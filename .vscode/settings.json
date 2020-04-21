@@ -13,8 +13,8 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {
-    "**/node_modules": false,
-    "**/.git": false,
+    "**/node_modules": true,
+    "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
     "**/CVS": true,
@@ -51,12 +51,6 @@
         "settings.json",
         "liquify.code-workspace"
       ],
-      "filename": true,
-      "format": "svg"
-    },
-    {
-      "icon": "git",
-      "extensions": [".meta"],
       "filename": true,
       "format": "svg"
     },
