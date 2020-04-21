@@ -2,7 +2,7 @@ import { extensions } from 'vscode'
 import { TransportKind, LanguageClient, RevealOutputChannelOn } from 'vscode-languageclient'
 import path from 'path'
 import fs from 'fs'
-import { activateTagClosing } from '../features/tag-close'
+import { activateTagClosing } from './../providers/tag-close'
 
 const getPkgJson = extension => {
   const read = fs.readFileSync(path.join(extension, 'package.json')).toString()

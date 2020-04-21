@@ -19,7 +19,6 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "packages/**/.babelrc": true,
     "packages/**/.editorconfig": true,
     "packages/**/.eslintignore": true,
     "packages/**/.eslintrc.json": true,
@@ -69,7 +68,7 @@
     },
     {
       "icon": "babel2",
-      "extensions": [".babelrc"],
+      "extensions": [".babelrc", "babel.config.json"],
       "filename": true,
       "format": "svg"
     },

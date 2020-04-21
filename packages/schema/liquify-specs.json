@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "vscode-html-customdata",
+  "version": 1.1,
+  "title": "Variation Specification References",
+  "description": "Liquid language variation specification reference data",
+  "type": "object",
+  "required": ["version"],
+  "definitions": {
+    "references": {
+      "type": "object",
+      "required": ["name", "url"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the reference."
+        },
+        "url": {
+          "type": "string",
+          "description": "The URL of the reference.",
+          "pattern": "https?://",
+          "patternErrorMessage": "URL should start with http:// or https://"
+        }
+      }
+    },
+    "markupDescription": {
+      "type": "object",
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "description": "Whether `description.value` should be rendered as plaintext or markdown",
+          "enum": ["plaintext", "markdown"]
+        },
+        "value": {
+          "type": "string",
+          "description": "Description shown in completion and hover"
+        }
+      }
+    }
+  },
+  "properties": {
+    "version": {
+      "const": 1.1,
+      "description": "The custom data version",
+      "type": "number"
+    },
+    "specification": {
+      "description": "Liquid tags",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "filters", "whitespace"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of tag"
+          },
+          "description": {
+            "description": "Description of tag shown in completion and hover",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/definitions/markupDescription"
+              }
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "description": "Define the tag kind",
+            "anyOf": [
+              {
+                "enum": ["control"],
+                "description": "Control flow tags can change the information Liquid shows using programming logic, eg: \"{% if %}\", \"{% unless %}\" etc"
+              },
+              {
+                "enum": ["embedded"],
+                "description": "Embedded tags can embed other lanugages. They are Liquid equivalent of HTML `<script>` and `<style>` tags or frontmatter tags like `---json`, `---javascript` and simply `---` yaml."
+              },
+              {
+                "enum": ["import"],
+                "description": "Import tags inject allows you to include content from another file or reference. The \"{% include 'file' %}\" typically used in most variations is what the Language Server considers an \"import\" kind tag."
+              },
+              {
+                "enum": ["filter"],
+                "description": "Filters change the output of a Liquid object. They are used within an output and are separated by a \"|\"."
+              },
+              {
+                "enum": ["object"],
+                "description": "Objects tell Liquid where to show content on a page. Objects and variable names are denoted by double curly braces: {{ and }}."
+              },
+              {
+                "enum": ["iteration"],
+                "description": "Iteration tags are used to loop collections and output data and/or content. Otherwise known as \"control flow\" tags."
+              },
+              {
+                "enum": ["output"],
+                "description": "Output tags typically generate markup and/or content. These tags accept parameter options, eg: \"{% tag 'something', param: something %}\" and will use passed in values when creating content to output."
+              },
+              {
+                "enum": ["variable"],
+                "description": "Variable tags have values assigned to them"
+              }
+            ]
+          },
+          "filters": {
+            "type": "boolean",
+            "description": "Does this tag accept filter attributes?",
+            "default": true
+          },
+          "singular": {
+            "type": "boolean",
+            "description": "Does this tag require an ender? eg: \"{% endtag %}\"",
+            "default": false
+          },
+          "whitespace": {
+            "type": "boolean",
+            "description": "Does this tag accept whitespace dashes?",
+            "default": true
+          },
+          "formatter": {
+            "type": "string",
+            "description": "Define the formatting language the contents of this adheres to.",
+            "enum": ["javascript", "json", "scss", "css"]
+          },
+          "reference": {
+            "$ref": "#/definitions/references"
+          }
+        }
+      }
+    }
+  }
+}

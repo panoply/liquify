@@ -1,7 +1,7 @@
 // @ts-check
 import { createConnection, ProposedFeatures } from 'vscode-languageserver'
 import { LiquidServer } from './provide/server'
-import { LiquidDocuments } from '../.scripts/old/documents'
+import { LiquidDocuments } from './provide/document'
 // import { Specification } from './config/specification'
 
 /**
@@ -17,4 +17,4 @@ export const Server = new LiquidServer()
 /**
  * Liquid Documents Manager - Instance
  */
-export const Documents = LiquidDocuments()
+export const Documents = new LiquidDocuments()

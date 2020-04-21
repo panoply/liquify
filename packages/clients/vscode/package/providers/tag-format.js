@@ -13,7 +13,7 @@ class Spacer {
   constructor () {
     this.TAG_DOUBLE = 0
     this.TAG_UNESCAPED = 1
-  ]this.TAG_COMMENT = 2
+    this.TAG_COMMENT = 2
   }
 
   char (doc, change) {

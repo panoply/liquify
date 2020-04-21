@@ -1,4 +1,4 @@
-import LiquidClient from './src/languages/liquid'
+import LiquidClient from './clients/liquid-client'
 
 /**
  * vscode-liquid
