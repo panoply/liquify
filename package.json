@@ -1,0 +1,116 @@
+{
+  "name": "liquify",
+  "version": "1.0.0",
+  "description": "Liquid Templating Language Support and IDE tooling",
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": true,
+  "scripts": {
+    "dev": "rollup",
+    "build": "",
+    "package": "",
+    "pkg": "",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node scripts/post-install.js"
+  },
+  "husky": {
+    "hooks": {
+      "post-merge": "pnpm run push"
+    }
+  },
+  "repository": {
+    "url": "https://github.com/panoply/liquify"
+  },
+  "projects": {
+    "atom": {
+      "directory": "packages/clients/atom",
+      "remote": "git@github.com:panoply/liquify-atom.git",
+      "links": [
+        ".editorconfig",
+        ".prettierignore",
+        ".prettierrc.js"
+      ]
+    },
+    "sublime": {
+      "directory": "packages/clients/sublime",
+      "remote": "git@github.com:panoply/liquify-sublime.git",
+      "links": [
+        ".editorconfig",
+        ".prettierignore",
+        ".prettierrc.js"
+      ]
+    },
+    "vscode": {
+      "directory": "packages/clients/vscode",
+      "remote": "git@github.com:panoply/liquify-vscode.git",
+      "links": [
+        ".babelrc",
+        ".editorconfig",
+        ".eslintignore",
+        ".eslintrc.json",
+        ".npmrc",
+        ".nvmrc",
+        ".prettierignore",
+        ".prettierrc.js",
+        "jsconfig.json"
+      ]
+    },
+    "website": {
+      "directory": "website",
+      "remote": "git@github.com:panoply/liquify.dev.git",
+      "links": [
+        ".babelrc",
+        ".editorconfig",
+        ".eslintignore",
+        ".eslintrc.json",
+        ".nvmrc",
+        ".prettierignore",
+        ".prettierrc.js",
+        "jsconfig.json"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.9.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/register": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "@rollup/plugin-json": "^4.0.2",
+    "@rollup/pluginutils": "^3.0.9",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.11.1",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-lodash": "^3.3.4",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "execa": "^4.0.0",
+    "husky": "^4.2.5",
+    "make-symlinks": "^2.0.1",
+    "mocha": "^7.1.1",
+    "parse-git-config": "^3.0.0",
+    "pnpm": "^4.13.0",
+    "prettier": "^2.0.4",
+    "prettier-eslint": "^9.0.1",
+    "rollup": "^2.6.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-terser": "^5.3.0",
+    "strip-json-comments": "^3.1.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
+}

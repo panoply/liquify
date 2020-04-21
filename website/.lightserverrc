@@ -1,0 +1,16 @@
+{
+ "port": 4000,
+ "serve": "dist",
+ "bind": "localhost",
+ "delay": 100,
+ "quiet": true,
+ "watchexps": [
+    "src/assets/**/*.js # npm run scripts:dev",
+    "src/assets/**/*.scss # npm run styles:dev # reloadcss",
+    "dist/**/*.html",
+    "src/**/*.html # npx eleventy",
+    "src/images/*.* # yarn cp:img"
+ ],
+ "http2": false,
+ "open": false
+}

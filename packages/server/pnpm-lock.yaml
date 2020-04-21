@@ -1,0 +1,126 @@
+dependencies:
+  prettydiff: 101.2.6
+  vscode-css-languageservice: 4.1.1
+  vscode-emmet-helper: 1.2.17
+  vscode-html-languageservice: 3.0.3
+  vscode-json-languageservice: 3.5.2
+  vscode-languageserver: 6.1.1
+  vscode-languageserver-textdocument: 1.0.1
+  vscode-uri: 2.1.1
+lockfileVersion: 5.1
+packages:
+  /@emmetio/extract-abbreviation/0.1.6:
+    dev: false
+    resolution:
+      integrity: sha512-Ce3xE2JvTSEbASFbRbA1gAIcMcZWdS2yUYRaQbeM0nbOzaZrUYfa3ePtcriYRZOZmr+CkKA+zbjhvTpIOAYVcw==
+  /@types/node/12.12.35:
+    dev: false
+    resolution:
+      integrity: sha512-ASYsaKecA7TUsDrqIGPNk3JeEox0z/0XR/WsJJ8BIX/9+SkMSImQXKWfU/yBrSyc7ZSE/NPqLu36Nur0miCFfQ==
+  /file-saver/2.0.2:
+    dev: false
+    resolution:
+      integrity: sha512-Wz3c3XQ5xroCxd1G8b7yL0Ehkf0TC9oYC6buPFkNnU9EnaPlifeAFCyCh+iewXTyFRcg0a6j3J7FmJsIhlhBdw==
+  /jsonc-parser/1.0.3:
+    dev: false
+    resolution:
+      integrity: sha512-hk/69oAeaIzchq/v3lS50PXuzn5O2ynldopMC+SWBql7J2WtdptfB9dy8Y7+Og5rPkTCpn83zTiO8FMcqlXJ/g==
+  /jsonc-parser/2.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-o6/yDBYccGvTz1+QFevz6l6OBZ2+fMVu2JZ9CIhzsYRX4mjaK5IyX9eldUdCmga16zlgQxyrj5pt9kzuj2C02w==
+  /prettydiff/101.2.6:
+    dependencies:
+      '@types/node': 12.12.35
+      file-saver: 2.0.2
+      sparser: 1.4.12
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-/fJ33pQ8MPI7+IB8fo/lOMR58CE/4GYNZRtjcQiPYmGNMo1HS9KmaybYdtEnfmx5EOSe/ch3Sg2fJ8YkNKb/XQ==
+  /sparser/1.4.12:
+    dependencies:
+      '@types/node': 12.12.35
+    dev: false
+    resolution:
+      integrity: sha512-qxDcacCuwHbvsf803PpZuETRI1pU8NAmLbyzZqFHPW7QjPK9pnCoX9ZPPbOMyiti6EOocfYzqzDPWj4fICXNzw==
+  /vscode-css-languageservice/4.1.1:
+    dependencies:
+      vscode-languageserver-textdocument: 1.0.1
+      vscode-languageserver-types: 3.15.1
+      vscode-nls: 4.1.2
+      vscode-uri: 2.1.1
+    dev: false
+    resolution:
+      integrity: sha512-2r2bYbhscivRu1zqh5kNe8aYpFnfksMYC7wTpKX2HqFsSzSJYXk0sCqPaWsP5ptqz0OFBTXnzx2JlE+Nb5Edgw==
+  /vscode-emmet-helper/1.2.17:
+    dependencies:
+      '@emmetio/extract-abbreviation': 0.1.6
+      jsonc-parser: 1.0.3
+      vscode-languageserver-types: 3.15.1
+    dev: false
+    resolution:
+      integrity: sha512-X4pzcrJ8dE7M3ArFuySF5fgipKDd/EauXkiJwtjBIVRWpVNq0tF9+lNCyuC7iDUwP3Oq7ow/TGssD3GdG96Jow==
+  /vscode-html-languageservice/3.0.3:
+    dependencies:
+      vscode-languageserver-types: 3.15.1
+      vscode-nls: 4.1.2
+      vscode-uri: 2.1.1
+    dev: false
+    resolution:
+      integrity: sha512-U+upM3gHp3HaF3wXAnUduA6IDKcz6frWS/dTAju3cZVIyZwOLBBFElQVlLH0ycHyMzqUFrjvdv+kEyPAEWfQ/g==
+  /vscode-json-languageservice/3.5.2:
+    dependencies:
+      jsonc-parser: 2.2.1
+      vscode-languageserver-textdocument: 1.0.1
+      vscode-languageserver-types: 3.15.1
+      vscode-nls: 4.1.2
+      vscode-uri: 2.1.1
+    dev: false
+    resolution:
+      integrity: sha512-9cUvBq00O08lpWVVOx6tQ1yLxCHss79nsUdEAVYGomRyMbnPBmc0AkYPcXI9WK1EM6HBo0R9Zo3NjFhcICpy4A==
+  /vscode-jsonrpc/5.0.1:
+    dev: false
+    engines:
+      node: '>=8.0.0 || >=10.0.0'
+    resolution:
+      integrity: sha512-JvONPptw3GAQGXlVV2utDcHx0BiY34FupW/kI6mZ5x06ER5DdPG/tXWMVHjTNULF5uKPOUUD0SaXg5QaubJL0A==
+  /vscode-languageserver-protocol/3.15.3:
+    dependencies:
+      vscode-jsonrpc: 5.0.1
+      vscode-languageserver-types: 3.15.1
+    dev: false
+    resolution:
+      integrity: sha512-zrMuwHOAQRhjDSnflWdJG+O2ztMWss8GqUUB8dXLR/FPenwkiBNkMIJJYfSN6sgskvsF0rHAoBowNQfbyZnnvw==
+  /vscode-languageserver-textdocument/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha512-UIcJDjX7IFkck7cSkNNyzIz5FyvpQfY7sdzVy+wkKN/BLaD4DQ0ppXQrKePomCxTS7RrolK1I0pey0bG9eh8dA==
+  /vscode-languageserver-types/3.15.1:
+    dev: false
+    resolution:
+      integrity: sha512-+a9MPUQrNGRrGU630OGbYVQ+11iOIovjCkqxajPa9w57Sd5ruK8WQNsslzpa0x/QJqC8kRc2DUxWjIFwoNm4ZQ==
+  /vscode-languageserver/6.1.1:
+    dependencies:
+      vscode-languageserver-protocol: 3.15.3
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-DueEpkUAkD5XTR4MLYNr6bQIp/UFR0/IPApgXU3YfCBCB08u2sm9hRCs6DxYZELkk++STPjpcjksR2H8qI3cDQ==
+  /vscode-nls/4.1.2:
+    dev: false
+    resolution:
+      integrity: sha512-7bOHxPsfyuCqmP+hZXscLhiHwe7CSuFE4hyhbs22xPIhQ4jv99FcR4eBzfYYVLP356HNFpdvz63FFb/xw6T4Iw==
+  /vscode-uri/2.1.1:
+    dev: false
+    resolution:
+      integrity: sha512-eY9jmGoEnVf8VE8xr5znSah7Qt1P/xsCdErz+g8HYZtJ7bZqKH5E3d+6oVNm1AC/c6IHUDokbmVXKOi4qPAC9A==
+specifiers:
+  prettydiff: ^101.2.6
+  vscode-css-languageservice: ^4.1.1
+  vscode-emmet-helper: ^1.2.17
+  vscode-html-languageservice: ^3.0.3
+  vscode-json-languageservice: ^3.5.1
+  vscode-languageserver: ^6.1.1
+  vscode-languageserver-textdocument: ^1.0.1
+  vscode-uri: ^2.1.1

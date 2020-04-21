@@ -1,0 +1,45 @@
+{
+	"settings": {
+		"files.exclude": {
+			".vscode": true,
+			"export": true,
+			"scripts": true,
+			"website": true,
+			"packages": true
+		}
+	},
+	"folders": [
+		{
+			"name": "Liquify",
+			"path": "."
+		},
+		{
+			"name": "Grammars",
+			"path": "packages/grammar"
+		},
+		{
+			"name": "Clients",
+			"path": "packages/clients"
+		},
+		{
+			"name": "Server",
+			"path": "packages/server"
+		},
+		{
+			"name": "Schema",
+			"path": "packages/schema"
+		},
+		{
+			"name": "Specs",
+			"path": "packages/specs"
+		},
+		{
+			"name": "Scripts",
+			"path": "scripts"
+		},
+		{
+			"name": "Website",
+			"path": "website"
+		}
+	]
+}

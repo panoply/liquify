@@ -1,0 +1,177 @@
+{
+  "documentation": [
+    {
+      "title": "Installation and Setup",
+      "linklist": [
+        {
+          "title": "Upgrading from 2.3.0^",
+          "url": "upgrading-from-2.3.0"
+        },
+        {
+          "title": "Install",
+          "url": "install"
+        },
+        {
+          "title": "Editor Settings",
+          "url": "editor-settings"
+        },
+        {
+          "title": "Commands",
+          "url": "commands"
+        },
+        {
+          "title": "Licensing",
+          "url": "licensing"
+        },
+        {
+          "title": "Extension Conflicts",
+          "url": "extension-conflicts"
+        }
+      ]
+    },
+    {
+      "title": "Configuration",
+      "linklist": [
+        {
+          "title": "Configuration",
+          "type": "group"
+        },
+        {
+          "title": "Config File",
+          "url": "config-file"
+        },
+        {
+          "title": "Default Options",
+          "url": "default-options"
+        },
+        {
+          "title": "Directory Heirachy",
+          "url": "directory-heirachy"
+        }
+      ]
+    },
+    {
+      "title": "Liquid Variations",
+      "linklist": [
+        {
+          "title": "Engine",
+          "url": "engine"
+        },
+        {
+          "title": "Supported Variations",
+          "url": "supported-variations"
+        },
+        {
+          "title": "Extending",
+          "url": "Extending"
+        }
+      ]
+    },
+    {
+      "title": "Syntax Highlighting",
+      "linklist": [
+        {
+          "title": "Syntax Support",
+          "url": "syntax-support"
+        },
+        {
+          "title": "Grammars",
+          "url": "grammar"
+        },
+        {
+          "title": "Semantic Highlighting",
+          "url": "semantic-highlighting"
+        }
+      ]
+    },
+    {
+      "title": "Hovers",
+      "linklist": [
+        {
+          "title": "Tag Descriptives",
+          "url": "tag-descriptives"
+        },
+        {
+          "title": "Configuration",
+          "url": "configuration"
+        }
+      ]
+    },
+    {
+      "title": "Completions",
+      "linklist": [
+        {
+          "title": "Formatting",
+          "url": "formatting"
+        },
+        {
+          "title": "Language Support",
+          "url": "supported-language"
+        },
+        {
+          "title": "Rules",
+          "url": "rules"
+        },
+        {
+          "title": "Tag Associations",
+          "url": "tag-associations"
+        },
+        {
+          "title": "Ignoring Code",
+          "url": "ignoring-code"
+        },
+        {
+          "title": "Using Prettier",
+          "url": "using-prettier"
+        },
+        {
+          "title": "Using JS Beautify",
+          "url": "js-beautify"
+        }
+      ]
+    },
+    {
+      "title": "Linting / Validations",
+      "linklist": [
+        {
+          "title": "Linting",
+          "url": "linting"
+        },
+        {
+          "title": "Rulesets",
+          "url": "rulesets"
+        },
+        {
+          "title": "Error Checking",
+          "url": "error-checking"
+        }
+      ]
+    },
+    {
+      "title": "Codelens",
+      "linklist": [
+        {
+          "title": "Codelens",
+          "url": "codelens"
+        },
+        {
+          "title": "Activation",
+          "url": "activation"
+        }
+      ]
+    },
+    {
+      "title": "Key Binding",
+      "linklist": [
+        {
+          "title": "Key Bindings",
+          "url": "key-bindings"
+        },
+        {
+          "title": "Shortcuts",
+          "url": "shortcuts"
+        }
+      ]
+    }
+  ]
+}

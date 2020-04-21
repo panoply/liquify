@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "togusa09.tmlanguage",
+    "mgmcdermott.vscode-language-babel",
+    "ms-vscode.vscode-typescript-next",
+    "vscode-icons-team.vscode-icons"
+  ]
+}

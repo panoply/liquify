@@ -1,0 +1,41 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "extensionHost",
+      "request": "launch",
+      "name": "Client",
+      "runtimeExecutable": "${execPath}",
+      "outFiles": [
+        "${workspaceRoot}/extension/client.cjs.js",
+        "${workspaceRoot}/extension/client.cjs.js.map"
+      ],
+      "args": [
+        "--disable-extensions",
+        "--extensionDevelopmentPath=${workspaceRoot}",
+        "${workspaceRoot}/tests"
+      ]
+    },
+    {
+      "name": "Server",
+      "type": "node",
+      "request": "attach",
+      "port": 6009,
+      "protocol": "inspector",
+      "restart": true,
+      "outFiles": [
+        "${workspaceRoot}/extension/server.cjs.js",
+        "${workspaceRoot}/extension/server.cjs.js.map"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Client + Server",
+      "configurations": [
+        "Client",
+        "Server"
+      ]
+    }
+  ]
+}

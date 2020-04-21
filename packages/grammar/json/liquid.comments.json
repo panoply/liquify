@@ -1,0 +1,60 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Liquid",
+  "injectionSelector": "L:comment.block.liquid",
+  "scopeName": "source.liquid.comments",
+  "patterns": [
+    {
+      "include": "#format"
+    },
+    {
+      "include": "#ignore"
+    }
+  ],
+  "repository": {
+    "format": {
+      "name": "comment.block.documentation.liquid",
+      "begin": "(@format)(:)\\s*(\\w+)?\\s*({)",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.liquid"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.mapping.liquid"
+        },
+        "3": {
+          "name": "string.other.liquid"
+        },
+        "4": {
+          "name": "punctuation.definition.bracket.curly.begin.liquid"
+        }
+      },
+      "end": "}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.bracket.curly.end.liquid"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.json"
+        }
+      ]
+    },
+    "ignore": {
+      "name": "comment.block.documentation.html",
+      "match": "(@ignore)(:)(start|end)",
+      "captures": {
+        "1": {
+          "name": "keyword.other.liquid"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.mapping.liquid"
+        },
+        "3": {
+          "name": "support.type.property-name.liquid"
+        }
+      }
+    }
+  }
+}

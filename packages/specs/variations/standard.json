@@ -1,0 +1,212 @@
+{
+  "comment": {
+    "type": "comment",
+    "description": "Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.",
+    "singular": false,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/comment/"
+  },
+  "case": {
+    "type": "control",
+    "description": "Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",
+    "singular": false,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/control-flow/#case"
+  },
+  "if": {
+    "type": "control",
+    "snippet": "if ${1} ${2|==,!=,or,and|} ${3} ",
+    "description": "Executes a block of code only if a certain condition is met.",
+    "singular": false,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/control-flow/#if"
+  },
+  "else": {
+    "type": "control",
+    "description": "Add condition within an if or unless block.",
+    "within": ["case", "if", "unless", "elsif", "when"],
+    "singular": true,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/control-flow/#unless"
+  },
+  "elsif": {
+    "type": "control",
+    "description": "Adds more conditions within an if or unless block.",
+    "within": ["if"],
+    "singular": true,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/control-flow/#unless"
+  },
+  "unless": {
+    "type": "control",
+    "description": "The opposite of if – executes a block of code only if a certain condition is not met.",
+    "singular": false,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/control-flow/#unless"
+  },
+  "when": {
+    "type": "control",
+    "description": "Define the various conditions set by the \"{% case %}\" tag",
+    "within": ["case"],
+    "singular": true,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/control-flow/#casewhen"
+  },
+  "concat": {
+    "engine": "Standard",
+    "name": "concat",
+    "type": "filter",
+    "snippet": "concat: ${0}",
+    "description": "Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",
+    "reference": "https://shopify.github.io/liquid/filters/concat/"
+  },
+  "first": {
+    "engine": "Standard",
+    "type": "filter",
+    "description": "Returns the first item of an array.",
+    "reference": "https://shopify.github.io/liquid/filters/first/"
+  },
+  "join": {
+    "engine": "Standard",
+    "type": "filter",
+    "snippet": "join: '${0}'",
+    "description": "Joins the elements of an array with the character passed as the parameter. The result is a single string.",
+    "reference": "https://shopify.github.io/liquid/filters/join/"
+  },
+  "last": {
+    "engine": "Standard",
+    "type": "filter",
+    "description": "Gets the last element in an array",
+    "reference": "https://shopify.github.io/liquid/filters/last/"
+  },
+  "map": {
+    "engine": "Standard",
+    "type": "filter",
+    "snippet": "map: '${0}'",
+    "description": "Accepts an array element’s attribute as a parameter and creates a string out of each array element’s value.",
+    "reference": "https://shopify.github.io/liquid/filters/map/"
+  },
+  "slice": {
+    "engine": "Standard",
+    "type": "filter",
+    "snippet": "slice: '${0}'",
+    "description": "The slice filter returns a substring, starting at the specified index. An optional second parameter can be passed to specify the length of the substring. If no second parameter is given, a substring of one character will be returned.",
+    "reference": "https://shopify.github.io/liquid/tags/iteration/#break"
+  },
+  "split": {
+    "engine": "Standard",
+    "type": "filter",
+    "snippet": "split: '${0}'",
+    "description": "The split filter takes on a substring as a parameter. The substring is used as a delimiter to divide a string into an array. You can output different parts of an array using array filters.",
+    "reference": "https://shopify.github.io/liquid/filters/split"
+  },
+  "break": {
+    "type": "iteration",
+    "description": "Causes the loop to stop iterating when it encounters the break tag.",
+    "within": ["case", "for", "if", "unless"],
+    "singular": true,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/iteration/#break"
+  },
+  "continue": {
+    "type": "iteration",
+    "description": "Causes the loop to skip the current iteration when it encounters the continue tag.",
+    "within": ["for"],
+    "singular": true,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/iteration/#continue"
+  },
+  "cycle": {
+    "type": "iteration",
+    "description": "Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",
+    "within": ["for"],
+    "singular": true,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/iteration/#cycle"
+  },
+  "for": {
+    "type": "iteration",
+    "description": "Repeatedly executes a block of code.",
+    "snippet": "for ${1:item} in ${2:collection}",
+    "singular": false,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/iteration/#for"
+  },
+  "tablerow": {
+    "type": "iteration",
+    "description": "Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",
+    "singular": false,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/iteration/#tablerow"
+  },
+  "raw": {
+    "description": "Allows output of Liquid code on a page without being parsed.",
+    "singular": false,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/raw/"
+  },
+  "assign": {
+    "type": "variable",
+    "description": "Creates a new variable.",
+    "snippet": "assign ${1:var} = ${2:value}",
+    "singular": true,
+    "filters": true,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/variable/#assign"
+  },
+  "capture": {
+    "type": "variable",
+    "description": "Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.",
+    "snippet": "capture ${1:var}",
+    "singular": false,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/variable/#capture"
+  },
+  "decrement": {
+    "type": "variable",
+    "description": "Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",
+    "singular": true,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/variable/#increment"
+  },
+  "increment": {
+    "type": "variable",
+    "description": "Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",
+    "singular": true,
+    "filters": false,
+    "whitespace": true,
+    "engine": "Standard",
+    "reference": "https://shopify.github.io/liquid/tags/variable/#increment"
+  }
+}

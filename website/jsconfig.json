@@ -1,0 +1,17 @@
+{
+  "exclude": ["node_modules/**"],
+  "include": ["packages", "scripts", "website"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2019",
+    "checkJs": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noEmitOnError": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true
+  }
+}

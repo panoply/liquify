@@ -1,0 +1,89 @@
+{
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 96,
+  "editor.detectIndentation": true,
+  "editor.renderIndentGuides": true,
+  "editor.codeActionsOnSave": {
+    "source.deleteSemicolons": true,
+    "source.fixAll.eslint": true
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    "**/node_modules": false,
+    "**/.git": false,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "packages/**/.babelrc": true,
+    "packages/**/.editorconfig": true,
+    "packages/**/.eslintignore": true,
+    "packages/**/.eslintrc.json": true,
+    "packages/**/.nvmrc": true,
+    "packages/**/.prettierignore": true,
+    "packages/**/.prettierrc.js": true,
+    "packages/**/jsconfig.json": true
+  },
+  "files.associations": {
+    ".meta": "json",
+    "*.sublime-settings": "jsonc",
+    "*.sublime-commands": "jsonc"
+  },
+  "javascript.suggest.enabled": true,
+  "javascript.suggestionActions.enabled": false,
+  "javascript.validate.enable": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "eslint.alwaysShowStatus": true,
+  "eslint.codeActionsOnSave.mode": "all",
+  "eslint.validate": ["html", "javascript"],
+  "eslint.options.extension": [".js"],
+  "prettier.useEditorConfig": true,
+  "prettier.requireConfig": true,
+  "prettier.disableLanguages": ["html"],
+  "vsicons.associations.files": [
+    {
+      "icon": "vscode",
+      "extensions": [
+        "extensions.json",
+        "settings.json",
+        "liquify.code-workspace"
+      ],
+      "filename": true,
+      "format": "svg"
+    },
+    {
+      "icon": "git",
+      "extensions": [".meta"],
+      "filename": true,
+      "format": "svg"
+    },
+    {
+      "icon": "config",
+      "extensions": [".lightserverrc"],
+      "filename": true,
+      "format": "svg"
+    },
+    {
+      "icon": "babel2",
+      "extensions": [".babelrc"],
+      "filename": true,
+      "format": "svg"
+    },
+    {
+      "icon": "liquid",
+      "extensions": [".liquidrc", ".liquidrc.json"],
+      "filename": true,
+      "format": "svg"
+    },
+    {
+      "icon": "netlify",
+      "extensions": ["_redirects", "_headers"],
+      "filename": true,
+      "format": "svg"
+    }
+  ]
+}

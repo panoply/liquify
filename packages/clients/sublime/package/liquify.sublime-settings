@@ -1,0 +1,26 @@
+{
+	"languages": [
+		{
+			"languageId": "liquid",
+			"scopes": ["source.php"],
+			"syntaxes": [
+				"Packages/PHP/PHP.sublime-syntax"
+			]
+		}
+	],
+	"initializationOptions": {
+		"clearCache": false,
+		// "storagePath": "/tmp/intelephense",
+		// "globalStoragePath": "/tmp/intelephense",
+		// "licenceKey": "${packages}/User/intelephense-license.txt",
+	},
+	// @see configuration in https://github.com/bmewburn/vscode-intelephense/blob/master/package.json
+	"settings": {
+		"intelephense": {
+			// as an example
+			"trace": {
+				"server": "off"
+			}
+		}
+	}
+}

@@ -1,0 +1,52 @@
+{
+  "projects": {
+    "atom": {
+      "path": "packages/clients/atom",
+      "remote": "https://github.com/panoply/liquify-atom",
+      "symlink": [
+        ".editorconfig",
+        ".prettierignore",
+        ".prettierrc.js"
+      ]
+    },
+    "sublime": {
+      "path": "packages/clients/sublime",
+      "remote": "https://github.com/panoply/liquify-sublime",
+      "symlink": [
+        ".editorconfig",
+        ".prettierignore",
+        ".prettierrc.js"
+      ]
+    },
+    "vscode": {
+      "path": "packages/clients/vscode",
+      "remote": "https://github.com/panoply/liquify-vscode",
+      "symlink": [
+        ".babelrc",
+        ".editorconfig",
+        ".eslintignore",
+        ".npmrc",
+        ".nvmrc",
+        ".prettierignore",
+        ".prettierrc.js",
+        "jsconfig.json"
+      ]
+    },
+    "website": {
+      "path": "website",
+      "remote": "https://github.com/panoply/liquify.dev",
+      "symlink": [
+        ".vscode/extensions.json",
+        ".vscode/settings.json",
+        ".babelrc",
+        ".editorconfig",
+        ".eslintignore",
+        ".eslintrc.js",
+        ".nvmrc",
+        ".prettierignore",
+        ".prettierrc.js",
+        "jsconfig.json"
+      ]
+    }
+  }
+}

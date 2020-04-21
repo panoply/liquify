@@ -1,0 +1,40 @@
+{
+  "name": "liquify.dev",
+  "version": "1.0.0",
+  "description": "Liquify IDE Tooling website and documentation",
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "ISC",
+  "main": ".eleventy.js",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "countup.js": "^2.0.4",
+    "freezeframe": "^4.1.3",
+    "mithril": "^2.0.4",
+    "netlicensing-client": "^1.2.21",
+    "stickybits": "^3.7.6",
+    "stimulus": "^1.1.1",
+    "turbolinks": "^5.2.0"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^0.10.0",
+    "autoprefixer": "^9.7.5",
+    "cssnano": "^4.1.10",
+    "light-server": "^2.6.4",
+    "mkdirp": "^1.0.4",
+    "node-sass": "^4.13.1",
+    "npm-run-all": "^4.1.5",
+    "postcss-cli": "^7.1.0",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "dev": "npm-run-all clean make styles 11ty --parallel 11ty serve",
+    "11ty": "npx @11ty/eleventy --watch",
+    "styles": "node-sass ./src/style/ --output public/assets/ --source-map true --source-map-contents true && postcss ./public/assets/*.css --replace",
+    "styles:prod": "node-sass ./src/style/ --output public/assets/ && postcss ./public/assets/*.css --replace",
+    "serve": "light-server -c .lightserverrc",
+    "make": "mkdirp ./public && mkdirp ./public/assets && mkdirp ./public/assets",
+    "clean": "rimraf public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
