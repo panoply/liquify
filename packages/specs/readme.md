@@ -1,24 +1,24 @@
 # Liquid Specifications
 
-This directory contains the default supported Liquid variation reference specifications which are used to construct a workable AST and provide code completions, formatting, hovers and diagnostic validation features for the [Liquid Language Server](#).
+This directory contains the default supported Liquid variation specifications which are used to construct a workable AST and provide code completions, formatting, hovers and diagnostic validation features for the [Liquid Language Server](#).
 
 ### What are variation specifications?
 
-In the context of the Liquid Language Server, variation specifications are just data references that describe tags and filters used in Liquid. A templating language like Liquid exists in a multitude of variations that extend upon its default [standard](#) variation. Due to Liquids versatile nature and endless implementations supporting intelliSense capabilities is made possible by providing the Language Server with project specific variation reference data.
+In the context of the Liquid Language Server, variation specifications are just data references that describe tags and filters used in Liquid. A templating language like Liquid exists in a multitude of variations that extend upon its default [standard](#) variation. Due to Liquids versatile nature and endless implementations providing the intelliSense capabilities are only possible by supplying the server with a specification.
 
 > Templating engines interpolate variables and process dynamic content. They're these safe user facing languages that do not adhere to any type of specification and traditionally have never really required such a thing (until now).
 
 ### Supported Variations
 
-The Liquid Language Server supports 3 Liquid variations out of the box, they are:
+The Liquid Language Server supports the following Liquid variations:
 
-- Standard
-- Shopify
-- Jekyll
+- [Standard](#)
+- [Shopify](#)
+- [Jekyll](#)
 
-Each variation uses a simple schema to categorize its syntax grammar and are provided to the server as an array of objects.
+Each variation uses a simple schema to categorize its syntax grammar which is provided to the server as an array of objects.
 
-> By default all new projects will use the Standard variation of Liquid.
+> By default, all new projects will use the **Standard** variation of Liquid.
 
 ### Creating Specifications
 
@@ -34,16 +34,18 @@ Given that the Liquid Language can be extended.
 
 the specs use tag type categorization. Tag types are used by the server when parsing the document correct categorization is imperative.
 
-- Comment
-- Control
-- Embedded
-- Filter
-- Import
-- Iteration
-- Object
-- Output
-- Raw
-- Variable
+| Type        | Scope      | Capture            |
+| ----------- | ---------- | ------------------ |
+| `comment`   | `comment`  | `{% comment %}`    |
+| `control`   | `keyword`  | `{% if }`          |
+| `embedded`  | `meta`     | `{% style %}`      |
+| `filter`    | `support`  | `{{ | filter }}`   |
+| `import`    | `meta`     | `{% include %}`    |
+| `iteration` | `keyword`  | `{% for %}`        |
+| `object`    | `storage`  | `{{ object.key }}` |
+| `output`    | `meta`     | `{% form %}`       |
+| `raw`       | `raw`      | `{% raw %}`        |
+| `variable`  | `variable` | `{% capture %}`    |
 
 # Contributing
 
