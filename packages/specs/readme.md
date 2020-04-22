@@ -21,7 +21,7 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 | Property      | Kind       | Default | Description                                                 |
 | ------------- | ---------- | ------- | ----------------------------------------------------------- |
 | `type`        | `string`   | `null`  | The tag type, see [type](#) for avaliable types             |
-| `filters`     | `boolean`  | `false` | Does this tag accept filter, eg: `|` filters                |
+| `filters`     | `boolean`  | `false` | Does this tag accept filter, eg: `\|` filters               |
 | `whitespace`  | `boolean`  | `true`  | Does this tag accept whitespace `-` dashes                  |
 | `description` | `string`   | `null`  | Short description which describes the tag                   |
 | `properties`  | `object[]` | `null`  | List of object properties the tag uses, see [properties](#) |
@@ -41,18 +41,18 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 </summary>
 <p>
 
-| Name        | Grammar Scope | Capture Example      | Description                                   |
-| ----------- | ------------- | -------------------- | --------------------------------------------- |
-| `comment`   | `comment`     | `{% comment %}`      | Allows un-rendered code                       |
-| `control`   | `keyword`     | `{% if ... }`        | Controls conditional execution of code        |
-| `embedded`  | `meta`        | `{% style %}`        | Contents of the tag contains another language |
-| `filter`    | `support`     | `{{ ... | filter }}` | Attribute-like appendments to singular tags   |
-| `import`    | `meta`        | `{% include ... %}`  | Tags which import/reference outside files     |
-| `iteration` | `keyword`     | `{% for ... %}`      | Iteration tags run blocks of code repeatedly  |
-| `object`    | `storage`     | `{{ object.key }}`   | Singular tags that contains objects           |
-| `output`    | `meta`        | `{% form %}`         | Block tags that generate additional code      |
-| `raw`       | `raw`         | `{% raw %}`          | Raw temporarily disables tag processing       |
-| `variable`  | `variable`    | `{% capture %}`      | Variable tags create new Liquid variables.    |
+| Name        | Grammar Scope | Capture Example       | Description                                   |
+| ----------- | ------------- | --------------------- | --------------------------------------------- |
+| `comment`   | `comment`     | `{% comment %}`       | Allows un-rendered code                       |
+| `control`   | `keyword`     | `{% if ... }`         | Controls conditional execution of code        |
+| `embedded`  | `meta`        | `{% style %}`         | Contents of the tag contains another language |
+| `filter`    | `support`     | `{{ ... \| filter }}` | Attribute-like appendments to singular tags   |
+| `import`    | `meta`        | `{% include ... %}`   | Tags which import/reference outside files     |
+| `iteration` | `keyword`     | `{% for ... %}`       | Iteration tags run blocks of code repeatedly  |
+| `object`    | `storage`     | `{{ object.key }}`    | Singular tags that contains objects           |
+| `output`    | `meta`        | `{% form %}`          | Block tags that generate additional code      |
+| `raw`       | `raw`         | `{% raw %}`           | Raw temporarily disables tag processing       |
+| `variable`  | `variable`    | `{% capture %}`       | Variable tags create new Liquid variables.    |
 
 </p>
 </details>
