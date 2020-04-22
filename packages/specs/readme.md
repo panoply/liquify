@@ -8,38 +8,36 @@ In the context of the Liquid Language Server, variation specifications are just 
 
 ### Supported Variations
 
-The Liquid Language Server supports the following Liquid variations:
+By default, all new projects will use the **Standard** variation of Liquid. The Liquid Language Server supports the following Liquid variations out of the box:
 
 - [Standard](#)
 - [Shopify](#)
 - [Jekyll](#)
 
-> By default, all new projects will use the **Standard** variation of Liquid.
-
 # Schema
 
 Liquid variation specifications are written according to a [Schema Store](#) JSON specification. Options are made available according to the defined Liquid tag [type](#).
 
-| Property      | Kind     | Default | Availability            | Description                                             |
-| ------------- | -------- | ------- | ----------------------- | ------------------------------------------------------- |
-| `type`        | String   | `null`  | -                       | The tag type, see [type](#) for avaliable types         |
-| `filters`     | Boolean  | `false` | -                       | Does this tag accept filter, eg: `|` filters            |
-| `whitespace`  | Boolean  | `true`  | -                       | Does this tag accept whitespace `-` dashes              |
-| `description` | String   | `null`  | -                       | Short description which describes the tag               |
-| `properties`  | Object[] | `null`  | `object`                | List of object properties the tag uses, see [object](#) |
-| `engine`      | String   | `null`  | -                       | The variation specification (engine) reference          |
-| `reference`   | String   | `null`  | -                       | The tag URL link, typically documentation reference     |
-| `snippet`     | String   | `null`  | -                       | The snippet completion tag should use                   |
-| `singular`    | Boolean  | `false` | -                       | The tag is a non-void, does not required `{% end %}`    |
-| `params`      | Object[] | `null`  | `iteration` or `import` | List of parameters the tag uses, see [parameters](#)    |
-| `operators`   | String[] | `null`  | `control`               | Tag operators, typically used on control type           |
-| `deprecated`  | Boolean  | `false` | -                       | Used when the tag is deprecated                         |
-| `language`    | String   | `null`  | `embedded`              | The language of tag inner contents, see [embedded](#)   |
-| `attributes`  | Object[] | `null`  | `embedded` or `output`  | The attributes the tag accepts, see [attributes](#)     |
+| Property      | Kind       | Default | Description                                                 |
+| ------------- | ---------- | ------- | ----------------------------------------------------------- |
+| `type`        | `string`   | `null`  | The tag type, see [type](#) for avaliable types             |
+| `filters`     | `boolean`  | `false` | Does this tag accept filter, eg: `|` filters                |
+| `whitespace`  | `boolean`  | `true`  | Does this tag accept whitespace `-` dashes                  |
+| `description` | `string`   | `null`  | Short description which describes the tag                   |
+| `properties`  | `object[]` | `null`  | List of object properties the tag uses, see [properties](#) |
+| `engine`      | `string`   | `null`  | The variation specification (engine) reference              |
+| `reference`   | `string`   | `null`  | The tag URL link, typically documentation reference         |
+| `snippet`     | `string`   | `null`  | The snippet completion tag should use                       |
+| `singular`    | `boolean`  | `false` | The tag is a non-void, does not required `{% end %}`        |
+| `params`      | `object[]` | `null`  | List of parameters the tag uses, see [parameters](#)        |
+| `operators`   | `string[]` | `null`  | Tag operators, typically used on control type               |
+| `deprecated`  | `boolean`  | `false` | Used when the tag is deprecated                             |
+| `language`    | `string`   | `null`  | The language of tag inner contents, see [embedded](#)       |
+| `attributes`  | `object[]` | `null`  | The attributes the tag accepts, see [attributes](#)         |
 
 <details>
 <summary>
-  <strong>`type`</strong>
+  <strong>type</strong>
 </summary>
 <p>
 
@@ -61,38 +59,38 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 
 <details>
 <summary>
-  <strong>`properties`</strong>
+  <strong>properties</strong>
 </summary>
 <p>
 
-| Name          | Kind     | Default | Description                                        |
-| ------------- | -------- | ------- | -------------------------------------------------- |
-| `name`        | String   | `null`  | The property name                                  |
-| `description` | String   | `null`  | Short description which describes the tag property |
-| `type`        | String   | `null`  | Contents of the tag contains another language      |
-| `properties`  | Object[] | `null`  | Attribute-like appendments to singular tags        |
+| Name          | Kind       | Default | Description                                        |
+| ------------- | ---------- | ------- | -------------------------------------------------- |
+| `name`        | `string`   | `null`  | The property name                                  |
+| `description` | `string`   | `null`  | Short description which describes the tag property |
+| `type`        | `string`   | `null`  | Contents of the tag contains another language      |
+| `properties`  | `object[]` | `null`  | Attribute-like appendments to singular tags        |
 
 </p>
 </details>
 
 <details>
 <summary>
-  <strong>`params`</strong>
+  <strong>params</strong>
 </summary>
 <p>
 
-| Name          | Kind   | Default | Description                                     |
-| ------------- | ------ | ------- | ----------------------------------------------- |
-| `name`        | String | `null`  | The property name                               |
-| `description` | String | `null`  | Short description which describes the parameter |
-| `snippet`     | String | `null`  | The snippet value applied after colon           |
+| Name          | Kind     | Default | Description                                     |
+| ------------- | -------- | ------- | ----------------------------------------------- |
+| `name`        | `string` | `null`  | The property name                               |
+| `description` | `string` | `null`  | Short description which describes the parameter |
+| `snippet`     | `string` | `null`  | The snippet value applied after colon           |
 
 </p>
 </details>
 
 <details>
 <summary>
-  <strong>`attributes`</strong>
+  <strong>attributes</strong>
 </summary>
 <p>
 
