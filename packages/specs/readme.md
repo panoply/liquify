@@ -1,12 +1,10 @@
-# Liquid Specifications
+# Specifications
 
-This directory contains the default supported Liquid variation specifications which are used to construct a workable AST and provide code completions, formatting, hovers and diagnostic validation features for the [Liquid Language Server](#).
+This directory contains the default supported Liquid variation specifications which are used by the parser to construct a workable AST and provide code completions, formatting, hovers and diagnostic validation features for the [Liquid Language Server](#). The specifications are the foundation of the servers functionality, without them the parser will fail.
 
 ### What are variation specifications?
 
-In the context of the Liquid Language Server, variation specifications are just data references that describe tags and filters used in Liquid. A templating language like Liquid exists in a multitude of variations that extend upon its default [standard](#) variation. Due to Liquids versatile nature and endless implementations providing the intelliSense capabilities are only possible by supplying the server with a specification.
-
-> Templating engines interpolate variables and process dynamic content. They're these safe user facing languages that do not adhere to any type of specification and traditionally have never really required such a thing (until now).
+In the context of the Liquid Language Server, variation specifications are just data references that describe tags and filters used in Liquid. A templating language like Liquid exists in a multitude of variations that extend upon its default [Standard Variation](#). Templating engines interpolate variables and process dynamic content, they're these safe user facing languages that do not adhere to any type of specification and traditionally have never really required such a thing, until now.
 
 ### Supported Variations
 
@@ -16,37 +14,92 @@ The Liquid Language Server supports the following Liquid variations:
 - [Shopify](#)
 - [Jekyll](#)
 
-Each variation uses a simple schema to categorize its syntax grammar which is provided to the server as an array of objects.
-
 > By default, all new projects will use the **Standard** variation of Liquid.
 
-### Creating Specifications
+# Schema
 
-You can provide custom specifications via the `spec[]` option available in `.liquidrc` file or via workspace settings.
+Liquid variation specifications are written according to a [Schema Store](#) JSON specification. Options are made available according to the defined Liquid tag [type](#).
 
-There are two different ways to provide specs. If you want to provide a complete variation you can do so “full”
+| Property      | Kind     | Default | Availability            | Description                                             |
+| ------------- | -------- | ------- | ----------------------- | ------------------------------------------------------- |
+| `type`        | String   | `null`  | -                       | The tag type, see [type](#) for avaliable types         |
+| `filters`     | Boolean  | `false` | -                       | Does this tag accept filter, eg: `|` filters            |
+| `whitespace`  | Boolean  | `true`  | -                       | Does this tag accept whitespace `-` dashes              |
+| `description` | String   | `null`  | -                       | Short description which describes the tag               |
+| `properties`  | Object[] | `null`  | `object`                | List of object properties the tag uses, see [object](#) |
+| `engine`      | String   | `null`  | -                       | The variation specification (engine) reference          |
+| `reference`   | String   | `null`  | -                       | The tag URL link, typically documentation reference     |
+| `snippet`     | String   | `null`  | -                       | The snippet completion tag should use                   |
+| `singular`    | Boolean  | `false` | -                       | The tag is a non-void, does not required `{% end %}`    |
+| `params`      | Object[] | `null`  | `iteration` or `import` | List of parameters the tag uses, see [parameters](#)    |
+| `operators`   | String[] | `null`  | `control`               | Tag operators, typically used on control type           |
+| `deprecated`  | Boolean  | `false` | -                       | Used when the tag is deprecated                         |
+| `language`    | String   | `null`  | `embedded`              | The language of tag inner contents, see [embedded](#)   |
+| `attributes`  | Object[] | `null`  | `embedded` or `output`  | The attributes the tag accepts, see [attributes](#)     |
 
-If you have a large specification you can create a seperate JSON file and refer it's path location relative to your projects root directory.
+<details>
+<summary>
+  <strong>`type`</strong>
+</summary>
+<p>
 
-### Understanding tag types
+| Name        | Grammar Scope | Capture Example      | Description                                   |
+| ----------- | ------------- | -------------------- | --------------------------------------------- |
+| `comment`   | `comment`     | `{% comment %}`      | Allows un-rendered code                       |
+| `control`   | `keyword`     | `{% if ... }`        | Controls conditional execution of code        |
+| `embedded`  | `meta`        | `{% style %}`        | Contents of the tag contains another language |
+| `filter`    | `support`     | `{{ ... | filter }}` | Attribute-like appendments to singular tags   |
+| `import`    | `meta`        | `{% include ... %}`  | Tags which import/reference outside files     |
+| `iteration` | `keyword`     | `{% for ... %}`      | Iteration tags run blocks of code repeatedly  |
+| `object`    | `storage`     | `{{ object.key }}`   | Singular tags that contains objects           |
+| `output`    | `meta`        | `{% form %}`         | Block tags that generate additional code      |
+| `raw`       | `raw`         | `{% raw %}`          | Raw temporarily disables tag processing       |
+| `variable`  | `variable`    | `{% capture %}`      | Variable tags create new Liquid variables.    |
 
-Given that the Liquid Language can be extended.
+</p>
+</details>
 
-the specs use tag type categorization. Tag types are used by the server when parsing the document correct categorization is imperative.
+<details>
+<summary>
+  <strong>`properties`</strong>
+</summary>
+<p>
 
-| Type        | Scope      | Capture            |
-| ----------- | ---------- | ------------------ |
-| `comment`   | `comment`  | `{% comment %}`    |
-| `control`   | `keyword`  | `{% if }`          |
-| `embedded`  | `meta`     | `{% style %}`      |
-| `filter`    | `support`  | `{{ | filter }}`   |
-| `import`    | `meta`     | `{% include %}`    |
-| `iteration` | `keyword`  | `{% for %}`        |
-| `object`    | `storage`  | `{{ object.key }}` |
-| `output`    | `meta`     | `{% form %}`       |
-| `raw`       | `raw`      | `{% raw %}`        |
-| `variable`  | `variable` | `{% capture %}`    |
+| Name          | Kind     | Default | Description                                        |
+| ------------- | -------- | ------- | -------------------------------------------------- |
+| `name`        | String   | `null`  | The property name                                  |
+| `description` | String   | `null`  | Short description which describes the tag property |
+| `type`        | String   | `null`  | Contents of the tag contains another language      |
+| `properties`  | Object[] | `null`  | Attribute-like appendments to singular tags        |
 
-# Contributing
+</p>
+</details>
 
-You can contribute Liquid specifications by adding its variation in the [specs/variations](#) directory. The spec must use a snake_case naming convention and adhere to the variation [contribution schema](#).
+<details>
+<summary>
+  <strong>`params`</strong>
+</summary>
+<p>
+
+| Name          | Kind   | Default | Description                                     |
+| ------------- | ------ | ------- | ----------------------------------------------- |
+| `name`        | String | `null`  | The property name                               |
+| `description` | String | `null`  | Short description which describes the parameter |
+| `snippet`     | String | `null`  | The snippet value applied after colon           |
+
+</p>
+</details>
+
+<details>
+<summary>
+  <strong>`attributes`</strong>
+</summary>
+<p>
+
+| Name          | Kind     | Default | Description                                     |
+| ------------- | -------- | ------- | ----------------------------------------------- |
+| `name`        | `string` | `null`  | The property name                               |
+| `description` | `string` | `null`  | Short description which describes the attribute |
+
+</p>
+</details>
