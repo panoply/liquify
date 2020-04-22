@@ -16,7 +16,53 @@ By default, all new projects will use the **Standard** variation of Liquid. The 
 
 # Schema
 
-Liquid variation specifications are written according to a [Schema Store](#) JSON specification. Options are made available according to the defined Liquid tag [type](#).
+Liquid variation specifications are written according to a [Schema Store](#) JSON specification. Options are made available according to the defined Liquid tag [type](#). The below example is a spec sample which specifies 3 tags, you can also take a peak in the [variations](#) directory for oversight on how default variations are specified.
+
+```javascript
+{
+  // Object tag: `{{- tag_name.property.another_property | filter -}}`
+  "tag_object": {
+    "type": "object",
+    "description": "Object name description",
+    "filters": true, // tag accepts filters
+    "whitespace": true, // tag accepts whitespace dash
+    "engine": "Standard", // This tag should extend upon the standard liquid variation
+    "reference": "https://liquify.dev/example-specification/tag_object",
+    "properties": [ // Object has properties
+      {
+        "name": "property",
+        "description": "Description of first property",
+        "type": "object", // Use type `object` when defining another property
+        "properties": [ // Another property (you can nest as many as you like)
+          {
+            "name": "another_property",
+            "description": "Description of second property",
+          }
+        ]
+      }
+    ]
+  }
+  // Import Tag: `{% tag_import = 'path/file' param: 'foo'  %}`
+  "tag_import": {
+    "type": "import",
+    "description": "Description of import tag", // The tag description
+    "filters": false // Tag does not accept filters
+    "params": [
+      {
+        "name": "param",
+        "description": "Parameter description to use"
+      }
+    ]
+  },
+  // Filter (replace) tag: `{{ tag | replace: 'foo', 'bar'  }}`
+  "filter_replace": {
+    "type": "filter",
+    "description": "Description for tag filter",
+    "snippet": "replace: $1, $2", // the snippet for the filter
+    "engine": "Shopify", // The Shopify Liquid variation
+  }
+}
+```
 
 | Property      | Kind       | Default | Description                                                 |
 | ------------- | ---------- | ------- | ----------------------------------------------------------- |
