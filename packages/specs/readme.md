@@ -18,6 +18,8 @@ By default, all new projects will use the **Standard** variation of Liquid. The 
 
 Liquid variation specifications are written according to a [Schema Store](#) JSON specification. Options are made available according to the defined Liquid tag [type](#). The below example is a spec sample which specifies 3 tags, you can also take a peak in the [variations](#) directory for oversight on how default variations are specified.
 
+### Example
+
 ```javascript
 {
   // Object tag: `{{- tag_name.property.another_property | filter -}}`
@@ -63,6 +65,8 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
   }
 }
 ```
+
+### Options
 
 | Property      | Kind       | Default | Description                                                 |
 | ------------- | ---------- | ------- | ----------------------------------------------------------- |
