@@ -18,9 +18,28 @@ By default, all new projects will use the **Standard** variation of Liquid. The 
 
 Liquid variation specifications are written according to a [Schema Store](#) JSON specification. Options are made available according to the defined Liquid tag [type](#). The below example is a spec sample which specifies 3 tags, you can also take a peak in the [variations](#) directory for oversight on how default variations are specified.
 
+### Available Options
+
+| Property      | Kind       | Default | Description                                                 |
+| ------------- | ---------- | ------- | ----------------------------------------------------------- |
+| `type`        | `string`   | `null`  | The tag type, see [type](#) for avaliable types             |
+| `filters`     | `boolean`  | `false` | Does this tag accept filter, eg: `\|` filters               |
+| `whitespace`  | `boolean`  | `true`  | Does this tag accept whitespace `-` dashes                  |
+| `description` | `string`   | `null`  | Short description which describes the tag                   |
+| `properties`  | `object[]` | `null`  | List of object properties the tag uses, see [properties](#) |
+| `engine`      | `string`   | `null`  | The variation specification (engine) reference              |
+| `reference`   | `string`   | `null`  | The tag URL link, typically documentation reference         |
+| `snippet`     | `string`   | `null`  | The snippet completion tag should use                       |
+| `singular`    | `boolean`  | `false` | The tag is a non-void, does not required `{% end %}`        |
+| `params`      | `object[]` | `null`  | List of parameters the tag uses, see [parameters](#)        |
+| `operators`   | `string[]` | `null`  | Tag operators, typically used on control type               |
+| `deprecated`  | `boolean`  | `false` | Used when the tag is deprecated                             |
+| `language`    | `string`   | `null`  | The language of tag inner contents, see [embedded](#)       |
+| `attributes`  | `object[]` | `null`  | The attributes the tag accepts, see [attributes](#)         |
+
 <details>
 <summary>
-  <h3>Example</h3>
+  <strong>Example</strong>
 </summary>
 <p>
 
@@ -73,24 +92,7 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 </p>
 </details>
 
-### Available Options
-
-| Property      | Kind       | Default | Description                                                 |
-| ------------- | ---------- | ------- | ----------------------------------------------------------- |
-| `type`        | `string`   | `null`  | The tag type, see [type](#) for avaliable types             |
-| `filters`     | `boolean`  | `false` | Does this tag accept filter, eg: `\|` filters               |
-| `whitespace`  | `boolean`  | `true`  | Does this tag accept whitespace `-` dashes                  |
-| `description` | `string`   | `null`  | Short description which describes the tag                   |
-| `properties`  | `object[]` | `null`  | List of object properties the tag uses, see [properties](#) |
-| `engine`      | `string`   | `null`  | The variation specification (engine) reference              |
-| `reference`   | `string`   | `null`  | The tag URL link, typically documentation reference         |
-| `snippet`     | `string`   | `null`  | The snippet completion tag should use                       |
-| `singular`    | `boolean`  | `false` | The tag is a non-void, does not required `{% end %}`        |
-| `params`      | `object[]` | `null`  | List of parameters the tag uses, see [parameters](#)        |
-| `operators`   | `string[]` | `null`  | Tag operators, typically used on control type               |
-| `deprecated`  | `boolean`  | `false` | Used when the tag is deprecated                             |
-| `language`    | `string`   | `null`  | The language of tag inner contents, see [embedded](#)       |
-| `attributes`  | `object[]` | `null`  | The attributes the tag accepts, see [attributes](#)         |
+<hr>
 
 <details>
 <summary>
@@ -158,3 +160,13 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 
 </p>
 </details>
+
+# Contributing
+
+Specifications are proprietary closed additions to Liquify. Specifications have relations to [Liquid Language Grammars](#) and the [Liquid Language Server](#).
+
+### Commands
+
+| Command          | Description                                           |
+| ---------------- | ----------------------------------------------------- |
+| `pnpm run specs` | Launches debugger and bundler for the language client |
