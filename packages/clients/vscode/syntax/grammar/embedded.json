@@ -5,9 +5,6 @@
   "scopeName": "source.liquid.embedded",
   "patterns": [
     {
-      "include": "#frontmatter"
-    },
-    {
       "include": "#schema"
     },
     {
@@ -24,27 +21,6 @@
     }
   ],
   "repository": {
-    "frontmatter": {
-      "name": "meta.embedded.block.liquid",
-      "contentName": "meta.embedded.block.frontmatter.liquid",
-      "begin": "^-{3}",
-      "beginCaptures": {
-        "0": {
-          "name": "punctuation.definition.tag.begin.liquid"
-        }
-      },
-      "end": "-{3}$",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.definition.tag.end.liquid"
-        }
-      },
-      "patterns": [
-        {
-          "include": "source.yaml"
-        }
-      ]
-    },
     "schema": {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.schema.liquid",

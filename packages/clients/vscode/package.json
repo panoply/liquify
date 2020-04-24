@@ -38,7 +38,7 @@
     "dev": "rollup -c -w",
     "prod": "rollup -c --environment prod"
   },
-  "main": "./export/vscode/client.cjs.js",
+  "main": "./../../../export/liquify-vscode/",
   "activationEvents": [
     "onLanguage:liquid",
     "workspaceContains:**/.liquidrc",
@@ -104,8 +104,17 @@
           "Liquid"
         ],
         "extensions": [
-          ".liquid",
-          ".jekyll"
+          ".liquid"
+        ]
+      },
+      {
+        "id": "liquidshopify",
+        "configuration": "./language-configuration.json",
+        "aliases": [
+          "Liquid Shopify"
+        ],
+        "extensions": [
+          ".liquid"
         ]
       },
       {
@@ -136,66 +145,16 @@
       {
         "id": "jsonc",
         "filenames": [
-          ".liquidrc"
+          ".liquidrc",
+          ".liquidrc.json"
         ]
-      }
-    ],
-    "snippets": [
-      {
-        "language": "liquid",
-        "path": "./snippets/snippets.json"
       }
     ],
     "grammars": [
       {
         "language": "liquid",
         "scopeName": "source.liquid",
-        "path": "./grammar/liquid.tmLanguage.json"
-      },
-      {
-        "scopeName": "markdown.liquid.codeblock",
-        "path": "./grammar/liquid.markdown.json",
-        "injectTo": [
-          "text.html.markdown"
-        ],
-        "embeddedLanguages": {
-          "meta.embedded.block.liquid": "liquid"
-        }
-      },
-      {
-        "scopeName": "source.liquid.comments",
-        "path": "./grammar/liquid.comments.json",
-        "injectTo": [
-          "source.liquid"
-        ],
-        "embeddedLanguages": {
-          "source.json": "json"
-        }
-      },
-      {
-        "scopeName": "source.liquid.embedded",
-        "path": "./grammar/liquid.embedded.json",
-        "injectTo": [
-          "source.liquid"
-        ],
-        "embeddedLanguages": {
-          "meta.embedded.block.javascript.liquid": "javascript",
-          "meta.embedded.block.schema.liquid": "json",
-          "meta.embedded.block.stylesheet.liquid": "css",
-          "meta.embedded.block.style.liquid": "css",
-          "meta.embedded.block.stylesheet.scss.liquid": "scss",
-          "meta.embedded.block.frontmatter.liquid": "yaml"
-        }
-      },
-      {
-        "scopeName": "source.liquid.injection",
-        "path": "./grammar/liquid.injection.json",
-        "injectTo": [
-          "source.js",
-          "source.json",
-          "source.css",
-          "source.css.scss"
-        ]
+        "path": "./syntax/liquid.tmLanguage.json"
       }
     ],
     "configuration": {

@@ -2,19 +2,17 @@
 
 This directory contains the default supported Liquid variation specifications which are used by the parser to construct a workable AST and provide code completions, formatting, hovers and diagnostic validation features for the [Liquid Language Server](#).
 
-> The specifications are the foundation of the servers functionality, without them the parser will fail.
-
 ### What are variation specifications?
 
-In the context of the Liquid Language Server, variation specifications are just data references that describe tags and filters used in Liquid. A templating language like Liquid exists in a multitude of variations that extend upon its default [Standard Variation](#). Templating engines interpolate variables and process dynamic content, they're these safe user facing languages that do not adhere to any type of specification and traditionally have never really required such a thing, until now.
+In the context of the [Liquid Language Server](#), variation specifications are just data references that describe Liquids syntax like tags and filters. A templating language like Liquid exists in a multitude of variations that extend upon its default [Standard Variation](#). Templating engines interpolate variables and process dynamic content, they're these safe user facing languages that do not adhere to any type of specification and traditionally have never really required such a thing, until now.
 
 ### Supported Variations
 
 By default, all new projects will use the **Standard** variation of Liquid. The Liquid Language Server supports the following Liquid variations out of the box:
 
-- [Standard](#)
-- [Shopify](#)
-- [Jekyll](#)
+- [Liquid Standard](#)
+- [Liquid Shopify](#)
+- [Liquid Jekyll](#)
 
 # Schema
 
@@ -75,7 +73,11 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 </p>
 </details>
 
-### Available Options
+<details>
+<summary>
+  <strong>View Example</strong>
+</summary>
+<p>
 
 | Property      | Kind       | Default | Description                                                 |
 | ------------- | ---------- | ------- | ----------------------------------------------------------- |
@@ -94,9 +96,12 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 | `language`    | `string`   | `null`  | The language of tag inner contents, see [embedded](#)       |
 | `attributes`  | `object[]` | `null`  | The attributes the tag accepts, see [attributes](#)         |
 
+</p>
+</details>
+
 <details>
 <summary>
-  <strong>type</strong>
+  <strong>Type</strong>
 </summary>
 <p>
 
@@ -118,7 +123,7 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 
 <details>
 <summary>
-  <strong>properties</strong>
+  <strong>Properties</strong>
 </summary>
 <p>
 
@@ -134,7 +139,7 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 
 <details>
 <summary>
-  <strong>params</strong>
+  <strong>Parameters</strong>
 </summary>
 <p>
 
@@ -142,14 +147,14 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 | ------------- | -------- | ------- | ----------------------------------------------- |
 | `name`        | `string` | `null`  | The property name                               |
 | `description` | `string` | `null`  | Short description which describes the parameter |
-| `snippet`     | `string` | `null`  | The snippet value applied after colon           |
+| `snippet`     | `string` | `null`  | The snippet value applied after pipe `\|`       |
 
 </p>
 </details>
 
 <details>
 <summary>
-  <strong>attributes</strong>
+  <strong>Attributes</strong>
 </summary>
 <p>
 

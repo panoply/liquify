@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "scopeName": "source.js.liquid",
+  "fileTypes": [".js.liquid"],
+  "injectionSelector": "L:source.css -comment -string -meta.embedded, L:source.js -string.quoted.*.js -comment -string -meta.embedded, L:source.jsx -comment -string -string.quoted.*.jsx, L:source.js.jsx -comment -string, L:source.ts -string -comment -string.quoted.*.ts",
+  "patterns": [
+    {
+      "include": "source.liquid#comments"
+    },
+    {
+      "include": "source.liquid#template-tags"
+    },
+    {
+      "include": "source.liquid#template-vars"
+    },
+    {
+      "include": "source.liquid.embedded#frontmatter"
+    }
+  ]
+}

@@ -7,12 +7,12 @@
       "name": "Client",
       "runtimeExecutable": "${execPath}",
       "outFiles": [
-        "${workspaceRoot}/extension/client.cjs.js",
-        "${workspaceRoot}/extension/client.cjs.js.map"
+        "${workspaceRoot}/export/liquify-vscode/index.js",
+        "${workspaceRoot}/export/liquify-vscode/index.js.map"
       ],
       "args": [
         "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceRoot}",
+        "--extensionDevelopmentPath=${workspaceRoot}/packages/clients/vscode/",
         "${workspaceRoot}/tests"
       ]
     },
@@ -32,10 +32,7 @@
   "compounds": [
     {
       "name": "Client + Server",
-      "configurations": [
-        "Client",
-        "Server"
-      ]
+      "configurations": ["Client", "Server"]
     }
   ]
 }

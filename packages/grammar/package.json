@@ -1,0 +1,13 @@
+{
+  "name": "liquid-language-grammars",
+  "version": "0.1.0",
+  "description": "Liquid language variation specification references",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {}
+}

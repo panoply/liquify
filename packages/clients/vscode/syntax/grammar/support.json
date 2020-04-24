@@ -1,0 +1,35 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Liquid",
+  "injectionSelector": "L:source.liquid",
+  "scopeName": "source.liquid.support",
+  "patterns": [
+    {
+      "include": "#support-class"
+    },
+    {
+      "include": "#support-function"
+    },
+    {
+      "include": "#support-variable"
+    }
+  ],
+  "repository": {
+    "support-class": {
+      "name": "support.class.liquid",
+      "match": "\\b(all_products|article|assets|block|blog|blogs|body_raw|canonical_url|cart|checkout|collection|collections|comment|current|customer|customer_address|date|discount|excerpt_raw|forloop|form|fulfillment|image|item|items|javascript|jekyll|line_item|link|linklist|linklists|meta|next|order|page|page_title|pages|paginate|parent|posts|previous|product|products|request|scripts|search|settings|shipping_method|schema|shop|site|style|stylesheet|tablerow|tags|tax_line|taxonomy|template|theme|themes|transaction|url|variant)\\b"
+    },
+    "support-function": {
+      "name": "support.function.liquid",
+      "match": "\\b(break|content_for_header|content_for_index|content_for_layout|continue|cycle|assign|increment|decrement|include|form|layout|highlight|highlight_active|json|join|sort|ceil|divided_by|floor|minus|plus|round|times|modulo|money|money_with_currency|money_without_trailing_zeros|money_without_currency|append|camelcase|capitalize|downcase|escape|handleize|md5|newline_to_br|pluralize|prepend|remove|remove_first|replace|replace_first|slice|split|strip|lstrip|rstrip|strip_html|strip_newlines|truncate|truncatewords|uniq|upcase|url_escape|url_param_escape)\\b"
+    },
+    "support-variable": {
+      "name": "support.variable.liquid",
+      "match": "\\b(date|weight_with_unit|index|size|asset_img_url|asset_url|file_img_url|file_url|img_url|product_img_url|url_for_type|url_for_vendor|link_to|link_to_vendor|link_to_type|link_to_tag|link_to_add_tag|link_to_remove_tag)\\b"
+    },
+    "support-constant": {
+      "name": "support.constant.liquid",
+      "match": "\\b(default|default_errors|default_pagination|first|last|script_tag|stylesheet_tag|img_tag|customer_login_link|global_asset_url|payment_type_img_url|shopify_asset_url)\\b"
+    }
+  }
+}
