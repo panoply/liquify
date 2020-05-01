@@ -1,4 +1,5 @@
 {
+  "editor.semanticHighlighting.enabled": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
@@ -13,7 +14,7 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {
-    "**/node_modules": true,
+    "**/node_modules": false,
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,

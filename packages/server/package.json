@@ -4,11 +4,17 @@
   "description": "Language Server for Liquid Templating Language",
   "main": "index.js",
   "scripts": {
+    "tl": "node provide/license.js",
+    "pd": "prettydiff",
+    "dev": "rollup -c -w",
+    "prod": "rollup -c --environment prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "netlicensing-client": "^1.2.21",
+    "node-fetch": "^2.6.0",
     "prettydiff": "^101.2.6",
     "vscode-css-languageservice": "^4.1.1",
     "vscode-emmet-helper": "^1.2.17",

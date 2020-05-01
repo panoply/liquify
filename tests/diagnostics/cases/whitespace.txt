@@ -1,0 +1,10 @@
+<!-- DOES NOT ACCEPT -->
+{%- schema %}
+{
+  "test": "name"
+}
+{% endschema %}
+
+{{ content_for_header -}}
+
+{{- content_for_index -}}

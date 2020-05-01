@@ -25,9 +25,10 @@ export default function (options) {
 
       const spec = { spec: {}, parse: {}, validate: {} }
       const name = path.basename(id, '.json')
+      const json = JSON.parse(strip(variation))
 
       // Assign the specification value
-      _.assign(spec.spec, standard, name !== 'standard' ? JSON.parse(strip(variation)) : null)
+      _.assign(spec.spec, standard, name !== 'standard' ? json : null)
 
       // Assign the parser value
       _.assign(spec.parse, {

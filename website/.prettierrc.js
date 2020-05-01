@@ -1,7 +1,7 @@
 module.exports = {
   overrides: [
     {
-      files: ['*.jjn', '*.jsonc', '.liquidrc'],
+      files: ['*.jsonc', '.liquidrc'],
       options: {
         parser: 'json',
         arrowParens: 'avoid',
@@ -10,7 +10,7 @@ module.exports = {
         insertPragma: false,
         jsxBracketSameLine: false,
         jsxSingleQuote: false,
-        printWidth: 40,
+        printWidth: 75,
         proseWrap: 'preserve',
         quoteProps: 'as-needed',
         requirePragma: false,

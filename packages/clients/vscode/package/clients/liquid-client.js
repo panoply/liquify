@@ -2,7 +2,7 @@ import {
   workspace, commands, Uri
 } from 'vscode'
 import { TransportKind, LanguageClient, RequestType } from 'vscode-languageclient'
-import { addspacer } from './../providers/tag-format'
+import { addspacer } from '../providers/tag-format'
 import HTMLClient from './html-client'
 import path from 'path'
 import fs from 'fs'
@@ -56,7 +56,9 @@ function getLiquidrcFile () {
  * @param {options}
  * @param {object} context
  */
-export default ({ subscriptions }) => {
+export default (context) => {
+
+  const { subscriptions } = context
 
   commands.registerCommand('liquid.releaseNotes', () => {
     const uri = Uri.file(path.join(__dirname, './../release', 'v2.4.0.md'))

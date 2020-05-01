@@ -7,11 +7,11 @@
       "name": "Client",
       "runtimeExecutable": "${execPath}",
       "outFiles": [
-        "${workspaceRoot}/export/liquify-vscode/index.js",
-        "${workspaceRoot}/export/liquify-vscode/index.js.map"
+        "${workspaceRoot}/packages/clients/vscode/index.js",
+        "${workspaceRoot}/packages/clients/vscode/index.js.map"
       ],
       "args": [
-        "--disable-extensions",
+        //"--disable-extensions",
         "--extensionDevelopmentPath=${workspaceRoot}/packages/clients/vscode/",
         "${workspaceRoot}/tests"
       ]
@@ -24,8 +24,8 @@
       "protocol": "inspector",
       "restart": true,
       "outFiles": [
-        "${workspaceRoot}/extension/server.cjs.js",
-        "${workspaceRoot}/extension/server.cjs.js.map"
+        "${workspaceRoot}/export/vscode/server/index.js",
+        "${workspaceRoot}/export/vscode/server/index.js.map"
       ]
     }
   ],

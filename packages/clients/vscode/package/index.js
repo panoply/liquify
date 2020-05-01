@@ -9,13 +9,18 @@ import LiquidClient from './clients/liquid-client'
 
 let client
 
-exports.activate = context => (client = LiquidClient(context))
+exports.activate = context => {
+
+  console.log(context.globalStoragePath)
+  client = LiquidClient(context)
+
+}
 
 exports.deactivate = () => {
 
   for (const [ index, server ] of Object.entries(client)) {
     if (index !== 'documentSelector') {
-      if (!client.length > 0) {
+      if (client.length > 0) {
         return undefined
       } else {
         return server.stop()

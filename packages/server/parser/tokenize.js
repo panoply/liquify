@@ -26,10 +26,7 @@ export default (textDocument, ast) => ({
    * @param {*} tokenSpec
    * @returns
    */
-  singularToken: (
-    tokenNode
-    , tokenSpec
-  ) => ast[ast.push(
+  singularToken: (tokenNode, tokenSpec) => ast[ast.push(
     {
       ...tokenNode,
       tag: TokenTag.singular,
@@ -45,14 +42,7 @@ export default (textDocument, ast) => ({
    * @param {*} tokenSpec
    * @returns
    */
-
-
-
-  startToken: (
-    tokenNode
-    , tokenSpec
-    , type = TokenType[tokenSpec.type]
-  ) => ast[ast.push(
+  startToken: (tokenNode, tokenSpec, type = TokenType[tokenSpec.type]) => ast[ast.push(
     (type === TokenType.control || type === TokenType.iteration) ? ({
       ...tokenNode,
       type,
@@ -65,8 +55,6 @@ export default (textDocument, ast) => ({
       languageId: tokenSpec.language
     })
   )],
-
-
 
   /**
    * Close Token

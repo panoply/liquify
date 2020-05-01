@@ -1,16 +1,22 @@
 import { terser } from 'rollup-plugin-terser'
-import json from '@rollup/plugin-json'
 import babel from 'rollup-plugin-babel'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
 
+/**
+ * @typedef {import('rollup').RollupOptions}
+ */
 export default {
-  input: 'packages/clients/vscode/package/index.js',
+  input: 'extension/index.js',
   output: {
-    file: 'export/liquify-vscode/index.js',
+    file: 'package/liquify-vscode.js',
     format: 'cjs',
     sourcemap: true,
     external: [
       'vscode',
       'vscode-languageclient'
+    ],
+    plugins: [
     ]
   },
   plugins: process.env.prod ? [

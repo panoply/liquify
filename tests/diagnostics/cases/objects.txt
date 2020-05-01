@@ -1,0 +1,72 @@
+<!-- INCORRECT -->
+{{ article.imag.src }}
+{{ block.item_type | slugify }}
+
+<!-- MULTIPLE OBJECTS IN TAG -->
+{{- product.name | filter: product.titl }}
+
+<!-- NESTED TAG -->
+{% include {{ block.item_type }} %}
+
+<!-- WITHIN ITERATION -->
+{%- if tag == 'foo' -%}
+  {%- for tag in collections.foo.bar -%}
+    {%- if tag contains garment -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+<!-- WITHIN CONTROL -->
+{% if product.titl !== product.name %}
+
+{% endif %}
+
+<!---------------------------------->
+
+<!-- MISSING PROPERTY -->
+{{ product. }}
+
+<!-- UNKNOWN PROPERTY -->
+{{ product.price }}
+
+<!-- IS NOT OBJECT  -->
+{{ current_page.dd }}
+
+<!---------------------------------->
+
+<!-- INCORRECT -->
+{{ article.imag.src }}
+{{ block.item_type | slugify }}
+
+<!-- MULTIPLE OBJECTS IN TAG -->
+{{- product.name | filter: product.titl }}
+
+<!-- NESTED TAG -->
+{% include {{ block.item_type }} %}
+
+<!-- WITHIN ITERATION -->
+{%- if tag == 'foo' -%}
+  {%- for tag in collections.foo.bar -%}
+    {%- if tag contains garment -%}{%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+<!-- WITHIN CONTROL -->
+{% if product.titl !== product.name %}{% endif %}
+
+<!---------------------------------->
+
+<!-- MISSING PROPERTY -->
+{{ product. }}
+
+<!-- UNKNOWN PROPERTY -->
+{{ product.price }}
+
+<!-- IS NOT OBJECT  -->
+{{ current_page.dd }}
+
+<!---------------------------------->
+
+<!-- NO STRING CONFLICT -->
+{{ product.price | append: "testing.d " }}
+{{ product.price | append: "{{ block.item_type }}" }}

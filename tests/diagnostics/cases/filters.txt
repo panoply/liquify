@@ -1,0 +1,17 @@
+<!-- DOES NOT ACCEPT -->
+{% schema | %}
+
+{% endschema %}
+
+<!-- EMPTY FILTER -->
+{{ product | s }}
+{{ product | -}}
+{{ product | -}}
+{{ product ||  -}}
+
+<!-- NESTED TAG -->
+{% assign test = {{ example |  }} %}
+
+<!-- NO STRING CONFLICT -->
+{{ product | attr | in_string: "| " -}}
+{{ product | attr | in_string: "| " -}}

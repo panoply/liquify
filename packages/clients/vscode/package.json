@@ -6,7 +6,8 @@
   "publisher": "sissel",
   "icon": "assets/logo.png",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
-  "license": "CC-BY-NC-ND-4.0",
+  "preview": false,
+  "license": "SEE LICENSE IN LICENSE",
   "keywords": [
     "liquid",
     "shopify",
@@ -38,7 +39,7 @@
     "dev": "rollup -c -w",
     "prod": "rollup -c --environment prod"
   },
-  "main": "./../../../export/liquify-vscode/",
+  "main": "./index.js",
   "activationEvents": [
     "onLanguage:liquid",
     "workspaceContains:**/.liquidrc",
@@ -108,16 +109,6 @@
         ]
       },
       {
-        "id": "liquidshopify",
-        "configuration": "./language-configuration.json",
-        "aliases": [
-          "Liquid Shopify"
-        ],
-        "extensions": [
-          ".liquid"
-        ]
-      },
-      {
         "id": "javascript",
         "extensions": [
           ".js.liquid"
@@ -155,6 +146,61 @@
         "language": "liquid",
         "scopeName": "source.liquid",
         "path": "./syntax/liquid.tmLanguage.json"
+      },
+      {
+        "scopeName": "markdown.liquid.codeblock",
+        "path": "./grammar/markdown.json",
+        "injectTo": [
+          "text.html.markdown"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.liquid": "liquid"
+        }
+      },
+      {
+        "scopeName": "source.liquid.comments",
+        "path": "./syntax/grammar/comments.json",
+        "injectTo": [
+          "source.liquid"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.json.liquid": "json"
+        }
+      },
+      {
+        "scopeName": "source.liquid.frontmatter",
+        "path": "./syntax/grammar/frontmatter.json",
+        "injectTo": [
+          "source.liquid"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.frontmatter.liquid": "yaml"
+        }
+      },
+      {
+        "scopeName": "source.liquid.embedded",
+        "path": "./syntax/grammar/embedded.json",
+        "injectTo": [
+          "source.liquid"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.javascript.liquid": "javascript",
+          "meta.embedded.block.schema.liquid": "json",
+          "meta.embedded.block.stylesheet.liquid": "css",
+          "meta.embedded.block.style.liquid": "css",
+          "meta.embedded.block.stylesheet.scss.liquid": "scss",
+          "meta.embedded.block.frontmatter.liquid": "yaml"
+        }
+      },
+      {
+        "scopeName": "source.liquid.injection",
+        "path": "./syntax/grammar/injection.json",
+        "injectTo": [
+          "source.js",
+          "source.json",
+          "source.css",
+          "source.css.scss"
+        ]
       }
     ],
     "configuration": {

@@ -1,0 +1,184 @@
+<html>
+  <head>
+    {% comment %}
+      apostrophe's
+    {% endcomment %}
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="mobile-web-app-capable">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="#317EFB" name="theme-color">
+    {% comment %}
+      apostrophe's
+    {% endcomment %}
+
+
+    {% comment %}
+      apostrophe's
+    {% endcomment %}
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="mobile-web-app-capable">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="#317EFB" name="theme-color">
+    {% comment %}
+      apostrophe's
+    {% endcomment %}
+
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="mobile-web-app-capable">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="#317EFB" name="theme-color">
+    {% comment %}
+      apostrophe's
+    {% endcomment %}
+
+    <!-- DOES NOT ACCEPT -->
+    {%- schema %}
+    {
+      "test": "name"
+    }
+    {% endschema %}
+
+
+    {{ content_for_header -}}
+    {{- content_for_index -}}
+
+    <!-- DOES NOT ACCEPT -->
+    {% schema | %}
+
+    {% endschema %}
+
+
+    <!-- EMPTY FILTER -->
+    {{ product | s }}
+    {{ product | -}}
+    {{ product | -}}
+    {{ product ||  -}}
+
+    <!-- NESTED TAG -->
+    {% assign test = {{ example |  }} %}
+
+    <!-- NO STRING CONFLICT -->
+    {{ product | attr | in_string: "| " -}}
+    {{ product | attr | in_string: "| " -}}
+
+    {% schema %}
+    {
+      "name": "test",
+      "settings": [
+        {
+          "default": "hello world"
+        }
+      ]
+    }
+    {% endschema %}
+
+    {% style  %}
+    .class {
+      background-color: #000;
+    }
+    {% endstyle %}
+
+
+    {% stylesheet 'scss' %}
+    .class {
+      background-color: #000;
+      .test {
+        color: #000;
+      }
+    }
+    {% endstylesheet %}
+
+    {% schema %}
+    {
+      "name": "",
+      "settings": [
+        {
+          "type": "html",
+          "content": "ssss",
+          "default": "hello world"
+        }
+      ]
+    }
+    {% endschema %}
+
+  </head>
+  <body></body>
+</html>
+
+<!-- DOES NOT ACCEPT -->
+{%- schema %}
+{
+  "test": "name"
+}
+{% endschema %}
+
+{{ content_for_header -}}
+{{- content_for_index -}}
+
+<!-- DOES NOT ACCEPT -->
+
+{% schema | %}
+
+{% endschema %}
+
+
+<!-- EMPTY FILTER -->
+{{ product | s }}
+{{ product | -}}
+{{ product | -}}
+{{ product ||  -}}
+
+<!-- NESTED TAG -->
+{%
+    assign test = {{ example |  }}
+  %}
+
+<!-- NO STRING CONFLICT -->
+{{ product | attr | in_string: "| " -}}
+{{ product | attr | in_string: "| hello worldhello worldhello worldhello worldhello worldhello worldhello world" -}}
+
+{% schema %}
+{
+  "name": "test",
+  "settings": [
+    {
+      "default": "hello world"
+    }
+  ]
+}
+{% endschema %}
+
+{% style  %}
+.class {
+  background-color: #000;
+}
+{% endstyle %}
+
+
+{% stylesheet 'scss' %}
+.class {
+  background-color: #000;
+  .test {
+    color: #000;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "",
+  "settings": [
+    {
+      "type": "html",
+      "content": "ssss",
+      "default": "hello world"
+    }
+  ]
+}
+{% endschema %}
