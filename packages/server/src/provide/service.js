@@ -27,9 +27,9 @@ import * as Hover from '../service/hovers'
  * @typedef {import('vscode-languageserver').CompletionItem} CompletionItem
  * @typedef {import('vscode-languageserver').CompletionContext} CompletionContext
  * @typedef {import('vscode-languageserver').TextDocumentContentChangeEvent} ChangeEvent
- * @typedef {import('defs').DocumentModel} DocumentModel
- * @typedef {import('defs').FormattingRules} FormattingRules
- * @typedef {import('defs').ValidationPromises} ValidationPromises
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').DocumentModel} DocumentModel
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').FormattingRules} FormattingRules
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ValidationPromises} ValidationPromises
  */
 export class LiquidService {
 
@@ -53,7 +53,7 @@ export class LiquidService {
    * Executed on Server intialization and will configure the
    * language service options to be used by its instance.
    *
-   * @param {import('defs').Services} support
+   * @param {import('../../../release/vscode-liquify/server/node_modules/defs').Services} support
    * @memberof LiquidService
    */
   configure (support) {

@@ -11,7 +11,7 @@ import { Server } from '../export'
  * the variation specification.
  *
  * @typedef {import("vscode-languageserver").TextDocument} TextDocument
- * @typedef {import('defs').ASTEmbeddedRegion} ASTEmbeddedRegion
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ASTEmbeddedRegion} ASTEmbeddedRegion
  * @typedef {import('vscode-languageserver').TextEdit} TextEdit
  */
 
@@ -26,7 +26,7 @@ import { Server } from '../export'
  * Extracts necessary values from the passed in specification record.
  *
  * @export
- * @param {import('defs').Specification} specification
+ * @param {import('../../../release/vscode-liquify/server/node_modules/defs').Specification} specification
  */
 export function setCompletionItems (specification) {
 
@@ -53,7 +53,7 @@ export function setCompletionItems (specification) {
  * offset index numbers and property value ear either string of array types.
  *
  * @export
- * @param {import('defs').AST} ASTnode
+ * @param {import('../../../release/vscode-liquify/server/node_modules/defs').AST} ASTnode
  * @param {number} offset
  * @returns {array|false}
  */

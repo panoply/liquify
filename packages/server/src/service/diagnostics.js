@@ -11,10 +11,10 @@ import * as validators from './validate/index'
  * to the returning `diagnostics[]` object property of the `Parser()`.
  *
  * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
- * @typedef {import('defs').AST} AST[]
- * @typedef {import('defs').AST} ASTnode
- * @typedef {import('defs').ASTEmbeddedRegion} ASTEmbeddedRegion
- * @typedef {import('defs').ValidationRunnerParams} ValidationRunnerParams
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').AST} AST[]
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').AST} ASTnode
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ASTEmbeddedRegion} ASTEmbeddedRegion
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ValidationRunnerParams} ValidationRunnerParams
  * @typedef {import('vscode-languageserver').TextEdit} TextEdit
  */
 

@@ -14,7 +14,7 @@ const regexp = /<\/?\b(script|style)\b[^<>]*>|{%[\s\S]*?\b(?:end)?(\w+)\b[\s\S]?
  * offset starting position of that token, this allows for a more incremental parse
  * opposed the full document.
  *
- * @param {import('defs').DocumentModel} params
+ * @param {import('../../../release/vscode-liquify/server/node_modules/defs').DocumentModel} params
  * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} changes[]
  * @param {object} options
  * @returns

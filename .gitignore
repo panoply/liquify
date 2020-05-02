@@ -4,3 +4,4 @@ pnpm-debug.log
 node_modules/
 export/
 tests/
+release/

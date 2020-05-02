@@ -6,8 +6,8 @@ import { Server } from '../../export'
  * Tag Whitespace
  *
  * @export
- * @typedef {import('../../provide/node_modules/defs').ValidationMeta} ValidationMeta
- * @typedef {import('../../provide/node_modules/defs').ValidationRuleParams} ValidationRuleParams
+ * @typedef {import('../../package/provide/node_modules/defs').ValidationMeta} ValidationMeta
+ * @typedef {import('../../package/provide/node_modules/defs').ValidationRuleParams} ValidationRuleParams
  */
 export default ({
 

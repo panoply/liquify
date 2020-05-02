@@ -16,12 +16,12 @@ import { Range } from 'vscode-languageserver'
  *
  * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
  * @typedef {import('vscode-languageserver').TextDocumentContentChangeEvent} changeEvent
- * @typedef {import('defs').AST} AST
- * @typedef {import('defs').IncrementalExecute} IncrementalExecute
- * @typedef {import('defs').IncrementalUpdate} IncrementalUpdate
- * @typedef {import('defs').DocumentModel} DocumentModel
- * @typedef {import('defs').ParsedDiagnostics} ParsedDiagnostics
- * @typedef {import('defs').Specification} Specification
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').AST} AST
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').IncrementalExecute} IncrementalExecute
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').IncrementalUpdate} IncrementalUpdate
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').DocumentModel} DocumentModel
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ParsedDiagnostics} ParsedDiagnostics
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').Specification} Specification
  */
 
 /* ---------------------------------------------------------------- */

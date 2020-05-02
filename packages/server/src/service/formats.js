@@ -22,7 +22,7 @@ import { TokenKind } from '../parser/lexical'
  * @see https://sparser.io/docs-html/tech-documentation.xhtml
  *
  * @typedef {import("vscode-languageserver").TextDocument} TextDocument
- * @typedef {import('defs').ASTEmbeddedRegion} ASTEmbeddedRegion
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ASTEmbeddedRegion} ASTEmbeddedRegion
  * @typedef {import('vscode-languageserver').TextEdit} TextEdit
  */
 

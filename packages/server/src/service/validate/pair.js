@@ -6,8 +6,8 @@ import { TokenTag, TokenType } from '../../parser/lexical'
  * Tag Pairs
  *
  * @export
- * @typedef {import('../../provide/node_modules/defs').ValidationMeta} ValidationMeta
- * @typedef {import('../../provide/node_modules/defs').ValidationRuleParams} ValidationRuleParams
+ * @typedef {import('../../package/provide/node_modules/defs').ValidationMeta} ValidationMeta
+ * @typedef {import('../../package/provide/node_modules/defs').ValidationRuleParams} ValidationRuleParams
  */
 
 export default ({
@@ -30,9 +30,7 @@ export default ({
     ],
     tags: [
       TokenTag.start,
-      TokenTag.close,
-      TokenTag.singular,
-      TokenTag.child
+      TokenTag.close
     ]
   },
 

@@ -16,9 +16,9 @@ import * as validations from '../service/validate/index'
  * @typedef {import('vscode-languageserver').ServerCapabilities} ServerCapabilities
  * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
  * @typedef {import('vscode-languageserver').TextEdit} TextEdit
- * @typedef {import('defs').ServerConfigureParams} ServerConfigureParams
- * @typedef {import('defs').FormattingRules} FormattingRules
- * @typedef {import('defs').ValidationPromises} ValidationPromises
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ServerConfigureParams} ServerConfigureParams
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').FormattingRules} FormattingRules
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ValidationPromises} ValidationPromises
  * @class LiquidServer
  * @extends {Config}
  */

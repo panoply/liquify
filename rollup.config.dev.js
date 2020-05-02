@@ -5,7 +5,6 @@ import babel from 'rollup-plugin-babel'
 import copy from 'rollup-plugin-copy'
 import { bundle, json } from './scripts/bundle'
 import specs from './scripts/rollup/plugin-specs'
-import schema from './scripts/rollup/plugin-schema'
 import generatePackageJson from 'rollup-plugin-generate-package-json'
 
 /**
@@ -37,22 +36,36 @@ export default bundle({
       },
       plugins: [
         babel({ runtimeHelpers: true }),
-        process.env.prod ? terser() : null,
         copy({
           targets: [
             {
-              src: 'packages/schema/stores/liquidrc.json',
+              src: 'packages/schema/liquidrc.json',
               dest: 'export/vscode/schema/',
               transform: json,
               verbose: true
             },
             {
-              src: [
-                'packages/schema/stores/*.json',
-                '!packages/schema/stores/shopify-sections.json'
-              ],
-              dest: 'export/vscode/schema/',
+              src: 'packages/clients/vscode/syntax/grammar/*.json',
+              dest: 'export/vscode/syntax/grammar/',
               transform: json,
+              verbose: true
+            },
+            {
+              src: 'packages/clients/vscode/syntax/*.json',
+              dest: 'export/vscode/syntax/',
+              transform: json,
+              verbose: true
+            },
+            {
+              src: [
+                'packages/clients/vscode/package.json',
+                'packages/clients/vscode/language-configuration.json',
+                'packages/clients/vscode/readme.md',
+                'packages/clients/vscode/changelog.md',
+                'packages/clients/vscode/.vscodeignore'
+
+              ],
+              dest: 'export/vscode/',
               verbose: true
             }
           ]
@@ -74,32 +87,30 @@ export default bundle({
         'vscode-languageserver'
       ],
       output: {
-        file: 'packages/clients/vscode/package/server/index.js',
+        file: 'export/vscode/server/index.js',
         format: 'cjs',
         sourcemap: true
       },
       plugins: [
         Json({ preferConst: true }),
         babel({ runtimeHelpers: true }),
-        process.env.prod ? terser() : null,
-        !process.env.prod ? generatePackageJson({
+        generatePackageJson({
           inputFolder: 'packages/server',
-          outputFolder: 'packages/clients/vscode/package/server/'
-        }) : null
+          outputFolder: 'export/vscode/server'
+        })
       ]
     },
     {
       input: 'node_modules/prettydiff/js/prettydiff.js',
       output: {
-        file: 'package/prettydiff.js',
+        file: 'export/vscode/server/node_modules/prettydiff/index.js',
         format: 'cjs',
         sourcemap: true
       },
       plugins: [
-        process.env.prod ? terser() : null,
         generatePackageJson({
           inputFolder: 'packages/server',
-          outputFolder: 'packages/clients/vscode/package/server/node_modules'
+          outputFolder: 'export/vscode/server/node_modules/prettydiff'
         })
       ]
     }
@@ -111,7 +122,7 @@ export default bundle({
   specs: {
     input: 'packages/specs/variations',
     output: {
-      dir: 'packages/clients/vscode/package/server/specs',
+      dir: 'export/vscode/server/specs',
       format: 'cjs',
       sourcemap: false
     },
@@ -130,8 +141,7 @@ export default bundle({
           'raw',
           'variable'
         ]
-      }),
-      process.env.prod ? terser() : null
+      })
     ]
 
   }

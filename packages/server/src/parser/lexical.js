@@ -6,7 +6,7 @@
  * Exports defined here are used by the parser/tokenizer and help give context to
  * Liquid tags located in each text document.
  *
- * @param {import('defs').DocumentModel} params
+ * @param {import('../../../release/vscode-liquify/server/node_modules/defs').DocumentModel} params
  * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} changes[]
  * @param {object} options
  * @returns

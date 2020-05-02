@@ -9,7 +9,7 @@ export default ({
   /**
    * Validation Meta
    *
-   * @type {import('defs').ValidationMeta}
+   * @type {import('../../../../release/vscode-liquify/server/node_modules/defs').ValidationMeta}
    */
   meta: {
     group: 'object',

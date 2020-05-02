@@ -6,7 +6,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "scripts": {
-    "dev": "rollup -c -w",
+    "dev": "rollup --config rollup.config.dev.js",
     "prod": "rollup -c --environment prod",
     "syntax": "node packages/specs/index.js",
     "cli": "node scripts/interface.js",

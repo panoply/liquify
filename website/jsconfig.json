@@ -1,6 +1,15 @@
 {
   "exclude": ["node_modules/**"],
-  "include": ["packages", "scripts", "website"],
+  "include": [
+    "package",
+    "scripts",
+    "website",
+    "server",
+    "specs",
+    "package/clients",
+    "export/vscode-liquify",
+    "packages, "specs"/clients"
+  ],
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2019",

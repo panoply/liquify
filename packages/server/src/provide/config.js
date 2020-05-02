@@ -7,9 +7,9 @@ import { License } from './license'
  * presets defined here are defaults and will maintain server configuration state.
  *
  * @export
- * @typedef {import('defs').Specification} Specification
- * @typedef {import('defs').FormattingRules} FormattingRules
- * @typedef {import('defs').ValidationRules} ValidationRules
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').Specification} Specification
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').FormattingRules} FormattingRules
+ * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ValidationRules} ValidationRules
  * @class Config {
  */
 export class Config extends License {

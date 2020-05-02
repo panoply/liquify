@@ -12,7 +12,7 @@ import { TokenTag, TokenType } from './lexical'
  * opposed the full document.
  *
  * @param {import('vscode-languageserver-textdocument').TextDocument}  textDocument
- * @param {import('defs').AST[]} ast
+ * @param {import('../../../release/vscode-liquify/server/node_modules/defs').AST[]} ast
  * @param {object} options
  * @returns
  */
