@@ -10,14 +10,8 @@
   ],
   "injectionSelector": "L:source.css -comment -string -meta.embedded, L:source.js -string.quoted.*.js -comment -string -meta.embedded, L:source.jsx -comment -string -string.quoted.*.jsx, L:source.js.jsx -comment -string, L:source.ts -string -comment -string.quoted.*.ts, L:source.json -string -comment -meta.embedded, R:text.html.markdown -comment",
   "patterns": [
-    {
-      "include": "source.liquid#comments"
-    },
-    {
-      "include": "source.liquid#template-tags"
-    },
-    {
-      "include": "source.liquid#template-vars"
-    }
+    { "include": "source.liquid#comments" },
+    { "include": "source.liquid#tags" },
+    { "include": "source.liquid#output" }
   ]
 }

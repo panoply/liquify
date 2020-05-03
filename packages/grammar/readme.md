@@ -1,6 +1,16 @@
-# Grammar
+# @liquify/liquid-tmlanguage
 
-This directory contains the Liquid [TextMate Language Grammars](https://macromates.com/manual/en/language_grammars) which are used to provide Liquid syntax highlighting support in text editors which are using the [Liquify](#) extension/package.
+This directory contains Liquid [TextMate Language Grammars](https://macromates.com/manual/en/language_grammars) which are used to provide Liquid syntax highlighting support in text editors that use the [Liquify](#) extension/package.
+
+### Installation
+
+```cli
+npm i @liquify/liquid-tmlanguage --dev
+```
+
+### Building
+
+By default, all grammars extend the [Liquid Standard](#) variation TextMate grammar. You can extend and generate variation grammars by supplying
 
 ### Grammar Variations
 

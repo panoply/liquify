@@ -8,7 +8,7 @@
     "specs",
     "package/clients",
     "export/vscode-liquify",
-    "packages, "specs"/clients"
+    "packages, "specs"/clients", "cli"
   ],
   "compilerOptions": {
     "module": "commonjs",

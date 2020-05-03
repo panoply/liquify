@@ -1,0 +1,11 @@
+# DIRECTORIES
+# --------------------
+node_modules/
+samples/
+src/
+
+# FILES
+# -------------------
+.gitignore
+rollup.config.js
+pnpm-debug.log

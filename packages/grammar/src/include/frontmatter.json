@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/panoply/tmlanguage/master/tmlanguage.json",
+  "patterns": [
+    {
+      "name": "meta.embedded.block.liquid",
+      "contentName": "meta.embedded.block.frontmatter.liquid",
+      "begin": "----?",
+      "end": "-?---",
+      "patterns": [
+        {
+          "include": "source.yaml"
+        }
+      ]
+    }
+  ]
+}

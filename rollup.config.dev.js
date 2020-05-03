@@ -1,7 +1,7 @@
 import { terser } from 'rollup-plugin-terser'
 import Json from '@rollup/plugin-json'
 import { join } from 'path'
-import babel from 'rollup-plugin-babel'
+import babel from '@rollup/plugin-babel'
 import copy from 'rollup-plugin-copy'
 import { bundle, json } from './scripts/bundle'
 import specs from './scripts/rollup/plugin-specs'

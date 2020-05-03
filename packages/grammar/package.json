@@ -1,0 +1,16 @@
+{
+  "name": "liquid-tmlanguage",
+  "version": "0.1.0",
+  "description": "TextMate Language grammars for the Liquid Templating Language",
+  "main": "export/index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@liquify/cli": "^0.1.0"
+  }
+}

@@ -1,16 +1,7 @@
 {
-  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "injectionSelector": "L:source.liquid -meta.embedded -comment",
-  "scopeName": "source.liquid.embedded",
+  "$schema": "https://raw.githubusercontent.com/panoply/tmlanguage/master/tmlanguage.json",
   "patterns": [
-    { "include": "#schema" },
-    { "include": "#javascript" },
-    { "include": "#style" },
-    { "include": "#stylesheet" },
-    { "include": "#stylesheet-scss" }
-  ],
-  "repository": {
-    "schema": {
+    {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.schema.liquid",
       "begin": "({%)\\s+(schema)\\s+(%})",
@@ -33,7 +24,7 @@
         }
       ]
     },
-    "style": {
+    {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.style.liquid",
       "begin": "({%)\\s+(style)\\s+(%})",
@@ -56,7 +47,7 @@
         }
       ]
     },
-    "stylesheet": {
+    {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.stylesheet.liquid",
       "begin": "({%)\\s+(stylesheet)\\s+(%})",
@@ -79,7 +70,7 @@
         }
       ]
     },
-    "stylesheet-scss": {
+    {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.stylesheet.scss.liquid",
       "begin": "({%)\\s+(stylesheet)\\s+('(scss)')\\s+(%})",
@@ -104,7 +95,7 @@
         }
       ]
     },
-    "javascript": {
+    {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.javascript.liquid",
       "begin": "({%)\\s+(javascript)\\s+(%})",
@@ -127,5 +118,5 @@
         }
       ]
     }
-  }
+  ]
 }

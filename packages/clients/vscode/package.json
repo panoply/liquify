@@ -42,6 +42,9 @@
   "main": "./index.js",
   "activationEvents": [
     "onLanguage:liquid",
+    "onLanguage:liquid-11ty",
+    "onLanguage:liquid-jekyll",
+    "onLanguage:liquid-shopify",
     "workspaceContains:**/.liquidrc",
     "workspaceContains:**/.liquidrc.json"
   ],
@@ -109,6 +112,38 @@
         ]
       },
       {
+        "id": "liquid-jekyll",
+        "configuration": "./language-configuration.json",
+        "aliases": [
+          "Liquid Jekyll"
+        ],
+        "extensions": [
+          ".liquid",
+          ".jekyll"
+        ]
+      },
+      {
+        "id": "liquid-11ty",
+        "configuration": "./language-configuration.json",
+        "aliases": [
+          "Liquid 11ty"
+        ],
+        "extensions": [
+          ".liquid",
+          ".11ty"
+        ]
+      },
+      {
+        "id": "liquid-shopify",
+        "configuration": "./language-configuration.json",
+        "aliases": [
+          "Liquid Shopify"
+        ],
+        "extensions": [
+          ".liquid"
+        ]
+      },
+      {
         "id": "javascript",
         "extensions": [
           ".js.liquid"
@@ -144,6 +179,21 @@
     "grammars": [
       {
         "language": "liquid",
+        "scopeName": "source.liquid",
+        "path": "./syntax/liquid.tmLanguage.json"
+      },
+      {
+        "language": "liquid-jekyll",
+        "scopeName": "source.liquid",
+        "path": "./syntax/liquid.tmLanguage.json"
+      },
+      {
+        "language": "liquid-shopify",
+        "scopeName": "source.liquid",
+        "path": "./syntax/liquid.tmLanguage.json"
+      },
+      {
+        "language": "liquid-11ty",
         "scopeName": "source.liquid",
         "path": "./syntax/liquid.tmLanguage.json"
       },

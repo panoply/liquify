@@ -3,3 +3,4 @@
 ./test/errors/issue-1.liquid
 extension/index.js
 export/
+**/package

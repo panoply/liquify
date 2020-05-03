@@ -1,13 +1,7 @@
 {
-  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "injectionSelector": "L:comment.block.liquid",
-  "scopeName": "source.liquid.comments",
+  "$schema": "https://raw.githubusercontent.com/panoply/tmlanguage/master/tmlanguage.json",
   "patterns": [
-    { "include": "#comment-format" },
-    { "include": "#comment-ignore" }
-  ],
-  "repository": {
-    "format": {
+    {
       "name": "comment.block.documentation.liquid",
       "begin": "(@format)(:)\\s*(\\w+)?\\s*({)",
       "beginCaptures": {
@@ -26,7 +20,7 @@
         }
       ]
     },
-    "ignore": {
+    {
       "name": "comment.block.documentation.liquid",
       "match": "(@ignore)(:)(start|end)",
       "captures": {
@@ -35,5 +29,5 @@
         "3": { "name": "support.type.property-name.liquid" }
       }
     }
-  }
+  ]
 }
