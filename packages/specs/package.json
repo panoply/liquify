@@ -1,5 +1,5 @@
 {
-  "name": "liquid-language-specs",
+  "name": "liquid-specs",
   "version": "0.1.0",
   "description": "Liquid language variation specification references for the Liquid Language Server and Liquify IDE extension/package tool",
   "main": "package/index.js",
@@ -10,7 +10,7 @@
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "SEE LICENSE IN LICENSE",
-  "private": true,
+  "private": false,
   "devDependencies": {
     "@liquify/cli": "^0.1.0"
   }

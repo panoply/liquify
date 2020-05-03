@@ -2,10 +2,11 @@
 # --------------------
 node_modules/
 samples/
-src/
+variations/
 
 # FILES
 # -------------------
 .gitignore
 rollup.config.js
 pnpm-debug.log
+readme.md
