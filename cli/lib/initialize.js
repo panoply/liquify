@@ -5,7 +5,7 @@ import chalk from 'chalk'
 import clear from 'console-clear'
 import bundle from './bundle'
 
-const pkg = require('./../../package.json')
+const pkg = require('../package.json')
 const { log } = console
 
 export default async () => {

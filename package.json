@@ -1,6 +1,6 @@
 {
   "name": "liquify",
-  "version": "3.0.0",
+  "version": "0.0.0-development",
   "description": "Liquid Templating Language Support and IDE tooling",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "SEE LICENSE IN LICENSE",
@@ -16,7 +16,8 @@
     "package": "",
     "pkg": "",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postsssinstall": "node scripts/post-install.js"
+    "postsssinstall": "node scripts/post-install.js",
+    "semantic-release": "semantic-release"
   },
   "husky": {
     "hooks": {
@@ -127,6 +128,10 @@
     "rollup-plugin-generate-package-json": "^3.2.0",
     "rollup-plugin-terser": "^5.3.0",
     "strip-json-comments": "^3.1.0",
-    "vscode-tmgrammar-test": "^0.0.9"
+    "vscode-tmgrammar-test": "^0.0.9",
+    "semantic-release": "^17.0.7"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }

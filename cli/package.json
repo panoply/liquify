@@ -27,6 +27,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "postsssinstall": "node scripts/post-install.js"
   },
+  "release": {
+    "branches": [
+      "master",
+      "next"
+    ]
+  },
   "dependencies": {
     "@liquify/specs": "file:../packages/specs/versions/liquify-specs-0.0.1.tgz",
     "boxen": "^4.2.0",

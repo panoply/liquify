@@ -3,7 +3,7 @@ import boxen from 'boxen'
 import chalk from 'chalk'
 import clear from 'console-clear'
 
-const pkg = require('./../../package.json')
+const pkg = require('../../../package.json')
 const { log } = console
 
 const execa = require('execa')

@@ -1,5 +1,19 @@
 import inquirer from 'inquirer'
 
+const execa = require('execa')
+
+const PnpmRunCommmand = async (params) => {
+
+  const command = execa('pnpm', params, { stdio: 'inherit' })
+
+  try {
+    await command
+  } catch (error) {
+    log(`${error.shortMessage}`)
+  }
+
+}
+
 export default () => inquirer.prompt([
   {
     type: 'list',

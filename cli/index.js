@@ -1,9 +1,9 @@
 
-import specs from './src/specs'
-import prompt from './src/prompt'
+import specs from './lib/run/specs'
+import prompt from './lib/prompt'
 import { basename } from 'path'
 import { statSync } from 'fs-extra'
-export { default as grammar } from './src/grammar'
+export { default as grammar } from './lib/run/grammar'
 
 export const run = async (run, config) => {
 
