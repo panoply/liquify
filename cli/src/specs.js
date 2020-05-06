@@ -1,9 +1,9 @@
 import { writeFile, readdir, readFile } from 'fs-extra'
 import { resolve, basename } from 'path'
+import Crypto from 'cryptorjs'
 import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
-import Crypto from 'cryptorjs'
 import chokidar from 'chokidar'
 
 /**
@@ -20,10 +20,8 @@ const { log } = console
  * Error handler which helps keeps error logging clean and
  * easy to understand
  *
- * @param {string} name the file name
- * @param {object} state state state
- * @param {string} output the export output
- * @param {object} json the JSON string to be encrypted
+ * @param {string} file
+ * @returns {(error: string) => void }
  */
 const errorHandler = file => error => {
 
@@ -48,6 +46,8 @@ const encryptFile = async (name, output, state, json) => {
   const encryptID = crypto.encode(name)
 
   await writeFile(`${output}/${encryptID}.js`, `module.exports="${encryptJSON}";`)
+
+  // @ts-ignore
   if (!global.watch) log(chalk`encrypted {magenta ${name}} to {green ${encryptID}}`)
 
   state.encrypt[encryptID] = `${encryptID}=require("./${encryptID}")`
@@ -81,9 +81,7 @@ const setCache = (name, state, json) => {
  * Set the grammar lexicals which are used when generating textmate
  * grammars liquid variations
  *
- * @param {string} name the file name
- * @param {object} state state state
- * @param {array} json the object entries of json
+ * @param {object} cache state state
  */
 const setGrammar = (cache, regex = {}) => {
 
@@ -100,9 +98,7 @@ const setGrammar = (cache, regex = {}) => {
  * Set the parsing lexicals that are used by the liquid
  * language server parser
  *
- * @param {string} name the file name
  * @param {object} state state state
- * @param {array} json the object entries of json
  */
 const setParsing = (state) => {
 
@@ -236,11 +232,16 @@ export default async (config, state = {
     log(chalk`{bold.cyan Liquid Specifications}\n`)
     await build(input, output, state).catch(errors)
   } else if (config.watch) {
+
     log(chalk`{bold.cyan Liquid Specifications}\n`)
     await build(input, output, state).catch(errors)
+
     const watcher = chokidar.watch(`${input}/**`, { persistent: true })
     const change = watch(output, state)
+
+    // @ts-ignore
     global.watch = true
+
     watcher.on('change', change).on('error', errors)
   }
 

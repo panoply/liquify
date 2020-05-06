@@ -7,8 +7,9 @@
   "bin": {
     "liquify": "./bin/liquify.js"
   },
-  "main": "./package/index.js",
-  "module": "package/index.es.js",
+  "main": "./package/LiquifyCLI.cjs.js",
+  "module": "package/LiquifyCLI.es.js",
+  "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/panoply/vscode-liquid.git"
@@ -27,7 +28,8 @@
     "postsssinstall": "node scripts/post-install.js"
   },
   "dependencies": {
-    "@liquify/specs": "file:../specs/versions/liquify-specs-0.0.1.tgz",
+    "@liquify/specs": "file:../packages/specs/versions/liquify-specs-0.0.1.tgz",
+    "boxen": "^4.2.0",
     "chalk": "^4.0.0",
     "chokidar": "^3.4.0",
     "console-clear": "^1.1.1",

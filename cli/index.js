@@ -1,12 +1,11 @@
 
-import chalk from 'chalk'
 import specs from './src/specs'
-import prompt from './src/publish/commands'
+import prompt from './src/prompt'
+import { basename } from 'path'
+import { statSync } from 'fs-extra'
 export { default as grammar } from './src/grammar'
 
-module.exports = async (run, config) => {
-
-  const { log } = console
+export const run = async (run, config) => {
 
   switch (run) {
     case 'specs':
@@ -17,11 +16,34 @@ module.exports = async (run, config) => {
       //  await server(config); break
     // case 'client':
       // await client(config); break
-    case 'grammar':
-      await grammar(config); break
+      //  case 'grammar':
+      // await grammar(config); break
     default:
       await prompt()
       // log(chalk`{red Command does not exist}`)
   }
 
 }
+
+export const banner = ({ name, main, version, author }) => `
+/**
+ * @license
+ *
+ * THIS IS PROPRIETARY CODE
+ *
+ * Copyright of Vellocet, Inc - All Rights Reserved.
+ * Unauthorized copying or modification of this file, via any medium is strictly prohibited.
+ * Please refer to the LICENSE.txt and/or ThirdPartyNotices.txt files included in bundle.
+ *
+ * ${basename(main)}
+ *
+ * Package:  ${name}
+ * Version:  ${version}
+ * Updated:  ${new Date(statSync(main).mtimeMs).toISOString().replace(/T/, ' ').substr(0, 19)}
+ * Website:  https://www.liquify.dev
+ * License:  See LICENSE.txt
+ * Notices:  See ThirdPartyNotices.txt
+ *
+ * Written by ${author}
+ *
+ */`

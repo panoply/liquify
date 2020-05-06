@@ -11,5 +11,8 @@
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "SEE LICENSE IN LICENSE",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@liquify/cli": "link:../../cli"
+  }
 }

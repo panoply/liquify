@@ -84,7 +84,7 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/register": "^7.9.0",
     "@babel/runtime": "^7.9.2",
-    "@liquify/cli": "link:packages/cli",
+    "@liquify/cli": "link:cli",
     "@rollup/plugin-babel": "^5.0.0",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-json": "^4.0.3",
