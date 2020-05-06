@@ -1,6 +1,6 @@
 import inquirer from 'inquirer'
 
-export default inquirer.prompt([
+export default () => inquirer.prompt([
   {
     type: 'list',
     name: 'bundle',

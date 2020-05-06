@@ -1,4 +1,5 @@
 .env
 package/
 node_modules/
+versions/
 

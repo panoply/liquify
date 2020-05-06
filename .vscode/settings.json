@@ -69,7 +69,12 @@
     },
     {
       "icon": "liquid",
-      "extensions": [".liquidrc", ".liquidrc.json"],
+      "extensions": [
+        ".liquidrc",
+        ".liquidrc.json",
+        ".liquifyrc",
+        ".liquifyrc.json"
+      ],
       "filename": true,
       "format": "svg"
     },

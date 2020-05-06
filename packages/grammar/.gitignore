@@ -1,3 +1,9 @@
+# DIRECTORIES
+# --------------------
 node_modules/
 package/
+variations/
+
+# FILES
+# -------------------
 bundle.jsonc

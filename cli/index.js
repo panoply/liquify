@@ -1,8 +1,10 @@
 
-const chalk = require('chalk')
-const specs = require('./operations/specs')
+import chalk from 'chalk'
+import specs from './src/specs'
+import prompt from './src/publish/commands'
+export { default as grammar } from './src/grammar'
 
-export default async (run, config) => {
+module.exports = async (run, config) => {
 
   const { log } = console
 
@@ -18,7 +20,8 @@ export default async (run, config) => {
     case 'grammar':
       await grammar(config); break
     default:
-      log(chalk`{red Command does not exist}`)
+      await prompt()
+      // log(chalk`{red Command does not exist}`)
   }
 
 }

@@ -1,4 +1,5 @@
 packages:
+  - "cli"
   - "packages/*"
   - "packages/clients/*"
-  - "website"
+  - "web/*"

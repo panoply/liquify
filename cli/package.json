@@ -7,8 +7,8 @@
   "bin": {
     "liquify": "./bin/liquify.js"
   },
-  "main": "./package/export.js",
-  "module": "package/export.es.js",
+  "main": "./package/index.js",
+  "module": "package/index.es.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/panoply/vscode-liquid.git"
@@ -27,7 +27,7 @@
     "postsssinstall": "node scripts/post-install.js"
   },
   "dependencies": {
-    "@liquify/specs": "link:../specs",
+    "@liquify/specs": "file:../specs/versions/liquify-specs-0.0.1.tgz",
     "chalk": "^4.0.0",
     "chokidar": "^3.4.0",
     "console-clear": "^1.1.1",

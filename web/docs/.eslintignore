@@ -4,3 +4,4 @@
 extension/index.js
 export/
 **/package
+web/cdn/**

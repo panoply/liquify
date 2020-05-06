@@ -41,9 +41,6 @@
     "prod": "rollup -c --environment prod",
     "postinstall": "liquify postinstall --client=vscode"
   },
-  "liquify": {
-    ""
-  },
   "main": "./index.js",
   "activationEvents": [
     "onLanguage:liquid",

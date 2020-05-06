@@ -3,11 +3,14 @@
 node_modules/
 samples/
 variations/
+versions/
 
 # FILES
 # -------------------
 .env
 .gitignore
+.liquifyrc.json
+.liquifyrc
 rollup.config.js
 pnpm-debug.log
 readme.md

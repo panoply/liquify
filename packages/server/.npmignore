@@ -1,10 +1,10 @@
 # DIRECTORIES
 # --------------------
-include/
-injects/
+samples/
+variations/
+src/
 
 # FILES
 # -------------------
-bundle.jsonc
-bundle.sample.jsonc
-liquid.jsonc
+index.js
+rollup.config.js

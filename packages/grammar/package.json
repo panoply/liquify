@@ -9,8 +9,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "@liquify/cli": "^0.0.1"
-  }
+  "license": "MIT"
 }
