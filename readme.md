@@ -10,7 +10,7 @@ A closed source LSP ([Language Sever Protocol](#)) implementation for the [Liqui
 | @liquify/specs                    | [packages/specs](#)           |
 | @liquify/schema-stores            | [packages/schema](#)          |
 | @liquify/liquid-language-server   | [packages/server](#)          |
-| @liquify/liquid-language-grammars | [packages/grammar]](#)        |
+| @liquify/liquid-language-grammars | [packages/grammar](#)         |
 | @liquify/vscode                   | [packages/clients/vscode](#)  |
 | @liquify/atom                     | [packages/clients/atom](#)    |
 | @liquify/sublime                  | [packages/clients/sublime](#) |
