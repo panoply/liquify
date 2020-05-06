@@ -4,12 +4,18 @@ A closed source LSP ([Language Sever Protocol](#)) implementation for the [Liqui
 
 ### Repositories
 
-| Project         | Package                       | Repository                  |
-| --------------- | ----------------------------- | --------------------------- |
-| liquify-vscode  | [packages/clients/vscode](#)  | [panoply/liquify-vscode](#) |
-| liquify-atom    | [packages/clients/atom](#)    | [panoply/liquify-atom](#)   |
-| liquify-sublime | [packages/clients/sublime](#) | [panoply/liquify-subime](#) |
-| liquify.dev     | [website/](#)                 | [panoply/liquify.dev](#)    |
+| Packages                        | Repository                           |
+| ------------------------------- | ------------------------------------ |
+| @liquify/cli                    | [panoply/liquify/packages/cli](#)    |
+| @liquify/specs                  | [panoply/liquify/packages/specs](#)  |
+| @liquify/schema-stores          | [panoply/liquify/packages/schema](#) |
+| @liquify/liquid-language-server | [panoply/liquify-atom](#)            |
+| @liquify/language-grammars      | [panoply/liquify-atom](#)            |
+| @liquify/sublime                | [panoply/liquify-subime](#)          |
+| @liquify/vscode                 | [panoply/liquify-vscode](#)          |
+| @liquify/atom                   | [panoply/liquify-atom](#)            |
+| @liquify/sublime                | [panoply/liquify-subime](#)          |
+| liquify.dev                     | [panoply/liquify.dev](#)             |
 
 # Setup
 

@@ -10,7 +10,7 @@
     "prod": "rollup -c --environment prod",
     "grammar": "node scripts/grammar.js",
     "syntax": "node packages/specs/index.js",
-    "cli": "node packages/cli/package/index.js",
+    "cli": "node packages/cli/package/export.js",
     "build": "",
     "package": "",
     "pkg": "",

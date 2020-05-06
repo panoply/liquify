@@ -1,16 +1,16 @@
 {
-  "name": "liquid-specs",
+  "name": "@liquify/specs",
   "version": "0.1.0",
   "description": "Liquid language variation specification references for the Liquid Language Server and Liquify IDE extension/package tool",
   "main": "package/index.js",
   "scripts": {
-    "run": "node index.js",
-    "build": "rollup -c",
+    "watch": "liquify specs --input=variations/ --output=package/ --watch",
+    "build": "liquify specs --input=variations/ --output=package/ --build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "SEE LICENSE IN LICENSE",
-  "private": false,
+  "private": true,
   "devDependencies": {
     "@liquify/cli": "^0.1.0"
   }

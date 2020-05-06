@@ -1,0 +1,20 @@
+{
+  "name": "@liquify/schema-stores",
+  "version": "0.0.1",
+  "description": "JSON Schema Store files for the Liquify IDE package/extension",
+  "main": "./package/index.js",
+  "scripts": {
+    "watch": "liquify schema --watch",
+    "build": "liquify schema --build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "private": true,
+  "liquify": {
+    "input": "./stores/**/*.json",
+    "output": "./package"
+  },
+  "devDependencies": {
+    "@liquify/cli": "^0.0.1"
+  }
+}

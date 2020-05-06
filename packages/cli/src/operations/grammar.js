@@ -67,7 +67,7 @@ const generateSpecs = async pattern => {
 
 }
 
-const bundle = async (pattern = { grammar: {}, parser: {}, syntax: {} }) => {
+const rollup = async (pattern = { grammar: {}, parser: {}, syntax: {} }) => {
 
   const specs = await generateSpecs(pattern)
 
@@ -113,4 +113,4 @@ const generate = async type => {
 
 }
 
-export default { generate, bundle }
+export default { generate, rollup }

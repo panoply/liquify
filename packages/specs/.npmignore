@@ -6,6 +6,7 @@ variations/
 
 # FILES
 # -------------------
+.env
 .gitignore
 rollup.config.js
 pnpm-debug.log

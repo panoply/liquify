@@ -1,1 +1,8 @@
-{}
+{
+  "link": {
+    "type": "output",
+    "filters": true,
+    "whitespace": true,
+    "parameters": false
+  }
+}

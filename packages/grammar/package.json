@@ -1,16 +1,16 @@
 {
-  "name": "liquid-tmlanguage",
-  "version": "0.1.0",
+  "name": "@liquify/language-grammars",
+  "version": "0.0.1",
   "description": "TextMate Language grammars for the Liquid Templating Language",
-  "main": "export/index.js",
+  "main": "./package/index.js",
   "scripts": {
-    "build": "rollup -c",
+    "watch": "liquify grammar --input=src/ --output=package/ --watch",
+    "build": "liquify grammar --input=src/ --output=package/ --build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
-  "private": true,
   "devDependencies": {
-    "@liquify/cli": "^0.1.0"
+    "@liquify/cli": "^0.0.1"
   }
 }
