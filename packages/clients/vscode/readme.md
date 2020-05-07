@@ -2,7 +2,7 @@
 
 # Liquify (vscode)
 
-A vscode extension for the [Liquid Templating Language](https://shopify.github.io/liquid/). Liquify brings intelliSense features for multiple [Liquid variations](#) to vscode which provides modern IDE tooling to developers who are working the language.
+💧A vscode extension for the [Liquid Templating Language](https://shopify.github.io/liquid/). Liquify brings intelliSense features for multiple [Liquid variations](#) to vscode which provides modern IDE tooling to developers who are working the language.
 
 - [Documentation](https://liquify.dev)
 - [Playground](https://liquify.dev)
@@ -16,8 +16,6 @@ A vscode extension for the [Liquid Templating Language](https://shopify.github.i
 - Auto formatting and beautification provided with the powerful [PrettyDiff](https://prettydiff.com/)
 - Hover descriptions and reference information for tags and completions
 - Codelens quick view support and path completion for include/import tags
-
-See the complete [feature list](#).
 
 ### Installation
 
@@ -38,7 +36,7 @@ The [TextMate Language](#) grammars used for this project are auto-generated and
 | Liquid Shopify | [cdn.liquify.dev/grammar/liquid-shopify.tmLanguage.json](#)  |
 | Liquid Jekyll  | [cdn.liquify.dev/grammar/liquid-jekyll.tmLanguage.json](#)   |
 
-> Please note that though the grammars are available via the CDN there is almost no use case where you would need to hotlink them to an application or service.
+_Please note that though the grammars are available via the CDN there is almost no use case where you would need to hotlink them to an application or service_
 
 ## Licensing
 
@@ -58,13 +56,13 @@ Those who wish to contribute to this project:
 2. Clone this repository and run `pnpm install`
 3. Run `pnpm run dev` and launch the debugger.
 
+> Liquify will automatically detect the development workspace and can distinguish between contributors and collaborator environments which is made possible using the [@liquify/cli](#) tool.
+
 | Command         | Description                                 |
 | --------------- | ------------------------------------------- |
 | `pnpm run cli`  | Launches the interactive CLI                |
 | `pnpm run dev`  | Launches debugger and bundler in watch mode |
 | `pnpm run test` | Runs a bunch of tests using Mocha           |
-
-> Liquify will automatically detect the development workspace and can distinguish between contributors and collaborator environments which is made possible using the [@liquify/cli](#) tool.
 
 ## Credits
 
