@@ -1,15 +1,13 @@
 <img src="https://github.com/panoply/liquify/blob/master/assets/github-banner-center.gif?raw=true"  atl="Liquify Logo"  width="100%">
 
-## Liquify (vscode)
+# Liquify (vscode)
 
-A vscode extension for the [Liquid Templating Language](https://shopify.github.io/liquid/). Liquify brings modern tooling and intelliSense features to vscode and supports multiple [Liquid variations](#).
+A vscode extension for the [Liquid Templating Language](https://shopify.github.io/liquid/). Liquify brings intelliSense features for multiple [Liquid variations](#) to vscode which provides modern IDE tooling to developers who are working the language.
 
 - [Documentation](https://liquify.dev)
 - [Playground](https://liquify.dev)
 
-> Checkout the [Potion Theme](#) for vscode and take advantage of Liquid specific syntax highlighting in combination dark material x monokai colours.
-
-## Key Features
+### Key Features
 
 - Intellisense features for Liquid [Standard](https://shopify.github.io/liquid/), [Jekyll](https://jekyllrb.com/docs/liquid/) and [Shopify](https://www.shopify.com/partners/shopify-cheat-sheet) variations
 - Code linting, validations and diagnostics
@@ -17,18 +15,42 @@ A vscode extension for the [Liquid Templating Language](https://shopify.github.i
 - Syntax highlighting for Liquid contained in CSS, SCSS, JavaScript, Markdown files
 - Auto formatting and beautification provided with the powerful [PrettyDiff](https://prettydiff.com/)
 - Hover descriptions and reference information for tags and completions
+- Codelens quick view support and path completion for include/import tags
+
+See the complete [feature list](#).
+
+### Installation
+
+The extension can be installed via the [Marketplace](#) or the command line:
+
+```cli
+code --install-extension sissel.liquify
+```
+
+> You can also install the extension via the editor marketplace tab (`shift+cmd+x`) and using the `liquid` or `liquify` search term
+
+## Language Grammars
+
+The [TextMate Language](#) grammars used for this project are auto-generated and bundled with the extension. Liquid and its variation TextMate (tmLanguage) grammars are maintained in the [@liquify/liquid-language-grammars](#) repository. If you wish to contirbute or require the or wish to use access the language grammars you will need to generate them via CDN:
+
+| Grammar        | CDN                                                          |
+| -------------- | ------------------------------------------------------------ |
+| Liquid         | [cdn.liquify.dev/grammar/liquid.tmLanguage.json](#)          |
+| Liquid 11ty    | [cdn.liquify.dev/grammar/liquid-eleventy.tmLanguage.json](#) |
+| Liquid Shopify | [cdn.liquify.dev/grammar/liquid-shopify.tmLanguage.json](#)  |
+| Liquid Jekyll  | [cdn.liquify.dev/grammar/liquid-jekyll.tmLanguage.json](#)   |
+
+> Please note that though the grammars are available via the CDN there is almost no use case where you would need to hotlink them to an application or service.
 
 ## Licensing
 
-Liquify operates on a freemium license model. Developers are free to use Liquify unlicenced and can take advantage of the features. Variations of Liquid pertaining to an open source project (ie: Jekyll) unlicenced users will have access some licensed features but when the variation is pertaining to a SaaS (ie: Shopify) unlicensed users will only have access to unlicensed features.
+Liquify operates on a freemium license model and developers are free to use the software unlicenced. Variations of Liquid pertaining to an open source project (ie: Jekyll) unlicenced users will have access some licensed features but when the variation is pertaining to a SaaS (ie: Shopify) unlicensed users will only have access to unlicensed features.
 
 - [Get License](https://liquify.dev/licensing)
 
 ## Contributing
 
-This repository is part of a [monorepo](#) which leverages [pnpm](#) for dependency management. Liquify implements the Language Server Protocol. The proprietary code is closed source but the language clients and syntax grammars are released under an MIT license so PR's are welcome 📥 here. Liquify will automatically detect the development workspace and can distinguish between contributors and collaborator environments.
-
-> Take a peek at the [liquify.dev](#) website [source code](#) if you're curious about JAMStack static websites built with [11ty](#) and would like to see a real world project using Liquify.
+This repository is part of a closed source [monorepo](#) which leverages [pnpm](#) for dependency management. Liquify implements the Language Server Protocol and though the proprietary code is closed source the language clients and syntax grammars have been released under an [MIT license](#) so contributions are welcome 📥 here.
 
 ### Development
 
@@ -38,26 +60,17 @@ Those who wish to contribute to this project:
 2. Clone this repository and run `pnpm install`
 3. Run `pnpm run dev` and launch the debugger.
 
-> Contributor workspaces are unable to execute closed sourced commands and will use the pre-installed Liquify extension source in debug mode.
-
-<details>
-<summary>
-  <strong>Contributor Commands</strong>
-</summary>
-<p>
-
 | Command         | Description                                 |
 | --------------- | ------------------------------------------- |
 | `pnpm run cli`  | Launches the interactive CLI                |
 | `pnpm run dev`  | Launches debugger and bundler in watch mode |
 | `pnpm run test` | Runs a bunch of tests using Mocha           |
 
-</p>
-</details>
+> Liquify will automatically detect the development workspace and can distinguish between contributors and collaborator environments which is made possible using the [@liquify/cli](#) tool.
 
 ## Credits
 
-Liquify is made possible by leveraging a collection open source projects.
+Liquify is made possible by leveraging a collection open source projects. Please refer to the [Third Party Notices](#) files for licensing information of these tools.
 
 - [prettydiff](#)
 - [sparser](#)
@@ -67,3 +80,9 @@ Liquify is made possible by leveraging a collection open source projects.
 - [vscode-json-languageservice](#)
 - [vscode-css-languageservice](#)
 - [vscode-uri](#)
+
+> Users that choose to license Liquify will also be contributing to projects like [PrettyDiff](#) with part of the profits generated going back to the community of open source tools the project depends on.
+
+<hr>
+
+🥛 <small>Laced with Vellocet by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small>

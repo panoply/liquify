@@ -1,24 +1,9 @@
 import inquirer from 'inquirer'
-import boxen from 'boxen'
+// import boxen from 'boxen'
 import chalk from 'chalk'
 import clear from 'console-clear'
-
-const pkg = require('../../../package.json')
-const { log } = console
-
-const execa = require('execa')
-
-const runCommmand = async (params) => {
-
-  const command = execa('pnpm', params, { stdio: 'inherit' })
-
-  try {
-    await command
-  } catch (error) {
-    log(`${error.shortMessage}`)
-  }
-
-}
+import { log, errorHandler } from '../utils/common'
+import execa from 'execa'
 
 export default async () => {
 
@@ -39,9 +24,14 @@ export default async () => {
   ])
 
   const value = bundle.toLowerCase().substring(0, bundle.indexOf(' '))
+  const error = errorHandler(value)
+  const command = await execa('pnpm', [
+    'run',
+    'build',
+    '--filter',
+    './packages/specs'
+  ], { stdio: 'inherit' }).catch(error)
 
-  runCommmand([ 'run', 'build', '--filter', './packages/specs' ])
-
-  return bundle.toLowerCase().substring(0, bundle.indexOf(' '))
+  return command
 
 }

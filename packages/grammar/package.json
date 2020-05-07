@@ -1,13 +1,16 @@
 {
-  "name": "@liquify/language-grammars",
+  "name": "@liquify/liquid-language-grammars",
   "version": "0.0.1",
   "description": "TextMate Language grammars for the Liquid Templating Language",
   "main": "./package/index.js",
   "scripts": {
-    "watch": "liquify grammar --input=src/ --output=package/ --watch",
-    "build": "liquify grammar --input=src/ --output=package/ --build",
+    "watch": "liquify grammar -m=bundle.jsonc -i=syntax -o=package -w",
+    "build": "liquify grammar -m=bundle.jsonc -i=syntax -o=package -b",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@liquify/cli": "link:../../cli"
+  }
 }

@@ -4,16 +4,12 @@
   "description": "JSON Schema Store files for the Liquify IDE package/extension",
   "main": "./package/index.js",
   "scripts": {
-    "watch": "liquify schema --watch",
-    "build": "liquify schema --build",
+    "watch": "liquify schema -i=stores -o=package -w",
+    "build": "liquify schema -i=stores -o=package -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "private": true,
-  "liquify": {
-    "input": "./stores/**/*.json",
-    "output": "./package"
-  },
   "devDependencies": {
     "@liquify/cli": "^0.0.1"
   }

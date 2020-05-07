@@ -5,30 +5,12 @@ import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
+import { log, errorHandler } from '../utils/common'
 
 /**
  * CONSTANTS
  */
 const SECRET = 'sissel siv'
-
-/**
- * GLOBALS
- */
-const { log } = console
-
-/**
- * Error handler which helps keeps error logging clean and
- * easy to understand
- *
- * @param {string} file
- * @returns {(error: string) => void }
- */
-const errorHandler = file => error => {
-
-  const printError = chalk`{red ${file}}\n${error}\n`
-  return log(chalk`{redBright Error} in ${printError}`)
-
-}
 
 /**
  * Write module JSON export as an AES string encryption and

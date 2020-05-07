@@ -7,8 +7,8 @@
   "bin": {
     "liquify": "./bin/liquify.js"
   },
-  "main": "./package/LiquifyCLI.cjs.js",
-  "module": "package/LiquifyCLI.es.js",
+  "main": "./package/liquify-cli.cjs.js",
+  "module": "package/liquify-cli.es.js",
   "private": false,
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "tests": "node ./test/require-specs.js",
+    "pack": "cd package; pnpm pack ../ && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postsssinstall": "node scripts/post-install.js"
   },

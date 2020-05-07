@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
-const { run } = require('../package/LiquifyCLI.cjs.js')
+const { run } = require('../package/liquify-cli.cjs.js')
 const argv = require('minimist')(process.argv.slice(2))
-const command = argv._[0]
+const main = argv._[0]; delete argv._
+const prop = Object.keys(argv)
 
-delete argv._
+for (const p of prop) {
 
-run(command, { build: false, watch: false, ...argv })
+}
+
+console.log(prop)

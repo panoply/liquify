@@ -1,7 +1,10 @@
-import fs from 'fs-extra'
+import { writeFile, readdir, readFile } from 'fs-extra'
+import { resolve, basename } from 'path'
 import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
-import inquirer from 'inquirer'
+import chalk from 'chalk'
+import chokidar from 'chokidar'
+import { log, errorHandler } from '../utils/common'
 
 const config = {
   grammar: './packages/grammar/liquid.jsonc',
@@ -10,7 +13,7 @@ const config = {
 
 const writeSyntax = async pattern => {
 
-  const jsonc = await fs.readFile(config.grammar)
+  const jsonc = await readFile(config.grammar)
   const strip = JSON.parse(stripJsonComments(jsonc.toString()))
 
   console.log(strip)
@@ -18,88 +21,13 @@ const writeSyntax = async pattern => {
   return pattern
 
 }
-
-const generateParse = pattern => {
-
-  const { grammar, parser } = pattern
-  const { standard } = grammar
-
-  for (const variant in grammar) {
-
-    if (typeof parser[variant] !== 'object') parser[variant] = {}
-
-    const { filter = [], object = [] } = grammar[variant]
-
-    pattern.parser[variant].objects = [ ...object ].sort()
-    pattern.parser[variant].filters = variant !== 'standard' ? [
-      ...filter,
-      ...standard.filter
-    ].sort() : standard.filter.sort()
-
-  }
-
-  return writeSyntax(pattern)
-
-}
-
-const generateSpecs = async pattern => {
-
-  const { grammar } = pattern
-  const specs = await fs.readdir(config.specs)
-
-  for (const variation of specs) {
-
-    const content = await fs.readFile(`${config.specs}/${variation}`)
-    const parsed = JSON.parse(stripJsonComments(content.toString()))
-    const variant = variation.replace(/\.[^/.]+$/, '')
-
-    grammar[variant] = { deprecated: [] }
-
-    for (const [ name, { type, deprecated } ] of Object.entries(parsed)) {
-      if (!grammar[variant][type]) grammar[variant][type] = []
-      if (deprecated) grammar[variant].deprecated.push(name)
-      else grammar[variant][type].push(name)
-    }
-
-  }
-
-  return generateParse(pattern)
-
-}
-
-const rollup = async (pattern = { grammar: {}, parser: {}, syntax: {} }) => {
-
-  const specs = await generateSpecs(pattern)
-
-  // const parsed = JSON.parse(stripJsonComments(jsonc.toString()))
-  // const string = JSON.stringify(parsed, null, 2)
-  console.log(specs)
-
-}
-
+/*
 const generate = async type => {
-
-  const prompt = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'bundle',
-      message: 'Select the type of Grammar',
-      choices: [
-        'include',
-        'injection'
-      ]
-    },
-    {
-      type: 'input',
-      name: 'filename',
-      message: 'Enter the filename'
-    }
-  ])
 
   const dir = prompt.bundle === 'include' ? prompt.bundle : 'injects'
   const path = `./packages/grammar/${dir}/${prompt.filename}.json`
 
-  await fs.writeFile(path, JSON.stringify(dir === 'include' ? {
+  await writeFile(path, JSON.stringify(dir === 'include' ? {
     $schema: 'https://cdn.liquify.dev/schema/include-tmlanguage.json',
     patterns: []
   } : {
@@ -111,6 +39,33 @@ const generate = async type => {
 
   return prompt
 
-}
+} */
 
-export default { generate, rollup }
+/**
+ * Default exports - Digested by the CLI
+ *
+ * @param {object} config
+ * @param {object} state prop values are the encoded names
+ */
+export default async (config, state = {
+  specs: {},
+  cache: {},
+  grammar: {},
+  parsing: {},
+  encrypt: {}
+}) => {
+
+  const cwd = process.cwd()
+  const main = resolve(cwd, config.main)
+  const input = resolve(cwd, config.input)
+  const output = resolve(cwd, config.output)
+
+  console.log(main)
+  const jsonc = await readFile(main)
+  const strip = JSON.parse(stripJsonComments(jsonc.toString()))
+
+  console.log(strip)
+
+  //  console.log(cwd)
+
+}

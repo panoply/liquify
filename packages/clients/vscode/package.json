@@ -39,7 +39,7 @@
     "cli": "liquify",
     "dev": "rollup -c -w",
     "prod": "rollup -c --environment prod",
-    "postinstall": "liquify postinstall --client=vscode"
+    "postinstall": "liquify client vscode --postinstall"
   },
   "main": "./index.js",
   "activationEvents": [

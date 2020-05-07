@@ -3,10 +3,7 @@
  *
  * This TextMate Grammar supports syntax highlighting for
  * the "Standard" varition of the Liquid Templating Language.
- *
- * Date: 03/05/2020
- * Author: Nikos Savvidis (nicos@gmx.com)
- **/
+ */
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "Liquid",
