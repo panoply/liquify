@@ -27,8 +27,6 @@ The extension can be installed via the [Marketplace](#) or the command line:
 code --install-extension sissel.liquify
 ```
 
-> You can also install the extension via the editor marketplace tab (`shift+cmd+x`) and using the `liquid` or `liquify` search term
-
 ## Language Grammars
 
 The [TextMate Language](#) grammars used for this project are auto-generated and bundled with the extension. Liquid and its variation TextMate (tmLanguage) grammars are maintained in the [@liquify/liquid-language-grammars](#) repository. If you wish to contirbute or require the or wish to use access the language grammars you will need to generate them via CDN:
