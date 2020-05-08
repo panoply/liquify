@@ -205,15 +205,10 @@ export default async (config, state = {
   encrypt: {}
 }) => {
 
-  const cwd = process.cwd()
-  const input = resolve(cwd, config.input)
-  const output = resolve(cwd, config.output)
+  const { input, output } = config
   const errors = errorHandler(input)
 
-  if (config.build) {
-    log(chalk`{bold.cyan Liquid Specifications}\n`)
-    await build(input, output, state).catch(errors)
-  } else if (config.watch) {
+  if (config.watch) {
 
     log(chalk`{bold.cyan Liquid Specifications}\n`)
     await build(input, output, state).catch(errors)
@@ -225,6 +220,10 @@ export default async (config, state = {
     global.watch = true
 
     watcher.on('change', change).on('error', errors)
+
+  } else {
+    log(chalk`{bold.cyan Liquid Specifications}\n`)
+    await build(input, output, state).catch(errors)
   }
 
 }

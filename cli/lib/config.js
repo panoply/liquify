@@ -12,6 +12,9 @@ export default {
       ]
     },
     {
+      command: 'peek'
+    },
+    {
       command: 'package'
     },
     {
@@ -39,48 +42,53 @@ export default {
           command: 'atom'
         }
       ]
-    },
+    }
   ],
   options: [
     {
-      flags: ['config', 'c'],
-      description: 'Use configuration file (defaults to `.liquifyrc.json`',
-      available: ['client', 'grammar', 'schema', 'specs', 'server']
+      name: 'config',
+      short: 'c',
+      description: 'Use configuration file (defaults to `.liquifyrc.json`'
     },
     {
-      flags: ['watch', 'w'],
+      name: 'watch',
+      short: 'w',
       description: 'Watch and bundle file/s'
     },
     {
-      flags: ['main', 'm'],
-      description: 'Define a main (entry) configuration file',
-      available: ['grammar']
+      name: 'main',
+      short: 'm',
+      description: 'Define a main (entry) configuration file'
     },
     {
-      flags: ['input', 'i'],
+      name: 'input',
+      short: 'i',
       description: 'Input path to directory of file/s'
     },
     {
-      flags: ['output', 'o'],
+      name: 'output',
+      short: 'o',
       description: 'Output path destination of bundled file/s'
     },
     {
-      flags: ['prod', 'p'],
+      name: 'prod',
+      short: 'p',
       description: 'Production bundle build'
     },
     {
-      flags: ['dev', 'd'],
+      name: 'dev',
+      short: 'd',
       description: 'Develop bundle build (default)'
     },
-     {
-      flags: ['postinstall', 'pi'],
+    {
+      name: 'postinstall',
+      short: 'pi',
       description: 'Post install'
     },
     {
-      flags: ['help', 'h'],
+      name: 'help',
+      short: 'h',
       description: 'Shows the CLI help and commands list'
     }
   ]
 }
-
-

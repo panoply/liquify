@@ -1,33 +1,33 @@
 import { writeFile, readdir, readFile } from 'fs-extra'
 import { resolve, basename } from 'path'
+import { getCrypt } from './../utils/crypto'
+import boxen from 'boxen'
 import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
+import execa from 'execa'
 import chokidar from 'chokidar'
 import { log, errorHandler } from '../utils/common'
+import YAML from 'json-to-pretty-yaml'
 
-const config = {
-  grammar: './packages/grammar/liquid.jsonc',
-  specs: './packages/specs/variations'
-}
+const stripJson = async path => {
 
-const writeSyntax = async pattern => {
+  const jsonc = await readFile(path)
+  const strip = stripJsonComments(jsonc.toString())
+  const parse = JSON.parse(strip)
 
-  const jsonc = await readFile(config.grammar)
-  const strip = JSON.parse(stripJsonComments(jsonc.toString()))
+  if (parse.$schema) delete parse.$schema
 
-  console.log(strip)
-
-  return pattern
+  return parse
 
 }
-/*
-const generate = async type => {
 
-  const dir = prompt.bundle === 'include' ? prompt.bundle : 'injects'
-  const path = `./packages/grammar/${dir}/${prompt.filename}.json`
+const createGrammar = async type => {
 
-  await writeFile(path, JSON.stringify(dir === 'include' ? {
+  // const dir = prompt.bundle === 'include' ? prompt.bundle : 'injects'
+  // const path = `./packages/grammar/${dir}/${prompt.filename}.json`
+
+  /* await writeFile(path, JSON.stringify(dir === 'include' ? {
     $schema: 'https://cdn.liquify.dev/schema/include-tmlanguage.json',
     patterns: []
   } : {
@@ -35,11 +35,60 @@ const generate = async type => {
     injectionSelector: '',
     scopeName: '',
     patterns: []
-  }, null, 2))
+  }, null, 2)) */
 
-  return prompt
+  // return prompt
 
-} */
+}
+
+const bundleInjections = dir => async ({ input, output }) => {
+
+  const file = await stripJson(input)
+  const json = jsonMinify(JSON.stringify(file))
+  const yaml = YAML.stringify(file)
+
+  await writeFile(`${dir}/${output}.json`, json)
+  log(chalk`{cyan JSON Injection} {green ${output}.json}`)
+
+  await writeFile(`${dir}/${output}.yaml`, yaml)
+  log(chalk`{yellow YAML Injection} {green ${output}.yaml}`)
+
+}
+
+const buildVariations = async (specs, base, output) => (item) => {
+
+  if (!specs[item.variant]) {
+    return
+  }
+
+  const { repository } = base
+  const { object } = specs[item.variant]
+
+  const file = {
+    ...base,
+    injectionSelector: '',
+    scopeName: '',
+    patterns: [],
+    repository: {
+      ...repository,
+      objects: {
+        patterns: [
+          ...repository.objects.patterns,
+          {
+            name: 'support.class.liquid',
+            match: `\\b${object}\\b`
+          }
+        ]
+      }
+    }
+  }
+
+}
+
+const readFiles = () => {
+
+  //
+}
 
 /**
  * Default exports - Digested by the CLI
@@ -55,17 +104,17 @@ export default async (config, state = {
   encrypt: {}
 }) => {
 
+  const { output } = config
   const cwd = process.cwd()
-  const main = resolve(cwd, config.main)
-  const input = resolve(cwd, config.input)
-  const output = resolve(cwd, config.output)
+  const main = await stripJson(config.main)
+  const base = await stripJson(resolve(cwd, main.input))
+  const specs = await getCrypt('grammar')
+  const injections = bundleInjections(output)
+  const variations = buildVariations(specs, base, output)
 
-  console.log(main)
-  const jsonc = await readFile(main)
-  const strip = JSON.parse(stripJsonComments(jsonc.toString()))
+  main.injections.forEach(await injections)
+  main.variations.forEach(await variations)
 
-  console.log(strip)
-
-  //  console.log(cwd)
+  // console.log(specs)
 
 }

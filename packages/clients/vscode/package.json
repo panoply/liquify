@@ -38,8 +38,7 @@
   "scripts": {
     "cli": "liquify",
     "dev": "rollup -c -w",
-    "prod": "rollup -c --environment prod",
-    "postinstall": "liquify client vscode --postinstall"
+    "prod": "rollup -c --environment prod"
   },
   "main": "./index.js",
   "activationEvents": [

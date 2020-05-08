@@ -5,7 +5,7 @@
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
   "bin": {
-    "liquify": "./bin/liquify.js"
+    "liquify": "./bin/liquify"
   },
   "main": "./package/liquify-cli.cjs.js",
   "module": "package/liquify-cli.es.js",
@@ -47,10 +47,14 @@
     "fs-extra": "^9.0.0",
     "hasha": "^5.2.0",
     "inquirer": "^7.1.0",
+    "json-to-pretty-yaml": "^1.2.2",
     "jsonminify": "^0.4.1",
     "lodash": "^4.17.15",
     "minimist": "^1.2.5",
     "parse-git-config": "^3.0.0",
     "strip-json-comments": "^3.1.0"
+  },
+  "optionalDependencies": {
+    "fx": "^18.0.1"
   }
 }

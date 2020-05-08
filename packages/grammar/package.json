@@ -4,8 +4,9 @@
   "description": "TextMate Language grammars for the Liquid Templating Language",
   "main": "./package/index.js",
   "scripts": {
-    "watch": "liquify grammar -m=bundle.jsonc -i=syntax -o=package -w",
-    "build": "liquify grammar -m=bundle.jsonc -i=syntax -o=package -b",
+    "build": "liquify grammar -m=generate.jsonc -o=package",
+    "create": "liquify grammar create -o=package -b",
+    "watch": "liquify grammar -m=generate.jsonc -o=package -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",

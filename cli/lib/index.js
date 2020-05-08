@@ -1,15 +1,70 @@
 
+import { resolve } from 'path'
+import peek from './cmd/peek'
 import specs from './run/specs'
 import grammar from './run/grammar'
 import prompt from './run/default'
+import { errorHandler } from './utils/common'
+import config from './config'
 
 export { default as rollup } from './run/rollup'
 
-export const run = async (run, config) => {
+/**
+ * Command call filter
+ *
+ * @param {object} argv
+ * @returns {{command: string, filter: null | string}}
+ */
+const call = ({ _: [ cmd, filter = null ] }) => {
+  for (const { command, filters } of config.calls) {
+    console.log(command === cmd)
+    if (command === cmd) return { command, filter }
+    if (command === cmd && filter && filters.length > 0) {
+      for (const f of filters) if (f.command === filter) return { command, filter }
+    }
+  }
+}
 
-  switch (run) {
+/**
+ * Command flags
+ *
+ * @param {string} cwd
+ * @param {object} cmd
+ */
+const flags = (cwd, cmd) => async ([ flag, value ]) => {
+  for (const { name, short } of config.options) {
+    if (name === flag || short === flag) {
+      await Object.assign(cmd, {
+        [name]: [
+          'config',
+          'main',
+          'input',
+          'output',
+          'peek'
+        ].includes(name) ? resolve(cwd, value) : value
+      })
+    }
+  }
+}
+
+export const run = async argv => {
+
+  const cwd = process.cwd()
+  const cmd = call(argv)
+
+  console.log(argv)
+
+  if (!cmd) return errorHandler('Command\n')(JSON.stringify(cmd))
+
+  const options = flags(cwd, cmd)
+
+  Object.entries(argv).forEach(await options)
+
+  switch (cmd.command) {
     case 'specs':
-      await specs(config); break
+      await specs(cmd); break
+    case 'peek':
+      await peek(cmd); break
     // case 'schema':
       // await schema(config); break
     // case 'server':
@@ -17,7 +72,7 @@ export const run = async (run, config) => {
     // case 'client':
       // await client(config); break
     case 'grammar':
-      await grammar(config); break
+      await grammar(cmd); break
     default:
       await prompt()
       // log(chalk`{red Command does not exist}`)
