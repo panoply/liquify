@@ -18,8 +18,8 @@ export default {
         log(chalk`{green  Encrypted} ${match} {dim to} {cyan ${encode}}`)
         return `${encode}`
       },
-      delimeters: [ 'getCrypt\\(\'?"?', '\'?"?\\)' ],
-      tags: [ 'grammar' ]
+      delimeters: [ '\\b(?:Crypto|getCrypt)\\(\'?"?', '\'?"?\\)' ],
+      tags: [ 'sissel siv', 'grammar' ]
     }),
     resolve(),
     commonjs({ include: '../node_modules/.pnpm/registry.npmjs.org/**' }),

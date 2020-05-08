@@ -8,11 +8,6 @@ import chokidar from 'chokidar'
 import { log, errorHandler } from '../utils/common'
 
 /**
- * CONSTANTS
- */
-const SECRET = 'sissel siv'
-
-/**
  * Write module JSON export as an AES string encryption and
  * use an MD5 hash for module name
  *
@@ -23,7 +18,7 @@ const SECRET = 'sissel siv'
  */
 const encryptFile = async (name, output, state, json) => {
 
-  const crypto = new Crypto(SECRET)
+  const crypto = new Crypto('sissel siv')
   const encryptJSON = crypto.encode(json)
   const encryptID = crypto.encode(name)
 

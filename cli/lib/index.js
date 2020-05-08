@@ -1,13 +1,13 @@
 
 import { resolve } from 'path'
-import peek from './cmd/peek'
-import specs from './run/specs'
-import grammar from './run/grammar'
-import prompt from './run/default'
+import peek from './commands/peek'
+import specs from './packages/specs'
+import grammar from './packages/grammar'
+import prompt from './commands/default'
 import { errorHandler } from './utils/common'
 import config from './config'
 
-export { default as rollup } from './run/rollup'
+export { default as rollup } from './packages/rollup'
 
 /**
  * Command call filter

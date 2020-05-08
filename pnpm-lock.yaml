@@ -72,7 +72,7 @@ importers:
       babel-eslint: ^10.1.0
       babel-plugin-lodash: ^3.3.4
       babel-plugin-module-resolver: ^4.0.0
-      cli: ^1.0.0
+      cli: ^1.0.1
       console-clear: ^1.1.1
       cryptorjs: ^3.0.0
       eslint: ^6.8.0
@@ -111,12 +111,10 @@ importers:
       chalk: 4.0.0
       chokidar: 3.4.0
       console-clear: 1.1.1
-      crypto-js: 4.0.0
       cryptr: 6.0.2
       execa: 4.0.0
       figlet: 1.4.0
       fs-extra: 9.0.0
-      hasha: 5.2.0
       inquirer: 7.1.0
       json-to-pretty-yaml: 1.2.2
       jsonminify: 0.4.1
@@ -132,13 +130,11 @@ importers:
       chalk: ^4.0.0
       chokidar: ^3.4.0
       console-clear: ^1.1.1
-      crypto-js: ^4.0.0
       cryptr: ^6.0.2
       execa: ^4.0.0
       figlet: ^1.4.0
       fs-extra: ^9.0.0
       fx: ^18.0.1
-      hasha: ^5.2.0
       inquirer: ^7.1.0
       json-to-pretty-yaml: ^1.2.2
       jsonminify: ^0.4.1
@@ -3055,10 +3051,6 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-PD6G8QG3S4FK/XCGFbEQrDqO2AnMMsy0meR7lerlIOHAAbkuavGU/pOqprrlvfTNjvowivTeBsjebAL0NSoMxw==
-  /crypto-js/4.0.0:
-    dev: false
-    resolution:
-      integrity: sha512-bzHZN8Pn+gS7DQA6n+iUmBfl0hO5DJq++QP3U6uTucDtk/0iGpXd/Gg7CGR0p8tJhofJyaKoWBuJI4eAO00BBg==
   /crypto-random-string/2.0.0:
     dev: true
     engines:
@@ -4851,15 +4843,6 @@ packages:
       node: '>= 0.4.0'
     resolution:
       integrity: sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==
-  /hasha/5.2.0:
-    dependencies:
-      is-stream: 2.0.0
-      type-fest: 0.8.1
-    dev: false
-    engines:
-      node: '>=8'
-    resolution:
-      integrity: sha512-2W+jKdQbAdSIrggA8Q35Br8qKadTrqCTC8+XZvBWepKDK6m9XkX6Iz1a2yh2KP01kzAR/dpuMeUnocoLYDcskw==
   /he/1.2.0:
     dev: true
     hasBin: true

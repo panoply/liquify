@@ -1,6 +1,6 @@
 import { writeFile, readdir, readFile } from 'fs-extra'
 import { resolve, basename } from 'path'
-import { getCrypt } from './../utils/crypto'
+import { getCrypt } from '../utils/crypto'
 import boxen from 'boxen'
 import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
