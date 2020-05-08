@@ -1,4 +1,4 @@
-[![license](https://img.shields.io/badge/license-proprietary-pink.svg?style=popout-square)](#) &nbsp; ![CircleCI](https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f) &nbsp; ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/@liquify/specs) &nbsp; ![Twitter URL](https://img.shields.io/twitter/url?label=%40sisselsiv&style=social&url=https%3A%2F%2Ftwitter.com%2Fsisselsiv)
+&nbsp; ![Twitter URL](https://img.shields.io/twitter/https%3A%2F%2Ftwitter.com%2Fsisselsiv?label=%40sisselsiv&style=social) [![license](https://img.shields.io/badge/License-Proprietary-blue)](#) &nbsp; ![CircleCI](https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f) &nbsp; ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/@liquify/specs)
 
 # @liquify/cli
 
