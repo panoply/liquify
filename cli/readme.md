@@ -16,7 +16,7 @@ This module is avialible on the npm registery exclusively for [@liquify](#) pack
 
 [Liquify](https://liquify.dev) is private mono/multi repository project that operates on a freemium licensing model. The project ships proprietarty, open and closed sourced modules that use this cli to perform package specific operations based on development workspace.
 
-# Usage <img align="right" src="https://pnpm.js.org/img/logos/pnpm-standard.svg" width="34">
+<h1 align="left">Usage<img align="right" src="https://raw.githubusercontent.com/panoply/liquify/next/assets/pnpm.svg?token=ABVXCLHHRU3WQKQOVKHYPIS6YBYYY" width="40" height="40"></h1>
 
 This package is a dependency module. Commands are preset to package `scripts` in [@liquify](#) modules. Liquify uses the [Pnpm Package Manager](#) for working with the npm registery and will enforce this upon developers working with the code base.
 
