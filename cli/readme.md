@@ -1,27 +1,32 @@
-<img align="left" src="https://img.shields.io/badge/closed%20source%20-f52c6e?label=&logoWidth=20&logo=github&logoColor=ffffff&labelColor=555&style=flat-square" /><img align="left" src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" /><img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
-<br>
+## <img src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" align="left" />&nbsp;&nbsp;<img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
+
+<br><br>
+
+<h3 align="center">CLOSED SOURCE PACKAGE</h3>
+<h6 align="center">THIS MODULE IS USED FOR <a href="https://liquify.dev">PROPRIETARY</a> SOFTWARE</h6>
+<br><br>
 
 # @liquify/cli
 
-Command line tooling for propietary and open source packages of the [Liquify IDE](#) extension. This module is closed source and avilable on the npm registery exclusively for packages which use the `@liquify/*` organization name.
+This is a closed source command line tool used for the [Liquify IDE](#) extension/package and used propietary and open source modules. This project is closed source and avilable on the npm registery exclusively for packages which use the `@liquify/*` organization name.
 
-## Why?
+## Why? <img src="https://image.flaticon.com/icons/svg/942/942751.svg" width="28" align="right" />
 
 [Liquify](https://liquify.dev) is private monorepo multi-repository project that operates on a freemium licensing model. The tool is made up of a collection of open and closed source packages which use this CLI to perform project wide operations like bundling, publishments, testing and more.
 
-## Usage
+## Usage <img align="right" src="https://pnpm.js.org/img/logos/pnpm-standard.svg" width="30">
 
-This module is shipped as dependency of various open and closed source Liquify packages. It's designed to operate in Liquify specific projects and therefore
+This module is designed to only work with Liquify packages.
 
 ```cli
 $ pnpx liquify <pkg> --flags
 ```
 
-### Scripts <img align="right" src="https://pnpm.js.org/img/logos/pnpm-standard.svg" width="25">
+### Scripts
 
 Commands are executed by running npm scripts from the `package.json` files of packages. The Liquify CLI and entire project is maintained with [pnpm](#).
 
-## Commands
+## Commands <img src="https://image.flaticon.com/icons/svg/2535/2535381.svg" align="right" width="30">
 
 ```cli
 bundle   <pkg>   --flags      Define a main file entry to use (optional)
@@ -53,6 +58,17 @@ test     <pkg>   --flags      Production build and/or bundle
 
 This poject command line tooling for open and closed source proprietary software. Cont distributed version avilable on public NPM registery has been encrypted
 
-<hr>
+## Dependents
+
+This module is used by the following packages of the `@liquify` organization
+
+- [@liquify/atom](#)
+- [@liquify/liquid-language-server](#)
+- [@liquify/liquid-language-grammars](#)
+- [@liquify/sublime](#)
+- [@liquify/vscode](#)
+- [@liquify/liquify.dev](#)
+
+---
 
 🥛 <small>Laced with Vellocet by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
