@@ -10,25 +10,37 @@
 
 # @liquify/cli
 
-This is a closed source command line tool used for the [Liquify IDE](#) extension/package and used propietary and open source modules. This project is closed source and avilable on the npm registery exclusively for packages which use the `@liquify/*` organization name.
+This module is avialible on the npm registery exclusively for [@liquify](#) packages. This is a closed source command line tool used by collaborators and contributors working on propietary and/or open source packages of the [Liquify](#) text editor extension.
 
-## Why? <img src="https://image.flaticon.com/icons/svg/942/942751.svg" width="28" align="right" />
+## Why?
 
-[Liquify](https://liquify.dev) is private monorepo multi-repository project that operates on a freemium licensing model. The tool is made up of a collection of open and closed source packages which use this CLI to perform project wide operations like bundling, publishments, testing and more.
+[Liquify](https://liquify.dev) is private mono/multi repository project that operates on a freemium licensing model. The project ships proprietarty, open and closed sourced modules that use this cli to perform package specific operations based on development workspace.
 
 ## Usage <img align="right" src="https://pnpm.js.org/img/logos/pnpm-standard.svg" width="30">
 
-This module is designed to only work with Liquify packages.
+This package is a dependency module. Commands are preset to package `scripts` in [@liquify](#) modules. Liquify uses the [Pnpm Package Manager](#) for working with the npm registery and will enforce this upon developers working with the code base.
 
 ```cli
 $ pnpx liquify <pkg> --flags
 ```
 
-### Scripts
+<details>
+<summary>
+  <h6>Dependents</h6>
+</summary>
+<p>
 
-Commands are executed by running npm scripts from the `package.json` files of packages. The Liquify CLI and entire project is maintained with [pnpm](#).
+- [@liquify/atom](#)
+- [@liquify/liquid-language-server](#)
+- [@liquify/liquid-language-grammars](#)
+- [@liquify/sublime](#)
+- [@liquify/vscode](#)
+- [@liquify/liquify.dev](#)
 
-## Commands <img src="https://image.flaticon.com/icons/svg/2535/2535381.svg" align="right" width="30">
+</p>
+</details>
+
+## Commands
 
 ```cli
 bundle   <pkg>   --flags      Define a main file entry to use (optional)
@@ -56,21 +68,6 @@ test     <pkg>   --flags      Production build and/or bundle
 --dry-run                     Dry run the command
 ```
 
-## Contributing
+###### AUTHOR
 
-This poject command line tooling for open and closed source proprietary software. Cont distributed version avilable on public NPM registery has been encrypted
-
-## Dependents
-
-This module is used by the following packages of the `@liquify` organization
-
-- [@liquify/atom](#)
-- [@liquify/liquid-language-server](#)
-- [@liquify/liquid-language-grammars](#)
-- [@liquify/sublime](#)
-- [@liquify/vscode](#)
-- [@liquify/liquify.dev](#)
-
-###### &nbsp;
-
-🥛 <small>Laced with Vellocet by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />

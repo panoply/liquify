@@ -1,48 +1,45 @@
 'use strict'
-const { resolve } = require('path')
-const { writeFileSync } = require('fs-extra')
+
+const { basename } = require('path')
+const { writeFileSync } = require('fs')
 const chalk = require('chalk')
 const { log } = console
 
 /**
- * Read all workspace packages. Extract package names and
+ * Read all workspace packages, extract package names and
  * write them to the CLI config `.packages` file.
  *
- * @param {object} pkg
+ * @param {object} lockfile
+ * @param {object} context
  * @returns {object}
  */
-const getName = (path, pkg) => {
-
-  if (pkg.name === '@liquify/cli') return null
-
-  log(chalk`- {cyan ${pkg.name}} {dim at} {italic.magenta ${path}}`)
-
-  packages.push(`${pkg.name}`)
-
-}
-
-const afterAllResolved = (lockfile) => {
+const afterAllResolved = (lockfile, context) => {
 
   const pkgs = Object.keys(lockfile.importers)
-  const packages = {}
-
-  log(chalk`{cyan Exporting workspaces to CLI }`)
+  const packages = Object.create(null)
+  log(chalk`{bold.cyanBright Exporting workspaces to CLI }`)
 
   for (const path of pkgs) {
+
+    if (path === 'cli') continue
+
     const pkg = require(`./${path}/package.json`)
-    if (pkg.name === '@liquify/cli') continue
-    packages[pkg.name] = path
-    log(chalk`- {cyan ${pkg.name}} {dim at} {italic.magenta ${path}}`)
+    const name = path === '.' ? 'root' : basename(path)
+    const space = ' '.repeat(40 - path.length)
+
+    packages[name] = { [pkg.name]: path }
+    log(chalk`${path}${space} | {dim CLI Referenced}: {cyan ${pkg.name}}`)
+
   }
 
-  writeFileSync('./cli/.packages', JSON.stringify(packages, null, 2))
+  const pkg = Object.assign(require('./cli/package.json'), { packages })
 
-  log(chalk`{green Suceess}`)
+  writeFileSync('./cli/package.json', JSON.stringify(pkg, null, 2))
+
+  context.log(chalk`{cyan ${Object.keys(packages).length}} packages linked CLI`)
 
   return lockfile
 
 }
 
-module.exports = {
-  hooks: { afterAllResolved }
-}
+module.exports = { hooks: { afterAllResolved } }

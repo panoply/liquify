@@ -52,5 +52,34 @@
   },
   "optionalDependencies": {
     "fx": "^18.0.1"
+  },
+  "packages": {
+    "root": {
+      "liquify": "."
+    },
+    "atom": {
+      "atom-liquid": "packages/clients/atom"
+    },
+    "vscode": {
+      "liquify-vscode": "packages/clients/vscode"
+    },
+    "grammar": {
+      "@liquify/liquid-language-grammars": "packages/grammar"
+    },
+    "schema": {
+      "@liquify/schema-stores": "packages/schema"
+    },
+    "server": {
+      "liquid-language-server": "packages/server"
+    },
+    "specs": {
+      "@liquify/specs": "packages/specs"
+    },
+    "cdn": {
+      "@liquify/cdn": "web/cdn"
+    },
+    "docs": {
+      "@liquify/docs": "web/docs"
+    }
   }
 }
