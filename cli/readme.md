@@ -14,36 +14,35 @@ Command line tooling for propietary and open source packages of the [Liquify IDE
 This module is shipped as dependency of various open and closed source Liquify packages. It's designed to operate in Liquify specific projects and therefore
 
 ```cli
-$ pnpx liquify <command or package> --flags
+$ pnpx liquify <pkg> --flags
 ```
 
-#### Commands
+### Scripts <img align="right" src="https://pnpm.js.org/img/logos/pnpm-standard.svg" width="45">
+
+Commands are executed by running npm scripts from the `package.json` files of packages. The Liquify CLI and entire project is maintained with [pnpm](#).
+
+## Commands
 
 ```cli
-bundle   <package> --flags   Define a main file entry to use (optional)
-peek     <package> --flags   Production build and/or bundle
-publish  <package> --flags   Development build and/or bundle
-package  <package> --flags   Production build and/or bundle
-test     <package> --flags   Production build and/or bundle
+bundle   <pkg>   --flags      Define a main file entry to use (optional)
+client   <pkg>   --flags      Define a main file entry to use (optional)
+grammar  --flags              Input directory path or file
+peek     <pkg>   --flags      Production build and/or bundle
+publish  <pkg>   --flags      Development build and/or bundle
+package  <pkg>   --flags      Production build and/or bundle
+test     <pkg>   --flags      Production build and/or bundle
+server   --flags              Output directory path or file
+specs    --flags              Watch input files/directories and rebuild on changes
+web      <pkg>   --flags      Show version number
 ```
 
-#### Packages
+### Flags
 
 ```cli
-client  <directory> --flags  Define a main file entry to use (optional)
-grammar --flags              Input directory path or file
-server  --flags              Output directory path or file
-specs   --flags              Watch input files/directories and rebuild on changes
-web     <directory> --flags  Show version number
-```
-
-#### Flags
-
-```cli
--c, --config  <filename>      Use a .liquifyrc.json configuration file
+-c, --config  <file>          Use a .liquifyrc.json configuration file
 -m, --main    <glob>          Define a main file entry to use (optional)
 -i, --input   <glob>          Input directory path or file
--o, --output  <directory>     Output directory path or file
+-o, --output  <dir>           Output directory path or file
 -w, --watch                   Watch input files/directories and rebuild on changes
 -d, --dev                     Development build and/or bundle
 -p, --prod                    Production build and/or bundle
