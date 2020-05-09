@@ -17,7 +17,7 @@ This module is shipped as dependency of various open and closed source Liquify p
 $ pnpx liquify <command or package> --flags
 ```
 
-## Command
+### Commands
 
 ```cli
 bundle   <package> --flags   Define a main file entry to use (optional)
@@ -27,7 +27,7 @@ package  <package> --flags   Production build and/or bundle
 test     <package> --flags   Production build and/or bundle
 ```
 
-## Package
+### Packages
 
 ```cli
 client  <directory> --flags  Define a main file entry to use (optional)
@@ -37,7 +37,7 @@ specs   --flags              Watch input files/directories and rebuild on change
 web     <directory> --flags  Show version number
 ```
 
-## Flags
+### Flags
 
 ```cli
 -c, --config  <filename>      Use a .liquifyrc.json configuration file
