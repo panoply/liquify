@@ -1,0 +1,11 @@
+{
+  "liquify": ".",
+  "atom-liquid": "packages/clients/atom",
+  "liquify-vscode": "packages/clients/vscode",
+  "@liquify/liquid-language-grammars": "packages/grammar",
+  "@liquify/schema-stores": "packages/schema",
+  "liquid-language-server": "packages/server",
+  "@liquify/specs": "packages/specs",
+  "@liquify/cdn": "web/cdn",
+  "@liquify/docs": "web/docs"
+}

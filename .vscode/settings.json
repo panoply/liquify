@@ -30,6 +30,7 @@
   },
   "files.associations": {
     ".meta": "json",
+    ".packages": "json",
     "*.sublime-settings": "jsonc",
     "*.sublime-commands": "jsonc"
   },

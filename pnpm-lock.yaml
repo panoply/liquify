@@ -190,6 +190,8 @@ importers:
       '@liquify/cli': 'link:../../cli'
     specifiers:
       '@liquify/cli': 'link:../../cli'
+  web/cdn:
+    specifiers: {}
   web/docs:
     dependencies:
       bootstrap: 4.4.1

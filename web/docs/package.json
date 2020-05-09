@@ -1,6 +1,6 @@
 {
-  "name": "liquify.dev",
-  "version": "1.0.0",
+  "name": "@liquify/docs",
+  "version": "0.0.1",
   "description": "Liquify IDE Tooling website and documentation",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "ISC",
