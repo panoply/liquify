@@ -1,3 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" height="10" width="100%">
-  <line x1="0" y1="0" x2="1000" y2="0" style="stroke:#eaecef;stroke-width:1" />
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 1"><title>line</title><line y1="0" x2="1000" y2="0" style="fill:none;stroke:#eaecef;stroke-miterlimit:10"/></svg>
