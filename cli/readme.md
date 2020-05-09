@@ -13,34 +13,44 @@ Command line tooling for propietary and open source packages of the [Liquify IDE
 
 This module is shipped as dependency of various open and closed source Liquify packages. It's designed to operate in Liquify specific projects and therefore
 
-## Commands
+```cli
+$ pnpx liquify <command or package> --flags
+```
 
-| Command   | Repository            |
-| --------- | --------------------- |
-| `init`    | [packages/grammar](#) |
-| `client`  | [cli](#)              |
-| `grammar` | [packages/specs](#)   |
-| `server`  | [packages/schema](#)  |
-| `schema`  | [packages/server](#)  |
-| `specs`   | [packages/grammar](#) |
-| `publish` | [packages/grammar](#) |
-| `package` | [packages/grammar](#) |
-| `website` | [packages/grammar](#) |
+## Command
+
+```cli
+bundle   <package> --flags   Define a main file entry to use (optional)
+peek     <package> --flags   Production build and/or bundle
+publish  <package> --flags   Development build and/or bundle
+package  <package> --flags   Production build and/or bundle
+test     <package> --flags   Production build and/or bundle
+```
+
+## Package
+
+```cli
+client  <directory> --flags  Define a main file entry to use (optional)
+grammar --flags              Input directory path or file
+server  --flags              Output directory path or file
+specs   --flags              Watch input files/directories and rebuild on changes
+web     <directory> --flags  Show version number
+```
 
 ## Flags
 
 ```cli
--c, --config  <file>      Use a .liquifyrc.json configuration file
--m, --main    <file>      Define a main file entry to use (optional)
--i, --input   <glob>      Input directory path or file
--o, --output  <dir>       Output directory path or file
--w, --watch               Watch input files/directories and rebuild on changes
--d, --dev                 Development build and/or bundle
--p, --prod                Production build and/or bundle
--v, --version             Show version number
--h, --help                Show this help message
---preinstall              Run the pre-install NPM script of package
---postinstall             Run the post-install NPM script of package
+-c, --config  <filename>      Use a .liquifyrc.json configuration file
+-m, --main    <glob>          Define a main file entry to use (optional)
+-i, --input   <glob>          Input directory path or file
+-o, --output  <directory>     Output directory path or file
+-w, --watch                   Watch input files/directories and rebuild on changes
+-d, --dev                     Development build and/or bundle
+-p, --prod                    Production build and/or bundle
+-v, --version                 Show version number
+-h, --help                    Show this help message
+--preinstall                  Run the pre-install NPM script of package
+--postinstall                 Run the post-install NPM script of package
 ```
 
 ## Contributing
