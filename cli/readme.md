@@ -69,6 +69,6 @@ This module is used by the following packages of the `@liquify` organization
 - [@liquify/vscode](#)
 - [@liquify/liquify.dev](#)
 
----
+###### &nbsp;
 
 🥛 <small>Laced with Vellocet by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
