@@ -23,33 +23,11 @@ export default {
       }
     ],
     packages: [
-      {
-        package: '@liquify/clients',
-        command: 'client',
-        filters: [ { command: 'vscode' }, { command: 'sublime' }, { command: 'atom' } ],
-        description: 'Build and compile bundles'
-      },
-      {
-        package: '@liquify/liquid-language-grammars',
-        command: 'grammar',
-        filters: [ { command: 'create' } ],
-        description: 'Packaging execution, eg: npm pack'
-      },
-      {
-        package: '@liquify/schema-stores',
-        command: 'schema',
-        description: 'Common git related operations for the project'
-      },
-      {
-        package: '@liquify/liquid-language-server',
-        command: 'server',
-        description: 'Publish to CDN, Netlify, Marketplace etc'
-      },
-      {
-        package: '@liquify/specs',
-        command: 'specs',
-        description: 'Publish to CDN, Netlify, Marketplace etc'
-      }
+      '@liquify/liquid-language-grammars',
+      '@liquify/schema-stores',
+      '@liquify/liquid-language-server',
+      '@liquify/specs',
+      '@liquify/clients'
     ],
     flags: [
       {

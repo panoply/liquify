@@ -1,8 +1,8 @@
 {
-  "name": "vscode-liquify",
-  "version": "3.0.0",
+  "name": "liquify-vscode",
+  "version": "0.0.1",
   "displayName": "Liquify",
-  "description": "Syntaxes highlighting, intellisense, diagnostics, formatting and snippet support for the Liquid template language support.",
+  "description": "Syntax highlighting, intellisense, diagnostics, formatting and support for the Liquid template language support.",
   "publisher": "sissel",
   "icon": "assets/logo.png",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
