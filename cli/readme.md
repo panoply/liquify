@@ -13,7 +13,7 @@ Command line tooling for propietary and open source packages of the [Liquify IDE
 
 This module is shipped as dependency of various open and closed source Liquify packages. It's designed to operate in Liquify specific projects and therefore
 
-## Commands
+## Commands <img src="https://pnpm.js.org/img/logos/pnpm-standard.svg" align="right" width="50" />
 
 | Command   | Repository            |
 | --------- | --------------------- |
