@@ -26,7 +26,7 @@ $ pnpx liquify <pkg> --flags
 
 <details>
 <summary>
-  <h6>Dependents</h6>
+  <strong>DEPENDENTS</strong>
 </summary>
 <p>
 
@@ -68,6 +68,6 @@ test     <pkg>   --flags      Production build and/or bundle
 --dry-run                     Dry run the command
 ```
 
-###### AUTHOR
+<hr>
 
 🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
