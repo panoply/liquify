@@ -10,15 +10,17 @@
 
 # @liquify/cli
 
-This module is avialible on the npm registery exclusively for [@liquify](#) packages. This is a closed source command line tool used by collaborators and contributors working on propietary and/or open source packages of the [Liquify](#) text editor extension.
+This package is avialible on the npm registery exclusively for [@liquify](#) modules. This is a **closed source** command line tool used by collaborators and contributors working on propietary and/or open source packages of the [Liquify](https://liquify.dev) IDE text editor extension/plugin. Distributed code provided in this package has been mangled, minified and encypted using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm. The resulting production bundle is enigmatic which prevents reverse enginnering without capable context.
 
 ## Why?
 
-[Liquify](https://liquify.dev) is private mono/multi repository project that operates on a freemium licensing model. The project ships proprietarty, open and closed sourced modules that use this cli to perform package specific operations based on development workspace.
+Liquify is developed in private monorepo that operates on a freemium licensing model and ships proprietarty, open and closed source packages from a single/sub-tree git [metarepo](https://notes.burke.libbey.me/metarepo/#metarepo-architecture) (_mono_ + _multi_) repository.
 
-<h1 align="left">Usage<img align="right" src="https://raw.githubusercontent.com/panoply/liquify/next/assets/pnpm.svg?token=ABVXCLHHRU3WQKQOVKHYPIS6YBYYY" width="40" height="40"></h1>
+Liquify's private (_proprietary_) and public (_open/closed source_) packages use this cli tool as a dependency module to provide `package.json` specific development build scripts and bundle operations in open sourced package development workspaces.
 
-This package is a dependency module. Commands are preset to package `scripts` in [@liquify](#) modules. Liquify uses the [Pnpm Package Manager](#) for working with the npm registery and will enforce this upon developers working with the code base.
+# Usage<img align="right" src="https://raw.githubusercontent.com/panoply/liquify/next/assets/pnpm.svg?token=ABVXCLHHRU3WQKQOVKHYPIS6YBYYY" width="40" height="40">
+
+Commands are preset to package `scripts` in [@liquify/\*\*](#) modules and unless you are working at root level in Liquify code base you probably wont find yourself using the commands as the run script presets in each package will suffice. When working on the cli dependents you will need to use the [Pnpm Package Manager](#) to work with the npm registery and the cli will enforce this.
 
 ```cli
 $ pnpx liquify <pkg> --flags
@@ -30,6 +32,8 @@ $ pnpx liquify <pkg> --flags
 </summary>
 <p>
 
+The following Liquify packages require the cli module as dependency and ship with preset run script commands or use methods available via the exported api.
+
 - [@liquify/atom](#)
 - [@liquify/liquid-language-server](#)
 - [@liquify/liquid-language-grammars](#)
@@ -40,7 +44,7 @@ $ pnpx liquify <pkg> --flags
 </p>
 </details>
 
-## Commands
+### Commands
 
 ```cli
 bundle   <pkg>   --flags      Define a main file entry to use (optional)
