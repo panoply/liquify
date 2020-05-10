@@ -64,7 +64,7 @@
     },
     {
       "icon": "config",
-      "extensions": [".lightserverrc"],
+      "extensions": [".lightserverrc", "argv.config.json"],
       "filename": true,
       "format": "svg"
     },
