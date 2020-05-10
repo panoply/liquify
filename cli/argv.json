@@ -1,0 +1,97 @@
+{
+  "cli": {
+    "commands": [
+      {
+        "command": "bundle",
+        "description": "Bundler"
+      },
+      {
+        "command": "git",
+        "description": "Common git related operations for the project"
+      },
+      {
+        "command": "package",
+        "description": "Common git related operations for the project"
+      },
+      {
+        "command": "peek",
+        "description": "Common git related operations for the project"
+      },
+      {
+        "command": "publish",
+        "description": "Common git related operations for the project"
+      }
+    ],
+    "flags": [
+      {
+        "name": "config",
+        "short": "c",
+        "description": "Use configuration file (defaults to `.liquifyrc.json`",
+        "type": "path"
+      },
+      {
+        "name": "watch",
+        "short": "w",
+        "description": "Watch and bundle file/s",
+        "type": "boolean"
+      },
+      {
+        "name": "main",
+        "short": "m",
+        "description": "Define a main (entry) configuration file",
+        "type": "path"
+      },
+      {
+        "name": "input",
+        "short": "i",
+        "description": "Input path to directory of file/s",
+        "type": "path"
+      },
+      {
+        "name": "output",
+        "short": "o",
+        "description": "Output path destination of bundled file/s",
+        "type": "path"
+      },
+      {
+        "name": "prod",
+        "short": "p",
+        "description": "Production bundle build",
+        "type": "boolean"
+      },
+      {
+        "name": "dev",
+        "short": "d",
+        "description": "Develop bundle build (default)",
+        "type": "boolean"
+      },
+      {
+        "name": "help",
+        "short": "h",
+        "description": "Shows the CLI help and commands list",
+        "type": "boolean"
+      },
+      {
+        "name": "version",
+        "short": "-v",
+        "description": "Shows the CLI help and commands list",
+        "type": "boolean"
+      },
+      {
+        "name": "postinstall",
+        "description": "Post install",
+        "type": "boolean"
+      },
+      {
+        "name": "preinstall",
+        "description": "Pre install",
+        "type": "boolean"
+      },
+      {
+        "name": "dry-run",
+        "description": "Dry runner",
+        "type": "boolean"
+      }
+    ]
+  }
+}

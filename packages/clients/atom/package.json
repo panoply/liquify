@@ -4,12 +4,15 @@
   "version": "0.1.0",
   "description": "Liquid language support for Atom",
   "keywords": [],
-  "repository": "https://github.com/panoply/liquify",
+  "private": false,
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
     "atom-languageclient": "^0.9.9"
+  },
+  "repository": {
+    "url": "https://github.com/panoply/liquify"
   }
 }

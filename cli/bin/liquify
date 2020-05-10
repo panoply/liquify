@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { run } = require('../package/liquify-cli.cjs.js')
+const run = require('../package/liquify-cli.cjs')
 const argv = require('minimist')(process.argv.slice(2))
 
 run(argv)

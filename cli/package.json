@@ -41,6 +41,7 @@
     "cryptr": "^6.0.2",
     "execa": "^4.0.0",
     "figlet": "^1.4.0",
+    "find-up": "^4.1.0",
     "fs-extra": "^9.0.0",
     "inquirer": "^7.1.0",
     "json-to-pretty-yaml": "^1.2.2",
@@ -53,33 +54,7 @@
   "optionalDependencies": {
     "fx": "^18.0.1"
   },
-  "packages": {
-    "root": {
-      "liquify": "."
-    },
-    "atom": {
-      "atom-liquid": "packages/clients/atom"
-    },
-    "vscode": {
-      "liquify-vscode": "packages/clients/vscode"
-    },
-    "grammar": {
-      "@liquify/liquid-language-grammars": "packages/grammar"
-    },
-    "schema": {
-      "@liquify/schema-stores": "packages/schema"
-    },
-    "server": {
-      "liquid-language-server": "packages/server"
-    },
-    "specs": {
-      "@liquify/specs": "packages/specs"
-    },
-    "cdn": {
-      "@liquify/cdn": "web/cdn"
-    },
-    "docs": {
-      "@liquify/docs": "web/docs"
-    }
+  "devDependencies": {
+    "parse-filepath": "^1.0.2"
   }
 }

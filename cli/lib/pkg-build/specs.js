@@ -1,11 +1,12 @@
 import { writeFile, readdir, readFile } from 'fs-extra'
-import { resolve, basename } from 'path'
+import { basename } from 'path'
 import Crypto from 'cryptorjs'
 import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
-import { log, errorHandler } from '../utils/common'
+import { errorHandler } from '../utils/console'
+import { log } from '../export'
 
 /**
  * Write module JSON export as an AES string encryption and
@@ -109,8 +110,9 @@ const createFiles = async (output, state) => {
 
   // Write encryptions
   await encryptFile('specs', output, state, state.specs)
-  await encryptFile('grammar', output, state, state.grammar)
+  await encryptFile('grammar', output, state, { grammar: state.grammar })
 
+  console.log(state)
   const { parsing } = setParsing(state)
   const { encrypt } = await encryptFile('parsing', output, state, parsing)
 

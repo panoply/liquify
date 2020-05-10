@@ -1,7 +1,12 @@
-.DS_Store
-.eslintcache
-pnpm-debug.log
+# DIRECTORIES
+# --------------------
 node_modules/
 export/
 tests/
-release/
+
+# FILES
+# -------------------
+.DS_Store
+.eslintcache
+pnpm-lock.yaml
+pnpm-debug.log

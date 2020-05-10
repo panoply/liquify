@@ -1,11 +1,13 @@
 # DIRECTORIES
 # --------------------
 node_modules/
-src/
-lib/
+package/
 test/
+version/
 
 # FILES
 # -------------------
-rollup.config.js
+.DS_Store
+.eslintcache
+pnpm-lock.yaml
 pnpm-debug.log

@@ -7,6 +7,7 @@
   "icon": "assets/logo.png",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "preview": false,
+  "private": false,
   "license": "SEE LICENSE IN LICENSE",
   "keywords": [
     "liquid",

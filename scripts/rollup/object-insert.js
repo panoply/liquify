@@ -1,6 +1,7 @@
 // @ts-nocheck
-
 import { createFilter } from '@rollup/pluginutils'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
 
 /**
  * Tag Replace - Runs a regular expression and replaces all matched
@@ -17,18 +18,24 @@ import { createFilter } from '@rollup/pluginutils'
 export default function (options) {
 
   const filter = createFilter(options.include, options.exclude)
-  const { tags, callback, delimeters: [ left, right ] } = options
-
+  const requires = Object.keys(options.require)
   const runCapture = (code, id) => {
-    const regexp = new RegExp(`(?<=${left})\\b${tags.join('|')}\\b(?=${right})`, 'gm')
-    if (!regexp.test(code)) return null
-    code = code.replace(regexp, callback)
+
+    for (const req in options.require) {
+
+      const regexp = new RegExp(`require\\('?"?${req}'?"?\\)`, 'gm')
+      if (!regexp.test(code)) return null
+      code = code.replace(regexp, options.require[req])
+
+    }
+
     if (!code) return null
     return code
+
   }
 
   return ({
-    name: 'Tag Replace',
+    name: 'Object Insert',
     transform (code, id) {
       if (!filter(id)) return null
       return runCapture(code, id)

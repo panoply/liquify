@@ -1,7 +1,7 @@
 'use strict'
 
-const { basename } = require('path')
-const { writeFileSync } = require('fs')
+const { basename, resolve } = require('path')
+const { writeFileSync, readFileSync } = require('fs')
 const chalk = require('chalk')
 const { log } = console
 
@@ -16,26 +16,27 @@ const { log } = console
 const afterAllResolved = (lockfile, context) => {
 
   const pkgs = Object.keys(lockfile.importers)
-  const packages = Object.create(null)
+  const packages = {}
+
   log(chalk`{bold.cyanBright Exporting workspaces to CLI }`)
 
   for (const path of pkgs) {
 
-    if (path === 'cli') continue
-
     const pkg = require(`./${path}/package.json`)
-    const name = path === '.' ? 'root' : basename(path)
+    const name = path === '.' ? 'liquify' : basename(path)
     const space = ' '.repeat(40 - path.length)
 
-    packages[name] = { [pkg.name]: path }
+    packages[name] = {
+      path,
+      name: pkg.name,
+      remote: pkg.repository.url.replace('https://', '')
+    }
+
     log(chalk`${path}${space} | {dim CLI Referenced}: {cyan ${pkg.name}}`)
 
   }
 
-  const pkg = Object.assign(require('./cli/package.json'), { packages })
-
-  writeFileSync('./cli/package.json', JSON.stringify(pkg, null, 2))
-
+  writeFileSync(resolve(__dirname, './.packages.json'), JSON.stringify(packages, null, 2))
   context.log(chalk`{cyan ${Object.keys(packages).length}} packages linked CLI`)
 
   return lockfile

@@ -13,6 +13,6 @@
  *
  */
 
-export { default as gammar } from './grammar'
+export { default as grammar } from './grammar'
 export { default as specs } from './specs'
-export { default as schema } from './schema'
+// export { default as schema } from './schema'

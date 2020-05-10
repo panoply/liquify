@@ -4,12 +4,13 @@
   "engines": {
     "node": "12"
   },
+  "private": true,
   "description": "Liquid language variation specification references for the Liquid Language Server and Liquify IDE extension/package tool",
   "main": "package/index.js",
   "scripts": {
-    "peek": "liquify peek -i=package/",
-    "watch": "liquify specs -i=variations/ -o=package/ -w",
-    "build": "liquify specs -i=variations/ -o=package/ -b",
+    "peek": "liquify peek -i package",
+    "build": "liquify -i variations -o package",
+    "watch": "liquify -i variations -o package -w",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,5 +18,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "@liquify/cli": "link:../../cli"
+  },
+  "repository": {
+    "url": "https://github.com/panoply/liquify"
   }
 }

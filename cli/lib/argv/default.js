@@ -4,7 +4,7 @@ import boxen from 'boxen'
 import chalk from 'chalk'
 import clear from 'console-clear'
 import bundle from './bundle'
-import { pkg, log } from '../utils/common'
+import { pkg, log } from '../utils/console'
 
 /**
  * Intialize default launch operations list

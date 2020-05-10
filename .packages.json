@@ -1,0 +1,52 @@
+{
+  "liquify": {
+    "path": ".",
+    "name": "liquify",
+    "remote": "github.com/panoply/liquify"
+  },
+  "cli": {
+    "path": "cli",
+    "name": "@liquify/cli",
+    "remote": "github.com/panoply/vscode-liquid.git"
+  },
+  "atom": {
+    "path": "packages/clients/atom",
+    "name": "atom-liquid",
+    "remote": "github.com/panoply/liquify"
+  },
+  "vscode": {
+    "path": "packages/clients/vscode",
+    "name": "liquify-vscode",
+    "remote": "github.com/panoply/vscode-liquid.git"
+  },
+  "grammar": {
+    "path": "packages/grammar",
+    "name": "@liquify/liquid-language-grammars",
+    "remote": "github.com/panoply/liquid-language-grammars"
+  },
+  "schema": {
+    "path": "packages/schema",
+    "name": "@liquify/schema-stores",
+    "remote": "github.com/panoply/liquify"
+  },
+  "server": {
+    "path": "packages/server",
+    "name": "liquid-language-server",
+    "remote": "github.com/panoply/liquify"
+  },
+  "specs": {
+    "path": "packages/specs",
+    "name": "@liquify/specs",
+    "remote": "github.com/panoply/liquify"
+  },
+  "cdn": {
+    "path": "web/cdn",
+    "name": "@liquify/cdn",
+    "remote": "github.com/panoply/cdn.liquify.dev"
+  },
+  "docs": {
+    "path": "web/docs",
+    "name": "@liquify/docs",
+    "remote": "github.com/panoply/liquify.dev"
+  }
+}
