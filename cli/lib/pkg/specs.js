@@ -5,7 +5,7 @@ import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
-import { errorHandler } from '../utils/console'
+import { errorHandler } from '../utils'
 import { log } from '../export'
 
 /**

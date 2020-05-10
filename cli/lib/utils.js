@@ -2,10 +2,9 @@
 import specs from '@liquify/specs'
 import { resolve, basename, relative, normalize, join } from 'path'
 import { crypto, log } from './export'
-import parsePath from 'parse-filepath'
+// import parsePath from 'parse-filepath'
 import findUp from 'find-up'
 import chalk from 'chalk'
-import { log } from '../export'
 
 /**
  * Error handler which helps keeps error logging clean and
@@ -48,32 +47,38 @@ export const getCrypt = async (param) => {
 /**
  * Command call filter
  *
+ * @param {object} state
  * @param {object} config
  * @param {object} argv
- * @returns {{acive: string, command: string, pkg?: null | string}}
  */
 export const getCommand = async (state, config, { _: [ arg1, arg2 = null ] }) => {
 
   const { commands } = config
   const { packages } = state
 
+  console.log(packages)
+  // commands.push(...packages)
+
   for (const { command, short } of commands) {
-    const valid = (command === arg1 || short === arg1)
-    if (valid && !arg2) {
+    console.log('here', command)
+
+    if ((command === arg1 || short === arg1) && !arg2) {
       state.command = command; break
-    } else if (valid && (arg2 && arg2.length > 0)) {
+    } else if ((command === arg1 || short === arg1) && (arg2 && arg2.length > 0)) {
       for (const pkg in packages) if (pkg === arg2) state.command = command; break
     }
   }
 
-  for (const pkg in packages) {
-    if (pkg === state.command) {
-      const [ path ] = Object.values(packages[pkg])
-      state.path = resolve(state.cwd, path)
-    }
+  // console.log(state)
+
+  for (const [ pkg, { path } ] of await Object.entries(packages)) {
+    if (pkg === state.command) state.path.basename = resolve(state.root, path); break
   }
 
-  return state.command
+  if (!state.path) state.path.basename = basename(state.cwd)
+
+  return state
+
 }
 
 /**
@@ -82,77 +87,46 @@ export const getCommand = async (state, config, { _: [ arg1, arg2 = null ] }) =>
  * @param {object} config
  * @param {object} state
  */
-export const getFlags = (state, config) => async ([ flag, value ]) => {
+export const getFlags = async (state, config, argv) => {
 
   state.flags = null
 
-  for (const { name, short } of config.flags) {
-    if (name === flag || short === flag) {
-      await Object.assign(state.flags, {
-        [name]: [
-          'config',
-          'main',
-          'input',
-          'output',
-          'peek'
-        ].includes(name) ? resolve(state.cwd, value) : value
-      })
+  for (const [ flag, value = null ] of await Object.entries(argv)) {
+    for (const { name, short, type } of config.flags) {
+      if (name !== flag || short !== flag) continue
+      const globs = { [name]: type === 'glob' ? resolve(state.cwd, value) : value }
+      await Object.assign(state.flags, globs)
     }
   }
 
-  if (!state.flags) {
+  return state
+  //  console.log(state)
 
-    // throw log(state)
-
-  }
-
-  return typeof state.flags === 'object' ? state.flags : false
 }
 
 /**
  * Get package.json files
  *
  * @param {object} state
- * @param {object} param
+ * @param {object} packages
  */
-export const getPackages = async (state, { packages }) => {
+export const getPackages = async (state, config, packages) => {
 
   state.packages = packages
 
-  const pkgs = []
   const cwd = process.cwd()
-  const root = basename(resolve(cwd, 'root'))
   const base = basename(cwd)
 
   state.root = await findUp('project', { type: 'directory' })
 
-  for (const command in packages) {
-    const [ description ] = Object.keys(packages[command])
-    pkgs.push({ command, description })
-    if (base === command || root === command) state.active = command
+  for (const [ command, { name } ] of await Object.entries(packages)) {
+    config.commands.push({ command, description: `Package bundle for ${name}` })
+    if (base === command) state.active = command
   }
 
-  return pkgs
-
-}
-
-/**
- * Get package.json files
- *
- * @param {object} state
- * @param {object} param
- */
-export const getWorkPkg = (state) => {
-
-  const pkgs = []
-  const cwd = process.cwd()
-  const root = basename(resolve(cwd, 'root'))
-  const base = basename(cwd)
-
-  if (state.active !== 0) {
-    console.log(state)
+  if (typeof state.active === 'undefined') {
+    log(chalk`{yellow Warning}: No {cyan package.json} in {magenta ${base}} directory`)
   }
 
-  return pkgs
-
+  return state
 }

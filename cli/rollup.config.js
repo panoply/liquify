@@ -4,9 +4,9 @@ import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
 import Crypto from 'cryptorjs'
 import chalk from 'chalk'
-import objectInsert from './../scripts/rollup/object-insert'
 import tagReplace from './../scripts/rollup/tag-replace'
 import pkg from './package.json'
+
 const crypto = new Crypto('sissel siv')
 const { log } = console
 
@@ -41,19 +41,16 @@ export default {
       , warnings: 'verbose'
       , compress: { passes: 2 }
     })
+
   ],
-  include: '',
   external: Object.keys(pkg.dependencies).concat('path', 'util'),
   output: [
     {
       // banner: banner(pkg),
       format: 'cjs',
-      file: pkg.main
-    },
-    {
-      // banner: banner(pkg),
-      format: 'es',
-      file: pkg.module
+      file: pkg.main,
+      plugins: []
     }
+
   ]
 }

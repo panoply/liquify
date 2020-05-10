@@ -9,6 +9,7 @@
     "package/clients",
     "export/vscode-liquify",
     "packages",
+    "cli",
     "cli"
   ],
   "compilerOptions": {

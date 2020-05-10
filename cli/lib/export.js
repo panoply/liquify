@@ -4,7 +4,7 @@ import chalk from 'chalk'
 /**
  * The `package.json` file
  */
-export const pkg = require('./../package.json')
+export const pkg = require('../package.json')
 
 /**
  * File Encryption `IV` and export

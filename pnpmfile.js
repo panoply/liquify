@@ -1,18 +1,12 @@
 'use strict'
-
 const { basename, resolve } = require('path')
-const { writeFileSync, readFileSync } = require('fs')
+const { writeFileSync } = require('fs')
 const chalk = require('chalk')
 const { log } = console
 
-/**
- * Read all workspace packages, extract package names and
- * write them to the CLI config `.packages` file.
- *
- * @param {object} lockfile
- * @param {object} context
- * @returns {object}
- */
+const ROOT = 'project'
+const FILE = '.packages.json'
+
 const afterAllResolved = (lockfile, context) => {
 
   const pkgs = Object.keys(lockfile.importers)
@@ -22,21 +16,22 @@ const afterAllResolved = (lockfile, context) => {
 
   for (const path of pkgs) {
 
-    const pkg = require(`./${path}/package.json`)
-    const name = path === '.' ? 'liquify' : basename(path)
+    const { name, version, repository: { url } } = require(`./${path}/package.json`)
     const space = ' '.repeat(40 - path.length)
+    const remote = url.replace('https://', '')
+    const prop = path !== '.' ? basename(path) : ROOT
 
-    packages[name] = {
-      path,
-      name: pkg.name,
-      remote: pkg.repository.url.replace('https://', '')
-    }
+    Object.assign(packages, { [prop]: { path, name, remote, version } })
 
-    log(chalk`${path}${space} | {dim CLI Referenced}: {cyan ${pkg.name}}`)
+    log(chalk`${path}${space} | {dim CLI Referenced}: {cyan ${name}}`)
 
   }
 
-  writeFileSync(resolve(__dirname, './.packages.json'), JSON.stringify(packages, null, 2))
+  const writePath = resolve(__dirname, FILE)
+  const writeJson = JSON.stringify(packages, null, 2)
+
+  writeFileSync(writePath, writeJson)
+
   context.log(chalk`{cyan ${Object.keys(packages).length}} packages linked CLI`)
 
   return lockfile

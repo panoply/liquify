@@ -1,30 +1,47 @@
 
 import { resolve } from 'path'
-import { cmdError } from './utils/console'
-import { getCommand, getFlags, getPackages } from './utils'
-import config from './config'
-import chalk from 'chalk'
-import * as packages from './pkg-build/export'
-import { log } from 'console'
+import { readFile } from 'fs-extra'
+import findUp from 'find-up'
+import { getCommand, getFlags, getPackages, cmdError } from './utils'
+import config from '../argv.config.json'
+import defaults from './prompt/defaults'
+// import chalk from 'chalk'
+// import * as packages from './pkg/export'
+import { log } from './export'
+const { command } = require('execa')
 
 export default async argv => {
 
-  const state = Object.create(null)
-  const pkgs = await getPackages(state, (await import('./export')).pkg)
+  const comman = await command('cd version/;',
+    {
+      stdio: 'inherit',
+      cwd: process.cwd(),
+      localDir: process.cwd()
+    })
 
-  state.cwd = process.cwd()
-  config.commands = [ ...config.commands, ...pkgs ]
+  try {
+    await comman
+  } catch (error) {
+    log(`${error.shortMessage}`)
+  }
 
+  return
+  const root = await findUp('project', { type: 'directory' })
+  const state = { path: { cwd: process.cwd(), root: root } }
+  const pkg = await readFile(resolve(state.path.root, '.packages.json'))
+
+  await getPackages(state, config, JSON.parse(pkg.toString()))
   await getCommand(state, config, argv)
-  return console.log(state)
+  await getFlags(state, config, argv)
 
-  // await getWorkPkg(state)
+  // if (!state.command) log(argv._.map(cmdError).join('\n'))
 
-  if (!state.command) return log(argv._.map(cmdError).join('\n'))
+  // if (!state.flags) return log(argv._.map(cmdError).join('\n'))
 
-  const flags = getFlags(state, config)
-  Object.entries(argv).forEach(await flags)
+  // console.log(state)
 
-  await packages[state.active](state).catch(e => log(chalk`{red Error}: ${e.message}`))
+  // await packages[state.active](state).catch(e => log(chalk`{red Error}: ${e.message}`))
+
+  // if (!state.flags) await defaults(state, config)
 
 }

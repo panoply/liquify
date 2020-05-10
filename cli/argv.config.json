@@ -1,97 +1,228 @@
 {
-  "cli": {
-    "commands": [
-      {
-        "command": "bundle",
-        "description": "Bundler"
-      },
-      {
-        "command": "git",
-        "description": "Common git related operations for the project"
-      },
-      {
-        "command": "package",
-        "description": "Common git related operations for the project"
-      },
-      {
-        "command": "peek",
-        "description": "Common git related operations for the project"
-      },
-      {
-        "command": "publish",
-        "description": "Common git related operations for the project"
-      }
-    ],
-    "flags": [
-      {
-        "name": "config",
-        "short": "c",
-        "description": "Use configuration file (defaults to `.liquifyrc.json`",
-        "type": "path"
-      },
-      {
-        "name": "watch",
-        "short": "w",
-        "description": "Watch and bundle file/s",
-        "type": "boolean"
-      },
-      {
-        "name": "main",
-        "short": "m",
-        "description": "Define a main (entry) configuration file",
-        "type": "path"
-      },
-      {
-        "name": "input",
-        "short": "i",
-        "description": "Input path to directory of file/s",
-        "type": "path"
-      },
-      {
-        "name": "output",
-        "short": "o",
-        "description": "Output path destination of bundled file/s",
-        "type": "path"
-      },
-      {
-        "name": "prod",
-        "short": "p",
-        "description": "Production bundle build",
-        "type": "boolean"
-      },
-      {
-        "name": "dev",
-        "short": "d",
-        "description": "Develop bundle build (default)",
-        "type": "boolean"
-      },
-      {
-        "name": "help",
-        "short": "h",
-        "description": "Shows the CLI help and commands list",
-        "type": "boolean"
-      },
-      {
-        "name": "version",
-        "short": "-v",
-        "description": "Shows the CLI help and commands list",
-        "type": "boolean"
-      },
-      {
-        "name": "postinstall",
-        "description": "Post install",
-        "type": "boolean"
-      },
-      {
-        "name": "preinstall",
-        "description": "Pre install",
-        "type": "boolean"
-      },
-      {
-        "name": "dry-run",
-        "description": "Dry runner",
-        "type": "boolean"
-      }
-    ]
-  }
+  "commands": [
+    {
+      "command": "build",
+      "description": "Bundle package/s execution (via npm scripts)",
+      "requires": ""
+    },
+    {
+      "command": "git",
+      "description": "Common git related operations for the project",
+      "options": [
+        {
+          "command": "Commit",
+          "description": "Commit changes to this package"
+        },
+        {
+          "command": "Push",
+          "description": "Push package to it remote"
+        },
+        {
+          "command": "Pull",
+          "description": "Pull from the remote"
+        },
+        {
+          "command": "Clone",
+          "description": "Pull from the remote"
+        },
+        {
+          "command": "Merge",
+          "description": "Merge between branches"
+        },
+        {
+          "command": "Branch",
+          "description": "Switch, Create or Delete branch"
+        },
+        {
+          "command": "Subtree",
+          "description": "Show subtree packages"
+        },
+        {
+          "command": "Cache",
+          "description": "Remove Cache"
+        }
+      ]
+    },
+    {
+      "command": "package",
+      "description": "Packaging execution (tgz/vsix)",
+      "options": [
+        {
+          "command": "tgz (via pnpm pack)",
+          "description": "Publish package to its NPM registry",
+          "execa": [
+            {
+              "pnpm": ["pack"],
+              "cd": ["versions;", "pnpm", "pack", "../", "&&", "cd .."]
+            }
+          ]
+        },
+        {
+          "command": "vsix (via vscode vsix)",
+          "description": "Publish web package to the Netlify server"
+        }
+      ]
+    },
+    {
+      "command": "peek",
+      "description": "Explore package via CLI (files, structure, ignores etc)",
+      "options": [
+        {
+          "command": "JSON Files",
+          "description": "Browse JSON files in the package using FX",
+          "files": ["*.json", "*.jsonc"]
+        },
+        {
+          "command": "Ignored",
+          "description": "View ignored files ",
+          "files": ["(\\.[a-zA-Z0-9_\\-]+ignore"]
+        },
+        {
+          "command": "Encoded Files",
+          "description": "View the encoded/encrypted files"
+        }
+      ]
+    },
+    {
+      "command": "publish",
+      "description": "Publish to remote services (netlify, marketplace etc)",
+      "options": [
+        {
+          "command": "NPM Registry",
+          "description": "Publish package to its NPM registry"
+        },
+        {
+          "command": "Netlify",
+          "description": "Publish web package to the Netlify server"
+        },
+        {
+          "command": "Marketplace",
+          "description": "Publish VS Code extension to Marketplace"
+        }
+      ]
+    },
+    {
+      "command": "Release",
+      "description": "Bundle package/s execution (via npm scripts)",
+      "options": [
+        {
+          "command": "Build",
+          "description": "Commit changes to this package"
+        },
+        {
+          "command": "Watch",
+          "description": "Push package to it remote"
+        },
+        {
+          "command": "Obfuscat",
+          "description": "Pull from the remote"
+        },
+        {
+          "command": "Copy",
+          "description": "Merge between branches"
+        },
+        {
+          "command": "Clean",
+          "description": "Switch, Create or Delete branch"
+        }
+      ]
+    },
+    {
+      "command": "Install",
+      "description": "Installation operatives",
+      "options": [
+        {
+          "command": "Build",
+          "description": "Commit changes to this package"
+        },
+        {
+          "command": "Watch",
+          "description": "Push package to it remote"
+        },
+        {
+          "command": "Obfuscat",
+          "description": "Pull from the remote"
+        },
+        {
+          "command": "Copy",
+          "description": "Merge between branches"
+        },
+        {
+          "command": "Clean",
+          "description": "Switch, Create or Delete branch"
+        }
+      ]
+    }
+  ],
+  "flags": [
+    {
+      "name": "config",
+      "short": "c",
+      "description": "Use configuration file (defaults to `.liquifyrc.json`",
+      "type": "glob"
+    },
+    {
+      "name": "watch",
+      "short": "w",
+      "description": "Watch and bundle file/s",
+      "type": "boolean"
+    },
+    {
+      "name": "main",
+      "short": "m",
+      "description": "Define a main (entry) configuration file",
+      "type": "path"
+    },
+    {
+      "name": "input",
+      "short": "i",
+      "description": "Input path to directory of file/s",
+      "type": "glob"
+    },
+    {
+      "name": "output",
+      "short": "o",
+      "description": "Output path destination of bundled file/s",
+      "type": "glob"
+    },
+    {
+      "name": "prod",
+      "short": "p",
+      "description": "Production bundle build",
+      "type": "boolean"
+    },
+    {
+      "name": "dev",
+      "short": "d",
+      "description": "Develop bundle build (default)",
+      "type": "boolean"
+    },
+    {
+      "name": "help",
+      "short": "h",
+      "description": "Shows the CLI help and commands list",
+      "type": "boolean"
+    },
+    {
+      "name": "version",
+      "short": "v",
+      "description": "Shows the CLI help and commands list",
+      "type": "boolean"
+    },
+    {
+      "name": "postinstall",
+      "description": "Post install",
+      "type": "boolean"
+    },
+    {
+      "name": "preinstall",
+      "description": "Pre install",
+      "type": "boolean"
+    },
+    {
+      "name": "dry-run",
+      "description": "Dry runner",
+      "type": "boolean"
+    }
+  ]
 }
