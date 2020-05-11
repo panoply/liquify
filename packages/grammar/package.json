@@ -4,8 +4,8 @@
   "description": "TextMate Language grammars for the Liquid Templating Language",
   "private": false,
   "scripts": {
-    "build": "liquify -i generate.jsonc -o package",
-    "watch": "liquify -i generate.jsonc -o package -w",
+    "build": "liquify -c -o package",
+    "watch": "liquify -c  -o package -w",
     "peek": "liquify peek",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

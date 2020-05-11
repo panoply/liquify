@@ -10,20 +10,20 @@
 
 # @liquify/cli
 
-This package is avialible on the npm registery exclusively for [@liquify](#) modules. This is a **closed source** command line tool used by collaborators and contributors working on propietary and/or open source packages of the [Liquify](https://liquify.dev) IDE text editor extension/plugin. Distributed code provided in this package has been mangled, minified and encypted using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm. The resulting production bundle is enigmatic which prevents reverse enginnering without capable context.
+This package is available on the npm registry exclusively for [@liquify](#) modules. This is a **closed source** command line tool which is used by collaborators and contributors working on proprietary and/or open source packages of the [Liquify](https://liquify.dev) text-editor extension/plugin. Liquify is developed in private monorepo that operates on a freemium licensing model and ships proprietarty, open and closed source packages from a single/sub-tree git [metarepo](https://notes.burke.libbey.me/metarepo/#metarepo-architecture) (mono + multi) repository.
+
+**Distributed code provided in this package has been mangled, minified, obfuscated and encrypted using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm. The resulting production bundle is enigmatic which prevents reverse engineering the tool and its dependents without capable context of their source.**
 
 ## Why?
 
-Liquify is developed in private monorepo that operates on a freemium licensing model and ships proprietarty, open and closed source packages from a single/sub-tree git [metarepo](https://notes.burke.libbey.me/metarepo/#metarepo-architecture) (_mono_ + _multi_) repository.
+Liquify's private (proprietary) and public (open/closed source) packages use this cli tool as a dependency module to provide package specific development build scripts and bundle operations to open sourced package development workspaces. The cli is an effective and performant solution when working with the code base and allowed for parts of the project to be open sourced without sacraficing the integitry of proprietary packages.
 
-Liquify's private (_proprietary_) and public (_open/closed source_) packages use this cli tool as a dependency module to provide `package.json` specific development build scripts and bundle operations in open sourced package development workspaces.
+# Usage <img align="right" src="https://raw.githubusercontent.com/panoply/liquify/next/assets/pnpm.svg?token=ABVXCLHHRU3WQKQOVKHYPIS6YBYYY" width="40" height="40">
 
-# Usage<img align="right" src="https://raw.githubusercontent.com/panoply/liquify/next/assets/pnpm.svg?token=ABVXCLHHRU3WQKQOVKHYPIS6YBYYY" width="40" height="40">
-
-Commands are preset to package `scripts` in [@liquify/\*\*](#) modules and unless you are working at root level in Liquify code base you probably wont find yourself using the commands as the run script presets in each package will suffice. When working on the cli dependents you will need to use the [Pnpm Package Manager](#) to work with the npm registery and the cli will enforce this.
+Commands are preset to `scripts` in [@liquify](#) packages and unless you are working at root level in the Liquify code base you probably wont find yourself using the commands as the run script presets in each package will suffice. When working on the cli dependents you will need to use the [Pnpm Package Manager](#) to work with the npm registry and the cli will enforce this.
 
 ```cli
-$ pnpx liquify <pkg> --flags
+$ pnpx liquify <cmd> <pkg> --flags
 ```
 
 <details>
@@ -32,7 +32,7 @@ $ pnpx liquify <pkg> --flags
 </summary>
 <p>
 
-The following Liquify packages require the cli module as dependency and ship with preset run script commands or use methods available via the exported api.
+The following Liquify packages require this cli module as a dependency and ship with preset run script commands.
 
 - [@liquify/atom](#)
 - [@liquify/liquid-language-server](#)
@@ -44,32 +44,39 @@ The following Liquify packages require the cli module as dependency and ship wit
 </p>
 </details>
 
-### Commands
+## Commands
 
 ```cli
-bundle   <pkg>   --flags      Define a main file entry to use (optional)
-git      <pkg>   --flags      Production build and/or bundle
-peek     <pkg>   --flags      Production build and/or bundle
-publish  <pkg>   --flags      Development build and/or bundle
-package  <pkg>   --flags      Production build and/or bundle
-test     <pkg>   --flags      Production build and/or bundle
+bundle   <pkg>   --flags    Define a main file entry to use (optional)
+git      <pkg>   --flags    Production build and/or bundle
+peek     <pkg>   --flags    Production build and/or bundle
+publish  <pkg>   --flags    Development build and/or bundle
+package  <pkg>   --flags    Production build and/or bundle
+test     <pkg>   --flags    Production build and/or bundle
 ```
 
-### Flags
+## Flags
 
 ```cli
--c, --config  <file>          Use a .liquifyrc configuration file
--m, --main    <glob>          Define a main file entry to use (optional)
--i, --input   <glob>          Input directory path or file
--o, --output  <dir>           Output directory path or file
--w, --watch                   Watch input files/directories and rebuild on changes
--d, --dev                     Development build and/or bundle
--p, --prod                    Production build and/or bundle
--v, --version                 Show version number
--h, --help                    Show this help message
---preinstall                  Run the pre-install NPM script of package
---postinstall                 Run the post-install NPM script of package
---dry-run                     Dry run the command
+-c, --config  <file>        Build configuration file defaults to "build.config.json"
+-i, --input   <glob>        Input directory path glob pattern, eg: "--input dir/**/*.json"
+-o, --output  <dir>         Output directory path, eg: "--output `path/to/output`"
+-w, --watch                 Watch input files/directories and rebuild on changes
+-d, --dev                   Development build and/or bundle
+-p, --prod                  Production build and/or bundle
+-v, --version               Show version number
+-h, --help                  Show this help message
+--preinstall                Run the pre-install NPM script of package
+--postinstall               Run the post-install NPM script of package
+--dry-run                   Dry run the command
+```
+
+## Config
+
+Packages distributed by Liquify might be using a `build.config.json` configuration file to help generate bundles and provide the cli with additional build options. Configuration settings available in `build.config.json` files use a preset [JSON Schema Store](#) which help prevent incorrect or invalid settings being defined on a per-package basis. In order to use a build config file, you will need use the `-c` or `--config` flag and instruct the cli to look for a build configuration file.
+
+```cli
+$ pnpx liquify <cmd> <pkg> -c
 ```
 
 <img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />

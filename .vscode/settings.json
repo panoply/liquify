@@ -64,7 +64,13 @@
     },
     {
       "icon": "config",
-      "extensions": [".lightserverrc", "argv.config.json"],
+      "extensions": [
+        ".lightserverrc",
+        "argv.config.json",
+        "build.config.json",
+        "liquify.config.json",
+        "pkg.config.js"
+      ],
       "filename": true,
       "format": "svg"
     },

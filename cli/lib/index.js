@@ -7,25 +7,10 @@ import config from '../argv.config.json'
 import defaults from './prompt/defaults'
 // import chalk from 'chalk'
 // import * as packages from './pkg/export'
-import { log } from './export'
-const { command } = require('execa')
+// import { log } from './export'
 
 export default async argv => {
 
-  const comman = await command('cd version/;',
-    {
-      stdio: 'inherit',
-      cwd: process.cwd(),
-      localDir: process.cwd()
-    })
-
-  try {
-    await comman
-  } catch (error) {
-    log(`${error.shortMessage}`)
-  }
-
-  return
   const root = await findUp('project', { type: 'directory' })
   const state = { path: { cwd: process.cwd(), root: root } }
   const pkg = await readFile(resolve(state.path.root, '.packages.json'))
@@ -42,6 +27,6 @@ export default async argv => {
 
   // await packages[state.active](state).catch(e => log(chalk`{red Error}: ${e.message}`))
 
-  // if (!state.flags) await defaults(state, config)
+  if (!state.flags) await defaults(state, config)
 
 }

@@ -3,7 +3,10 @@
     {
       "command": "build",
       "description": "Bundle package/s execution (via npm scripts)",
-      "requires": ""
+      "execa": {
+        "pnpm": ["dev"],
+        "rollup": ["package"]
+      }
     },
     {
       "command": "git",
@@ -50,12 +53,9 @@
         {
           "command": "tgz (via pnpm pack)",
           "description": "Publish package to its NPM registry",
-          "execa": [
-            {
-              "pnpm": ["pack"],
-              "cd": ["versions;", "pnpm", "pack", "../", "&&", "cd .."]
-            }
-          ]
+          "execa": {
+            "pnpm": ["pack"]
+          }
         },
         {
           "command": "vsix (via vscode vsix)",
@@ -103,55 +103,11 @@
     },
     {
       "command": "Release",
-      "description": "Bundle package/s execution (via npm scripts)",
-      "options": [
-        {
-          "command": "Build",
-          "description": "Commit changes to this package"
-        },
-        {
-          "command": "Watch",
-          "description": "Push package to it remote"
-        },
-        {
-          "command": "Obfuscat",
-          "description": "Pull from the remote"
-        },
-        {
-          "command": "Copy",
-          "description": "Merge between branches"
-        },
-        {
-          "command": "Clean",
-          "description": "Switch, Create or Delete branch"
-        }
-      ]
+      "description": "Bundle package/s execution (via npm scripts)"
     },
     {
       "command": "Install",
-      "description": "Installation operatives",
-      "options": [
-        {
-          "command": "Build",
-          "description": "Commit changes to this package"
-        },
-        {
-          "command": "Watch",
-          "description": "Push package to it remote"
-        },
-        {
-          "command": "Obfuscat",
-          "description": "Pull from the remote"
-        },
-        {
-          "command": "Copy",
-          "description": "Merge between branches"
-        },
-        {
-          "command": "Clean",
-          "description": "Switch, Create or Delete branch"
-        }
-      ]
+      "description": "Installation operatives"
     }
   ],
   "flags": [

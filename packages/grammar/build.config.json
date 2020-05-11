@@ -4,7 +4,7 @@
   "output": "liquid-standard.tmLanguage",
   "variations": [
     {
-      "variation": "shopify",
+      "name": "shopify",
       "output": "liquid-shopify.tmLanguage",
       "grammar": {
         "name": "Liquid Shopify",
@@ -13,7 +13,7 @@
       }
     },
     {
-      "variation": "11ty",
+      "name": "11ty",
       "output": "liquid-11ty.tmLanguage",
       "grammar": {
         "name": "Liquid 11ty",

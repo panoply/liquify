@@ -1,25 +1,25 @@
 {
   "name": "@liquify/specs",
   "version": "0.0.2",
+  "private": true,
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "SEE LICENSE IN LICENSE",
+  "description": "Liquid language variation specification references for the Liquid Language Server and Liquify IDE extension/package tool",
+  "main": "package/index.js",
   "engines": {
     "node": "12"
   },
-  "private": true,
-  "description": "Liquid language variation specification references for the Liquid Language Server and Liquify IDE extension/package tool",
-  "main": "package/index.js",
-  "scripts": {
-    "peek": "liquify peek -i package",
-    "build": "liquify -i variations -o package",
-    "watch": "liquify -i variations -o package -w",
-    "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Nikolas Savvidis <nicos@gmx.com>",
-  "license": "SEE LICENSE IN LICENSE",
-  "dependencies": {
-    "@liquify/cli": "link:../../cli"
-  },
   "repository": {
     "url": "https://github.com/panoply/liquify"
+  },
+  "scripts": {
+    "dev": "liquify -i variations -o package -w",
+    "build": "liquify -i variations -o package --prod",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "peek": "liquify peek -i package",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@liquify/cli": "link:../../cli"
   }
 }
