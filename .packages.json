@@ -2,61 +2,61 @@
   "project": {
     "path": ".",
     "name": "liquify",
-    "remote": "github.com/panoply/liquify",
+    "repo": "github.com/panoply/liquify",
     "version": "0.0.0-development"
   },
   "cli": {
     "path": "cli",
     "name": "@liquify/cli",
-    "remote": "github.com/panoply/vscode-liquid.git",
+    "repo": "github.com/panoply/vscode-liquid.git",
     "version": "0.0.1"
   },
   "atom": {
     "path": "packages/clients/atom",
     "name": "atom-liquid",
-    "remote": "github.com/panoply/liquify",
+    "repo": "github.com/panoply/liquify",
     "version": "0.1.0"
   },
   "vscode": {
     "path": "packages/clients/vscode",
     "name": "liquify-vscode",
-    "remote": "github.com/panoply/vscode-liquid.git",
+    "repo": "github.com/panoply/vscode-liquid.git",
     "version": "0.0.1"
   },
   "grammar": {
     "path": "packages/grammar",
     "name": "@liquify/liquid-language-grammars",
-    "remote": "github.com/panoply/liquid-language-grammars",
+    "repo": "github.com/panoply/liquid-language-grammars",
     "version": "0.0.1"
   },
   "schema": {
     "path": "packages/schema",
     "name": "@liquify/schema-stores",
-    "remote": "github.com/panoply/liquify",
+    "repo": "github.com/panoply/liquify",
     "version": "0.0.1"
   },
   "server": {
     "path": "packages/server",
     "name": "liquid-language-server",
-    "remote": "github.com/panoply/liquify",
+    "repo": "github.com/panoply/liquify",
     "version": "1.0.0"
   },
   "specs": {
     "path": "packages/specs",
     "name": "@liquify/specs",
-    "remote": "github.com/panoply/liquify",
+    "repo": "github.com/panoply/liquify",
     "version": "0.0.2"
   },
   "cdn": {
     "path": "web/cdn",
     "name": "@liquify/cdn",
-    "remote": "github.com/panoply/cdn.liquify.dev",
+    "repo": "github.com/panoply/cdn.liquify.dev",
     "version": "0.0.1"
   },
   "docs": {
     "path": "web/docs",
     "name": "@liquify/docs",
-    "remote": "github.com/panoply/liquify.dev",
+    "repo": "github.com/panoply/liquify.dev",
     "version": "0.0.1"
   }
 }

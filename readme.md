@@ -1,54 +1,119 @@
+<img src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" align="left" />&nbsp;&nbsp;<img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
+<br>
+
 # Liquify
 
-A closed source LSP ([Language Sever Protocol](#)) implementation for the [Liquid Templating Language](#). This repository contains proprietary code used by the [Liquify](#) extension/package IDE tool.
+An extension/package tool for the [Liquid Templating Language](#). Liquify uses the [Language Sever Protocol](#) implementation to provide modern IDE tooling and features to developers working with Liquid and using text editors like [VSCode](#), [Sublime](#) and [Atom](#). The tool operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licenced packages.
 
-### Repositories
+### Packages
 
-| Package                           | Repository                    |
-| --------------------------------- | ----------------------------- |
-| @liquify/cli                      | [cli](#)                      |
-| @liquify/specs                    | [packages/specs](#)           |
-| @liquify/schema-stores            | [packages/schema](#)          |
-| @liquify/liquid-language-server   | [packages/server](#)          |
-| @liquify/liquid-language-grammars | [packages/grammar](#)         |
-| @liquify/vscode                   | [packages/clients/vscode](#)  |
-| @liquify/atom                     | [packages/clients/atom](#)    |
-| @liquify/sublime                  | [packages/clients/sublime](#) |
-| @liquify/cdn.liquify.dev          | [web/cdn](#)                  |
-| @liquify/liquify.dev              | [web/docs](#)                 |
+| Repository                    | License              | Description                                           |
+| ----------------------------- | -------------------- | ----------------------------------------------------- |
+| [@liquify/cli](#)             | [CC BY-NC-ND 4.0](#) | CLI tool used for development on Liquify packages.    |
+| [@liquify/specs](#)           | [PROPRIETARY](#)     | Liquid variation specification references.            |
+| [@liquify/schema-stores](#)   | [CC BY-NC-ND 4.0](#) | Schema Stores used for configuration files and JSON.  |
+| [cdn.liquify.dev ](#)         | [CC BY-NC-ND 4.0](#) | Liquify CDN for delivering things like Schema Stores. |
+| [liquify.dev](#)              | [CC BY-NC-ND 4.0](#) | Liquify website for documentation and licensing.      |
+| [liquid-language-grammars](#) | [MIT](#)             | Liquid Language generator for TextMate grammar files. |
+| [liquid-language-server](#)   | [PROPRIETARY](#)     | Liquid Language server implementation using LSP       |
+| [liquify-atom ](#)            | [MIT](#)             | Atom Liquify package using Atom LSP Client            |
+| [liquify-sublime](#)          | [MIT](#)             | Sublime Liquify package using Sublime LSP             |
+| [liquify-vscode](#)           | [MIT](#)             | VSCode Liquify extension using VSCode LSP Client      |
+
+###### IMPORTANT
+
+**Packages operating on a [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#) license consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types) so their producton bundles are mangled, minified and obfuscated upon prior to distribution. Objects and large data sources like [Liquid Specifications](#) use a [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) encryption algorithm.**
 
 # Setup
 
-The project is a combination monorepo/multirepo that uses [pnpm](#) for dependency and workspace management. The project contains both proprietary and open sourced packages. The open source packages are deployed to public repositiories hosted on Github.
+The project is a combination monorepo/multirepo that uses [pnpm](#) for dependency and workspace management. Development is intended to be conducted using the [vscode](#) text editor. You can use the [liquify.code-workspace](#) or traditional workspace hierarchy. The development environments requires the following:
 
-> Development is intended to be conducted within the [vscode](#) text editor. You can use the [liquify.code-workspace](#) or traditional workspace hierarchy.
+<details>
+<summary>
+  Pre-requisites
+</summary>
+<p>
 
-### Install
+- [Git](#)
+- [Node](#)
+- [Pnpm](#)
+- [VS Code](#)
+
+</p>
+</details>
+
+### Installation
 
 - Ensure [pnpm](#) is installed globally `npm i pnpm -g`
 - Clone this repository `git clone https://github.com/panoply/liquify.git`
 - Run `pnpm install`
 
-### Interactive CLI
+# CLI
 
 Liquify provides an interactive CLI that allows you to run common tasks. The interactive CLI will provide shortcut execution for Git operations, deployments, publishments, bundling and more. You can initialize the interactive CLI by running `pnpm run cli` command and following the prompts.
 
-> Unless you have verified SHA, publishing to some service providers may be restricted, such as the vscode [marketplace](#) or sublime [Package Control](#).
-
 ### Commands
 
-| Command            | Description                                                |
-| ------------------ | ---------------------------------------------------------- |
-| `pnpm run cli`     | Starts the interactive CLI                                 |
-| `pnpm run dev`     | Starts debugger, bundler and watchers for entire project   |
-| `pnpm run build`   | Builds the production exports of Liquify                   |
-| `pnpm run grammar` | Bundles grammar tag names according to specifications      |
-| `pnpm run specs`   | Bundles and exports the Liquid Specifications              |
-| `pnpm run schemas` | Exports Liquify JSON schema stores to required directories |
-| `pnpm run website` | Starts 11ty and Liquify website documentation development  |
-| `pnpm run publish` | Initializes the interactive CLI publisher                  |
-| `pnpm run test`    | Runs a bunch of tests using Mocha                          |
+```cli
+bundle   <pkg>   --flags    Define a main file entry to use (optional)
+git      <pkg>   --flags    Production build and/or bundle
+peek     <pkg>   --flags    Production build and/or bundle
+publish  <pkg>   --flags    Development build and/or bundle
+package  <pkg>   --flags    Production build and/or bundle
+test     <pkg>   --flags    Production build and/or bundle
+```
+
+### Flags
+
+```cli
+-c, --config  <file>        Build configuration file defaults to "build.config.json"
+-i, --input   <glob>        Input directory path glob pattern, eg: "--input dir/**/*.json"
+-o, --output  <dir>         Output directory path, eg: "--output `path/to/output`"
+-w, --watch                 Watch input files/directories and rebuild on changes
+-d, --dev                   Development build and/or bundle
+-p, --prod                  Production build and/or bundle
+-v, --version               Show version number
+-h, --help                  Show this help message
+--preinstall                Run the pre-install NPM script of package
+--postinstall               Run the post-install NPM script of package
+--dry-run                   Dry run the command
+```
+
+### Config
+
+Packages distributed by Liquify might be using a `build.config.json` configuration file to help generate bundles and provide the cli with additional build options. Configuration settings available in `build.config.json` files use a preset [JSON Schema Store](#) which help prevent incorrect or invalid settings being defined on a per-package basis. In order to use a build config file, you will need use the `-c` or `--config` flag and instruct the cli to look for a build configuration file.
+
+```cli
+$ pnpx liquify <cmd> <pkg> -c
+```
+
+<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />
 
 # Bundling
 
-Bundles are compiled using [Rollup](#).
+Rollup and the Liquify CLI are used to bundle packages. The rollup config files located at the project root are used for executing project wide bundling of JavaScript.
+
+### CLI Scripts
+
+```cli
+$ pnpx liquify <cmd> <pkg> --flags
+```
+
+### PNPM Scripts
+
+```cli
+pnpm run dev
+pnpm run build
+pnpm run pack
+pnpm run peep
+pnpm run status
+pnpm run test
+```
+
+### Obfuscation
+
+Packages operating on a [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#) license consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types) so their producton bundles are mangled, minified and obfuscated upon prior to distribution. Objects and large data sources like [Liquid Specifications](#) use a [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) encryption algorithm.
+
+<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />
+
+🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />

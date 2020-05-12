@@ -5,8 +5,8 @@ import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
-import { errorHandler } from '../utils'
-import { log } from '../export'
+import { errorHandler } from '../utils/console'
+import { log } from '../utils/export'
 
 /**
  * Write module JSON export as an AES string encryption and

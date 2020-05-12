@@ -2,22 +2,22 @@
   "name": "@liquify/liquid-language-grammars",
   "version": "0.0.1",
   "description": "TextMate Language grammars for the Liquid Templating Language",
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "MIT",
   "private": false,
+  "repository": {
+    "url": "https://github.com/panoply/liquid-language-grammars"
+  },
   "scripts": {
     "build": "liquify -c -o package",
     "watch": "liquify -c  -o package -w",
     "peek": "liquify peek",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Nikolas Savvidis <nicos@gmx.com>",
-  "license": "MIT",
   "husky": {
     "hooks": {
       "post-merge": "pnpm run push"
     }
-  },
-  "repository": {
-    "url": "https://github.com/panoply/liquid-language-grammars"
   },
   "devDependencies": {
     "@liquify/cli": "link:../../cli"

@@ -2,12 +2,9 @@
 import { resolve } from 'path'
 import { readFile } from 'fs-extra'
 import findUp from 'find-up'
-import { getCommand, getFlags, getPackages, cmdError } from './utils'
+import { getCommand, getFlags, getPackages } from './utils/config'
 import config from '../argv.config.json'
 import defaults from './prompt/defaults'
-// import chalk from 'chalk'
-// import * as packages from './pkg/export'
-// import { log } from './export'
 
 export default async argv => {
 

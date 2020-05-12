@@ -3,7 +3,8 @@ import figlet from 'figlet'
 import boxen from 'boxen'
 import chalk from 'chalk'
 import clear from 'console-clear'
-import { log, pkg } from '../export'
+
+const { log } = console
 
 /**
  * Intialize default launch operations list

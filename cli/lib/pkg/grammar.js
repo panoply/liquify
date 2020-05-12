@@ -1,13 +1,13 @@
 import { writeFile, readdir, readFile } from 'fs-extra'
 import { resolve, basename } from 'path'
-import boxen from 'boxen'
+// import boxen from 'boxen'
 import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
-import execa from 'execa'
-import chokidar from 'chokidar'
-import { log } from '../export'
-import { getCrypt } from '../utils'
+// import execa from 'execa'
+// import chokidar from 'chokidar'
+// import { log } from '../utils/export'
+import { getCrypt } from '../utils/crypto'
 
 import YAML from 'json-to-pretty-yaml'
 

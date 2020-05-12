@@ -18,10 +18,10 @@ const afterAllResolved = (lockfile, context) => {
 
     const { name, version, repository: { url } } = require(`./${path}/package.json`)
     const space = ' '.repeat(40 - path.length)
-    const remote = url.replace('https://', '')
+    const repo = url.replace('https://', '')
     const prop = path !== '.' ? basename(path) : ROOT
 
-    Object.assign(packages, { [prop]: { path, name, remote, version } })
+    Object.assign(packages, { [prop]: { path, name, repo, version } })
 
     log(chalk`${path}${space} | {dim CLI Referenced}: {cyan ${name}}`)
 
