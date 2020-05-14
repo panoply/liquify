@@ -3,63 +3,75 @@ import figlet from 'figlet'
 import boxen from 'boxen'
 import chalk from 'chalk'
 import clear from 'console-clear'
+import { getLists } from './choices'
+import execa from 'execa'
 
 const { log } = console
 
 /**
  * Intialize default launch operations list
  *
+ * @param {import('argv.config.json')} config
+ * @param {import('types').Options} options
  */
-export default async (state, config) => {
+export default async function (config, options) {
 
   clear(true)
 
-  log(
-    chalk`{cyan ${figlet.textSync('Liquify CLI', {
-      font: 'Slant',
-      horizontalLayout: 'controlled smushing'
-    })}}`
-  )
+  const { command, info } = options
 
-  const { name, path, remote, version } = state.packages[state.active]
+  if (!command.nobanner) {
+    log(
+      chalk`{cyan ${figlet.textSync('Liquify CLI', {
+        font: 'Slant',
+        horizontalLayout: 'controlled smushing'
+      })}}\n`
+    )
+  }
 
-  log(boxen([
-    chalk`{magentaBright Command}{dim :} ${state.command}                              `,
-    chalk`{magentaBright Package}{dim :} ${name}                            `,
-    chalk`{magentaBright Version}{dim :} ${version}                            `,
-    chalk`{magentaBright  Remote}{dim :} ${remote}                            `,
-    chalk`{magentaBright Located}{dim :} ${path}`
-  ].join('\n'), {
-    padding: 0,
-    borderColor: 'gray',
-    dimBorder: true,
-    borderStyle: {
-      topLeft: ' ',
-      topRight: ' ',
-      bottomLeft: ' ',
-      bottomRight: ' ',
-      horizontal: '-',
-      vertical: ' '
-    }
-  }))
+  if (command.task && info) {
+    log(boxen([
+      chalk`{magentaBright  Execute}{dim :} ${command.task}                              `,
+      chalk`{magentaBright  Package}{dim :} ${info.name}                      `,
+      chalk`{magentaBright  Version}{dim :} ${info.version}                   `,
+      chalk`{magentaBright   Remote}{dim :} ${info.repo}                      `,
+      chalk`{magentaBright  Located}{dim :} ${info.path}                      `
+    ].join('\n'), {
+      padding: 0,
+      borderColor: 'gray',
+      dimBorder: true,
+      borderStyle: {
+        topLeft: ' ',
+        topRight: ' ',
+        bottomLeft: ' ',
+        bottomRight: ' ',
+        horizontal: '-',
+        vertical: ' '
+      }
+    }))
+  }
 
-  const options = [
-    {
-      type: 'list',
-      name: 'run',
-      message: 'Select operation:',
-      choices: config.commands.filter(i => !i.pkg).map(({ command, description }) => ([
-        chalk`${command}`,
-        chalk`${' '.repeat(15 - command.length)}`,
-        chalk`{gray.italic ${description}}`
-      ]).join(''))
-    }
-  ]
+  const { execute = { pkg: null, task: null, option: null } } = options
 
-  const { run } = await inquirer.prompt(options)
-  // const execute = run.toLowerCase().substring(0, run.indexOf(' '))
-  // const promise = await bundle()
+  execute.pkg = await inquirer.prompt(getLists(command.pkg, config.packages))
+  execute.task = await inquirer.prompt(getLists(command.task, config.tasks))
+  const [ next ] = config.tasks.choices.filter(({
+    name
+  }) => (name === execute.task.name || name === execute.task.task))
 
-  return run
+  if (next && next.choices) {
+    execute.option = await inquirer.prompt(getLists(null, next))
+  }
+
+  if (execute.task.name === 'build') {
+    await execa('pnpm', [
+      'run',
+      'build',
+      '--filter',
+      './packages/clients/vscode'
+    ], {
+      stdio: 'inherit'
+    })
+  }
 
 }

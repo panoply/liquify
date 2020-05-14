@@ -1,0 +1,12 @@
+{
+  "extends": "../jsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "baseUrl": ".",
+    "paths": {
+      "types": ["./types"]
+    }
+  },
+  "include": ["lib/**/*", "test/**/*", "types/**/*"]
+}

@@ -9,6 +9,7 @@
   },
   "main": "./package/liquify-cli.cjs.js",
   "module": "package/liquify-cli.es.js",
+  "types": "types/index.d.ts",
   "private": false,
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "jsonminify": "^0.4.1",
     "lodash": "^4.17.15",
     "minimist": "^1.2.5",
+    "ora": "^4.0.4",
     "parse-git-config": "^3.0.0",
     "strip-json-comments": "^3.1.0"
   },

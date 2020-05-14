@@ -56,16 +56,11 @@ Liquify provides an interactive CLI that allows you to run common tasks. The int
 
 ```cli
 bundle   <pkg>   --flags    Define a main file entry to use (optional)
-git      <pkg>   --flags    Production build and/or bundle
-peek     <pkg>   --flags    Production build and/or bundle
-publish  <pkg>   --flags    Development build and/or bundle
-package  <pkg>   --flags    Production build and/or bundle
-test     <pkg>   --flags    Production build and/or bundle
-```
-
-### Flags
-
-```cli
+git      <pkg>   --flags    Various Git related operations
+peep     <pkg>   --flags    Peep into JSON and other files via the cli
+publish  <pkg>   --flags    Publish package to third party services, eg: npm registry
+package  <pkg>   --flags    Package compression of bundles like pnpm pack
+test     <pkg>   --flags    Execute and run a bunch of tests
 -c, --config  <file>        Build configuration file defaults to "build.config.json"
 -i, --input   <glob>        Input directory path glob pattern, eg: "--input dir/**/*.json"
 -o, --output  <dir>         Output directory path, eg: "--output `path/to/output`"
@@ -79,24 +74,10 @@ test     <pkg>   --flags    Production build and/or bundle
 --dry-run                   Dry run the command
 ```
 
-### Config
-
-Packages distributed by Liquify might be using a `build.config.json` configuration file to help generate bundles and provide the cli with additional build options. Configuration settings available in `build.config.json` files use a preset [JSON Schema Store](#) which help prevent incorrect or invalid settings being defined on a per-package basis. In order to use a build config file, you will need use the `-c` or `--config` flag and instruct the cli to look for a build configuration file.
+### Interactive CLI
 
 ```cli
-$ pnpx liquify <cmd> <pkg> -c
-```
-
-<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />
-
-# Bundling
-
-Rollup and the Liquify CLI are used to bundle packages. The rollup config files located at the project root are used for executing project wide bundling of JavaScript.
-
-### CLI Scripts
-
-```cli
-$ pnpx liquify <cmd> <pkg> --flags
+$ pnpx liquify
 ```
 
 ### PNPM Scripts
@@ -109,10 +90,6 @@ pnpm run peep
 pnpm run status
 pnpm run test
 ```
-
-### Obfuscation
-
-Packages operating on a [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#) license consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types) so their producton bundles are mangled, minified and obfuscated upon prior to distribution. Objects and large data sources like [Liquid Specifications](#) use a [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) encryption algorithm.
 
 <img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />
 

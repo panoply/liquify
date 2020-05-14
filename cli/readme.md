@@ -48,11 +48,11 @@ The following Liquify packages require this cli module as a dependency and ship 
 
 ```cli
 bundle   <pkg>   --flags    Define a main file entry to use (optional)
-git      <pkg>   --flags    Production build and/or bundle
-peek     <pkg>   --flags    Production build and/or bundle
-publish  <pkg>   --flags    Development build and/or bundle
-package  <pkg>   --flags    Production build and/or bundle
-test     <pkg>   --flags    Production build and/or bundle
+git      <pkg>   --flags    Various Git related operations
+peep     <pkg>   --flags    Peep into JSON and other files via the cli
+publish  <pkg>   --flags    Publish package to third party services, eg: npm registry
+package  <pkg>   --flags    Package compression of bundles like pnpm pack
+test     <pkg>   --flags    Execute and run a bunch of tests
 ```
 
 ## Flags

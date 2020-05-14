@@ -39,6 +39,7 @@
   "scripts": {
     "cli": "liquify",
     "dev": "rollup -c -w",
+    "build": "rollup -c",
     "prod": "rollup -c --environment prod"
   },
   "main": "./index.js",

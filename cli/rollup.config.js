@@ -1,10 +1,12 @@
 import commonjs from '@rollup/plugin-commonjs'
-import resolve from '@rollup/plugin-node-resolve'
+import nodeResolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
 import Crypto from 'cryptorjs'
 import chalk from 'chalk'
+import { babel } from '@rollup/plugin-babel'
 import tagReplace from './../scripts/rollup/tag-replace'
+import { resolve } from 'path'
 import pkg from './package.json'
 
 const crypto = new Crypto('sissel siv')
@@ -34,7 +36,11 @@ export default {
       delimeters: [ '\\b(?:Crypto|getCrypt)\\(\'?"?', '\'?"?\\)' ],
       tags: [ 'sissel siv', 'grammar' ]
     }),
-    resolve(),
+    babel({
+      babelHelpers: 'runtime',
+      configFile: resolve(__dirname, './../babel.config.json')
+    }),
+    nodeResolve(),
     commonjs({ include: '../node_modules/.pnpm/registry.npmjs.org/**' }),
     terser({
       ecma: 6
@@ -43,7 +49,7 @@ export default {
     })
 
   ],
-  external: Object.keys(pkg.dependencies).concat('path', 'util'),
+  external: Object.keys(pkg.dependencies).concat('path', 'util').filter(i => i !== '@liquify/specs'),
   output: [
     {
       // banner: banner(pkg),

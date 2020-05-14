@@ -1,9 +1,58 @@
-
-import { resolve, basename, relative, normalize, join } from 'path'
 import findUp from 'find-up'
+import { resolve, basename } from 'path'
+import { readFile } from 'fs-extra'
 import chalk from 'chalk'
+import * as state from './state'
 
 const { log } = console
+
+/**
+ * Command flags
+ *
+ * @param {object} argv
+ */
+export const getFlags = async (state, argv) => {
+
+  for (const [ flag, value = null ] of await Object.entries(argv)) {
+    for (const { name, short, type } of state.config.flags) {
+      if (name !== flag || short !== flag) continue
+      const globs = { [name]: type === 'glob' ? resolve(state.cwd, value) : value }
+      state.flags = { ...state.flags, ...globs }
+    }
+  }
+
+  return state
+
+}
+
+/**
+ * Command call filter
+
+ * @param {object} argv
+ */
+export const getCommand = async (state, argv) => {
+
+  const { _: [ arg1, arg2 = null ] } = argv
+
+  if (!arg1) {
+    state.command.argv = 'default'
+    return null
+  }
+
+  for (const { name, type } of await state.config.commands) {
+    console.log(type)
+    if (name === arg1 && !arg2) {
+      state[type] = name; break
+    } else if (name === arg1 && typeof arg2 === 'string') {
+      for (const pkg in state.config.packages) {
+        if (pkg === arg2) state[type] = name; break
+      }
+    }
+  }
+
+  await getFlags(state, argv)
+
+}
 
 /**
  * Get package.json files
@@ -11,83 +60,42 @@ const { log } = console
  * @param {object} state
  * @param {object} packages
  */
-export const getPackages = async (state, config, packages) => {
+const getPackages = async (root, argv) => {
 
-  state.packages = packages
+  state.path.root = root
 
-  const cwd = process.cwd()
-  const base = basename(cwd)
+  const read = await readFile(resolve(root, '.packages.json'))
+  const pkgs = JSON.parse(read.toString())
 
-  state.root = await findUp('project', { type: 'directory' })
-
-  for (const [ command, { name } ] of await Object.entries(packages)) {
-    config.commands.push({ command, description: `Package bundle for ${name}` })
-    if (base === command) state.active = command
+  for (const [ command, { name } ] of await Object.entries(pkgs)) {
+    if (state.path.basename === command) state.path.dirname = command
+    state.config.commands.push({
+      name: command,
+      description: `Package bundle for ${name}`,
+      type: 'package'
+    })
   }
 
-  if (typeof state.active === 'undefined') {
-    log(chalk`{yellow Warning}: No {cyan package.json} in {magenta ${base}} directory`)
+  if (!state.path.dirname) {
+    log(chalk`{yellow Warning}: No {cyan package.json} in {magenta ${state.path.basename}} directory`)
   }
 
-  return state
-}
-
-/**
- * Command call filter
- *
- * @param {object} state
- * @param {object} config
- * @param {object} argv
- */
-export const getCommand = async (state, config, { _: [ arg1, arg2 = null ] }) => {
-
-  const { commands } = config
-  const { packages } = state
-
-  console.log(packages)
-  // commands.push(...packages)
-
-  for (const { command, short } of commands) {
-    console.log('here', command)
-
-    if ((command === arg1 || short === arg1) && !arg2) {
-      state.command = command; break
-    } else if ((command === arg1 || short === arg1) && (arg2 && arg2.length > 0)) {
-      for (const pkg in packages) if (pkg === arg2) state.command = command; break
-    }
-  }
-
-  // console.log(state)
-
-  for (const [ pkg, { path } ] of await Object.entries(packages)) {
-    if (pkg === state.command) state.path.basename = resolve(state.root, path); break
-  }
-
-  if (!state.path) state.path.basename = basename(state.cwd)
-
-  return state
+  await getCommand(state, argv)
 
 }
 
-/**
- * Command flags
- *
- * @param {object} config
- * @param {object} state
- */
-export const getFlags = async (state, config, argv) => {
+export default async (argv) => {
 
-  state.flags = null
+  const root = await findUp('project', { type: 'directory' })
+  const read = await readFile(resolve(root, '.packages.json'))
+  const pkgs = JSON.parse(read.toString())
 
-  for (const [ flag, value = null ] of await Object.entries(argv)) {
-    for (const { name, short, type } of config.flags) {
-      if (name !== flag || short !== flag) continue
-      const globs = { [name]: type === 'glob' ? resolve(state.cwd, value) : value }
-      await Object.assign(state.flags, globs)
-    }
+  for (const [ command, { name } ] of await Object.entries(pkgs)) {
+    state.config.commands.push()
   }
 
+  const commands = await getPackages(root, argv)
+
   return state
-  //  console.log(state)
 
 }

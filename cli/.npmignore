@@ -3,6 +3,7 @@
 node_modules/
 src/
 lib/
+types/
 test/
 
 # FILES

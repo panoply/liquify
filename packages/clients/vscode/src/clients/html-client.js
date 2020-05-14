@@ -1,5 +1,5 @@
 import { extensions } from 'vscode'
-import { TransportKind, LanguageClient, RevealOutputChannelOn } from 'vscode-languageclient'
+import { LanguageClient } from 'vscode-languageclient'
 import path from 'path'
 import fs from 'fs'
 import { activateTagClosing } from '../providers/tag-close'
@@ -43,11 +43,11 @@ subscriptions) => {
   const server = {
     run: {
       module,
-      transport: TransportKind.ipc
+      transport: 1
     },
     debug: {
       module,
-      transport: TransportKind.ipc
+      transport: 1
     }
   }
 
@@ -66,7 +66,7 @@ subscriptions) => {
         'javascript'
       ]
     },
-    revealOutputChannelOn: RevealOutputChannelOn.Never,
+    revealOutputChannelOn: 4,
     initializationOptions: {
       dataPaths: [],
       embeddedLanguages: {
