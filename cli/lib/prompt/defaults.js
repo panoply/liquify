@@ -18,9 +18,9 @@ export default async function (config, options) {
 
   clear(true)
 
-  const { command, info } = options
+  const { argv, info, path } = options
 
-  if (!command.nobanner) {
+  if (!argv.nobanner) {
     log(
       chalk`{cyan ${figlet.textSync('Liquify CLI', {
         font: 'Slant',
@@ -29,13 +29,13 @@ export default async function (config, options) {
     )
   }
 
-  if (command.task && info) {
+  if (argv.task && info) {
     log(boxen([
-      chalk`{magentaBright  Execute}{dim :} ${command.task}                              `,
+      chalk`{magentaBright  Execute}{dim :} ${argv.task}                              `,
       chalk`{magentaBright  Package}{dim :} ${info.name}                      `,
       chalk`{magentaBright  Version}{dim :} ${info.version}                   `,
       chalk`{magentaBright   Remote}{dim :} ${info.repo}                      `,
-      chalk`{magentaBright  Located}{dim :} ${info.path}                      `
+      chalk`{magentaBright  Located}{dim :} ${path.pkg}                      `
     ].join('\n'), {
       padding: 0,
       borderColor: 'gray',
@@ -53,8 +53,8 @@ export default async function (config, options) {
 
   const { execute = { pkg: null, task: null, option: null } } = options
 
-  execute.pkg = await inquirer.prompt(getLists(command.pkg, config.packages))
-  execute.task = await inquirer.prompt(getLists(command.task, config.tasks))
+  execute.pkg = await inquirer.prompt(getLists(argv.pkg, config.packages))
+  execute.task = await inquirer.prompt(getLists(argv.task, config.tasks))
   const [ next ] = config.tasks.choices.filter(({
     name
   }) => (name === execute.task.name || name === execute.task.task))

@@ -4,15 +4,15 @@
     "choices": [
       {
         "name": "build",
-        "message": "Bundle package/s execution (via npm scripts)",
+        "message": "Launches development (Watching)",
         "choices": [
           {
             "name": "dev",
-            "message": "Semver minor update"
+            "message": "Watch and build development bundle/s (default)"
           },
           {
-            "name": "production",
-            "message": "Semver major update"
+            "name": "prod",
+            "message": "Watch and build production bundle/s"
           }
         ]
       },
@@ -160,13 +160,15 @@
       "name": "prod",
       "short": "p",
       "message": "Production bundle build",
-      "type": "boolean"
+      "type": "boolean",
+      "notWith": ["dev"]
     },
     {
       "name": "dev",
       "short": "d",
       "message": "Develop bundle build (default)",
-      "type": "boolean"
+      "type": "boolean",
+      "notWith": ["prod"]
     },
     {
       "name": "help",

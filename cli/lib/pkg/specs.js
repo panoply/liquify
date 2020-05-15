@@ -6,7 +6,8 @@ import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import { errorHandler } from '../utils/console'
-import { log } from '../utils/export'
+
+const { log } = console
 
 /**
  * Write module JSON export as an AES string encryption and
@@ -26,7 +27,9 @@ const encryptFile = async (name, output, state, json) => {
   await writeFile(`${output}/${encryptID}.js`, `module.exports="${encryptJSON}";`)
 
   // @ts-ignore
-  if (!global.watch) log(chalk`encrypted {magenta ${name}} to {green ${encryptID}}`)
+  if (!global.watch) {
+    log(chalk`{dim ├─} {greenBright encrypted} {yellow ${name}} to {magenta ${encryptID}}`)
+  }
 
   state.encrypt[encryptID] = `${encryptID}=require("./${encryptID}")`
 
@@ -112,7 +115,8 @@ const createFiles = async (output, state) => {
   await encryptFile('specs', output, state, state.specs)
   await encryptFile('grammar', output, state, { grammar: state.grammar })
 
-  console.log(state)
+  // console.log(state)
+
   const { parsing } = setParsing(state)
   const { encrypt } = await encryptFile('parsing', output, state, parsing)
 
@@ -179,7 +183,7 @@ const watch = (output, state) => async input => {
   const filename = basename(input)
   const error = errorHandler(filename)
 
-  log(chalk`{cyan changed} '{yellow ${filename}}'`)
+  log(chalk`{dim ├─} {greenBright modified} '{yellow ${filename}}'`)
 
   const write = writeFiles(input, state)
 
@@ -202,13 +206,15 @@ export default async (config, state = {
   encrypt: {}
 }) => {
 
-  const { input, output } = config
+  const { input, output } = config.argv
   const errors = errorHandler(input)
 
-  if (config.watch) {
+  if (config.argv.watch) {
 
-    log(chalk`{bold.cyan Liquid Specifications}\n`)
-    await build(input, output, state).catch(errors)
+    // console.log(config)
+    const logpath = /.*?\/(?=project)/
+    log(chalk`{dim ┌─} {cyan Liquid Specifications}`)
+    log(chalk`{dim ├─} {blueBright watching} {magenta ${input.replace(logpath, '')}/**}`)
 
     const watcher = chokidar.watch(`${input}/**`, { persistent: true })
     const change = watch(output, state)
@@ -219,8 +225,10 @@ export default async (config, state = {
     watcher.on('change', change).on('error', errors)
 
   } else {
-    log(chalk`{bold.cyan Liquid Specifications}\n`)
+    log(chalk`{dim ┌─} {cyan Liquid Specifications}`)
     await build(input, output, state).catch(errors)
+    log(chalk`{dim └─} {green ✔} {cyan Success}`)
+
   }
 
 }

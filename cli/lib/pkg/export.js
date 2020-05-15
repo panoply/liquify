@@ -13,5 +13,5 @@
  *
  */
 
-export { default as grammar } from './grammar'
+// export { default as grammar } from './grammar'
 export { default as specs } from './specs'

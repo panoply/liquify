@@ -1,125 +1,104 @@
 
 import findUp from 'find-up'
 import { resolve, basename } from 'path'
-import { readFile, pathExists } from 'fs-extra'
-import config from '../argv.config.json'
-// import { packages, command, flags } from './utils/config'
+import argv from '../argv.config.json'
 import defaults from './prompt/defaults'
+import * as config from './utils/config'
+import * as packages from './pkg/export'
 
 const { log } = console
 
-const getPkgs = async root => {
-  const read = await readFile(resolve(root, '.packages.json'))
-  return JSON.parse(read.toString())
-}
-
-const setPkgCommands = ([ pkg, { name } ]) => ({
-  name: pkg,
-  message: name
-})
-
-const setStateCommands = (command = { task: null, pkg: null }) => {
-  for (const { name, type } of config.flags) {
-    if (type === 'glob') command[name] = null
-    else command[name] = false
-  }
-  return command
-}
-
-const setFlags = (state, flags, [ flag, value ]) => {
-
-  const argvflag = flags.find(({ name, short }) => (name === flag || short === flag))
-
-  if (typeof argvflag !== 'object') {
-    return log(`An unknown flag value of "${value}" was supplied, command failed`)
-  }
-
-  if (argvflag.type === 'info') {
-    return log(`call to ${argvflag.name}`)
-  }
-
-  if (argvflag.type !== 'glob') {
-    state.command[argvflag.name] = value
-  } else {
-    if (typeof value !== 'string') {
-      return log(`The flag value "-${flag}" (${argvflag.name}) must be a glob pattern`)
-    } else {
-      state.command[argvflag.name] = resolve(cwd, value)
-    }
-  }
-}
-
-const setState = (object) => ({
-  ...object,
-  command: setStateCommands(),
-  execute: {}
-})
-
 /**
- * @param {import('types').ArgvParamaters} argv
+ * CLI Entry - Digests args from the command line and dispatches
+ * to the appropriate task.
+ *
+ * @param {import('types').ArgvParamaters} args
+ * @param {import('types').Options} state
  */
-export default async (argv) => {
+export default async function (args, state = { argv: {}, path: {} }) {
 
-  const argvFlags = Object.entries(argv).slice(1)
-  const cwd = process.cwd()
-  const base = basename(cwd)
-  const root = await findUp('project', { type: 'directory' })
-  const pkgs = await getPkgs(root).catch(console.error)
+  let flags = Object.entries(args).slice(1)
 
-  config.packages.choices = [
-    ...config.packages.choices,
-    ...Object.entries(pkgs).map(setPkgCommands)
-  ]
+  const { path } = state
 
-  const state = setState({ cwd, base, root })
-  const { tasks, packages, flags } = config
-  const [ task, pkg = null ] = argv._
+  args = config.normalizeFlagName(args)
+  path.cwd = process.cwd()
+  path.base = basename(path.cwd)
+  path.root = await findUp('project', { type: 'directory' })
 
-  if (argvFlags.length) {
-    for (const [ flag, value ] of argvFlags) {
+  const pkgs = await config.getPkgs(path.root, '.packages.json').catch(console.error)
+  const { _: [ task, pkg = null ] } = args
 
-      const argvflag = flags.find(({ name, short }) => (name === flag || short === flag))
+  // Get main task command
+  if (argv.tasks.choices.some(({ name }) => name === task)) {
+    state.argv.task = task
+  }
 
-      if (typeof argvflag !== 'object') {
-        return log(`An unknown flag value of "${value}" was supplied, command failed`)
-      }
+  argv.packages.choices = config.pkgCommands(argv.packages.choices, pkgs)
 
-      if (argvflag.type === 'info') {
-        return log(`call to ${argvflag.name}`)
-      }
+  if (argv.packages.choices.some(({ name }) => (name === pkg || name === task))) {
 
-      if (argvflag.type !== 'glob') {
-        state.command[argvflag.name] = value
-      } else {
-        if (typeof value !== 'string') {
-          return log(`The flag value "-${flag}" (${argvflag.name}) must be a glob pattern`)
-        } else {
-          state.command[argvflag.name] = resolve(cwd, value)
-        }
-      }
+    const pkgcmd = pkg ? pkgs[pkg] : pkgs[task]
+    const { name, repo, version } = pkgcmd
+
+    path.pkg = resolve(path.root, pkgcmd.path)
+    state.info = { name, repo, version }
+    state.argv.pkg = pkg || task
+
+    const { scripts } = await config.getPkgs(path.pkg, 'package.json').catch(console.error)
+    const script = await config.parsePkgScripts(state, scripts, args)
+    const check = Object.keys(script)
+
+    flags = script
+
+    // if (script._[0] && state.argv.task !== script._[0]) state.argv.task = script._[0]
+    // if (script._[1] && state.argv.pkg !== script._[1]) state.argv.pkg = script._[1]
+
+    delete script._
+
+    state.argv = { ...state.argv, ...script }
+
+    if (!check.length) {
+      return log('no script runner setup that matches this command')
+    }
+
+    if (check.length === 1) {
+      flags = script[check[0]]
+
+    } else {
+      // await defaults(config, state)
+      log('will pass to command list for selection')
+    }
+
+  }
+
+  state.argv = { ...config.argvDefaults(argv), ...state.argv }
+
+  if (!path.pkg) return defaults(argv, state)
+
+  try {
+
+    const cmds = await config.flagCommands(path.pkg, flags)
+
+    state.argv = { ...state.argv, ...cmds }
+    path.filter = await config.pkgPath(path)
+
+    try {
+
+      await packages[state.argv.pkg](state)
+
+    } catch (error) {
+
+      throw log(error)
 
     }
+
+  } catch (error) {
+    throw log(error)
   }
 
-  if (tasks.choices.some(({ name }) => name === task)) {
-    state.command.task = task
-  }
+  // console.log(cwd, base)
 
-  if (packages.choices.some(({ name }) => (name === pkg || name === task))) {
-    const path = pkg ? pkgs[pkg] : pkgs[task]
-    state.info = { ...path, path: resolve(state.root, `${path.path}`) }
-    state.info.dir = path.path
-    state.command.pkg = pkg || task
-  }
-
-  if (typeof state.command.task === 'string' && !state.command.pkg) {
-    log(`No package value for the task "${task}" was supplied`)
-  } else if (typeof state.command.pkg === 'string' && !state.command.task) {
-    log(`No task was defined with package "${pkg}" `)
-  }
-
-  // const pkg = require(resolve(state.cwd, pkgs[state]))
-
-  await defaults(config, state)
+  // await defaults(argv, state)
 
 }

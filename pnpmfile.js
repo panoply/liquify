@@ -21,7 +21,14 @@ const afterAllResolved = (lockfile, context) => {
     const repo = url.replace('https://', '')
     const prop = path !== '.' ? basename(path) : ROOT
 
-    Object.assign(packages, { [prop]: { path, name, repo, version } })
+    Object.assign(packages, {
+      [prop]: {
+        path,
+        name,
+        repo,
+        version
+      }
+    })
 
     log(chalk`${path}${space} | {dim CLI Referenced}: {cyan ${name}}`)
 

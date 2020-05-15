@@ -13,7 +13,7 @@
     "url": "https://github.com/panoply/liquify"
   },
   "scripts": {
-    "dev": "liquify -i variations -o package -w",
+    "dev": "liquify -i variations -o package --watch",
     "build": "liquify -i variations -o package --prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "peek": "liquify peek -i package",

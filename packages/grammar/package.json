@@ -9,9 +9,9 @@
     "url": "https://github.com/panoply/liquid-language-grammars"
   },
   "scripts": {
+    "dev": "liquify -c build.config.json -o package -w",
     "build": "liquify -c -o package",
-    "watch": "liquify -c  -o package -w",
-    "peek": "liquify peek",
+    "peep": "liquify peek",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "husky": {

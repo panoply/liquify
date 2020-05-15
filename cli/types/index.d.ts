@@ -30,30 +30,33 @@ export declare type ArgvParamaters = {
  * @export
  */
 export declare type Options = {
-  cwd: string
-  base: string
-  root: string
-  command: {
-    task: string | null
-    pkg: string | null
-    config: string | null
-    watch: boolean
-    input: string | null
-    output: string | null
-    prod: boolean
-    dev: boolean
-    help: boolean
-    version: boolean
-    postinstall: boolean
-    preinstall: boolean
-    dryrun: boolean
-    nobanner: boolean
+  path: {
+    cwd?: string
+    base?: string
+    root?: string
+    pkg?: string
+    filter?: string
   }
-  execute: {}
-  info: {
-    path: string
-    name: string
-    repo: string
-    version: string
+  argv?: {
+    task?: string | null
+    pkg?: string | null
+    config?: string | null
+    watch?: boolean
+    input?: string | null
+    output?: string | null
+    prod?: boolean
+    dev?: boolean
+    help?: boolean
+    version?: boolean
+    postinstall?: boolean
+    preinstall?: boolean
+    dryrun?: boolean
+    nobanner?: boolean
+  }
+  execute?: {}
+  info?: {
+    name?: string
+    repo?: string
+    version?: string
   }
 }
