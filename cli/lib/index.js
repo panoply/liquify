@@ -27,12 +27,10 @@ export default async function (args, state = { argv: {}, path: {} }) {
   path.root = await findUp('project', { type: 'directory' })
 
   const pkgs = await config.getPkgs(path.root, '.packages.json').catch(console.error)
-  const { _: [ task, pkg = null ] } = args
+  const condition = ((path.cwd !== path.root) && (path.base === basename(path.cwd)))
+  const { _: [ task, pkg = condition ? path.base : null ] } = args
 
-  // Get main task command
-  if (argv.tasks.choices.some(({ name }) => name === task)) {
-    state.argv.task = task
-  }
+  if (argv.tasks.choices.some(({ name }) => name === task)) state.argv.task = task
 
   argv.packages.choices = config.pkgCommands(argv.packages.choices, pkgs)
 
@@ -50,25 +48,13 @@ export default async function (args, state = { argv: {}, path: {} }) {
     const check = Object.keys(script)
 
     flags = script
-
-    // if (script._[0] && state.argv.task !== script._[0]) state.argv.task = script._[0]
-    // if (script._[1] && state.argv.pkg !== script._[1]) state.argv.pkg = script._[1]
-
     delete script._
-
     state.argv = { ...state.argv, ...script }
 
-    if (!check.length) {
-      return log('no script runner setup that matches this command')
-    }
+    if (!check.length) return // log('no script runner setup that matches this command')
 
-    if (check.length === 1) {
-      flags = script[check[0]]
-
-    } else {
-      // await defaults(config, state)
-      log('will pass to command list for selection')
-    }
+    if (check.length === 1) flags = script[check[0]]
+    // else log('will pass to command list for selection')
 
   }
 
@@ -77,28 +63,11 @@ export default async function (args, state = { argv: {}, path: {} }) {
   if (!path.pkg) return defaults(argv, state)
 
   try {
-
     const cmds = await config.flagCommands(path.pkg, flags)
-
-    state.argv = { ...state.argv, ...cmds }
     path.filter = await config.pkgPath(path)
+    state.argv = { ...state.argv, ...cmds }
 
-    try {
+    await packages[state.argv.pkg](state)
 
-      await packages[state.argv.pkg](state)
-
-    } catch (error) {
-
-      throw log(error)
-
-    }
-
-  } catch (error) {
-    throw log(error)
-  }
-
-  // console.log(cwd, base)
-
-  // await defaults(argv, state)
-
+  } catch (error) { throw log(error) }
 }

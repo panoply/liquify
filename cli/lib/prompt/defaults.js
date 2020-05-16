@@ -7,6 +7,9 @@ import { getLists } from './choices'
 import execa from 'execa'
 
 const { log } = console
+const ascii = {
+  font: 'Slant'
+}
 
 /**
  * Intialize default launch operations list
@@ -21,12 +24,7 @@ export default async function (config, options) {
   const { argv, info, path } = options
 
   if (!argv.nobanner) {
-    log(
-      chalk`{cyan ${figlet.textSync('Liquify CLI', {
-        font: 'Slant',
-        horizontalLayout: 'controlled smushing'
-      })}}\n`
-    )
+    log(chalk`{cyan.bold ${figlet.textSync('Liquify CLI', { font: 'Slant' })}}\n`)
   }
 
   if (argv.task && info) {

@@ -13,8 +13,8 @@
     "url": "https://github.com/panoply/liquify"
   },
   "scripts": {
-    "dev": "liquify -i variations -o package --watch",
-    "build": "liquify -i variations -o package --prod",
+    "dev": "liquify dev -i variations -o package --watch",
+    "build": "liquify build -i variations -o package --prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "peek": "liquify peek -i package",
     "test": "echo \"Error: no test specified\" && exit 1"

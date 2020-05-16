@@ -199,22 +199,22 @@ const watch = (output, state) => async input => {
  * @param {object} state prop values are the encoded names
  */
 export default async (config, state = {
-  specs: {},
-  cache: {},
-  grammar: {},
-  parsing: {},
-  encrypt: {}
+  specs: {}, cache: {}, grammar: {}, parsing: {}, encrypt: {}
 }) => {
 
   const { input, output } = config.argv
   const errors = errorHandler(input)
+
+  log(chalk`{dim ┌─} {cyan Liquid Specifications}`)
+  await build(input, output, state).catch(errors)
+  log(chalk`{dim └─} {green ✔} {cyan Success}`)
 
   if (config.argv.watch) {
 
     // console.log(config)
     const logpath = /.*?\/(?=project)/
     log(chalk`{dim ┌─} {cyan Liquid Specifications}`)
-    log(chalk`{dim ├─} {blueBright watching} {magenta ${input.replace(logpath, '')}/**}`)
+    log(chalk`{dim ├─} {blueBright watching} {dim ${input.replace(/.*?\/(?=project)/, '')}/**}`)
 
     const watcher = chokidar.watch(`${input}/**`, { persistent: true })
     const change = watch(output, state)
@@ -223,11 +223,6 @@ export default async (config, state = {
     global.watch = true
 
     watcher.on('change', change).on('error', errors)
-
-  } else {
-    log(chalk`{dim ┌─} {cyan Liquid Specifications}`)
-    await build(input, output, state).catch(errors)
-    log(chalk`{dim └─} {green ✔} {cyan Success}`)
 
   }
 

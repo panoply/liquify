@@ -1,4 +1,4 @@
-import { writeFile, readdir, readFile } from 'fs-extra'
+import { writeFile, readFile } from 'fs-extra'
 import { resolve, basename } from 'path'
 // import boxen from 'boxen'
 import stripJsonComments from 'strip-json-comments'
@@ -8,6 +8,7 @@ import chalk from 'chalk'
 // import chokidar from 'chokidar'
 // import { log } from '../utils/export'
 import { getCrypt } from '../utils/crypto'
+import * as log from '../utils/logs'
 
 import YAML from 'json-to-pretty-yaml'
 
@@ -42,33 +43,38 @@ const createGrammar = async type => {
 
 }
 
-const bundleInjections = dir => async ({ input, output }) => {
+const bundleInjections = ({ pkg }) => async ({ input, output }) => {
 
-  const file = await stripJson(input)
+  const file = await stripJson(resolve(pkg, input))
   const json = jsonMinify(JSON.stringify(file))
   const yaml = YAML.stringify(file)
+  const path = resolve(pkg, output)
+  const base = basename(path)
 
-  await writeFile(`${dir}/${output}.json`, json)
-  log(chalk`{cyan JSON Injection} {green ${output}.json}`)
+  await writeFile(`${path}.json`, json)
+  log.tree.deep.middle(chalk`{cyanBright JSON} into '{magenta ${base}.json}'`)
 
-  await writeFile(`${dir}/${output}.yaml`, yaml)
-  log(chalk`{yellow YAML Injection} {green ${output}.yaml}`)
+  await writeFile(`${path}.yaml`, yaml)
+  log.tree.deep.middle(chalk`{yellowBright YAML} into '{magenta ${base}.yaml}'`)
 
 }
 
 const buildVariations = async (specs, base, output) => (item) => {
 
-  if (!specs[item.variant]) {
+  console.log(item)
+
+  if (!specs.grammar[item.variant]) {
     return
   }
 
   const { repository } = base
-  const { object } = specs[item.variant]
+  const { object } = specs.grammar[item.variant]
 
   const file = {
     ...base,
     injectionSelector: '',
-    scopeName: '',
+    name: item.grammar.name,
+    scopeName: item.grammar.scopeName,
     patterns: [],
     repository: {
       ...repository,
@@ -84,6 +90,8 @@ const buildVariations = async (specs, base, output) => (item) => {
     }
   }
 
+  console.log(file)
+
 }
 
 const readFiles = () => {
@@ -94,28 +102,31 @@ const readFiles = () => {
 /**
  * Default exports - Digested by the CLI
  *
- * @param {object} config
+ * @param {import('types').Options} state
  * @param {object} state prop values are the encoded names
  */
-export default async (config, state = {
-  specs: {},
-  cache: {},
-  grammar: {},
-  parsing: {},
-  encrypt: {}
-}) => {
+export default async (state) => {
 
-  const { output } = config
-  const cwd = process.cwd()
-  const main = await stripJson(config.main)
-  const base = await stripJson(resolve(cwd, main.input))
+  const { path: { pkg, filter }, argv: { output } } = state
+  // console.log(state)
+  const main = await stripJson(state.argv.config)
+  const base = await stripJson(resolve(pkg, main.input))
   const specs = await getCrypt('grammar')
-  const injections = bundleInjections(output)
-  const variations = buildVariations(specs, base, output)
 
-  main.injections.forEach(await injections)
+  log.tree.top('Liquid Language Grammars')
+
+  const injections = bundleInjections(state.path)
+
+  // console.log(resolve(pkg, output))
+  const variations = buildVariations(specs, base, output)
+  log.tree.middle(chalk.blue('Injections'))
+
+  // for (const inject of main.injections) await injections(inject)
+
+  // log.tree.deep.success(`${main.injections.length} grammars generated`)
+
   main.variations.forEach(await variations)
 
-  // console.log(specs)
+  // console.log(main)
 
 }

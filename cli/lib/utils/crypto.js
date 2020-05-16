@@ -1,11 +1,10 @@
-
-import specs from '@liquify/specs'
 import Crypto from 'cryptorjs'
+import specs from '@liquify/specs'
 
 /**
  * File Encryption `IV` and export
  */
-export const crypto = new Crypto('sissel siv')
+const crypto = new Crypto('sissel siv')
 
 /**
  * @typedef {'specs' | 'grammar' | 'parsing'} types
@@ -14,12 +13,15 @@ export const crypto = new Crypto('sissel siv')
  */
 export const getCrypt = async (param) => {
 
-  if (typeof param === 'string') return crypto.decode(specs[param])
+  if (param) return crypto.decode(specs[`${crypto.encode(param)}`])
 
-  for (const id in specs) {
-    specs[crypto.decode(id)] = crypto.decode(specs[id])
-    delete specs[id]
-  }
+  // const spec = {}
+
+  // for (const id in specs) {
+  // console.log(crypto.encode(param), specs[`${crypto.encode(param)}`])
+  // specs[crypto.decode(id)] = crypto.decode(specs[id])
+  // delete specs[id]
+  // }
 
   return specs
 }

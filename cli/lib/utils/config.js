@@ -20,12 +20,13 @@ export const pkgPath = async ({ base, root, pkg, cwd }) => {
   const filter = join(root, pkg).replace(regex, './')
 
   if (cwd === root || pkg.split('/').some(dir => contains.includes(dir))) {
-    log('current directory contains packages', filter)
+  //  log('current directory contains packages', filter)
     return filter
   }
 
-  log('requested package not in current path, fetched relative location')
+  //  log('requested package not in current path, fetched relative location')
   const path = normalize(`${relative(cwd, root)}/${filter.replace(normal, '/')}`)
+
   return `./${path}/`
 
 }
@@ -63,6 +64,7 @@ export const pkgCommands = (choices, pkgs) => ([
  */
 export const flagCommands = async (cwd, args, command = {}) => {
 
+  // console.log(cwd, args)
   for (const [ flag, value ] of await Object.entries(args)) {
 
     const argvflag = flags.find(({ name }) => (name === flag))

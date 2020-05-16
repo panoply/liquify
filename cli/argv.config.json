@@ -3,6 +3,20 @@
     "name": "task",
     "choices": [
       {
+        "name": "dev",
+        "message": "Launches development (Watching)",
+        "choices": [
+          {
+            "name": "dev",
+            "message": "Watch and build development bundle/s (default)"
+          },
+          {
+            "name": "prod",
+            "message": "Watch and build production bundle/s"
+          }
+        ]
+      },
+      {
         "name": "build",
         "message": "Launches development (Watching)",
         "choices": [

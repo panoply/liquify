@@ -34,13 +34,13 @@
     ]
   },
   "dependencies": {
-    "@liquify/specs": "file:../packages/specs/versions/liquify-specs-0.0.1.tgz",
+    "@liquify/specs": "link:../packages/specs",
     "boxen": "^4.2.0",
     "chalk": "^4.0.0",
     "chokidar": "^3.4.0",
     "console-clear": "^1.1.1",
     "cryptr": "^6.0.2",
-    "execa": "^4.0.0",
+    "execa": "^4.0.1",
     "figlet": "^1.4.0",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.0",

@@ -71,7 +71,7 @@ export default [
           return `${encode}`
         },
         delimeters: [ '\\b(?:Crypto|getCrypt)\\(\'?"?', '\'?"?\\)' ],
-        tags: [ 'sissel siv', 'grammar' ]
+        tags: [ 'sissel siv' ]
       }),
       babel({
         babelHelpers: 'runtime',
@@ -86,7 +86,7 @@ export default [
     }) */
 
     ],
-    external: Object.keys(pkg.dependencies).concat('path', 'util').filter(i => i !== '@liquify/specs'),
+    external: Object.keys(pkg.dependencies).concat('path', 'util'),
     output: [
       {
       // banner: banner(pkg),

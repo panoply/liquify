@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import figlet from 'figlet'
 
 const { log } = console
 

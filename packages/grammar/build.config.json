@@ -34,21 +34,21 @@
   "injections": [
     {
       "input": "syntax/injects/comments.json",
-      "output": "liquify-comment.inject",
+      "output": "package/liquify-comment.inject",
       "grammar": {
         "scopeName": "source.liquid.comments"
       }
     },
     {
       "input": "syntax/injects/markdown.json",
-      "output": "liquid-markdown.codeblock",
+      "output": "package/liquid-markdown.codeblock",
       "grammar": {
         "scopeName": "markdown.liquid.codeblock"
       }
     },
     {
       "input": "syntax/injects/injection.json",
-      "output": "liquid.injection",
+      "output": "package/liquid.injection",
       "grammar": {
         "scopeName": "source.liquid.injection"
       }
