@@ -34,11 +34,11 @@ The [grammars.json](#) file located in the root directory is used as the grammar
 
 The project uses the [Liquify CLI](#) tool to process and build grammars. By default, all generated grammars extend upon the **[Standard](#)** Liquid variation grammar which is located at the root of the `syntax` directory. There are 2 types of grammars that can be generated.
 
-#### Variation Grammars
+###### Variation Grammars
 
 Variation grammars will import pattern files contained within the `syntax/include` directory. Pattern files can be referenced to variations in the grammar generator config file and will either extend upon an already existing (standard variation) include pattern or be appended as a new include pattern.
 
-#### Injection Grammars
+###### Injection Grammars
 
 Injection grammars will import patterns from the `syntax/inject` directory. Injection grammar patterns require an `injectionSelector` value which you can define in the grammar generator config file.
 
