@@ -22,7 +22,7 @@ Liquid exists in a multitude of variations and while structurally consistent the
 
 ## Usage
 
-The `build.grammar.json` file located in the root directory is used as the grammar generator from which all grammars will be created. The file references a JSON [Schema Store](http://schemastore.org/) which provides IntelliSense validation, completion and descriptives for the export configuration options.
+The [grammars.json](#) file located in the root directory is used as the grammar generator from which all grammars will be created. The file references a JSON [Schema Store](http://schemastore.org/) which provides IntelliSense validation, completion and descriptives for the export configuration options.
 
 | Command          | Description                             |
 | ---------------- | --------------------------------------- |
