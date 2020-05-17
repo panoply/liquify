@@ -42,10 +42,6 @@ Variation grammars will import pattern files contained within the `syntax/includ
 
 Injection grammars will import patterns from the `syntax/inject` directory. Injection grammar patterns require an `injectionSelector` value which you can define in the grammar generator config file.
 
-## Changelog
-
-See [changelog](#)
-
 <img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLBQXPLFVBBTSGSXSSC6ZLPVA" />
 
 🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
