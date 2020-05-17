@@ -5,6 +5,7 @@
       "name": "shopify",
       "type": "variation",
       "export": "liquid-shopify.tmLanguage",
+      "extend": "standard",
       "formats": ["json", "yaml"],
       "grammar": {
         "name": "Liquid Shopify",
@@ -19,6 +20,7 @@
       "name": "11ty",
       "type": "variation",
       "export": "liquid-11ty.tmLanguage",
+      "extend": "standard",
       "formats": ["json", "yaml"],
       "grammar": {
         "name": "Liquid 11ty",
