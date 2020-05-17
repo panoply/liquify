@@ -13,7 +13,8 @@ const crypto = new Crypto('sissel siv')
  */
 export const getCrypt = async (param) => {
 
-  if (param) return crypto.decode(specs[`${crypto.encode(param)}`])
+  // @ts-ignore
+  if (param) return crypto.decode(specs[`${crypto.encode(param)}`])[param]
 
   // const spec = {}
 

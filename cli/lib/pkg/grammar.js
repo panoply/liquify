@@ -8,13 +8,22 @@ import chalk from 'chalk'
 // import chokidar from 'chokidar'
 // import { log } from '../utils/export'
 import { getCrypt } from '../utils/crypto'
+import erre from 'erre'
 import * as log from '../utils/logs'
 
 import YAML from 'json-to-pretty-yaml'
+import { config } from 'process'
 
-const stripJson = async path => {
+/**
+ * Read and strip JSON file of comments
+ *
+ */
+const stripJson = async (path) => {
 
   const jsonc = await readFile(path)
+
+  if (!jsonc.length) return null
+
   const strip = stripJsonComments(jsonc.toString())
   const parse = JSON.parse(strip)
 
@@ -24,80 +33,106 @@ const stripJson = async path => {
 
 }
 
-const createGrammar = async type => {
+const inclusions = async (path, grammar, data = { patterns: [], includes: {} }) => {
 
-  // const dir = prompt.bundle === 'include' ? prompt.bundle : 'injects'
-  // const path = `./packages/grammar/${dir}/${prompt.filename}.json`
+  for (const include in grammar.include) {
 
-  /* await writeFile(path, JSON.stringify(dir === 'include' ? {
-    $schema: 'https://cdn.liquify.dev/schema/include-tmlanguage.json',
-    patterns: []
-  } : {
-    $schema: 'https://cdn.liquify.dev/schema/tmlanguage.json',
-    injectionSelector: '',
-    scopeName: '',
-    patterns: []
-  }, null, 2)) */
+    const file = await stripJson(resolve(path.input, `includes/${include}.json`))
+    const name = include.substring(0, include.length - 5)
 
-  // return prompt
+    if (!file) continue
 
-}
+    data.patterns.push({ include: `#${name}` })
+    data.includes[name] = { patterns: file.patterns }
 
-const bundleInjections = ({ pkg }) => async ({ input, output }) => {
-
-  const file = await stripJson(resolve(pkg, input))
-  const json = jsonMinify(JSON.stringify(file))
-  const yaml = YAML.stringify(file)
-  const path = resolve(pkg, output)
-  const base = basename(path)
-
-  await writeFile(`${path}.json`, json)
-  log.tree.deep.middle(chalk`{cyanBright JSON} into '{magenta ${base}.json}'`)
-
-  await writeFile(`${path}.yaml`, yaml)
-  log.tree.deep.middle(chalk`{yellowBright YAML} into '{magenta ${base}.yaml}'`)
-
-}
-
-const buildVariations = async (specs, base, output) => (item) => {
-
-  console.log(item)
-
-  if (!specs.grammar[item.variant]) {
-    return
   }
 
-  const { repository } = base
-  const { object } = specs.grammar[item.variant]
+  return data
 
-  const file = {
+}
+
+const variations = async ({ path, argv, specs, base }, { name, grammar, output }) => {
+
+  const spec = specs[name]
+
+  if (!spec) return console.log('No specification for this variation')
+
+  const HTMLGrammar = base.patterns.pop()
+
+  if (!HTMLGrammar) return console.log('Missing HTML TextMate include')
+
+  const { patterns, includes } = await inclusions(path, grammar)
+  const dest = resolve(argv.output, output)
+
+  const tmLanguage = JSON.stringify({
     ...base,
-    injectionSelector: '',
-    name: item.grammar.name,
-    scopeName: item.grammar.scopeName,
-    patterns: [],
+    name: grammar.n,
+    scopeName: grammar.scopeName,
+    patterns: [
+      ...base.patterns,
+      ...patterns,
+      HTMLGrammar
+    ],
     repository: {
-      ...repository,
+      ...base.repository,
       objects: {
         patterns: [
-          ...repository.objects.patterns,
+          ...base.repository.objects.patterns,
           {
             name: 'support.class.liquid',
-            match: `\\b${object}\\b`
+            match: `\\b(${spec.object && spec.object.join('|')})\\b`
           }
         ]
-      }
+      },
+      ...includes
     }
-  }
+  }, null, 2)
 
-  console.log(file)
+  console.log(argv.prod)
+  return [
+    [ `${dest}.json`, argv.prod ? jsonMinify(tmLanguage) : tmLanguage ],
+    [ `${dest}.yaml`, YAML.stringify(tmLanguage) ]
+  ]
 
 }
 
-const readFiles = () => {
+const injections = async ({ path: { pkg }, argv }, { output, input }) => {
 
-  //
+  const parse = await stripJson(resolve(pkg, input))
+  const string = JSON.stringify(parse, null, 2)
+  const dest = resolve(argv.output, output)
+
+  return [
+    [ `${dest}.json`, argv.prod ? jsonMinify(string) : string ],
+    [ `${dest}.yaml`, YAML.stringify(string) ]
+  ]
 }
+
+const stream = erre(
+  async context => ({
+    ...context,
+    specs: await getCrypt('grammar'),
+    config: await stripJson(context.argv.config)
+  }),
+  async context => ({
+    ...context,
+    base: await stripJson(resolve(context.path.pkg, context.config.input)),
+    injections: context.config.package.map((config) => (
+      config.type === 'injection'
+        ? injections(context, config)
+        : variations(context, config)
+    ))
+  }),
+  async context => Promise.all([
+    ...context.injections,
+    ...context.config.variations.map(config => variations(context, config))
+  ]),
+  async context => context.filter(Boolean).forEach(async ([ [ file, string ] ]) => (
+    await writeFile(file, string).then(() => (
+      log.tree.deep.middle(chalk`{cyanBright JSON} into '{magenta ${basename(file)}}'`)
+    ))
+  ))
+)
 
 /**
  * Default exports - Digested by the CLI
@@ -105,27 +140,33 @@ const readFiles = () => {
  * @param {import('types').Options} state
  * @param {object} state prop values are the encoded names
  */
-export default async (state) => {
+export default async (context) => {
 
-  const { path: { pkg, filter }, argv: { output } } = state
-  // console.log(state)
-  const main = await stripJson(state.argv.config)
-  const base = await stripJson(resolve(pkg, main.input))
-  const specs = await getCrypt('grammar')
+  // const config = await stripJson(context.argv.config)
+  // const liquid = await stripJson(resolve(context.path.pkg, config.input))
+  // const specs = await getCrypt('grammar')
 
+  stream.push(context)
+  stream.on.error(console.log)
+  // stream.on.value(console.log)
+
+  // stream.on.value(async i => (await Promise.all(i.config.injections)
+  // ).forEach(i => console.log(i)))
   log.tree.top('Liquid Language Grammars')
 
-  const injections = bundleInjections(state.path)
+  // for (const inject of config.injections) await injections({ config, inject })
+
+  //  const injections = bundleInjections(state.path)
 
   // console.log(resolve(pkg, output))
-  const variations = buildVariations(specs, base, output)
-  log.tree.middle(chalk.blue('Injections'))
+  // const variations = buildVariations(pkg, specs, base, output)
+  // log.tree.middle(chalk.blue('Injections'))
 
   // for (const inject of main.injections) await injections(inject)
 
   // log.tree.deep.success(`${main.injections.length} grammars generated`)
 
-  main.variations.forEach(await variations)
+  // main.variations.forEach(await variations)
 
   // console.log(main)
 

@@ -6,6 +6,7 @@ import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import { errorHandler } from '../utils/console'
+import erre from 'erre'
 
 const { log } = console
 
@@ -68,7 +69,7 @@ const setGrammar = (cache, regex = {}) => {
 
   for (const prop in cache) {
     if (!cache[prop].length) continue
-    regex[prop] = `(${cache[prop].join('|')})`
+    regex[prop] = cache[prop]
   }
 
   return regex

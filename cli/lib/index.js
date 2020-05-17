@@ -44,7 +44,7 @@ export default async function (args, state = { argv: {}, path: {} }) {
     state.argv.pkg = pkg || task
 
     const { scripts } = await config.getPkgs(path.pkg, 'package.json').catch(console.error)
-    const script = await config.parsePkgScripts(state, scripts, args)
+    const script = await config.parsePkgScripts(state, scripts, args).catch(console.error)
     const check = Object.keys(script)
 
     flags = script

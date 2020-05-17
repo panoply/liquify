@@ -1,7 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/panoply/tmlanguage/master/tmlanguage.json",
   "scopeName": "source.liquid.comments",
-  "injectionSelector": "L:comment.block.liquid",
   "patterns": [
     {
       "name": "comment.block.documentation.liquid",

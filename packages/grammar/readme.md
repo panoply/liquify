@@ -2,7 +2,7 @@
 
 # @liquify/language-grammars
 
-Liquid templating language [TextMate](https://macromates.com/manual/en/language_grammars) grammar generator. Used by [Liquify](#) IDE extension/package to generate syntax support for multiple variations of the Language.
+Liquid Language [TextMate](https://macromates.com/manual/en/language_grammars) grammar generator. Used by the [Liquify](#) IDE extension/package to generate syntax support for multiple variations of Liquid.
 
 ## Why?
 
@@ -22,15 +22,11 @@ NPM:
 npm install @liquify/language-grammars --save-dev
 ```
 
-Yarn:
-
-```bash
-yarn add @liquify/language-grammars --dev
-```
-
 ## Usage
 
-By default, all grammars extend the [Liquid Standard](#) variation TextMate grammar which is located in the root of the `src` directory. If you would like to contribute or create a new Liquid variaton/injection grammars you can use the `build.config.json` configuration file. There are 2 types of grammars that can be generated:
+The `build.config.json` file located in the root directory is used as the configuration generator. This project includes its own bundler as a development dependency
+
+By default, all grammars extend the [Liquid Standard](#) variation TextMate standard grammar which is located in the root of the `syntax` directory. If you would like to contribute or create a new Liquid variaton/injection grammar you can use the `build.config.json` configuration file. There are 2 types of grammars that can be generated:
 
 #### Includes
 

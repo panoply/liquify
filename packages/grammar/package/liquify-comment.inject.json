@@ -1,1 +1,50 @@
-{"scopeName":"source.liquid.comments","injectionSelector":"L:comment.block.liquid","patterns":[{"name":"comment.block.documentation.liquid","begin":"(@format)(:)\\s*(\\w+)?\\s*({)","beginCaptures":{"1":{"name":"support.constant.liquid"},"2":{"name":"punctuation.separator.key-value.mapping.liquid"},"3":{"name":"string.other.liquid"},"4":{"name":"punctuation.definition.bracket.curly.begin.liquid"}},"end":"}","endCaptures":{"0":{"name":"punctuation.definition.bracket.curly.end.liquid"}},"patterns":[{"include":"source.json"}]},{"name":"comment.block.documentation.liquid","match":"(@ignore)(:)(start|end)","captures":{"1":{"name":"keyword.other.liquid"},"2":{"name":"punctuation.separator.key-value.mapping.liquid"},"3":{"name":"support.type.property-name.liquid"}}}]}
+{
+  "scopeName": "source.liquid.comments",
+  "injectionSelector": "L:comment.block.liquid",
+  "patterns": [
+    {
+      "name": "comment.block.documentation.liquid",
+      "begin": "(@format)(:)\\s*(\\w+)?\\s*({)",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.liquid"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.mapping.liquid"
+        },
+        "3": {
+          "name": "string.other.liquid"
+        },
+        "4": {
+          "name": "punctuation.definition.bracket.curly.begin.liquid"
+        }
+      },
+      "end": "}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.bracket.curly.end.liquid"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.json"
+        }
+      ]
+    },
+    {
+      "name": "comment.block.documentation.liquid",
+      "match": "(@ignore)(:)(start|end)",
+      "captures": {
+        "1": {
+          "name": "keyword.other.liquid"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.mapping.liquid"
+        },
+        "3": {
+          "name": "support.type.property-name.liquid"
+        }
+      }
+    }
+  ]
+}

@@ -1,56 +1,85 @@
 {
-  "name": "Liquid",
-  "input": "syntax/liquid.jsonc",
-  "output": "liquid-standard.tmLanguage",
-  "variations": [
+  "$schema": "./../schema/stores/liquid-grammas.json",
+  "package": [
     {
       "name": "shopify",
-      "output": "liquid-shopify.tmLanguage",
+      "type": "variation",
+      "export": "liquid-shopify.tmLanguage",
+      "formats": ["json", "yaml"],
       "grammar": {
         "name": "Liquid Shopify",
         "scopeName": "source.liquid.shopify",
-        "includes": ["embedded.json", "imports.json"]
+        "include": {
+          "tags": ["imports"],
+          "embeds": ["embedded"]
+        }
       }
     },
     {
       "name": "11ty",
-      "output": "liquid-11ty.tmLanguage",
+      "type": "variation",
+      "export": "liquid-11ty.tmLanguage",
+      "formats": ["json", "yaml"],
       "grammar": {
         "name": "Liquid 11ty",
         "scopeName": "source.liquid.11ty",
-        "includes": ["frontmatter.json", "imports.json"]
+        "include": {
+          "tags": ["imports"],
+          "frontmatter": ["frontmatter"]
+        }
       }
     },
     {
-      "variant": "jekyll",
-      "output": "liquid-jekyll.tmLanguage",
+      "name": "jekyll",
+      "type": "variation",
+      "export": "liquid-jekyll.tmLanguage",
+      "extend": "standard",
+      "formats": ["json", "yaml"],
       "grammar": {
         "name": "Liquid Jekyll",
         "scopeName": "source.liquid.jekyll",
-        "includes": ["frontmatter.json", "imports.json", "rouge.json"]
-      }
-    }
-  ],
-  "injections": [
-    {
-      "input": "syntax/injects/comments.json",
-      "output": "package/liquify-comment.inject",
-      "grammar": {
-        "scopeName": "source.liquid.comments"
+        "include": {
+          "tags": ["imports", "rouge"],
+          "frontmatter": ["frontmatter"]
+        }
       }
     },
     {
-      "input": "syntax/injects/markdown.json",
-      "output": "package/liquid-markdown.codeblock",
+      "type": "injection",
+      "import": "comments",
+      "export": "liquify-comment.inject",
+      "formats": ["json"],
       "grammar": {
-        "scopeName": "markdown.liquid.codeblock"
+        "scopeName": "source.liquid.comments",
+        "injectionSelector": ["L:comment.block.liquid"]
       }
     },
     {
-      "input": "syntax/injects/injection.json",
-      "output": "package/liquid.injection",
+      "type": "injection",
+      "import": "markdown",
+      "export": "liquid-markdown.codeblock",
+      "formats": ["json"],
       "grammar": {
-        "scopeName": "source.liquid.injection"
+        "scopeName": "markdown.liquid.codeblock",
+        "injectionSelector": ["L:text.html.markdown"]
+      }
+    },
+    {
+      "type": "injection",
+      "import": "injection",
+      "export": "liquid.injection",
+      "formats": ["json"],
+      "grammar": {
+        "scopeName": "source.liquid.injection",
+        "injectionSelector": [
+          "L:source.css -comment -string -meta.embedded",
+          "L:source.js -string.quoted.*.js -comment -string -meta.embedded",
+          "L:source.jsx -comment -string -string.quoted.*.jsx",
+          "L:source.js.jsx -comment -string",
+          "L:source.ts -string -comment -string.quoted.*.ts",
+          "L:source.json -string -comment -meta.embedded",
+          "R:text.html.markdown -comment"
+        ]
       }
     }
   ]

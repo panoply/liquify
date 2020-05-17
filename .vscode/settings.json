@@ -14,7 +14,7 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {
-    "**/node_modules": false,
+    "**/node_modules": true,
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,

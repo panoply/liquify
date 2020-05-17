@@ -57,6 +57,7 @@
     "fx": "^18.0.1"
   },
   "devDependencies": {
+    "erre": "^2.2.0",
     "parse-filepath": "^1.0.2"
   }
 }

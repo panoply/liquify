@@ -1,0 +1,81 @@
+{
+  "title": "JSON formatting schema for the VSCode Liquid extension",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "name": {
+      "type": "string",
+      "required": ["Liquid"],
+      "default": "Liquid",
+      "oneOf": [
+        {
+          "enum": ["Liquid"]
+        }
+      ]
+    },
+    "variations": {
+      "type": "array",
+      "description": "Format options or rules applied to a custom set of defined tags",
+      "items": {
+        "type": "object",
+        "required": ["variant", "output", "grammar"],
+        "additionalProperties": false,
+        "properties": {
+          "variant": {
+            "pattern": "[^<>{}\\/\\%]",
+            "type": "string",
+            "title": "Tag name",
+            "description": "The name of the HTML or Liquid tag. Do not include delimeters or use expression syntax, accepts only a string value"
+          },
+          "output": {
+            "type": "string",
+            "title": "Tag attribute",
+            "description": "Define the tag by its attribute value. The extension will query select the defined tag and matching attribute property or value"
+          },
+          "grammar": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "title": "Grammar Name",
+                "type": "string"
+              },
+              "scopeName": {
+                "title": "Grammar Name",
+                "type": "string"
+              },
+              "output": {
+                "title": "Output file name",
+                "type": "string"
+              },
+              "includes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "title": "Grammar Name",
+                    "type": "string"
+                  },
+                  "output": {
+                    "title": "Output file name",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["name"],
+  "properties": {
+    "name": {
+      "title": "Liquid Standard",
+      "description": "The name of the base Liquid language grammard. All variations generated will extend upon this grammar.",
+      "$ref": "#/definitions/name"
+    },
+    "variations": {
+      "title": "Variations",
+      "description": "Diagnostic/Linting validation to execute on Liquid syntax.",
+      "$ref": "#/definitions/variations"
+    }
+  }
+}
