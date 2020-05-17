@@ -9,7 +9,7 @@
     "url": "https://github.com/panoply/liquid-language-grammars"
   },
   "scripts": {
-    "dev": "liquify dev -c build.config.json -i syntax -o package -w",
+    "dev": "liquify dev -c build.grammar.json -i syntax -o package -w",
     "build": "liquify build -c -o package --prod",
     "peep": "liquify peek",
     "test": "echo \"Error: no test specified\" && exit 1"

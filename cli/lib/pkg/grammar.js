@@ -66,7 +66,7 @@ const variations = async ({ path, argv, specs, base }, { name, grammar, output }
 
   const tmLanguage = JSON.stringify({
     ...base,
-    name: grammar.n,
+    name: grammar.name,
     scopeName: grammar.scopeName,
     patterns: [
       ...base.patterns,

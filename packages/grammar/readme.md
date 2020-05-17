@@ -2,56 +2,44 @@
 
 # @liquify/language-grammars
 
-Liquid Language [TextMate](https://macromates.com/manual/en/language_grammars) grammar generator. Used by the [Liquify](#) IDE extension/package to generate syntax support for multiple variations of Liquid.
+Liquid Language [TextMate Grammar](https://macromates.com/manual/en/language_grammars) generator. Grammars contained in this repository are consumed by the [Liquify](#) text editor extension/package plugin and provide syntax support for multiple variations of the language.
 
 ## Why?
 
-Liquid exists in a multitude of variations and while structurally consistent the context and functionality of the syntax changes. This tool will generate Liquid TextMate grammars and provides a structured way to create and/or extend variations of the language.
+Liquid exists in a multitude of variations and while structurally consistent the context and functionality of the syntax changes depending on its implementation. This module generates Liquid TextMate grammars and provides a structured way to create and/or extend variations of the language.
 
-## Install
+## Supported
 
-PNPM
-
-```bash
-pnpm add @liquify/language-grammars -D
-```
-
-NPM:
-
-```bash
-npm install @liquify/language-grammars --save-dev
-```
-
-## Usage
-
-The `build.config.json` file located in the root directory is used as the configuration generator. This project includes its own bundler as a development dependency
-
-By default, all grammars extend the [Liquid Standard](#) variation TextMate standard grammar which is located in the root of the `syntax` directory. If you would like to contribute or create a new Liquid variaton/injection grammar you can use the `build.config.json` configuration file. There are 2 types of grammars that can be generated:
-
-#### Includes
-
-Grammars located within the `syntax/include` directory are extendable grammar modules that will be included as pattern references when generating additional variations or injections.
-
-#### Injects
-
-Grammars located within the `syntax/injects` directory are injection grammars.
-
-## Commands
-
-| Command        | Description                                           |
-| -------------- | ----------------------------------------------------- |
-| `pnpm run cli` | Launches debugger and bundler for the language client |
-| `pnpm run dev` | Launches debugger and bundler for the language client |
-| `pnpm run cdn` | Launches debugger and bundler for the language client |
-
-### Variations
-
-There are 3 syntax languages generated, each of which will extend the `default.jsonc` standard Liquid variation grammar.
+This project supports 4 Liquid variations
 
 - [Liquid Standard](#)
+- [Liquid 11ty](#)
 - [Liquid Shopify](#)
 - [Liquid Jekyll](#)
 
-> If you're a [licensed](#) user of Liquify you can extend grammars to support custom variations of Liquid.
+# Install
 
-##
+1. Clone/fork the repository
+2. Run `pnpm install`
+
+## Usage
+
+The `build.grammar.json` file located in the root directory is used as the grammar generator from which all grammars will be created. The file references a JSON [Schema Store](http://schemastore.org/) which provides IntelliSense validation, completion and descriptives for the export configuration options.
+
+| Command          | Description                             |
+| ---------------- | --------------------------------------- |
+| `pnpm run dev`   | Watches and builds grammar files        |
+| `pnpm run build` | Build minified production grammar files |
+| `pnpm run peep`  | View generated grammars via [fx](#)     |
+
+## Generating
+
+The project uses the [Liquify CLI](#) tool to process and build grammars. By default, all generated grammars extend upon the **[Standard](#)** Liquid variation grammar which is located at the root of the `syntax` directory. There are 2 types of grammars that can be generated.
+
+### Variation Grammars
+
+Variation grammars will import pattern files contained within the `syntax/include` directory. Pattern files can be referenced to variations in the grammar generator config file and will either extend upon an already existing (standard variation) include pattern or be appended as a new include pattern.
+
+### Injection Grammars
+
+Injection grammars will import patterns from the `syntax/inject` directory. Injection grammar patterns require an `injectionSelector` value which you can define in the grammar generator config file.
