@@ -46,6 +46,6 @@ Injection grammars will import patterns from the `syntax/inject` directory. Inje
 
 See [changelog](#)
 
-<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />
+<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLBQXPLFVBBTSGSXSSC6ZLPVA" />
 
 🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
