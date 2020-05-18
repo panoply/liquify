@@ -211,28 +211,36 @@ async function watch (path) {
   const base = basename(path)
   const name = base.substring(0, base.lastIndexOf('.json'))
 
-  let prop
+  let generate
 
   // This is the base grammar
   if (name === 'liquid') {
+
     context.files[name] = { ...await stripJson(path) }
-    return build({ ...context })
+
+    generate = context.config.generate.filter(({ type }) => (
+      type === 'variation'
+    ))
+
   } else if (context.files.inject[name]) {
+
     context.files.inject[name] = { ...await stripJson(path) }
-    prop = 'inject'
+
+    generate = context.config.generate.filter(({ type, file }) => (
+      type === 'injection' && file === name
+    ))
+
   } else if (context.files.include[name]) {
+
     context.files.include[name] = { ...await stripJson(path) }
-    prop = 'include'
+
+    generate = context.config.generate.filter(({ grammar }) => (
+      grammar.include && grammar.include.includes(name)
+    ))
+
   }
 
-  return build({
-    ...context,
-    config: {
-      generate: context.config.generate.filter(({ grammar }) => (
-        grammar[prop] && grammar[prop].includes(name)
-      ))
-    }
-  })
+  return build({ ...context, config: { generate } })
 
 }
 
@@ -256,7 +264,10 @@ export default async (options) => {
     // console.log(config)
     log.tree[0].while(chalk`{blue watching}`)
 
-    const watcher = chokidar.watch(`${context.argv.input}/**`, { persistent: true })
+    const watcher = chokidar.watch(`${context.argv.input}/**`, {
+      persistent: true,
+      interval: 100
+    })
     // const change = watch(output, state)
 
     // @ts-ignore

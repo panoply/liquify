@@ -209,6 +209,7 @@ export default async (config, state = {
   const { input, output } = config.argv
   const errors = errorHandler(input)
   await build(input, output, state).catch(errors)
+
   log.tree[1].end(chalk`{dim Generated in }{whiteBright ${log.perf.stop().preciseWords}}`)
 
   if (config.argv.watch) {
@@ -217,7 +218,11 @@ export default async (config, state = {
     const item = input.replace(/.*?\/(?=project)/, '')
     log.tree[1].while(chalk`{blueBright watching} {dim ${item}/**}`)
 
-    const watcher = chokidar.watch(`${input}/**`, { persistent: true })
+    const watcher = chokidar.watch(`${input}/**`, {
+      persistent: true,
+      interval: 100
+    })
+
     const change = watch(output, state)
 
     // @ts-ignore
