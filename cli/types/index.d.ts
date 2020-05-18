@@ -1,3 +1,9 @@
+/* -------------------------------------------- */
+/*                 COMMAND LINE                 */
+/* -------------------------------------------- */
+
+import { argv } from 'process'
+
 /**
  * Argv Object
  *
@@ -24,39 +30,92 @@ export declare type ArgvParamaters = {
   dryrun?: boolean
 }
 
+/* -------------------------------------------- */
+/*                     ARGV                     */
+/* -------------------------------------------- */
+
+type Argv = {
+  task?: string | null
+  pkg?: string | null
+  config?: string | null
+  watch?: boolean
+  input?: string | null
+  output?: string | null
+  prod?: boolean
+  dev?: boolean
+  help?: boolean
+  version?: boolean
+  postinstall?: boolean
+  preinstall?: boolean
+  dryrun?: boolean
+  nobanner?: boolean
+}
+
+/* -------------------------------------------- */
+/*                     PATH                     */
+/* -------------------------------------------- */
+
+type Path = {
+  cwd?: string
+  base?: string
+  root?: string
+  pkg?: string
+  filter?: string
+}
+
+type Info = {
+  name?: string
+  repo?: string
+  version?: string
+}
+
 /**
- * Specification
+ * Options
  *
  * @export
  */
 export declare type Options = {
-  path: {
-    cwd?: string
-    base?: string
-    root?: string
-    pkg?: string
-    filter?: string
-  }
-  argv?: {
-    task?: string | null
-    pkg?: string | null
-    config?: string | null
-    watch?: boolean
-    input?: string | null
-    output?: string | null
-    prod?: boolean
-    dev?: boolean
-    help?: boolean
-    version?: boolean
-    postinstall?: boolean
-    preinstall?: boolean
-    dryrun?: boolean
-    nobanner?: boolean
-  }
+  path: Path
+  argv?: Argv
   execute?: {}
-  info?: {
-    name?: string
-    repo?: string
-    version?: string
+  info?: Info
+}
+
+/* -------------------------------------------- */
+/*                  GRAMMAR PKG                 */
+/* -------------------------------------------- */
+
+/**
+ * Argv Object
+ *
+ * @export
+ */
+export declare type GrammarGenerator = {
+  name?: string
+  file: string
+  type: 'variation' | 'injection'
+  output: string
+  extend?: 'standard'
+  formats: ['json' | 'yaml']
+  grammar: {
+    name: string
+    scopeName: string
+    injectionSelector?: string[]
+    include?: string[]
+  }
+}
+
+export declare type GrammarContext = GrammarGenerator & {
+  argv: Argv
+  path: Path
+  info?: Info
+  specs: object
+  imports: {
+    include: object
+    inject: object
+    standard?: {
+      patterns: object[{ include: string }]
+      repository: { objects: { patterns: object[] } }
+    }
   }
 }

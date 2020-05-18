@@ -24,10 +24,10 @@
       "include": "#tags"
     },
     {
-      "include": "#embedded"
+      "include": "#output"
     },
     {
-      "include": "#imports"
+      "include": "#embedded"
     },
     {
       "include": "text.html.basic"
@@ -78,6 +78,9 @@
         },
         {
           "include": "#filters"
+        },
+        {
+          "include": "#imports"
         }
       ],
       "end": "(-)?(%})",
@@ -298,6 +301,19 @@
         }
       ]
     },
+    "imports": {
+      "patterns": [
+        {
+          "name": "markup.underline.link.liquid",
+          "match": "((?<=render)|(?<=include))\\s([^{,'\"]+?)\\s+",
+          "captures": {
+            "0": {
+              "name": "markup.underline.link.liquid"
+            }
+          }
+        }
+      ]
+    },
     "embedded": {
       "patterns": [
         {
@@ -500,19 +516,6 @@
               "include": "source.js"
             }
           ]
-        }
-      ]
-    },
-    "imports": {
-      "patterns": [
-        {
-          "name": "markup.underline.link.liquid",
-          "match": "((?<=render)|(?<=include))\\s([^{,'\"]+?)\\s+",
-          "captures": {
-            "0": {
-              "name": "markup.underline.link.liquid"
-            }
-          }
         }
       ]
     }

@@ -24,13 +24,13 @@
       "include": "#tags"
     },
     {
-      "include": "#frontmatter"
-    },
-    {
-      "include": "#imports"
-    },
-    {
       "include": "#output"
+    },
+    {
+      "include": "#rogue"
+    },
+    {
+      "include": "text.html.basic"
     }
   ],
   "repository": {
@@ -78,6 +78,9 @@
         },
         {
           "include": "#filters"
+        },
+        {
+          "include": "#imports"
         }
       ],
       "end": "(-)?(%})",
@@ -295,21 +298,6 @@
               "name": "support.function.filter.liquid"
             }
           }
-        }
-      ]
-    },
-    "frontmatter": {
-      "patterns": [
-        {
-          "name": "meta.embedded.block.liquid",
-          "contentName": "meta.embedded.block.frontmatter.liquid",
-          "begin": "----?",
-          "end": "-?---",
-          "patterns": [
-            {
-              "include": "source.yaml"
-            }
-          ]
         }
       ]
     },

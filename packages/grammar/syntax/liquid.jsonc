@@ -52,7 +52,8 @@
         { "include": "#invalid" },
         { "include": "#operators" },
         { "include": "#strings" },
-        { "include": "#filters" }
+        { "include": "#filters" },
+        { "include": "#imports" }
       ],
       "end": "(-)?(%})",
       "endCaptures": {
@@ -261,6 +262,24 @@
           "captures": {
             "1": { "name": "keyword.separator.pipe.liquid" },
             "2": { "name": "support.function.filter.liquid" }
+          }
+        }
+      ]
+    },
+
+    /* -------------------------------------------- */
+    /*                    IMPORTS                   */
+    /* -------------------------------------------- */
+
+    "imports": {
+      "patterns": [
+        {
+          "name": "markup.underline.link.liquid",
+          "match": "((?<=render)|(?<=include))\\s([^{,'\"]+?)\\s+",
+          "captures": {
+            "0": {
+              "name": "markup.underline.link.liquid"
+            }
           }
         }
       ]

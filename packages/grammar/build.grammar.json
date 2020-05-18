@@ -1,55 +1,46 @@
 {
   "$schema": "./../schema/stores/liquid-grammas.json",
-  "package": [
+  "generate": [
     {
       "name": "shopify",
       "type": "variation",
-      "export": "liquid-shopify.tmLanguage",
+      "output": "liquid-shopify.tmLanguage",
       "extend": "standard",
       "formats": ["json", "yaml"],
       "grammar": {
         "name": "Liquid Shopify",
         "scopeName": "source.liquid.shopify",
-        "include": {
-          "tags": ["imports"],
-          "embeds": ["embedded"]
-        }
+        "include": ["embedded"]
       }
     },
     {
       "name": "11ty",
       "type": "variation",
-      "export": "liquid-11ty.tmLanguage",
+      "output": "liquid-11ty.tmLanguage",
       "extend": "standard",
       "formats": ["json", "yaml"],
       "grammar": {
         "name": "Liquid 11ty",
         "scopeName": "source.liquid.11ty",
-        "include": {
-          "tags": ["imports"],
-          "frontmatter": ["frontmatter"]
-        }
+        "include": ["frontmatter"]
       }
     },
     {
       "name": "jekyll",
       "type": "variation",
-      "export": "liquid-jekyll.tmLanguage",
+      "output": "liquid-jekyll.tmLanguage",
       "extend": "standard",
       "formats": ["json", "yaml"],
       "grammar": {
         "name": "Liquid Jekyll",
         "scopeName": "source.liquid.jekyll",
-        "include": {
-          "tags": ["imports", "rouge"],
-          "frontmatter": ["frontmatter"]
-        }
+        "include": ["frontmatter", "rogue"]
       }
     },
     {
       "type": "injection",
-      "import": "comments",
-      "export": "liquify-comment.inject",
+      "file": "comments",
+      "output": "liquify-comment.inject",
       "formats": ["json"],
       "grammar": {
         "scopeName": "source.liquid.comments",
@@ -58,8 +49,8 @@
     },
     {
       "type": "injection",
-      "import": "markdown",
-      "export": "liquid-markdown.codeblock",
+      "file": "markdown",
+      "output": "liquid-markdown.codeblock",
       "formats": ["json"],
       "grammar": {
         "scopeName": "markdown.liquid.codeblock",
@@ -68,8 +59,8 @@
     },
     {
       "type": "injection",
-      "import": "injection",
-      "export": "liquid.injection",
+      "file": "injection",
+      "output": "liquid.injection",
       "formats": ["json"],
       "grammar": {
         "scopeName": "source.liquid.injection",

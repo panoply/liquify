@@ -5,8 +5,13 @@
     "module": "commonjs",
     "baseUrl": ".",
     "paths": {
-      "types": ["./types"]
+      "types": ["./types", "./../packages/grammar/build.grammar.json"]
     }
   },
-  "include": ["lib/**/*", "test/**/*", "types/**/*"]
+  "include": [
+    "lib/**/*",
+    "test/**/*",
+    "types/**/*",
+    "./../packages/grammar/**/*"
+  ]
 }

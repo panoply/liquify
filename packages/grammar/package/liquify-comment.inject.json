@@ -1,6 +1,5 @@
 {
   "scopeName": "source.liquid.comments",
-  "injectionSelector": "L:comment.block.liquid",
   "patterns": [
     {
       "name": "comment.block.documentation.liquid",
@@ -46,5 +45,6 @@
         }
       }
     }
-  ]
+  ],
+  "injectionSelector": "L:comment.block.liquid"
 }
