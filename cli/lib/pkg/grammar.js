@@ -249,7 +249,7 @@ export default async (options) => {
 
   const context = await generateContext(options)
 
-  // await build(context)
+  await build(context)
 
   if (context.argv.watch) {
 

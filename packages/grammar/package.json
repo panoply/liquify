@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "liquify dev -c build.grammar.json -i syntax -o package -w",
-    "build": "liquify build -c -o package --prod",
+    "build": "liquify build -c build.grammar.json -i syntax -o package --prod",
     "peep": "liquify peek",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
