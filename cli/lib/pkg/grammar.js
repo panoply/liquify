@@ -75,7 +75,7 @@ const generateFile = async ({ prod, output }, generate, json) => {
   }
 
   if (generate.formats.includes('yaml')) {
-    await writeFile(`${file}.yaml`, YAML.stringify(str)).then(() => (
+    await writeFile(`${file}.yaml`, YAML.stringify(json)).then(() => (
       log.tree.deep.middle(chalk`{yellow YAML} into '{magenta ${basename(file)}}'`)
     ))
   }

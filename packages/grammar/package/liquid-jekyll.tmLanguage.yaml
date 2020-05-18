@@ -1,1 +1,161 @@
-"{\n  \"name\": \"Liquid Jekyll\",\n  \"scopeName\": \"source.liquid.jekyll\",\n  \"fileTypes\": [\n    \"liquid\"\n  ],\n  \"injections\": {\n    \"L:string - (string.quoted.*.html)\": {\n      \"patterns\": [\n        {\n          \"include\": \"#tags\"\n        },\n        {\n          \"include\": \"#output\"\n        }\n      ]\n    }\n  },\n  \"patterns\": [\n    {\n      \"include\": \"#comments\"\n    },\n    {\n      \"include\": \"#tags\"\n    },\n    {\n      \"include\": \"#output\"\n    },\n    {\n      \"include\": \"#rogue\"\n    },\n    {\n      \"include\": \"text.html.basic\"\n    }\n  ],\n  \"repository\": {\n    \"comments\": {\n      \"name\": \"comment.block.liquid\",\n      \"begin\": \"{%-?\\\\s*comment\\\\s*-?%}\",\n      \"end\": \"{%-?\\\\s*endcomment\\\\s*-?%}\"\n    },\n    \"tags\": {\n      \"name\": \"punctuation.output.liquid\",\n      \"begin\": \"({%)(-)?\",\n      \"beginCaptures\": {\n        \"1\": {\n          \"name\": \"punctuation.definition.tag.begin.liquid\"\n        },\n        \"2\": {\n          \"name\": \"keyword.other.whitespace.liquid\"\n        }\n      },\n      \"patterns\": [\n        {\n          \"name\": \"entity.name.tag.liquid\",\n          \"match\": \"(?:(?<={%)|(?<={%-))\\\\s*\\\\w+\"\n        },\n        {\n          \"include\": \"#objects\"\n        },\n        {\n          \"include\": \"#numeric\"\n        },\n        {\n          \"include\": \"#constants\"\n        },\n        {\n          \"include\": \"#parameters\"\n        },\n        {\n          \"include\": \"#invalid\"\n        },\n        {\n          \"include\": \"#operators\"\n        },\n        {\n          \"include\": \"#strings\"\n        },\n        {\n          \"include\": \"#filters\"\n        },\n        {\n          \"include\": \"#imports\"\n        }\n      ],\n      \"end\": \"(-)?(%})\",\n      \"endCaptures\": {\n        \"1\": {\n          \"name\": \"keyword.other.whitespace.liquid\"\n        },\n        \"2\": {\n          \"name\": \"punctuation.definition.tag.end.liquid\"\n        }\n      }\n    },\n    \"output\": {\n      \"name\": \"punctuation.output.liquid\",\n      \"begin\": \"({{)(-)?\",\n      \"beginCaptures\": {\n        \"1\": {\n          \"name\": \"punctuation.definition.tag.begin.liquid\"\n        },\n        \"2\": {\n          \"name\": \"keyword.other.whitespace.liquid\"\n        }\n      },\n      \"patterns\": [\n        {\n          \"include\": \"#objects\"\n        },\n        {\n          \"include\": \"#numeric\"\n        },\n        {\n          \"include\": \"#constants\"\n        },\n        {\n          \"include\": \"#parameters\"\n        },\n        {\n          \"include\": \"#invalid\"\n        },\n        {\n          \"include\": \"#operators\"\n        },\n        {\n          \"include\": \"#strings\"\n        },\n        {\n          \"include\": \"#filters\"\n        }\n      ],\n      \"end\": \"(-)?(}})\",\n      \"endCaptures\": {\n        \"1\": {\n          \"name\": \"keyword.other.whitespace.liquid\"\n        },\n        \"2\": {\n          \"name\": \"punctuation.definition.tag.end.liquid\"\n        }\n      }\n    },\n    \"objects\": {\n      \"patterns\": [\n        {\n          \"name\": \"support.class.liquid\",\n          \"match\": \"(?:(?<=[{%}>=!\\\\[\\\\]\\\\-|:])|(?<=\\\\s))(\\\\w+)(?=\\\\.)\"\n        },\n        {\n          \"name\": \"support.class.liquid\",\n          \"match\": \"\\\\b(undefined)\\\\b\"\n        }\n      ]\n    },\n    \"parameters\": {\n      \"patterns\": [\n        {\n          \"name\": \"variable.parameter.liquid\",\n          \"match\": \"(?!\\\\|\\\\s*)\\\\b([a-zA-Z0-9_-]+)(?=:\\\\s*)\"\n        }\n      ]\n    },\n    \"numeric\": {\n      \"patterns\": [\n        {\n          \"name\": \"constant.numeric.float.liquid\",\n          \"match\": \"(-|\\\\+)?\\\\s*[0-9]+(\\\\.[0-9]+)?\"\n        },\n        {\n          \"name\": \"constant.numeric.integer.liquid\",\n          \"match\": \"(\\\\+|\\\\-)[\\\\d]+\"\n        },\n        {\n          \"name\": \"constant.numeric.natural.liquid\",\n          \"match\": \"[\\\\d]+\"\n        }\n      ]\n    },\n    \"constants\": {\n      \"patterns\": [\n        {\n          \"name\": \"constant.language.liquid\",\n          \"match\": \"(false|true|nil|null|empty|blank)\"\n        },\n        {\n          \"name\": \"constant.character.entity.liquid\",\n          \"match\": \"(&)([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+)(;)\",\n          \"captures\": {\n            \"1\": {\n              \"name\": \"punctuation.definition.entity.html\"\n            },\n            \"3\": {\n              \"name\": \"punctuation.definition.entity.html\"\n            }\n          }\n        }\n      ]\n    },\n    \"invalid\": {\n      \"patterns\": [\n        {\n          \"match\": \"&\",\n          \"name\": \"invalid.illegal.bad-ampersand.liquid\"\n        },\n        {\n          \"match\": \"(\\\\[)(\\\\|)(?=[^\\\\]]*)(?=\\\\])\",\n          \"captures\": {\n            \"2\": {\n              \"name\": \"invalid.illegal.filter.liquid\"\n            },\n            \"3\": {\n              \"name\": \"invalid.illegal.filter.liquid\"\n            }\n          }\n        },\n        {\n          \"match\": \"(?=if|unless|elsif)\\\\s*[^%}]+\\\\s(in)\\\\s+\",\n          \"captures\": {\n            \"3\": {\n              \"name\": \"invalid.illegal.operator.liquid\"\n            }\n          }\n        },\n        {\n          \"name\": \"invalid.illegal.filter.liquid\",\n          \"match\": \"(?<=\\\\s)(\\\\+|\\\\-|\\\\/|\\\\*)(?=\\\\s)\"\n        }\n      ]\n    },\n    \"operators\": {\n      \"patterns\": [\n        {\n          \"match\": \"\\\\=\",\n          \"name\": \"keyword.operator.assignment.augmented.liquid\"\n        },\n        {\n          \"match\": \"\\\\.\",\n          \"name\": \"keyword.other.dot.liquid\"\n        },\n        {\n          \"name\": \"keyword.operator.logical.liquid\",\n          \"match\": \"\\\\s+(and|or|contains|in)\\\\s+\"\n        },\n        {\n          \"name\": \"keyword.operator.equality.liquid\",\n          \"match\": \"\\\\s+(\\\\!=|\\\\=\\\\=|\\\\<|\\\\>|\\\\>\\\\=|\\\\<\\\\=)\\\\s+\"\n        },\n        {\n          \"name\": \"keyword.other.colon.liquid\",\n          \"match\": \":\"\n        },\n        {\n          \"name\": \"keyword.other.array-item.liquid\",\n          \"match\": \"\\\\[|\\\\]\"\n        },\n        {\n          \"name\": \"variable.parameter.liquid\",\n          \"match\": \"(?<=\\\\s)(as|with|offset|limit|reverse|cols)\"\n        }\n      ]\n    },\n    \"strings\": {\n      \"patterns\": [\n        {\n          \"name\": \"string.quoted.single.liquid\",\n          \"begin\": \"'\",\n          \"end\": \"'\"\n        },\n        {\n          \"name\": \"string.quoted.double.liquid\",\n          \"begin\": \"\\\"\",\n          \"end\": \"\\\"\"\n        }\n      ]\n    },\n    \"filters\": {\n      \"patterns\": [\n        {\n          \"name\": \"support.function.with-args.liquid\",\n          \"match\": \"(\\\\|\\\\s*)(?![\\\\.0-9])([a-zA-Z0-9_-]+)(?=\\\\:\\\\s*)\",\n          \"captures\": {\n            \"1\": {\n              \"name\": \"keyword.separator.pipe.liquid\"\n            },\n            \"2\": {\n              \"name\": \"support.function.filter.liquid\"\n            }\n          }\n        },\n        {\n          \"name\": \"support.function.without-args.liquid\",\n          \"match\": \"(\\\\|\\\\s*)(?![\\\\.0-9])([a-zA-Z0-9_-]+)\\\\s*\",\n          \"captures\": {\n            \"1\": {\n              \"name\": \"keyword.separator.pipe.liquid\"\n            },\n            \"2\": {\n              \"name\": \"support.function.filter.liquid\"\n            }\n          }\n        }\n      ]\n    },\n    \"imports\": {\n      \"patterns\": [\n        {\n          \"name\": \"markup.underline.link.liquid\",\n          \"match\": \"((?<=render)|(?<=include))\\\\s([^{,'\\\"]+?)\\\\s+\",\n          \"captures\": {\n            \"0\": {\n              \"name\": \"markup.underline.link.liquid\"\n            }\n          }\n        }\n      ]\n    }\n  }\n}"
+name: "Liquid Jekyll"
+scopeName: "source.liquid.jekyll"
+fileTypes:
+  - "liquid"
+injections:
+  L:string - (string.quoted.*.html):
+    patterns:
+      - include: "#tags"
+      - include: "#output"
+patterns:
+  - include: "#comments"
+  - include: "#tags"
+  - include: "#output"
+  - include: "#rogue"
+  - include: "text.html.basic"
+repository:
+  comments:
+    name: "comment.block.liquid"
+    begin: "{%-?\\s*comment\\s*-?%}"
+    end: "{%-?\\s*endcomment\\s*-?%}"
+  tags:
+    name: "punctuation.output.liquid"
+    begin: "({%)(-)?"
+    beginCaptures:
+      1:
+        name: "punctuation.definition.tag.begin.liquid"
+      2:
+        name: "keyword.other.whitespace.liquid"
+    patterns:
+      - name: "entity.name.tag.liquid"
+        match: "(?:(?<={%)|(?<={%-))\\s*\\w+"
+      - include: "#objects"
+      - include: "#numeric"
+      - include: "#constants"
+      - include: "#parameters"
+      - include: "#invalid"
+      - include: "#operators"
+      - include: "#strings"
+      - include: "#filters"
+      - include: "#imports"
+    end: "(-)?(%})"
+    endCaptures:
+      1:
+        name: "keyword.other.whitespace.liquid"
+      2:
+        name: "punctuation.definition.tag.end.liquid"
+  output:
+    name: "punctuation.output.liquid"
+    begin: "({{)(-)?"
+    beginCaptures:
+      1:
+        name: "punctuation.definition.tag.begin.liquid"
+      2:
+        name: "keyword.other.whitespace.liquid"
+    patterns:
+      - include: "#objects"
+      - include: "#numeric"
+      - include: "#constants"
+      - include: "#parameters"
+      - include: "#invalid"
+      - include: "#operators"
+      - include: "#strings"
+      - include: "#filters"
+    end: "(-)?(}})"
+    endCaptures:
+      1:
+        name: "keyword.other.whitespace.liquid"
+      2:
+        name: "punctuation.definition.tag.end.liquid"
+  objects:
+    patterns:
+      - name: "support.class.liquid"
+        match: "(?:(?<=[{%}>=!\\[\\]\\-|:])|(?<=\\s))(\\w+)(?=\\.)"
+      - name: "support.class.liquid"
+        match: "\\b(undefined)\\b"
+  parameters:
+    patterns:
+      - name: "variable.parameter.liquid"
+        match: "(?!\\|\\s*)\\b([a-zA-Z0-9_-]+)(?=:\\s*)"
+  numeric:
+    patterns:
+      - name: "constant.numeric.float.liquid"
+        match: "(-|\\+)?\\s*[0-9]+(\\.[0-9]+)?"
+      - name: "constant.numeric.integer.liquid"
+        match: "(\\+|\\-)[\\d]+"
+      - name: "constant.numeric.natural.liquid"
+        match: "[\\d]+"
+  constants:
+    patterns:
+      - name: "constant.language.liquid"
+        match: "(false|true|nil|null|empty|blank)"
+      - name: "constant.character.entity.liquid"
+        match: "(&)([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+)(;)"
+        captures:
+          1:
+            name: "punctuation.definition.entity.html"
+          3:
+            name: "punctuation.definition.entity.html"
+  invalid:
+    patterns:
+      - match: "&"
+        name: "invalid.illegal.bad-ampersand.liquid"
+      - match: "(\\[)(\\|)(?=[^\\]]*)(?=\\])"
+        captures:
+          2:
+            name: "invalid.illegal.filter.liquid"
+          3:
+            name: "invalid.illegal.filter.liquid"
+      - match: "(?=if|unless|elsif)\\s*[^%}]+\\s(in)\\s+"
+        captures:
+          3:
+            name: "invalid.illegal.operator.liquid"
+      - name: "invalid.illegal.filter.liquid"
+        match: "(?<=\\s)(\\+|\\-|\\/|\\*)(?=\\s)"
+  operators:
+    patterns:
+      - match: "\\="
+        name: "keyword.operator.assignment.augmented.liquid"
+      - match: "\\."
+        name: "keyword.other.dot.liquid"
+      - name: "keyword.operator.logical.liquid"
+        match: "\\s+(and|or|contains|in)\\s+"
+      - name: "keyword.operator.equality.liquid"
+        match: "\\s+(\\!=|\\=\\=|\\<|\\>|\\>\\=|\\<\\=)\\s+"
+      - name: "keyword.other.colon.liquid"
+        match: ":"
+      - name: "keyword.other.array-item.liquid"
+        match: "\\[|\\]"
+      - name: "variable.parameter.liquid"
+        match: "(?<=\\s)(as|with|offset|limit|reverse|cols)"
+  strings:
+    patterns:
+      - name: "string.quoted.single.liquid"
+        begin: "'"
+        end: "'"
+      - name: "string.quoted.double.liquid"
+        begin: "\""
+        end: "\""
+  filters:
+    patterns:
+      - name: "support.function.with-args.liquid"
+        match: "(\\|\\s*)(?![\\.0-9])([a-zA-Z0-9_-]+)(?=\\:\\s*)"
+        captures:
+          1:
+            name: "keyword.separator.pipe.liquid"
+          2:
+            name: "support.function.filter.liquid"
+      - name: "support.function.without-args.liquid"
+        match: "(\\|\\s*)(?![\\.0-9])([a-zA-Z0-9_-]+)\\s*"
+        captures:
+          1:
+            name: "keyword.separator.pipe.liquid"
+          2:
+            name: "support.function.filter.liquid"
+  imports:
+    patterns:
+      - name: "markup.underline.link.liquid"
+        match: "((?<=render)|(?<=include))\\s([^{,'\"]+?)\\s+"
+        captures:
+          0:
+            name: "markup.underline.link.liquid"
