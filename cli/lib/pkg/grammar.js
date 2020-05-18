@@ -1,16 +1,12 @@
 import { writeFile, readFile, readdir } from 'fs-extra'
 import { resolve, basename } from 'path'
-// import boxen from 'boxen'
 import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
-// import execa from 'execa'
-// import chokidar from 'chokidar'
-// import { log } from '../utils/export'
+import chokidar from 'chokidar'
 import { getCrypt } from '../utils/crypto'
-import erre from 'erre'
-import * as log from '../utils/logs'
 import YAML from 'json-to-pretty-yaml'
+import * as log from '../utils/logs'
 
 /**
   * Read, strip and parse syntax json and jsonc files
@@ -19,7 +15,7 @@ import YAML from 'json-to-pretty-yaml'
   * @param {string} path
   * @returns {Promise<object>}
   */
-const stripJson = async (path) => {
+async function stripJson (path) {
 
   const jsonc = await readFile(path)
 
@@ -31,7 +27,6 @@ const stripJson = async (path) => {
   if (parse.$schema) delete parse.$schema
 
   return parse
-
 }
 
 /**
@@ -41,18 +36,18 @@ const stripJson = async (path) => {
  * @param {string} input
  * @param {object} includes
  */
-const getPatterns = async (input, includes = {}) => {
+async function getPatterns (input, includes = {}) {
 
   const files = await readdir(input)
 
   for (const file of files) {
     const name = file.replace('.json', '')
     const json = await stripJson(resolve(input, file))
+
     if (json) includes[name] = json
   }
 
   return includes
-
 }
 
 /**
@@ -63,23 +58,120 @@ const getPatterns = async (input, includes = {}) => {
  * @param {import('types').GrammarGenerator} generate
  * @param {object} json
  */
-const generateFile = async ({ prod, output }, generate, json) => {
+async function generateFile ({ watch, prod, output }, generate, json) {
 
   const str = JSON.stringify(json, null, 2)
   const file = resolve(output, generate.output)
 
+  log.perf.start('i')
+
+  log.tree[1].while(chalk`{magentaBright ${generate.name || generate.file}}`)
+
   if (generate.formats.includes('json')) {
-    await writeFile(`${file}.json`, prod ? jsonMinify(str) : str).then(() => (
-      log.tree.deep.middle(chalk`{cyanBright JSON} into '{magenta ${basename(file)}}'`)
-    ))
+    await writeFile(`${file}.json`, prod ? jsonMinify(str) : str)
+    log.tree[2].while(chalk`{greenBright change} {dim ${basename(file)}.json}`)
   }
 
   if (generate.formats.includes('yaml')) {
-    await writeFile(`${file}.yaml`, YAML.stringify(json)).then(() => (
-      log.tree.deep.middle(chalk`{yellow YAML} into '{magenta ${basename(file)}}'`)
-    ))
+    await writeFile(`${file}.yaml`, YAML.stringify(json))
+    log.tree[2].while(chalk`{greenBright change} {dim ${basename(file)}.yaml}`)
   }
 
+  log.tree[2].end(
+    chalk`{cyan ${log.perf.stop('i').preciseWords}}`
+  )
+
+}
+
+/**
+ * Generate Injection grammar bundles
+ *
+ * @param {object} context
+ * @param {import('types').GrammarGenerator} generate
+ * @returns
+ */
+async function applyIncludes ({ liquid, include }, generate) {
+
+  const prepend = liquid.patterns.filter(({ include }) => include[0] === '#')
+  const append = liquid.patterns.filter(({ include }) => include[0] !== '#')
+  const file = { ...liquid }
+
+  for (const scope of generate.grammar.include) {
+    if (file.repository[scope]) continue
+    file.patterns = [ ...prepend, { include: `#${scope}` }, ...append ]
+    file.repository = { ...liquid.repository, [scope]: include[scope] }
+  }
+
+  return file
+}
+
+/**
+ * Applies specification supports to each grammar according to
+ * the spec variation name.
+ *
+ * @param {object} specs
+ * @param {object} generate
+ * @returns
+ */
+async function applySpecExtends (specs, { repository }) {
+
+  if (!specs || !specs.object) return {}
+
+  const condition = (pattern, scope) => (pattern ? scope : {})
+
+  await ({
+    objects: condition(specs.object, {
+      patterns: [
+        ...repository.objects.patterns,
+        {
+          name: 'support.class.liquid',
+          match: `\\b(${specs.object.join('|')})\\b`
+        }
+      ]
+    })
+  })
+}
+
+/**
+ * Generat the package context object
+ *
+ * @param {object} context
+ * @returns
+ */
+async function generateContext (context) {
+
+  const config = await stripJson(context.argv.config)
+
+  return {
+    ...context,
+    config,
+    specs: await getCrypt('grammar'),
+    files: {
+      liquid: await stripJson(resolve(context.argv.input, 'liquid.jsonc')),
+      inject: await getPatterns(resolve(context.argv.input, 'inject')),
+      include: await getPatterns(resolve(context.argv.input, 'include'))
+    }
+  }
+}
+
+/**
+ * Generate Injection grammar bundles
+ *
+ * @param {import('types').GrammarContext} context
+ * @param {import('types').GrammarGenerator} generate
+ * @returns
+ */
+async function generateInjection ({ argv, files }, generate) {
+
+  if (generate.type === 'injection') {
+    if (!generate.grammar.injectionSelector) return console.log('Missing injectionSelector')
+
+    await generateFile(argv, generate, {
+      ...files.inject[generate.file],
+      scopeName: generate.grammar.scopeName,
+      injectionSelector: generate.grammar.injectionSelector.join(', ')
+    })
+  }
 }
 
 /**
@@ -87,77 +179,62 @@ const generateFile = async ({ prod, output }, generate, json) => {
  * and export the injection grammars.
  *
  * @param {import('types').GrammarContext} context
- * @param {import('types').GrammarGenerator} generate
  */
-const buildGrammar = async ({ argv, specs, imports }, generate) => {
+async function build (context) {
 
-  const { name, grammar, type } = generate
+  for (const generate of context.config.generate) {
 
-  if (type === 'injection') {
-    if (!grammar.injectionSelector) return console.log('Missing injectionSelector')
-    return generateFile(argv, generate, {
-      ...imports.inject[generate.file],
+    if (generate.type === 'injection') {
+      await generateInjection(context, generate)
+      continue
+    }
+
+    const variant = await applyIncludes(context.files, generate)
+
+    await generateFile(context.argv, generate, {
+      ...variant,
+      name: generate.grammar.name,
       scopeName: generate.grammar.scopeName,
-      injectionSelector: generate.grammar.injectionSelector.join(', ')
-    })
-  }
-
-  if (!specs[name]) {
-    return console.log('No specification for this variation')
-  }
-
-  const file = { ...imports.standard }
-  const prepend = file.patterns.filter(({ include }) => include[0] === '#')
-  const append = file.patterns.filter(({ include }) => include[0] !== '#')
-
-  for (const scope of grammar.include) {
-    if (file.repository[scope]) continue
-    file.patterns = [ ...prepend, { include: `#${scope}` }, ...append ]
-    file.repository = { ...imports.standard.repository, [scope]: imports.include[scope] }
-  }
-
-  return generateFile(argv, generate, {
-    ...file,
-    name: grammar.name,
-    scopeName: grammar.scopeName,
-    repository: {
-      ...file.repository,
-      objects: {
-        patterns: [
-          ...file.repository.objects.patterns,
-          {
-            name: 'support.class.liquid',
-            match: `\\b(${specs[name].object && specs[name].object.join('|')})\\b`
-          }
-        ]
+      repository: {
+        ...variant.repository,
+        ...await applySpecExtends(context.specs[generate.name], variant)
       }
+    })
+
+  }
+
+}
+
+async function watch (path) {
+
+  const { context } = this
+  const base = basename(path)
+  const name = base.substring(0, base.lastIndexOf('.json'))
+
+  let prop
+
+  // This is the base grammar
+  if (name === 'liquid') {
+    context.files[name] = { ...await stripJson(path) }
+    return build({ ...context })
+  } else if (context.files.inject[name]) {
+    context.files.inject[name] = { ...await stripJson(path) }
+    prop = 'inject'
+  } else if (context.files.include[name]) {
+    context.files.include[name] = { ...await stripJson(path) }
+    prop = 'include'
+  }
+
+  return build({
+    ...context,
+    config: {
+      generate: context.config.generate.filter(({ grammar }) => (
+        grammar[prop] && grammar[prop].includes(name)
+      ))
     }
   })
 
 }
-
-const stream = erre(
-  async context => ({
-    ...context,
-    specs: await getCrypt('grammar'),
-    config: await stripJson(context.argv.config),
-    imports: {
-      include: await getPatterns(resolve(context.argv.input, 'include')),
-      inject: await getPatterns(resolve(context.argv.input, 'inject'))
-    }
-  }),
-  async context => ({
-    ...context,
-    imports: {
-      ...context.imports,
-      standard: await stripJson(resolve(context.argv.input, 'liquid.jsonc'))
-    }
-  }),
-  async context => ({
-    ...context,
-    ...context.config.generate.map(async config => await buildGrammar(context, config))
-  })
-)
 
 /**
  * Default exports - Digested by the CLI
@@ -165,34 +242,29 @@ const stream = erre(
  * @param {import('types').Options} state
  * @param {object} state prop values are the encoded names
  */
-export default async (context) => {
+export default async (options) => {
 
-  // const config = await stripJson(context.argv.config)
-  // const liquid = await stripJson(resolve(context.path.pkg, config.input))
-  // const specs = await getCrypt('grammar')
+  log.perf.start()
+  log.tree[0].start('Liquid Language Grammars')
 
-  stream.push(context)
-  stream.on.error(console.log)
-  stream.on.value(console.log)
+  const context = await generateContext(options)
 
-  // stream.on.value(async i => (await Promise.all(i.config.injections)
-  // ).forEach(i => console.log(i)))
-  log.tree.top('Liquid Language Grammars')
+  // await build(context)
 
-  // for (const inject of config.injections) await injections({ config, inject })
+  if (context.argv.watch) {
 
-  //  const injections = bundleInjections(state.path)
+    // console.log(config)
+    log.tree[0].while(chalk`{blue watching}`)
 
-  // console.log(resolve(pkg, output))
-  // const variations = buildVariations(pkg, specs, base, output)
-  // log.tree.middle(chalk.blue('Injections'))
+    const watcher = chokidar.watch(`${context.argv.input}/**`, { persistent: true })
+    // const change = watch(output, state)
 
-  // for (const inject of main.injections) await injections(inject)
+    // @ts-ignore
+    global.watch = true
+    watcher.on('change', watch.bind({ context })).on('error', log.error)
 
-  // log.tree.deep.success(`${main.injections.length} grammars generated`)
+  }
 
-  // main.variations.forEach(await variations)
-
-  // console.log(main)
+  // log.tree[1].end(chalk`{dim Generated in }{whiteBright ${log.perf.stop().preciseWords}}`)
 
 }

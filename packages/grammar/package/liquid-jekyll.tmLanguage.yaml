@@ -71,8 +71,6 @@ repository:
     patterns:
       - name: "support.class.liquid"
         match: "(?:(?<=[{%}>=!\\[\\]\\-|:])|(?<=\\s))(\\w+)(?=\\.)"
-      - name: "support.class.liquid"
-        match: "\\b(undefined)\\b"
   parameters:
     patterns:
       - name: "variable.parameter.liquid"

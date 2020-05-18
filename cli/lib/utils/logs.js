@@ -9,20 +9,30 @@
 */
 
 import chalk from 'chalk'
+import { Console } from 'console'
 
-const { log } = console
+export const { log, error } = new Console({
+  stdout : process.stdout,
+  stderr : process.stderr
+})
 
-export const tree = {
-  top    : text => log(chalk`{dim ┌──} {cyan ${text}}`),
-  left   : text => log(chalk`{dim │} ${text}`),
-  middle : text => log(chalk`{dim ├──} ${text}`),
-  bottom : text => log(chalk`{dim └──} ${text}`),
-  deep   : {
-    middle  : text => log(chalk`{dim │  ├──} ${text}`),
-    bottom  : text => log(chalk`{dim │  └──} ${text}`),
-    success : text => log(chalk`{dim │  └──} {greenBright ✔} {green ${text}}`)
+export const perf = require('execution-time')()
+
+export const tree = [
+  {
+    start : text => log(chalk`{grey.dim ┌──} {cyan ${text}}`),
+    while : text => log(chalk`{grey.dim ├──} ${text}`),
+    end   : text => log(chalk`{grey.dim └──} ${text}`)
+  },
+  {
+    while : text => log(chalk`{grey.dim │  ├──} ${text}`),
+    end   : text => log(chalk`{grey.dim │  └──} ${text}`)
+  },
+  {
+    while : text => log(chalk`{grey.dim │  │  ├──} ${text}`),
+    end   : text => log(chalk`{grey.dim │  │  └──} ${text}`)
   }
-}
+]
 
 /**
  * Info box - Use to show breakdown of current command executed

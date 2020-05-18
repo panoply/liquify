@@ -4,8 +4,6 @@ import { readdir, readFile } from 'fs-extra'
 import minimist from 'minimist'
 import { flags } from '../../argv.config.json'
 
-const { log } = console
-
 /**
  * Get Package Path - Parsed the projects paths
  * for pnpm `--filter` execution from any directory in the tree
@@ -138,8 +136,6 @@ export const parsePkgScripts = async (state, scripts, argv) => {
 
   const { argv: { task } } = state
   const regex = /\bliquify\b\s+/
-  const names = flags.map(({ name, short }) => short ? `${name}|${short}` : `${name}`)
-  const match = new RegExp(`(?<=\\-\\-?)(\\b[a-zA-Z0-9_\\-]+?(?<!${names.join('|')})\\b)`, 'gm')
 
   // When task command specifies the run script
   if (scripts[task] && regex.test(scripts[task])) {

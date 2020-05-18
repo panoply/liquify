@@ -6,9 +6,7 @@ import jsonMinify from 'jsonminify'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import { errorHandler } from '../utils/console'
-import erre from 'erre'
-
-const { log } = console
+import * as log from '../utils/logs'
 
 /**
  * Write module JSON export as an AES string encryption and
@@ -25,11 +23,13 @@ const encryptFile = async (name, output, state, json) => {
   const encryptJSON = crypto.encode(json)
   const encryptID = crypto.encode(name)
 
+  log.tree[1].while(chalk`{magentaBright ${name}}`)
+
   await writeFile(`${output}/${encryptID}.js`, `module.exports="${encryptJSON}";`)
 
   // @ts-ignore
   if (!global.watch) {
-    log(chalk`{dim ├─} {greenBright encrypted} {yellow ${name}} to {magenta ${encryptID}}`)
+    log.tree[2].end(chalk`{greenBright encrypted} {cyan ${encryptID}}`)
   }
 
   state.encrypt[encryptID] = `${encryptID}=require("./${encryptID}")`
@@ -184,7 +184,7 @@ const watch = (output, state) => async input => {
   const filename = basename(input)
   const error = errorHandler(filename)
 
-  log(chalk`{dim ├─} {greenBright modified} '{yellow ${filename}}'`)
+  log.tree[1].while(chalk`{greenBright modified} {yellow ${filename}}}`)
 
   const write = writeFiles(input, state)
 
@@ -203,19 +203,19 @@ export default async (config, state = {
   specs: {}, cache: {}, grammar: {}, parsing: {}, encrypt: {}
 }) => {
 
+  log.perf.start()
+  log.tree[0].start('Liquid Specifications')
+
   const { input, output } = config.argv
   const errors = errorHandler(input)
-
-  log(chalk`{dim ┌─} {cyan Liquid Specifications}`)
   await build(input, output, state).catch(errors)
-  log(chalk`{dim └─} {green ✔} {cyan Success}`)
+  log.tree[1].end(chalk`{dim Generated in }{whiteBright ${log.perf.stop().preciseWords}}`)
 
   if (config.argv.watch) {
 
     // console.log(config)
-    const logpath = /.*?\/(?=project)/
-    log(chalk`{dim ┌─} {cyan Liquid Specifications}`)
-    log(chalk`{dim ├─} {blueBright watching} {dim ${input.replace(/.*?\/(?=project)/, '')}/**}`)
+    const item = input.replace(/.*?\/(?=project)/, '')
+    log.tree[1].while(chalk`{blueBright watching} {dim ${item}/**}`)
 
     const watcher = chokidar.watch(`${input}/**`, { persistent: true })
     const change = watch(output, state)

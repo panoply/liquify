@@ -105,12 +105,13 @@ export declare type GrammarGenerator = {
   }
 }
 
-export declare type GrammarContext = GrammarGenerator & {
+export declare type GrammarContext = {
   argv: Argv
   path: Path
   info?: Info
   specs: object
-  imports: {
+  config: { generate: GrammarGenerator[] }
+  files: {
     include: object
     inject: object
     standard?: {

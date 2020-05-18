@@ -1,6 +1,6 @@
 {
-  "name": "Liquid Jekyll",
-  "scopeName": "source.liquid.jekyll",
+  "name": "Liquid 11ty",
+  "scopeName": "source.liquid.11ty",
   "fileTypes": [
     "liquid"
   ],
@@ -27,7 +27,7 @@
       "include": "#output"
     },
     {
-      "include": "#rogue"
+      "include": "#frontmatter"
     },
     {
       "include": "text.html.basic"
@@ -307,6 +307,21 @@
               "name": "markup.underline.link.liquid"
             }
           }
+        }
+      ]
+    },
+    "frontmatter": {
+      "patterns": [
+        {
+          "name": "meta.embedded.block.liquid",
+          "contentName": "meta.embedded.block.frontmatter.liquid",
+          "begin": "----?",
+          "end": "-?---",
+          "patterns": [
+            {
+              "include": "source.yaml"
+            }
+          ]
         }
       ]
     }

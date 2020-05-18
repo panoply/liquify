@@ -78,12 +78,12 @@ export default [
         configFile: resolve(__dirname, './../babel.config.json')
       }),
       nodeResolve(),
-      commonjs({ include: '../node_modules/.pnpm/registry.npmjs.org/**' })
-      /* terser({
-      ecma: 6
-      , warnings: 'verbose'
-      , compress: { passes: 2 }
-    }) */
+      commonjs(), // { include: '../node_modules/.pnpm/registry.npmjs.org/**' })
+      terser({
+        ecma: 6
+        , warnings: 'verbose'
+        , compress: { passes: 2 }
+      })
 
     ],
     external: Object.keys(pkg.dependencies).concat('path', 'util'),
