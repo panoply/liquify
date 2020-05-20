@@ -1,5 +1,7 @@
 {
-  "$schema": "https://raw.githubusercontent.com/panoply/tmlanguage/master/tmlanguage.json",
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "injectionSelector": "L:source.jekyll.liquid -meta.embedded -comment, L:source.11ty.liquid -meta.embedded -comment",
+  "scopeName": "source.liquid.frontmatter",
   "patterns": [
     {
       "name": "meta.embedded.block.liquid",

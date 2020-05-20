@@ -3,6 +3,7 @@ import { babel } from '@rollup/plugin-babel'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import { resolve } from 'path'
 import commonjs from '@rollup/plugin-commonjs'
+import { } from '@liquify/liquid-language-grammars/'
 
 /**
  * @typedef {import('rollup').RollupOptions}
@@ -13,7 +14,8 @@ export default {
     'fs',
     'path',
     'vscode',
-    'vscode-languageclient'
+    'vscode-languageclient',
+    'liquid-language-server'
   ],
   output: {
     file: 'package/liquify-vscode.js',

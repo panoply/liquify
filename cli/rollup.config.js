@@ -9,8 +9,22 @@ import tagReplace from './../scripts/rollup/tag-replace'
 import { resolve } from 'path'
 import pkg from './package.json'
 
-const crypto = new Crypto('sissel siv')
 const { log } = console
+
+/**
+ * Cryptography IV
+ */
+const crypto = new Crypto('sissel siv')
+
+/**
+ * External Dependencies
+ */
+const external = Object.keys(pkg.dependencies).concat('path', 'util')
+
+/**
+ * Linked NPM Node Modules
+ */
+const links = [ '@liquify/liquid-language-grammars' ]
 
 /**
  * @type {import('rollup').RollupOptions}
@@ -78,15 +92,14 @@ export default [
         configFile: resolve(__dirname, './../babel.config.json')
       }),
       nodeResolve(),
-      commonjs(), // { include: '../node_modules/.pnpm/registry.npmjs.org/**' })
-      terser({
+      commonjs({ include: '../node_modules/.pnpm/registry.npmjs.org/**' }),
+      process.env.prod && terser({
         ecma: 6
         , warnings: 'verbose'
         , compress: { passes: 2 }
       })
-
     ],
-    external: Object.keys(pkg.dependencies).concat('path', 'util'),
+    external: process.env.prod ? external.filter(i => !links.includes(i)) : external,
     output: [
       {
       // banner: banner(pkg),

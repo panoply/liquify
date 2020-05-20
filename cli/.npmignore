@@ -1,12 +1,13 @@
 # DIRECTORIES
 # --------------------
 node_modules/
-src/
 lib/
-types/
 test/
+versions/
 
 # FILES
 # -------------------
+argv.config.json
+jsconfig.json
 rollup.config.js
 pnpm-debug.log

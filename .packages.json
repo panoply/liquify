@@ -27,7 +27,7 @@
     "path": "packages/grammar",
     "name": "@liquify/liquid-language-grammars",
     "repo": "github.com/panoply/liquid-language-grammars",
-    "version": "0.0.1"
+    "version": "0.0.0"
   },
   "schema": {
     "path": "packages/schema",
@@ -39,13 +39,13 @@
     "path": "packages/server",
     "name": "liquid-language-server",
     "repo": "github.com/panoply/liquify",
-    "version": "1.0.0"
+    "version": "0.0.0"
   },
   "specs": {
     "path": "packages/specs",
-    "name": "@liquify/specs",
+    "name": "@liquify/liquid-language-specs",
     "repo": "github.com/panoply/liquify",
-    "version": "0.0.2"
+    "version": "0.0.0"
   },
   "cdn": {
     "path": "web/cdn",

@@ -19,13 +19,10 @@ export default async function (args, state = { argv: {}, path: {} }) {
 
   let flags = Object.entries(args).slice(1)
 
-  const { path } = state
-
   args = config.normalizeFlagName(args)
-  path.cwd = process.cwd()
-  path.base = basename(path.cwd)
-  path.root = await findUp('project', { type: 'directory' })
+  state.path = await config.setPath('project')
 
+  const { path } = state
   const pkgs = await config.getPkgs(path.root, '.packages.json').catch(console.error)
   const condition = ((path.cwd !== path.root) && (path.base === basename(path.cwd)))
   const { _: [ task, pkg = condition ? path.base : null ] } = args

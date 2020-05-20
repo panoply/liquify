@@ -1,0 +1,28 @@
+{
+  "$schema": "",
+  "package": {
+    "include": {
+      "dir": "package/",
+      "files": [
+        ".vscodeignore",
+        "changelog.md",
+        "language-configuration.json",
+        "readme.md",
+        "ThirdPartyNotices.txt",
+        "LICENSE"
+      ]
+    },
+    "grammar": {
+      "dir": "package/syntaxes",
+      "files": [
+        "liquid.tmLanguage.json",
+        "liquid-shopify.tmLanguage.json",
+        "liquid-11ty.tmLanguage.json",
+        "liquid-jekyll.tmLanguage.json",
+        "liquid-markdown.codeblock.json",
+        "liquid.injection.json",
+        "liquify-comment.inject.json"
+      ]
+    }
+  }
+}

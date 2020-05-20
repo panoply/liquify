@@ -1,5 +1,6 @@
 import Crypto from 'cryptorjs'
-import specs from '@liquify/specs'
+
+import * as specs from '@liquify/liquid-language-specs'
 
 /**
  * File Encryption `IV` and export

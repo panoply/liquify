@@ -1,10 +1,13 @@
 {
   "name": "@liquify/liquid-language-grammars",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "TextMate Language grammars for the Liquid Templating Language",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
-  "private": false,
+  "private": true,
+  "files": [
+    "package"
+  ],
   "repository": {
     "url": "https://github.com/panoply/liquid-language-grammars"
   },
@@ -20,6 +23,9 @@
     }
   },
   "devDependencies": {
-    "@liquify/cli": "link:../../cli"
+    "@liquify/cli": "workspace:^0.0.1"
+  },
+  "peerDependencies": {
+    "@liquify/cli": "workspace:^0.0.1"
   }
 }

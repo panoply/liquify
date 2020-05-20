@@ -1,5 +1,8 @@
 {
-  "$schema": "https://raw.githubusercontent.com/panoply/tmlanguage/master/tmlanguage.json",
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Liquid",
+  "injectionSelector": "L:source.shopify.liquid -meta.embedded -comment",
+  "scopeName": "source.liquid.embedded",
   "patterns": [
     {
       "name": "meta.embedded.block.liquid",

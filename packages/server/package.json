@@ -1,12 +1,12 @@
 {
   "name": "liquid-language-server",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Language Server for Liquid Templating Language",
   "scripts": {
     "tl": "node provide/license.js",
     "pd": "prettydiff",
     "dev": "rollup -c -w",
-    "prod": "rollup -c --environment prod",
+    "build": "rollup -c --environment prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "private": false,
@@ -14,6 +14,7 @@
   "license": "ISC",
   "main": "index.js",
   "dependencies": {
+    "@liquify/liquid-language-specs": "workspace:^0.0.0",
     "netlicensing-client": "^1.2.21",
     "node-fetch": "^2.6.0",
     "prettydiff": "^101.2.6",

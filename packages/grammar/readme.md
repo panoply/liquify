@@ -1,4 +1,4 @@
-## <img src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" align="left" />&nbsp;&nbsp;<img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
+<img src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" align="left" />&nbsp;&nbsp;<img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
 
 # @liquify/language-grammars
 
@@ -23,17 +23,17 @@ Liquid exists in a multitude of variations and while structurally consistent the
 
 ## Usage
 
-The project uses the [Liquify CLI](#) tool. The [grammars.json](#) file located in the root directory is used as the grammar generator from which all grammars will be created. The file references a JSON [Schema Store](http://schemastore.org/) which provides IntelliSense validation, completion and descriptives for the export configuration options.
+The project uses the [Liquify CLI](#) tool. The [grammars](#) file located in the root directory is used as the grammar generator from which all grammars will be created. The file references a JSON [Schema Store](http://schemastore.org/) which provides IntelliSense validation, completion and descriptives for the export configuration options.
 
-#### Base Grammar
+### Base Grammar
 
 By default, all generated grammars extend upon the **[Standard](#)** Liquid variation grammar which is located at the root of the `syntax` directory. The Standard grammar file is treated as a base grammar and all variations generated will include this grammar.
 
-#### Variations
+### Variations
 
 Variation grammars will import pattern files contained within the `syntax/include` directory. Pattern files can be referenced to variations in the grammar generator config file and will either extend upon an already existing (standard variation) include pattern or be appended as a new include pattern.
 
-#### Injections
+### Injections
 
 Injection grammars will import patterns from the `syntax/inject` directory. Injection grammar patterns require an `injectionSelector` value which you can define in the grammar generator config file.
 
@@ -48,6 +48,5 @@ Injection grammars will import patterns from the `syntax/inject` directory. Inje
 _Refer the [package.json](#) file for all availabled commands_
 
 <br><br>
-<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLBQXPLFVBBTSGSXSSC6ZLPVA" />
 
-🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+🥛 <small>Laced with **Vellocet** by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />

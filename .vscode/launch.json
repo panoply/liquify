@@ -7,12 +7,12 @@
       "name": "Client",
       "runtimeExecutable": "${execPath}",
       "outFiles": [
-        "${workspaceRoot}/packages/clients/vscode/index.js",
-        "${workspaceRoot}/packages/clients/vscode/index.js.map"
+        "${workspaceRoot}/packages/clients/vscode/package/liquify-vscode.js",
+        "${workspaceRoot}/packages/clients/vscode/package/liquify-vscode.js.map"
       ],
       "args": [
         //"--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceRoot}/packages/clients/vscode/",
+        "--extensionDevelopmentPath=${workspaceRoot}/packages/clients/vscode/package/",
         "${workspaceRoot}/tests"
       ]
     },

@@ -217,7 +217,6 @@ async function watch (path) {
   if (name === 'liquid') {
 
     context.files[name] = { ...await stripJson(path) }
-
     generate = context.config.generate.filter(({ type }) => (
       type === 'variation'
     ))
@@ -225,7 +224,6 @@ async function watch (path) {
   } else if (context.files.inject[name]) {
 
     context.files.inject[name] = { ...await stripJson(path) }
-
     generate = context.config.generate.filter(({ type, file }) => (
       type === 'injection' && file === name
     ))
@@ -233,7 +231,6 @@ async function watch (path) {
   } else if (context.files.include[name]) {
 
     context.files.include[name] = { ...await stripJson(path) }
-
     generate = context.config.generate.filter(({ grammar }) => (
       grammar.include && grammar.include.includes(name)
     ))
@@ -260,15 +257,12 @@ export default async (options) => {
   await build(context)
 
   if (context.argv.watch) {
-
-    // console.log(config)
     log.tree[0].while(chalk`{blue watching}`)
 
     const watcher = chokidar.watch(`${context.argv.input}/**`, {
       persistent: true,
       interval: 100
     })
-    // const change = watch(output, state)
 
     // @ts-ignore
     global.watch = true

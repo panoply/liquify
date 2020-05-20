@@ -1,8 +1,21 @@
 
+import minimist from 'minimist'
+import findUp from 'find-up'
 import { resolve, basename, relative, join, normalize } from 'path'
 import { readdir, readFile } from 'fs-extra'
-import minimist from 'minimist'
 import { flags } from '../../argv.config.json'
+
+export async function setPath (rootDir) {
+
+  const cwd = process.cwd()
+
+  return {
+    cwd,
+    base: basename(cwd),
+    root: await findUp(rootDir, { type: 'directory' })
+  }
+
+}
 
 /**
  * Get Package Path - Parsed the projects paths
@@ -35,8 +48,10 @@ export const pkgPath = async ({ base, root, pkg, cwd }) => {
  * @param {string} root
  */
 export const getPkgs = async (path, file) => {
+
   const read = await readFile(resolve(path, file))
   return JSON.parse(read.toString())
+
 }
 
 /**

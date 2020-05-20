@@ -5,6 +5,9 @@
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "SEE LICENSE IN LICENSE",
   "private": true,
+  "engines": {
+    "pnpm": ">=4"
+  },
   "scripts": {
     "liquify": "liquify",
     "dev": "rollup --config rollup.config.dev.js",
@@ -36,55 +39,6 @@
   "repository": {
     "url": "https://github.com/panoply/liquify"
   },
-  "projects": {
-    "atom": {
-      "directory": "packages/clients/atom",
-      "remote": "git@github.com:panoply/liquify-atom.git",
-      "links": [
-        ".editorconfig",
-        ".prettierignore",
-        ".prettierrc.js"
-      ]
-    },
-    "sublime": {
-      "directory": "packages/clients/sublime",
-      "remote": "git@github.com:panoply/liquify-sublime.git",
-      "links": [
-        ".editorconfig",
-        ".prettierignore",
-        ".prettierrc.js"
-      ]
-    },
-    "vscode": {
-      "directory": "packages/clients/vscode",
-      "remote": "git@github.com:panoply/liquify-vscode.git",
-      "links": [
-        ".babelrc",
-        ".editorconfig",
-        ".eslintignore",
-        ".eslintrc.json",
-        ".npmrc",
-        ".nvmrc",
-        ".prettierignore",
-        ".prettierrc.js",
-        "jsconfig.json"
-      ]
-    },
-    "website": {
-      "directory": "website",
-      "remote": "git@github.com:panoply/liquify.dev.git",
-      "links": [
-        ".babelrc",
-        ".editorconfig",
-        ".eslintignore",
-        ".eslintrc.json",
-        ".nvmrc",
-        ".prettierignore",
-        ".prettierrc.js",
-        "jsconfig.json"
-      ]
-    }
-  },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
@@ -94,7 +48,6 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/register": "^7.9.0",
     "@babel/runtime": "^7.9.2",
-    "@liquify/cli": "link:cli",
     "@rollup/plugin-babel": "^5.0.0",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-json": "^4.0.3",

@@ -1,12 +1,13 @@
 {
-  "name": "@liquify/specs",
-  "version": "0.0.2",
-  "private": true,
+  "name": "@liquify/liquid-language-specs",
+  "version": "0.0.0",
+  "private": false,
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "SEE LICENSE IN LICENSE",
-  "description": "Liquid language variation specification references for the Liquid Language Server and Liquify IDE extension/package tool",
+  "description": "Liquid language variation specification references used by Liquify",
   "main": "package/index.js",
   "engines": {
+    "pnpm": ">=4",
     "node": "12"
   },
   "repository": {
@@ -15,11 +16,14 @@
   "scripts": {
     "dev": "liquify dev -i variations -o package --watch",
     "build": "liquify build -i variations -o package --prod",
-    "pack": "cd versions; pnpm pack ../ && cd ..",
     "peek": "liquify peek -i package",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "@liquify/cli": "link:../../cli"
+  "devDependencies": {
+    "@liquify/cli": "workspace:^0.0.1"
+  },
+  "peerDependencies": {
+    "@liquify/cli": "workspace:^0.0.1"
   }
 }
