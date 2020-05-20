@@ -23,29 +23,11 @@ Liquid exists in a multitude of variations and while structurally consistent the
 
 ## Usage
 
-The project uses the [Liquify CLI](#) tool. The [grammars](#) file located in the root directory is used as the grammar generator from which all grammars will be created. The file references a JSON [Schema Store](http://schemastore.org/) which provides IntelliSense validation, completion and descriptives for the export configuration options.
-
-### Base Grammar
-
-By default, all generated grammars extend upon the **[Standard](#)** Liquid variation grammar which is located at the root of the `syntax` directory. The Standard grammar file is treated as a base grammar and all variations generated will include this grammar.
-
-### Variations
-
-Variation grammars will import pattern files contained within the `syntax/include` directory. Pattern files can be referenced to variations in the grammar generator config file and will either extend upon an already existing (standard variation) include pattern or be appended as a new include pattern.
-
-### Injections
-
-Injection grammars will import patterns from the `syntax/inject` directory. Injection grammar patterns require an `injectionSelector` value which you can define in the grammar generator config file.
-
-## Commands
-
 | Command          | Description                             |
 | ---------------- | --------------------------------------- |
 | `pnpm run dev`   | Watches and builds grammar files        |
 | `pnpm run build` | Build minified production grammar files |
 | `pnpm run peep`  | View generated grammars via [fx](#)     |
-
-_Refer the [package.json](#) file for all availabled commands_
 
 <br><br>
 
