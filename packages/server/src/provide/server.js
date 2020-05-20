@@ -201,7 +201,7 @@ export class LiquidServer extends Config {
 
     this.engine = engine
 
-    const { spec, parse } = require(`./specs/${this.engine}.js`)
+    const { spec, parse } = require('@liquify/liquid-language-specs')
 
     this.specification = spec
 

@@ -25,19 +25,6 @@ The extension can be installed via the [Marketplace](#) or the command line:
 code --install-extension sissel.liquify
 ```
 
-## Language Grammars
-
-The [TextMate Language](#) grammars used for this project are auto-generated and bundled with the extension. Liquid and its variation TextMate (tmLanguage) grammars are maintained in the [@liquify/liquid-language-grammars](#) repository. If you wish to contirbute or require the or wish to use access the language grammars you will need to generate them via CDN:
-
-| Grammar        | CDN                                                          |
-| -------------- | ------------------------------------------------------------ |
-| Liquid         | [cdn.liquify.dev/grammar/liquid.tmLanguage.json](#)          |
-| Liquid 11ty    | [cdn.liquify.dev/grammar/liquid-eleventy.tmLanguage.json](#) |
-| Liquid Shopify | [cdn.liquify.dev/grammar/liquid-shopify.tmLanguage.json](#)  |
-| Liquid Jekyll  | [cdn.liquify.dev/grammar/liquid-jekyll.tmLanguage.json](#)   |
-
-_Please note that though the grammars are available via the CDN there is almost no use case where you would need to hotlink them to an application or service_
-
 ## Licensing
 
 Liquify operates on a freemium license model and developers are free to use the software unlicenced. Variations of Liquid pertaining to an open source project (ie: Jekyll) unlicenced users will have access some licensed features but when the variation is pertaining to a SaaS (ie: Shopify) unlicensed users will only have access to unlicensed features.
@@ -81,4 +68,4 @@ Liquify is made possible by leveraging a collection open source projects. Please
 
 <hr>
 
-🥛 <small>Laced with Vellocet by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small>
+🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small>

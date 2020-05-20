@@ -1,12 +1,12 @@
 // @ts-nocheck
 
 import { DidChangeConfigurationNotification, TextDocumentSyncKind } from 'vscode-languageserver'
-import { LiquidDocuments } from './src/provide/document'
-import { connection, Server } from './src/export'
-import { runAsync, runSync } from './src/utils/runners'
+import { LiquidDocuments } from './provide/document'
+import { connection, Server } from './export'
+import { runAsync, runSync } from './utils/runners'
 import { performance } from 'perf_hooks'
-import { LiquidService } from './src/provide/service'
-import * as Parse from './src/parser/export'
+import { LiquidService } from './provide/service'
+import * as Parse from './parser/export'
 
 /**
  * Liquid Service

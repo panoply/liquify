@@ -2,7 +2,7 @@
 
 import _ from 'lodash'
 import { getLanguageService, ClientCapabilities } from 'vscode-json-languageservice'
-import schema from '../../../../release/vscode-liquify/server/node_modules/@liquify/schema'
+const schema = require('@liquify/schema')
 
 /**
  * JSON Language Service

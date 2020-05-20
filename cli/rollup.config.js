@@ -5,7 +5,7 @@ import { terser } from 'rollup-plugin-terser'
 import Crypto from 'cryptorjs'
 import chalk from 'chalk'
 import { babel } from '@rollup/plugin-babel'
-import tagReplace from './../scripts/rollup/tag-replace'
+import tagReplace from '../../scripts/rollup/tag-replace'
 import { resolve } from 'path'
 import pkg from './package.json'
 

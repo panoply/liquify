@@ -1,12 +1,10 @@
-import { terser } from 'rollup-plugin-terser'
 import Json from '@rollup/plugin-json'
-import { join } from 'path'
+import { resolve } from 'path'
 import babel from '@rollup/plugin-babel'
 import copy from 'rollup-plugin-copy'
-import { bundle, json } from './scripts/bundle'
-import specs from './scripts/rollup/plugin-specs'
-import generatePackageJson from 'rollup-plugin-generate-package-json'
-
+import { json } from './scripts/bundle'
+// import generatePackageJson from 'rollup-plugin-generate-package-json'
+import pkgs from './.packages.json'
 /**
  * @todo Multirepo support
  */
@@ -15,134 +13,94 @@ import generatePackageJson from 'rollup-plugin-generate-package-json'
 // import sublime from './packages/clients/sublime/rollup.config'
 // import vscode from './packages/clients/vscode/rollup.config'
 
-const vs = 'packages/clients/vscode'
-
-export default bundle({
-
-  /**
-   * Client Bundle
-   */
-  clients: [
-    {
-      input: 'packages/clients/vscode/package/index.js',
-      output: {
-        file: 'export/vscode/index.js',
-        format: 'cjs',
-        sourcemap: true,
-        external: [
-          'vscode',
-          'vscode-languageclient'
-        ]
-      },
-      plugins: [
-        babel({ runtimeHelpers: true }),
-        copy({
-          targets: [
-            {
-              src: 'packages/schema/liquidrc.json',
-              dest: 'export/vscode/schema/',
-              transform: json,
-              verbose: true
-            },
-            {
-              src: 'packages/clients/vscode/syntax/grammar/*.json',
-              dest: 'export/vscode/syntax/grammar/',
-              transform: json,
-              verbose: true
-            },
-            {
-              src: 'packages/clients/vscode/syntax/*.json',
-              dest: 'export/vscode/syntax/',
-              transform: json,
-              verbose: true
-            },
-            {
-              src: [
-                'packages/clients/vscode/package.json',
-                'packages/clients/vscode/language-configuration.json',
-                'packages/clients/vscode/readme.md',
-                'packages/clients/vscode/changelog.md',
-                'packages/clients/vscode/.vscodeignore'
-
-              ],
-              dest: 'export/vscode/',
-              verbose: true
-            }
-          ]
-        })
-      ]
-    }
-  ],
-
-  /**
-   * Language Server Bundle
-   */
-  server: [
-    {
-      input: 'packages/server/index.js',
-      external: process.env.prod ? [
-        'prettydiff',
-        'vscode-languageserver'
-      ] : [
-        'vscode-languageserver'
-      ],
-      output: {
-        file: 'export/vscode/server/index.js',
-        format: 'cjs',
-        sourcemap: true
-      },
-      plugins: [
-        Json({ preferConst: true }),
-        babel({ runtimeHelpers: true }),
-        generatePackageJson({
-          inputFolder: 'packages/server',
-          outputFolder: 'export/vscode/server'
-        })
-      ]
-    },
-    {
-      input: 'node_modules/prettydiff/js/prettydiff.js',
-      output: {
-        file: 'export/vscode/server/node_modules/prettydiff/index.js',
-        format: 'cjs',
-        sourcemap: true
-      },
-      plugins: [
-        generatePackageJson({
-          inputFolder: 'packages/server',
-          outputFolder: 'export/vscode/server/node_modules/prettydiff'
-        })
-      ]
-    }
-  ],
-
-  /**
-   * Specification Varition Bundles
-   */
-  specs: {
-    input: 'packages/specs/variations',
+export default [
+  {
+    input: `${pkgs.vscode.path}/extension/index.js`,
     output: {
-      dir: 'export/vscode/server/specs',
+      file: `${pkgs.vscode.path}/package/index.js`,
       format: 'cjs',
-      sourcemap: false
+      sourcemap: true,
+      external: [
+        'vscode',
+        'vscode-languageclient',
+        'liquid-language-server'
+      ]
     },
     plugins: [
-      specs({
-        main: 'packages/specs/variations/standard.json',
-        types: [
-          'comment',
-          'control',
-          'embedded',
-          'filter',
-          'import',
-          'iteration',
-          'object',
-          'output',
-          'raw',
-          'variable'
+      babel({
+        babelHelpers: 'runtime',
+        configFile: resolve(__dirname, './babel.config.json')
+      }),
+      copy({
+        targets: [
+          {
+            src: `${pkgs.schema}/stores/liquidrc.json`,
+            dest: `${pkgs.vscode.path}/schema`,
+            transform: json,
+            verbose: true
+          },
+          {
+            src: [
+              `${pkgs.vscode.path}/syntaxes/**/*.json`
+            ],
+            dest: `${pkgs.vscode.path}/package/syntaxes`,
+            transform: json,
+            verbose: true
+          },
+          {
+            src: [
+              `${pkgs.vscode.path}/package.json`,
+              `${pkgs.vscode.path}/language-configuration.json`,
+              `${pkgs.vscode.path}/readme.md`,
+              `${pkgs.vscode.path}/changelog.md`,
+              `${pkgs.vscode.path}/.vscodeignore`
+            ],
+            dest: `${pkgs.vscode.path}/package`,
+            verbose: true
+          }
         ]
       })
     ]
-
+  },
+  {
+    input: `${pkgs.server.path}/index.js`,
+    external: [
+      'vscode-languageserver'
+    ],
+    output: {
+      file: `${pkgs.server.path}/package/index.js`,
+      format: 'cjs',
+      sourcemap: true
+    },
+    plugins: [
+      Json({ preferConst: true }),
+      babel({
+        babelHelpers: 'runtime',
+        configFile: resolve(__dirname, './babel.config.json')
+      }),
+      copy({
+        targets: [
+          {
+            src: [
+              `${pkgs.server.path}/package.json`,
+              `${pkgs.server.path}/readme.md`,
+              `${pkgs.server.path}/changelog.md`,
+              `${pkgs.server.path}/ThirdPartyNotices.txt`,
+              `${pkgs.server.path}/LICENSE`
+            ],
+            dest: `${pkgs.server.path}/package`,
+            verbose: true
+          }
+        ]
+      })
+    ]
+  },
+  {
+    input: './node_modules/prettydiff/js/prettydiff.js',
+    output: {
+      file: `${pkgs.server.path}/package/node_modules/prettydiff/index.js`,
+      format: 'cjs',
+      sourcemap: true
+    }
   }
-})
+]

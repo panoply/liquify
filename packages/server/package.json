@@ -7,12 +7,17 @@
     "pd": "prettydiff",
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "private": false,
   "author": "",
   "license": "ISC",
   "main": "index.js",
+  "bundledDependencies": [
+    "@liquify/liquid-language-specs",
+    "vscode-languageserver"
+  ],
   "dependencies": {
     "@liquify/liquid-language-specs": "workspace:^0.0.0",
     "netlicensing-client": "^1.2.21",
