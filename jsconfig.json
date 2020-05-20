@@ -1,6 +1,14 @@
 {
   "exclude": ["node_modules/**"],
-  "include": ["packages/cli", "packages", "scripts", "server", "specs", "web"],
+  "include": [
+    "packages/cli",
+    "packages",
+    "scripts",
+    "server",
+    "specs",
+    "web",
+    "cli"
+  ],
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2019",
