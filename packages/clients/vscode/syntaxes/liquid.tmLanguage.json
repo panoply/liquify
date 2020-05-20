@@ -1,24 +1,10 @@
-/**
- * Liquid Language - TextMate Grammar
- *
- * This TextMate Grammar supports syntax highlighting for
- * the "Standard" varition of the Liquid Templating Language.
- */
 {
-  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "Liquid",
   "scopeName": "source.liquid",
   "fileTypes": ["liquid"],
   "injections": {
     "L:string - (string.quoted.*.html)": {
-      "patterns": [
-        {
-          "include": "#tags"
-        },
-        {
-          "include": "#output"
-        }
-      ]
+      "patterns": [{ "include": "#tags" }, { "include": "#output" }]
     }
   },
   "patterns": [
@@ -57,12 +43,8 @@
       ],
       "end": "(-)?(%})",
       "endCaptures": {
-        "1": {
-          "name": "keyword.other.whitespace.liquid"
-        },
-        "2": {
-          "name": "punctuation.definition.tag.end.liquid"
-        }
+        "1": { "name": "keyword.other.whitespace.liquid" },
+        "2": { "name": "punctuation.definition.tag.end.liquid" }
       }
     },
     "output": {
@@ -84,19 +66,10 @@
       ],
       "end": "(-)?(}})",
       "endCaptures": {
-        "1": {
-          "name": "keyword.other.whitespace.liquid"
-        },
-        "2": {
-          "name": "punctuation.definition.tag.end.liquid"
-        }
+        "1": { "name": "keyword.other.whitespace.liquid" },
+        "2": { "name": "punctuation.definition.tag.end.liquid" }
       }
     },
-
-    /* -------------------------------------------- */
-    /*                     OBJECT                   */
-    /* -------------------------------------------- */
-
     "objects": {
       "patterns": [
         {
@@ -105,10 +78,6 @@
         }
       ]
     },
-
-    /* -------------------------------------------- */
-    /*                  PARAMETERS                  */
-    /* -------------------------------------------- */
     "parameters": {
       "patterns": [
         {
@@ -117,11 +86,6 @@
         }
       ]
     },
-
-    /* -------------------------------------------- */
-    /*                    NUMBERS                   */
-    /* -------------------------------------------- */
-
     "numeric": {
       "patterns": [
         {
@@ -132,13 +96,9 @@
           "name": "constant.numeric.integer.liquid",
           "match": "(\\+|\\-)[\\d]+"
         },
-        {
-          "name": "constant.numeric.natural.liquid",
-          "match": "[\\d]+"
-        }
+        { "name": "constant.numeric.natural.liquid", "match": "[\\d]+" }
       ]
     },
-
     "constants": {
       "patterns": [
         {
@@ -155,17 +115,9 @@
         }
       ]
     },
-
-    /* -------------------------------------------- */
-    /*                    INVALID                   */
-    /* -------------------------------------------- */
-
     "invalid": {
       "patterns": [
-        {
-          "match": "&",
-          "name": "invalid.illegal.bad-ampersand.liquid"
-        },
+        { "match": "&", "name": "invalid.illegal.bad-ampersand.liquid" },
         {
           "match": "(\\[)(\\|)(?=[^\\]]*)(?=\\])",
           "captures": {
@@ -175,9 +127,7 @@
         },
         {
           "match": "(?=if|unless|elsif)\\s*[^%}]+\\s(in)\\s+",
-          "captures": {
-            "3": { "name": "invalid.illegal.operator.liquid" }
-          }
+          "captures": { "3": { "name": "invalid.illegal.operator.liquid" } }
         },
         {
           "name": "invalid.illegal.filter.liquid",
@@ -185,21 +135,13 @@
         }
       ]
     },
-
-    /* -------------------------------------------- */
-    /*                   OPERATORS                  */
-    /* -------------------------------------------- */
-
     "operators": {
       "patterns": [
         {
           "match": "\\=",
           "name": "keyword.operator.assignment.augmented.liquid"
         },
-        {
-          "match": "\\.",
-          "name": "keyword.other.dot.liquid"
-        },
+        { "match": "\\.", "name": "keyword.other.dot.liquid" },
         {
           "name": "keyword.operator.logical.liquid",
           "match": "\\s+(and|or|contains|in)\\s+"
@@ -208,44 +150,20 @@
           "name": "keyword.operator.equality.liquid",
           "match": "\\s+(\\!=|\\=\\=|\\<|\\>|\\>\\=|\\<\\=)\\s+"
         },
-        {
-          "name": "keyword.other.colon.liquid",
-          "match": ":"
-        },
-        {
-          "name": "keyword.other.array-item.liquid",
-          "match": "\\[|\\]"
-        },
+        { "name": "keyword.other.colon.liquid", "match": ":" },
+        { "name": "keyword.other.array-item.liquid", "match": "\\[|\\]" },
         {
           "name": "variable.parameter.liquid",
           "match": "(?<=\\s)(as|with|offset|limit|reverse|cols)"
         }
       ]
     },
-
-    /* -------------------------------------------- */
-    /*                    STRINGS                   */
-    /* -------------------------------------------- */
-
     "strings": {
       "patterns": [
-        {
-          "name": "string.quoted.single.liquid",
-          "begin": "'",
-          "end": "'"
-        },
-        {
-          "name": "string.quoted.double.liquid",
-          "begin": "\"",
-          "end": "\""
-        }
+        { "name": "string.quoted.single.liquid", "begin": "'", "end": "'" },
+        { "name": "string.quoted.double.liquid", "begin": "\"", "end": "\"" }
       ]
     },
-
-    /* -------------------------------------------- */
-    /*                    FILTERS                   */
-    /* -------------------------------------------- */
-
     "filters": {
       "patterns": [
         {
@@ -262,24 +180,6 @@
           "captures": {
             "1": { "name": "keyword.separator.pipe.liquid" },
             "2": { "name": "support.function.filter.liquid" }
-          }
-        }
-      ]
-    },
-
-    /* -------------------------------------------- */
-    /*                    IMPORTS                   */
-    /* -------------------------------------------- */
-
-    "imports": {
-      "patterns": [
-        {
-          "name": "markup.underline.link.liquid",
-          "match": "((?<=render)|(?<=include))\\s([^{,'\"]+?)\\s+",
-          "captures": {
-            "0": {
-              "name": "markup.underline.link.liquid"
-            }
           }
         }
       ]

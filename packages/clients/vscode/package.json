@@ -41,8 +41,7 @@
     "cli": "liquify",
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
-    "pack": "cd versions; pnpm pack ../ && cd ..",
-    "postinstall": "liquify build -c -o package/syntaxes"
+    "pack": "cd versions; pnpm pack ../ && cd .."
   },
   "activationEvents": [
     "onLanguage:liquid",
@@ -128,18 +127,13 @@
       {
         "id": "liquid-jekyll",
         "configuration": "./language-configuration.json",
+        "firstLine": "---",
         "aliases": [
           "Liquid Jekyll"
         ],
         "extensions": [
+          ".liquid",
           ".jekyll"
-        ]
-      },
-      {
-        "id": "liquid-11ty",
-        "configuration": "./language-configuration.json",
-        "aliases": [
-          "Liquid 11ty"
         ]
       },
       {
@@ -184,47 +178,26 @@
       {
         "language": "liquid-shopify",
         "scopeName": "source.liquid.shopify",
-        "path": "./syntaxes/liquid-shopify.tmLanguage.json",
-        "embeddedLanguages": {
-          "meta.embedded.block.javascript.liquid": "javascript",
-          "meta.embedded.block.schema.liquid": "json",
-          "meta.embedded.block.stylesheet.liquid": "css",
-          "meta.embedded.block.style.liquid": "css",
-          "meta.embedded.block.stylesheet.scss.liquid": "scss"
-        }
+        "path": "./syntaxes/liquid-shopify.tmLanguage.json"
       },
       {
         "language": "liquid-jekyll",
         "scopeName": "source.liquid.jekyll",
-        "path": "./syntaxes/liquid-jekyll.tmLanguage.json",
-        "embeddedLanguages": {
-          "meta.embedded.block.frontmatter.liquid": "yaml"
-        }
+        "path": "./syntaxes/liquid-jekyll.tmLanguage.json"
       },
       {
-        "language": "liquid-11ty",
-        "scopeName": "source.liquid.11ty",
-        "path": "./syntaxes/liquid-11ty.tmLanguage.json",
-        "embeddedLanguages": {
-          "meta.embedded.block.frontmatter.liquid": "yaml"
-        }
-      },
-      {
-        "scopeName": "source.liquid.comments",
-        "path": "./syntaxes/liquify-comment.inject.json",
+        "scopeName": "source.liquid.frontmatter",
+        "path": "./syntaxes/injections/frontmatter.json",
         "injectTo": [
-          "source.liquid",
-          "source.liquid.shopify",
-          "source.liquid.jekyll",
-          "source.liquid.11ty"
+          "source.liquid.jekyll"
         ],
         "embeddedLanguages": {
-          "meta.embedded.block.json.liquid": "json"
+          "meta.embedded.block.frontmatter.liquid": "yaml"
         }
       },
       {
         "scopeName": "markdown.liquid.codeblock",
-        "path": "./syntaxes/markdown.json",
+        "path": "./syntaxes/injections/liquid-markdown.codeblock.json",
         "injectTo": [
           "text.html.markdown"
         ],
@@ -233,14 +206,18 @@
         }
       },
       {
-        "scopeName": "source.liquid.injection",
-        "path": "./syntaxes/grammar/injection.json",
+        "scopeName": "source.liquid.embedded",
+        "path": "./syntaxes/injections/embedded.inject.json",
         "injectTo": [
-          "source.js",
-          "source.json",
-          "source.css",
-          "source.css.scss"
-        ]
+          "source.liquid.shopify"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.javascript.liquid": "javascript",
+          "meta.embedded.block.schema.liquid": "json",
+          "meta.embedded.block.stylesheet.liquid": "css",
+          "meta.embedded.block.style.liquid": "css",
+          "meta.embedded.block.stylesheet.scss.liquid": "scss"
+        }
       }
     ],
     "configuration": {
@@ -301,18 +278,7 @@
       }
     }
   },
-  "bundledDependencies": [
-    "liquid-language-server",
-    "vscode-languageclient"
-  ],
   "dependencies": {
-    "liquid-language-server": "workspace:^0.0.0",
     "vscode-languageclient": "^6.1.3"
-  },
-  "devDependencies": {
-    "@liquify/cli": "^0.0.1"
-  },
-  "peerDependencies": {
-    "@liquify/cli": "workspace:^0.0.1"
   }
 }

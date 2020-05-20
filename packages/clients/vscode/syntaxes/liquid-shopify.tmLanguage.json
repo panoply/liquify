@@ -1,0 +1,5 @@
+{
+  "name": "Liquid Shopify",
+  "scopeName": "source.liquid.shopify",
+  "patterns": [{ "include": "source.liquid" }]
+}

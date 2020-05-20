@@ -1,0 +1,5 @@
+{
+  "name": "Liquid Jekyll",
+  "scopeName": "source.liquid.jekyll",
+  "patterns": [{ "include": "source.liquid" }]
+}
