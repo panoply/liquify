@@ -7,18 +7,18 @@ An extension/package tool for the [Liquid Templating Language](#). Liquify uses 
 
 ### Packages
 
-| Repository                    | License              | Description                                           |
-| ----------------------------- | -------------------- | ----------------------------------------------------- |
-| [@liquify/cli](#)             | [CC BY-NC-ND 4.0](#) | CLI tool used for development on Liquify packages.    |
-| [@liquify/specs](#)           | [PROPRIETARY](#)     | Liquid variation specification references.            |
-| [@liquify/schema-stores](#)   | [CC BY-NC-ND 4.0](#) | Schema Stores used for configuration files and JSON.  |
-| [cdn.liquify.dev ](#)         | [CC BY-NC-ND 4.0](#) | Liquify CDN for delivering things like Schema Stores. |
-| [liquify.dev](#)              | [CC BY-NC-ND 4.0](#) | Liquify website for documentation and licensing.      |
-| [liquid-language-grammars](#) | [MIT](#)             | Liquid Language generator for TextMate grammar files. |
-| [liquid-language-server](#)   | [PROPRIETARY](#)     | Liquid Language server implementation using LSP       |
-| [liquify-atom ](#)            | [MIT](#)             | Atom Liquify package using Atom LSP Client            |
-| [liquify-sublime](#)          | [MIT](#)             | Sublime Liquify package using Sublime LSP             |
-| [liquify-vscode](#)           | [MIT](#)             | VSCode Liquify extension using VSCode LSP Client      |
+| Repository                          | Description                                          | License              |
+| ----------------------------------- | ---------------------------------------------------- | -------------------- |
+| [@liquify/cli](#)                   | CLI tool used for development on Liquify packages.   | [CC BY-NC-ND 4.0](#) |
+| [@liquify/rollup-plugins](#)        | Various Rollup plugins used by Liquify packages      | [MIT](#)             |
+| [@liquify/path-resolve](#)          | Path resolver which detects workspace path           | [MIT](#)             |
+| [@liquify/liquid-language-specs](#) | Liquid variation specification references.           | [PROPRIETARY](#)     |
+| [@liquify/schema-stores](#)         | Schema Stores used for configuration files and JSON. | [CC BY-NC-ND 4.0](#) |
+| [liquify.dev](#)                    | Liquify website for documentation and licensing.     | [CC BY-NC-ND 4.0](#) |
+| [liquid-language-server](#)         | Liquid Language server implementation using LSP      | [PROPRIETARY](#)     |
+| [liquify-atom ](#)                  | Atom Liquify package using Atom LSP Client           | [MIT](#)             |
+| [liquify-sublime](#)                | Sublime Liquify package using Sublime LSP            | [MIT](#)             |
+| [liquify-vscode](#)                 | VSCode Liquify extension using VSCode LSP Client     | [MIT](#)             |
 
 ###### IMPORTANT
 
