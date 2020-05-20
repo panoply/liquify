@@ -2,22 +2,14 @@ import Json from '@rollup/plugin-json'
 import { resolve } from 'path'
 import babel from '@rollup/plugin-babel'
 import copy from 'rollup-plugin-copy'
-import { json } from './scripts/bundle'
-// import generatePackageJson from 'rollup-plugin-generate-package-json'
-import pkgs from './.packages.json'
-/**
- * @todo Multirepo support
- */
-// import server from './packages/server/rollup.config'
-// import atom from './packages/clients/atom/rollup.config'
-// import sublime from './packages/clients/sublime/rollup.config'
-// import vscode from './packages/clients/vscode/rollup.config'
+import { minifyJSON } from './scripts/bundle'
+import { packages } from './package.json'
 
 export default [
   {
-    input: `${pkgs.vscode.path}/extension/index.js`,
+    input: `${packages.vscode.path}/extension/index.js`,
     output: {
-      file: `${pkgs.vscode.path}/package/index.js`,
+      file: `${packages.vscode.path}/package/index.js`,
       format: 'cjs',
       sourcemap: true,
       external: [
@@ -34,28 +26,28 @@ export default [
       copy({
         targets: [
           {
-            src: `${pkgs.schema}/stores/liquidrc.json`,
-            dest: `${pkgs.vscode.path}/schema`,
-            transform: json,
+            src: `${packages.schema}/stores/liquidrc.json`,
+            dest: `${packages.vscode.path}/schema`,
+            transform: minifyJSON,
             verbose: true
           },
           {
             src: [
-              `${pkgs.vscode.path}/syntaxes/**/*.json`
+              `${packages.vscode.path}/syntaxes/**/*.json`
             ],
-            dest: `${pkgs.vscode.path}/package/syntaxes`,
-            transform: json,
+            dest: `${packages.vscode.path}/package/syntaxes`,
+            transform: minifyJSON,
             verbose: true
           },
           {
             src: [
-              `${pkgs.vscode.path}/package.json`,
-              `${pkgs.vscode.path}/language-configuration.json`,
-              `${pkgs.vscode.path}/readme.md`,
-              `${pkgs.vscode.path}/changelog.md`,
-              `${pkgs.vscode.path}/.vscodeignore`
+              `${packages.vscode.path}/package.json`,
+              `${packages.vscode.path}/language-configuration.json`,
+              `${packages.vscode.path}/readme.md`,
+              `${packages.vscode.path}/changelog.md`,
+              `${packages.vscode.path}/.vscodeignore`
             ],
-            dest: `${pkgs.vscode.path}/package`,
+            dest: `${packages.vscode.path}/package`,
             verbose: true
           }
         ]
@@ -63,12 +55,12 @@ export default [
     ]
   },
   {
-    input: `${pkgs.server.path}/index.js`,
+    input: `${packages.server.path}/index.js`,
     external: [
       'vscode-languageserver'
     ],
     output: {
-      file: `${pkgs.server.path}/package/index.js`,
+      file: `${packages.server.path}/package/index.js`,
       format: 'cjs',
       sourcemap: true
     },
@@ -82,13 +74,13 @@ export default [
         targets: [
           {
             src: [
-              `${pkgs.server.path}/package.json`,
-              `${pkgs.server.path}/readme.md`,
-              `${pkgs.server.path}/changelog.md`,
-              `${pkgs.server.path}/ThirdPartyNotices.txt`,
-              `${pkgs.server.path}/LICENSE`
+              `${packages.server.path}/package.json`,
+              `${packages.server.path}/readme.md`,
+              `${packages.server.path}/changelog.md`,
+              `${packages.server.path}/ThirdPartyNotices.txt`,
+              `${packages.server.path}/LICENSE`
             ],
-            dest: `${pkgs.server.path}/package`,
+            dest: `${packages.server.path}/package`,
             verbose: true
           }
         ]
@@ -98,7 +90,7 @@ export default [
   {
     input: './node_modules/prettydiff/js/prettydiff.js',
     output: {
-      file: `${pkgs.server.path}/package/node_modules/prettydiff/index.js`,
+      file: `${packages.server.path}/package/node_modules/prettydiff/index.js`,
       format: 'cjs',
       sourcemap: true
     }

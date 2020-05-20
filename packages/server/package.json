@@ -15,7 +15,7 @@
   "license": "ISC",
   "main": "index.js",
   "bundledDependencies": [
-    "@liquify/liquid-language-specs",
+    "vscode-css-languageservice",
     "vscode-languageserver"
   ],
   "dependencies": {

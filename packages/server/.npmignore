@@ -1,10 +1,10 @@
 # DIRECTORIES
 # --------------------
-samples/
+src/
 variations/
 src/
 
 # FILES
 # -------------------
-index.js
+.gitignore
 rollup.config.js

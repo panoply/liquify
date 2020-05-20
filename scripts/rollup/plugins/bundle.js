@@ -6,7 +6,7 @@ import jsonMinify from 'jsonminify'
 /**
  * @param {string} content
  */
-export function json (content) {
+export function minifyJSON (content) {
 
   const parsed = JSON.parse(stripJsonComments(content.toString()))
   const string = JSON.stringify(parsed)
