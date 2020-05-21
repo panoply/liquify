@@ -1,21 +1,14 @@
 'use strict'
 
-const { basename, resolve } = require('path')
-const { writeFileSync } = require('fs')
-const chalk = require('chalk')
-const { log } = console
-const babel = require('./babel.config.json')
 
-const ROOT = 'project'
-const FILE = '.packages.json'
 
 module.exports = {
   hooks: {
     readPackage (pkg, context) {
 
-      const { packages = {} } = require(`${resolve(__dirname)}/package.json`)
+      //const { packages = {} } = require(`${resolve(__dirname)}/package.json`)
 
-      log(babel)
+     // log(babel)
 
       // const pkgs = Object.keys(lockfile.importers)
 

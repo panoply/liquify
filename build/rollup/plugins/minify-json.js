@@ -4,7 +4,7 @@ import jsonMinify from 'jsonminify'
 /**
  * @param {string} content
  */
-export const json = content => {
+export default function (content) {
 
   const parsed = JSON.parse(jsonStrip(content.toString()))
 

@@ -3,9 +3,11 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
 import { babel } from '@rollup/plugin-babel'
-import { banner, path, plugins, tagReplace } from '@liquify/rollup-utils'
+import { banner, path, plugins, replace } from '@liquify/rollup'
 import pkg from './package.json'
 import Crypto from 'cryptorjs'
+
+const $ = path(pkg.name)
 
 /**
  * Cryptography IV
@@ -17,11 +19,11 @@ const crypto = new Crypto('sissel siv')
  */
 export default [
   {
-    input: path('lib/index.js'),
+    input: $('src/index.js'),
     output: {
-      banner: banner(pkg),
+      // banner: banner(pkg),
       format: 'cjs',
-      file: pkg.main,
+      file: $('package/liquify-cli.cjs.js'),
       sourcemap: !process.env.prod
     },
     external: Object.keys(pkg.dependencies).concat('path', 'util'),
@@ -30,18 +32,14 @@ export default [
         namedExports: true,
         compact: process.env.prod
       }),
-      tagReplace({
+      replace({
         delimeters: [ '\\b(?:Crypto|getCrypt)\\(\'?"?', '\'?"?\\)' ],
         tags: [ 'sissel siv' ],
         callback: match => crypto.encode(match)
       }),
-      babel({
-        babelHelpers: 'runtime',
-        configFile: path('.babelrc')
-      }),
       nodeResolve(),
       commonjs({
-        include: '../node_modules/.pnpm/registry.npmjs.org/**'
+        include: '../../node_modules/.pnpm/registry.npmjs.org/**'
       })
     ], [
       terser({
@@ -52,9 +50,9 @@ export default [
     ])
   },
   {
-    input: path('argv.config.json'),
+    input: $('argv.config.json'),
     output: {
-      file: 'package/argv.js',
+      file: $('./package/argv.js'),
       format: 'cjs',
       sourcemap: !process.env.prod
     },

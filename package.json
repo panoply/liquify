@@ -10,9 +10,9 @@
   },
   "scripts": {
     "liquify": "liquify",
-    "dev": "rollup --config rollup.config.dev.js",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
-    "cli:dev": "pnpm run dev --filter ./cli/",
+    "cli:dev": "pnpm run dev --filter ./build/cli/",
     "client:atom": "pnpm run build --filter ./packages/clients/atom/",
     "client:sublime": "pnpm run build --filter ./packages/clients/sublime/",
     "client:vscode": "pnpm run build --filter ./packages/clients/vscode/",
@@ -43,7 +43,7 @@
       "version": "0.0.0-development"
     },
     "cli": {
-      "path": "cli",
+      "path": "build/cli",
       "name": "@liquify/cli",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.1"
@@ -59,12 +59,6 @@
       "name": "liquify-vscode",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.1"
-    },
-    "grammar": {
-      "path": "packages/grammar",
-      "name": "@liquify/liquid-language-grammars",
-      "repo": "github.com/panoply/liquid-language-grammars",
-      "version": "0.0.0"
     },
     "schema": {
       "path": "packages/schema",
@@ -106,6 +100,7 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/register": "^7.9.0",
     "@babel/runtime": "^7.9.2",
+    "@liquify/rollup": "workspace:^0.0.0",
     "@rollup/plugin-babel": "^5.0.0",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-json": "^4.0.3",

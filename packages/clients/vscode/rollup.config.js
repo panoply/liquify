@@ -2,12 +2,15 @@ import babel from '@rollup/plugin-babel'
 import copy from 'rollup-plugin-copy'
 import { terser } from 'rollup-plugin-terser'
 import { path, plugins, minifyJSON } from '@liquify/rollup'
+import { name } from './package.json'
+
+const $ = path(name)
 
 export default [
   {
-    input: path('extension/index.js'),
+    input: $('extension/index.js'),
     output: {
-      file: path('package/index.js'),
+      file: $('package/index.js'),
       format: 'cjs',
       sourcemap: true,
       external: [
@@ -16,15 +19,15 @@ export default [
         'liquid-language-server'
       ]
     },
-    plugins: plugins(process.env)([
+    plugins: plugins([
       babel({
         babelHelpers: 'runtime',
-        configFile: path('.babelrc')
+        configFile: $('./.babelrc')
       }),
       copy({
         targets: [
           {
-            src: path([
+            src: $([
               'package.json',
               'language-configuration.json',
               'readme.md',
@@ -34,13 +37,14 @@ export default [
             dest: 'package'
           },
           {
-            src: path('syntaxes/**/*.json'),
+            src: $('syntaxes/**/*.json'),
             dest: 'package/syntaxes',
             transform: minifyJSON
           }
         ]
       })
-    ], [
+    ],
+    [
       terser({
         ecma: 6
         , warnings: 'verbose'

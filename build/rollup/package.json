@@ -1,11 +1,11 @@
 {
   "name": "@liquify/rollup",
   "version": "0.0.0",
-  "description": "Rollup plugin for working on the Liquify monorepo codebase",
+  "description": "Rollup plugins and utilities for working with the Liquify monorepo codebase",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
-  "main": "./package/liquify-rollup.js",
-  "module": "package/liquify-rollup.es.js",
+  "main": "./package/index.cjs.js",
+  "module": "package/index.es.js",
   "types": "types/index.d.ts",
   "private": false,
   "repository": {

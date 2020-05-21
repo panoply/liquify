@@ -1,7 +1,7 @@
 {
   "exclude": ["node_modules/**"],
-  "include": [, "rollup", "build/rollup"
-    "packages/cli",
+  "include": [
+    "build/rollup",
     "packages",
     "scripts",
     "server",

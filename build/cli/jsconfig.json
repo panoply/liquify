@@ -1,17 +1,11 @@
 {
-  "extends": "../jsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "commonjs",
     "baseUrl": ".",
     "paths": {
-      "types": ["./types", "./../packages/grammar/build.grammar.json"]
+      "types": ["./types"]
     }
   },
-  "include": [
-    "src/**/*",
-    "test/**/*",
-    "types/**/*",
-    "./../packages/grammar/**/*"
-  ]
+  "include": ["types/**/*"]
 }

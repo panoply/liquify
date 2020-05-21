@@ -2,13 +2,16 @@ import { terser } from 'rollup-plugin-terser'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import copy from 'rollup-plugin-copy'
-import { path, plugins } from '../../bundle/rollup/node_modules/@liquify/rollup-utils'
+import { path, plugins } from '@liquify/rollup'
+import { name } from './package.json'
+
+const $ = path(name)
 
 export default [
   {
-    input: path('src/index.js'),
+    input: $('src/index.js'),
     output: {
-      file: path('package/liquid-language-server.js'),
+      file: $('package/liquid-language-server.js'),
       format: 'cjs',
       sourcemap: !process.env.prod
     },
@@ -23,18 +26,20 @@ export default [
       'vscode-languageserver-textdocument',
       'vscode-uri'
     ],
-    plugins: plugins(process.env)([
-      json({ preferConst: true }),
-      babel({ babelHelpers: 'runtime', configFile: path('.babelrc') }),
+    plugins: plugins([
+      json({
+        preferConst: true,
+        compact: !!process.env.prod
+      }),
+      babel({
+        babelHelpers: 'runtime',
+        configFile: $('.babelrc')
+      }),
       copy({
         targets: [
           {
-            src: path('LICENSE'),
-            dest: path('LICENSE.txt')
-          },
-          {
-            src: path([ 'package.json', 'readme.md', 'ThirdPartyNotices.txt' ]),
-            dest: path('package')
+            src: $([ 'package.json', 'readme.md', 'ThirdPartyNotices.txt', 'LICENSE' ]),
+            dest: $('package')
           }
         ]
       })
@@ -48,9 +53,9 @@ export default [
     ])
   },
   {
-    input: path('node_modules/prettydiff/js/prettydiff.js'),
+    input: $('node_modules/prettydiff/js/prettydiff.js'),
     output: {
-      file: path('package/node_modules/prettydiff/index.js'),
+      file: $('package/node_modules/prettydiff/index.js'),
       format: 'cjs',
       sourcemap: !process.env.prod
     },

@@ -1,5 +1,5 @@
-
-import findUp from 'find-up'
-import { resolve } from 'path'
-
-export const path = p => !p ? resolve(__dirname, p) : p.map(i => resolve(__dirname, i))
+export { default as banner } from './plugins/banner'
+export { default as path } from './plugins/path-resolve'
+export { default as replace } from './plugins/replace'
+export { default as plugins } from './plugins/plugins'
+export { default as minifyJSON } from './plugins/minify-json'

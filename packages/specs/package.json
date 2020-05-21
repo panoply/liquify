@@ -14,16 +14,14 @@
     "url": "https://github.com/panoply/liquify"
   },
   "scripts": {
-    "dev": "liquify dev -i variations -o package --watch",
+    "dev": "rollup -c -w",
+    "devs": "liquify dev -i variations -o package --watch",
     "build": "liquify build -i variations -o package --prod",
     "peek": "liquify peek -i package",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@liquify/cli": "workspace:^0.0.1"
-  },
-  "peerDependencies": {
-    "@liquify/cli": "workspace:^0.0.1"
+    "@liquify/rollup": "workspace:^0.0.0"
   }
 }
