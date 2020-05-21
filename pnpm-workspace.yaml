@@ -1,7 +1,8 @@
 packages:
   - "."
-  - "cli"
+  - "build/*"
   - "packages/*"
   - "packages/clients/*"
+  - "!packages/server/package/*"
   - "!packages/clients/vscode/package/*"
   - "web/*"

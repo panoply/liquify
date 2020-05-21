@@ -1,44 +1,65 @@
 import { terser } from 'rollup-plugin-terser'
 import json from '@rollup/plugin-json'
-import babel from 'rollup-plugin-babel'
-import commonjs from '@rollup/plugin-commonjs'
-import nodeResolve from '@rollup/plugin-node-resolve'
-// import virtual from '@rollup/plugin-virtual'
-import generatePackageJson from 'rollup-plugin-generate-package-json'
+import babel from '@rollup/plugin-babel'
+import copy from 'rollup-plugin-copy'
+import { path, plugins } from '../../bundle/rollup/node_modules/@liquify/rollup-utils'
 
 export default [
   {
-    input: 'index.js',
-    external: process.env.prod ? [
-      'prettydiff',
-      'vscode-languageserver'
-    ] : [
-      'vscode-languageserver'
-    ],
+    input: path('src/index.js'),
     output: {
-      file: 'package/serverliquid-language-server.js',
+      file: path('package/liquid-language-server.js'),
       format: 'cjs',
-      sourcemap: true
+      sourcemap: !process.env.prod
     },
-    plugins: [
+    external: [
+      '@liquify/liquid-language-specs',
+      'prettydiff',
+      'vscode-languageserver',
+      'vscode-css-languageservice',
+      'vscode-html-languageservice',
+      'vscode-json-languageservice',
+      'vscode-languageserver',
+      'vscode-languageserver-textdocument',
+      'vscode-uri'
+    ],
+    plugins: plugins(process.env)([
       json({ preferConst: true }),
-      babel({ runtimeHelpers: true }),
-      process.env.prod ? terser() : null,
-      process.env.prod ? generatePackageJson({
-        inputFolder: 'packages/server',
-        outputFolder: 'packages/server/package/server'
-      }) : null
-    ]
+      babel({ babelHelpers: 'runtime', configFile: path('.babelrc') }),
+      copy({
+        targets: [
+          {
+            src: path('LICENSE'),
+            dest: path('LICENSE.txt')
+          },
+          {
+            src: path([ 'package.json', 'readme.md', 'ThirdPartyNotices.txt' ]),
+            dest: path('package')
+          }
+        ]
+      })
+    ],
+    [
+      terser({
+        ecma: 6
+        , warnings: 'verbose'
+        , compress: { passes: 2 }
+      })
+    ])
   },
   {
-    input: 'node_modules/prettydiff/js/prettydiff.js',
+    input: path('node_modules/prettydiff/js/prettydiff.js'),
     output: {
-      file: 'package/prettydiff.js',
+      file: path('package/node_modules/prettydiff/index.js'),
       format: 'cjs',
-      sourcemap: true
+      sourcemap: !process.env.prod
     },
     plugins: [
-      process.env.prod ? terser() : null
+      terser({
+        ecma: 6
+        , warnings: 'verbose'
+        , compress: { passes: 2 }
+      })
     ]
   }
 ]

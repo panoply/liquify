@@ -1,0 +1,34 @@
+{
+  "name": "@liquify/rollup",
+  "version": "0.0.0",
+  "description": "Rollup plugin for working on the Liquify monorepo codebase",
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "MIT",
+  "main": "./package/liquify-rollup.js",
+  "module": "package/liquify-rollup.es.js",
+  "types": "types/index.d.ts",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/master/scripts/rollup"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c",
+    "tests": "node ./test/require-specs.js",
+    "prepack": "rollup -c --environment prod",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "release": {
+    "branches": [
+      "master",
+      "next"
+    ]
+  },
+  "dependencies": {},
+  "optionalDependencies": {}
+}

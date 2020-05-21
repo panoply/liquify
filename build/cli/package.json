@@ -1,6 +1,6 @@
 {
   "name": "@liquify/cli",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Interactive development CLI for the Liquify extension/package",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",

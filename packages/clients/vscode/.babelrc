@@ -1,0 +1,21 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": {
+          "node": true
+        }
+      }
+    ]
+  ],
+  "sourceMaps": true,
+  "retainLines": true,
+  "plugins": [
+    "lodash",
+    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/transform-runtime"
+  ]
+}

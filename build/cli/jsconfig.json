@@ -9,7 +9,7 @@
     }
   },
   "include": [
-    "lib/**/*",
+    "src/**/*",
     "test/**/*",
     "types/**/*",
     "./../packages/grammar/**/*"
