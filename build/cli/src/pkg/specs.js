@@ -1,6 +1,5 @@
 import { writeFile, readdir, readFile } from 'fs-extra'
 import { basename } from 'path'
-import Crypto from 'cryptorjs'
 import stripJsonComments from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import chalk from 'chalk'

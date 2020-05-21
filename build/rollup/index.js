@@ -1,5 +1,14 @@
-export { default as banner } from './plugins/banner'
-export { default as path } from './plugins/path-resolve'
+/* -------------------------------------------- */
+/*                    PLUGINS                   */
+/* -------------------------------------------- */
+
 export { default as replace } from './plugins/replace'
-export { default as plugins } from './plugins/plugins'
-export { default as minifyJSON } from './plugins/minify-json'
+
+/* -------------------------------------------- */
+/*                   UTILITIES                  */
+/* -------------------------------------------- */
+
+export { default as plugins } from './utils/plugins'
+export { default as banner } from './utils/banner'
+export { default as path } from './utils/path-resolve'
+export { default as minifyJSON } from './utils/minify-json'

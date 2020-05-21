@@ -1,4 +1,8 @@
 import { terser } from 'rollup-plugin-terser'
+import { path } from '@liquify/rollup'
+import { name } from './package.json'
+
+const $ = path(name)
 
 /**
  * @typedef {import('rollup').RollupOptions} export
@@ -6,16 +10,16 @@ import { terser } from 'rollup-plugin-terser'
  */
 export default [
   {
-    input: './index.js',
+    input: $('index.js'),
     output: [
       {
-        format: 'commonjs',
-        file: 'package/index.cjs.js',
+        format: 'cjs',
+        file: $('package/index.cjs.js'),
         sourcemap: !process.env.prod
       },
       {
         format: 'module',
-        file: 'package/index.es.js',
+        file: $('package/index.es.js'),
         sourcemap: !process.env.prod
       }
     ],

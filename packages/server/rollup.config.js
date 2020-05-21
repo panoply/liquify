@@ -33,7 +33,7 @@ export default [
       }),
       babel({
         babelHelpers: 'runtime',
-        configFile: $('.babelrc')
+        configFile: $('./.babelrc')
       }),
       copy({
         targets: [
@@ -51,8 +51,8 @@ export default [
         , compress: { passes: 2 }
       })
     ])
-  },
-  {
+  }
+  /* {
     input: $('node_modules/prettydiff/js/prettydiff.js'),
     output: {
       file: $('package/node_modules/prettydiff/index.js'),
@@ -66,5 +66,5 @@ export default [
         , compress: { passes: 2 }
       })
     ]
-  }
+  } */
 ]

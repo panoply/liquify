@@ -39,7 +39,7 @@ export default [
       }),
       nodeResolve(),
       commonjs({
-        include: '../../node_modules/.pnpm/registry.npmjs.org/**'
+        include: './../../node_modules/.pnpm/registry.npmjs.org/**'
       })
     ], [
       terser({

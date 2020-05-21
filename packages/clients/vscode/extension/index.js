@@ -11,7 +11,6 @@ let client
 
 exports.activate = context => {
 
-  console.log(context.globalStoragePath)
   client = LiquidClient(context)
 
 }

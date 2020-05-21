@@ -13,7 +13,7 @@ export default [
     }),
     output: {
       format: 'cjs',
-      dir: $('package'),
+      dir: $('./package'),
       entryFileNames: '[name].js',
       sourcemap: !process.env.prod
     },

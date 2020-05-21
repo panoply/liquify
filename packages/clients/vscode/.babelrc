@@ -15,7 +15,6 @@
   "plugins": [
     "lodash",
     "@babel/plugin-proposal-optional-chaining",
-    "@babel/plugin-syntax-dynamic-import",
     "@babel/transform-runtime"
   ]
 }

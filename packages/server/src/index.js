@@ -9,7 +9,7 @@ import { LiquidService } from './provide/service'
 import * as Parse from './parser/export'
 
 /**
- * Liquid Service
+ * Liquid Servsice
  */
 const service = new LiquidService()
 

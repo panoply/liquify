@@ -1,5 +1,4 @@
 import Crypto from 'cryptorjs'
-
 import * as specs from '@liquify/liquid-language-specs'
 
 /**
