@@ -1,7 +1,7 @@
 import { terser } from 'rollup-plugin-terser'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
-import copy from 'rollup-plugin-copy'
+import globsync from 'rollup-plugin-globsync'
 import { path, plugins } from '@liquify/rollup'
 import { name } from './package.json'
 
@@ -35,13 +35,22 @@ export default [
         babelHelpers: 'runtime',
         configFile: $('./.babelrc')
       }),
-      copy({
-        targets: [
-          {
-            src: $([ 'package.json', 'readme.md', 'ThirdPartyNotices.txt', 'LICENSE' ]),
-            dest: $('package')
+      globsync({
+        // @ts-ignore
+        patterns: $([
+          './package.json',
+          './readme.md',
+          './ThirdPartyNotices.txt',
+          './LICENSE'
+        ]),
+        dest: $('package'),
+        // @ts-ignore
+        options: {
+          transform (file) {
+            console.log(file)
+            return file
           }
-        ]
+        }
       })
     ],
     [
@@ -51,8 +60,8 @@ export default [
         , compress: { passes: 2 }
       })
     ])
-  }
-  /* {
+  },
+  {
     input: $('node_modules/prettydiff/js/prettydiff.js'),
     output: {
       file: $('package/node_modules/prettydiff/index.js'),
@@ -66,5 +75,5 @@ export default [
         , compress: { passes: 2 }
       })
     ]
-  } */
+  }
 ]

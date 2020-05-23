@@ -1,5 +1,5 @@
 {
-  "name": "@liquify/cli",
+  "name": "@liquify/prompt",
   "version": "0.0.0",
   "description": "Interactive development CLI for the Liquify extension/package",
   "author": "Nikolas Savvidis <nicos@gmx.com>",

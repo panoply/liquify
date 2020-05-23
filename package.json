@@ -15,8 +15,10 @@
     "cli:dev": "pnpm run dev --filter ./build/cli/",
     "client:atom": "pnpm run build --filter ./packages/clients/atom/",
     "client:sublime": "pnpm run build --filter ./packages/clients/sublime/",
-    "client:vscode": "pnpm run build --filter ./packages/clients/vscode/",
-    "server": "pnpm run build --filter ./packages/server/",
+    "vscode": "pnpm run dev --filter ./packages/clients/vscode/",
+    "vscode:build": "pnpm run dev --filter ./packages/clients/vscode/",
+    "server": "pnpm run dev --filter ./packages/server/",
+    "server:build": "pnpm run build --filter ./packages/server/",
     "grammar:build": "pnpm run build --filter ./packages/grammar/",
     "grammar:create": "pnpm run create --filter ./packages/grammar/",
     "grammar:watch": "pnpm run watch --filter ./packages/grammar/",
@@ -42,9 +44,9 @@
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0-development"
     },
-    "cli": {
-      "path": "build/cli",
-      "name": "@liquify/cli",
+    "prompt": {
+      "path": "build/prompt",
+      "name": "@liquify/prompt",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.1"
     },

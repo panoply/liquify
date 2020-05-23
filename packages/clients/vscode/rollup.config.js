@@ -1,7 +1,7 @@
 import babel from '@rollup/plugin-babel'
-import copy from 'rollup-plugin-copy'
+import globsync from 'rollup-plugin-globsync'
 import { terser } from 'rollup-plugin-terser'
-import { path, plugins, minifyJSON } from '@liquify/rollup'
+import { path, plugins } from '@liquify/rollup'
 import { name } from './package.json'
 
 const $ = path(name)
@@ -20,28 +20,27 @@ export default [
       ]
     },
     plugins: plugins([
+      globsync({
+        patterns: ([
+          'package.json',
+          'language-configuration.json',
+          'readme.md',
+          'changelog.md',
+          '.vscodeignore'
+        ]),
+        dest: $('package'),
+        // @ts-ignore
+        options: {
+          loglevel: 'silly',
+          transform (file) {
+            console.log(file)
+            return file
+          }
+        }
+      }),
       babel({
         babelHelpers: 'runtime',
         configFile: $('./.babelrc')
-      }),
-      copy({
-        targets: [
-          {
-            src: $([
-              'package.json',
-              'language-configuration.json',
-              'readme.md',
-              'changelog.md',
-              '.vscodeignore'
-            ]),
-            dest: 'package'
-          },
-          {
-            src: $('syntaxes/**/*.json'),
-            dest: 'package/syntaxes',
-            transform: minifyJSON
-          }
-        ]
       })
     ],
     [

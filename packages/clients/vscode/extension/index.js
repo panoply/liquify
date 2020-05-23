@@ -4,7 +4,7 @@ import LiquidClient from './languages/liquid-client'
  * vscode-liquid
  *
  * @author Nikolas Savvidis
- * @version 2.4.0
+ * @version 2.4.0n
  */
 
 let client

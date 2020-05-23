@@ -35,7 +35,7 @@ export type PathOptions = string | string[] | { [entryAlias: string]: string }
  * Path Resolve - Resolves paths in rollup configuration to
  * their correct directories
  */
-export function path(name: string): (path: PathOptions) => PathOptions
+export function path(name: string): (path: PathOptions) => string
 
 /**
  * RegExp Replace - Modified version the rollup `replace` plugin

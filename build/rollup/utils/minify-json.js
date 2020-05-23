@@ -8,6 +8,6 @@ export default function (content) {
 
   const parsed = JSON.parse(jsonStrip(content.toString()))
 
-  return jsonMinify(parsed)
+  return jsonMinify(JSON.stringify(parsed))
 
 }
