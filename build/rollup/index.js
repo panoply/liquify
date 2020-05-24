@@ -2,6 +2,7 @@
 /*                    PLUGINS                   */
 /* -------------------------------------------- */
 
+export { default as globs } from './plugins/globs'
 export { default as replace } from './plugins/replace'
 
 /* -------------------------------------------- */
@@ -10,5 +11,4 @@ export { default as replace } from './plugins/replace'
 
 export { default as plugins } from './utils/plugins'
 export { default as banner } from './utils/banner'
-export { default as path } from './utils/path-resolve'
-export { default as minifyJSON } from './utils/minify-json'
+export { default as jsonmin } from './utils/minify-json'

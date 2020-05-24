@@ -29,6 +29,15 @@
       "next"
     ]
   },
-  "dependencies": {},
-  "optionalDependencies": {}
+  "devDependencies": {
+    "rollup-plugin-terser": "^6.0.1"
+  },
+  "dependencies": {
+    "chokidar": "^3.4.0",
+    "cp": "^0.2.0",
+    "del": "^5.1.0",
+    "marky": "^1.2.1",
+    "minimatch": "^3.0.4",
+    "pretty-ms": "^7.0.0"
+  }
 }

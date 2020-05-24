@@ -6,8 +6,9 @@ import jsonMinify from 'jsonminify'
  */
 export default function (content) {
 
-  const parsed = JSON.parse(jsonStrip(content.toString()))
+  const parsed = JSON.parse(jsonStrip(content))
+  const minified = jsonMinify(JSON.stringify(parsed))
 
-  return jsonMinify(JSON.stringify(parsed))
+  return minified
 
 }

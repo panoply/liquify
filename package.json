@@ -10,7 +10,7 @@
   },
   "scripts": {
     "liquify": "liquify",
-    "dev": "rollup -c -w --silent",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "cli:dev": "pnpm run dev --filter ./build/cli/",
     "client:atom": "pnpm run build --filter ./packages/clients/atom/",
@@ -44,11 +44,23 @@
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0-development"
     },
+    "path-resolve": {
+      "path": "build/path-resolve",
+      "name": "@liquify/path-resolve",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
     "prompt": {
       "path": "build/prompt",
       "name": "@liquify/prompt",
       "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.1"
+      "version": "0.0.0"
+    },
+    "rollup": {
+      "path": "build/rollup",
+      "name": "@liquify/rollup",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
+      "version": "0.0.0"
     },
     "atom": {
       "path": "packages/clients/atom",
@@ -79,18 +91,6 @@
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"
-    },
-    "rollup": {
-      "path": "build/rollup",
-      "name": "@liquify/rollup",
-      "repo": "github.com/panoply/liquify/master/build/rollup",
-      "version": "0.0.0"
-    },
-    "docs": {
-      "path": "web/docs",
-      "name": "@liquify/docs",
-      "repo": "github.com/panoply/liquify.dev",
-      "version": "0.0.1"
     }
   },
   "devDependencies": {
@@ -102,6 +102,7 @@
     "@babel/preset-env": "^7.9.6",
     "@babel/register": "^7.9.0",
     "@babel/runtime": "^7.9.6",
+    "@liquify/path-resolve": "workspace:^0.0.0",
     "@liquify/rollup": "workspace:^0.0.0",
     "@rollup/plugin-babel": "^5.0.2",
     "@rollup/plugin-commonjs": "^11.1.0",
@@ -113,8 +114,6 @@
     "babel-eslint": "^10.1.0",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^4.0.0",
-    "cli": "^1.0.1",
-    "cli-spinners": "^2.3.0",
     "console-clear": "^1.1.1",
     "cryptorjs": "^3.0.0",
     "eslint": "^6.8.0",
@@ -141,13 +140,10 @@
     "prettier-eslint": "^9.0.1",
     "qs": "^6.9.4",
     "rollup": "^2.10.5",
-    "rollup-plugin-copy": "^3.3.0",
-    "rollup-plugin-generate-package-json": "^3.2.0",
     "rollup-plugin-javascript-obfuscator": "^1.0.4",
     "rollup-plugin-terser": "^5.3.0",
     "semantic-release": "^17.0.7",
-    "strip-json-comments": "^3.1.0",
-    "vscode-tmgrammar-test": "^0.0.9"
+    "strip-json-comments": "^3.1.0"
   },
   "publishConfig": {
     "access": "restricted"

@@ -1,54 +1,48 @@
-import babel from '@rollup/plugin-babel'
-import globsync from 'rollup-plugin-globsync'
+import { babel } from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
-import { path, plugins } from '@liquify/rollup'
 import { name } from './package.json'
+import { jsonmin, plugins, globs } from '@liquify/rollup'
 
-const $ = path(name)
+const { $ } = require('@liquify/path-resolve')(name)
 
-export default [
-  {
-    input: $('extension/index.js'),
-    output: {
-      file: $('package/index.js'),
-      format: 'cjs',
-      sourcemap: true,
-      external: [
-        'vscode',
-        'vscode-languageclient',
-        'liquid-language-server'
-      ]
-    },
-    plugins: plugins([
-      globsync({
-        patterns: ([
-          'package.json',
-          'language-configuration.json',
-          'readme.md',
-          'changelog.md',
-          '.vscodeignore'
-        ]),
-        dest: $('package'),
-        // @ts-ignore
-        options: {
-          loglevel: 'silly',
-          transform (file) {
-            console.log(file)
-            return file
-          }
-        }
-      }),
-      babel({
-        babelHelpers: 'runtime',
-        configFile: $('./.babelrc')
-      })
-    ],
-    [
-      terser({
-        ecma: 6
-        , warnings: 'verbose'
-        , compress: { passes: 2 }
-      })
-    ])
-  }
-]
+export default {
+  input: $`extension/index.js`,
+  output: {
+    file: $`package/index.js`,
+    format: 'cjs',
+    sourcemap: process.env.prod ? false : 'inline'
+  },
+  external: [
+    'vscode',
+    'vscode-languageclient',
+    'liquid-language-server'
+  ],
+  plugins: plugins([
+    globs({
+      globs: $([
+        'package.json',
+        'LICENSE',
+        'language-configuration.json',
+        'readme.md',
+        'changelog.md',
+        '.vscodeignore',
+        'ThirdPartyNotices.txt'
+      ]),
+      dest: $`package`,
+      transform: {
+        '**/*.json': jsonmin
+      }
+    }),
+    babel({
+      babelHelpers: 'runtime',
+      exclude: $`node_modules/**`
+    })
+  ],
+  [
+    terser({
+      ecma: 6
+      , warnings: 'verbose'
+      , compress: { passes: 2 }
+    })
+  ])
+}
