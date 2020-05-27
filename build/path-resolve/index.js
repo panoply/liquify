@@ -1,4 +1,4 @@
-const { join } = require('path')
+const { join, basename } = require('path')
 
 /* -------------------------------------------- */
 /*                 PATH RESOLVE                 */
@@ -63,16 +63,21 @@ const parseObject = (input, path) => {
 /**
  * Gets the Resolved path
  *
- * @param {string} pkgname
- * @returns {(PackagePath|void)}
+ * @param {object} pkg
+ * @returns {(string|boolean|void)}
  */
-const getResolvedPath = (pkgname) => {
+const getResolvedPath = (pkg) => {
 
   const cwd = process.cwd()
+  const dir = basename(cwd)
+
+  console.log(dir)
+  if (dir !== 'project') return false
+
   const { packages } = require(join(cwd, 'package.json'))
 
   for (const { name, path } of Object.values(packages)) {
-    if (name === pkgname) return path
+    if (name === pkg.name) return path
   }
 }
 
@@ -86,7 +91,9 @@ const getResolvedPath = (pkgname) => {
  */
 module.exports = pkg => {
 
-  const path = !pkg.packages ? false : getResolvedPath(pkg.name)
+  console.log(pkg)
+
+  const path = getResolvedPath(pkg)
 
   return ({
     p: input => Array.isArray(input) ? parseArray(input, path)
