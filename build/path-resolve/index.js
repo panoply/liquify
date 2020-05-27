@@ -1,35 +1,54 @@
-const { resolve, join } = require('path')
+const { join } = require('path')
 
-const parseArray = (path, input) => {
+/* -------------------------------------------- */
+/*                 PATH RESOLVE                 */
+/* -------------------------------------------- */
 
-  if (input.length === 0) return new Error(`Empty Glob in ${input}`)
-  if (input.length === 1) {
-    const string = input[0].toString().trim()
+/**
+ * Parse array type parameters
+ *
+ * @param {string} input
+ * @param {string|false} path
+ * @returns {string|string[]|false}
+ */
+const parseArray = (input, path) => {
 
-    if (!string.length || string.charCodeAt(0) === 32) {
-      return new Error(`Bad or incorrect glob at ${input}`)
+  if (input.length <= 1) {
+
+    const string = input.toString().trim()
+
+    if (!string.length) {
+      throw new Error('invalid or incorrect file glob passed to resolver')
+    } else {
+      return path ? join(path, string) : string
     }
-
-    return resolve(path, string)
 
   }
 
-  return input.map(item => join(path, item.trim()))
+  return input.map(item => path ? join(path, item.trim()) : item.trim())
 
 }
 
-const parseObject = (path, input) => {
+/**
+ * Parse object type parameters
+ *
+ * @param {string} input
+ * @param {string|false} path
+ */
+const parseObject = (input, path) => {
 
   const object = Object.keys(input)
 
-  if (object.length === 0) return new Error('Empty object at', input)
+  if (object.length === 0) throw new Error(`empty object at ${input}`)
 
-  const regex = /[/.*]/
+  if (!path) return input
+
   const model = {}
+  const regex = /[/.*]/
 
   for (const prop of object) {
     if (typeof input[prop] !== 'string') {
-      return new Error(`Glob prop is not a string at ${input[prop]}`)
+      throw new Error(`glob prop is not a string at ${input[prop]}`)
     } else if (regex.test(prop)) {
       model[join(path, prop)] = join(path, input[prop])
     } else {
@@ -42,43 +61,38 @@ const parseObject = (path, input) => {
 }
 
 /**
- * Path - Resolves paths to their current working directory and
- * make paths relative from the root directory when in dev mode and
- * watching the entire repository
+ * Gets the Resolved path
  *
- * @export
- * @param {string} name
- * @param {import('../types/index').PathOptions} input
- * @returns {string}
+ * @param {string} pkgname
+ * @returns {(PackagePath|void)}
  */
-module.exports = (name, parse = []) => {
+const getResolvedPath = (pkgname) => {
 
   const cwd = process.cwd()
-  const pkg = require(`${cwd}/package.json`)
+  const { packages } = require(join(cwd, 'package.json'))
+
+  for (const { name, path } of Object.values(packages)) {
+    if (name === pkgname) return path
+  }
+}
+
+/**
+ * Resolves paths to their current working directory
+ *
+ * @export
+ * @param {object} input
+ * @param {object} options
+ * @returns {(string|object|array)}
+ */
+module.exports = pkg => {
+
+  const path = !pkg.packages ? false : getResolvedPath(pkg.name)
 
   return ({
-    $: (
-      input
-      , options = { root: 'liquify', parse: false }
-    ) => {
-
-      // if not in project root
-      if (pkg && pkg.name && pkg.name !== options.root) return input
-
-      const { path } = Object.values(pkg.packages).find(i => i.name === name)
-
-      let pattern
-
-      if (!path) pattern = input
-      else if (Array.isArray(input)) pattern = parseArray(path, input)
-      else if (typeof input === 'string') pattern = resolve(path, input)
-      else if (typeof input === 'object') pattern = parseObject(path, input)
-
-      if (options.parse) parse.push(pattern)
-
-      return pattern
-
-    }
+    p: input => Array.isArray(input) ? parseArray(input, path)
+      : (typeof input === 'string' && path) ? join(path, input)
+        : (typeof input === 'object' && path) ? parseObject(input, path) : input
 
   })
+
 }

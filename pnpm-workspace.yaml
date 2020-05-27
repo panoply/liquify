@@ -1,6 +1,7 @@
 packages:
   - "."
   - "build/*"
+  - "!build/path-resolve/test/**"
   - "packages/*"
   - "packages/clients/*"
   - "!packages/server/package/*"

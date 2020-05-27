@@ -39,55 +39,55 @@
   },
   "packages": {
     "project": {
-      "path": ".",
+      "path": "./.",
       "name": "liquify",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0-development"
     },
     "path-resolve": {
-      "path": "build/path-resolve",
+      "path": "./build/path-resolve",
       "name": "@liquify/path-resolve",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.0"
     },
     "prompt": {
-      "path": "build/prompt",
+      "path": "./build/prompt",
       "name": "@liquify/prompt",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.0"
     },
     "rollup": {
-      "path": "build/rollup",
+      "path": "./build/rollup",
       "name": "@liquify/rollup",
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
     "atom": {
-      "path": "packages/clients/atom",
+      "path": "./packages/clients/atom",
       "name": "atom-liquid",
       "repo": "github.com/panoply/liquify",
       "version": "0.1.0"
     },
     "vscode": {
-      "path": "packages/clients/vscode",
+      "path": "./packages/clients/vscode",
       "name": "liquify-vscode",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.1"
     },
     "schema": {
-      "path": "packages/schema",
+      "path": "./packages/schema",
       "name": "@liquify/schema-stores",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.1"
     },
     "server": {
-      "path": "packages/server",
+      "path": "./packages/server",
       "name": "liquid-language-server",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"
     },
     "specs": {
-      "path": "packages/specs",
+      "path": "./packages/specs",
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"

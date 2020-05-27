@@ -1,18 +1,19 @@
 {
-  "exclude": ["node_modules/**"],
+  "exclude": ["node_modules/**", "!node_modules/ava"],
   "include": [
+    "build/path-resolve",
     "build/rollup",
     "packages",
     "scripts",
     "server",
     "specs",
-    "web",
-    "cli"
+    "web"
   ],
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2019",
     "checkJs": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",

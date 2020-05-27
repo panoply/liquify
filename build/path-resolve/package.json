@@ -1,12 +1,10 @@
 {
   "name": "@liquify/path-resolve",
   "version": "0.0.0",
-  "description": "Path resolver for the Liquify monorepo. Used to resolve configuraiton paths",
+  "description": "Path resolver for the Liquify monorepo",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
   "main": "./package/index.cjs.js",
-  "module": "package/index.es.js",
-  "types": "index.d.ts",
   "private": false,
   "repository": {
     "type": "git",
@@ -17,11 +15,28 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "build": "rollup -c -w",
+    "prebuild": "rollup -i index.js -o package/index.cjs.js -f cjs --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava --watch --verbose"
+  },
+  "ava": {
+    "babel": true,
+    "files": [
+      "test/**/*"
+    ],
+    "concurrency": 5
   },
   "devDependencies": {
+    "@ava/babel": "^1.0.1",
+    "@rollup/plugin-commonjs": "^12.0.0",
+    "@types/node": "^14.0.5",
+    "ava": "^3.8.2",
+    "chalk": "^4.0.0",
     "rollup-plugin-terser": "^6.0.1"
+  },
+  "dependencies": {
+    "find-up": "^4.1.0"
   }
 }
