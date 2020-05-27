@@ -32,7 +32,8 @@ export default {
         'readme.md',
         'changelog.md',
         '.vscodeignore',
-        'ThirdPartyNotices.txt'
+        'ThirdPartyNotices.txt',
+        'syntaxes/**/*.json'
       ]),
       dest: p`package`,
       transform: {
