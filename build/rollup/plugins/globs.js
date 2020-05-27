@@ -1,4 +1,4 @@
-import { resolve, join, basename } from 'path'
+import { join, basename } from 'path'
 import chokidar from 'chokidar'
 import minimatch from 'minimatch'
 import cp from 'cp-file'
@@ -50,13 +50,16 @@ export default (options) => {
 
   const modify = async (item) => {
 
-    const read = await readFile(item)
-
     let modified
 
+    const read = await readFile(item)
+
     if (typeof transform === 'function') {
+
       modified = transform(read.toString())
+
       if (typeof modified === 'string') return modified
+
       log.warn('transform', `The ${item} transform must return a string!`)
 
     } else if (typeof transform === 'object') {
@@ -77,17 +80,16 @@ export default (options) => {
   }
 
   const copy = async (item) => {
+
     const timer = `copy-${item}`
 
     mark(timer)
 
     const file = transform ? await modify(item) : transform
     const path = join(dest, basename(item))
-    // Delete the target before copying
+
     await del(path)
 
-    // file must be an indentical `false` to prevent empty '' strings return false
-    // when file is not false, (ie: string) file is written
     if (file === false) {
 
       console.log('DIR', join(dest, item))
@@ -113,10 +115,6 @@ export default (options) => {
 
     const tgt = join(dest, setDestination(item))
 
-    // await del(slash(tgt))
-
-    // files.delete(item)
-
     log.verbose('remove', `Deleted ${tgt} in ${pretty(stop(timer).duration)}`)
   }
 
@@ -126,6 +124,7 @@ export default (options) => {
 
     ...globs
     // Filter out falsey values
+    // @ts-ignore
     .filter(Boolean)
     // flatten one level deep
     .reduce((acc, val) => acc.concat(val), [])

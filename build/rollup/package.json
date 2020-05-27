@@ -30,6 +30,7 @@
     ]
   },
   "devDependencies": {
+    "@liquify/path-resolve": "workspace:^0.0.0",
     "rollup-plugin-terser": "^6.0.1"
   },
   "dependencies": {

@@ -6,17 +6,17 @@ import { createFilter } from '@rollup/pluginutils'
  * @param {string} code
  * @param {import('../types/index').ReplaceOptions} options
  */
-function runCapture (code, {
-  tags
-  , callback
-  , delimeters: [ left, right ]
-}) {
-  const regexp = new RegExp(`(?<=${left})\\b${tags.join('|')}\\b(?=${right})`, 'g')
-  if (!regexp.test(code)) return null
-  else {
-    code = code.replace(regexp, callback)
-    return code || null
-  }
+const runCapture = (code, { tags, callback, delimeters: [ left, right ] }) => {
+
+  const regexp = `(?<=${left})\\b${tags.join('|')}\\b(?=${right})`
+  const regex = new RegExp(regexp, 'g')
+
+  if (!regex.test(code)) return null
+
+  code = code.replace(regex, callback)
+
+  return code || null
+
 }
 
 /**

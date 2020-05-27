@@ -1,25 +1,26 @@
 import { terser } from 'rollup-plugin-terser'
-import { path } from '@liquify/rollup'
-import { name } from './package.json'
-
-const $ = path(name)
+import pkg from './package.json'
 
 /**
- * @typedef {import('rollup').RollupOptions} export
- * @type {export}
+ * Monorepo path resolver
+ */
+const { p } = require('@liquify/path-resolve')(pkg)
+
+/**
+ * Rollup Bundle
  */
 export default [
   {
-    input: $('index.js'),
+    input: p`index.js`,
     output: [
       {
         format: 'cjs',
-        file: $('package/index.cjs.js'),
+        file: p`package/index.cjs.js`,
         sourcemap: !process.env.prod
       },
       {
         format: 'module',
-        file: $('package/index.es.js'),
+        file: p`package/index.es.js`,
         sourcemap: !process.env.prod
       }
     ],

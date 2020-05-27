@@ -6,8 +6,6 @@ import pkg from './package.json'
  */
 const { p } = require('./index')(pkg)
 
-console.log(p)
-
 /**
  * Rollup Bundle
  */
