@@ -29,41 +29,21 @@ export default {
   },
   plugins: [
     globs({
-      globs: ['dir/**/*.json', 'assets/*.svg'], // define some globs patterns
-      dest: "dest", // choose a destination directory
-      clean: true, // clean files before a build
+      globs: ['dir/**/*.json', 'assets/*.svg'],
+      dest: "dest",
+      clean: true,
       transform: {
-      // specific file in globs to transform
-      'bar/foo.json': ({ content, filename, dest }) => ({
-        content: JSON.stringify(JSON.parse(content), null, 4), // beautify some JSON
-        filename: 'bar.json', // change this name of this file
-        dest: 'some-dir/bar' // move this file to another destination
-      }),
-      // accepts a glob of files
-      'assets/*.svg': ({ content, dest }) => ({
-        content: somePlugin(content), // transform the contents, ie: svgo
-        dest: 'assets' // send all these files to an `assets` directory
-      }),
+        'glob/*.json': ({ content, filename, dest }) => (),
+      }
     }),
   ],
 };
 ```
 
-## Options
-
-| Option      | Type      | Default | Required |
-| ----------- | --------- | ------- | -------- |
-| `globs`     | `string`  | `[]`    | YES      |
-| `dest`      | `string`  | `''`    | YES      |
-| `clean`     | `boolean` | `true`  | NO       |
-| `transform` | `object`  | `{}`    | NO       |
-
 ## Contributing
 
 This package exists as part of a monorepo that is closed source which prevents contributions, issues and/or feature requests for end users who have installed this plugin via the npm registry.
 
-## License
-
-This plugin is licensed under [MIT](#).
+## Author
 
 🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
