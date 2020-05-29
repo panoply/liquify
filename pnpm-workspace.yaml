@@ -1,6 +1,7 @@
 packages:
   - "."
   - "build/*"
+  - "build/rollup-plugins/*"
   - "!build/path-resolve/test/**"
   - "packages/*"
   - "packages/clients/*"

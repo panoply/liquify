@@ -1,164 +1,191 @@
 import { join, basename } from 'path'
 import chokidar from 'chokidar'
 import minimatch from 'minimatch'
-import cp from 'cp-file'
-import del from 'del'
-import log from 'npmlog'
-import { readFile, outputFile } from 'fs-extra'
+import { readFile, outputFile, copy, remove, exists } from 'fs-extra'
 import { mark, stop } from 'marky'
 import pretty from 'pretty-ms'
+import chalk from 'chalk'
 
-// Wrapper around pretty-ms and stop
-const slash = (str) => str.replace(/\\/g, '/')
+const { log } = console
 
-const patterns = (globs) => ([
-  // The worst dir for a watcher to walk, yikes
-  '!**/node_modules/**',
+/**
+ * Transform, file contents
+ *
+ * @param {string} dest
+ * @param {(function|object|false)} transform
+ * @returns {(item: string) => Promise<string>}
+ */
+const transformer = (dest, transform) => async file => {
 
-  ...globs
-  // Filter out falsey values
-  // @ts-ignore
-  .filter(Boolean)
-  // flatten one level deep
-  .reduce((acc, val) => acc.concat(val), [])
-  // No \ allowed
-  .map((glob) => slash(glob))
+  if (!transform || !file) return false
 
-  // No inception, please
-  // `!${slash(dest)}/**`
-])
-
-const setDestination = (file) => {
-  if (files.has(file)) {
-    return files.get(file)
+  if (![ 'function', 'object' ].includes(typeof transform)) {
+    throw new Error(`${file} transform must be of type object or function`)
   }
 
-  const out = destination ? destination(file) : file
+  try { await exists(file) } catch (error) { throw new Error(error) }
 
-  files.set(file, out)
+  const content = await readFile(file)
 
-  return out
-}
+  if (typeof transform === 'function') return transform({ file, content, dest })
 
-const modify = async (item) => {
+  if (typeof transform === 'object') {
 
-  let modified
+    const item = Object.keys(transform).find(glob => minimatch(file, glob))
 
-  const read = await readFile(item)
+    if (!item) throw new Error(`Failed to match the ${item} glob transform`)
 
-  if (typeof transform === 'function') {
-
-    modified = transform(read.toString())
-
-    if (typeof modified === 'string') return modified
-
-    log.warn('transform', `The ${item} transform must return a string!`)
-
-  } else if (typeof transform === 'object') {
-
-    const file = Object.keys(transform).find((glob) => minimatch(item, glob))
-
-    if (file) {
-      modified = transform[file](read.toString())
-      if (typeof modified === 'string') return modified
-      log.warn('transform', `The ${item} transform must return a string!`)
+    if (typeof transform[item] === 'string') return transform[item]
+    if (typeof transform[item] === 'function') {
+      return transform[item]({ content, dest, file })
     }
 
-  } else {
-    log.warn('transform', `${item} transform must be an object or function`)
+    log(chalk.dim(`The transform used by ${item} must of type function or string`))
+
   }
-
-  return false
-}
-
-const copy = async (item) => {
-
-  const timer = `copy-${item}`
-
-  mark(timer)
-
-  const file = transform ? await modify(item) : transform
-  const path = join(dest, basename(item))
-
-  await del(path)
-
-  if (file === false) {
-
-    console.log('DIR', join(dest, item))
-    // console.log('TGT', tgt)
-    console.log('ITEM', item)
-
-    log.silly('copy', `Copying ${item}...`)
-    await cp(item, path)
-    log.verbose('copy', `Copied ${item} in ${pretty(stop(timer).duration)}`)
-  } else {
-    log.verbose('transform', `OUTPUT ${join(dest, basename(item))}...`)
-    await outputFile(path, file, 'utf8')
-    log.verbose('transform', `Transformed ${item} in ${pretty(stop(timer).duration)}`)
-  }
-}
-
-const remove = async (item) => {
-  const timer = `delete-${item}`
-
-  mark(timer)
-
-  log.silly('remove', `Removing ${item}...`)
-
-  const tgt = join(dest, setDestination(item))
-
-  log.verbose('remove', `Deleted ${tgt} in ${pretty(stop(timer).duration)}`)
 }
 
 /**
- * @param {import('../types').GlobsOptions} options
+ * Changed Event
+ *
+ * @param {string} files
+ * @param {string} dest
+ * @param {function|object|false} transform
+ * @returns {(item: string) => Promise<string>}
  */
-export default (options = {
-  globs,
-  clean: true,
-  dest: './package',
-  pkg: process.cwd(),
-  destination: false,
-  transform: false
-}) => {
+const changes = (files, dest, transform) => async item => {
 
-  if (!globs) throw new Error('Missing { globs : [] } in rollup-plugin-globs')
+  mark(item)
+
+  const file = await transform(item)
+
+  if (typeof file === 'boolean' || typeof file === 'string') {
+
+    await copy(item, join(dest, file === false ? basename(item) : file))
+
+    log(chalk`copied {cyan ${item}} in {italic ${pretty(stop(item).duration)}}`)
+
+  } else if (typeof file === 'object') {
+
+    if (file.content && typeof file.content !== 'string') {
+      throw new Error(`The ${item} content property did not return a string!`)
+    }
+
+    if (!file.dest) file.dest = dest
+
+    if (file.file) {
+      if (!files.has(item)) files.set(item, file.file)
+      file.file = files.get(item)
+      log(chalk`renamed {cyan ${basename(item)}} to {cyan ${file.file}}`)
+    } else {
+      file.file = basename(item)
+    }
+
+    if (file.content) {
+
+      await outputFile(join(file.dest, file.file), file.content, 'utf8')
+
+      log(chalk`transformed {cyan ${item}} in {italic ${pretty(stop(item).duration)}}`)
+
+    }
+  }
+
+}
+
+/**
+ * Remove Event
+ *
+ * @param {MapConstructor} files
+ * @param {string} dest
+ * @returns {(item: string) => Promise<string>}
+ */
+const removal = (files, dest) => async item => {
+
+  mark(item)
+
+  const path = join(dest, basename(item))
+
+  await remove(path)
+  files.delete(item)
+  log(chalk`{red deleted ${path}} in {cyan ${pretty(stop(item).duration)}}`)
+
+}
+
+/**
+ * Chokidor is ready
+ *
+ * @param {MapConstructor} files
+ * @param {import('chokidar').FSWatcher} watch
+ * @returns {(resolve: function) => function}
+ */
+const ready = (files, watch) => resolve => watch.on('ready', (paths = []) => {
+
+  const watched = watch.getWatched()
+
+  log(`Watching ${Object.keys(watched).length} paths`)
+
+  return resolve()
+
+})
+
+/**
+ * Globs pattern builder
+ *
+ * @param {array} globs
+ */
+const patterns = (globs) => ([
+  ...globs
+  .filter(Boolean)
+  .reduce((acc, val) => acc.concat(val), []),
+  '!**/node_modules/**'
+])
+
+/**
+ * Rollup Plugin Globs
+ *
+ * This code is essentially a hard fork of `rollup-plugin-globsync`
+ * by tivac. I've merely modified the code to fit my coding style,
+ * eliminated the manifests feature, provided type definitions and
+ * brought support for file transformations that do what the fuck they
+ * are intended to do, transform files.
+ *
+ * @param {import('.').GlobsOptions} options
+ */
+export default (options = false) => {
+
+  const {
+    globs = false
+    , clean = true
+    , dest = './package'
+    , cwd = process.cwd()
+    , transform = false
+  } = options
+
+  if (!globs) throw new Error('Missing { globs: [] } in rollup-plugin-globs')
 
   let runs = 0
-    , files
-    , watcher
     , initialize
 
   return {
     name: '@liquify/rollup-plugin-globs',
-
     async buildStart () {
 
       if (runs++) return
-      if (clean) await del(slash(dest))
+      if (clean) await remove(dest)
 
-      files = new Map()
+      const files = new Map()
+      const unlink = removal(files, dest)
+      const change = changes(files, dest, transformer(dest, transform))
+      const watch = chokidar.watch(patterns(globs), { cwd })
 
-      watcher = chokidar.watch(patterns(globs), { cwd: pkg })
+      initialize = new Promise(ready(files, watch))
 
-      watcher.on('add', copy)
-      watcher.on('change', copy)
-      watcher.on('unlink', remove)
-      watcher.on('unlinkDir', remove)
-      watcher.on('error', (e) => { throw e })
+      watch.on('add', change)
+      watch.on('change', change)
+      watch.on('unlink', unlink)
+      watch.on('unlinkDir', unlink)
+      watch.on('error', error => { throw error })
 
-      initialize = new Promise(resolve => watcher.on('ready', () => {
-
-        const paths = []
-        const watch = watcher.getWatched()
-
-        Object.keys(watch).forEach(k => watch[k].forEach(f => paths.push(`${k}/${f}`)))
-
-        log.verbose('watch', `Watching ${paths.length} paths, ${files.size} files`)
-
-        resolve()
-
-      }))
     },
 
     async generateBundle () {
@@ -166,6 +193,5 @@ export default (options = {
       await initialize
 
     }
-
   }
 }

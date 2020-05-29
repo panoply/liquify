@@ -1,12 +1,11 @@
 {
-  "name": "@liquify/rollup",
+  "name": "@liquify/rollup-plugin-supplant",
   "version": "0.0.0",
   "description": "Rollup plugins and utilities for working with the Liquify monorepo codebase",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
   "main": "./package/index.cjs.js",
-  "module": "package/index.es.js",
-  "types": "types/index.d.ts",
+  "types": "index.d.ts",
   "private": false,
   "repository": {
     "type": "git",
@@ -17,9 +16,9 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c",
+    "build": "rollup -c --environment prod",
     "tests": "node ./test/require-specs.js",
-    "prepack": "rollup -c --environment prod",
+    "prepack": "rollup -c--environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -34,11 +33,6 @@
     "rollup-plugin-terser": "^6.0.1"
   },
   "dependencies": {
-    "chokidar": "^3.4.0",
-    "cp": "^0.2.0",
-    "del": "^5.1.0",
-    "marky": "^1.2.1",
-    "minimatch": "^3.0.4",
-    "pretty-ms": "^7.0.0"
+    "@rollup/pluginutils": "^3.0.10"
   }
 }

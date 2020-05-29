@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "./package/index.cjs.js",
   "module": "package/index.es.js",
-  "types": "types/index.d.ts",
+  "types": "index.d.ts",
   "private": false,
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c",
+    "build": "rollup -c --environment prod",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
@@ -34,6 +34,7 @@
     "rollup-plugin-terser": "^6.0.1"
   },
   "dependencies": {
+    "chalk": "^4.0.0",
     "chokidar": "^3.4.0",
     "cp": "^0.2.0",
     "del": "^5.1.0",

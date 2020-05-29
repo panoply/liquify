@@ -22,22 +22,54 @@ The vast majority of rollup plugins which provide file transforms and copies wer
 import globs from "@liquify/rollup-plugin-globs";
 
 export default {
-  input: 'src/index.js',
+  input: "src/index.js",
   output: {
-    dir: 'output',
-    format: 'cjs',
+    dir: "output",
+    format: "cjs",
   },
   plugins: [
     globs({
-      globs: ['dir/**/*.json', 'assets/*.svg'],
+      globs: ["dir/**/*.json", "assets/*.svg"],
       dest: "dest",
       clean: true,
-      transform: {
-        'glob/*.json': ({ content, filename, dest }) => (),
-      }
+      transform: Object | function,
     }),
   ],
 };
+```
+
+## Transforms
+
+The plugin `transform` option will allow you to rename, repath and/or modify contents of a file. The transform option accepts either an `object` or `function` which will supply an object parameter argument. Transforms **must** return either a string or object value. When an transform returns a `string` it is interpreted as a combination rename and repath, see below example:
+
+#### Transforming multiple files
+
+```js
+globs({
+  globs: ["dir/**/*.json", "assets/*.svg"],
+  dest: "dest",
+  transform: {
+    // returing a string without slash will rename the file
+    "img/**/file.png": "rename.png"
+    // returning an object
+    "glob/*.json": ({
+      content
+      , file
+      , dest
+    }) => {
+
+      // Lets beautify some JSON with indentation of 4
+      const json = JSON.stringify(JSON.parse(content), null, 4)
+
+      // We return an object
+      return {
+        content: json, // the transformed contents,
+        file: `new-${file}.json`, // prepend `new-` to these all filenames
+        dest: 'json/dest' // output all files to the json/dest directory
+      }
+    },
+  },
+}),
 ```
 
 ## Contributing
