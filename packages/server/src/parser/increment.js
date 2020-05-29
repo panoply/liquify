@@ -35,9 +35,8 @@ export default async (
 ) => {
 
   ast = scan(document, undefined, ast, undefined)
-  return ast
 
-  // console.log(ast)
+  console.log(ast)
   if (!ast.length) {
     ast = scan(document, undefined, ast, undefined)
     return ast

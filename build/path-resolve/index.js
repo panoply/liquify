@@ -1,13 +1,9 @@
 const { join, basename } = require('path')
 
-/* -------------------------------------------- */
-/*                 PATH RESOLVE                 */
-/* -------------------------------------------- */
-
 /**
  * Parse array type parameters
  *
- * @param {string} input
+ * @param {string[]} input
  * @param {string|false} path
  * @returns {string|string[]|false}
  */
@@ -71,8 +67,7 @@ const getResolvedPath = (pkg) => {
   const cwd = process.cwd()
   const dir = basename(cwd)
 
-  console.log(dir)
-  if (dir !== 'project') return false
+  if (dir !== 'project') return ''
 
   const { packages } = require(join(cwd, 'package.json'))
 
@@ -85,13 +80,10 @@ const getResolvedPath = (pkg) => {
  * Resolves paths to their current working directory
  *
  * @export
- * @param {object} input
- * @param {object} options
+ * @param {object} pkg
  * @returns {(string|object|array)}
  */
 module.exports = pkg => {
-
-  console.log(pkg)
 
   const path = getResolvedPath(pkg)
 

@@ -14,8 +14,8 @@
       "path": "."
     },
     {
-      "name": "Clients",
-      "path": "packages/clients"
+      "name": "Client",
+      "path": "packages/clients/vscode"
     },
     {
       "name": "Server",
@@ -28,14 +28,6 @@
     {
       "name": "Specs",
       "path": "packages/specs"
-    },
-    {
-      "name": "Scripts",
-      "path": "scripts"
-    },
-    {
-      "name": "Website",
-      "path": "website"
     }
   ]
 }

@@ -15,7 +15,7 @@ const { p } = require('@liquify/path-resolve')(pkg)
 export default {
   input: p`extension/index.js`,
   output: {
-    file: p`package/index.js`,
+    file: p`package/extension.js`,
     format: 'cjs',
     sourcemap: process.env.prod ? false : 'inline'
   },
@@ -26,7 +26,7 @@ export default {
   ],
   plugins: plugins([
     globs({
-      globs: p([
+      globs: [
         'package.json',
         'LICENSE',
         'language-configuration.json',
@@ -35,8 +35,9 @@ export default {
         '.vscodeignore',
         'ThirdPartyNotices.txt',
         'syntaxes/**/*.json'
-      ]),
+      ],
       transform: {
+        LICENSE: 'LICENSE.txt',
         '*.json': ({ content }) => ({
           content: jsonmin(content.toString())
         }),

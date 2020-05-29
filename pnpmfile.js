@@ -28,11 +28,12 @@ module.exports = {
       for (const path of pkgs) {
 
         const { name, version, repository: { url } } = require(`./${path}/package.json`)
+
         const space = ' '.repeat(40 - path.length)
         const repo = url.replace('https://', '')
-        const prop = path !== '.' ? basename(path) : ROOT_DIR
+        const prop = path !== '.' ? `./${basename(path)}` : ROOT_DIR
 
-        pkg.packages[prop] = { path: `./${path}`, name, repo, version }
+        pkg.packages[prop] = { path: path, name, repo, version }
 
         log(chalk`${path}${space} | {dim Package}: {cyan ${name}}`)
 

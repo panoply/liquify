@@ -77,14 +77,14 @@ export default (context) => {
    */
   const server = {
     run: {
-      module: './../extension/server.cjs.js',
+      module: './../packages/server/package/server.js',
       transport: TransportKind.ipc
     },
     debug: {
-      module: './../extension/server.cjs.js',
+      module: './../packages/server/package/server.js',
       transport: TransportKind.ipc,
       options: {
-        execArgv: [ '--nolazy', '--inspect=6009' ]
+        execArgv: [ '--nolazy', '--inspect=6080' ]
       }
     }
   }
@@ -105,6 +105,22 @@ export default (context) => {
       {
         scheme: 'untitled',
         language: 'liquid'
+      },
+      {
+        scheme: 'file',
+        language: 'liquid-shopify'
+      },
+      {
+        scheme: 'untitled',
+        language: 'liquid-shopify'
+      },
+      {
+        scheme: 'file',
+        language: 'liquid-jekyll'
+      },
+      {
+        scheme: 'untitled',
+        language: 'liquid-jekyll'
       }
     ],
     synchronize: {

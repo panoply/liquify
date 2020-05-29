@@ -13,7 +13,7 @@
   "private": false,
   "author": "",
   "license": "ISC",
-  "main": "index.js",
+  "main": "./server.js",
   "bundledDependencies": [
     "vscode-css-languageservice",
     "vscode-languageserver"
@@ -35,6 +35,8 @@
     "url": "https://github.com/panoply/liquify"
   },
   "devDependencies": {
-    "@liquify/path-resolve": "workspace:^0.0.0"
+    "@liquify/path-resolve": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.0.0"
   }
 }

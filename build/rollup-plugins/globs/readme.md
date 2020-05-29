@@ -8,7 +8,7 @@ A [rollup](https://rollupjs.org) plugin used by the [Liquify](#) IDE extension/p
 
 ## Why?
 
-The vast majority of rollup plugins which provide file transforms and/or copies were a bunch of smoke and mirrors and kept falling short in what I required in the [Liquify](#) development workspace. The plugin is essentially a stripped down and hard-fork extended version of [rollup-plugin-globsync](https://github.com/tivac/) that has been re-written, uses different dependencies and facilitates file transformations and type delcarations.
+The vast majority of rollup plugins which provide file transforms and/or copies were a bunch of smoke and mirrors and kept falling short in what I required in the [Liquify](#) development workspace. The plugin is essentially a stripped down and hard-fork extended version of [rollup-plugin-globsync](https://github.com/tivac/) that has been re-written, uses different dependencies and facilitates file transformations + type delcarations.
 
 ## Install
 
@@ -51,14 +51,13 @@ globs({
   transform: {
     "img/**/file.png": "rename.png" // string without slash will rename the file
     "image.jpg": "images/prepend-[name].[ext]" // string with slash / will repath from dest/
-    "data/*.json": content => {
+    "data/*.json": ({ content }) => {
 
       // Returning a function on all '.json' files and do some modifications
       // For example, lets beautify these JSON files with an indentation of 4
       const json = JSON.stringify(JSON.parse(content), null, 4)
 
       // Returning an object using you can repath and rename the files using the
-      // `[name]` and/or `[ext]` will automatically have apply name or file extension
       return {
         content: json, // the transformed contents, should always be a string!
         file: `new-[name].json`, // prepend `new-` to these all filenames
@@ -77,7 +76,7 @@ import { minify } from 'html-minifier'
 globs({
   globs: ["views/*.html"],
   dest: "pages",
-  transform: content => {
+  transform: ({ content }) => {
 
       // This will modify all files referenced in globs
       // for example, let minify all HTML files

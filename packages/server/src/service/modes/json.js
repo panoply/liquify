@@ -2,7 +2,7 @@
 
 import _ from 'lodash'
 import { getLanguageService, ClientCapabilities } from 'vscode-json-languageservice'
-const schema = require('@liquify/schema')
+const schema = require('./shopify-sections.json')
 
 /**
  * JSON Language Service

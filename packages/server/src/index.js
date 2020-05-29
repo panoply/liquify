@@ -139,7 +139,7 @@ connection.onDidChangeTextDocument(async ({
   const changes = documents.update(document, contentChanges)
   const parsed = await Parse.increment(document, ast, ...changes)
 
-  // console.log(parsed)
+  console.log(parsed)
   const v2 = performance.now()
 
   // console.log(parsed)

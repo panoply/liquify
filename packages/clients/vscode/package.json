@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/panoply/vscode-liquid/issues"
   },
-  "main": "./index.js",
+  "main": "./extension.js",
   "engines": {
     "vscode": "^1.33.0"
   },

@@ -72,6 +72,8 @@ export default (
 
   }
 
+  console.log(ast)
+
   /**
    * Return the composed AST record
    */

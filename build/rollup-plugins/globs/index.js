@@ -118,7 +118,7 @@ const removal = (files, dest) => async item => {
  * @param {import('chokidar').FSWatcher} watch
  * @returns {(resolve: function) => function}
  */
-const ready = (files, watch) => resolve => watch.on('ready', (paths = []) => {
+const ready = watch => resolve => watch.on('ready', (paths = []) => {
 
   const watched = watch.getWatched()
 

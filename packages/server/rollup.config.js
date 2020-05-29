@@ -1,6 +1,7 @@
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
-import { plugins, globs, jsonmin } from '@liquify/rollup'
+import globs from '@liquify/rollup-plugin-globs'
+import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 
@@ -15,7 +16,7 @@ const { p } = require('@liquify/path-resolve')(pkg)
 export default {
   input: p`src/index.js`,
   output: {
-    file: p`package/index.js`,
+    file: p`package/server.js`,
     format: 'cjs',
     sourcemap: process.env.prod ? false : 'inline'
   },
@@ -32,16 +33,18 @@ export default {
   ],
   plugins: plugins([
     globs({
-      globs: p([
+      globs: [
         'package.json',
         'readme.md',
         'changelog.md',
         'ThirdPartyNotices.txt',
-        'LICENSE'
-      ]),
-      dest: p`package`,
+        'LICENSE',
+        './shopify-sections.json'
+      ],
       transform: {
-        '**/*.json': jsonmin
+        '*.json': ({ content }) => ({
+          content: jsonmin(content.toString())
+        })
       }
     }),
     json({
