@@ -2,7 +2,7 @@
   "exclude": ["node_modules/**", "!node_modules/ava"],
   "include": [
     "build/path-resolve",
-    "build/rollup",
+    "build/rollup-plugins/globs",
     "packages",
     "scripts",
     "server",

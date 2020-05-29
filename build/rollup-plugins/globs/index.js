@@ -33,7 +33,7 @@ const transformer = (dest, transform) => async file => {
 
     const item = Object.keys(transform).find(glob => minimatch(file, glob))
 
-    if (!item) throw new Error(`Failed to match the ${item} glob transform`)
+    if (!item) return false
 
     if (typeof transform[item] === 'string') return transform[item]
     if (typeof transform[item] === 'function') {
@@ -134,10 +134,12 @@ const ready = (files, watch) => resolve => watch.on('ready', (paths = []) => {
  * @param {array} globs
  */
 const patterns = (globs) => ([
+
   ...globs
   .filter(Boolean)
   .reduce((acc, val) => acc.concat(val), []),
   '!**/node_modules/**'
+
 ])
 
 /**

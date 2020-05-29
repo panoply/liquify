@@ -4,11 +4,11 @@
 
 # @liquify/rollup-plugin-globs
 
-Rollup plugin used by the [Liquify](#) IDE extension/package tool which will watch, copy, transform and rename capabilities when working with files in your workspace. The plugin leverages the rollup watch chokidor instance.
+A [rollup](https://rollupjs.org) plugin used by the [Liquify](#) IDE extension/package. The plugin provides watch, copy, transform, repath and rename capabilities for files in a development workspace.
 
 ## Why?
 
-The vast majority of rollup plugins which provide file transforms and copies were a bunch of smoke and mirrors. This plugin was originally [rollup-plugin-globsync](https://github.com/tivac/) written by [tivac](https://github.com/tivac) but has since been re-written to better suit the requirements needed in the [Liquify](#) development workspace.
+The vast majority of rollup plugins which provide file transforms and/or copies were a bunch of smoke and mirrors and kept falling short in what I required in the [Liquify](#) development workspace. The plugin is essentially a stripped down and hard-fork extended version of [rollup-plugin-globsync](https://github.com/tivac/) that has been re-written, uses different dependencies and facilitates file transformations and type delcarations.
 
 ## Install
 
@@ -49,23 +49,43 @@ globs({
   globs: ["dir/**/*.json", "assets/*.svg"],
   dest: "dest",
   transform: {
-    // returing a string without slash will rename the file
-    "img/**/file.png": "rename.png"
-    // returning an object
-    "glob/*.json": ({
-      content
-      , file
-      , dest
-    }) => {
+    "img/**/file.png": "rename.png" // string without slash will rename the file
+    "image.jpg": "images/prepend-[name].[ext]" // string with slash / will repath from dest/
+    "data/*.json": content => {
 
-      // Lets beautify some JSON with indentation of 4
+      // Returning a function on all '.json' files and do some modifications
+      // For example, lets beautify these JSON files with an indentation of 4
       const json = JSON.stringify(JSON.parse(content), null, 4)
 
-      // We return an object
+      // Returning an object using you can repath and rename the files using the
+      // `[name]` and/or `[ext]` will automatically have apply name or file extension
       return {
-        content: json, // the transformed contents,
-        file: `new-${file}.json`, // prepend `new-` to these all filenames
-        dest: 'json/dest' // output all files to the json/dest directory
+        content: json, // the transformed contents, should always be a string!
+        file: `new-[name].json`, // prepend `new-` to these all filenames
+        dest: 'json/dest' // output files to a new destination relative to workspace root
+      }
+    },
+  },
+}),
+```
+
+#### Transforming all files
+
+```js
+import { minify } from 'html-minifier'
+
+globs({
+  globs: ["views/*.html"],
+  dest: "pages",
+  transform: content => {
+
+      // This will modify all files referenced in globs
+      // for example, let minify all HTML files
+      const html =  minify(content.toString());
+
+      return {
+        content: html, // the transformed contents, should always be a string!
+        file: `[name].liquid`, // all files should use a `.liquid` extension
       }
     },
   },
@@ -74,7 +94,7 @@ globs({
 
 ## Contributing
 
-This package exists as part of a monorepo that is closed source which prevents contributions, issues and/or feature requests for end users who have installed this plugin via the npm registry.
+This package licensed under MIT but it exists as part of a monorepo that is closed source. Currently, any contributions, issues and/or feature requests by end users is not possible.
 
 ## Author
 

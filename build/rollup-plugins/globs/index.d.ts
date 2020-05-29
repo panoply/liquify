@@ -1,10 +1,5 @@
 import rollup from 'rollup'
 
-/**
- * Transform Function
- */
-type TransformFunction = (file: string, content: Buffer, dest: string) => string
-
 interface TransformReturns {
   /**
    * The filename including extension
@@ -63,7 +58,16 @@ interface GlobsOptions {
 }
 
 /**
+ * Transform Function
+ */
+type TransformFunction = (
+  file: string,
+  content: Buffer,
+  dest: string
+) => TransformReturns
+
+/**
  * Rollup plugin to take a list of globs, copy, transform, rename or repath
  * and optionally watch for changes, syncing those over.
  */
-export function globs(options?: GlobsOptions): rollup.Plugin
+export default function globs(options: GlobsOptions): rollup.Plugin

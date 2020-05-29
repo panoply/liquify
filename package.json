@@ -68,6 +68,12 @@
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
+    "utils": {
+      "path": "./build/rollup-plugins/utils",
+      "name": "@liquify/rollup-plugin-utils",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
+      "version": "0.0.0"
+    },
     "atom": {
       "path": "./packages/clients/atom",
       "name": "atom-liquid",
@@ -96,12 +102,6 @@
       "path": "./packages/specs",
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
-      "version": "0.0.0"
-    },
-    "utils": {
-      "path": "./build/rollup-plugins/utils",
-      "name": "@liquify/rollup-plugin-utils",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     }
   },

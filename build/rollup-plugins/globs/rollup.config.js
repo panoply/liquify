@@ -1,4 +1,5 @@
 import { terser } from 'rollup-plugin-terser'
+import pkg from './package.json'
 
 /**
  * Monorepo path resolver
@@ -13,7 +14,12 @@ export default {
   output: [
     {
       format: 'cjs',
-      file: 'package/index.cjs.js',
+      file: pkg.main,
+      sourcemap: process.env.prod ? false : 'inline'
+    },
+    {
+      format: 'module',
+      file: pkg.module,
       sourcemap: process.env.prod ? false : 'inline'
     }
   ],

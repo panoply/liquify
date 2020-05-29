@@ -283,7 +283,7 @@
   },
   "devDependencies": {
     "@liquify/path-resolve": "workspace:^0.0.0",
-    "@liquify/rollup": "workspace:^0.0.0",
-    "rollup-plugin-globsync": "^2.1.0"
+    "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.0.0"
   }
 }

@@ -29,4 +29,4 @@ interface SupplantOptions {
  * RegExp Replace - Modified version the rollup `replace` plugin
  * which is restrictive.
  */
-export function supplant(options: ReplaceOptions): rollup.Plugin
+export default function supplant(options: ReplaceOptions): rollup.Plugin

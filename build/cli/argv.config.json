@@ -3,7 +3,7 @@
     "name": "task",
     "choices": [
       {
-        "name": "dev",
+        "name": "watch",
         "message": "Launches development (Watching)",
         "choices": [
           {
@@ -107,7 +107,7 @@
         "message": "Bundle package/s execution (via npm scripts)",
         "choices": [
           {
-            "name": "NPM Registry",
+            "name": "NPM",
             "message": "Publish package to its NPM registry"
           },
           {
@@ -125,12 +125,16 @@
         "message": "Bundle package/s execution (via npm scripts)",
         "choices": [
           {
+            "name": "patch",
+            "message": "Semver patch update, x.x.patch"
+          },
+          {
             "name": "minor",
-            "message": "Semver minor update"
+            "message": "Semver minor update, x.minor.x"
           },
           {
             "name": "major",
-            "message": "Semver major update"
+            "message": "Semver major update, major.x.x"
           }
         ]
       }

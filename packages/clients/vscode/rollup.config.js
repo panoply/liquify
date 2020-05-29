@@ -1,6 +1,7 @@
 import { babel } from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
-import { jsonmin, plugins, globs } from '@liquify/rollup'
+import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
+import globs from '@liquify/rollup-plugin-globs'
 import pkg from './package.json'
 
 /**
@@ -35,9 +36,18 @@ export default {
         'ThirdPartyNotices.txt',
         'syntaxes/**/*.json'
       ]),
-      dest: p`package`,
       transform: {
-        '**/*.json': jsonmin
+        '*.json': ({ content }) => ({
+          content: jsonmin(content.toString())
+        }),
+        'syntaxes/*.json': ({ content }) => ({
+          content: jsonmin(content.toString()),
+          dest: 'package/syntaxes'
+        }),
+        'syntaxes/injections/*.json': ({ content }) => ({
+          content: jsonmin(content.toString()),
+          dest: 'package/syntaxes/injections'
+        })
       }
     }),
     babel({
