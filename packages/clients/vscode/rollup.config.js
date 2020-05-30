@@ -26,7 +26,7 @@ export default {
   ],
   plugins: plugins([
     globs({
-      globs: [
+      globs: p([
         'package.json',
         'LICENSE',
         'language-configuration.json',
@@ -35,21 +35,22 @@ export default {
         '.vscodeignore',
         'ThirdPartyNotices.txt',
         'syntaxes/**/*.json'
-      ],
-      transform: {
-        LICENSE: 'LICENSE.txt',
+      ]),
+      dest: p`package`,
+      transform: p({
+        LICENSE: '[name].txt',
         '*.json': ({ content }) => ({
           content: jsonmin(content.toString())
         }),
         'syntaxes/*.json': ({ content }) => ({
           content: jsonmin(content.toString()),
-          dest: 'package/syntaxes'
+          dest: p`package/syntaxes`
         }),
         'syntaxes/injections/*.json': ({ content }) => ({
           content: jsonmin(content.toString()),
-          dest: 'package/syntaxes/injections'
+          dest: p`package/syntaxes/injections`
         })
-      }
+      })
     }),
     babel({
       babelHelpers: 'runtime',

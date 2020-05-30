@@ -4,13 +4,14 @@ interface TransformReturns {
   /**
    * The filename including extension
    */
-  readonly file?: string
+  readonly name?: string
   /**
    * The file contents, **MUST** return a `string` value, not buffer!!
    */
   readonly content?: string
   /**
-   * Destination path replacement
+   * Destination path replacement, returing dest will repath the destination
+   * of the file, ie: output will **NOT** be relative to the defined `dest` path
    */
   readonly dest?: string
 }
@@ -19,7 +20,7 @@ interface TransformObjectFunctions {
   /**
    * A glob or file to match for transformation
    */
-  readonly [glob: string]: TransformFunction
+  readonly [glob: string]: string | TransformFunction
 }
 
 interface GlobsOptions {

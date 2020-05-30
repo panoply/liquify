@@ -33,19 +33,21 @@ export default {
   ],
   plugins: plugins([
     globs({
-      globs: [
+      globs: p([
         'package.json',
         'readme.md',
         'changelog.md',
         'ThirdPartyNotices.txt',
         'LICENSE',
-        './shopify-sections.json'
-      ],
-      transform: {
+        'shopify-sections.json'
+      ]),
+      dest: p`package`,
+      transform: p({
+        LICENSE: '[name].txt',
         '*.json': ({ content }) => ({
           content: jsonmin(content.toString())
         })
-      }
+      })
     }),
     json({
       preferConst: true,
@@ -53,7 +55,6 @@ export default {
     }),
     babel({
       babelHelpers: 'runtime'
-      // configFile: p`babel.config.json`
     })
   ],
   [

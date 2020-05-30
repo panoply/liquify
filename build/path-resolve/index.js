@@ -30,6 +30,7 @@ const parseArray = (input, path) => {
  *
  * @param {string} input
  * @param {string|false} path
+ * @param {object} options
  */
 const parseObject = (input, path) => {
 
@@ -40,17 +41,19 @@ const parseObject = (input, path) => {
   if (!path) return input
 
   const model = {}
-  const regex = /[/.*]/
+  const regex = /(\.|\*|\/)/
 
   for (const prop of object) {
-    if (typeof input[prop] !== 'string') {
-      throw new Error(`glob prop is not a string at ${input[prop]}`)
-    } else if (regex.test(prop)) {
-      model[join(path, prop)] = join(path, input[prop])
+    if (regex.test(prop)) {
+      model[join(path, prop)] = typeof input[prop] === 'string'
+        ? join(path, input[prop])
+        : input[prop]
     } else {
       model[prop] = join(path, input[prop])
     }
   }
+
+  console.log(model)
 
   return model
 
@@ -88,10 +91,17 @@ module.exports = pkg => {
   const path = getResolvedPath(pkg)
 
   return ({
-    p: input => Array.isArray(input) ? parseArray(input, path)
-      : (typeof input === 'string' && path) ? join(path, input)
-        : (typeof input === 'object' && path) ? parseObject(input, path) : input
+    p: (input) => {
 
+      if (Array.isArray(input)) {
+        return parseArray(input, path)
+      } else if (typeof input === 'string' && path) {
+        return join(path, input)
+      } else if (typeof input === 'object' && path) {
+        return parseObject(input, path)
+      }
+
+    }
   })
 
 }

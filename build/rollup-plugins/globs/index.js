@@ -5,17 +5,21 @@ import { readFile, outputFile, copy, remove, exists } from 'fs-extra'
 import { mark, stop } from 'marky'
 import pretty from 'pretty-ms'
 import chalk from 'chalk'
+import { version } from './package.json'
 
 const { log } = console
 
+/* ----------------- FUNCTIONS ---------------- */
+
 /**
- * Transform, file contents
+ * Transform file contents, when returning `false` transform is
+ * skipped and file is copied
  *
  * @param {string} dest
  * @param {(function|object|false)} transform
- * @returns {(item: string) => Promise<string>}
+ * @returns {(base: string, item: string) => Promise<string>}
  */
-const transformer = (dest, transform) => async file => {
+const transformer = (dest, transform) => async (base, file) => {
 
   if (!transform || !file) return false
 
@@ -27,22 +31,76 @@ const transformer = (dest, transform) => async file => {
 
   const content = await readFile(file)
 
-  if (typeof transform === 'function') return transform({ file, content, dest })
+  if (typeof transform === 'function') return transform({ name: file, content, dest })
 
   if (typeof transform === 'object') {
 
+    if (typeof transform[base] === 'string') {
+      if (transform[base] !== base) return transform[base]
+    }
+
     const item = Object.keys(transform).find(glob => minimatch(file, glob))
 
+    // execute copy
     if (!item) return false
 
     if (typeof transform[item] === 'string') return transform[item]
     if (typeof transform[item] === 'function') {
-      return transform[item]({ content, dest, file })
+      return transform[item]({ content, dest, name: file })
     }
 
     log(chalk.dim(`The transform used by ${item} must of type function or string`))
 
   }
+}
+
+/**
+ * Rename file transform. Good for multiple return approaches.
+ *
+ * @param {string} base
+ * @param {object} file
+ * @param {MapConstructor} files
+ * @param {string} item
+ */
+const rename = (base, file, item, files) => {
+
+  if (file === false) return base
+
+  const ext = item.substring(item.lastIndexOf('.'), item.length)
+  const filename = (typeof file === 'object' && file.name)
+    ? file.name
+    : typeof file === 'string' ? basename(file) : base
+
+  const name = filename
+  .replace(/\[\bname\b\]/, base)
+  .replace(/\[\bext\b\]/, ext || null)
+
+  if (!files.has(item)) files.set(item, name)
+
+  if (base !== name) {
+    log(chalk`{dim renamed ${base} to ${name}}`)
+  }
+  return files.get(item)
+
+}
+
+/**
+ * Repath file destination
+ *
+ * @param {string} base
+ * @param {object} file
+ * @param {string} item
+ */
+const repath = (base, file, dest) => {
+
+  if (typeof file === 'object') {
+    if (file.dest) {
+      return file.dest.replace(/\[\bname\b\]/, base)
+    }
+  }
+
+  return dest
+
 }
 
 /**
@@ -57,13 +115,14 @@ const changes = (files, dest, transform) => async item => {
 
   mark(item)
 
-  const file = await transform(item)
+  const base = basename(item)
+  const file = await transform(base, item)
 
   if (typeof file === 'boolean' || typeof file === 'string') {
 
-    await copy(item, join(dest, file === false ? basename(item) : file))
+    await copy(item, join(repath(base, file, dest), rename(base, file, item, files)))
 
-    log(chalk`copied {cyan ${item}} in {italic ${pretty(stop(item).duration)}}`)
+    log(chalk`{bold copied} {cyan ${item}} in {dim ${pretty(stop(item).duration)}}`)
 
   } else if (typeof file === 'object') {
 
@@ -71,21 +130,20 @@ const changes = (files, dest, transform) => async item => {
       throw new Error(`The ${item} content property did not return a string!`)
     }
 
-    if (!file.dest) file.dest = dest
-
-    if (file.file) {
-      if (!files.has(item)) files.set(item, file.file)
-      file.file = files.get(item)
-      log(chalk`renamed {cyan ${basename(item)}} to {cyan ${file.file}}`)
-    } else {
-      file.file = basename(item)
-    }
+    file.dest = repath(base, file, dest)
+    file.name = rename(base, file, item, files)
 
     if (file.content) {
 
-      await outputFile(join(file.dest, file.file), file.content, 'utf8')
+      await outputFile(join(file.dest, file.name), file.content, 'utf8')
 
-      log(chalk`transformed {cyan ${item}} in {italic ${pretty(stop(item).duration)}}`)
+      log(chalk`{bold modified} {cyan ${item}} in {dim ${pretty(stop(item).duration)}}`)
+
+    } else {
+
+      await copy(item, join(file.dest, file.name))
+
+      log(chalk`{bold copied} {cyan ${item}} in {dim ${pretty(stop(item).duration)}}`)
 
     }
   }
@@ -107,7 +165,7 @@ const removal = (files, dest) => async item => {
 
   await remove(path)
   files.delete(item)
-  log(chalk`{red deleted ${path}} in {cyan ${pretty(stop(item).duration)}}`)
+  log(chalk`{bold.red deleted} {red ${path}} in {dim ${pretty(stop(item).duration)}}`)
 
 }
 
@@ -118,7 +176,7 @@ const removal = (files, dest) => async item => {
  * @param {import('chokidar').FSWatcher} watch
  * @returns {(resolve: function) => function}
  */
-const ready = watch => resolve => watch.on('ready', (paths = []) => {
+const ready = watch => resolve => watch.on('ready', () => {
 
   const watched = watch.getWatched()
 
@@ -133,12 +191,11 @@ const ready = watch => resolve => watch.on('ready', (paths = []) => {
  *
  * @param {array} globs
  */
-const patterns = (globs) => ([
+const patterns = (globs, dest) => ([
 
-  ...globs
-  .filter(Boolean)
-  .reduce((acc, val) => acc.concat(val), []),
-  '!**/node_modules/**'
+  ...globs.filter(Boolean),
+  '!**/node_modules/**',
+  `!${dest}/**`
 
 ])
 
@@ -176,17 +233,19 @@ export default (options = false) => {
       if (clean) await remove(dest)
 
       const files = new Map()
+      const watch = chokidar.watch(patterns(globs, dest), { cwd })
+
       const unlink = removal(files, dest)
       const change = changes(files, dest, transformer(dest, transform))
-      const watch = chokidar.watch(patterns(globs), { cwd })
-
-      initialize = new Promise(ready(files, watch))
 
       watch.on('add', change)
       watch.on('change', change)
       watch.on('unlink', unlink)
       watch.on('unlinkDir', unlink)
       watch.on('error', error => { throw error })
+
+      initialize = new Promise(ready(watch))
+      log(chalk`{underline rollup-plugin-globs v${version}}`)
 
     },
 
@@ -195,5 +254,6 @@ export default (options = false) => {
       await initialize
 
     }
+
   }
 }
