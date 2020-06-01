@@ -1,10 +1,11 @@
 const { join, basename } = require('path')
+const Cryptor = require('cryptorjs')
 
 /**
  * Parse array type parameters
  *
  * @param {string[]} input
- * @param {string|false} path
+ * @param {string|boolean} path
  * @returns {string|string[]|false}
  */
 const parseArray = (input, path) => {
@@ -16,21 +17,39 @@ const parseArray = (input, path) => {
     if (!string.length) {
       throw new Error('invalid or incorrect file glob passed to resolver')
     } else {
-      return path ? join(path, string) : string
+      return typeof path === 'string' ? join(path, string) : string
     }
 
   }
 
-  return input.map(item => path ? join(path, item.trim()) : item.trim())
+  return input.map(item => typeof path === 'string' ? join(path, item) : item)
 
 }
 
 /**
  * Parse object type parameters
  *
- * @param {string} input
- * @param {string|false} path
- * @param {object} options
+ * @param {object} entry
+ */
+const returnOrEncryptObject = (entry) => {
+
+  if (!entry.crypto && !entry.object) return entry
+
+  const input = {}
+  const cryptor = new Cryptor(entry.crypto)
+  const modules = Object.keys(entry.object)
+
+  for (const prop of modules) input[`${cryptor.encode(prop)}`] = entry.object[prop]
+
+  return input
+
+}
+
+/**
+ * Parse object type parameters
+ *
+ * @param {string|object} entry
+ * @param {string|boolean} path
  */
 const parseObject = (input, path) => {
 
@@ -45,6 +64,7 @@ const parseObject = (input, path) => {
 
   for (const prop of object) {
     if (regex.test(prop)) {
+
       model[join(path, prop)] = typeof input[prop] === 'string'
         ? join(path, input[prop])
         : input[prop]
@@ -52,8 +72,6 @@ const parseObject = (input, path) => {
       model[prop] = join(path, input[prop])
     }
   }
-
-  console.log(model)
 
   return model
 
@@ -63,7 +81,7 @@ const parseObject = (input, path) => {
  * Gets the Resolved path
  *
  * @param {object} pkg
- * @returns {(string|boolean|void)}
+ * @returns {string|boolean}
  */
 const getResolvedPath = (pkg) => {
 
@@ -95,9 +113,9 @@ module.exports = pkg => {
 
       if (Array.isArray(input)) {
         return parseArray(input, path)
-      } else if (typeof input === 'string' && path) {
-        return join(path, input)
-      } else if (typeof input === 'object' && path) {
+      } else if (typeof input === 'string') {
+        return typeof path === 'string' ? join(path, input) : input
+      } else if (typeof input === 'object') {
         return parseObject(input, path)
       }
 

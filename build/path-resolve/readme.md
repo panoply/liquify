@@ -6,7 +6,7 @@ Resolves paths contained within a pnpm monorepo. This module is used by the [Liq
 
 ## Why?
 
-The [Liquify](#) codebase leverages [rollup](#) and a collection of custom plugins to facilitate bundling. This module will resolve paths to files at any location in the project and is used to combine closed and open sourced packages from root.
+The [Liquify](#) codebase leverages [rollup](#) and a collection of custom plugins to facilitate bundling. This module will resolve paths to files at any location in the project and is used to combine closed and open sourced packages. The Rollup configuration files that each package provides are wrapped with a `p` instance with will resolve linked files in relatively.
 
 ## Install
 

@@ -7,6 +7,10 @@ import { Config } from './config'
 import { Expressions } from '../parser/lexical'
 import { propLevels } from '../utils/functions'
 import * as validations from '../service/validate/index'
+import specs from '@liquify/liquid-language-specs'
+import Cryptor from 'cryptorjs'
+
+const crypt = new Cryptor('sissel siv')
 
 /**
  * Liquid Language Server
@@ -31,7 +35,22 @@ export class LiquidServer extends Config {
    * @param {ServerCapabilities} capabilities
    * @memberof LiquidServer
    */
-  capabilities (initializeParams, capabilities) {
+  async capabilities (initializeParams, capabilities) {
+
+    const combine = {}
+
+    /**
+     * @type {object}
+     */
+    const standard = crypt.decode(specs.standard)
+
+    for (const spec in specs) {
+      if (spec === 'standard') continue
+
+      combine[spec] = { ...standard, ...crypt.decode(specs[spec]) }
+    }
+
+    console.log(combine)
 
     const {
       initializationOptions: {

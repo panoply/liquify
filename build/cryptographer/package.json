@@ -1,10 +1,11 @@
 {
-  "name": "@liquify/path-resolve",
+  "name": "@liquify/cryptographer",
   "version": "0.0.0",
-  "description": "Path resolver for the Liquify monorepo",
+  "description": "Encrypt and decrypt string, number and objects",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
   "main": "./package/index.cjs.js",
+  "module": "./package/index.es.js",
   "private": false,
   "repository": {
     "type": "git",
@@ -30,14 +31,11 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
+    "@liquify/path-resolve": "workspace:^0.0.0",
     "@rollup/plugin-commonjs": "^12.0.0",
     "@types/node": "^14.0.5",
     "ava": "^3.8.2",
     "chalk": "^4.0.0",
     "rollup-plugin-terser": "^6.0.1"
-  },
-  "dependencies": {
-    "cryptorjs": "^3.0.0",
-    "find-up": "^4.1.0"
   }
 }

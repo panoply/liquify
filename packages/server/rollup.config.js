@@ -1,5 +1,6 @@
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
+import commonjs from '@rollup/plugin-commonjs'
 import globs from '@liquify/rollup-plugin-globs'
 import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import { terser } from 'rollup-plugin-terser'
@@ -32,6 +33,7 @@ export default {
     'vscode-uri'
   ],
   plugins: plugins([
+    commonjs(),
     globs({
       globs: p([
         'package.json',

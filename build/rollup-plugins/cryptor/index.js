@@ -202,51 +202,10 @@ export default function (options) {
   const filter = createFilter(options.include, options.exclude)
 
   return ({
-    name: 'Replace',
+    name: '@',
     transform (code, id) {
       if (!filter(id)) return null
       return runCapture(code, options)
     }
   })
-}
-
-/**
- * Default exports - Digested by the CLI
- *
- * @param {object} config
- * @param {object} state prop values are the encoded names
- */
-export default async (config, state = {
-  specs: {}, cache: {}, grammar: {}, parsing: {}, encrypt: {}
-}) => {
-
-  log.perf.start()
-  log.tree[0].start('Liquid Specifications')
-
-  const { input, output } = config.argv
-  const errors = errorHandler(input)
-  await build(input, output, state).catch(errors)
-
-  log.tree[1].end(chalk`{dim Generated in }{whiteBright ${log.perf.stop().preciseWords}}`)
-
-  if (config.argv.watch) {
-
-    // console.log(config)
-    const item = input.replace(/.*?\/(?=project)/, '')
-    log.tree[1].while(chalk`{blueBright watching} {dim ${item}/**}`)
-
-    const watcher = chokidar.watch(`${input}/**`, {
-      persistent: true,
-      interval: 100
-    })
-
-    const change = watch(output, state)
-
-    // @ts-ignore
-    global.watch = true
-
-    watcher.on('change', change).on('error', errors)
-
-  }
-
 }

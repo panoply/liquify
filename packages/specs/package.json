@@ -15,13 +15,20 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "devs": "liquify dev -i variations -o package --watch",
     "build": "liquify build -i variations -o package --prod",
     "peek": "liquify peek -i package",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "@liquify/path-resolve": "workspace:^0.0.0",
+    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-multi-entry": "^3.0.1",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "rollup-plugin-jsonc": "^0.1.0",
     "rollup-plugin-terser": "^6.0.1"
+  },
+  "dependencies": {
+    "cryptorjs": "^3.0.0"
   }
 }

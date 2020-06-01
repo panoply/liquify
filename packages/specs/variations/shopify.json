@@ -12,7 +12,7 @@
   },
   "schema": {
     "type": "embedded",
-    "description": "The javascript tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.",
+    "description": "The javascript tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",
     "parameters": false,
     "singular": false,
     "filters": false,
@@ -983,7 +983,7 @@
         "description": "Generates a form for logging into Customer Accounts on the login.liquid template."
       },
       {
-        "name": "guest_login",
+        "name": "guest_logi n",
         "description": "Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account."
       },
       {

@@ -2,10 +2,18 @@
 
 # @liquify/liquid-language-specs
 
-This package is available on the npm registry exclusively for modules consumed by the [Liquify](https://liquify.dev) text editor extension/plugin.
+This package is available on the npm registry for modules consumed by the [Liquify](https://liquify.dev) text editor extension/plugin.
 
-**Liquify is proprietarty closed source software and the distributed code provided in this package is enigmatic and has been encrypted using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm.**
+**Liquify is proprietarty closed source software. The distributed code provided in this package is enigmatic and has been encrypted using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm**
 
-<br>
+## Why?
+
+The [Liquid Language Server](#) requires these Liquid specification variation references to compose a workable AST and provide LSP capabilities to the various Liquify clients.
+
+## What the F\*ck are Liquid Language Specs?
+
+In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax. A templating language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation. Due to versatile nature and endless implementations in which Liquid exists supporting intelliSense capabilities is made possible by providing the Language Server with project specific variation reference data.
+
+## Author
 
 🥛 Laced with **Vellocet** by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />

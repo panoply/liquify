@@ -103,6 +103,12 @@
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"
+    },
+    "./cryptographer": {
+      "path": "build/cryptographer",
+      "name": "@liquify/cryptographer",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
     }
   },
   "devDependencies": {
