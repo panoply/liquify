@@ -28,7 +28,7 @@ crypto.encode({ foo: "bar" });
 crypto.decode("12345678910abcdefghijkmnopqrstuvwxyz");
 
 // Ciphers
-cryptor.ciphers();
+crypto.ciphers();
 
 // Hash
 crypto.hash("secret", "md5");
