@@ -50,10 +50,22 @@
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.0"
     },
+    "./cryptographer": {
+      "path": "build/cryptographer",
+      "name": "@liquify/cryptographer",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
     "./path-resolve": {
       "path": "build/path-resolve",
       "name": "@liquify/path-resolve",
       "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
+    "./crypto": {
+      "path": "build/rollup-plugins/crypto",
+      "name": "@liquify/rollup-plugin-crypto",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
     "./globs": {
@@ -102,12 +114,6 @@
       "path": "packages/specs",
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
-      "version": "0.0.0"
-    },
-    "./cryptographer": {
-      "path": "build/cryptographer",
-      "name": "@liquify/cryptographer",
-      "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.0"
     }
   },

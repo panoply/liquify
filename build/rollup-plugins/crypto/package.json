@@ -1,0 +1,48 @@
+{
+  "name": "@liquify/rollup-plugin-crypto",
+  "version": "0.0.0",
+  "description": "Rollup plugin to encrypt objects, string and numbers using an AES algorithm",
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "MIT",
+  "main": "./package/index.cjs.js",
+  "module": "package/index.es.js",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/master/scripts/rollup"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c --environment prod",
+    "tests": "node ./test/require-specs.js",
+    "prepack": "rollup -c --environment prod",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava --verbose"
+  },
+  "ava": {
+    "babel": true,
+    "files": [
+      "test/**/**"
+    ],
+    "concurrency": 5
+  },
+  "release": {
+    "branches": [
+      "master",
+      "next"
+    ]
+  },
+  "devDependencies": {
+    "@ava/babel": "^1.0.1",
+    "@liquify/path-resolve": "workspace:^0.0.0",
+    "ava": "^3.8.2",
+    "rollup-plugin-terser": "^6.0.1"
+  },
+  "dependencies": {
+    "@liquify/cryptographer": "workspace:^0.0.0",
+    "@rollup/pluginutils": "^3.0.10"
+  }
+}

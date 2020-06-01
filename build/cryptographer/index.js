@@ -9,7 +9,7 @@ import crypto from 'crypto'
 const normalizeInput = input => {
 
   if (input === null || typeof input === 'undefined') throw new Error('required origin')
-  if (typeof input === 'object') input = JSON.stringfy(input)
+  if (typeof input === 'object') input = JSON.stringify(input)
   if (typeof input !== 'string') input = input.toString()
 
   return input
@@ -105,8 +105,10 @@ export default (key, algorithm = 'aes-256-ctr') => {
     throw new Error(`algorithm ${algorithm} not supported, use: ${algorithms.join(', ')}`)
   }
 
+  key = hash(key, 'md5')
+
   const options = {
-    key: hash(key, 'md5')
+    key
     , iv: key.substr(16)
     , options: {}
     , algorithm

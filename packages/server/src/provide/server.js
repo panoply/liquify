@@ -37,20 +37,9 @@ export class LiquidServer extends Config {
    */
   async capabilities (initializeParams, capabilities) {
 
-    const combine = {}
+    const spec = await specs('sissel siv')
 
-    /**
-     * @type {object}
-     */
-    const standard = crypt.decode(specs.standard)
-
-    for (const spec in specs) {
-      if (spec === 'standard') continue
-
-      combine[spec] = { ...standard, ...crypt.decode(specs[spec]) }
-    }
-
-    console.log(combine)
+    console.log(spec.shopify)
 
     const {
       initializationOptions: {
