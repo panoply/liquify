@@ -8,9 +8,6 @@ import { Expressions } from '../parser/lexical'
 import { propLevels } from '../utils/functions'
 import * as validations from '../service/validate/index'
 import specs from '@liquify/liquid-language-specs'
-import Cryptor from 'cryptorjs'
-
-const crypt = new Cryptor('sissel siv')
 
 /**
  * Liquid Language Server
@@ -39,7 +36,7 @@ export class LiquidServer extends Config {
 
     const spec = await specs('sissel siv')
 
-    console.log(spec.shopify)
+    console.log(spec.shopify())
 
     const {
       initializationOptions: {

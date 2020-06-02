@@ -25,12 +25,13 @@ export default function (options = {}) {
       config.input.index = 'index.js'
 
       for (const prop in config.input) {
-        if (config.input.index) continue
+        if (prop === 'index') continue
         config.input[crypto.encode(prop)] = config.input[prop]
         delete config.input[prop]
       }
 
-      console.log(config)
+      console.log(config.input)
+
       return config
 
     },
@@ -47,8 +48,8 @@ export default function (options = {}) {
       const [ item ] = parse.input.find(([ k ]) => k === main)
       const modules = parse.input.map(([ k, v ]) => `const ${k} = await import('./${v}')`)
       const decoded = parse.input.map(([ k ]) => (k === options.main
-        ? `${k}: crypto.decode(${k})`
-        : `${k}: { ...crypto.decode(${item}), ...crypto.decode(${k}) }`
+        ? `${k}: () => crypto.decode(${k})`
+        : `${k}: () => ({ ...crypto.decode(${item}), ...crypto.decode(${k}) })`
       ))
 
       return `

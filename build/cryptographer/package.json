@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "watch": "rollup -c -w",
-    "build": "rollup -c -w",
+    "build": "rollup -c",
     "prebuild": "rollup -i index.js -o package/index.cjs.js -f cjs --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --watch --verbose"

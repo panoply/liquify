@@ -2,20 +2,11 @@ import { babel } from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import globs from '@liquify/rollup-plugin-globs'
-import pkg from './package.json'
 
-/**
- * Monorepo path resolver
- */
-const { p } = require('@liquify/path-resolve')(pkg)
-
-/**
- * Rollup Bundle
- */
 export default {
-  input: p`extension/index.js`,
+  input: 'extension/index.js',
   output: {
-    file: p`package/extension.js`,
+    file: 'package/extension.js',
     format: 'cjs',
     sourcemap: process.env.prod ? false : 'inline'
   },
@@ -26,7 +17,7 @@ export default {
   ],
   plugins: plugins([
     globs({
-      globs: p([
+      globs: [
         'package.json',
         'LICENSE',
         'language-configuration.json',
@@ -35,26 +26,26 @@ export default {
         '.vscodeignore',
         'ThirdPartyNotices.txt',
         'syntaxes/**/*.json'
-      ]),
-      dest: p`package`,
-      transform: p({
+      ],
+      dest: 'package',
+      transform: {
         LICENSE: '[name].txt',
         '*.json': ({ content }) => ({
           content: jsonmin(content.toString())
         }),
         'syntaxes/*.json': ({ content }) => ({
           content: jsonmin(content.toString()),
-          dest: p`package/syntaxes`
+          dest: 'package/syntaxes'
         }),
         'syntaxes/injections/*.json': ({ content }) => ({
           content: jsonmin(content.toString()),
-          dest: p`package/syntaxes/injections`
+          dest: 'package/syntaxes/injections'
         })
-      })
+      }
     }),
     babel({
       babelHelpers: 'runtime',
-      exclude: p`node_modules/**`
+      exclude: 'node_modules/**'
     })
   ],
   [

@@ -55,6 +55,13 @@
     "vscode.html-language-features"
   ],
   "contributes": {
+    "themes": [
+      {
+        "label": "Potion Theme",
+        "uiTheme": "vs-dark",
+        "path": "./themes/potion-color-theme.json"
+      }
+    ],
     "jsonValidation": [
       {
         "fileMatch": ".liquidrc",

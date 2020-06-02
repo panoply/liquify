@@ -223,20 +223,28 @@ export default (options = false) => {
   if (!globs) throw new Error('Missing { globs: [] } in rollup-plugin-globs')
 
   let runs = 0
+    , build
+    , watch
     , initialize
 
   return {
     name: '@liquify/rollup-plugin-globs',
+    options (config) {
+
+      build = typeof config.watch === 'undefined'
+
+    },
     async buildStart () {
 
       if (runs++) return
       if (clean) await remove(dest)
 
       const files = new Map()
-      const watch = chokidar.watch(patterns(globs, dest), { cwd })
 
       const unlink = removal(files, dest)
       const change = changes(files, dest, transformer(dest, transform))
+
+      watch = chokidar.watch(patterns(globs, dest), { cwd })
 
       watch.on('add', change)
       watch.on('change', change)
@@ -245,6 +253,7 @@ export default (options = false) => {
       watch.on('error', error => { throw error })
 
       initialize = new Promise(ready(watch))
+
       log(chalk`{underline rollup-plugin-globs v${version}}`)
 
     },
@@ -252,6 +261,11 @@ export default (options = false) => {
     async generateBundle () {
 
       await initialize
+
+    },
+    buildEnd () {
+
+      if (build) watch.close()
 
     }
 

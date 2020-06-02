@@ -16,7 +16,7 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c --environment prod",
+    "builds": "rollup -c --environment prod",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c--environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",

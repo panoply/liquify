@@ -5,11 +5,6 @@ import strip from 'rollup-plugin-strip-code'
 import pkg from './package.json'
 
 /**
- * Monorepo path resolver
- */
-// const { p } = require('./index')(pkg)
-
-/**
  * Rollup Bundle
  */
 export default {

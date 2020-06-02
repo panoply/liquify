@@ -10,7 +10,7 @@
         "${workspaceRoot}/packages/clients/vscode/package/extension.js"
       ],
       "args": [
-        //"--disable-extensions",
+        "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceRoot}/packages/clients/vscode/package",
         "${workspaceRoot}/tests"
       ]

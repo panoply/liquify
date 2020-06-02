@@ -19,6 +19,7 @@
     "vscode-languageserver"
   ],
   "dependencies": {
+    "@liquify/cryptographer": "workspace:^0.0.0",
     "@liquify/liquid-language-specs": "workspace:^0.0.0",
     "cryptorjs": "^3.0.0",
     "netlicensing-client": "^1.2.21",

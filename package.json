@@ -10,7 +10,7 @@
   },
   "scripts": {
     "liquify": "liquify",
-    "dev": "rollup -c -w",
+    "devs": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "cli:dev": "pnpm run dev --filter ./build/cli/",
     "client:atom": "pnpm run build --filter ./packages/clients/atom/",

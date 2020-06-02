@@ -4,20 +4,11 @@ import commonjs from '@rollup/plugin-commonjs'
 import globs from '@liquify/rollup-plugin-globs'
 import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import { terser } from 'rollup-plugin-terser'
-import pkg from './package.json'
 
-/**
- * Monorepo path resolver
- */
-const { p } = require('@liquify/path-resolve')(pkg)
-
-/**
- * Rollup Bundle
- */
 export default {
-  input: p`src/index.js`,
+  input: 'src/index.js',
   output: {
-    file: p`package/server.js`,
+    file: 'package/server.js',
     format: 'cjs',
     sourcemap: process.env.prod ? false : 'inline'
   },
@@ -35,15 +26,15 @@ export default {
   plugins: plugins([
     commonjs(),
     globs({
-      globs: p([
+      globs: [
         'package.json',
         'readme.md',
         'changelog.md',
         'ThirdPartyNotices.txt',
         'LICENSE',
         'shopify-sections.json'
-      ]),
-      dest: p`package`,
+      ],
+      dest: 'package',
       transform: p({
         LICENSE: '[name].txt',
         '*.json': ({ content }) => ({
