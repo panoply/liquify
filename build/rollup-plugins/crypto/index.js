@@ -31,8 +31,6 @@ export default function (options = {}) {
         delete config.input[prop]
       }
 
-      console.log(config.input)
-
       return config
 
     },

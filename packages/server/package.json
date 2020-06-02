@@ -19,9 +19,7 @@
   "dependencies": {
     "@liquify/cryptographer": "workspace:^0.0.0",
     "@liquify/liquid-language-specs": "workspace:^0.0.0",
-    "cryptorjs": "^3.0.0",
     "netlicensing-client": "^1.2.21",
-    "node-fetch": "^2.6.0",
     "prettydiff": "^101.2.6",
     "vscode-css-languageservice": "^4.1.1",
     "vscode-emmet-helper": "^1.2.17",
@@ -37,6 +35,7 @@
   "devDependencies": {
     "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
-    "@rollup/plugin-commonjs": "^12.0.0"
+    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0"
   }
 }

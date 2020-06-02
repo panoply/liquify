@@ -15,7 +15,7 @@ export default {
       sourcemap: process.env.prod ? false : 'inline'
     }
   ],
-  external: [ ...Object.keys(pkg.dependencies), 'path' ],
+  external: [ ...Object.keys(pkg.dependencies), 'path', 'crypto' ],
   plugins: [
     terser({
       ecma: 6

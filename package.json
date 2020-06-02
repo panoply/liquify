@@ -9,8 +9,9 @@
     "pnpm": ">=5"
   },
   "scripts": {
-    "dev": "pnpm run watch -r --stream --no-sort --workspace-concurrency Infinity",
-    "build": "pnpm run build -r --stream --no-sort --workspace-concurrency Infinity",
+    "dev": "pnpm run watch -r --stream  --filter ./packages/ --no-sort --workspace-concurrency Infinity",
+    "dev:build": "pnpm run build -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
+    "build:build": "pnpm run build -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
     "semantic-release": "semantic-release",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

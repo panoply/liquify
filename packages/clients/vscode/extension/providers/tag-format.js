@@ -2,9 +2,7 @@ import {
   workspace,
   window,
   SnippetString,
-  Range,
-  commands,
-  languages
+  Range
 } from 'vscode'
 
 class Spacer {

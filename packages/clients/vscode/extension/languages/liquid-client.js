@@ -1,7 +1,7 @@
 import {
   workspace, commands, Uri
 } from 'vscode'
-import { TransportKind, LanguageClient, RequestType } from 'vscode-languageclient'
+import { TransportKind, LanguageClient } from 'vscode-languageclient'
 import { addspacer } from '../providers/tag-format'
 import HTMLClient from './html-client'
 import path from 'path'

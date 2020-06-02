@@ -2,6 +2,7 @@ import { terser } from 'rollup-plugin-terser'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import crypto from '@liquify/rollup-plugin-crypto'
+import pkg from './package.json'
 
 export default {
   input: {
@@ -16,6 +17,7 @@ export default {
       sourcemap: process.env.prod ? false : 'inline'
     }
   ],
+  external: [ 'crypto' ],
   plugins: [
     crypto({
       main: 'standard',

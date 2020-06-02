@@ -13,7 +13,9 @@ export default {
   external: [
     'vscode',
     'vscode-languageclient',
-    'liquid-language-server'
+    'liquid-language-server',
+    'path',
+    'fs'
   ],
   plugins: plugins([
     globs({

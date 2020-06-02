@@ -1,7 +1,6 @@
 // @ts-check
 
 import _ from 'lodash'
-import url from 'url'
 import {
   getCSSLanguageService,
   getSCSSLanguageService,

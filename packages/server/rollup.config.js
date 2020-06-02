@@ -1,6 +1,7 @@
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
+import resolve from '@rollup/plugin-node-resolve'
 import globs from '@liquify/rollup-plugin-globs'
 import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import { terser } from 'rollup-plugin-terser'
@@ -21,13 +22,17 @@ export default {
     'vscode-json-languageservice',
     'vscode-languageserver',
     'vscode-languageserver-textdocument',
-    'vscode-uri'
+    'vscode-uri',
+    'fs',
+    'perf_hooks',
+    'path'
   ],
   plugins: plugins([
     json({
       preferConst: true,
       compact: !!process.env.prod
     }),
+    resolve(),
     commonjs(),
     globs({
       globs: [
@@ -47,7 +52,8 @@ export default {
       }
     }),
     babel({
-      babelHelpers: 'runtime'
+      babelHelpers: 'runtime',
+      configFile: './.babelrc'
     })
   ],
   [
