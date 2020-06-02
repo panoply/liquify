@@ -22,7 +22,7 @@
     "liquify": "./bin/liquify",
     "cli": "node package/index.js",
     "dev": "rollup -c -w",
-    "build": "rollup -c",
+    "_build": "rollup -c",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",

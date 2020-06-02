@@ -24,6 +24,10 @@ export default {
     'vscode-uri'
   ],
   plugins: plugins([
+    json({
+      preferConst: true,
+      compact: !!process.env.prod
+    }),
     commonjs(),
     globs({
       globs: [
@@ -35,16 +39,12 @@ export default {
         'shopify-sections.json'
       ],
       dest: 'package',
-      transform: p({
+      transform: {
         LICENSE: '[name].txt',
         '*.json': ({ content }) => ({
           content: jsonmin(content.toString())
         })
-      })
-    }),
-    json({
-      preferConst: true,
-      compact: !!process.env.prod
+      }
     }),
     babel({
       babelHelpers: 'runtime'

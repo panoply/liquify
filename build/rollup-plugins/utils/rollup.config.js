@@ -1,14 +1,7 @@
 import { terser } from 'rollup-plugin-terser'
-// import pkg from './package.json'
+import commonjs from '@rollup/plugin-commonjs'
+import pkg from './package.json'
 
-/**
- * Monorepo path resolver
- */
-// const { p } = require('../../path-resolve/package/index.cjs')(pkg)
-
-/**
- * Rollup Bundle
- */
 export default [
   {
     input: 'index.js',
@@ -16,10 +9,17 @@ export default [
       {
         format: 'cjs',
         file: 'package/index.cjs.js',
-        sourcemap: !process.env.prod
+        sourcemap: process.env.prod ? false : 'inline'
+      },
+      {
+        format: 'es',
+        file: 'package/index.es.js',
+        sourcemap: process.env.prod ? false : 'inline'
       }
     ],
+    external: Object.keys(pkg.dependencies),
     plugins: [
+      commonjs(),
       terser({
         ecma: 6
         , warnings: 'verbose'

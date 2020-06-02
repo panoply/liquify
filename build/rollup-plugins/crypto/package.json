@@ -5,7 +5,7 @@
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
   "main": "./package/index.cjs.js",
-  "module": "package/index.es.js",
+  "module": "./package/index.es.js",
   "private": false,
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
     "url": "https://github.com/panoply/liquify/issues"
   },
   "scripts": {
-    "dev": "rollup -c -w",
+    "watch": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c --environment prod",
@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
-    "@liquify/path-resolve": "workspace:^0.0.0",
     "ava": "^3.8.2",
     "rollup-plugin-terser": "^6.0.1"
   },

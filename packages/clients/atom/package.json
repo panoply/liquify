@@ -9,6 +9,10 @@
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
+  "scripts": {
+    "_watch": "rollup -c -w",
+    "_build": "rollup -c --environment prod"
+  },
   "dependencies": {
     "atom-languageclient": "^0.9.9"
   },

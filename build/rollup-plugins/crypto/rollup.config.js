@@ -1,28 +1,21 @@
 import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 
-/**
- * Monorepo path resolver
- */
-const { p } = require('@liquify/path-resolve')(pkg)
-
-/**
- * Rollup Bundle
- */
 export default {
-  input: p`index.js`,
+  input: 'index.js',
   output: [
     {
       format: 'cjs',
-      file: p(pkg.main),
+      file: pkg.main,
       sourcemap: process.env.prod ? false : 'inline'
     },
     {
       format: 'module',
-      file: p(pkg.module),
+      file: pkg.module,
       sourcemap: process.env.prod ? false : 'inline'
     }
   ],
+  external: [ ...Object.keys(pkg.dependencies), 'path' ],
   plugins: [
     terser({
       ecma: 6

@@ -14,9 +14,8 @@
     "url": "https://github.com/panoply/vscode-liquid/issues"
   },
   "scripts": {
-    "dev": "rollup -c -w",
-    "watch": "rollup -c -w",
-    "build": "rollup -c",
+    "_watch": "rollup -c -w",
+    "_build": "rollup -c --environment prod",
     "prebuild": "rollup -i index.js -o package/index.cjs.js -f cjs --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --watch --verbose"

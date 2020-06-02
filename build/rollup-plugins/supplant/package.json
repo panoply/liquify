@@ -15,8 +15,8 @@
     "url": "https://github.com/panoply/liquify/issues"
   },
   "scripts": {
-    "dev": "rollup -c -w",
-    "builds": "rollup -c --environment prod",
+    "_watch": "rollup -c -w",
+    "_build": "rollup -c --environment prod",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c--environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
@@ -29,7 +29,6 @@
     ]
   },
   "devDependencies": {
-    "@liquify/path-resolve": "workspace:^0.0.0",
     "rollup-plugin-terser": "^6.0.1"
   },
   "dependencies": {

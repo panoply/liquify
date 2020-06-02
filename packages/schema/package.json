@@ -4,8 +4,8 @@
   "description": "JSON Schema Store files for the Liquify IDE package/extension",
   "main": "./package/index.js",
   "scripts": {
-    "watch": "liquify -i stores -o package -w",
-    "buildss": "liquify -i stores -o package -w",
+    "_watch": "liquify -i stores -o package -w",
+    "_buildss": "liquify -i stores -o package -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nikolas Savvidis <nicos@gmx.com>",
