@@ -2,7 +2,8 @@
 
 import _ from 'lodash'
 import fs from 'fs'
-import path from 'path'
+import { readFileSync, exists } from 'fs-extra'
+import { basename } from 'path'
 import { Config } from './config'
 import { Expressions } from '../parser/lexical'
 import { propLevels } from '../utils/functions'
@@ -17,9 +18,6 @@ import specs from '@liquify/liquid-language-specs'
  * @typedef {import('vscode-languageserver').ServerCapabilities} ServerCapabilities
  * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
  * @typedef {import('vscode-languageserver').TextEdit} TextEdit
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ServerConfigureParams} ServerConfigureParams
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').FormattingRules} FormattingRules
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ValidationPromises} ValidationPromises
  * @class LiquidServer
  * @extends {Config}
  */
@@ -32,35 +30,27 @@ export class LiquidServer extends Config {
    * @param {ServerCapabilities} capabilities
    * @memberof LiquidServer
    */
-  async capabilities (initializeParams, capabilities) {
-
-    const spec = await specs('sissel siv')
-
-    console.log(spec.shopify())
-
-    const {
-      initializationOptions: {
-        service = null,
-        rcfile = null
-      },
-      capabilities: {
-        textDocument,
-        workspace
-      }
-    } = initializeParams
-
-    // Language Services
-    Object.assign(this.service, service)
-
-    // Location of `.liquidrc` file
-    this.rcfile = rcfile
+  async capabilities ({
+    initializationOptions: {
+      service = null
+      , license = 'sissel siv'
+      , rcfile = null
+    },
+    capabilities: {
+      textDocument
+      , workspace
+    }
+  }, capabilities) {
 
     // Completion capabilities
     textDocument.completion.contextSupport = true
     textDocument.completion.dynamicRegistration = true
     textDocument.completion.completionItem.snippetSupport = true
 
-    // Workspace configuration patches
+    this.rcfile = rcfile
+    this.license = await this.#authenticate(license)
+    this.service = { ...this.service, ...service }
+
     this.hasConfigurationCapability = !!(workspace && !!workspace.configuration)
     this.hasWorkspaceFolderCapability = !!(workspace && !!workspace.workspaceFolders)
     this.hasDiagnosticRelatedInformationCapability = !!(
@@ -112,29 +102,31 @@ export class LiquidServer extends Config {
   configure (event, settings) {
 
     return ({
-      onDidChangeWatchedFiles: (
-        { changes: [ { uri } ] }
-      ) => ((
-        path.basename(this.rcfile) === path.basename(uri)
-      ) && (
+      onDidChangeWatchedFiles: ({ changes: [ { uri } ] }) => {
+
+        if (basename(this.rcfile) !== basename(uri)) return null
+
         this.#setUserSettings()
-      )),
-      onDidChangeConfiguration: ({ liquid }) => (
-        this
-        .#setProviders(liquid)
-        .#setUserSettings()
-      )
+
+      },
+      onDidChangeConfiguration: ({ liquid }) => {
+
+        this.#setProviders(liquid)
+        this.#setUserSettings()
+
+      }
+
     }[event])(settings)
 
   }
 
-  #rcfileReadSync = () => {
+  #rcfile = rcfile => {
 
-    if (!this.rcfile) return false
+    if (!rcfile) return false
 
     try {
 
-      const read = fs.readFileSync(this.rcfile, 'utf8')
+      const read = readFileSync(rcfile).toString()
       const rules = JSON.parse(require('strip-json-comments')(read), null)
 
       return rules
@@ -144,6 +136,11 @@ export class LiquidServer extends Config {
       return console.error(error.toString())
 
     }
+  }
+
+  #authenticate = license => {
+
+    return license
 
   }
 
@@ -154,16 +151,11 @@ export class LiquidServer extends Config {
    */
   #setProviders = liquid => {
 
-    Object.entries(liquid).forEach(([
-      prop,
-      setting
-    ]) => (
-      _.has(this.provider, prop) && _.has(setting, 'enable')
-    ) && (
-      this.provider[prop] = setting.enable
-    ))
-
-    return this
+    for (const [ prop, setting ] of Object.entries(liquid)) {
+      if (this.provider?.[prop] && setting?.enable) {
+        this.provider[prop] = setting.enable
+      }
+    }
 
   }
 
@@ -176,43 +168,15 @@ export class LiquidServer extends Config {
    */
   #setUserSettings = () => {
 
-    const settings = this.#rcfileReadSync()
-
-    console.log(settings)
+    const settings = this.#rcfile(this.rcfile)
 
     if (!settings) return null
 
-    // Set Readable Engine Label
-    // Used for Diagnostics and Hover descriptions
-    settings.engineLabel = `\n${_.upperFirst(settings.engine)} Liquid`
+    this.engine = settings.engine
+    this.engineLabel = `\n${_.upperFirst(settings.engine)} Liquid`
 
-    return this
-    .#setVariationEngine(settings.engine)
-    .#setDiagnosticRules(settings.validate)
-    .#setFormattingRules(settings.format)
-
-  }
-
-  /**
-   * Set Variation Engine - Sets the specification references
-   *
-   * @param {string} engine
-   * @memberof LiquidServer
-   */
-  #setVariationEngine = (engine) => {
-
-    // Return early if engine has not changed
-    if (this.engine === engine) return this
-
-    this.engine = engine
-
-    const { spec, parse } = require('@liquify/liquid-language-specs')
-
-    this.specification = spec
-
-    return this
-    .#setParsingConfig(parse)
-    .#setSpecification()
+    this.#setSpecification()
+    this.#setFormattingRules(settings.format)
 
   }
 
@@ -222,17 +186,25 @@ export class LiquidServer extends Config {
    * @param {object} parse
    * @memberof LiquidServer
    */
-  #setParsingConfig = (parse) => {
+  #setParsingConfig = () => {
 
     const { blocks, html, output, comments, frontmatter } = Expressions
 
+    const objects = Object
+    .entries(this.specification)
+    .filter(([ prop, { type } ]) => type === 'object')
+    .map(([ prop ]) => prop)
+
+    const filters = Object
+    .entries(this.specification)
+    .filter(([ prop, { type } ]) => type === 'filter')
+    .map(([ prop ]) => prop)
+
     this.parsing = {
       parsing: new RegExp(`${html}|${blocks}|${output}`, 'g'),
-      objects: new RegExp(`\\b(${parse.objects.join('|')})\\.?(\\b[\\w-.]+)?`, 'g'),
-      filters: new RegExp(parse.filters.join('|'), 'g')
+      objects: new RegExp(`\\b(${objects.join('|')})\\.?(\\b[\\w-.]+)?`, 'g'),
+      filters: new RegExp(filters.join('|'), 'g')
     }
-
-    return this.#setSpecification()
 
   }
 
@@ -241,29 +213,17 @@ export class LiquidServer extends Config {
    *
    * @memberof LiquidServer
    */
-  #setSpecification = () => {
+  #setSpecification = async () => {
 
-    for (const prop in this.specification) {
+    this.specification = await (await specs(this.license))[this.engine]()
 
-      const spec = this.specification[prop]
-
-      // Mark all tag kinds as liquid is `kind` property is not defined
-      !_.has(spec, 'kind') && (spec.kind = 'liquid')
-
-      // Extract types
-      _.has(spec, 'types') && (spec.types = spec.types.map(({ name }) => (name)))
-
-      // Extract properties
-      _.has(spec, 'properties') && (
-        spec.props = _.isArray(spec.properties)
-          ? spec.properties.map(propLevels)
-          : spec.properties || true
-      )
-
+    for (const spec of Object.values(this.specification)) {
+      spec.kind = spec?.kind || 'liquid'
+      spec.types = !spec?.types || spec.types.map(({ name }) => name)
+      spec.props = !spec?.properties || spec.properties.map(propLevels)
     }
 
-    return this
-
+    return this.#setParsingConfig()
   }
 
   /**
@@ -281,8 +241,6 @@ export class LiquidServer extends Config {
       }
     } of Object.values(validations)) Object.assign(rules, userRules[group])
 
-    return this
-
   }
 
   /**
@@ -292,7 +250,7 @@ export class LiquidServer extends Config {
    * @param {object} userFormatRules
    * @memberof Config
    */
-  #setFormattingRules = (userFormatRules) => {
+  #setFormattingRules = userFormatRules => {
 
     for (const language in userFormatRules) {
 
@@ -300,24 +258,27 @@ export class LiquidServer extends Config {
 
       if (rules?.tags) {
         for (const associate of rules.tags) {
-          Object.assign(associate, { language, type: 'associate' })
-          this.formatRules.associateTags.push({ ...associate })
+          this.formatRules.associateTags.push({
+            ...associate
+            , language
+            , type: 'associate'
+          })
         }
       }
 
       if (this.formatRules.customRules?.[language]) {
         this.formatRules.customRules[language] = _.pick(
           rules
-          , _.keys(this.formatRules.customRules[language])
+          , Object.keys(this.formatRules.customRules[language])
         )
       }
 
       if (this.formatRules.languageRules?.[language]) {
-        Object.assign(
-          this.formatRules.languageRules[language]
-          , _.omit(rules, this.formatRules.excludedRules)
-          , this.formatRules.editorRules
-        )
+        this.formatRules.languageRules[language] = {
+          ...this.formatRules.languageRules[language]
+          , ..._.omit(rules, this.formatRules.excludedRules)
+          , ...this.formatRules.editorRules
+        }
       }
     }
 

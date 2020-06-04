@@ -21,9 +21,8 @@ const closest = (index, { offset }) => offset.reduce((prev, current) => (
  * @param {import('vscode-languageserver-textdocument').TextDocument} document
  * @returns
  */
-export default async (
+export default (
   document
-  , ast
   , {
     text
     , rangeLength
@@ -34,9 +33,8 @@ export default async (
   }
 ) => {
 
-  ast = scan(document, undefined, ast, undefined)
-
-  console.log(ast)
+  // ast = scan(document, undefined, undefined)
+  return scan(document, undefined, undefined)
   if (!ast.length) {
     ast = scan(document, undefined, ast, undefined)
     return ast
@@ -49,8 +47,6 @@ export default async (
     parse.inRange(start, offset[0], offset[1]) ||
     parse.inRange(start, offset[2], offset[3])
   ))
-
-  console.log(astIndex)
 
   if (astIndex > 0) {
 
@@ -71,10 +67,7 @@ export default async (
       }
 
       // Extract the changed text
-      const content = getText(
-        ast[astIndex].offset[$1]
-        , ast[astIndex].offset[$2] + text.length
-      )
+      const content = getText(ast[astIndex].offset[$1], ast[astIndex].offset[$2] + text.length)
 
       // Re-parse the changed token
       const [ node ] = scan(document, content, record, ast[astIndex].offset[$1])
@@ -111,37 +104,51 @@ export default async (
     // Get the index of the nearest changed token
     const index = ast.findIndex(({ offset: [ offset ] }) => offset > start)
 
-    // Retrive all backward nodes, which are pre change offset index
-    const backward = ast[index].offset[ast[index].offset.length - 1]
+    if (index >= 0) {
 
-    // Retrive all forward nodes, which are post change offset index
-    const forward = ast.filter(({ offset }) => (backward > offset[offset.length - 1]))
+      // Retrive all backward nodes, which are pre change offset index
+      const backward = ast[index].offset[ast[index].offset.length - 1]
 
-    // Retrive the nodes that require increment
-    // Will grab all nodes after the last change node offset
-    // We will increment this by 1 to skip the current node
-    const append = ast.slice(index + forward.length + 1)
+      // Retrive all forward nodes, which are post change offset index
+      const forward = ast.filter(({ offset }) => (backward > offset[offset.length - 1]))
 
-    // Remove all nodes
-    ast.splice(index).push(...append)
+      // Retrive the nodes that require increment
+      // Will grab all nodes after the last change node offset
+      // We will increment this by 1 to skip the current node
+      const append = ast.slice(index + forward.length + 1)
 
-    // Push all nodes
-    ast.push(...append)
+      // Remove all nodes
+      ast.splice(index).push(...append)
 
-    // Decrement all nodes
-    for (let i = 0; i < ast.length; i++) {
-      if (ast[i].offset[0] >= start) {
-        ast[i].offset = ast[i].offset.map(increment)
-      } else if (ast[i].offset.length > 2 && ast[i].offset[2] >= start) {
-        ast[i].offset = [
-          ...ast[i].offset.slice(0, 2)
-          , ...ast[i].offset.slice(2).map(increment)
-        ]
+      // Push all nodes
+      // ast.push(...append)
+
+      // Decrement all nodes
+      for (let i = 0; i < ast.length; i++) {
+        if (ast[i].offset[0] >= start) {
+          ast[i].offset = ast[i].offset.map(increment)
+        } else if (ast[i].offset.length > 2 && ast[i].offset[2] >= start) {
+          ast[i].offset = [
+            ...ast[i].offset.slice(0, 2)
+            , ...ast[i].offset.slice(2).map(increment)
+          ]
+        }
       }
-    }
 
-    console.log(ast)
-    // return
+      // return
+      if (ast.length === 1) {
+        if (ast[0].offsets[0] === 0 && ast[0].offsets[1] === 0) {
+          ast = []
+          return ast
+        }
+      }
+
+      return ast
+
+    }
+    // console.log(ast)
+
+    ast = []
     return ast
 
   } else if (text.length > 2 && /[{%}]/g.test(text)) {

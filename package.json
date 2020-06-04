@@ -42,12 +42,6 @@
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.0"
     },
-    "./path-resolve": {
-      "path": "build/path-resolve",
-      "name": "@liquify/path-resolve",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.0"
-    },
     "./crypto": {
       "path": "build/rollup-plugins/crypto",
       "name": "@liquify/rollup-plugin-crypto",
@@ -92,7 +86,7 @@
     },
     "./server": {
       "path": "packages/server",
-      "name": "liquid-language-server",
+      "name": "@liquify/liquid-language-server",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"
     },

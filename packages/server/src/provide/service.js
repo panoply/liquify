@@ -3,7 +3,8 @@
 import _ from 'lodash'
 import { TextEdit, Position } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { Documents, Server } from '../export'
+import Documents from '../provide/document'
+import { Server } from '../export'
 import { CSSService } from '../service/modes/css'
 import { SCSSService } from '../service/modes/scss'
 import { JSONService } from '../service/modes/json'
@@ -79,12 +80,12 @@ export class LiquidService {
   async doValidation (document, { diagnostics }) {
 
     // disabled temporarily
-    if (!diagnostics) {
+    /* if (!diagnostics) {
       return {
         uri: document.uri,
         diagnostics: []
       }
-    }
+    } */
 
     // const embedded = Documents.getEmbeddedDocuments(document.uri, false)
     const embedded = []
@@ -109,45 +110,48 @@ export class LiquidService {
   /**
    * Formats
    *
-   * @param {TextDocument} document
-   * @param {FormattingRules} formattingRules
+   * @paramz {TextDocument} document
+   * @paramz {FormattingRules} formattingRules
    * @returns
    * @memberof LiquidService
    */
-  doFormat (document, formattingRules) {
-
-    const { languageId, version, uri } = document
+  doFormat ({ textDocument, embedded }, formattingRules) {
 
     // const filename = path.basename(uri)
     // if (settings.ignore.files.includes(filename)) return
 
-    const embedded = Documents.getEmbeddedDocuments(uri)
+    const { uri, version, languageId } = textDocument
+    const embeds = embedded.values()
 
-    if (!embedded) return null
+    console.log(embeds)
+    if (!embeds) return null
 
-    const content = document.getText()
+    const content = textDocument.getText()
     const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
-    const regions = _.flatMap(embedded, embed => Format.embeds(literal, embed))
-    const formats = Format.markup(TextDocument.applyEdits(literal, regions))
-    const replace = { start: Position.create(0, 0), end: document.positionAt(content.length) }
+    const regions = _.flatMap(embeds, embed => Format.embeds(literal, embed))
 
     // Replace formatting edits - MUST BE RETURNED AS ARRAY
-    return [ TextEdit.replace(replace, formats) ]
+    return [
+      TextEdit.replace(
+        {
+          start: Position.create(0, 0),
+          end: textDocument.positionAt(content.length)
+        }
+        , Format.markup(TextDocument.applyEdits(literal, regions))
+      )
+    ]
 
   }
 
   /**
    * `doHover`
    *
-   * @param {TextDocument} document
-   * @param {Position} position
    * @returns
    * @memberof LiquidService
    */
-  doHover (document, position) {
+  doHover ({ textDocument, embedded }, position) {
 
-    const offset = document.offsetAt(position)
-    const [ embed = false ] = Documents.embeds(document.uri, offset)
+    const embed = embedded.get('json')
 
     if (embed && this.modes?.[embed.languageId]) {
       if (this.modes[embed.languageId]) {
@@ -157,7 +161,7 @@ export class LiquidService {
       }
     }
 
-    const name = Hover.getWordAtPosition(document, position)
+    const name = Hover.getWordAtPosition(textDocument, position)
 
     if (!Server.specification[name]) return null
 
@@ -179,33 +183,29 @@ export class LiquidService {
   /**
    * `doComplete`
    *
-   * @param {TextDocument} document
-   * @param {Position} position
-   * @param {CompletionContext} context
+   * @paramz {CompletionContext} contextsss
    * @memberof LiquidService
    */
   async doComplete (document, position, { triggerKind }) {
 
-    const { uri } = document
-    const offset = document.offsetAt(position)
-    const [ embed = false ] = Documents.embeds(uri, offset)
+    const { ast, textDocument, embedded } = document
+    const offset = textDocument.offsetAt(position)
+    const embeds = embedded.values()
 
     let doComplete
 
-    if (embed && _.has(this.modes, embed.languageId)) {
-      const { languageId } = embed
+    if (embeds && _.has(this.modes, embeds.languageId)) {
+      const { languageId } = embeds
       if (this.modes[languageId]) {
-        doComplete = await this.modes[languageId].doComplete(embed, position)
+        doComplete = await this.modes[languageId].doComplete(embeds, position)
         doComplete.data = { languageId }
         return doComplete
       }
     }
 
-    const [ node ] = Documents.get(offset)
+    if (!ast) return null
 
-    if (!node) return null
-
-    doComplete = Completion.getObjectCompletion(node, offset)
+    doComplete = Completion.getObjectCompletion(document, offset)
 
     return !doComplete || doComplete.map(Completion.setCompletionItems)
 

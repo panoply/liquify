@@ -12,7 +12,7 @@ import { TokenTag, TokenType } from './lexical'
  * opposed the full document.
  *
  * @param {import('vscode-languageserver-textdocument').TextDocument}  textDocument
- * @param {import('../../../release/vscode-liquify/server/node_modules/defs').AST[]} ast
+ * @param {import('defs').AST[]} ast
  * @param {object} options
  * @returns
  */
@@ -90,16 +90,19 @@ export default (textDocument, ast) => ({
     tokenNode
     , tokenSpec
     , parentNode = _.findLast(ast, { tag: TokenTag.start })
-  ) => (!parentNode ? false : tokenSpec.within.includes(tokenNode.name) && {
-    ...parentNode,
-    children: [
-      ...parentNode.children,
-      {
-        ...tokenNode,
-        objects: setTokenObjects(tokenNode.offset[0], tokenNode.token)
-      }
-    ]
-  }),
+  ) => {
+
+    // if (!parentNode) return false
+
+    parentNode.children.push({
+      ...tokenNode,
+      objects: setTokenObjects(tokenNode.offset[0], tokenNode.token)
+    })
+
+    console.log(parentNode)
+
+    return parentNode
+  },
 
   /**
    * Embedded Token

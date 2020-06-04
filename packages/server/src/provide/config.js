@@ -7,17 +7,19 @@ import { License } from './license'
  * presets defined here are defaults and will maintain server configuration state.
  *
  * @export
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').Specification} Specification
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').FormattingRules} FormattingRules
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ValidationRules} ValidationRules
- * @class Config {
  */
 export class Config extends License {
 
   /**
+   * Engine Variation Spec, eg: `standard` | `shopify` | `jekyll`
+   *
+   * @type {string}
+   */
+  engine = null
+
+  /**
    * Specification References
    *
-   * @type {Specification}
    * @memberof Config
    */
   specification = null
@@ -28,13 +30,6 @@ export class Config extends License {
    * @type {string}
    */
   rcfile = null
-
-  /**
-   * Engine Variation Spec, eg: `standard` | `shopify` | `jekyll`
-   *
-   * @type {string}
-   */
-  engine = 'standard'
 
   /**
    * Server Document Settings - Records settings of documents
@@ -296,6 +291,8 @@ export class Config extends License {
 
     /**
      * Excluded Rules - Formatting Rules to be omitted on assignment
+     *
+     * @readonly
      */
     excludedRules: [
       'mode',
@@ -462,7 +459,7 @@ export class Config extends License {
   *
   * @type {ValidationRules}
   */
-  validate = {
+  linter = {
 
     tag: {
 

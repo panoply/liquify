@@ -6,6 +6,8 @@
       "request": "launch",
       "name": "Client",
       "runtimeExecutable": "${execPath}",
+      "stopOnEntry": false,
+      "sourceMaps": true,
       "outFiles": [
         "${workspaceRoot}/packages/clients/vscode/package/extension.js"
       ],
@@ -19,10 +21,15 @@
       "name": "Server",
       "type": "node",
       "request": "attach",
-      "port": 6007,
+      "port": 6080,
       "protocol": "inspector",
+      "cwd": "${workspaceFolder}/packages/server/src/",
       "restart": true,
-      "outFiles": ["${workspaceRoot}/packages/server/package/server.js"]
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceRoot}/packages/server/package/server.js",
+        "${workspaceRoot}/packages/server/package/server.js.map"
+      ]
     }
   ],
   "compounds": [

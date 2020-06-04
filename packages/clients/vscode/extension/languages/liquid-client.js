@@ -38,7 +38,7 @@ function getLiquidrcFile () {
 
   const root = getWorkspaceRoot()
 
-  const rcfile = path.join(root, '.liquidrc')
+  const rcfile = path.join(root, '.liquidrc.json')
   if (!fs.existsSync(rcfile, 'utf8')) {
     return false
   }
@@ -124,7 +124,7 @@ export default (context) => {
       }
     ],
     synchronize: {
-      fileEvents: workspace.createFileSystemWatcher('**/.liquidrc'),
+      fileEvents: workspace.createFileSystemWatcher('**/.liquidrc.json'),
       configurationSection: [
 
         /**
@@ -177,6 +177,8 @@ export default (context) => {
       ]
     },
     initializationOptions: {
+
+      secret: 'sissel siv',
 
       /**
        * Runtime configuration `.liquidrc` file path

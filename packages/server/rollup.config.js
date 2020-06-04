@@ -1,7 +1,8 @@
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
-import resolve from '@rollup/plugin-node-resolve'
+import { join } from 'path'
+import noderesolve from '@rollup/plugin-node-resolve'
 import globs from '@liquify/rollup-plugin-globs'
 import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import { terser } from 'rollup-plugin-terser'
@@ -11,9 +12,10 @@ export default {
   output: {
     file: 'package/server.js',
     format: 'cjs',
-    sourcemap: process.env.prod ? false : 'inline'
+    sourcemap: true
   },
   external: [
+    'lodash',
     '@liquify/liquid-language-specs',
     'prettydiff',
     'vscode-languageserver',
@@ -32,7 +34,7 @@ export default {
       preferConst: true,
       compact: !!process.env.prod
     }),
-    resolve(),
+    process.env.prod ? noderesolve() : null,
     commonjs(),
     globs({
       globs: [

@@ -11,6 +11,7 @@
     ]
   ],
   "sourceMaps": true,
+  "inputSourceMap": true,
   "retainLines": true,
   "plugins": [
     "lodash",

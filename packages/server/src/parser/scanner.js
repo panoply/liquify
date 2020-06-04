@@ -1,10 +1,11 @@
 // @ts-nocheck
 import _ from 'lodash'
-import { Characters, TokenTag } from './lexical'
-import tokenizer from './tokenize'
+import { TextDocument } from 'vscode-languageserver-textdocument'
+import { setTokenObjects } from './utils'
+import { Characters, TokenTag, TokenKind, TokenType } from './lexical'
 import * as parse from './utils'
 
-const regexp = /<\/?\b(script|style)\b[^<>]*>|{%[\s\S]*?\b(?:end)?(\w+)\b[\s\S]?[^%]*?%}|{{2}[\s\S]*?\b(\w+)\b[\s\S]?[^{}]*?}{2}/g
+const regexp = /{%.\b(?:end)?(\w+)\b.?[^%]*?%}|{{2}.\b(\w+)\b.[^{}]*?}{2}|<\/?\b(script|style)\b(?:[^>]*|[^"']["'])*>/gs
 
 /**
  * Parser
@@ -14,69 +15,176 @@ const regexp = /<\/?\b(script|style)\b[^<>]*>|{%[\s\S]*?\b(?:end)?(\w+)\b[\s\S]?
  * offset starting position of that token, this allows for a more incremental parse
  * opposed the full document.
  *
- * @param {import('../../../release/vscode-liquify/server/node_modules/defs').DocumentModel} params
  * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} changes[]
  * @param {object} options
  * @returns
  */
-export default (
-  document
-  , content = document.getText()
-  , ast = []
-  , index = undefined
-) => {
+export default ({ ast, embedded, textDocument }, index = undefined) => {
 
-  const tokenize = tokenizer(document, ast)
+  const content = textDocument.getText()
+  const matches = content.matchAll(regexp)
+  const ASTNode = (
+    name
+    , token
+    , match
+  ) => ({
+    name
+    , token: [ token ]
+    , offset: typeof index === 'undefined' ? [
+      match.index
+      , match.index + token.length
+    ] : [
+      match.index + index
+      , match.index + token.length + index
+    ]
+  })
 
-  let match
-    , increment
-    , offset = 0
+  if (!matches) return ast
 
-  while ((match = regexp.exec(content)) !== null) {
+  let run = 0
 
-    if (match.index === regexp.lastIndex) regexp.lastIndex++
+  Array.from(matches, parseText)
+
+  /* -------------------------------------------- */
+  /*                   FUNCTIONS                  */
+  /* -------------------------------------------- */
+
+  /**
+   * Start Token
+   *
+   * @param {object} tokenNode
+   * @param {object} tokenSpec
+   */
+  function parseText (match) {
 
     const [ token, name ] = match.filter(Boolean)
     const spec = parse.getTokenSpec(token, name)
 
-    if (spec) {
+    if (!spec) return
 
-      const node = {
-        name,
-        token: [ token ],
-        offset: index ? [
-          match.index + index,
-          match.index + token.length + index
-        ] : [
-          match.index + offset,
-          match.index + offset + token.length
-        ]
-      }
+    const node = ASTNode(name, token, match)
 
-      spec.type === 'object' || spec?.singular
-        ? spec?.within
-          ? tokenize.childToken(node, spec)
-          : tokenize.singularToken(node, spec)
-        : parse.isTokenTagEnd(token, name)
-          ? tokenize.closeToken(node)
-          : tokenize.startToken(node, spec)
-
-      // if (node?.languageId && ast[ast.length]) tokenize.embeddedDocument(node)
-
-    }
-
-    //! index || offsets.push(...node.offset)
-    content = content.slice(regexp.lastIndex)
-    offset = offset === 0 ? regexp.lastIndex : offset + regexp.lastIndex
-    regexp.lastIndex = 0
+    return spec.type === 'object' || spec?.singular
+      ? spec?.within
+        ? childToken(node, spec)
+        : ast.push(singularToken(node, spec))
+      : parse.isTokenTagEnd(token, name)
+        ? closeToken(node)
+        : ast.push(startToken(node, spec))
 
   }
 
-  console.log(ast)
+  /**
+   * Start Token
+   *
+   * @param {object} tokenNode
+   * @param {object} tokenSpec
+   */
+  function startToken (tokenNode, tokenSpec) {
+
+    const type = TokenType[tokenSpec.type]
+
+    return (type === TokenType.control || type === TokenType.iteration) ? ({
+      ...tokenNode,
+      type,
+      tag: TokenTag.start,
+      children: []
+    }) : (type === TokenType.embedded || type === TokenType.associate) && ({
+      ...tokenNode,
+      type,
+      tag: TokenTag.start,
+      languageId: tokenSpec.language
+    })
+
+  }
 
   /**
-   * Return the composed AST record
+   * Start Token
+   *
+   * @param {object} tokenNode
    */
-  return ast
+  function closeToken (tokenNode) {
+
+    const parentNode = _.findLast(ast, { name: tokenNode.name, tag: TokenTag.start })
+
+    Object.assign(
+      !parentNode ? tokenNode : parentNode
+      , !parentNode ? { tag: TokenTag.close } : {
+        tag: TokenTag.pair,
+        token: [ parentNode.token[0], tokenNode.token[0] ],
+        offset: [ ...parentNode.offset, ...tokenNode.offset ]
+      }
+    )
+
+    if (parentNode?.languageId) embeddedDocument(parentNode, tokenNode)
+
+  }
+
+  /**
+   * Child Token
+   *
+   * @param {object} tokenNode
+   * @param {object} tokenSpec
+   */
+  function childToken (tokenNode, tokenSpec) {
+
+    const parentNode = _.findLast(ast, { tag: TokenTag.start })
+
+    if (!parentNode?.children) return
+
+    parentNode.children.push({
+      ...tokenNode,
+      objects: setTokenObjects(tokenNode.offset[0], tokenNode.token)
+    })
+
+    return parentNode
+
+  }
+
+  /**
+   * Singular Token
+   *
+   * @param {object} tokenNode
+   * @param {object} tokenSpec
+   */
+  function singularToken (tokenNode, tokenSpec) {
+
+    return ({
+      ...tokenNode,
+      tag: TokenTag.singular,
+      type: TokenType[tokenSpec.type]
+    })
+
+  }
+
+  /**
+   * Embedded Token
+   *
+   * @param {object} tokenNode
+   */
+  function embeddedDocument (parentNode, tokenNode) {
+
+    run = run + 1
+
+    const range = {
+      start: textDocument.positionAt(parentNode.offset[1]),
+      end: textDocument.positionAt(tokenNode.offset[0])
+    }
+
+    const uri = textDocument.uri.replace('.liquid', `_${run}_${parentNode.languageId}.tmp`)
+    const embed = TextDocument.create(
+      uri
+      , parentNode.languageId
+      , textDocument.version
+      , textDocument.getText(range)
+    )
+
+    embedded.set(uri, embed)
+
+    Object.assign(parentNode, {
+      lineOffset: range.start.line,
+      embeddedDocument: embedded.size
+    })
+  }
 
 }
