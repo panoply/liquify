@@ -263,6 +263,6 @@ export const setTokenObjects = (offset, token, map = {}) => {
 
   } while (regex)
 
-  return map.length && map
+  return map
 
 }

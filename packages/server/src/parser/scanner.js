@@ -1,8 +1,8 @@
 // @ts-nocheck
 import _ from 'lodash'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { setTokenObjects } from './utils'
 import { Characters, TokenTag, TokenKind, TokenType } from './lexical'
+import { Server } from '../export'
 import * as parse from './utils'
 
 const regexp = /{%.\b(?:end)?(\w+)\b.?[^%]*?%}|{{2}.\b(\w+)\b.[^{}]*?}{2}|<\/?\b(script|style)\b(?:[^>]*|[^"']["'])*>/gs
@@ -134,7 +134,7 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
 
     parentNode.children.push({
       ...tokenNode,
-      objects: setTokenObjects(tokenNode.offset[0], tokenNode.token)
+      objects: parseObjects(tokenNode.offset[0], tokenNode.token[0])
     })
 
     return parentNode
@@ -152,7 +152,9 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
     return ({
       ...tokenNode,
       tag: TokenTag.singular,
-      type: TokenType[tokenSpec.type]
+      type: TokenType[tokenSpec.type],
+      objects: parseObjects(tokenNode.offset[0], tokenNode.token[0])
+
     })
 
   }
@@ -185,6 +187,45 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
       lineOffset: range.start.line,
       embeddedDocument: embedded.size
     })
+  }
+
+  /**
+   * Get Token Objects
+   *
+   * This function will assign the offset indexes of Liquid objects used
+   * within tags which are used by validations and completion capabilities.
+   *
+   * @export
+   * @param {number} offset The current offset (used to fill position offset)
+   * @param {string} token The token (tag) to parse
+   * @param {object} [map] An empty object to assign (Default Paramater)
+   * @returns {Object|Boolean}
+   */
+
+  function parseObjects (offset, token) {
+
+    const objects = token.matchAll(Server.parsing.objects)
+
+    if (!objects) return null
+
+    const record = Array.from(objects).reduce((prop, match) => {
+
+      const [ position, property = 0 ] = match.filter(Boolean).slice(1)
+      const index = offset + match.index + property.length + 1
+
+      if (isNaN(index)) return prop
+
+      property
+        ? (prop[index + property.length] = [ position, ...property.split('.') ])
+        : (prop[index] = [ position ])
+
+      return prop
+
+    }, {})
+
+    console.log(record)
+
+    return record
   }
 
 }

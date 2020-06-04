@@ -188,7 +188,7 @@ export class LiquidService {
    */
   async doComplete (document, position, { triggerKind }) {
 
-    const { ast, textDocument, embedded } = document
+    const { textDocument, embedded } = document
     const offset = textDocument.offsetAt(position)
     const embeds = embedded.values()
 
@@ -203,9 +203,11 @@ export class LiquidService {
       }
     }
 
-    if (!ast) return null
+    const [ node ] = Documents.ASTNode(textDocument.uri, offset)
 
-    doComplete = Completion.getObjectCompletion(document, offset)
+    if (!node) return null
+
+    doComplete = Completion.getObjectCompletion(node, offset)
 
     return !doComplete || doComplete.map(Completion.setCompletionItems)
 

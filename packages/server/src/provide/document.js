@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 
 /**
@@ -13,6 +14,17 @@ export default (function () {
   return ({
 
     documents,
+
+    ASTNode: (uri, location) => {
+
+      const { ast } = documents.get(uri)
+      const index = ast.findIndex(({ offset }) => (
+        _.inRange(location, offset[0], offset[offset.length - 1])
+      ))
+
+      return [ ast[index], index ]
+
+    },
 
     /**
      * Create - Creates a documents of the text document

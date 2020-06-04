@@ -53,16 +53,16 @@ export function setCompletionItems (specification) {
  * offset index numbers and property value ear either string of array types.
  *
  * @export
- * @param {import('defs').AST} ASTnode
+ * @param {import('../../../release/vscode-liquify/server/node_modules/defs').AST} ASTnode
  * @param {number} offset
  * @returns {array|false}
  */
-export function getObjectCompletion ({ ast }, offset) {
+export function getObjectCompletion (ASTnode, offset) {
 
-  console.log(ast)
-  if (!ast?.objects) return false
+  console.log(ASTnode.objects, offset)
+  if (!ASTnode?.objects) return false
 
-  const prop = ast.objects[offset]
+  const prop = ASTnode.objects[offset]
 
   if (prop.length === 1) return Server.specification[prop[0]].properties
 

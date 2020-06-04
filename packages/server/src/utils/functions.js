@@ -24,8 +24,8 @@ export const closestValue = (
   , value
 ) => {
 
-  let result
-  let last
+  let result,
+    last
 
   array.some((item) => {
     const delta = Math.abs(value - item)
@@ -37,6 +37,25 @@ export const closestValue = (
   return result
 
 }
+
+/**
+ * In Range
+ *
+ * Checks if n is between start and up to, but not including, end.
+ *
+ * @param {number} offset
+ * @param {number} rangeStart
+ * @param {number} rangeEnd
+ */
+export const inRange = (
+  offset
+  , rangeStart
+  , rangeEnd = 0
+) => typeof rangeStart === 'number' && ((
+  rangeStart < offset && offset < rangeEnd
+) || (
+  rangeEnd < offset && offset < rangeStart
+))
 
 /**
  * Join an array of expressions
