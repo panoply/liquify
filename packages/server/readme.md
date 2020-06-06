@@ -72,6 +72,49 @@ Token types give reference to a tag.
 - Object
 - Variable
 
+### AST Nodes
+
+Nodes contained on the AST will return and object. Depending on what type of node (tag) that is parsed some properties may differ.
+
+```ts
+[
+  {
+    name: string
+    token: string[]
+    type: number
+    tag: number
+    offset: number[]
+    languageId?: string
+    lineOffset?: number
+    embeddedDocument?: number
+    children?: [
+      {
+        name: string
+        token: string
+        offset: number[]
+        type: number
+        tag: number
+        objects?: objects
+      }
+    ]
+    diagnostics: Promise< null | [
+      {
+        range: object;
+        severity?: number;
+        code?: number | string;
+        source?: string;
+        message: string;
+      }
+    ]>
+    objects?: Promise< null | {
+      [string: number]: [
+        string
+      ]
+    }>
+  }
+]
+```
+
 ## Language Services
 
 Supported language servers

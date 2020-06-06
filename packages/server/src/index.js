@@ -143,6 +143,7 @@ connection.onDidChangeTextDocument(({
 
   const changes = Document.update(document.textDocument, contentChanges)
 
+  document.ast = []
   const parsed = Parse.increment(document, ...changes)
 
   const v2 = performance.now()

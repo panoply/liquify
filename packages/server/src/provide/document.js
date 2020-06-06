@@ -19,7 +19,9 @@ export default (function () {
 
       const { ast } = documents.get(uri)
       const index = ast.findIndex(({ offset }) => (
-        _.inRange(location, offset[0], offset[offset.length - 1])
+        _.inRange(location, offset[0], offset[1]) ||
+        _.inRange(location, offset[2], offset[3]) ||
+        _.inRange(location, offset[1], offset[2])
       ))
 
       return [ ast[index], index ]

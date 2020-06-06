@@ -202,7 +202,7 @@ export class LiquidServer extends Config {
 
     this.parsing = {
       parsing: new RegExp(`${html}|${blocks}|${output}`, 'g'),
-      objects: new RegExp(`\\b(${objects.join('|')})\\.?(\\b[\\w-.]+)?`, 'g'),
+      objects: new RegExp(`\\b(?:${objects.join('|')})\\.?(?:[^\\s\\n]*\\b)?`, 'gm'),
       filters: new RegExp(filters.join('|'), 'g')
     }
 

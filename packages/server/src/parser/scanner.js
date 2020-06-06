@@ -5,7 +5,7 @@ import { Characters, TokenTag, TokenKind, TokenType } from './lexical'
 import { Server } from '../export'
 import * as parse from './utils'
 
-const regexp = /{%.\b(?:end)?(\w+)\b.?[^%]*?%}|{{2}.\b(\w+)\b.[^{}]*?}{2}|<\/?\b(script|style)\b(?:[^>]*|[^"']["'])*>/gs
+const regexp = /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}|{{2}-?\s*\b(\w+)\b.?(?:[^{}]{2})*-?}{2}|<\/?\b(script|style)\b[^<>]*>/gs
 
 /**
  * Parser
@@ -21,8 +21,21 @@ const regexp = /{%.\b(?:end)?(\w+)\b.?[^%]*?%}|{{2}.\b(\w+)\b.[^{}]*?}{2}|<\/?\b
  */
 export default ({ ast, embedded, textDocument }, index = undefined) => {
 
-  const content = textDocument.getText()
-  const matches = content.matchAll(regexp)
+  let run = 0
+
+  /* -------------------------------------------- */
+  /*                   FUNCTIONS                  */
+  /* -------------------------------------------- */
+
+  /**
+   * AST Node
+   *
+   * Helper function which will generate the global node
+   * defaults required by each token on the tree
+   *
+   * @param {object} tokenNode
+   * @param {object} tokenSpec
+   */
   const ASTNode = (
     name
     , token
@@ -38,16 +51,6 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
       , match.index + token.length + index
     ]
   })
-
-  if (!matches) return ast
-
-  let run = 0
-
-  Array.from(matches, parseText)
-
-  /* -------------------------------------------- */
-  /*                   FUNCTIONS                  */
-  /* -------------------------------------------- */
 
   /**
    * Start Token
@@ -88,7 +91,8 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
       ...tokenNode,
       type,
       tag: TokenTag.start,
-      children: []
+      children: [],
+      objects: parseObjects(tokenNode.offset[0], tokenNode.token[0])
     }) : (type === TokenType.embedded || type === TokenType.associate) && ({
       ...tokenNode,
       type,
@@ -154,7 +158,6 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
       tag: TokenTag.singular,
       type: TokenType[tokenSpec.type],
       objects: parseObjects(tokenNode.offset[0], tokenNode.token[0])
-
     })
 
   }
@@ -174,18 +177,22 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
     }
 
     const uri = textDocument.uri.replace('.liquid', `_${run}_${parentNode.languageId}.tmp`)
-    const embed = TextDocument.create(
-      uri
-      , parentNode.languageId
-      , textDocument.version
-      , textDocument.getText(range)
-    )
+    const embed = {
+      kind: parentNode.kind,
+      offset: parentNode.offset,
+      textDocument: TextDocument.create(
+        uri
+        , parentNode.languageId
+        , textDocument.version
+        , textDocument.getText(range)
+      )
+    }
 
     embedded.set(uri, embed)
 
     Object.assign(parentNode, {
       lineOffset: range.start.line,
-      embeddedDocument: embedded.size
+      embeddedDocument: uri
     })
   }
 
@@ -195,37 +202,38 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
    * This function will assign the offset indexes of Liquid objects used
    * within tags which are used by validations and completion capabilities.
    *
-   * @export
    * @param {number} offset The current offset (used to fill position offset)
    * @param {string} token The token (tag) to parse
-   * @param {object} [map] An empty object to assign (Default Paramater)
    * @returns {Object|Boolean}
    */
 
-  function parseObjects (offset, token) {
+  async function parseObjects (offset, token) {
 
-    const objects = token.matchAll(Server.parsing.objects)
+    const objects = Array.from(token.matchAll(Server.parsing.objects))
 
-    if (!objects) return null
+    if (!objects.length) return false
 
-    const record = Array.from(objects).reduce((prop, match) => {
+    return objects.reduce((object, match) => {
 
-      const [ position, property = 0 ] = match.filter(Boolean).slice(1)
-      const index = offset + match.index + property.length + 1
+      const props = match[0].split('.').filter(Boolean)
+      const position = offset + match.index + match[0].length
 
-      if (isNaN(index)) return prop
+      object[props.length > 1 ? position + 1 : position] = props
 
-      property
-        ? (prop[index + property.length] = [ position, ...property.split('.') ])
-        : (prop[index] = [ position ])
-
-      return prop
+      return object
 
     }, {})
 
-    console.log(record)
-
-    return record
   }
+
+  /* -------------------------------------------- */
+  /*                    EXECUTE                   */
+  /* -------------------------------------------- */
+
+  const matches = textDocument.getText().matchAll(regexp)
+
+  return !matches
+    ? ast
+    : Array.from(matches, parseText)
 
 }

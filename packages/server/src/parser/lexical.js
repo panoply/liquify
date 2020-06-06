@@ -19,6 +19,8 @@
 /**
  * Regular expressions used to parse the document,
  * we will connects these together at server intialisation
+ *
+ * @see https://regex101.com/r/xRMug9/6
  */
 export const Expressions = {
 
@@ -34,21 +36,21 @@ export const Expressions = {
    *
    * Liquid tag blocks or singular tags.
    */
-  blocks: /{%[\s\S]*?\b(?:end)?(\w+)\b[\s\S][^%]*?%}/.source,
+  blocks: /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}/.source,
 
   /**
    * `{{ tag }}`
    *
    *  Liquid singular output tags, generally objects
    */
-  output: /{{2}[\s\S]*?\b(\w+)\b[\s\S][^{}]*?}{2}/.source,
+  output: /{{2}-?\s*\b(\w+)\b.?(?:[^{}]{2})*-?}{2}/.source,
 
   /**
    * `<!-- text -->` or `/* text ` or `// text `
    *
    * HTML, JavaScript and CSS/SCSS comment tags
    */
-  comments: /(?:<!--|\/\*)[\s\S]*(?:\*\/|-->)/.source,
+  comments: /(?:<!--|\/\*).*?(?:\*\/|-->)/.source,
 
   /**
    * `---`

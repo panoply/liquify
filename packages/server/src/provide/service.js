@@ -115,7 +115,7 @@ export class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doFormat ({ textDocument, embedded }, formattingRules) {
+  doFormat ({ textDocument, embedded, ast }, formattingRules) {
 
     // const filename = path.basename(uri)
     // if (settings.ignore.files.includes(filename)) return
@@ -123,12 +123,14 @@ export class LiquidService {
     const { uri, version, languageId } = textDocument
     const embeds = embedded.values()
 
-    console.log(embeds)
     if (!embeds) return null
 
     const content = textDocument.getText()
     const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
-    const regions = _.flatMap(embeds, embed => Format.embeds(literal, embed))
+    const regions = _.flatMap(
+      Array.from(embedded),
+      ([ , embed ]) => Format.embeds(literal, embed)
+    )
 
     // Replace formatting edits - MUST BE RETURNED AS ARRAY
     return [
@@ -207,7 +209,7 @@ export class LiquidService {
 
     if (!node) return null
 
-    doComplete = Completion.getObjectCompletion(node, offset)
+    doComplete = await Completion.getObjectCompletion(node, offset)
 
     return !doComplete || doComplete.map(Completion.setCompletionItems)
 

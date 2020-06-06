@@ -53,33 +53,33 @@ export function setCompletionItems (specification) {
  * offset index numbers and property value ear either string of array types.
  *
  * @export
- * @param {import('../../../release/vscode-liquify/server/node_modules/defs').AST} ASTnode
+ * @param {import('defs').AST} ASTnode
  * @param {number} offset
  * @returns {array|false}
  */
-export function getObjectCompletion (ASTnode, offset) {
 
-  console.log(ASTnode.objects, offset)
+export async function getObjectCompletion (ASTnode, offset) {
+
   if (!ASTnode?.objects) return false
 
-  const prop = ASTnode.objects[offset]
+  const promise = await ASTnode.objects
+  const record = promise[offset]
 
-  if (prop.length === 1) return Server.specification[prop[0]].properties
+  if (!record) return false
 
-  let objects = Server.specification[prop[0]]
+  const { properties } = Server.specification[record[0]]
 
-  for (const nameProp of prop.slice(1)) {
-    if (objects?.properties) {
-      objects = objects.properties.filter(({ name }) => name === nameProp)
-    } else {
-      for (const deepProp of objects) {
-        (deepProp?.properties) && (objects = deepProp.properties)
-      }
-    }
-  }
+  if (record.length === 1) return properties
 
-  // If last property exists in record we will return `false`
-  return !_.some(objects, { name: prop[prop.length - 2] }) ? objects : false
+  return (function walk (objects, props) {
+
+    const prop = props.find(({ name }) => name === objects[0])
+
+    return objects.length > 1
+      ? walk(objects.slice(1), prop.properties)
+      : prop?.properties || false
+
+  }(record.slice(1), properties))
 
 }
 
