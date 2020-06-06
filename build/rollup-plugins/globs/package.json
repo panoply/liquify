@@ -21,7 +21,7 @@
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava --verbose"
+    "test": "ava --verbose --watch"
   },
   "ava": {
     "babel": true,

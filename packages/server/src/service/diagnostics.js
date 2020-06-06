@@ -41,7 +41,7 @@ export function resolve (document) {
  * Do Validation
  *
  * Validation runner used to validate tokens. This function is
- * executed while generating the document AST and returns and asynchronously
+ * executed while generating the document AST and returns and asynchronous
  * function which will be fulfilled and executed post-parse.
  *
  * @param {ASTnode} ASTnode

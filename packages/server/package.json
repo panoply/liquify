@@ -6,7 +6,7 @@
     "watch": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava --verbose --watch"
   },
   "private": false,
   "author": "",
@@ -16,6 +16,17 @@
     "vscode-css-languageservice",
     "vscode-languageserver"
   ],
+  "ava": {
+    "babel": {
+      "testOptions": {
+        "babelrc": true
+      }
+    },
+    "files": [
+      "test/**/**"
+    ],
+    "concurrency": 5
+  },
   "dependencies": {
     "@liquify/cryptographer": "workspace:^0.0.0",
     "@liquify/liquid-language-specs": "workspace:^0.0.0",
@@ -36,9 +47,11 @@
     "url": "https://github.com/panoply/liquify"
   },
   "devDependencies": {
+    "@ava/babel": "^1.0.1",
     "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
     "@rollup/plugin-commonjs": "^12.0.0",
-    "@rollup/plugin-node-resolve": "^8.0.0"
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "ava": "^3.8.2"
   }
 }

@@ -77,7 +77,7 @@ export class LiquidService {
    * @param {*} diagnostics
    * @memberof LiquidService
    */
-  async doValidation (document, { diagnostics }) {
+  async doValidation ({ textDocument, embedded }, { diagnostics }) {
 
     // disabled temporarily
     /* if (!diagnostics) {
@@ -87,21 +87,19 @@ export class LiquidService {
       }
     } */
 
-    // const embedded = Documents.getEmbeddedDocuments(document.uri, false)
-    const embedded = []
-    const promise = Diagnostic.resolve(document)
+    const promise = Diagnostic.resolve(textDocument)
     const validations = (await Promise.all(diagnostics.map(promise)))
 
-    if (embedded && embedded.length > 0) {
-      for (const embed of embedded) {
-        const region = await this.modes[embed.languageId].doValidation(embed)
-        if (region) validations.push(...region)
-      }
-    }
+    console.log(validations)
+
+    embedded.forEach(async ({ textDocument }) => {
+      const region = await this.modes[textDocument.languageId].doValidation(textDocument)
+      if (region) validations.push(...region)
+    })
 
     if (validations.length > 0) {
       return {
-        uri: document.uri,
+        uri: textDocument.uri,
         diagnostics: validations.filter(Boolean)
       }
     }

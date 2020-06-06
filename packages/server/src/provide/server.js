@@ -177,7 +177,7 @@ export class LiquidServer extends Config {
 
     this.#setSpecification()
     this.#setFormattingRules(settings.format)
-
+    this.#setDiagnosticRules(settings.rules)
   }
 
   /**
