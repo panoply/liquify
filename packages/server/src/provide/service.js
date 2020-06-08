@@ -28,9 +28,9 @@ import * as Hover from '../service/hovers'
  * @typedef {import('vscode-languageserver').CompletionItem} CompletionItem
  * @typedef {import('vscode-languageserver').CompletionContext} CompletionContext
  * @typedef {import('vscode-languageserver').TextDocumentContentChangeEvent} ChangeEvent
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').DocumentModel} DocumentModel
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').FormattingRules} FormattingRules
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ValidationPromises} ValidationPromises
+ * @typedef {import('defs').DocumentModel} DocumentModel
+ * @typedef {import('defs').FormattingRules} FormattingRules
+ * @typedef {import('defs').ValidationPromises} ValidationPromises
  */
 export class LiquidService {
 

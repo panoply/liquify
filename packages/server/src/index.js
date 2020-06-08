@@ -86,23 +86,13 @@ connection.onInitialized(() => {
 /* onDidChangeConfiguration                                         */
 /* ---------------------------------------------------------------- */
 
-connection.onDidChangeConfiguration(async change => {
+connection.onDidChangeConfiguration(change => {
 
   console.log('onDidChangeConfiguration')
 
-  if (Server.hasConfigurationCapability) {
-    Server.settings.clear()
-  } else {
-    if (change.settings.liquid) {
-      // Server.configure('onDidChangeConfiguration', change.settings)
-    }
-  }
+  Server.configure('onDidChangeConfiguration', change.settings)
 
-  if (change.settings) {
-    Server.configure('onDidChangeConfiguration', change.settings)
-  }
-
-  await Server.documents.all().forEach(service.doValidation)
+  documents.forEach(service.doValidation)
 
 })
 
@@ -113,18 +103,19 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   console.log('onDidOpenTextDocument')
 
-  Document.create(textDocument)(Parse.scan)
+  const document = Document.create(textDocument)
 
-  // console.log(parsed)
-  /* return service.doValidation(document, parsed).then(({
-      uri
-      , diagnostics
-    }) => (
-      connection.sendDiagnostics({
-        uri,
-        diagnostics
-      })
-    )) */
+  Parse.scanner(document)
+
+  return service.doValidation(document).then(({
+    uri
+    , diagnostics
+  }) => (
+    connection.sendDiagnostics({
+      uri,
+      diagnostics
+    })
+  ))
 
 })
 
@@ -136,6 +127,8 @@ connection.onDidChangeTextDocument(({
   contentChanges
   , textDocument: { uri }
 }) => {
+
+  console.log('onDidChangeTextDocument')
 
   const v1 = performance.now()
 
@@ -149,8 +142,6 @@ connection.onDidChangeTextDocument(({
   Parse.increment(document, ...changes)
 
   const v2 = performance.now()
-
-  // console.log(Document.embeds(uri))
 
   // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
 

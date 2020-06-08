@@ -24,6 +24,8 @@ export class Config extends License {
    */
   specification = null
 
+  parser = {}
+
   /**
    * The `.liquidrc` file location
    *

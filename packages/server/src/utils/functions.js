@@ -63,7 +63,7 @@ export const inRange = (
  * @export
  * @param {array} array
  */
-export const regexArr = (exp, flag) => new RegExp(exp.join('|'), flag || '')
+export const regexp = (exp, flag) => new RegExp(exp, flag || '')
 
 /**
  * Build a Regular expression match from specification tags

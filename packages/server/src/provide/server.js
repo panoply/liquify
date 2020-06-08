@@ -6,7 +6,7 @@ import { readFileSync, exists } from 'fs-extra'
 import { basename } from 'path'
 import { Config } from './config'
 import { Expressions } from '../parser/lexical'
-import { propLevels } from '../utils/functions'
+import { propLevels, regexp } from '../utils/functions'
 import * as validations from '../service/validate/index'
 import specs from '@liquify/liquid-language-specs'
 
@@ -30,7 +30,7 @@ export class LiquidServer extends Config {
    * @param {ServerCapabilities} capabilities
    * @memberof LiquidServer
    */
-  async capabilities ({
+  capabilities ({
     initializationOptions: {
       service = null
       , license = 'sissel siv'
@@ -42,15 +42,13 @@ export class LiquidServer extends Config {
     }
   }, capabilities) {
 
-    // Completion capabilities
     textDocument.completion.contextSupport = true
-    textDocument.completion.dynamicRegistration = true
     textDocument.completion.completionItem.snippetSupport = true
+    textDocument.completion.dynamicRegistration = true
 
     this.rcfile = rcfile
-    this.license = await this.#authenticate(license)
+    this.license = license
     this.service = { ...this.service, ...service }
-
     this.hasConfigurationCapability = !!(workspace && !!workspace.configuration)
     this.hasWorkspaceFolderCapability = !!(workspace && !!workspace.workspaceFolders)
     this.hasDiagnosticRelatedInformationCapability = !!(
@@ -58,6 +56,14 @@ export class LiquidServer extends Config {
       textDocument.publishDiagnostics &&
       textDocument.publishDiagnostics.relatedInformation
     )
+
+    if (this.hasWorkspaceFolderCapability) {
+      capabilities.workspace = {
+        workspaceFolders: {
+          supported: true
+        }
+      }
+    }
 
     return { capabilities }
 
@@ -71,7 +77,7 @@ export class LiquidServer extends Config {
    * @returns
    * @memberof LiquidServer
    */
-  documents (resource, connection) {
+  documents = (resource, connection) => {
 
     if (!this.hasConfigurationCapability) return Promise.resolve(this.settings)
 
@@ -101,61 +107,24 @@ export class LiquidServer extends Config {
    */
   configure (event, settings) {
 
-    return ({
+    return {
+
+      /**
+       * Configuration changed
+       */
+      onDidChangeConfiguration: ({ liquid }) => this.setProviders(liquid),
+
+      /**
+       * Changed files
+       */
       onDidChangeWatchedFiles: ({ changes: [ { uri } ] }) => {
 
-        if (basename(this.rcfile) !== basename(uri)) return null
-
-        this.#setUserSettings()
-
-      },
-      onDidChangeConfiguration: ({ liquid }) => {
-
-        this.#setProviders(liquid)
-        this.#setUserSettings()
-
+        return basename(this.rcfile) === basename(uri)
+          ? this.setUserSettings()
+          : null
       }
 
-    }[event])(settings)
-
-  }
-
-  #rcfile = rcfile => {
-
-    if (!rcfile) return false
-
-    try {
-
-      const read = readFileSync(rcfile).toString()
-      const rules = JSON.parse(require('strip-json-comments')(read), null)
-
-      return rules
-
-    } catch (error) {
-
-      return console.error(error.toString())
-
-    }
-  }
-
-  #authenticate = license => {
-
-    return license
-
-  }
-
-  /**
-   * Set Provider Services
-   *
-   * @param {object} liquid
-   */
-  #setProviders = liquid => {
-
-    for (const [ prop, setting ] of Object.entries(liquid)) {
-      if (this.provider?.[prop] && setting?.enable) {
-        this.provider[prop] = setting.enable
-      }
-    }
+    }[event](settings)
 
   }
 
@@ -166,61 +135,77 @@ export class LiquidServer extends Config {
    * @returns
    * @memberof LiquidServer
    */
-  #setUserSettings = () => {
+  setUserSettings = async () => {
 
-    const settings = this.#rcfile(this.rcfile)
+    const settings = await this.setLiquidrc(this.rcfile)
 
-    if (!settings) return null
+    await this.setSpecification(settings.engine)
+    await this.setParseExpressions(this.specification)
+    await this.setDiagnosticRules(settings.validate)
+    await this.setFormattingRules(settings.format)
 
-    this.engine = settings.engine
-    this.engineLabel = `\n${_.upperFirst(settings.engine)} Liquid`
+  }
 
-    this.#setSpecification()
-    this.#setFormattingRules(settings.format)
-    this.#setDiagnosticRules(settings.linter)
+  setLiquidrc = rcfile => {
+
+    if (!rcfile) return null
+
+    try {
+      const read = readFileSync(rcfile).toString()
+      const rules = JSON.parse(require('strip-json-comments')(read), null)
+      return rules
+
+    } catch (error) {
+      return console.error(error.toString())
+    }
+
   }
 
   /**
-   * Set Parsing References
+   * Set Provider Services
    *
-   * @param {object} parse
-   * @memberof LiquidServer
+   * @param {object} liquid
    */
-  #setParsingConfig = () => {
+  setProviders = (liquid) => {
 
-    const { blocks, html, output, comments, frontmatter } = Expressions
-    const get = name => Object
-    .entries(this.specification)
-    .filter(([ prop ]) => prop === name)
-    .map(([ , prop ]) => prop[name])
-    .join('|')
+    Object.entries(liquid).forEach(([ prop, setting ]) => {
+      if (this.provider?.[prop] && setting?.enable) {
+        this.provider[prop] = setting.enable
+      }
+    })
 
-    this.parsing = {
-      parsing: new RegExp(`${html}|${blocks}|${output}`, 'g'),
-      objects: new RegExp(`\\b(?:${get('objects')})\\.?(?:[^\\s\\n]*\\b)?`, 'gm'),
-      filters: new RegExp(get('filters'), 'g')
-    }
+    return this.setUserSettings()
 
-    console.log(this.parsing)
   }
 
   /**
    * Set Specification
    *
+   * @private
    * @memberof LiquidServer
    */
-  #setSpecification = async () => {
+  setSpecification = async engine => {
 
-    this.specification = await (await specs(this.license))[this.engine]()
-
-    const { blocks, html, output, comments, frontmatter } = Expressions
-    const { objects, filters } = this.specification
-
-    this.parsing = {
-      parsing: new RegExp(`${html}|${blocks}|${output}`, 'g'),
-      objects: new RegExp(`\\b(?:${Object.keys(objects).join('|')})\\.?(?:[^\\s\\n]*\\b)?`, 'gm'),
-      filters: new RegExp(Object.keys(filters).join('|'), 'g')
+    if (this.engine !== engine) {
+      const spec = await specs(this.license)
+      this.engine = engine
+      this.engineLabel = `\n${_.upperFirst(engine)} Liquid`
+      this.specification = spec[this.engine]()
     }
+
+    return this.specification
+
+  }
+
+  setParseExpressions = ({ objects, filters }) => {
+
+    const { html, blocks, output } = Expressions
+
+    this.parser.parsing = regexp(`${html}|${blocks}|${output}`, 'g')
+    this.parser.objects = regexp(`\\b(?:${objects})\\.?(?:[^\\s\\n]*\\b)?`, 'gm')
+    this.parser.filters = regexp(Object.keys(filters).join('|'), 'g')
+
+    return this.parser
 
   }
 
@@ -230,14 +215,16 @@ export class LiquidServer extends Config {
    * @param {object} userRules
    * @memberof Server
    */
-  #setDiagnosticRules = (userRules) => {
+  setDiagnosticRules = userRules => {
 
-    for (const {
+    Object.values(validations).forEach(({
       meta: {
         group,
         rules
       }
-    } of Object.values(validations)) Object.assign(rules, userRules[group])
+    }) => Object.assign(rules, userRules[group]))
+
+    return validations
 
   }
 
@@ -248,7 +235,7 @@ export class LiquidServer extends Config {
    * @param {object} userFormatRules
    * @memberof Config
    */
-  #setFormattingRules = userFormatRules => {
+  setFormattingRules = userFormatRules => {
 
     for (const language in userFormatRules) {
 
@@ -279,6 +266,8 @@ export class LiquidServer extends Config {
         }
       }
     }
+
+    return this.formatRules
 
   }
 

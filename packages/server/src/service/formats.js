@@ -171,7 +171,6 @@ export function embeds (document, ASTnode) {
   const { kind = 2, embeddedDocument, offset } = ASTnode
 
   const source = embeddedDocument.getText()
-  console.log(embeddedDocument)
   const indent_level = indentLevel(document, kind, offset[0])
   const rules = Server.formatRules.languageRules[embeddedDocument.languageId]
 
@@ -222,7 +221,7 @@ export function markup (source) {
   Object.assign(
     prettydiff.options
     , Server.formatRules.languageRules.html
-    , { source: source.replace(/="{{/g, '=" {{') }
+    , { source: source.replace(/="{[{%]{1}/g, '=" {{') }
   )
 
   const output = prettydiff()

@@ -1,12 +1,10 @@
 // @ts-nocheck
 import _ from 'lodash'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { Characters, TokenTag, TokenKind, TokenType } from './lexical'
+import { TokenTag, TokenType } from './lexical'
 import { doValidate } from '../service/diagnostics'
 import { Server } from '../export'
 import * as parse from './utils'
-
-const regexp = /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}|{{2}-?\s*\b(\w+)\b.?(?:[^{}]{2})*-?}{2}|<\/?\b(script|style)\b[^<>]*>/gs
 
 /**
  * Parser
@@ -20,7 +18,13 @@ const regexp = /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}|{{2}-?\s*\b(\w+)\
  * @param {object} options
  * @returns
  */
-export default ({ ast, embedded, textDocument, diagnostics }, index = undefined) => {
+export default (document, index = undefined) => {
+
+  const {
+    ast
+    , textDocument
+    , diagnostics
+  } = document
 
   let run = 0
 
@@ -69,9 +73,7 @@ export default ({ ast, embedded, textDocument, diagnostics }, index = undefined)
     const node = ASTNode(name, token, match)
 
     return spec.type === 'object' || spec?.singular
-      ? spec?.within
-        ? childToken(node, spec)
-        : ast.push(singularToken(node, spec))
+      ? spec?.within ? childToken(node, spec) : ast.push(singularToken(node, spec))
       : parse.isTokenTagEnd(token, name)
         ? closeToken(node)
         : ast.push(startToken(node, spec))
@@ -205,7 +207,7 @@ export default ({ ast, embedded, textDocument, diagnostics }, index = undefined)
 
   function parseObjects (offset, token) {
 
-    const objects = Array.from(token.matchAll(Server.parsing.objects))
+    const objects = Array.from(token.matchAll(Server.parser.objects))
 
     if (!objects.length) return false
 
@@ -226,10 +228,11 @@ export default ({ ast, embedded, textDocument, diagnostics }, index = undefined)
   /*                    EXECUTE                   */
   /* -------------------------------------------- */
 
-  const matches = textDocument.getText().matchAll(regexp)
+  const matches = textDocument.getText().matchAll(Server.parser.parsing)
 
-  return !matches
-    ? ast
-    : Array.from(matches, parseText)
+  if (!matches) return ast
+  for (const match of matches) parseText(match)
+
+  return document
 
 }

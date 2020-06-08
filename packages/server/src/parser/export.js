@@ -1,2 +1,2 @@
-export { default as scan } from './scanner'
+export { default as scanner } from './scanner'
 export { default as increment } from './increment'

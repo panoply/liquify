@@ -22,15 +22,16 @@ const closest = (index, { offset }) => offset.reduce((prev, current) => (
  * @returns
  */
 export default (
-  document
-  , {
+  document,
+  param
+  /*, {
     text
     , rangeLength
     , range: {
       start,
       end
     }
-  }
+  } */
 ) => {
 
   // ast = scan(document, undefined, undefined)

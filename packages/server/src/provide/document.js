@@ -11,41 +11,41 @@ export default (function () {
 
   const documents = new Map()
 
-  return ({
+  function embeds (uri) {
 
-    documents,
+    const { ast } = documents.get(uri)
+    const embedded = ast.filter(({ embeddedDocument }) => embeddedDocument)
 
-    embeds: (uri) => {
+    return embedded
 
-      const { ast } = documents.get(uri)
-      return ast.filter(({ embeddedDocument }) => embeddedDocument)
+  }
 
-    },
+  function ASTNode (uri, location) {
 
-    ASTNode: (uri, location) => {
+    const { ast } = documents.get(uri)
+    const index = ast.findIndex(({
+      offset: [
+        TL = -1
+        , TR = -1
+        , BL = -1
+        , BR = -1
+      ]
+    }) => (
+      _.inRange(location, TL, TR) ||
+        _.inRange(location, BL, BR) ||
+        _.inRange(location, TR, BL)
+    ))
 
-      const { ast } = documents.get(uri)
-      console.log(ast)
+    return [ ast[index], index ]
 
-      const index = ast.findIndex(({ offset }) => (
-        _.inRange(location, offset[0], offset[1]) ||
-        _.inRange(location, offset[2], offset[3]) ||
-        _.inRange(location, offset[1], offset[2])
-      ))
+  }
 
-      return [ ast[index], index ]
+  /**
+   * Create - Creates a documents of the text document
+   */
+  function create ({ uri, languageId, version, text }) {
 
-    },
-
-    /**
-     * Create - Creates a documents of the text document
-     */
-    create: ({
-      uri
-      , languageId
-      , version
-      , text
-    }) => callback => callback(documents.has(uri) ? documents.get(uri) : documents.set(uri, {
+    return documents.has(uri) ? documents.get(uri) : documents.set(uri, {
 
       /**
        * AST
@@ -69,41 +69,40 @@ export default (function () {
       diagnostics: [],
 
       /**
-       * Embedded Documents
-       *
-       * @memberof Extend
-       */
-      embedded: new Map(),
-
-      /**
        * Text Document
        *
        * @memberof Extend
        */
       textDocument: TextDocument.create(uri, languageId, version, text)
 
-    }).get(uri)),
+    })
+    .get(uri)
 
-    /**
-     * Update - Update document context and convert range positions to offsets
-     *
-     */
-    update: (
-      document
-      , contentChanges
-    ) => {
+  }
 
-      TextDocument.update(document, contentChanges, document.version)
+  /**
+   * Update - Update document context and convert range positions to offsets
+   */
+  function update (document, contentChanges) {
 
-      return contentChanges.map(change => ({
-        ...change,
-        range: {
-          start: document.offsetAt(change.range.start),
-          end: document.offsetAt(change.range.end)
-        }
-      }))
+    TextDocument.update(document, contentChanges, document.version)
 
-    }
+    return contentChanges.map(change => ({
+      ...change,
+      range: {
+        start: document.offsetAt(change.range.start),
+        end: document.offsetAt(change.range.end)
+      }
+    }))
+
+  }
+
+  return ({
+    ASTNode
+    , documents
+    , create
+    , embeds
+    , update
   })
 
 })()

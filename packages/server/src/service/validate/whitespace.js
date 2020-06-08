@@ -21,20 +21,20 @@ export default ({
       whitespace: true
     },
     types: [
-      'associate',
-      'comment',
-      'control',
-      'embedded',
-      'import',
-      'iteration',
-      'object',
-      'variable'
+      TokenType.associate,
+      TokenType.comment,
+      TokenType.control,
+      TokenType.embedded,
+      TokenType.import,
+      TokenType.iteration,
+      TokenType.object,
+      TokenType.variable
     ],
     tags: [
-      'start',
-      'singular',
-      'child',
-      'close'
+      TokenTag.start,
+      TokenTag.singular,
+      TokenTag.child,
+      TokenTag.close
     ]
   },
 
