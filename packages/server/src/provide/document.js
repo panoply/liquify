@@ -15,12 +15,22 @@ export default (function () {
 
     documents,
 
+    embeds: (uri) => {
+
+      const { ast } = documents.get(uri)
+      return ast.filter(({ embeddedDocument }) => embeddedDocument)
+
+    },
+
     ASTNode: (uri, location) => {
 
       const { ast } = documents.get(uri)
+      console.log(ast)
+
       const index = ast.findIndex(({ offset }) => (
         _.inRange(location, offset[0], offset[1]) ||
-        _.inRange(location, offset[2], offset[3])
+        _.inRange(location, offset[2], offset[3]) ||
+        _.inRange(location, offset[1], offset[2])
       ))
 
       return [ ast[index], index ]

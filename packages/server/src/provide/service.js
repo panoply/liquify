@@ -77,25 +77,25 @@ export class LiquidService {
    * @param {*} diagnostics
    * @memberof LiquidService
    */
-  async doValidation ({ textDocument, embedded }, { diagnostics }) {
+  async doValidation ({ textDocument, diagnostics }) {
 
-    // disabled temporarily
-    /* if (!diagnostics) {
+    if (!diagnostics) {
       return {
-        uri: document.uri,
+        uri: textDocument.uri,
         diagnostics: []
       }
-    } */
+    }
 
+    const embedded = Documents.embeds(textDocument.uri)
     const promise = Diagnostic.resolve(textDocument)
     const validations = (await Promise.all(diagnostics.map(promise)))
 
-    console.log(validations)
-
-    embedded.forEach(async ({ textDocument }) => {
-      const region = await this.modes[textDocument.languageId].doValidation(textDocument)
-      if (region) validations.push(...region)
-    })
+    if (embedded) {
+      for (const i of embedded) {
+        const region = await this.modes[i.embeddedDocument.languageId].doValidation(i)
+        if (region) validations.push(...region)
+      }
+    }
 
     if (validations.length > 0) {
       return {
@@ -113,22 +113,19 @@ export class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doFormat ({ textDocument, embedded, ast }, formattingRules) {
+  doFormat ({ textDocument }, formattingRules) {
 
     // const filename = path.basename(uri)
     // if (settings.ignore.files.includes(filename)) return
 
     const { uri, version, languageId } = textDocument
-    const embeds = embedded.values()
+    const embedded = Documents.embeds(uri)
 
-    if (!embeds) return null
+    if (embedded.length < 0) return null
 
     const content = textDocument.getText()
     const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
-    const regions = _.flatMap(
-      Array.from(embedded),
-      ([ , embed ]) => Format.embeds(literal, embed)
-    )
+    const regions = embedded.map((embed) => Format.embeds(literal, embed))
 
     // Replace formatting edits - MUST BE RETURNED AS ARRAY
     return [
@@ -149,23 +146,31 @@ export class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doHover ({ textDocument, embedded }, position) {
+  doHover ({ textDocument }, position) {
 
-    const embed = embedded.get('json')
-
-    if (embed && this.modes?.[embed.languageId]) {
-      if (this.modes[embed.languageId]) {
-        return this.modes[embed.languageId].doHover(embed, position)
+    // const [ node ] = Documents.ASTNode(textDocument.uri, textDocument.offsetAt(position))
+    /*
+    if (node && this.modes?.[node.embeddedDocument.languageId]) {
+      if (this.modes[node.embeddedDocument.languageId]) {
+        return this.modes[node.embeddedDocument.languageId].doHover(node.embeddedDocument, position)
       } else {
         return null
       }
-    }
+    } */
 
     const name = Hover.getWordAtPosition(textDocument, position)
 
-    if (!Server.specification[name]) return null
+    let spec
 
-    const { type, description, engine, reference } = Server.specification[name]
+    if (Server.specification.tags?.[name]) {
+      spec = Server.specification.tags[name]
+    } else if (Server.specification.objects?.[name]) {
+      spec = Server.specification.objects[name]
+    } else {
+      return null
+    }
+
+    const { type, description, engine, reference } = spec
 
     return {
       kind: 'markdown',
@@ -188,22 +193,20 @@ export class LiquidService {
    */
   async doComplete (document, position, { triggerKind }) {
 
-    const { textDocument, embedded } = document
+    const { textDocument } = document
     const offset = textDocument.offsetAt(position)
-    const embeds = embedded.values()
+    const [ node ] = Documents.ASTNode(textDocument.uri, offset)
 
     let doComplete
 
-    if (embeds && _.has(this.modes, embeds.languageId)) {
-      const { languageId } = embeds
+    if (_.has(node, 'embeddedDocument')) {
+      const { languageId } = node.embeddedDocument
       if (this.modes[languageId]) {
-        doComplete = await this.modes[languageId].doComplete(embeds, position)
+        doComplete = await this.modes[languageId].doComplete(node, position)
         doComplete.data = { languageId }
         return doComplete
       }
     }
-
-    const [ node ] = Documents.ASTNode(textDocument.uri, offset)
 
     if (!node) return null
 

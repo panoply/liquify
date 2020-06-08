@@ -2,7 +2,7 @@
 
 import _ from 'lodash'
 import { getLanguageService, ClientCapabilities } from 'vscode-json-languageservice'
-const schema = require('./shopify-sections.json')
+import schema from './../../../shopify-sections.json'
 
 /**
  * JSON Language Service
@@ -35,7 +35,7 @@ export class JSONService {
 
     this.service.configure({
       validate: true,
-      allowComments: true,
+      // allowComments: true,
       schemas: [
         {
           uri: 'http://json-schema.org/draft-07/schema',
@@ -138,6 +138,7 @@ export class JSONService {
       JSONDocument
     ).then(completion => {
 
+      console.log(completion)
       // Modify the completion item position
       completion.items.forEach(({ textEdit: { range } }) => (
         _.merge(range, {

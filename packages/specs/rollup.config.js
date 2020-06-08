@@ -1,7 +1,7 @@
 import { terser } from 'rollup-plugin-terser'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import crypto from '../../build/rollup-plugins/cryptospec'
+import cryptospec from '@liquify/rollup-plugin-cryptospec'
 
 export default {
   input: {
@@ -18,7 +18,7 @@ export default {
   ],
   external: [ 'crypto' ],
   plugins: [
-    crypto({
+    cryptospec({
       password: 'sissel siv'
     }),
     resolve(),

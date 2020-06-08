@@ -168,13 +168,12 @@ function formatLiquidEmbeds (document, newText, ASTnode) {
  */
 export function embeds (document, ASTnode) {
 
-  console.log(ASTnode)
+  const { kind = 2, embeddedDocument, offset } = ASTnode
 
-  const { kind = 2, textDocument, offset } = ASTnode
-
-  const source = textDocument.getText()
+  const source = embeddedDocument.getText()
+  console.log(embeddedDocument)
   const indent_level = indentLevel(document, kind, offset[0])
-  const rules = Server.formatRules.languageRules[textDocument.languageId]
+  const rules = Server.formatRules.languageRules[embeddedDocument.languageId]
 
   // Set formatting rules
   // Apply `indent_level` when nested within elements
@@ -195,8 +194,8 @@ export function embeds (document, ASTnode) {
   Object.assign(prettydiff.options, defaultRules)
 
   if (kind === TokenKind.html && !/\s*$/.test(source)) {
-    return formatHTMLEmbeds(textDocument, newText, ASTnode)
-  } else if (textDocument.languageId === 'scss' || textDocument.languageId === 'css') {
+    return formatHTMLEmbeds(embeddedDocument, newText, ASTnode)
+  } else if (embeddedDocument.languageId === 'scss' || embeddedDocument.languageId === 'css') {
     return formatLiquidEmbeds(document, newText, ASTnode)
   }
 

@@ -2,6 +2,7 @@
 import _ from 'lodash'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { Characters, TokenTag, TokenKind, TokenType } from './lexical'
+import { doValidate } from '../service/diagnostics'
 import { Server } from '../export'
 import * as parse from './utils'
 
@@ -19,7 +20,7 @@ const regexp = /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}|{{2}-?\s*\b(\w+)\
  * @param {object} options
  * @returns
  */
-export default ({ ast, embedded, textDocument }, index = undefined) => {
+export default ({ ast, embedded, textDocument, diagnostics }, index = undefined) => {
 
   let run = 0
 
@@ -122,6 +123,8 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
 
     if (parentNode?.languageId) embeddedDocument(parentNode, tokenNode)
 
+    diagnostics.push(doValidate(tokenNode))
+
   }
 
   /**
@@ -176,23 +179,16 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
       end: textDocument.positionAt(tokenNode.offset[0])
     }
 
-    const uri = textDocument.uri.replace('.liquid', `_${run}_${parentNode.languageId}.tmp`)
-    const embed = {
-      kind: parentNode.kind,
-      offset: parentNode.offset,
-      textDocument: TextDocument.create(
+    const uri = textDocument.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
+
+    Object.assign(parentNode, {
+      lineOffset: range.start.line,
+      embeddedDocument: TextDocument.create(
         uri
         , parentNode.languageId
         , textDocument.version
         , textDocument.getText(range)
       )
-    }
-
-    embedded.set(uri, embed)
-
-    Object.assign(parentNode, {
-      lineOffset: range.start.line,
-      embeddedDocument: uri
     })
   }
 
@@ -207,7 +203,7 @@ export default ({ ast, embedded, textDocument }, index = undefined) => {
    * @returns {Object|Boolean}
    */
 
-  async function parseObjects (offset, token) {
+  function parseObjects (offset, token) {
 
     const objects = Array.from(token.matchAll(Server.parsing.objects))
 

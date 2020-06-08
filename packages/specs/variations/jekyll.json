@@ -1,37 +1,36 @@
 {
   "engine": "jekyll",
   "updated": "06-06-2020",
-  "extends": "standard",
   "filters": {
     "relative_url": {
       "type": "filter",
       "description": "Prepend the baseurl value to the input. Useful if your site is hosted at a subpath rather than the root of the domain.",
       "engine": "Jekyll",
-      "reference": "https://jekyllrb.com/docs/liquid/filters/"
+      "ref": "https://jekyllrb.com/docs/liquid/filters/"
     },
     "absolute_url": {
       "type": "filter",
       "description": "Prepend the url and baseurl value to the input.",
       "engine": "Jekyll",
-      "reference": "https://jekyllrb.com/docs/liquid/filters/"
+      "ref": "https://jekyllrb.com/docs/liquid/filters/"
     },
     "date_to_xmlschema": {
       "type": "filter",
       "description": "Convert a Date into XML Schema (ISO 8601) format.",
       "engine": "Jekyll",
-      "reference": "https://jekyllrb.com/docs/liquid/filters/"
+      "ref": "https://jekyllrb.com/docs/liquid/filters/"
     },
     "date_to_rfc822": {
       "type": "filter",
       "description": "Convert a Date into the RFC-822 format used for RSS feeds.",
       "engine": "Jekyll",
-      "reference": "https://jekyllrb.com/docs/liquid/filters/"
+      "ref": "https://jekyllrb.com/docs/liquid/filters/"
     },
     "date_to_string": {
       "type": "filter",
       "description": "Convert a date to short format.",
       "engine": "Jekyll",
-      "reference": "https://jekyllrb.com/docs/liquid/filters/"
+      "ref": "https://jekyllrb.com/docs/liquid/filters/"
     }
   },
   "objects": {

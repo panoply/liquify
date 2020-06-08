@@ -78,8 +78,6 @@ connection.onInitialized(() => {
     })
   }
 
-  console.log(Server)
-
   return service.configure(Server.service)
 
 })
@@ -88,21 +86,23 @@ connection.onInitialized(() => {
 /* onDidChangeConfiguration                                         */
 /* ---------------------------------------------------------------- */
 
-connection.onDidChangeConfiguration(change => {
+connection.onDidChangeConfiguration(async change => {
 
   console.log('onDidChangeConfiguration')
 
   if (Server.hasConfigurationCapability) {
     Server.settings.clear()
   } else {
-    globalSettings = (change.settings.liquid || Server.settings)
+    if (change.settings.liquid) {
+      // Server.configure('onDidChangeConfiguration', change.settings)
+    }
   }
 
   if (change.settings) {
     Server.configure('onDidChangeConfiguration', change.settings)
   }
 
-  // await Server.documents.all().forEach(service.doValidation)
+  await Server.documents.all().forEach(service.doValidation)
 
 })
 
@@ -146,11 +146,11 @@ connection.onDidChangeTextDocument(({
   const changes = Document.update(document.textDocument, contentChanges)
 
   document.ast = []
-  const parsed = Parse.increment(document, ...changes)
+  Parse.increment(document, ...changes)
 
   const v2 = performance.now()
 
-  // console.log(documents)
+  // console.log(Document.embeds(uri))
 
   // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
 
@@ -158,7 +158,7 @@ connection.onDidChangeTextDocument(({
 
   // const parsed = await Parse(document, contentChanges)
 
-  /* service.doValidation(document, parsed).then(({
+  service.doValidation(document).then(({
     uri
     , diagnostics
   }) => (
@@ -166,7 +166,7 @@ connection.onDidChangeTextDocument(({
       uri,
       diagnostics
     })
-  )) */
+  ))
 
   // const v2 = performance.now()
 

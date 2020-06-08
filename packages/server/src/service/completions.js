@@ -67,7 +67,7 @@ export async function getObjectCompletion (ASTnode, offset) {
 
   if (!record) return false
 
-  const { properties } = Server.specification[record[0]]
+  const { properties } = Server.specification.objects[record[0]]
 
   if (record.length === 1) return properties
 

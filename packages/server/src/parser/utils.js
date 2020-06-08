@@ -147,7 +147,8 @@ export const isSelection = (start, end, offsets) => ((
  */
 export const getTokenSpec = (token, name) => {
 
-  if (Server.specification?.[name]) return Server.specification[name]
+  if (Server.specification.objects?.[name]) return Server.specification.objects[name]
+  if (Server.specification.tags?.[name]) return Server.specification.tags[name]
 
   const kind = token.charCodeAt(0) === Characters.LAN ? 'html' : 'liquid'
   const find = Server.formatRules.associateTags.filter(i => i.name === name && i.kind === kind)

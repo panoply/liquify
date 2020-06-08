@@ -1,7 +1,6 @@
 {
   "engine": "shopify",
   "updated": "06-06-2020",
-  "extends": "standard",
   "filters": {
     "asset_img_url": {
       "description": "Returns the asset URL of an image in the \"assets\" folder of a theme. asset_img_url accepts an image size parameter.",
@@ -846,7 +845,6 @@
     },
     "customer_address": {
       "description": "The currency object",
-      "filters": false,
       "properties": [
         {
           "description": "Returns the abbreviated value of the Province/State field of the address",
@@ -911,7 +909,6 @@
     },
     "discount_allocation": {
       "description": "The `discount_allocation` object contains all of the information about how a particular discount affects a line item and how the price reduces. The object can be accessed on customer order and notification templates. **Shopify Plus** merchants can also access properties of the `discount_allocation` object in the `checkout.liquid` layout file.",
-      "filters": false,
       "properties": [
         {
           "description": "The discount application that allocates the amount on the line item",
@@ -928,7 +925,6 @@
     },
     "discount_application": {
       "description": "The `discount_application` object captures the intent of a `discount applied` on an order. The object can be accessed on customer order and notification templates. **Shopify Plus** merchants can also access properties of the discount_allocation object in the checkout.liquid layout file.",
-      "filters": false,
       "properties": [
         {
           "description": "Describes how a discount selects line items in the cart to be discounted",
@@ -965,7 +961,6 @@
     },
     "external_video": {
       "description": "The external_video object can be accessed from the product object's media attribute. It contains information about a YouTube video associated with a product",
-      "filters": true,
       "properties": [
         {
           "description": "Returns the ID of the YouTube video",
@@ -1002,7 +997,6 @@
     },
     "font": {
       "description": "The font object is used to access the font_picker settings. It can be accessed via the global settings object",
-      "filters": true,
       "properties": [
         {
           "description": "Returns all of the variants within the font's family. Each of the variants is also a font object",
@@ -1031,6 +1025,85 @@
       ],
       "type": "object",
       "whitespace": true
+    },
+    "form": {
+      "description": "The form object is used within the form tag. It contains attributes of its parent form.",
+      "filters": false,
+      "within": ["form"],
+      "properties": [
+        {
+          "name": "address1",
+          "description": "Returns the first address line associated with the address. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "address2",
+          "description": "Returns the second address line associated with the address, if it exists. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "author",
+          "description": "Returns the name of the author of the blog article comment. Exclusive to form tags with the \"article\" parameter."
+        },
+        {
+          "name": "body",
+          "description": "Returns the content of the blog article comment. Exclusive to form tags with the \"article\" parameter."
+        },
+        {
+          "name": "city",
+          "description": "Returns the city associated with the address. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "company",
+          "description": "Returns the company name associated with the address, if it exists. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "country",
+          "description": "Returns the country associated with the address. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "email",
+          "description": "Returns the email of the blog article comment's author. Exclusive to form tags with the \"article\" parameter."
+        },
+        {
+          "name": "errors",
+          "description": "Returns an array of strings if the form was not submitted successfully. The strings returned depend on which fields of the form were left empty or contained errors. Possible values are:\n\n- author\n- body\n- email\n- form\n"
+        },
+        {
+          "name": "first_name",
+          "description": "Returns the first name associated with the address. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "id",
+          "description": "Returns the id (unique identifier) of the form."
+        },
+        {
+          "name": "last_name",
+          "description": "Returns the last name associated with the address. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "password_needed",
+          "description": "Used only for form tags with the \"customer_login\" parameter. The form.password_needed attribute always returns true."
+        },
+        {
+          "name": "phone",
+          "description": "Returns the telephone number associated with the address, if it exists. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "posted_successfully?",
+          "description": "Returns true if the form was submitted successfully, or false if the form contained errors. All forms but the address form set that property. The address form is always submitted successfully."
+        },
+        {
+          "name": "province",
+          "description": "Returns the province or state associated with the address. Exclusive to form tags with the \"address\" parameter."
+        },
+        {
+          "name": "set_as_default_checkbox",
+          "description": "Renders an HTML checkbox that can submit the current form as the customer's default address. Exclusive to form tags with the \"address\" parameter"
+        },
+        {
+          "name": "zip",
+          "description": "Returns the zip code or postal code associated with the address. Exclusive to form tags with the \"address\" parameter."
+        }
+      ]
     },
     "forloop": {
       "description": "The forloop object contains attributes of its parent for loop.",
@@ -1069,6 +1142,32 @@
       "type": "object",
       "whitespace": false,
       "within": ["for"]
+    },
+    "fulfillment": {
+      "description": "The fulfillment object",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/fulfillment",
+      "properties": [
+        {
+          "name": "fulfillment_line_items",
+          "description": "Returns an array of all line items and their quantity included in the fulfillment. Any line items that have already been fulfilled, or are yet to be fulfilled, will not be included in the array."
+        },
+        {
+          "name": "item_count",
+          "description": "Returns the total number of items included in the fulfillment."
+        },
+        {
+          "name": "tracking_company",
+          "description": "Returns the name of the fulfillment service."
+        },
+        {
+          "name": "tracking_number",
+          "description": "Returns a fulfillment's tracking number, if it exists."
+        },
+        {
+          "name": "tracking_url",
+          "description": "Returns the URL for a tracking number."
+        }
+      ]
     },
     "handle": {
       "description": "Returns the handle of the page that is being viewed",
@@ -1142,7 +1241,6 @@
     },
     "product": {
       "description": "Product object",
-      "filters": true,
       "properties": [
         {
           "description": "Returns an array of all of the collections that a product belongs to, except any collections that are not available on the sales channel being used.",
@@ -1256,6 +1354,158 @@
       "reference": "https://help.shopify.com/themes/liquid/objects#product",
       "type": "object",
       "whitespace": true
+    },
+    "order": {
+      "description": "You can access the order object in a theme's Liquid templates with \"customer.orders\"",
+      "singular": true,
+      "type": "object",
+      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/order",
+      "properties": [
+        {
+          "name": "attributes",
+          "description": "Returns the custom cart attributes for the order, if there are any. You can add as many custom attributes to your cart as you like.\n\nWhen you're looping through attributes, use \"{{ attribute | first }}\" to get the name of the attribute, and \"{{ attribute | last }}\" to get its value."
+        },
+        {
+          "name": "billing_address",
+          "description": "Returns the billing address of the order."
+        },
+        {
+          "name": "cancelled",
+          "description": "Returns true if an order is canceled, or false if it is not."
+        },
+        {
+          "name": "cancelled_at",
+          "description": "Returns the timestamp of when an order was canceled. Use the date filter to format the timestamp."
+        },
+        {
+          "name": "cancel_reason",
+          "description": "Returns one of the following cancellation reasons, if an order was canceled:\n\n-items unavailable\n- fraudulent order\n- customer changed/cancelled order\n- other\n"
+        },
+        {
+          "name": "cancel_reason_label",
+          "description": "Returns the translated output of an order's order.cancel_reason."
+        },
+        {
+          "name": "cart_level_discount_applications",
+          "description": "Returns an array of order-specific discount applications for an order."
+        },
+        {
+          "name": "created_at",
+          "description": "Returns the timestamp of when an order was created. Use the date filter to format the timestamp."
+        },
+        {
+          "name": "customer",
+          "description": "Returns the customer associated with the order."
+        },
+        {
+          "name": "customer_url",
+          "description": "Returns a unique URL that the customer can use to access the order."
+        },
+        {
+          "name": "discount_applications",
+          "description": "Returns an array of discount applications for an order."
+        },
+        {
+          "name": "email",
+          "description": "Returns the email address associated with an order, if it exists."
+        },
+        {
+          "name": "financial_status",
+          "description": "Returns the financial status of an order. The possible values are:\n\n- pending\n- authorized\n- paid\n- partially_paid\n- refunded\n- partially_refunded\n- voided"
+        },
+        {
+          "name": "financial_status_label",
+          "description": "Returns the translated output of an order's \"financial_status\"."
+        },
+        {
+          "name": "fulfillment_status",
+          "description": "Returns the fulfillment status of an order."
+        },
+        {
+          "name": "fulfillment_status_label",
+          "description": "Returns the translated output of an order's fulfillment_status."
+        },
+        {
+          "name": "line_items",
+          "description": "Returns an array of line items for the order."
+        },
+        {
+          "name": "line_items_subtotal_price",
+          "description": "Returns the sum of the order's line-item prices after any line item discounts have been applied. The subtotal amount doesn't include cart discounts, taxes (unless taxes are included in the prices), or shipping costs."
+        },
+        {
+          "name": "location",
+          "description": "(POS only) Returns the physical location of the order. You can configure locations in the Locations settings of your Shopify admin."
+        },
+        {
+          "name": "name",
+          "description": "Returns the name of the order in the format set in the Standards and formats section of the General settings of your Shopify admin."
+        },
+        {
+          "name": "note",
+          "description": "Returns the note associated with a customer order."
+        },
+        {
+          "name": "order_number",
+          "description": "Returns the integer representation of the order name."
+        },
+        {
+          "name": "order_status_url",
+          "description": "Returns the unique URL for the order status page of the order."
+        },
+        {
+          "name": "phone",
+          "description": "Returns the phone number associated with an order, if it exists."
+        },
+        {
+          "name": "shipping_address",
+          "description": "Returns the shipping address of the order."
+        },
+        {
+          "name": "shipping_methods",
+          "description": "Returns an array of shipping_method variables from the order."
+        },
+        {
+          "name": "shipping_price",
+          "description": "Returns the shipping price of an order."
+        },
+        {
+          "name": "subtotal_price",
+          "description": "Returns the subtotal price of all the items in the order after both line-item and cart discounts have been applied. The subtotal doesn't include taxes (unless taxes are included in the prices) or shipping costs."
+        },
+        {
+          "name": "tags",
+          "description": "Returns an array of all of the order's tags. The tags are returned in alphabetical order."
+        },
+        {
+          "name": "tax_lines",
+          "description": "Returns an array of tax_line variables for an order."
+        },
+        {
+          "name": "tax_price",
+          "description": "Returns the order's tax price."
+        },
+        {
+          "name": "total_discounts",
+          "description": "Returns the total value of all discounts applied to the order."
+        },
+        {
+          "name": "total_net_amount",
+          "description": "Returns the net amount of the order.\n\nThe \"order.total_net_amount\" is calculated after refunds are applied. The value is equivalent to \"order.total_price minus\" \"order.total_refunded_amount\"."
+        },
+        {
+          "name": "total_price",
+          "description": "Returns the total price of an order.\n\nThe \"order.total_price amount\" is calculated before refunds are applied. To get the value of refunds, use the \"order.total_refunded_amount property.\""
+        },
+        {
+          "name": "total_refunded_amount",
+          "description": "Returns the total refunded amount of an order."
+        },
+        {
+          "name": "transactions",
+          "description": "Returns an array of transactions from the order."
+        }
+      ]
     }
   },
   "tags": {
@@ -1270,11 +1520,10 @@
     "form": {
       "description": "Creates an HTML <form> element along with the required <input> elements to submit the form to a particular endpoint.",
       "filters": true,
-      "parameters": true,
       "reference": "https: //help.shopify.com/en/themes/liquid/tags/theme-tags#echo",
       "singular": false,
       "type": "output",
-      "types": [
+      "parameters": [
         {
           "description": "Generates a form for activating a customer account on the activate_account.liquid template.",
           "name": "activate_customer_password"
@@ -1340,16 +1589,6 @@
       "type": "import",
       "whitespace": false
     },
-    "javascript": {
-      "description": "The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",
-      "filters": false,
-      "language": "javascript",
-      "parameters": false,
-      "reference": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags",
-      "singular": false,
-      "type": "embedded",
-      "whitespace": false
-    },
     "layout": {
       "description": "Include \"{% layout 'alternate' %}\" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:",
       "filters": false,
@@ -1380,31 +1619,28 @@
       "type": "import",
       "whitespace": true
     },
-    "schema": {
-      "description": "The javascript tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",
-      "filters": false,
-      "language": "json",
-      "parameters": false,
-      "reference": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
-      "singular": false,
-      "type": "embedded",
-      "whitespace": false
-    },
     "section": {
       "description": "Renders a section from the sections folder of a theme.",
       "filters": false,
       "language": "json",
-      "parameters": false,
       "reference": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
       "singular": true,
       "type": "import",
       "whitespace": true
     },
+    "schema": {
+      "description": "The javascript tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",
+      "filters": false,
+      "language": "json",
+      "reference": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
+      "singular": false,
+      "type": "embedded",
+      "whitespace": false
+    },
     "style": {
       "description": "The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",
       "filters": false,
       "language": "css",
-      "parameters": false,
       "reference": "https://help.shopify.com/themes/liquid/tags/theme-tags#style",
       "singular": false,
       "type": "embedded",
@@ -1414,7 +1650,6 @@
       "description": "The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",
       "filters": false,
       "language": "css",
-      "parameters": false,
       "reference": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags",
       "singular": false,
       "type": "embedded",
@@ -1424,6 +1659,16 @@
           "name": "scss"
         }
       ],
+      "whitespace": false
+    },
+    "javascript": {
+      "description": "The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",
+      "filters": false,
+      "language": "javascript",
+      "parameters": false,
+      "reference": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags",
+      "singular": false,
+      "type": "embedded",
       "whitespace": false
     }
   }

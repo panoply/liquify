@@ -177,7 +177,7 @@ export class LiquidServer extends Config {
 
     this.#setSpecification()
     this.#setFormattingRules(settings.format)
-    this.#setDiagnosticRules(settings.rules)
+    this.#setDiagnosticRules(settings.linter)
   }
 
   /**
@@ -189,23 +189,19 @@ export class LiquidServer extends Config {
   #setParsingConfig = () => {
 
     const { blocks, html, output, comments, frontmatter } = Expressions
-
-    const objects = Object
+    const get = name => Object
     .entries(this.specification)
-    .filter(([ prop, { type } ]) => type === 'object')
-    .map(([ prop ]) => prop)
-
-    const filters = Object
-    .entries(this.specification)
-    .filter(([ prop, { type } ]) => type === 'filter')
-    .map(([ prop ]) => prop)
+    .filter(([ prop ]) => prop === name)
+    .map(([ , prop ]) => prop[name])
+    .join('|')
 
     this.parsing = {
       parsing: new RegExp(`${html}|${blocks}|${output}`, 'g'),
-      objects: new RegExp(`\\b(?:${objects.join('|')})\\.?(?:[^\\s\\n]*\\b)?`, 'gm'),
-      filters: new RegExp(filters.join('|'), 'g')
+      objects: new RegExp(`\\b(?:${get('objects')})\\.?(?:[^\\s\\n]*\\b)?`, 'gm'),
+      filters: new RegExp(get('filters'), 'g')
     }
 
+    console.log(this.parsing)
   }
 
   /**
@@ -217,13 +213,15 @@ export class LiquidServer extends Config {
 
     this.specification = await (await specs(this.license))[this.engine]()
 
-    for (const spec of Object.values(this.specification)) {
-      spec.kind = spec?.kind || 'liquid'
-      spec.types = !spec?.types || spec.types.map(({ name }) => name)
-      spec.props = !spec?.properties || spec.properties.map(propLevels)
+    const { blocks, html, output, comments, frontmatter } = Expressions
+    const { objects, filters } = this.specification
+
+    this.parsing = {
+      parsing: new RegExp(`${html}|${blocks}|${output}`, 'g'),
+      objects: new RegExp(`\\b(?:${Object.keys(objects).join('|')})\\.?(?:[^\\s\\n]*\\b)?`, 'gm'),
+      filters: new RegExp(Object.keys(filters).join('|'), 'g')
     }
 
-    return this.#setParsingConfig()
   }
 
   /**

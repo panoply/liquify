@@ -43,20 +43,39 @@ export default function (options = {}) {
 
       if (id !== 'index.js') return null
 
-      const { main } = options
-      const [ item ] = parse.input.find(([ k ]) => k === main)
+      const [ base ] = parse.input.find(([ k ]) => k === 'standard')
       const modules = parse.input.map(([ k, v ]) => `const ${k} = await import('./${v}')`)
-      const decoded = parse.input.map(([ k ]) => (k === options.main
-        ? `${k}: () => crypto.decode(${k})`
-        : `${k}: () => ({ ...crypto.decode(${item}), ...crypto.decode(${k}) })`
+      const decoded = parse.input.map(([ k ]) => (k === 'standard'
+        ? `${k}: () => decrypt(${k}, crypto.decode(${k}))`
+        : `${k}: () => decrypt(${k}, crypto.decode(${base}))`
       ))
 
       return `
       import cryptographer from '@liquify/cryptographer'
       export default async iv => {
         const crypto = cryptographer(iv);
+
+        function decrypt(id, json) {
+          if(typeof json !== 'object') return new Error("Invalid IV password was supplied!")
+          if(id === 'standard') return json;
+          const variant = crypto.decode(id)
+          return {
+            ...variant,
+            filters: {
+              ...variant.filters,
+              ...json.filters
+            },
+            tags: {
+              ...variant.tags,
+              ...json.tags
+            }
+          }
+        }
+
         ${modules.join(';\n')}
+
         return { ${decoded.join(',\n')} }
+
       }`
 
     },

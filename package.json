@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "pnpm run watch -r --stream  --filter ./packages/ --no-sort --workspace-concurrency Infinity",
-    "dev:build": "pnpm run build -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
+    "dev:build": "pnpm run watch -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
     "build:build": "pnpm run build -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
     "semantic-release": "semantic-release",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -40,6 +40,12 @@
       "path": "build/cryptographer",
       "name": "@liquify/cryptographer",
       "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
+    "./cryptospec": {
+      "path": "build/rollup-plugins/cryptospec",
+      "name": "@liquify/rollup-plugin-cryptospec",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
     "./globs": {
@@ -88,12 +94,6 @@
       "path": "packages/specs",
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
-      "version": "0.0.0"
-    },
-    "./cryptospec": {
-      "path": "build/rollup-plugins/cryptospec",
-      "name": "@liquify/rollup-plugin-crypto",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     }
   },
