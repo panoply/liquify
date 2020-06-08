@@ -158,7 +158,7 @@ connection.onDidChangeTextDocument(({
 
   // const parsed = await Parse(document, contentChanges)
 
-  service.doValidation(document, parsed).then(({
+  /* service.doValidation(document, parsed).then(({
     uri
     , diagnostics
   }) => (
@@ -166,7 +166,7 @@ connection.onDidChangeTextDocument(({
       uri,
       diagnostics
     })
-  ))
+  )) */
 
   // const v2 = performance.now()
 

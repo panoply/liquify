@@ -16,7 +16,7 @@ export default function (options = {}) {
   let runner = 0
 
   return ({
-    name: '@liquify/rollup-plugin-crypto',
+    name: '@liquify/rollup-plugin-cryptospec',
 
     options (config) {
 

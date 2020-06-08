@@ -1,8 +1,8 @@
 <img src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" align="left" />&nbsp;&nbsp;<img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
 
-# @liquify/rollup-plugin-crypto
+# @liquify/rollup-plugin-cryptospec
 
-A Rollup plugin used for development on the [Liquify IDE](#) extension/package codebase. Facilitates encryption using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm and will transforms objects, string and number data. This plugin works with JSON data only and must follow the usage pattern.
+A Rollup plugin used for development on the [Liquify IDE](#) extension/package codebase. Facilitates encryption using [aes-256](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithms. Transforms objects, strings and numbers. This plugin is intended to be consumed within the Liquify development workspace.
 
 ## Why?
 
@@ -31,7 +31,6 @@ export default {
   },
   plugins: [
     crypto({
-      main: "a",
       iv: "secret",
       algorithm: "aes-256-cbc",
     }),
@@ -54,7 +53,7 @@ export default {
 
 ## Contributing
 
-This package licensed under MIT but it exists as part of a monorepo that is closed source. Currently, any contributions, issues and/or feature requests by end users is not possible.
+This package licensed under MIT but it exists as part of a monorepo that is mostly closed source. Contributions for outside developers are prohibited as the package only exists on the public NPM registry.
 
 ## Author
 

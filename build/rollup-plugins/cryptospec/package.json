@@ -1,7 +1,7 @@
 {
-  "name": "@liquify/rollup-plugin-crypto",
+  "name": "@liquify/rollup-plugin-cryptospec",
   "version": "0.0.0",
-  "description": "Rollup plugin to encrypt objects, string and numbers using an AES algorithm",
+  "description": "Rollup plugin used by Liquify IDE editor tool for encryption and cryptography bundle processing",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
   "main": "./package/index.cjs.js",
