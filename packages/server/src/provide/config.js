@@ -15,7 +15,7 @@ export class Config extends License {
    *
    * @type {string}
    */
-  engine = null
+  engine = 'standard'
 
   /**
    * Specification References
@@ -24,6 +24,11 @@ export class Config extends License {
    */
   specification = null
 
+  /**
+   * Specification References
+   *
+   * @memberof Config
+  */
   parser = {}
 
   /**
