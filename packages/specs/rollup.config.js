@@ -19,7 +19,23 @@ export default {
   external: [ 'crypto' ],
   plugins: [
     cryptospec({
-      password: 'sissel siv'
+      password: 'sissel siv',
+      defaults: {
+        filters: {
+          type: 'filter'
+        },
+        objects: {
+          type: 'object',
+          filters: true,
+          singular: true,
+          whitespace: true
+        },
+        tags: {
+          filters: false,
+          singular: false,
+          whitespace: true
+        }
+      }
     }),
     resolve(),
     commonjs(),

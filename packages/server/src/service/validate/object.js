@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { DiagnosticSeverity } from 'vscode-languageserver'
-import { Server } from '../../export'
+import { Server } from './../../export'
 import { TokenTag, TokenType } from '../../parser/lexical'
 import { regexp } from '../../../.scripts/old/lexical'
 
@@ -39,9 +39,7 @@ export default ({
    */
   validate: async context => {
 
-    return context.token
-
-    /* if (!ASTnode.objects) return false
+    if (!ASTnode.objects) return false
 
     const problems = []
 
@@ -107,6 +105,6 @@ export default ({
         }
       }
     ))
-    */
+
   }
 })

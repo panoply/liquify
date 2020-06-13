@@ -17,9 +17,13 @@
     "vscode-languageserver"
   ],
   "ava": {
+    "require": [
+      "@babel/register"
+    ],
     "babel": {
       "testOptions": {
-        "babelrc": true
+        "babelrc": false,
+        "configFile": false
       }
     },
     "files": [
@@ -49,10 +53,13 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
+    "@ava/babel-preset-stage-4": "^4.0.0",
+    "@babel/register": "^7.10.1",
     "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
     "@rollup/plugin-commonjs": "^12.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
-    "ava": "^3.8.2"
+    "ava": "^3.8.2",
+    "babel-plugin-ramda": "^2.0.0"
   }
 }

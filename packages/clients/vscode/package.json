@@ -241,10 +241,20 @@
           "default": "off",
           "description": "Traces the communication between VS Code and the language server."
         },
-        "liquid.releaseNotes": {
+        "liquid.notifier.releases": {
           "type": "boolean",
           "default": true,
           "description": "Whether to show version update notifications"
+        },
+        "liquid.notifier.recommendations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show recommendation notifications. This provides and show tips when using the extension."
+        },
+        "liquid.notifier.conflicts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to notify you of conflicting extensions. Helps prevent issues from occuring."
         },
         "liquid.completion.enable": {
           "type": "boolean",
@@ -266,20 +276,21 @@
           "default": true,
           "description": "Whether to enable/disable Liquid formatting."
         },
-        "liquid.format": {
-          "deprecationMessage": "DEPRECATED!\nUse \"liquid.format.enable\" instead."
-        },
         "liquid.formatting": {
-          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc file or if you really must, you can use the \"liquid.format.*\" workspace setting where the asterix (*) is replace by either a \"html\", \"javascript\", \"css\", \"scss\" or \"json\" value."
+          "default": false,
+          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or if you really must, you can use the \"liquid.format.*\" workspace setting where the asterix (*) is replaced by one of the following:\n\n- \"html\"\n- \"javascript\"\n- \"css\"\n- \"scss\"\n- \"json\"\n\nNote: If \"liquid.format.enable\" is set to \"false\" all formatting will be disabled."
         },
         "liquid.rules": {
-          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc file or if you really must, you can use the \"liquid.format.*\" workspace setting where the asterix (*) is replace by either a \"html\", \"javascript\", \"css\", \"scss\" or \"json\" value."
+          "default": false,
+          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or if you really must, you can use the \"liquid.format.*\" workspace setting where the asterix (*) is replaced by one of the following:\n\n- \"html\"\n- \"javascript\"\n- \"css\"\n- \"scss\"\n- \"json\"\n\nNote: If \"liquid.format.enable\" is set to \"false\" all formatting will be disabled."
         },
         "liquid.formatIgnore": {
+          "default": false,
           "deprecationMessage": "DEPRECATED!\nDefine ignore tags in the \"liquid.format.html\": { \"tags\": [] } property ruleset and set the \"kind\" value to \"ignore\""
         },
         "liquid.beautify": {
-          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc file or use the \"liquid.format.*\" workspace setting."
+          "default": false,
+          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or use the \"liquid.format.*\" workspace setting."
         }
       }
     }

@@ -6,6 +6,7 @@
   "editor.wordWrap": "wordWrapColumn",
   "editor.wordWrapColumn": 96,
   "editor.detectIndentation": true,
+  "editor.renderWhitespace": "none",
   "editor.renderIndentGuides": true,
   "editor.codeActionsOnSave": {
     "source.deleteSemicolons": true,
@@ -20,14 +21,7 @@
     "**/.svn": true,
     "**/.hg": true,
     "**/CVS": true,
-    "**/.DS_Store": true,
-    "packages/**/.editorconfig": true,
-    "packages/**/.eslintignore": true,
-    "packages/**/.eslintrc.json": true,
-    "packages/**/.nvmrc": true,
-    "packages/**/.prettierignore": true,
-    "packages/**/.prettierrc.js": true,
-    "packages/**/jsconfig.json": true
+    "**/.DS_Store": true
   },
   "files.associations": {
     ".meta": "json",

@@ -1,0 +1,23 @@
+{
+  "exclude": ["node_modules/**/**"],
+  "include": ["src/**/*", "types/**/*"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",
+    "checkJs": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noEmitOnError": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "baseUrl": ".",
+    "paths": {
+      "specification": ["./types/specification.d.ts"]
+    }
+  }
+}

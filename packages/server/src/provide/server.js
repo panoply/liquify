@@ -1,12 +1,12 @@
 // @ts-check
 
 import _ from 'lodash'
-import fs from 'fs'
-import { readFileSync, exists } from 'fs-extra'
+import R from 'ramda'
+import { readFileSync } from 'fs-extra'
 import { basename } from 'path'
 import { Config } from './config'
 import { Expressions } from '../parser/lexical'
-import { propLevels, regexp } from '../utils/functions'
+import { regexp } from '../utils/functions'
 import * as validations from '../service/validate/index'
 import specs from '@liquify/liquid-language-specs'
 
@@ -14,10 +14,12 @@ import specs from '@liquify/liquid-language-specs'
  * Liquid Language Server
  *
  * @export
- * @typedef { import('vscode-languageserver').InitializeParams } InitializeParams
+ * @typedef {import('vscode-languageserver').InitializeParams} InitializeParams
  * @typedef {import('vscode-languageserver').ServerCapabilities} ServerCapabilities
  * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
  * @typedef {import('vscode-languageserver').TextEdit} TextEdit
+ * @typedef {import('types/specification').Specification} Specification
+ * @typedef {import('types/specification').Engine} Engine
  * @class LiquidServer
  * @extends {Config}
  */
@@ -72,8 +74,8 @@ export class LiquidServer extends Config {
   /**
    *
    *
-   * @param {*} resource
-   * @param {*} connection
+   * @param {string} resource
+   * @param {object} connection
    * @returns
    * @memberof LiquidServer
    */
@@ -101,62 +103,49 @@ export class LiquidServer extends Config {
   /**
    * Configure Server Settings
    *
-   * @param {ServerConfigureParams} event
    * @param {object} settings
    * @memberof LiquidServer
    */
   configure (event, settings) {
 
+    /**
+     * Configuration changed
+     */
     return {
-
-      /**
-       * Configuration changed
-       */
-      onDidChangeConfiguration: ({ liquid }) => this.setProviders(liquid),
-
-      /**
-       * Changed files
-       */
-      onDidChangeWatchedFiles: ({ changes: [ { uri } ] }) => {
-
-        return basename(this.rcfile) === basename(uri)
-          ? this.setUserSettings()
-          : null
-      }
+      onDidChangeConfiguration: this.setProviders,
+      onDidChangeWatchedFiles: (
+        {
+          changes: [ { uri } ]
+        }
+      ) => basename(this.rcfile) !== basename(uri) ? null : this.setUserSettings()
 
     }[event](settings)
 
   }
 
   /**
-   * Get User Settings - Reads and parsed the `.liquidrc` file
-   * containing user configuration
+   * Set Provider Services
    *
-   * @returns
-   * @memberof LiquidServer
+   * @private
+   * @param {string} rcfile
    */
-  setUserSettings = async () => {
-
-    const settings = await this.setLiquidrc(this.rcfile)
-
-    await this.setSpecification(settings.engine)
-    await this.setParseExpressions(this.specification)
-    await this.setDiagnosticRules(settings.validate)
-    await this.setFormattingRules(settings.format)
-
-  }
-
   setLiquidrc = rcfile => {
 
     if (!rcfile) return null
 
     try {
+
       const read = readFileSync(rcfile).toString()
-      const rules = JSON.parse(require('strip-json-comments')(read), null)
+      const rules = JSON.parse(require('strip-json-comments')(read, {
+        whitespace: false
+      }))
+
       return rules
 
     } catch (error) {
+
       return console.error(error.toString())
+
     }
 
   }
@@ -164,9 +153,10 @@ export class LiquidServer extends Config {
   /**
    * Set Provider Services
    *
+   * @private
    * @param {object} liquid
    */
-  setProviders = (liquid) => {
+  setProviders = ({ liquid }) => {
 
     Object.entries(liquid).forEach(([ prop, setting ]) => {
       if (this.provider?.[prop] && setting?.enable) {
@@ -179,52 +169,64 @@ export class LiquidServer extends Config {
   }
 
   /**
-   * Set Specification
+   * Get User Settings - Reads and parsed the `.liquidrc` file
+   * containing user configuration
    *
    * @private
+   * @returns
    * @memberof LiquidServer
    */
-  setSpecification = async engine => {
+  setUserSettings = () => {
 
-    if (this.engine !== engine) {
-      const spec = await specs(this.license)
-      this.engine = engine
-      this.engineLabel = `\n${_.upperFirst(engine)} Liquid`
-      this.specification = spec[this.engine]()
-    }
+    const settings = this.setLiquidrc(this.rcfile)
 
-    return this.specification
+    return this.setLiquidEngine(settings)
 
   }
 
-  setParseExpressions = ({ objects, filters }) => {
+  setLiquidEngine = async settings => {
 
-    const { html, blocks, output } = Expressions
+    if (this.engine === settings.engine) return null
 
-    this.parser.parsing = regexp(`${html}|${blocks}|${output}`, 'g')
-    this.parser.objects = regexp(`\\b(?:${objects})\\.?(?:[^\\s\\n]*\\b)?`, 'gm')
-    this.parser.filters = regexp(Object.keys(filters).join('|'), 'g')
+    this.engine = settings.engine
+    this.engineLabel = `\n${_.upperFirst(this.engine)} Liquid`
 
-    return this.parser
+    return this.setSpecification(settings)
+
+  }
+
+  /**
+   * Set Specification
+   *
+   * @private
+   * @param {object} settings
+   * @memberof LiquidServer
+   */
+  setSpecification = async settings => {
+
+    const spec = await specs(this.license)
+
+    this.specification = spec[this.engine]()
+
+    return this.setFormattingRules(settings)
 
   }
 
   /**
    * Diagnostics
    *
-   * @param {object} userRules
+   * @private
+   * @param {object} settings
    * @memberof Server
    */
-  setDiagnosticRules = userRules => {
+  setDiagnosticRules = settings => {
 
     Object.values(validations).forEach(({
       meta: {
         group,
         rules
       }
-    }) => Object.assign(rules, userRules[group]))
-
-    return validations
+    }) => Object.assign(rules, settings.validate[group]))
 
   }
 
@@ -232,48 +234,87 @@ export class LiquidServer extends Config {
    * Formatter - Merges user configuration Config used
    * when formatting is being applied
    *
-   * @param {object} userFormatRules
+   * @private
+   * @param {object} settings
    * @memberof Config
    */
-  setFormattingRules = userFormatRules => {
+  setFormattingRules = settings => {
 
-    for (const language in userFormatRules) {
+    const enforce = [
+      'mode',
+      'end_quietly',
+      'node_error',
+      'language_name',
+      'language',
+      'lexer',
+      'tags',
+      'files',
+      'format_script',
+      'format_style',
+      'tag_newline',
+      'tag_whitespace',
+      'tag_spacing'
+    ]
 
-      const rules = userFormatRules[language]
+    for (const language in settings.format) {
+
+      const rules = settings.format[language]
 
       if (rules?.tags) {
-        for (const associate of rules.tags) {
+        rules.tags.forEach(associate => {
           this.formatRules.associateTags.push({
             ...associate
             , language
             , type: 'associate'
           })
-        }
+        })
       }
 
       if (this.formatRules.customRules?.[language]) {
-        this.formatRules.customRules[language] = _.pick(
+        this.formatRules.customRules[language] = R.pick(
+          Object.keys(this.formatRules.customRules[language]),
           rules
-          , Object.keys(this.formatRules.customRules[language])
         )
       }
 
       if (this.formatRules.languageRules?.[language]) {
         this.formatRules.languageRules[language] = {
           ...this.formatRules.languageRules[language]
-          , ..._.omit(rules, this.formatRules.excludedRules)
+          , ..._.omit(rules, enforce)
           , ...this.formatRules.editorRules
         }
       }
     }
 
-    return this.formatRules
+    return this.setParseExpressions(settings)
+
+  }
+
+  /**
+   * Set Specification
+   *
+   * @private
+   * @param {Specification} settings
+   * @memberof LiquidServer
+   */
+  setParseExpressions = settings => {
+
+    const { html, blocks, output } = Expressions
+    const { objects, filters } = this.specification
+
+    this.parser = {
+      ...this.parser,
+      parsing: regexp(`${html}|${blocks}|${output}`, 'g'),
+      objects: regexp(`\\b(?:${Object.keys(objects).join('|')})\\.?(?:[^\\s\\n]*\\b)?`, 'g'),
+      filters: regexp(Object.keys(filters).join('|'), 'g')
+    }
+
+    return this.setDiagnosticRules(settings)
 
   }
 
 }
 
-// export const Server = new LiquidServer()
-
-// Server.validate
+// const Server = new LiquidServer()
+// Server
 // const s = new LanguageServerService()

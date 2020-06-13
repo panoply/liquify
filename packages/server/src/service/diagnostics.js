@@ -67,11 +67,8 @@ export function doValidate (ASTnode, call = undefined) {
           tags
         }
       } of validations) {
-        if (onCall) continue
-        if (types.includes(type) && tags.includes(tag)) {
-          if (group === 'object' && !ASTnode.objects) continue
-          validate(document, ASTnode, rules, diagnostics)
-        }
+        validate(document, ASTnode, rules, diagnostics)
+
       }
 
     } else {

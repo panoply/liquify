@@ -79,11 +79,9 @@ export class LiquidService {
    */
   async doValidation ({ textDocument, diagnostics }) {
 
-    if (!diagnostics) {
-      return {
-        uri: textDocument.uri,
-        diagnostics: []
-      }
+    return {
+      uri: textDocument.uri,
+      diagnostics
     }
 
     const embedded = Documents.embeds(textDocument.uri)

@@ -5,191 +5,156 @@
     "asset_img_url": {
       "description": "Returns the asset URL of an image in the \"assets\" folder of a theme. asset_img_url accepts an image size parameter.",
       "snippet": "${1|asset_img_url|asset_img_url: ${2}}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#asset_img_url"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#asset_img_url"
     },
     "asset_url": {
       "description": "Returns the URL of a file in the \"assets\" folder of a theme.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#asset_url"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#asset_url"
     },
     "currency_selector": {
       "description": "Generates a drop-down list that customers can use to select an accepted currency on your storefront. This filter must be used on the form object within a currency form",
       "snippet": "class: ${1}, id: ${2}",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/html-filters#currency_selector"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/html-filters#currency_selector"
     },
     "customer_login_link": {
       "description": "Generates a link to the customer login page.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#customer_login_link"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#customer_login_link"
     },
     "file_img_url": {
       "description": "Returns the URL of an image in the Files page of the admin. file_img_url accepts an image size parameter.",
       "snippet": "${1|file_img_url|file_img_url: ${2}}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#file_img_url"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#file_img_url"
     },
     "file_url": {
       "description": "Returns the URL of a file in the Files page of the admin.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#file_url"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#file_url"
     },
     "font_face": {
       "description": "Returns a CSS @font-face declaration to load the chosen font",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/font-filters#font_face"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/font-filters#font_face"
     },
     "font_modify": {
       "description": "font_modify takes two arguments. The first indicates which property should be modified and the second is the modification to be made.",
       "snippet": "font_modify: '${1|normal,italic,oblique|}', '${2|100,200,300,400,500,600,700,800,900,lighter,normal,bold,bolder|}'",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/font-filters#font_face"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/font-filters#font_face"
     },
     "font_url": {
       "description": "Returns a CDN URL for the chosen font. By default, font_url returns the woff2 version, but it can also be called with an additional parameter to specify the format. Both woff and woff2 are supported.",
       "snippet": "${1|font_url|font_url: 'woff'}",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/font-filters#font_face"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/font-filters#font_face"
     },
     "global_asset_url": {
       "description": "Returns the URL of a global asset. Global assets are kept in a central directory on Shopify’s servers. Using global assets can improve the load times of your pages.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#global_asset_url"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#global_asset_url"
     },
     "img_tag": {
       "description": "Generates an image tag.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/html-filters#img_tag"
+      "ref": "https://help.shopify.com/themes/liquid/filters/html-filters#img_tag"
     },
     "img_url": {
       "description": "Returns the URL of an image. Accepts an image size as a parameter.",
       "snippet": "${1|img_url|img_url: ${2}}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#img_url"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#img_url"
     },
     "link_to": {
       "description": "Generates an HTML link. The first parameter is the URL of the link, and the optional second parameter is the title of the link.",
       "snippet": "link_to: '${1:url}', '${2:title}'",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to"
     },
     "link_to_add_tag": {
       "description": "Creates a link to all products in a collection that have a given tag as well as any tags that have been already selected.",
       "snippet": "link_to_add_tag: ${1}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_add_tag"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_add_tag"
     },
     "link_to_remove_tag": {
       "description": "Generates a link to all products in a collection that have the given tag and all the previous tags that might have been added already.",
       "snippet": "link_to_remove_tag: ${1}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_remove_tag"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_remove_tag"
     },
     "link_to_tag": {
       "description": "Creates a link to all products in a collection that have a given tag.",
       "snippet": "link_to_tag: ${1}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_tag"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_tag"
     },
     "link_to_type": {
       "description": "Creates an HTML link to a collection page that lists all products belonging to a product type.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_type"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_type"
     },
     "link_to_vendor": {
       "description": "Creates an HTML link to a collection page that lists all products belonging to a vendor.",
       "snippet": "link_to_vendor: '${1:url}', '${2:title}'",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_vendor"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_vendor"
     },
     "money": {
       "description": "Formats the price based on the shop’s `HTML without currency` setting",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/money-filters#money"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/money-filters#money"
     },
     "money_with_currency": {
       "description": "Formats the price based on the shop’s `HTML with currency` setting.",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/money-filters#money_with_currency"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/money-filters#money_with_currency"
     },
     "money_without_currency": {
       "description": "Formats the price using a decimal.",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/money-filters#money_without_currency"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/money-filters#money_without_currency"
     },
     "money_without_trailing_zeros": {
       "description": "Formats the price based on the shop’s `HTML with currency` setting and excludes the decimal point and trailing zeros.",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/money-filters#money_without_trailing_zeros"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/money-filters#money_without_trailing_zeros"
     },
     "payment_button": {
       "description": "Creates a dynamic checkout button for a product. This filter must be used on the form object within a product form.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/html-filters#payment_button"
+      "ref": "https://help.shopify.com/themes/liquid/filters/html-filters#payment_button"
     },
     "payment_type_img_url": {
       "description": "Returns the URL of the payment type’s SVG image. Used in conjunction with the shop.enabled_payment_types variable.",
       "snippet": "link_to_remove_tag: ${1}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#payment_type_img_url"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#payment_type_img_url"
     },
     "payment_type_svg_tag": {
       "description": "Returns the `<svg>` tag of the requested payment type image for inlining purposes. Used in conjunction with the `shop.enabled_payment_types` variable.",
       "snippet": "class: ${1}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/html-filters#payment_button"
+      "ref": "https://help.shopify.com/themes/liquid/filters/html-filters#payment_button"
     },
     "script_tag": {
       "description": "Generates a script tag.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/html-filters#payment_button"
+      "ref": "https://help.shopify.com/themes/liquid/filters/html-filters#payment_button"
     },
     "shopify_asset_url": {
       "description": "Returns the URL of a global assets that are found on Shopify’s servers.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#shopify_asset_url"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#shopify_asset_url"
     },
     "sort_by": {
       "description": "Creates a URL to a collection page with the provided sort_by parameter. This filter must be applied to a collection URL.",
       "snippet": "sort_by: ${1}",
-      "type": "filter",
-      "url": "https://help.shopify.com/en/themes/liquid/filters/url-filters#sort_by"
+      "ref": "https://help.shopify.com/en/themes/liquid/filters/url-filters#sort_by"
     },
     "stylesheet_tag": {
       "description": "Generates a link tag that points to the given stylesheet.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/html-filters#payment_button"
+      "ref": "https://help.shopify.com/themes/liquid/filters/html-filters#payment_button"
     },
     "url_for_type": {
       "description": "Creates a URL that links to a collection page containing products with a specific product type.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#url_for_type"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#url_for_type"
     },
     "url_for_vendor": {
       "description": "Creates a URL that links to a collection page containing products with a specific product vendor.",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#url_for_vendor"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#url_for_vendor"
     },
     "within": {
       "description": "Creates a collection-aware product URL by prepending /collections/collection-handle to a product URL, where collection-handle is the handle of the collection that is currently being viewed.",
       "snippet": "within: ${1}",
-      "type": "filter",
-      "url": "https://help.shopify.com/themes/liquid/filters/url-filters#within"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#within"
     }
   },
   "objects": {
     "additional_checkout_buttons": {
       "description": "The content_for_layout object is required in theme.liquid. It must be placed inside the HTML <body> tag. It dynamically loads content generated by other templates such as index.liquid or product.liquid.",
       "filters": false,
-      "properties": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/objects#additional-checkout-buttons",
-      "type": "object",
+      "ref": "https://help.shopify.com/en/themes/liquid/objects#additional-checkout-buttons",
       "whitespace": false
     },
     "address": {
       "description": "The address object contains information entered by a customer in Shopify's checkout pages.",
-      "filters": true,
       "properties": [
         {
           "description": "Returns the abbreviated value of the Province/State field of the address.",
@@ -201,7 +166,7 @@
         },
         {
           "description": "Returns the relative URL of the address.",
-          "name": "reference"
+          "name": "ref"
         },
         {
           "description": "Returns the value of the Address1 field of the address.",
@@ -252,27 +217,19 @@
           "name": "name"
         }
       ],
-      "reference": "https://help.shopify.com/en/themes/liquid/objects/address",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/en/themes/liquid/objects/address"
     },
     "all_country_option_tags": {
       "description": "The all_country_option_tags object creates an <option> tag for each country. An attribute called data-provinces is set for each <option>, and contains a JSON-encoded array of the country's subregions. If a country doesn't have any subregions, then an empty array is set for its data-provinces attribute.",
       "filters": false,
-      "reference": "https://help.shopify.com/themes/liquid/objects#all_products",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#all_products"
     },
     "all_products": {
       "description": "Returns a list of all the products in your store. You can use all_products to access products by their handles.",
-      "filters": true,
-      "reference": "https://help.shopify.com/themes/liquid/objects#all_products",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#all_products"
     },
     "article": {
       "description": "Returns a list of all the blog articles in a store.",
-      "filters": true,
       "properties": [
         {
           "description": "Returns all the tags for the article.",
@@ -280,7 +237,6 @@
         },
         {
           "description": "Returns an object with information about the article's author.",
-          "filters": true,
           "name": "user",
           "properties": [
             {
@@ -321,9 +277,7 @@
               "description": "Returns true if the author of the article is the account owner of the store. Returns false if the author is not the account owner.",
               "name": "account_owner"
             }
-          ],
-          "type": "object",
-          "whitespace": true
+          ]
         },
         {
           "description": "Returns article.excerpt of the article if it exists. Returns article.content if an excerpt does not exist for the article.",
@@ -374,7 +328,7 @@
         },
         {
           "description": "Returns the relative URL of the article.",
-          "name": "reference"
+          "name": "ref"
         },
         {
           "description": "Returns the relative URL where POST requests are sent to when creating new comments.",
@@ -397,13 +351,10 @@
           "name": "moderated"
         }
       ],
-      "reference": "https://help.shopify.com/themes/liquid/objects#all_products",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#all_products"
     },
     "block": {
       "description": "A block represents the content and settings of a single block in an array of section blocks. The block object can be accessed in a section file by looping through section.blocks.",
-      "filters": true,
       "properties": [
         {
           "description": "Returns a string representing the block's attributes.",
@@ -422,13 +373,10 @@
           "name": "type"
         }
       ],
-      "reference": "https://help.shopify.com/en/themes/liquid/objects/block",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/en/themes/liquid/objects/block"
     },
     "blog": {
       "description": "Blog object",
-      "filters": true,
       "properties": [
         {
           "description": "Returns all tags in a blog. Similar to all_tags, but only returns tags of articles that are in the filtered view.",
@@ -460,7 +408,7 @@
         },
         {
           "description": "Returns the relative URL of the blog.",
-          "name": "reference"
+          "name": "ref"
         },
         {
           "description": "Returns the title of the blog.",
@@ -479,20 +427,15 @@
           "name": "moderated"
         }
       ],
-      "reference": "https://help.shopify.com/themes/liquid/objects#blogs",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#blogs"
     },
     "canonical_url": {
       "description": "Returns the canonical URL of the current page. A page's canonical URL is the page's default URL without any URL parameters. For products and variants, the canonical URL is the default product page with no collection or variant selected.",
       "filters": false,
-      "reference": "https://help.shopify.com/themes/liquid/objects#canonical_url",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#canonical_url"
     },
     "cart": {
       "description": "Cart object",
-      "filters": true,
       "properties": [
         {
           "description": "Cart attributes allow the capturing of more information on the cart page.",
@@ -543,9 +486,7 @@
           "name": "note"
         }
       ],
-      "reference": "https://help.shopify.com/themes/liquid/objects#canonical_url",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#canonical_url"
     },
     "collection": {
       "filters": false,
@@ -576,7 +517,7 @@
         },
         {
           "description": "Returns the URL of the collection",
-          "name": "url"
+          "name": "ref"
         },
         {
           "description": "Returns the collection's handle",
@@ -639,24 +580,19 @@
           "name": "current_vendor"
         }
       ],
-      "reference": "https://help.shopify.com/themes/liquid/objects#collection",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#collection"
     },
     "collections": {
       "description": "Returns a list of all of the collections in a store",
       "filters": false,
-      "properties": false,
-      "reference": "https://help.shopify.com/themes/liquid/objects#collections",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#collections"
     },
     "comment": {
       "filters": false,
       "properties": [
         {
           "description": "Returns the URL of the article with `comment.id` appended to it. This is so the page will automatically scroll to the comment",
-          "name": "url"
+          "name": "ref"
         },
         {
           "description": "Returns the author of the comment",
@@ -687,48 +623,36 @@
           "name": "updated_at"
         }
       ],
-      "reference": "https://help.shopify.com/themes/liquid/objects/comment",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects/comment"
     },
     "content_for_additional_checkout_buttons": {
       "description": "Returns checkout buttons for any active payment providers with offsite checkouts. The \"additional_checkout_buttons\" and \"content_for_additional_checkout_buttons\" are used in many Shopify themes.",
       "filters": false,
-      "properties": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/objects#content-for-additional-checkout-button",
-      "type": "object",
+      "ref": "https://help.shopify.com/en/themes/liquid/objects#content-for-additional-checkout-button",
       "whitespace": false
     },
     "content_for_header": {
       "description": "The content_for_header object is required in theme.liquid. It must be placed inside the HTML <head> tag. It dynamically loads all scripts required by Shopify into the document head. These scripts include Shopify analytics, Google Analytics, and scripts required for Shopify apps.",
       "filters": false,
-      "properties": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/objects#content-objects",
-      "type": "object",
+      "ref": "https://help.shopify.com/en/themes/liquid/objects#content-objects",
       "whitespace": false
     },
     "content_for_index": {
       "description": "The content_for_index object contains the content of dynamic sections to be rendered on the home page. This object must be included in templates/index.liquid.",
       "filters": false,
-      "properties": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/objects#content-for-index",
-      "type": "object",
+      "ref": "https://help.shopify.com/en/themes/liquid/objects#content-for-index",
       "whitespace": false
     },
     "content_for_layout": {
       "description": "The content_for_layout object is required in theme.liquid. It must be placed inside the HTML <body> tag. It dynamically loads content generated by other templates such as index.liquid or product.liquid.",
       "filters": false,
-      "properties": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/objects#content-for-layout",
-      "type": "object",
+      "ref": "https://help.shopify.com/en/themes/liquid/objects#content-for-layout",
       "whitespace": false
     },
     "country_option_tags ": {
       "description": "The country_option_tags object creates an <option> tag for each country that is included as a shipping zone on the Shipping page of the admin. An attribute called data-provinces is set for each <option>, and contains a JSON-encoded array of the country's subregions. If a country doesn't have any subregions, then an empty array is set for its data-provinces attribute",
       "filters": false,
-      "properties": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags",
-      "type": "object",
+      "ref": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags",
       "whitespace": false
     },
     "currency": {
@@ -748,23 +672,18 @@
           "name": "name"
         }
       ],
-      "reference": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags",
-      "type": "object",
+      "ref": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags",
       "whitespace": false
     },
     "current_page": {
       "description": "current_page returns the number of the page you are on when browsing through paginated content. It can be used outside the paginate block",
       "filters": false,
-      "reference": "https://help.shopify.com/themes/liquid/objects#collections",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#collections"
     },
     "current_tags": {
       "description": "Product tags are used to filter a collection to only show products that contain a specific product tag. Similarly, article tags are used to filter a blog to only show products that contain a specific article tag. The current_tags variable is an array that contains all tags that are being used to filter a collection or blog.",
       "filters": false,
-      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/current-tags",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/current-tags"
     },
     "customer": {
       "description": "The customer object contains information about a customer who has a customer account",
@@ -839,8 +758,7 @@
           "name": "tax_exempt"
         }
       ],
-      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/customer",
-      "type": "object",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/customer",
       "whitespace": false
     },
     "customer_address": {
@@ -903,8 +821,7 @@
           "name": "province"
         }
       ],
-      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/customer-address",
-      "type": "object",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/customer-address",
       "whitespace": false
     },
     "discount_allocation": {
@@ -919,8 +836,7 @@
           "name": "amount"
         }
       ],
-      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/discount-allocation",
-      "type": "object",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/discount-allocation",
       "whitespace": false
     },
     "discount_application": {
@@ -955,8 +871,7 @@
           "name": "value_type"
         }
       ],
-      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/discount-application",
-      "type": "object",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/discount-application",
       "whitespace": false
     },
     "external_video": {
@@ -991,9 +906,7 @@
           "name": "media_type"
         }
       ],
-      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/external-video",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/external-video"
     },
     "font": {
       "description": "The font object is used to access the font_picker settings. It can be accessed via the global settings object",
@@ -1022,9 +935,7 @@
           "description": "Returns the suggested fallback font families",
           "name": "fallback_families"
         }
-      ],
-      "type": "object",
-      "whitespace": true
+      ]
     },
     "form": {
       "description": "The form object is used within the form tag. It contains attributes of its parent form.",
@@ -1138,8 +1049,7 @@
           "name": "last"
         }
       ],
-      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/for-loops",
-      "type": "object",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/for-loops",
       "whitespace": false,
       "within": ["for"]
     },
@@ -1171,14 +1081,10 @@
     },
     "handle": {
       "description": "Returns the handle of the page that is being viewed",
-      "filters": true,
-      "reference": "https://help.shopify.com/themes/liquid/objects#handle",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#handle"
     },
     "image": {
       "description": "The image object returns information about an image.",
-      "filters": true,
       "properties": [
         {
           "description": "Returns an array of attributes for the variant that the image is associated with.",
@@ -1221,23 +1127,15 @@
           "name": "attached_to_variant"
         }
       ],
-      "reference": "https://help.shopify.com/themes/liquid/objects#image",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#image"
     },
     "images": {
       "description": "Allows you to access any image in a store by its filename",
-      "filters": true,
-      "reference": "https://help.shopify.com/themes/liquid/objects#images",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#images"
     },
     "linklists": {
       "description": "Returns a list of all the menus (link lists) in your store. You can use linklists to access your link lists with their handles.",
-      "filters": true,
-      "reference": "https://help.shopify.com/themes/liquid/objects#linklists",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#linklists"
     },
     "product": {
       "description": "Product object",
@@ -1351,15 +1249,12 @@
           "name": "price_varies"
         }
       ],
-      "reference": "https://help.shopify.com/themes/liquid/objects#product",
-      "type": "object",
-      "whitespace": true
+      "ref": "https://help.shopify.com/themes/liquid/objects#product"
     },
     "order": {
       "description": "You can access the order object in a theme's Liquid templates with \"customer.orders\"",
       "singular": true,
-      "type": "object",
-      "reference": "https://shopify.dev/docs/themes/liquid/reference/objects/order",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/order",
       "properties": [
         {
           "name": "attributes",
@@ -1511,19 +1406,37 @@
   "tags": {
     "echo": {
       "description": "Outputs an expression in the rendered HTML. This is identical to wrapping an expression in `{{` and `}}`, but works inside liquid tags. Filters are supported.",
-      "filters": true,
-      "reference": "https://help.shopify.com/en/themes/liquid/tags/theme-tags#echo",
+      "ref": "https://help.shopify.com/en/themes/liquid/tags/theme-tags#echo",
       "singular": true,
-      "type": "variable",
-      "whitespace": true
+      "type": "variable"
     },
     "form": {
-      "description": "Creates an HTML <form> element along with the required <input> elements to submit the form to a particular endpoint.",
-      "filters": true,
-      "reference": "https: //help.shopify.com/en/themes/liquid/tags/theme-tags#echo",
-      "singular": false,
       "type": "output",
+      "description": "Creates an HTML <form> element along with the required <input> elements to submit the form to a particular endpoint.",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form",
       "parameters": [
+        {
+          "name": "article",
+          "preceding": "comma",
+          "description": "The `article` object"
+        },
+        {
+          "name": "address",
+          "preceding": "comma",
+          "description": "The `address` object is required when editing an existing address"
+        },
+        {
+          "name": "customer.new_address",
+          "preceding": "comma",
+          "description": "The `customer.new_address` is required for creating a new address"
+        },
+        {
+          "name": "product",
+          "preceding": "comma",
+          "description": "The `product` object is required when generating a form for adding a product variant to the cart"
+        }
+      ],
+      "types": [
         {
           "description": "Generates a form for activating a customer account on the activate_account.liquid template.",
           "name": "activate_customer_password"
@@ -1576,100 +1489,106 @@
           "description": "Generates a form that lets your customer change the currency in your storefront.",
           "name": "currency"
         }
-      ],
-      "whitespace": true
+      ]
     },
     "include": {
-      "deprecated": true,
       "description": "The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",
       "filters": false,
       "parameters": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
+      "whitespace": false,
+      "deprecated": true,
+      "ref": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
       "singular": true,
-      "type": "import",
-      "whitespace": false
+      "type": "include"
     },
     "layout": {
       "description": "Include \"{% layout 'alternate' %}\" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:",
-      "filters": false,
-      "operators": ["by"],
-      "parameters": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
       "singular": true,
-      "type": "import",
-      "whitespace": true
+      "filters": false,
+      "type": "include",
+      "ref": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"
     },
     "paginate": {
       "description": "Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",
       "filters": false,
-      "operators": ["by"],
-      "parameters": false,
-      "reference": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
+      "ref": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
       "singular": false,
       "type": "iteration",
-      "whitespace": true
+      "parameters": [
+        {
+          "name": "by",
+          "description": "The by parameter is followed by an integer between 1 and 50 that tells the paginate tag how many results it should output per page."
+        }
+      ]
     },
     "render": {
       "description": "Renders a snippet from the snippets folder of a theme.",
       "filters": false,
-      "operators": ["as", "for", "with"],
-      "parameters": true,
-      "reference": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
       "singular": true,
-      "type": "import",
-      "whitespace": true
+      "ref": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
+      "type": "include",
+      "parameters": [
+        {
+          "name": "for",
+          "requires": ["as"],
+          "snippet": "for ${1} as ${2} ${0}",
+          "description": "A snippet can be rendered once for each value of an enumerable object by using the `for` and `as` parameters.\n\nWhen using the for parameter, the forloop object is accessible within the snippet."
+        },
+        {
+          "name": "with",
+          "requires": ["for", "as"],
+          "snippet": "with ${1} for ${1} as ${2} ${0}",
+          "description": "A single object can be passed to a snippet by using the `with` and `as` parameters."
+        }
+      ]
     },
     "section": {
       "description": "Renders a section from the sections folder of a theme.",
       "filters": false,
       "language": "json",
-      "reference": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
+      "ref": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
       "singular": true,
-      "type": "import",
-      "whitespace": true
+      "type": "include"
     },
     "schema": {
       "description": "The javascript tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",
       "filters": false,
       "language": "json",
-      "reference": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
+      "ref": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
       "singular": false,
       "type": "embedded",
       "whitespace": false
     },
     "style": {
+      "type": "embedded",
       "description": "The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",
       "filters": false,
+      "whitespace": false,
       "language": "css",
-      "reference": "https://help.shopify.com/themes/liquid/tags/theme-tags#style",
-      "singular": false,
-      "type": "embedded",
-      "whitespace": false
+      "ref": "https://help.shopify.com/themes/liquid/tags/theme-tags#style"
     },
     "stylesheet": {
+      "type": "embedded",
       "description": "The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",
       "filters": false,
+      "whitespace": false,
       "language": "css",
-      "reference": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags",
-      "singular": false,
-      "type": "embedded",
+      "ref": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags",
       "types": [
         {
-          "description": "SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",
-          "name": "scss"
+          "name": "scss",
+          "type": "string",
+          "description": "SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."
         }
-      ],
-      "whitespace": false
+      ]
     },
     "javascript": {
+      "type": "embedded",
       "description": "The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",
       "filters": false,
+      "whitespace": false,
       "language": "javascript",
-      "parameters": false,
-      "reference": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags",
-      "singular": false,
-      "type": "embedded",
-      "whitespace": false
+      "ref": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags"
     }
   }
 }

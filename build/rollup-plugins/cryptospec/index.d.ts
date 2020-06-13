@@ -6,6 +6,26 @@ interface Options {
    */
   readonly password: string;
   /**
+   * Default properties to merge into each specification
+   */
+  readonly defaults: {
+    filters?: {
+      type?: string;
+    };
+    objects?: {
+      type?: string;
+      filters?: boolean;
+      singular?: boolean;
+      whitespace?: boolean;
+    };
+    tags?: {
+      type?: string;
+      filters?: boolean;
+      singular?: boolean;
+      whitespace?: boolean;
+    };
+  };
+  /**
    * The encryption cipher
    */
   readonly cipher?:

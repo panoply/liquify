@@ -6,7 +6,7 @@
  * Exports defined here are used by the parser/tokenizer and help give context to
  * Liquid tags located in each text document.
  *
- * @param {import('../../../release/vscode-liquify/server/node_modules/defs').DocumentModel} params
+ * @param {import('types/defs').DocumentModel} params
  * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} changes[]
  * @param {object} options
  * @returns
@@ -59,6 +59,30 @@ export const Expressions = {
    */
   frontmatter: /(-{3})/.source
 
+}
+
+/**
+ * The token kind used to distinguish the
+ * language type of the the token.
+ *
+ * @readonly
+ */
+export const ControlExpressions = {
+
+  /**
+   * Captures condition, eg: `{% if condition  == compare %}` > `condition`
+   */
+  condition: /.*?(?=[!=<>]+|\bor\b|\band\b)/s,
+
+  /**
+   * Captures control operators, eg: `{% if condition == true %}` > `==`
+   */
+  operators: /[!=<>]+|\bor\b|\band\b/,
+
+  /**
+   * Captures a valid operator sequence, eg: `!===` > `!=`
+   */
+  characters: /<=|>=|==|>|<|!=|\bor\b|\band\b/
 }
 
 /**
@@ -145,9 +169,9 @@ export const TokenType = {
   embedded: 4,
 
   /**
-   * `5` Import Type, eg: `{% include '' %}` | `{% render '' %}`
+   * `5` Include Type, eg: `{% include '' %}` | `{% render '' %}`
    */
-  import: 5,
+  include: 5,
 
   /**
    * `6` Iteration Type, eg: `{% for %} {% endfor %}` | `{% cycle %} {% endcycle %}`
@@ -267,4 +291,14 @@ export const Characters = {
    */
   TAB: '\t'.charCodeAt(0)
 
+}
+
+const Validationsss = {
+
+  string: '[\'"]{1}',
+  word: '\\w+',
+  iteration: '\\bin\\b',
+  condition: '[!=<>]{2}|[<>]{1}|\\bor\\b|\\band\\b',
+  filter: '\\|',
+  variable: '={1}'
 }

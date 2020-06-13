@@ -7,36 +7,47 @@ import { License } from './license'
  * presets defined here are defaults and will maintain server configuration state.
  *
  * @export
+ * @class Config
  */
-export class Config extends License {
+export class Config {
 
   /**
-   * Engine Variation Spec, eg: `standard` | `shopify` | `jekyll`
+   * Engine Variation Specification
    *
-   * @type {string}
+   * @type {import('types/specification').Engine}
+   * @memberof Config
    */
-  engine = 'standard'
+  engine = null
 
   /**
    * Specification References
    *
+   * @type {import('types/specification').Specification}
    * @memberof Config
    */
   specification = null
 
   /**
-   * Specification References
-   *
-   * @memberof Config
-  */
-  parser = {}
-
-  /**
    * The `.liquidrc` file location
    *
    * @type {string}
+   * @memberof Config
    */
   rcfile = null
+
+  /**
+   * Specification References
+   *
+   * @type {import('types/parser').ParseExpressions}
+   * @memberof Config
+  */
+  parser = {
+    comment: null,
+    filters: null,
+    objects: null,
+    parsing: null,
+    frontmatter: null
+  }
 
   /**
    * Server Document Settings - Records settings of documents
@@ -70,78 +81,59 @@ export class Config extends License {
   hasDiagnosticRelatedInformationCapability = false
 
   /**
-   * Settings - Language Server settings and configuration option
+   * **NOT YET IMPLEMENTED**
    *
-   * @memberof Config
+   * Third party extensions - In future version we will inherit
+   * formatting rulesets from alternative formatters/beautifiers
+   *
+   * @protected
    */
-  workspaceSettings = {
+  thirdParties = {
 
     /**
-     * The `.liquidrc` file location
-     *
-     * @type {string}
+     * Prettier - NOT YET AVAILABLE - DO NOT USE
      */
-    rcfile: null,
+    prettier: null,
 
     /**
-     * Additional specification refernces
-     *
-     * @type {Specification}
+     * JS Beautify - NOT YET AVAILABLE - DO NOT USE
      */
-    spec: null,
+    jsbeautiy: null
+
+  }
+
+  /**
+   * Server tracing (LSP related)
+   */
+  trace ={
 
     /**
-     * Notification options - Used to limit and control what
-     * notifications are shown by the extension
+     * Trace LSP
      */
-    notifications: {
+    server: 'off'
 
-      /**
-       * Show version notification for new releases
-       */
-      releaseNotes: true,
+  }
 
-      /**
-       * Project reccomendation - Show project reccomendations
-       */
-      projectReccomendations: false,
-
-      /**
-       * Notify when conflicting extensions are active
-       */
-      conflictingExtensions: true
-
-    },
+  /**
+   * Notification options - Used to limit and control what
+   * notifications are shown by the extension
+   */
+  notifier = {
 
     /**
-     * Server tracing (LSP related)
+     * Show version notification for new releases
      */
-    trace: {
-
-      /**
-       * Trace LSP
-       */
-      server: 'off'
-
-    },
+    releases: true,
 
     /**
-     * Third party extensions - In future version we will inherit
-     * formatting rulesets from alternative formatters/beautifiers
+     * Project reccomendation - Show project recommendations
      */
-    extensions: {
+    recommendations: true,
 
-      /**
-       * Prettier - NOT YET AVAILABLE - DO NOT USE
-       */
-      prettier: null,
-
-      /**
-       * JS Beautify - NOT YET AVAILABLE - DO NOT USE
-       */
-      jsbeautiy: null
-
-    }
+    /**
+     * Notify when conflicting extensions are active
+     */
+    conflicts: true
 
   }
 
@@ -186,7 +178,6 @@ export class Config extends License {
      * The JSON Language Server
      *
      * @type {boolean}
-     * @constant
      */
     json: true,
 
@@ -194,7 +185,6 @@ export class Config extends License {
      * The CSS Language Server - NOT YET AVAILABLE
      *
      * @type {boolean}
-     * @constant
      */
     css: false,
 
@@ -202,7 +192,6 @@ export class Config extends License {
      * The SCSS Language Server - NOT YET AVAILABLE
      *
      * @type {boolean}
-     * @constant
      */
     scss: false,
 
@@ -210,7 +199,6 @@ export class Config extends License {
      * The JavaScript Language Server - NOT YET AVAILABLE
      *
      * @type {boolean}
-     * @constant
      */
     javascript: false
 
@@ -295,27 +283,6 @@ export class Config extends License {
       }
 
     },
-
-    /**
-     * Excluded Rules - Formatting Rules to be omitted on assignment
-     *
-     * @readonly
-     */
-    excludedRules: [
-      'mode',
-      'end_quietly',
-      'node_error',
-      'language_name',
-      'language',
-      'lexer',
-      'tags',
-      'files',
-      'format_script',
-      'format_style',
-      'tag_newline',
-      'tag_whitespace',
-      'tag_spacing'
-    ],
 
     /**
      * Associated Tags - Shipping as default additional tags
@@ -466,7 +433,7 @@ export class Config extends License {
   *
   * @type {ValidationRules}
   */
-  linter = {
+  validations = {
 
     tag: {
 

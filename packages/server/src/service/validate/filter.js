@@ -1,6 +1,6 @@
 import { DiagnosticSeverity } from 'vscode-languageserver'
 import { Grammar, TokenTag, TokenType } from '../../parser/lexical'
-import { regexp } from '../../../.scripts/old/lexical'
+import { regexp } from '../../parser/utils'
 
 /**
  * Filter validation function export

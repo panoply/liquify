@@ -1,13 +1,5 @@
 import test from 'ava'
-
-const Expressions = {
-
-  html: /<\/?\b(script|style)\b[^<>]*>/,
-  blocks: /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}/,
-  output: /{{2}-?\s*\b(\w+)\b.?(?:[^{}]{2})*-?}{2}/,
-  comments: /(?:<!--|\/\*).*?(?:\*\/|-->)/,
-  frontmatter: /(-{3})/
-}
+import { Expressions } from '../../src/parser/lexical'
 
 test('block tags', t => {
 

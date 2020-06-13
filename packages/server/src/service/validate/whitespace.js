@@ -49,7 +49,10 @@ export default ({
   ) => {
 
     // If whitespace rule is false, skip validation
-    if (!rules.whitespace || Server.specification[name].whitespace) return undefined
+    if (
+      !rules?.whitespace ||
+      (Server.specification.tags?.[name]?.whitespace ||
+      Server.specification.objects?.[name]?.whitespace)) return undefined
 
     const severity = DiagnosticSeverity.Error
     const message = 'Tag does not accept whitespace dash'

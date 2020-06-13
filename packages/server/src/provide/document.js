@@ -45,7 +45,7 @@ export default (function () {
    */
   function create ({ uri, languageId, version, text }) {
 
-    return documents.has(uri) ? documents.get(uri) : documents.set(uri, {
+    return callback => callback(documents.has(uri) ? documents.get(uri) : documents.set(uri, {
 
       /**
        * AST
@@ -75,8 +75,7 @@ export default (function () {
        */
       textDocument: TextDocument.create(uri, languageId, version, text)
 
-    })
-    .get(uri)
+    }).get(uri))
 
   }
 

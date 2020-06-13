@@ -103,11 +103,9 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   console.log('onDidOpenTextDocument')
 
-  const document = Document.create(textDocument)
+  Document.create(textDocument)(Parse.scanner)
 
-  Parse.scanner(document)
-
-  return service.doValidation(document).then(({
+  /* return service.doValidation(document).then(({
     uri
     , diagnostics
   }) => (
@@ -115,7 +113,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
       uri,
       diagnostics
     })
-  ))
+  )) */
 
 })
 
@@ -128,21 +126,24 @@ connection.onDidChangeTextDocument(({
   , textDocument: { uri }
 }) => {
 
-  console.log('onDidChangeTextDocument')
+  console.log('onDidChangeTextDocument', uri)
 
   const v1 = performance.now()
 
   const document = documents.get(uri)
 
-  if (!document.textDocument) return null
+  if (!document?.textDocument) return null
 
   const changes = Document.update(document.textDocument, contentChanges)
 
   document.ast = []
+  document.diagnostics = []
+
   Parse.increment(document, ...changes)
 
   const v2 = performance.now()
 
+  // console.log(document.diagnostics)
   // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
 
   // return Documents.set(textDocument.uri)
@@ -207,18 +208,20 @@ connection.onDocumentRangeFormatting(
 /* onHover                                                          */
 /* ---------------------------------------------------------------- */
 
-connection.onHover(({
-  position
-  , textDocument: { uri }
-}, token) => !Server.provider.hover || runSync(() => {
+connection.onHover(
+  ({
+    position
+    , textDocument: { uri }
+  }, token) => !Server.provider.hover || runSync(() => {
 
-  const document = documents.get(uri)
+    const document = documents.get(uri)
 
-  if (!document.textDocument) return null
+    if (!document.textDocument) return null
 
-  return service.doHover(document, position)
+    return service.doHover(document, position)
 
-}, null, `Error while computing hover for ${uri}`, token))
+  }, null, `Error while computing hover for ${uri}`, token)
+)
 
 /* ---------------------------------------------------------------- */
 /* onCompletion                                                     */
@@ -236,7 +239,6 @@ connection.onCompletion(
     if (!document.textDocument) return null
 
     const onComplete = await service.doComplete(document, position, context)
-
     return onComplete
 
   }, null, `Error while computing completion for ${uri}`, token)
