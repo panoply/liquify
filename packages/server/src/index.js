@@ -1,21 +1,10 @@
 // @ts-nocheck
 
 import { DidChangeConfigurationNotification, TextDocumentSyncKind } from 'vscode-languageserver'
-import Document from './provide/document'
-import { connection, Server } from './export'
+import { connection, Server, Service, Document, Parser } from './export'
 import { runAsync, runSync } from './utils/runners'
 import { performance } from 'perf_hooks'
-import { LiquidService } from './provide/service'
-import * as Parse from './parser/export'
 
-/**
- * Liquid Servsice
- */
-const service = new LiquidService()
-
-/**
- * Text Documents
- */
 const { documents } = Document
 
 /* ---------------------------------------------------------------- */
@@ -78,7 +67,7 @@ connection.onInitialized(() => {
     })
   }
 
-  return service.configure(Server.service)
+  return Service.configure(Server.service)
 
 })
 
@@ -92,7 +81,7 @@ connection.onDidChangeConfiguration(change => {
 
   Server.configure('onDidChangeConfiguration', change.settings)
 
-  documents.forEach(service.doValidation)
+  // documents.forEach(Service.doValidation)
 
 })
 
@@ -103,9 +92,11 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   console.log('onDidOpenTextDocument')
 
-  Document.create(textDocument)(Parse.scanner)
+  Document.create(textDocument)(Parser.scanner)
 
-  /* return service.doValidation(document).then(({
+  // documents.forEach(Service.doValidation)
+
+  /* return Service.doValidation(document).then(({
     uri
     , diagnostics
   }) => (
@@ -136,21 +127,18 @@ connection.onDidChangeTextDocument(({
 
   const changes = Document.update(document.textDocument, contentChanges)
 
-  document.ast = []
-  document.diagnostics = []
-
-  Parse.increment(document, ...changes)
+  Parser.increment(document, ...changes)
 
   const v2 = performance.now()
 
-  // console.log(document.diagnostics)
+  console.log(document)
   // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
 
   // return Documents.set(textDocument.uri)
 
-  // const parsed = await Parse(document, contentChanges)
+  // const parserd = await Parser(document, contentChanges)
 
-  service.doValidation(document).then(({
+  Service.doValidation(document).then(({
     uri
     , diagnostics
   }) => (
@@ -199,7 +187,7 @@ connection.onDocumentRangeFormatting(
 
     if (!document.textDocument) return null
 
-    return service.doFormat(document, Server.format)
+    return Service.doFormat(document, Server.format)
 
   }, null, `Error while computing formatting for ${uri}`, token)
 )
@@ -218,7 +206,7 @@ connection.onHover(
 
     if (!document.textDocument) return null
 
-    return service.doHover(document, position)
+    return Service.doHover(document, position)
 
   }, null, `Error while computing hover for ${uri}`, token)
 )
@@ -238,7 +226,7 @@ connection.onCompletion(
 
     if (!document.textDocument) return null
 
-    const onComplete = await service.doComplete(document, position, context)
+    const onComplete = await Service.doComplete(document, position, context)
     return onComplete
 
   }, null, `Error while computing completion for ${uri}`, token)
@@ -254,7 +242,7 @@ connection.onCompletionResolve(
     , token
   ) => runSync(() => {
 
-    return service.doCompleteResolve(item)
+    return Service.doCompleteResolve(item)
 
   }, item, 'Error while resolving completion proposal', token)
 )

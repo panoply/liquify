@@ -1,8 +1,8 @@
 // @ts-nocheck
-import _, { set } from 'lodash'
+import _ from 'lodash'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { TokenTag, TokenType } from './lexical'
-import validator from '../service/linter'
+import validator from '../service/diagnostics'
 import { Server } from '../export'
 import * as parse from './utils'
 
@@ -18,10 +18,12 @@ import * as parse from './utils'
  * @param {object} options
  * @returns
  */
-export default (document, index = undefined) => {
+export default (document, options = { ast: false, isIncrement: false }) => {
 
+  const { textDocument } = document
+  const { index, content = textDocument.getText() } = options
+  const { ast } = options?.ast ? options : document
   const validate = validator(document)
-  const { ast, textDocument } = document
 
   let run = 0
 
@@ -72,8 +74,9 @@ export default (document, index = undefined) => {
 
       const props = match[0].split('.').filter(Boolean)
       const position = offset + match.index + match[0].length
+      const key = props.length > 1 ? position + 1 : position
 
-      object[props.length > 1 ? position + 1 : position] = props
+      object[key] = props
 
       return object
 
@@ -212,19 +215,19 @@ export default (document, index = undefined) => {
   }
 
   /* -------------------------------------------- */
-  /*                    EXECUTE                   */
+  /*                   EXECUTION                  */
   /* -------------------------------------------- */
 
-  const matches = textDocument.getText().matchAll(Server.parser.parsing)
+  const matches = content.matchAll(Server.parser.parsing)
 
   if (!matches) return ast
 
   for (const match of matches) parseText(match)
 
   if (ast.some(i => i.tag === TokenTag.start)) {
-    ast.filter(i => i.tag === TokenTag.start).forEach(validate)
+  //  ast.filter(i => i.tag === TokenTag.start).forEach(validate)
   }
 
-  return document
+  return options.isIncrement ? ast : document
 
 }

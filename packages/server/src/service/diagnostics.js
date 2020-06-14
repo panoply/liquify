@@ -1,88 +1,46 @@
-// @ts-nocheck
+import { DiagnosticSeverity } from 'vscode-languageserver'
+import { TokenType } from '../parser/lexical'
+import * as validate from './validations/index'
 
-import * as validators from './validate/index'
+export default document => (ASTNode, spec) => {
 
-/**
- * Diagnostic Functions
- *
- * Validation diagnostics are supplied when building an AST representation
- * of an opened/active text document (executing on a per-change basis).
- * Validations are returned as an array of asynchronous functions and assigned
- * to the returning `diagnostics[]` object property of the `Parser()`.
- *
- * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').AST} AST[]
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').AST} ASTnode
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ASTEmbeddedRegion} ASTEmbeddedRegion
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ValidationRunnerParams} ValidationRunnerParams
- * @typedef {import('vscode-languageserver').TextEdit} TextEdit
- */
+  if (!spec || !ASTNode) return
 
-/* ---------------------------------------------------------------- */
-/* PUBLIC                                                           */
-/* ---------------------------------------------------------------- */
+  const { diagnostics, textDocument } = document
+  const { token: [ token ] } = ASTNode
 
-/**
- * Validation Resolver
- *
- * @export
- * @param {TextDocument} document
- */
-export function resolve (document) {
+  if (spec.whitespace) {
+    if (token.startsWith('-') || token.endsWith('-')) {
 
-  return async (validate) => (
-    validate
-      ? validate(document)
-      : undefined
-  )
-}
-
-/**
- * Do Validation
- *
- * Validation runner used to validate tokens. This function is
- * executed while generating the document AST and returns and asynchronous
- * function which will be fulfilled and executed post-parse.
- *
- * @param {ASTnode} ASTnode
- * @param {ValidationRunnerParams} [call]
- */
-export function doValidate (ASTnode, call = undefined) {
-
-  const diagnostics = []
-  const validations = Object.values(validators)
-  const { tag, type } = ASTnode
-
-  return async document => new Promise(resolve => {
-
-    if (!call) {
-
-      for (const {
-        validate,
-        meta: {
-          group,
-          onCall,
-          rules,
-          types,
-          tags
+      diagnostics.push({
+        severity: DiagnosticSeverity.Error,
+        message: 'Tag does not accept whitespace dashes!',
+        range: {
+          start: textDocument.positionAt(ASTNode.offset[0]),
+          end: textDocument.positionAt(ASTNode.offset[1])
         }
-      } of validations) {
-        validate(document, ASTnode, rules, diagnostics)
+      })
 
-      }
-
-    } else {
-
-      const [ [ $group, $rule ] ] = Object.entries(call)
-      const [ { validate, meta: { rules } } ] = validations.filter(({
-        meta: { group, onCall, rules }
-      }) => ((onCall && group === $group) && Object.keys(rules).includes($rule)))
-
-      if (rules[$rule]) validate(document, ASTnode, rules, diagnostics)
+      return diagnostics
 
     }
+  }
 
-    resolve(...diagnostics)
+  if (ASTNode?.type === TokenType.object) {
+    // validate.object(ASTNode, document)
+  }
 
-  }).catch(e => console.log(e))
+  if (ASTNode?.type === TokenType.control) {
+    validate.control(ASTNode, document)
+  }
+
+  if (ASTNode?.type === TokenType.iteration) {
+    // iterationValidation(ASTNode, document)
+  }
+
+  if (ASTNode?.type === TokenType.variable) {
+    // variableValidation(ASTNode, document)
+  }
+
+  return diagnostics
 }

@@ -14,6 +14,7 @@ export default {
     format: 'cjs',
     sourcemap: true
   },
+  watch: process.env.prod && undefined,
   external: [
     'lodash',
     '@liquify/liquid-language-specs',
@@ -34,6 +35,10 @@ export default {
       preferConst: true,
       compact: !!process.env.prod
     }),
+    babel({
+      babelHelpers: 'runtime',
+      configFile: './.babelrc'
+    }),
     process.env.prod ? noderesolve() : null,
     commonjs(),
     globs({
@@ -52,10 +57,6 @@ export default {
           content: jsonmin(content.toString())
         })
       }
-    }),
-    babel({
-      babelHelpers: 'runtime',
-      configFile: './.babelrc'
     })
   ],
   [

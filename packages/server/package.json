@@ -5,6 +5,7 @@
   "scripts": {
     "watch": "rollup -c -w",
     "build": "rollup -c --environment prod",
+    "rollup": "rollup -c",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --verbose --watch"
   },
@@ -54,6 +55,7 @@
   "devDependencies": {
     "@ava/babel": "^1.0.1",
     "@ava/babel-preset-stage-4": "^4.0.0",
+    "@babel/plugin-proposal-private-methods": "^7.10.1",
     "@babel/register": "^7.10.1",
     "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.0.0",

@@ -218,6 +218,7 @@ export default (options = false) => {
     , dest = './package'
     , cwd = process.cwd()
     , transform = false
+    , watcher = false
   } = options
 
   if (!globs) throw new Error('Missing { globs: [] } in rollup-plugin-globs')

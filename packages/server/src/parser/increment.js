@@ -17,33 +17,31 @@ const closest = (index, { offset }) => offset.reduce((prev, current) => (
  * incremental parsing on a per-change basis.
  *
  * @export
- * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} offset
- * @param {import('vscode-languageserver-textdocument').TextDocument} document
+ * @param {import('types/document').Document} Document
+ * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} {params}
  * @returns
  */
 export default (
-  document,
-  param
-  /*, {
+  document
+  , {
     text
     , rangeLength
     , range: {
       start,
       end
     }
-  } */
+  }
 ) => {
 
-  // ast = scan(document, undefined, undefined)
-  return scan(document, undefined, undefined)
-  if (!ast.length) {
-    ast = scan(document, undefined, ast, undefined)
-    return ast
-  }
+  document.ast = []
+  document.diagnostics = []
+  // if (!document.ast.length) return scan(document)
 
+  return scan(document)
+
+  const { ast } = document
   const increment = parse.setTokenOffset(rangeLength, text.length)
-  const getText = parse.getRange(document)
-  const getToken = parse.isOffsetInToken(start)
+  const getText = parse.getRange(document.textDocument)
   const astIndex = ast.findIndex(({ offset }) => (
     parse.inRange(start, offset[0], offset[1]) ||
     parse.inRange(start, offset[2], offset[3])
@@ -51,12 +49,12 @@ export default (
 
   if (astIndex > 0) {
 
-    const token = getToken(ast[astIndex])
+    const token = parse.isOffsetInToken(ast[astIndex], start)
+    const { offset } = ast[astIndex]
 
     if (token) {
 
-      let record
-        , $1 = 0
+      let $1 = 0
         , $2 = 1
 
       // Changed node is a start tag, eg: `{% tag %}`
@@ -64,18 +62,19 @@ export default (
       if (token.tag === TokenTag.start) {
         $1 = 2
         $2 = 3
-        record = [ token ]
       }
 
       // Extract the changed text
-      const content = getText(ast[astIndex].offset[$1], ast[astIndex].offset[$2] + text.length)
-
-      // Re-parse the changed token
-      const [ node ] = scan(document, content, record, ast[astIndex].offset[$1])
+      const [ node ] = scan(document, {
+        ast: []
+        , index: offset[$1]
+        , content: getText(offset[$1], offset[$2] + text.length)
+        , isIncrement: true
+      })
 
       // When the re-parsed node is a start tag
       // Updated token should not match the changed token
-      if (node?.tag === TokenTag.start && node.token[0] !== token.token[0]) {
+      if (node?.tag === TokenTag.start) {
         node.tag = TokenTag.pair
         node.token.push(token.token[0])
         node.offset.push(...token.offset.map(increment))
@@ -84,10 +83,12 @@ export default (
       // If successful, replace node record
       if (node) ast.splice(astIndex, 1, node)
 
+      return ast
+
     }
 
     // Decrement all nodes
-    for (let i = 0; i < ast.length; i++) {
+    /*  for (let i = 0; i < ast.length; i++) {
       if (ast[i].offset[0] >= start) {
         ast[i].offset = ast[i].offset.map(increment)
       } else if (ast[i].offset.length > 2 && ast[i].offset[2] >= start) {
@@ -96,7 +97,7 @@ export default (
           , ...ast[i].offset.slice(2).map(increment)
         ]
       }
-    }
+    } */
 
     return ast
 
@@ -149,13 +150,13 @@ export default (
     }
     // console.log(ast)
 
-    ast = []
+    document.ast = []
     return ast
 
   } else if (text.length > 2 && /[{%}]/g.test(text)) {
 
     console.log('RE PARSE')
-    ast = scan(document, undefined, ast, undefined)
+    document.ast = scan(document)
     return ast
 
   } else {

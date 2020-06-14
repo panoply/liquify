@@ -7,7 +7,6 @@ import { basename } from 'path'
 import { Config } from './config'
 import { Expressions } from '../parser/lexical'
 import { regexp } from '../utils/functions'
-import * as validations from '../service/validate/index'
 import specs from '@liquify/liquid-language-specs'
 
 /**
@@ -79,7 +78,7 @@ export class LiquidServer extends Config {
    * @returns
    * @memberof LiquidServer
    */
-  documents = (resource, connection) => {
+  #documents = (resource, connection) => {
 
     if (!this.hasConfigurationCapability) return Promise.resolve(this.settings)
 
@@ -112,12 +111,12 @@ export class LiquidServer extends Config {
      * Configuration changed
      */
     return {
-      onDidChangeConfiguration: this.setProviders,
+      onDidChangeConfiguration: this.#setProviders,
       onDidChangeWatchedFiles: (
         {
           changes: [ { uri } ]
         }
-      ) => basename(this.rcfile) !== basename(uri) ? null : this.setUserSettings()
+      ) => basename(this.rcfile) !== basename(uri) ? null : this.#setUserSettings()
 
     }[event](settings)
 
@@ -129,7 +128,7 @@ export class LiquidServer extends Config {
    * @private
    * @param {string} rcfile
    */
-  setLiquidrc = rcfile => {
+  #setLiquidrc = (rcfile) => {
 
     if (!rcfile) return null
 
@@ -156,7 +155,7 @@ export class LiquidServer extends Config {
    * @private
    * @param {object} liquid
    */
-  setProviders = ({ liquid }) => {
+  #setProviders = ({ liquid }) => {
 
     Object.entries(liquid).forEach(([ prop, setting ]) => {
       if (this.provider?.[prop] && setting?.enable) {
@@ -164,7 +163,7 @@ export class LiquidServer extends Config {
       }
     })
 
-    return this.setUserSettings()
+    return this.#setUserSettings()
 
   }
 
@@ -176,22 +175,22 @@ export class LiquidServer extends Config {
    * @returns
    * @memberof LiquidServer
    */
-  setUserSettings = () => {
+  #setUserSettings = () => {
 
-    const settings = this.setLiquidrc(this.rcfile)
+    const settings = this.#setLiquidrc(this.rcfile)
 
-    return this.setLiquidEngine(settings)
+    return this.#setLiquidEngine(settings)
 
   }
 
-  setLiquidEngine = async settings => {
+  #setLiquidEngine = (settings) => {
 
     if (this.engine === settings.engine) return null
 
     this.engine = settings.engine
     this.engineLabel = `\n${_.upperFirst(this.engine)} Liquid`
 
-    return this.setSpecification(settings)
+    return this.#setSpecification(settings)
 
   }
 
@@ -202,13 +201,13 @@ export class LiquidServer extends Config {
    * @param {object} settings
    * @memberof LiquidServer
    */
-  setSpecification = async settings => {
+  #setSpecification = async settings => {
 
     const spec = await specs(this.license)
 
     this.specification = spec[this.engine]()
 
-    return this.setFormattingRules(settings)
+    return this.#setFormattingRules(settings)
 
   }
 
@@ -219,14 +218,14 @@ export class LiquidServer extends Config {
    * @param {object} settings
    * @memberof Server
    */
-  setDiagnosticRules = settings => {
+  #setDiagnosticRules = (settings) => {
 
-    Object.values(validations).forEach(({
+    /* Object.values(validations).forEach(({
       meta: {
         group,
         rules
       }
-    }) => Object.assign(rules, settings.validate[group]))
+    }) => Object.assign(rules, settings.validate[group])) */
 
   }
 
@@ -238,7 +237,7 @@ export class LiquidServer extends Config {
    * @param {object} settings
    * @memberof Config
    */
-  setFormattingRules = settings => {
+  #setFormattingRules = (settings) => {
 
     const enforce = [
       'mode',
@@ -286,7 +285,7 @@ export class LiquidServer extends Config {
       }
     }
 
-    return this.setParseExpressions(settings)
+    return this.#setParseExpressions(settings)
 
   }
 
@@ -297,7 +296,7 @@ export class LiquidServer extends Config {
    * @param {Specification} settings
    * @memberof LiquidServer
    */
-  setParseExpressions = settings => {
+  #setParseExpressions = (settings) => {
 
     const { html, blocks, output } = Expressions
     const { objects, filters } = this.specification
@@ -309,7 +308,7 @@ export class LiquidServer extends Config {
       filters: regexp(Object.keys(filters).join('|'), 'g')
     }
 
-    return this.setDiagnosticRules(settings)
+    return this.#setDiagnosticRules(settings)
 
   }
 

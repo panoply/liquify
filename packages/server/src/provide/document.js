@@ -6,6 +6,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument'
  *
  * Provides a documents documents for Liquid Language documents somewhat extending
  * upon the vscodes text document documents module.
+ *
  */
 export default (function () {
 
@@ -42,40 +43,44 @@ export default (function () {
 
   /**
    * Create - Creates a documents of the text document
+   *
    */
   function create ({ uri, languageId, version, text }) {
 
-    return callback => callback(documents.has(uri) ? documents.get(uri) : documents.set(uri, {
+    return callback => callback(
 
-      /**
-       * AST
-       *
-       * @memberof Extend
-       */
-      ast: [],
+      documents.has(uri) ? documents.get(uri) : documents.set(uri, {
 
-      /**
-       * Document Settings
-       *
-       * @memberof Extend
-       */
-      settings: {},
+        /**
+         * AST
+         *
+         * @memberof Extend
+         */
+        ast: [],
 
-      /**
-       * Diagnostics
-       *
-       * @memberof Extend
-       */
-      diagnostics: [],
+        /**
+         * Document Settings
+         *
+         * @memberof Extend
+         */
+        settings: {},
 
-      /**
-       * Text Document
-       *
-       * @memberof Extend
-       */
-      textDocument: TextDocument.create(uri, languageId, version, text)
+        /**
+         * Diagnostics
+         *
+         * @memberof Extend
+         */
+        diagnostics: [],
 
-    }).get(uri))
+        /**
+         * Text Document
+         *
+         * @memberof Extend
+         */
+        textDocument: TextDocument.create(uri, languageId, version, text)
+
+      }).get(uri)
+    )
 
   }
 

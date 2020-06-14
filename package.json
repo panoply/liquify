@@ -24,34 +24,10 @@
     "url": "https://github.com/panoply/liquify"
   },
   "packages": {
-    "project": {
-      "path": ".",
-      "name": "liquify",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.0-development"
-    },
-    "./cli": {
-      "path": "build/cli",
-      "name": "@liquify/cli",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.0"
-    },
     "./cryptographer": {
       "path": "build/cryptographer",
       "name": "@liquify/cryptographer",
       "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.0"
-    },
-    "./cryptospec": {
-      "path": "build/rollup-plugins/cryptospec",
-      "name": "@liquify/rollup-plugin-cryptospec",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "./globs": {
-      "path": "build/rollup-plugins/globs",
-      "name": "@liquify/rollup-plugin-globs",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
     "./supplant": {
@@ -72,22 +48,22 @@
       "repo": "github.com/panoply/liquify",
       "version": "0.1.0"
     },
-    "./vscode": {
-      "path": "packages/clients/vscode",
-      "name": "liquify-vscode",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.1"
-    },
     "./schema": {
       "path": "packages/schema",
       "name": "@liquify/schema-stores",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.1"
     },
-    "./server": {
-      "path": "packages/server",
-      "name": "@liquify/liquid-language-server",
-      "repo": "github.com/panoply/liquify",
+    "./cryptospec": {
+      "path": "build/rollup-plugins/cryptospec",
+      "name": "@liquify/rollup-plugin-cryptospec",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
+      "version": "0.0.0"
+    },
+    "./globs": {
+      "path": "build/rollup-plugins/globs",
+      "name": "@liquify/rollup-plugin-globs",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
     "./specs": {
@@ -95,6 +71,30 @@
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"
+    },
+    "./cli": {
+      "path": "build/cli",
+      "name": "@liquify/cli",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
+    "./server": {
+      "path": "packages/server",
+      "name": "@liquify/liquid-language-server",
+      "repo": "github.com/panoply/liquify",
+      "version": "0.0.0"
+    },
+    "project": {
+      "path": ".",
+      "name": "liquify",
+      "repo": "github.com/panoply/liquify",
+      "version": "0.0.0-development"
+    },
+    "./vscode": {
+      "path": "packages/clients/vscode",
+      "name": "liquify-vscode",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.1"
     }
   },
   "devDependencies": {
@@ -102,6 +102,7 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.9.6",
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
+    "@babel/plugin-proposal-private-methods": "^7.10.1",
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/register": "^7.9.0",
@@ -115,7 +116,7 @@
     "@rollup/pluginutils": "^3.0.10",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.8",
-    "babel-eslint": "^10.1.0",
+    "babel-eslint": "v11.0.0-beta.2",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^4.0.0",
     "console-clear": "^1.1.1",

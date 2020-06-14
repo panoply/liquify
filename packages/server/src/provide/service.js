@@ -8,7 +8,6 @@ import { Server } from '../export'
 import { CSSService } from '../service/modes/css'
 import { SCSSService } from '../service/modes/scss'
 import { JSONService } from '../service/modes/json'
-import * as Diagnostic from '../service/diagnostics'
 import * as Format from '../service/formats'
 import * as Completion from '../service/completions'
 import * as Hover from '../service/hovers'
@@ -32,7 +31,7 @@ import * as Hover from '../service/hovers'
  * @typedef {import('defs').FormattingRules} FormattingRules
  * @typedef {import('defs').ValidationPromises} ValidationPromises
  */
-export class LiquidService {
+export default new class LiquidService {
 
   /**
    * Service Modes
@@ -85,8 +84,8 @@ export class LiquidService {
     }
 
     const embedded = Documents.embeds(textDocument.uri)
-    const promise = Diagnostic.resolve(textDocument)
-    const validations = (await Promise.all(diagnostics.map(promise)))
+    // const promise = Diagnostic.resolve(textDocument)
+    // const validations = (await Promise.all(diagnostics.map(promise)))
 
     if (embedded) {
       for (const i of embedded) {
@@ -231,6 +230,6 @@ export class LiquidService {
 
   }
 
-}
+}()
 
 // export const Server = new LiquidService()

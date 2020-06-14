@@ -16,12 +16,7 @@ import { Range } from 'vscode-languageserver'
  *
  * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
  * @typedef {import('vscode-languageserver').TextDocumentContentChangeEvent} changeEvent
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').AST} AST
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').IncrementalExecute} IncrementalExecute
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').IncrementalUpdate} IncrementalUpdate
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').DocumentModel} DocumentModel
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ParsedDiagnostics} ParsedDiagnostics
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').Specification} Specification
+ * @typedef {import('types/ast').AST} ASTNode
  */
 
 /* ---------------------------------------------------------------- */
@@ -56,11 +51,10 @@ export const inRange = (
  * in an `end` tag offset.
  *
  * @export
+ * @param {ASTNode} ASTNode
  * @param {number} index
- * @returns {(ASTNode: AST) => object}
  */
-export const isOffsetInToken = index => ASTNode => (
-  // remove the modified token and offset from the AST
+export const isOffsetInToken = (ASTNode, index) => (
   inRange(index, ASTNode.offset[0], ASTNode.offset[1]) ? {
     ...ASTNode,
     tag: ASTNode.tag === TokenTag.pair ? TokenTag.close : ASTNode.tag,
@@ -195,75 +189,3 @@ export const setTokenOffset = (
     ? offset - rangeLength < 0 ? 0 : offset - rangeLength
     : offset + textLength
 )
-
-/**
- * For Parse
- *
- * Parsing function which executes a callback function upon each
- * regular expression match. The callback function will return
- * the match and offset index.
- *
- * @export
- * @param {RegExp} regexp The regular expression
- * @param {string} content The string to parse
- * @returns {(callback:(matches: string[], offset: number) => void) => void}
- */
-export const forParse = (regexp, content, offset = 0) => callback => {
-
-  let match
-
-  while ((match = regexp.exec(content)) !== null) {
-    if (match.index === regexp.lastIndex) regexp.lastIndex++
-    callback(match.filter(Boolean), match.index + offset)
-    content = content.slice(regexp.lastIndex)
-    offset = offset === 0 ? regexp.lastIndex : regexp.lastIndex + offset
-    regexp.lastIndex = 0
-
-  }
-
-  return true
-
-}
-
-/**
- * Get Token Objects
- *
- * This function will assign the offset indexes of Liquid objects used
- * within tags which are used by validations and completion capabilities.
- *
- * @export
- * @param {number} offset The current offset (used to fill position offset)
- * @param {string} token The token (tag) to parse
- * @param {object} [map] An empty object to assign (Default Paramater)
- * @returns {Object|Boolean}
- */
-export const setTokenObjects = (offset, token, map = {}) => {
-
-  const { objects } = Server.parsing
-
-  /**
-   * @type {RegExpExecArray}
-   */
-  let regex,
-
-    /**
-   * @type {string}
-   */
-    input = token
-
-  do {
-
-    regex = objects.exec(input)
-
-    if (!regex) break
-
-    const [ k, props ] = regex.filter(Boolean).slice(1)
-    const index = offset + regex.index + k.length + 1
-    input = input.slice(regex.lastIndex)
-    props ? (map[index + props.length] = [ k, ...props.split('.') ]) : (map[index] = [ k ])
-
-  } while (regex)
-
-  return map
-
-}

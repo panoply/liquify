@@ -102,7 +102,6 @@ export default (
     string = token.slice(condition[0].indexOf(compare) + compare.length)
 
     const operators = regexOperators.exec(string)
-
     if (operators) {
 
       const chars = regexValidOperators.exec(string)
@@ -148,7 +147,6 @@ export default (
     }
 
     const truth = regexConditionTruth.exec(string)
-
     if (truth[0].trim().length > 0) {
 
       string = string.slice(string.indexOf(truth[0]))
