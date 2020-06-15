@@ -1,5 +1,3 @@
-import { License } from './license'
-
 /**
  * Configuration
  *
@@ -73,28 +71,37 @@ export class Config {
   settings = new Map()
 
   /**
-   * Server - hasConfigurationCapability
+   * Server capabilities - Used for different text editor implementations
+   * that can consume and/or support the Language Server Protocol
    *
-   * @type {boolean}
-   * @memberof Config
    */
-  hasConfigurationCapability = false
+  capability = {
 
-  /**
-   * Server = hasWorkspaceFolderCapability
-   *
-   * @type {boolean}
-   * @memberof Config
-   */
-  hasWorkspaceFolderCapability = false
+    /**
+     * Server - hasConfigurationCapability
+     *
+     * @type {boolean}
+     * @memberof Config
+     */
+    hasConfigurationCapability: false,
 
-  /**
-   * Server - hasDiagnosticRelatedInformationCapability
-   *
-   * @type {boolean}
-   * @memberof Config
-   */
-  hasDiagnosticRelatedInformationCapability = false
+    /**
+     * Server - hasWorkspaceFolderCapability
+     *
+     * @type {boolean}
+     * @memberof Config
+     */
+    hasWorkspaceFolderCapability: false,
+
+    /**
+     * Server - hasDiagnosticRelatedInformationCapability
+     *
+     * @type {boolean}
+     * @memberof Config
+     */
+    hasDiagnosticRelatedInformationCapability: false
+
+  }
 
   /**
    * **NOT YET IMPLEMENTED**
@@ -181,7 +188,14 @@ export class Config {
      *
      * @type {boolean}
      */
-    validate: true
+    validate: true,
+
+    /**
+     * Enable/Disable Liquid document links, ie: include
+     *
+     * @type {boolean}
+     */
+    link: true
 
   }
 

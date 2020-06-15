@@ -8,7 +8,6 @@ import { Config } from './config'
 import { Expressions } from '../parser/lexical'
 import { regexp } from '../utils/functions'
 import specs from '@liquify/liquid-language-specs'
-import { settings } from 'cluster'
 
 /**
  * Liquid Language Server
@@ -53,16 +52,15 @@ export class LiquidServer extends Config {
     this.rcfile = rcfile
     this.license = license
     this.service = { ...this.service, ...service }
-
-    this.hasConfigurationCapability = !!(workspace && !!workspace.configuration)
-    this.hasWorkspaceFolderCapability = !!(workspace && !!workspace.workspaceFolders)
+    this.capability.hasConfigurationCapability = !!(workspace && !!workspace.configuration)
+    this.capability.hasWorkspaceFolderCapability = !!(workspace && !!workspace.workspaceFolders)
     this.hasDiagnosticRelatedInformationCapability = !!(
       textDocument &&
       textDocument.publishDiagnostics &&
       textDocument.publishDiagnostics.relatedInformation
     )
 
-    if (this.hasWorkspaceFolderCapability) {
+    if (this.capability.hasWorkspaceFolderCapability) {
       capabilities.workspace = {
         workspaceFolders: {
           supported: true
@@ -161,11 +159,13 @@ export class LiquidServer extends Config {
    */
   #setProviders = ({ liquid }) => {
 
-    Object.entries(liquid).forEach(([ prop, setting ]) => {
-      if (this.provider?.[prop] && setting?.enable) {
-        this.provider[prop] = setting.enable
-      }
-    })
+    Object
+      .entries(liquid)
+      .forEach(([ prop, setting ]) => {
+        if (this.provider?.[prop] && setting?.enable) {
+          this.provider[prop] = setting.enable
+        }
+      })
 
     return this.#setUserSettings()
 

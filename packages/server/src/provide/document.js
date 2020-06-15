@@ -6,13 +6,88 @@ import { TokenType } from '../parser/lexical'
  * Documents
  *
  * Provides a documents documents for Liquid Language documents somewhat extending
- * upon the vscodes text document documents module.
+ * upon the vscodes text document module.
  *
+ * @typedef {import('types/ast').AST} AST
+ * @typedef {import('vscode-languageserver').Diagnostic} Diagnostic
+ * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocumenr
  */
 export default (function () {
 
   const documents = new Map()
 
+  /**
+   * Create - Creates a documents of the text document
+   *
+   */
+  function create ({
+    uri
+    , languageId
+    , version
+    , text
+  }) {
+
+    return fn => fn(documents.has(uri) ? documents.get(uri) : documents.set(uri, {
+
+      /**
+       * AST
+       *
+       * @type {AST[]}
+       */
+      ast: [],
+
+      /**
+       * Document Settings
+       *
+       * @type {object}
+       */
+      settings: {},
+
+      /**
+       * Diagnostics
+       *
+       * @type {Diagnostic[]}
+       */
+      diagnostics: [],
+
+      /**
+       * Frontmatter
+       *
+       * @type {object}
+       */
+      frontmatter: {},
+
+      /**
+       * Links
+       *
+       * @type {number[]}
+       */
+      documentLinks: [],
+
+      /**
+       * Embedded Documents
+       *
+       * @type {number[]}
+       */
+      embeddedDocuments: [],
+
+      /**
+       * Text Document
+       *
+       * @type {TextDocument}
+       */
+      textDocument: TextDocument.create(uri, languageId, version, text)
+
+    }).get(uri))
+
+  }
+
+  /**
+   * Includes
+   *
+   * @param {string} uri
+   * @returns
+   */
   function includes (uri) {
 
     const { ast, textDocument } = documents.get(uri)
@@ -20,9 +95,6 @@ export default (function () {
 
     return nodes.map(({ offset: [ start, end ], paths }) => (
       {
-        /**
-         * @type {import('vscode-languageserver').Command}
-        */
         command: {
           title: 'view file',
           command: 'liquid.codelens',
@@ -40,22 +112,22 @@ export default (function () {
   function links (uri) {
 
     const { ast, documentLinks } = documents.get(uri)
-    const linked = documentLinks.map(link => ast[link].linked)
 
-    console.log(linked, documentLinks)
-    return linked
+    return documentLinks
+      .map(link => ast[link].link)
+
   }
 
   function embeds (uri) {
 
-    const { ast } = documents.get(uri)
-    const embedded = ast.filter(({ embeddedDocument }) => embeddedDocument)
-
-    return embedded
+    return documents
+      .get(uri)
+      .ast
+      .filter(({ embeddedDocument }) => embeddedDocument)
 
   }
 
-  function ASTNode (uri, location) {
+  function ASTNode (uri, offset) {
 
     const { ast } = documents.get(uri)
     const index = ast.findIndex(({
@@ -66,76 +138,12 @@ export default (function () {
         , BR = -1
       ]
     }) => (
-      _.inRange(location, TL, TR) ||
-        _.inRange(location, BL, BR) ||
-        _.inRange(location, TR, BL)
+      _.inRange(offset, TL, TR) ||
+      _.inRange(offset, BL, BR) ||
+      _.inRange(offset, TR, BL)
     ))
 
     return [ ast[index], index ]
-
-  }
-
-  /**
-   * Create - Creates a documents of the text document
-   *
-   */
-  function create ({ uri, languageId, version, text }) {
-
-    return callback => callback(
-
-      documents.has(uri) ? documents.get(uri) : documents.set(uri, {
-
-        /**
-         * AST
-         *
-         * @memberof Extend
-         */
-        ast: [],
-
-        /**
-         * Document Settings
-         *
-         * @memberof Extend
-         */
-        settings: {},
-
-        /**
-         * Diagnostics
-         *
-         * @memberof Extend
-         */
-        diagnostics: [],
-
-        /**
-         * AST
-         *
-         * @memberof Extend
-         */
-        frontmatter: {},
-
-        /**
-         * Links
-         *
-         * @memberof Extend
-         */
-        documentLinks: [],
-
-        /**
-         * Embedded Documents
-         *
-         * @memberof Extend
-         */
-        embeddedDocuments: [],
-
-        /**
-         * Text Document
-         *
-         * @memberof Extend
-         */
-        textDocument: TextDocument.create(uri, languageId, version, text)
-
-      }).get(uri)
-    )
 
   }
 
@@ -146,14 +154,15 @@ export default (function () {
 
     TextDocument.update(document, contentChanges, document.version)
 
-    return contentChanges.map(change => ({
-      ...change,
-      range: {
-        start: document.offsetAt(change.range.start),
-        end: document.offsetAt(change.range.end)
-      }
-    }))
-
+    return contentChanges.map(
+      change => ({
+        ...change,
+        range: {
+          start: document.offsetAt(change.range.start),
+          end: document.offsetAt(change.range.end)
+        }
+      })
+    )
   }
 
   return ({

@@ -1,11 +1,10 @@
-// @ts-nocheck
 import _ from 'lodash'
 import { basename } from 'path'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { TokenTag, TokenType, Expressions } from './lexical'
-import diagnostics from '../service/diagnostics'
 import { Server } from '../export'
 import YAML from 'yamljs'
+import diagnostics from '../service/diagnostics'
 import * as parse from './utils'
 
 /**
@@ -23,10 +22,10 @@ import * as parse from './utils'
 export default (
   document
   , {
-    ast = document.ast,
-    content = document.textDocument.getText(),
-    isIncrement = false,
-    index = undefined
+    ast = document.ast
+    , content = document.textDocument.getText()
+    , isIncrement = false
+    , index = undefined
   } = {}
 ) => {
 
@@ -35,18 +34,22 @@ export default (
   const { textDocument, documentLinks, embeddedDocuments } = document
   const validate = diagnostics(document)
 
-  return (parsed => {
+  return (
 
-    const frontmatter = Server.parser.frontmatter.exec(content)
-    if (frontmatter) document.frontmatter = YAML.parse(frontmatter[0])
+    parsed => {
 
-    const matches = content.matchAll(Server.parser.parsing)
-    if (!matches) return parsed
-    for (const match of matches) parseText(match)
+      const frontmatter = Server.parser.frontmatter.exec(content)
+      if (frontmatter) document.frontmatter = YAML.parse(frontmatter[0])
 
-    return parsed
+      const matches = content.matchAll(Server.parser.parsing)
 
-  })(isIncrement ? ast : document)
+      if (!matches) return parsed
+      for (const match of matches) parseText(match)
+
+      return parsed
+    }
+
+  )(isIncrement ? ast : document)
 
   /**
    * Parse Text
@@ -57,15 +60,18 @@ export default (
   function parseText (match) {
 
     const [ token, name ] = match.filter(Boolean)
-    const node = parse.ASTNode(name, token, match)
+    const node = parse.ASTNode(name, token, match, index)
     const spec = parse.getTokenSpec(token, name)
 
-    return !spec || spec.singular ? spec?.within
-      ? childToken(node, spec)
-      : singularToken(node, spec)
-      : parse.isTokenTagEnd(token, name)
+    return !spec || spec.singular ? (
+      spec?.within
+        ? childToken(node, spec)
+        : singularToken(node, spec)
+    ) : (
+      parse.isTokenTagEnd(token, name)
         ? closeToken(node, spec)
         : startToken(node, spec)
+    )
 
   }
 
@@ -81,19 +87,20 @@ export default (
    */
   function parseObjects (offset, token) {
 
-    const objects = Array.from(token.matchAll(Server.parser.objects))
+    return Array
+      .from(token.matchAll(Server.parser.objects))
+      .reduce((object, match) => {
 
-    return objects.reduce((object, match) => {
+        const props = match[0].split('.').filter(Boolean)
+        const position = offset + match.index + match[0].length
+        const key = props.length > 1 ? position + 1 : position
 
-      const props = match[0].split('.').filter(Boolean)
-      const position = offset + match.index + match[0].length
-      const key = props.length > 1 ? position + 1 : position
+        object[key] = props
 
-      object[key] = props
+        return object
 
-      return object
-
-    }, {})
+      }
+      , {})
 
   }
 
@@ -134,13 +141,16 @@ export default (
     tokenNode.tag = TokenTag.start
 
     if (type === TokenType.control || type === TokenType.iteration) {
+
       tokenNode.children = []
       tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
-      if (tokenSpec?.parameters) {
-        tokenNode.parameters = parseParameters(tokenNode, tokenSpec)
-      }
+
+      if (tokenSpec?.params) tokenNode.params = parseParameters(tokenNode, tokenSpec)
+
     } else if (type === TokenType.embedded || type === TokenType.associate) {
+
       tokenNode.languageId = tokenSpec.language
+
       if (!embeddedDocuments.includes(ast.length)) {
         embeddedDocuments.push(ast.length)
         tokenNode.embeddedId = embeddedDocuments.length - 1
@@ -212,7 +222,7 @@ export default (
     , parameters
   }) {
 
-    const params = token.matchAll(Expressions.parameters)
+    const params = token.matchAll(Expressions.params)
 
     console.log(token)
 
@@ -265,16 +275,14 @@ export default (
     tokenNode.type = TokenType[tokenSpec.type]
     tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
 
+    if (tokenSpec?.params) tokenNode.params = parseParameters(tokenNode, tokenSpec)
+
     if (tokenNode.type === TokenType.include) {
-      tokenNode.linked = linkedDocument(tokenNode)
+      tokenNode.link = linkedDocument(tokenNode)
       if (!documentLinks.includes(ast.length)) {
         documentLinks.push(ast.length)
-        tokenNode.linkedId = documentLinks.length - 1
+        tokenNode.linkId = documentLinks.length - 1
       }
-    }
-
-    if (tokenSpec?.parameters) {
-      tokenNode.parameters = parseParameters(tokenNode, tokenSpec)
     }
 
     ast.push(tokenNode)
