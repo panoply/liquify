@@ -27,6 +27,13 @@ connection.onInitialize(initializeParams => (
     },
     documentRangeFormattingProvider: true,
     hoverProvider: true,
+    documentLinkProvider: {
+      resolveProvider: true
+    },
+    /* codeLensProvider: {
+      workDoneProgress: true,
+      resolveProvider: true
+    }, */
     completionProvider: {
       resolveProvider: true,
       triggerCharacters: [ '"', ':', '|', '.', '<' ]
@@ -42,7 +49,8 @@ connection.onInitialize(initializeParams => (
         'liquid.toggleOutput',
         'liquid.enableValidation',
         'liquid.disableValidation',
-        'liquid.changeEngine'
+        'liquid.changeEngine',
+        'liquid.codelens'
       ]
     }
   })
@@ -67,7 +75,7 @@ connection.onInitialized(() => {
     })
   }
 
-  return Service.configure(Server.service)
+  Service.configure(Server.service)
 
 })
 
@@ -91,6 +99,8 @@ connection.onDidChangeConfiguration(change => {
 connection.onDidOpenTextDocument(({ textDocument }) => {
 
   console.log('onDidOpenTextDocument')
+
+  // console.log(Server)
 
   Document.create(textDocument)(Parser.scanner)
 
@@ -131,7 +141,7 @@ connection.onDidChangeTextDocument(({
 
   const v2 = performance.now()
 
-  console.log(document)
+  console.log(document.ast)
   // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
 
   // return Documents.set(textDocument.uri)
@@ -168,11 +178,13 @@ connection.onDidCloseTextDocument(({ textDocument: { uri } }) => (
 /* onDidChangeWatchedFiles                                          */
 /* ---------------------------------------------------------------- */
 
-connection.onDidChangeWatchedFiles(change => (
+connection.onDidChangeWatchedFiles(change => {
+
+  console.log('onDidChangeWatchedFiles')
 
   Server.configure('onDidChangeWatchedFiles', change)
 
-))
+})
 
 /* ---------------------------------------------------------------- */
 /* onDocumentRangeFormatting                                        */
@@ -212,6 +224,73 @@ connection.onHover(
 )
 
 /* ---------------------------------------------------------------- */
+/* onCodeLens                                                       */
+/* ---------------------------------------------------------------- */
+
+connection.onCodeLens(
+  ({
+    partialResultToken,
+    textDocument: { uri }
+  }, token) => runSync(() => {
+
+    const document = documents.get(uri)
+
+    if (!document.textDocument) return null
+
+    return Document.includes(uri)
+
+  }, null, `Error while computing completion for ${uri}`, token)
+)
+
+/* ---------------------------------------------------------------- */
+/* onCodeLensResolve                                                */
+/* ---------------------------------------------------------------- */
+
+connection.onCodeLensResolve(
+  (
+    item
+    , token
+  ) => runSync(() => {
+
+    return item
+
+  }, item, 'Error while resolving completion proposal', token)
+)
+
+/* ---------------------------------------------------------------- */
+/* onDocumentLinks                                            */
+/* ---------------------------------------------------------------- */
+
+connection.onDocumentLinks(
+  ({
+    textDocument: { uri }
+  }, token) => runSync(() => {
+
+    const document = documents.get(uri)
+
+    if (!document.textDocument) return null
+
+    return Document.links(uri)
+
+  }, null, `Error while computing completion for ${uri}`, token)
+)
+
+/* ---------------------------------------------------------------- */
+/* onDocumentLinkResolve                                            */
+/* ---------------------------------------------------------------- */
+
+connection.onDocumentLinkResolve(
+  (
+    item
+    , token
+  ) => runSync(() => {
+
+    return item
+
+  }, item, 'Error while resolving completion proposal', token)
+)
+
+/* ---------------------------------------------------------------- */
 /* onCompletion                                                     */
 /* ---------------------------------------------------------------- */
 
@@ -227,6 +306,7 @@ connection.onCompletion(
     if (!document.textDocument) return null
 
     const onComplete = await Service.doComplete(document, position, context)
+
     return onComplete
 
   }, null, `Error while computing completion for ${uri}`, token)
@@ -243,6 +323,21 @@ connection.onCompletionResolve(
   ) => runSync(() => {
 
     return Service.doCompleteResolve(item)
+
+  }, item, 'Error while resolving completion proposal', token)
+)
+
+/* ---------------------------------------------------------------- */
+/* onExecuteCommand                                                 */
+/* ---------------------------------------------------------------- */
+
+connection.onExecuteCommand(
+  (
+    item
+    , token
+  ) => runSync(() => {
+
+    return item.arguments[0]
 
   }, item, 'Error while resolving completion proposal', token)
 )

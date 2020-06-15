@@ -47,7 +47,8 @@
     "vscode-json-languageservice": "^3.5.1",
     "vscode-languageserver": "^6.1.1",
     "vscode-languageserver-textdocument": "^1.0.1",
-    "vscode-uri": "^2.1.1"
+    "vscode-uri": "^2.1.1",
+    "yamljs": "^0.3.0"
   },
   "repository": {
     "url": "https://github.com/panoply/liquify"

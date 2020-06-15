@@ -1,11 +1,11 @@
 import {
-  workspace, commands, Uri
+  workspace, commands, Uri, window
 } from 'vscode'
 import { TransportKind, LanguageClient } from 'vscode-languageclient'
 import { addspacer } from '../providers/tag-format'
 import HTMLClient from './html-client'
-import path from 'path'
-import fs from 'fs'
+import { join, resolve } from 'path'
+import { existsSync, readFileSync } from 'fs'
 
 /**
  * Get workspace root
@@ -28,24 +28,39 @@ function getWorkspaceRoot (document = undefined) {
 
 }
 
+function readLiquidrcFile (rcfile) {
+
+  try {
+
+    const read = readFileSync(rcfile)
+
+    return JSON.parse(require('strip-json-comments')(read.toString(), {
+      whitespace: false
+    }))
+
+  } catch (error) {
+
+    return console.error(error.toString())
+
+  }
+}
+
 /**
  * Get the liquidrc file
  *
- * @param {string} root
  * @returns {string|boolean}
  */
-function getLiquidrcFile () {
+const rcfile = (() => {
 
   const root = getWorkspaceRoot()
+  const file = join(root, '.liquidrc.json')
+  const exist = existsSync(file, 'utf8')
 
-  const rcfile = path.join(root, '.liquidrc.json')
-  if (!fs.existsSync(rcfile, 'utf8')) {
-    return false
-  }
+  if (!exist) return false
 
-  return rcfile
+  return file
 
-}
+})()
 
 /**
  * Liquid Language Client
@@ -61,7 +76,7 @@ export default (context) => {
   const { subscriptions } = context
 
   commands.registerCommand('liquid.releaseNotes', () => {
-    const uri = Uri.file(path.join(__dirname, './../release', 'v2.4.0.md'))
+    const uri = Uri.file(join(__dirname, './../release', 'v2.4.0.md'))
     commands.executeCommand('markdown.showPreview', uri)
   })
 
@@ -183,7 +198,7 @@ export default (context) => {
       /**
        * Runtime configuration `.liquidrc` file path
        */
-      rcfile: getLiquidrcFile(),
+      rcfile,
 
       /**
        * Embedded Languages

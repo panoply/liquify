@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { TextDocument } from 'vscode-languageserver-textdocument'
+import { TokenType } from '../parser/lexical'
 
 /**
  * Documents
@@ -11,6 +12,39 @@ import { TextDocument } from 'vscode-languageserver-textdocument'
 export default (function () {
 
   const documents = new Map()
+
+  function includes (uri) {
+
+    const { ast, textDocument } = documents.get(uri)
+    const nodes = ast.filter(({ type }) => type === TokenType.include)
+
+    return nodes.map(({ offset: [ start, end ], paths }) => (
+      {
+        /**
+         * @type {import('vscode-languageserver').Command}
+        */
+        command: {
+          title: 'view file',
+          command: 'liquid.codelens',
+          arguments: [ paths.include[0], false ]
+        },
+        range: {
+          start: textDocument.positionAt(start),
+          end: textDocument.positionAt(end)
+        }
+      }
+    ))
+
+  }
+
+  function links (uri) {
+
+    const { ast, documentLinks } = documents.get(uri)
+    const linked = documentLinks.map(link => ast[link].linked)
+
+    console.log(linked, documentLinks)
+    return linked
+  }
 
   function embeds (uri) {
 
@@ -73,6 +107,27 @@ export default (function () {
         diagnostics: [],
 
         /**
+         * AST
+         *
+         * @memberof Extend
+         */
+        frontmatter: {},
+
+        /**
+         * Links
+         *
+         * @memberof Extend
+         */
+        documentLinks: [],
+
+        /**
+         * Embedded Documents
+         *
+         * @memberof Extend
+         */
+        embeddedDocuments: [],
+
+        /**
          * Text Document
          *
          * @memberof Extend
@@ -107,6 +162,8 @@ export default (function () {
     , create
     , embeds
     , update
+    , includes
+    , links
   })
 
 })()

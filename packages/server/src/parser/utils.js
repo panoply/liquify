@@ -17,6 +17,7 @@ import { Range } from 'vscode-languageserver'
  * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
  * @typedef {import('vscode-languageserver').TextDocumentContentChangeEvent} changeEvent
  * @typedef {import('types/ast').AST} ASTNode
+ * @typedef {import('types/specification').Specification} Specification
  */
 
 /* ---------------------------------------------------------------- */
@@ -41,6 +42,32 @@ export const inRange = (
 ) || (
   rangeEnd < offset && offset < rangeStart
 ))
+
+/**
+ * AST Node
+ *
+ * Helper function which will generate the global node
+ * defaults required by each token on the tree
+ *
+ * @param {object} tokenNode
+ * @param {object} tokenSpec
+ */
+export const ASTNode = (
+  name
+  , token
+  , match
+  , index
+) => ({
+  name
+  , token: [ token ]
+  , offset: typeof index === 'undefined' ? [
+    match.index
+    , match.index + token.length
+  ] : [
+    match.index + index
+    , match.index + token.length + index
+  ]
+})
 
 /**
  * Offset Change Position In Token
@@ -137,7 +164,6 @@ export const isSelection = (start, end, offsets) => ((
  * @export
  * @param {string} token The captured token (tag)
  * @param {string} name The name of the token (tag)
- * @returns {Specification}
  */
 export const getTokenSpec = (token, name) => {
 

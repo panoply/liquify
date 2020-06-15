@@ -39,6 +39,13 @@ export const Expressions = {
   blocks: /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}/.source,
 
   /**
+   * `{% tag %}{% endtag %}` or `{% tag %}`
+   *
+   * Liquid tag blocks or singular tags.
+   */
+  parameters: /(?<=,|\s)(\w+\s*[:=]\s*)["']?(.*?)(?=,|["']|-?%})/g,
+
+  /**
    * `{{ tag }}`
    *
    *  Liquid singular output tags, generally objects
@@ -57,7 +64,12 @@ export const Expressions = {
    *
    * Frontmatter blocks
    */
-  frontmatter: /(-{3})/.source
+  frontmatter: /(?<=-{3}\n).*?(?=\n-{3})/s,
+
+  /**
+   * `{% tag 'ref' %}` or `{% tag file.html %}` to `ref` and `file.html`
+   */
+  reference: /(?<=['"]?)\b[_a-zA-Z0-9.-]+\b(?=["']?)/
 
 }
 
@@ -291,14 +303,4 @@ export const Characters = {
    */
   TAB: '\t'.charCodeAt(0)
 
-}
-
-const Validationsss = {
-
-  string: '[\'"]{1}',
-  word: '\\w+',
-  iteration: '\\bin\\b',
-  condition: '[!=<>]{2}|[<>]{1}|\\bor\\b|\\band\\b',
-  filter: '\\|',
-  variable: '={1}'
 }

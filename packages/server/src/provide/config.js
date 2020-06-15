@@ -36,6 +36,22 @@ export class Config {
   rcfile = null
 
   /**
+   * The rootURI path of workspace
+   *
+   * @type {string}
+   * @memberof Config
+   */
+  rootUri = null
+
+  /**
+   * Path includes used to resolve include/import tags
+   *
+   * @type {object}
+   * @memberof Config
+   */
+  paths = {}
+
+  /**
    * Specification References
    *
    * @type {import('types/parser').ParseExpressions}

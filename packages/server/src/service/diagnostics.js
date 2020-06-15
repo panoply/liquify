@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { DiagnosticSeverity } from 'vscode-languageserver'
 import { TokenType } from '../parser/lexical'
 import * as validate from './validations/index'
@@ -26,12 +27,12 @@ export default document => (ASTNode, spec) => {
     }
   }
 
-  if (ASTNode?.type === TokenType.object) {
-    // validate.object(ASTNode, document)
+  if (ASTNode?.type === TokenType.object || !_.isEmpty(ASTNode?.objects)) {
+    validate.object(ASTNode, document, spec)
   }
 
   if (ASTNode?.type === TokenType.control) {
-    validate.control(ASTNode, document)
+    validate.control(ASTNode, document, spec)
   }
 
   if (ASTNode?.type === TokenType.iteration) {

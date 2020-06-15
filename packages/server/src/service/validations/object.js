@@ -4,30 +4,7 @@ import { DiagnosticSeverity } from 'vscode-languageserver'
 /*                   CONSTANTS                  */
 /* -------------------------------------------- */
 
-/**
- * Captures condition, eg: `{% if condition  == compare %}` is `condition`
- */
-const regexCondition = /.*?(?=[!=<>]+|\b(?:and|or)\b|-?%})/s
-
-/**
- * Captures a valid condition block, eg: `(conditon)` is invalid
- */
-const regexValidCondition = /_?\w+[0-9[\]]*/
-
-/**
- * Captures control operators, eg: `{% if condition == true %}` > `==`
- */
-const regexOperators = /[!=<>]+|\bor\b|\band\b/
-
-/**
- * Captures a valid operator sequence, eg: `!===` > `!=`
- */
-const regexValidOperators = /(?<=\w|\s+)(?:[<>]|<=|>=|==|!=|\bor\b|\band\b)/
-
-/**
- * Captures the end and/or truthy portion of a control eg: `{% if tag %}` > `tag %}`
- */
-const regexConditionTruth = /.*?(?=-?%})/s
+const regexObjects = /(?<=[^.])\.[_\w-]+(?:\[[0-9]+\])?\.?(?=\W)/g
 
 /* -------------------------------------------- */
 /*                  VALIDATION                  */
@@ -40,28 +17,26 @@ const regexConditionTruth = /.*?(?=-?%})/s
  * @param {import('types/document').Document} Document
  */
 export default (
-  { name, token: [ tag ], offset: [ start, end ] }
+  { objects, token: [ tag ], offset: [ start, end ] }
   , { textDocument, diagnostics }
+  , specification
 ) => {
 
-  const isEmpty = new RegExp(`(?<=${name})\\s*(?=-?%})`).exec(tag)
-  const charOffset = tag.indexOf(name) + name.length
+  const matches = tag.match(regexObjects)
+  const object = Object.values(objects)
 
-  let string = tag.slice(charOffset)
-    , compare
-    , position
+  return (properties => !properties ? null : properties.forEach(props))(matches)
 
-  if (isEmpty) {
-    return diagnostics.push({
-      severity: DiagnosticSeverity.Warning,
-      message: 'Empty condition expression detected',
-      range: {
-        start: textDocument.positionAt(start + charOffset),
-        end: textDocument.positionAt(start + charOffset + isEmpty[0].length)
-      }
-    })
+  function props (prop, key) {
+
+    // object exists
+    if (object?.[key]) {
+      console.log(object[key][0], prop)
+    }
+
   }
 
+  return
   /**
    * Recursive walk the token string. The function will be re-called
    * until it reaches the ending delimeter.

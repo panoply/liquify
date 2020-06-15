@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import { DiagnosticSeverity } from 'vscode-languageserver'
+import validateObject from './object'
 
 /* -------------------------------------------- */
 /*                   CONSTANTS                  */
@@ -40,8 +42,9 @@ const regexConditionTruth = /.*?(?=-?%})/s
  * @param {import('types/document').Document} Document
  */
 export default (
-  { name, token: [ tag ], offset: [ start, end ] }
+  { name, objects, token: [ tag ], offset: [ start, end ] }
   , { textDocument, diagnostics }
+  , specification
 ) => {
 
   const isEmpty = new RegExp(`(?<=${name})\\s*(?=-?%})`).exec(tag)
@@ -87,6 +90,7 @@ export default (
     }
 
     if (compare === name[0]) {
+
       diagnostics.push({
         severity: DiagnosticSeverity.Warning,
         source: 'liquify',

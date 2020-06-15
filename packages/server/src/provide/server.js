@@ -2,12 +2,13 @@
 
 import _ from 'lodash'
 import R from 'ramda'
-import { readFileSync } from 'fs-extra'
-import { basename } from 'path'
+import { readFileSync, readdirSync, existsSync } from 'fs-extra'
+import { basename, resolve, join, normalize } from 'path'
 import { Config } from './config'
 import { Expressions } from '../parser/lexical'
 import { regexp } from '../utils/functions'
 import specs from '@liquify/liquid-language-specs'
+import { settings } from 'cluster'
 
 /**
  * Liquid Language Server
@@ -32,6 +33,7 @@ export class LiquidServer extends Config {
    * @memberof LiquidServer
    */
   capabilities ({
+    rootUri,
     initializationOptions: {
       service = null
       , license = 'sissel siv'
@@ -47,9 +49,11 @@ export class LiquidServer extends Config {
     textDocument.completion.completionItem.snippetSupport = true
     textDocument.completion.dynamicRegistration = true
 
+    this.rootUri = rootUri
     this.rcfile = rcfile
     this.license = license
     this.service = { ...this.service, ...service }
+
     this.hasConfigurationCapability = !!(workspace && !!workspace.configuration)
     this.hasWorkspaceFolderCapability = !!(workspace && !!workspace.workspaceFolders)
     this.hasDiagnosticRelatedInformationCapability = !!(
@@ -305,10 +309,33 @@ export class LiquidServer extends Config {
       ...this.parser,
       parsing: regexp(`${html}|${blocks}|${output}`, 'g'),
       objects: regexp(`\\b(?:${Object.keys(objects).join('|')})\\.?(?:[^\\s\\n]*\\b)?`, 'g'),
-      filters: regexp(Object.keys(filters).join('|'), 'g')
+      filters: regexp(Object.keys(filters).join('|'), 'g'),
+      frontmatter: Expressions.frontmatter
     }
 
-    return this.#setDiagnosticRules(settings)
+    return this.#setPathIncludes(settings)
+
+  }
+
+  /**
+   * Set Specification
+   *
+   * @private
+   * @param {object} settings
+   * @memberof LiquidServer
+   */
+  #setPathIncludes = settings => {
+
+    if (!settings?.paths) return null
+
+    for (const path in settings.paths) {
+      if (existsSync(settings.paths[path])) {
+        const strip = normalize(settings.paths[path])
+        this.paths[path] = readdirSync(resolve(strip)).map(file => (
+          `${this.rootUri}/${join(strip, file)}`
+        ))
+      }
+    }
 
   }
 

@@ -27,7 +27,7 @@
       "error",
       2,
       {
-        "MemberExpression": 0,
+        "MemberExpression": 1,
         "SwitchCase": 1,
         "ignoredNodes": ["TemplateLiteral"]
       }

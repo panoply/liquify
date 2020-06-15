@@ -24,10 +24,34 @@
     "url": "https://github.com/panoply/liquify"
   },
   "packages": {
+    "project": {
+      "path": ".",
+      "name": "liquify",
+      "repo": "github.com/panoply/liquify",
+      "version": "0.0.0-development"
+    },
+    "./cli": {
+      "path": "build/cli",
+      "name": "@liquify/cli",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
     "./cryptographer": {
       "path": "build/cryptographer",
       "name": "@liquify/cryptographer",
       "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
+    "./cryptospec": {
+      "path": "build/rollup-plugins/cryptospec",
+      "name": "@liquify/rollup-plugin-cryptospec",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
+      "version": "0.0.0"
+    },
+    "./globs": {
+      "path": "build/rollup-plugins/globs",
+      "name": "@liquify/rollup-plugin-globs",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
     "./supplant": {
@@ -48,35 +72,17 @@
       "repo": "github.com/panoply/liquify",
       "version": "0.1.0"
     },
+    "./vscode": {
+      "path": "packages/clients/vscode",
+      "name": "liquify-vscode",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.1"
+    },
     "./schema": {
       "path": "packages/schema",
       "name": "@liquify/schema-stores",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.1"
-    },
-    "./cryptospec": {
-      "path": "build/rollup-plugins/cryptospec",
-      "name": "@liquify/rollup-plugin-cryptospec",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "./globs": {
-      "path": "build/rollup-plugins/globs",
-      "name": "@liquify/rollup-plugin-globs",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "./specs": {
-      "path": "packages/specs",
-      "name": "@liquify/liquid-language-specs",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.0"
-    },
-    "./cli": {
-      "path": "build/cli",
-      "name": "@liquify/cli",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.0"
     },
     "./server": {
       "path": "packages/server",
@@ -84,17 +90,11 @@
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"
     },
-    "project": {
-      "path": ".",
-      "name": "liquify",
+    "./specs": {
+      "path": "packages/specs",
+      "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
-      "version": "0.0.0-development"
-    },
-    "./vscode": {
-      "path": "packages/clients/vscode",
-      "name": "liquify-vscode",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.1"
+      "version": "0.0.0"
     }
   },
   "devDependencies": {

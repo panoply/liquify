@@ -1,9 +1,11 @@
 // @ts-nocheck
 import _ from 'lodash'
+import { basename } from 'path'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { TokenTag, TokenType } from './lexical'
-import validator from '../service/diagnostics'
+import { TokenTag, TokenType, Expressions } from './lexical'
+import diagnostics from '../service/diagnostics'
 import { Server } from '../export'
+import YAML from 'yamljs'
 import * as parse from './utils'
 
 /**
@@ -18,43 +20,54 @@ import * as parse from './utils'
  * @param {object} options
  * @returns
  */
-export default (document, options = { ast: false, isIncrement: false }) => {
-
-  const { textDocument } = document
-  const { index, content = textDocument.getText() } = options
-  const { ast } = options?.ast ? options : document
-  const validate = validator(document)
+export default (
+  document
+  , {
+    ast = document.ast,
+    content = document.textDocument.getText(),
+    isIncrement = false,
+    index = undefined
+  } = {}
+) => {
 
   let run = 0
 
-  /* -------------------------------------------- */
-  /*                   FUNCTIONS                  */
-  /* -------------------------------------------- */
+  const { textDocument, documentLinks, embeddedDocuments } = document
+  const validate = diagnostics(document)
+
+  return (parsed => {
+
+    const frontmatter = Server.parser.frontmatter.exec(content)
+    if (frontmatter) document.frontmatter = YAML.parse(frontmatter[0])
+
+    const matches = content.matchAll(Server.parser.parsing)
+    if (!matches) return parsed
+    for (const match of matches) parseText(match)
+
+    return parsed
+
+  })(isIncrement ? ast : document)
 
   /**
-   * AST Node
-   *
-   * Helper function which will generate the global node
-   * defaults required by each token on the tree
+   * Parse Text
    *
    * @param {object} tokenNode
    * @param {object} tokenSpec
    */
-  const ASTNode = (
-    name
-    , token
-    , match
-  ) => ({
-    name
-    , token: [ token ]
-    , offset: typeof index === 'undefined' ? [
-      match.index
-      , match.index + token.length
-    ] : [
-      match.index + index
-      , match.index + token.length + index
-    ]
-  })
+  function parseText (match) {
+
+    const [ token, name ] = match.filter(Boolean)
+    const node = parse.ASTNode(name, token, match)
+    const spec = parse.getTokenSpec(token, name)
+
+    return !spec || spec.singular ? spec?.within
+      ? childToken(node, spec)
+      : singularToken(node, spec)
+      : parse.isTokenTagEnd(token, name)
+        ? closeToken(node, spec)
+        : startToken(node, spec)
+
+  }
 
   /**
    * Get Token Objects
@@ -105,7 +118,6 @@ export default (document, options = { ast: false, isIncrement: false }) => {
       , textDocument.version
       , textDocument.getText(range)
     )
-
   }
 
   /**
@@ -124,8 +136,15 @@ export default (document, options = { ast: false, isIncrement: false }) => {
     if (type === TokenType.control || type === TokenType.iteration) {
       tokenNode.children = []
       tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
+      if (tokenSpec?.parameters) {
+        tokenNode.parameters = parseParameters(tokenNode, tokenSpec)
+      }
     } else if (type === TokenType.embedded || type === TokenType.associate) {
       tokenNode.languageId = tokenSpec.language
+      if (!embeddedDocuments.includes(ast.length)) {
+        embeddedDocuments.push(ast.length)
+        tokenNode.embeddedId = embeddedDocuments.length - 1
+      }
     }
 
     ast.push(tokenNode)
@@ -176,6 +195,65 @@ export default (document, options = { ast: false, isIncrement: false }) => {
   }
 
   /**
+   * Get Token Parameters
+   *
+   * This function will assign the offset indexes of Liquid objects used
+   * within tags which are used by validations and completion capabilities.
+   *
+   * @param {number} offset The current offset (used to fill position offset)
+   * @param {string} token The token (tag) to parse
+   * @returns {Object|Boolean}
+   */
+  function parseParameters ({
+    token: [ token ]
+    , offset: [ start, end ]
+  }, {
+    type
+    , parameters
+  }) {
+
+    const params = token.matchAll(Expressions.parameters)
+
+    console.log(token)
+
+    return {}
+    return params.reduce((object, match) => {
+
+      const props = match[0].split('.').filter(Boolean)
+      const position = offset + match.index + match[0].length
+      const key = props.length > 1 ? position + 1 : position
+
+      object[key] = props
+
+      return object
+
+    }, {})
+
+  }
+
+  /**
+   * Linked Documents - The resolved LSP Document links
+   * tokens, these are served up to to the Document manager
+   *
+   * @param {object} { name, token: [ token ], offset: [ start ] }
+   * @returns
+   */
+  function linkedDocument ({ name, token: [ token ], offset: [ start ] }) {
+
+    const link = new RegExp(`(?<=\\b${name}\\b)\\s*["']?([\\w.]+)["']?`).exec(token)
+    const offset = start + token.indexOf(link[1])
+
+    return {
+      target: Server.paths[name].find(i => basename(i, '.liquid') === link[1]),
+      tooltip: 'Hello World',
+      range: {
+        start: textDocument.positionAt(offset),
+        end: textDocument.positionAt(offset + link[1].length)
+      }
+    }
+  }
+
+  /**
    * Singular Token
    *
    * @param {object} tokenNode
@@ -183,51 +261,26 @@ export default (document, options = { ast: false, isIncrement: false }) => {
    */
   function singularToken (tokenNode, tokenSpec) {
 
-    const ASTNode = {
-      ...tokenNode,
-      tag: TokenTag.singular,
-      type: TokenType[tokenSpec.type],
-      objects: parseObjects(tokenNode.offset[0], tokenNode.token[0])
+    tokenNode.tag = TokenTag.singular
+    tokenNode.type = TokenType[tokenSpec.type]
+    tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
+
+    if (tokenNode.type === TokenType.include) {
+      tokenNode.linked = linkedDocument(tokenNode)
+      if (!documentLinks.includes(ast.length)) {
+        documentLinks.push(ast.length)
+        tokenNode.linkedId = documentLinks.length - 1
+      }
     }
 
-    ast.push(ASTNode)
+    if (tokenSpec?.parameters) {
+      tokenNode.parameters = parseParameters(tokenNode, tokenSpec)
+    }
 
-    return validate(ASTNode, tokenSpec)
+    ast.push(tokenNode)
 
-  }
-
-  /**
-   * Parse Text
-   *
-   * @param {object} tokenNode
-   * @param {object} tokenSpec
-   */
-  function parseText (match) {
-
-    const [ token, name ] = match.filter(Boolean)
-    const node = ASTNode(name, token, match)
-    const spec = parse.getTokenSpec(token, name)
-
-    return !spec || spec.singular ? spec?.within ? childToken(node, spec)
-      : singularToken(node, spec)
-      : parse.isTokenTagEnd(token, name) ? closeToken(node, spec) : startToken(node, spec)
+    return validate(tokenNode, tokenSpec)
 
   }
-
-  /* -------------------------------------------- */
-  /*                   EXECUTION                  */
-  /* -------------------------------------------- */
-
-  const matches = content.matchAll(Server.parser.parsing)
-
-  if (!matches) return ast
-
-  for (const match of matches) parseText(match)
-
-  if (ast.some(i => i.tag === TokenTag.start)) {
-  //  ast.filter(i => i.tag === TokenTag.start).forEach(validate)
-  }
-
-  return options.isIncrement ? ast : document
 
 }
