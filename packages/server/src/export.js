@@ -1,4 +1,3 @@
-// @ts-check
 import { createConnection, ProposedFeatures } from 'vscode-languageserver'
 import { LiquidServer } from './provide/server'
 

@@ -54,6 +54,12 @@
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
+    "./obfuscator": {
+      "path": "build/rollup-plugins/obfuscator",
+      "name": "@liquify/rollup-plugin-obfuscator",
+      "repo": "github.com/panoply/liquify/master/scripts/rollup",
+      "version": "0.0.0"
+    },
     "./supplant": {
       "path": "build/rollup-plugins/supplant",
       "name": "@liquify/rollup-plugin-supplant",
