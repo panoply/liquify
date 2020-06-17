@@ -72,8 +72,8 @@ const rename = (base, file, item, files) => {
     : typeof file === 'string' ? basename(file) : base
 
   const name = filename
-  .replace(/\[\bname\b\]/, base)
-  .replace(/\[\bext\b\]/, ext || null)
+    .replace(/\[\bname\b\]/, base)
+    .replace(/\[\bext\b\]/, ext || null)
 
   if (!files.has(item)) files.set(item, name)
 

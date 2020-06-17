@@ -26,6 +26,15 @@ export class Config {
   specification = null
 
   /**
+   * Strict Specification - This will validate syntax according
+   * to the engine spec, if you're using Jekyll, this should be `false`
+   * whereas the Shopify engine can use true.
+   *
+   * @memberof Config
+   */
+  strictSpec = false
+
+  /**
    * The `.liquidrc` file location
    *
    * @type {string}
@@ -60,7 +69,8 @@ export class Config {
     filters: null,
     objects: null,
     parsing: null,
-    frontmatter: null
+    frontmatter: null,
+    params: {}
   }
 
   /**

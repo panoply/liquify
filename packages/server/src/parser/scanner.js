@@ -1,9 +1,10 @@
 import _ from 'lodash'
 import { basename } from 'path'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { TokenTag, TokenType, Expressions } from './lexical'
+import { TokenTag, TokenType, Expressions, Characters } from './lexical'
 import { Server } from '../export'
 import YAML from 'yamljs'
+import * as diagnostic from '../service/validations/index'
 import diagnostics from '../service/diagnostics'
 import * as parse from './utils'
 
@@ -63,7 +64,7 @@ export default (
     const node = parse.ASTNode(name, token, match, index)
     const spec = parse.getTokenSpec(token, name)
 
-    return !spec || spec.singular ? (
+    !spec || spec.singular ? (
       spec?.within
         ? childToken(node, spec)
         : singularToken(node, spec)
@@ -72,35 +73,6 @@ export default (
         ? closeToken(node, spec)
         : startToken(node, spec)
     )
-
-  }
-
-  /**
-   * Get Token Objects
-   *
-   * This function will assign the offset indexes of Liquid objects used
-   * within tags which are used by validations and completion capabilities.
-   *
-   * @param {number} offset The current offset (used to fill position offset)
-   * @param {string} token The token (tag) to parse
-   * @returns {Object|Boolean}
-   */
-  function parseObjects (offset, token) {
-
-    return Array
-      .from(token.matchAll(Server.parser.objects))
-      .reduce((object, match) => {
-
-        const props = match[0].split('.').filter(Boolean)
-        const position = offset + match.index + match[0].length
-        const key = props.length > 1 ? position + 1 : position
-
-        object[key] = props
-
-        return object
-
-      }
-      , {})
 
   }
 
@@ -145,7 +117,7 @@ export default (
       tokenNode.children = []
       tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
 
-      if (tokenSpec?.params) tokenNode.params = parseParameters(tokenNode, tokenSpec)
+      if (tokenSpec?.parameters) tokenNode.params = parseParameters(tokenNode, tokenSpec)
 
     } else if (type === TokenType.embedded || type === TokenType.associate) {
 
@@ -205,7 +177,7 @@ export default (
   }
 
   /**
-   * Get Token Parameters
+   * Get Token Objects
    *
    * This function will assign the offset indexes of Liquid objects used
    * within tags which are used by validations and completion capabilities.
@@ -214,30 +186,54 @@ export default (
    * @param {string} token The token (tag) to parse
    * @returns {Object|Boolean}
    */
+  function parseObjects (offset, token) {
+
+    return Array
+      .from(token.matchAll(Server.parser.objects))
+      .reduce((object, match) => {
+
+        const props = match[0].split('.').filter(Boolean)
+        const position = offset + match.index + match[0].length
+        const key = props.length > 1 ? position + 1 : position
+
+        object[key] = props
+
+        return object
+
+      }
+      , {})
+
+  }
+
+  function parseFilters (tokenNode, tokenSpec) {
+
+    const {
+      token: [ token ],
+      offset: [ offset ]
+    } = tokenNode
+
+    diagnostic.filter(tokenNode, tokenSpec, document)
+
+  }
+
+  /**
+   * Get Token Parameters
+   *
+   * @param {number} offset The current offset (used to fill position offset)
+   * @param {string} token The token (tag) to parse
+   * @returns {Object|Boolean}
+   */
   function parseParameters ({
     token: [ token ]
-    , offset: [ start, end ]
+    , offset: [ offset ]
   }, {
     type
-    , parameters
+    , params
   }) {
 
-    const params = token.matchAll(Expressions.params)
-
-    console.log(token)
-
-    return {}
-    return params.reduce((object, match) => {
-
-      const props = match[0].split('.').filter(Boolean)
-      const position = offset + match.index + match[0].length
-      const key = props.length > 1 ? position + 1 : position
-
-      object[key] = props
-
-      return object
-
-    }, {})
+    return Array
+      .from(token.matchAll(/[_a-zA-Z0-9-]+(?=\s*[:=]\s*[_a-zA-Z0-9-"'])/g))
+      .map(([ match ]) => match)
 
   }
 
@@ -274,9 +270,9 @@ export default (
     tokenNode.tag = TokenTag.singular
     tokenNode.type = TokenType[tokenSpec.type]
     tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
+    tokenNode.filters = parseFilters(tokenNode, tokenSpec)
 
-    if (tokenSpec?.params) tokenNode.params = parseParameters(tokenNode, tokenSpec)
-
+    if (tokenSpec?.parameters) tokenNode.params = parseParameters(tokenNode, tokenSpec)
     if (tokenNode.type === TokenType.include) {
       tokenNode.link = linkedDocument(tokenNode)
       if (!documentLinks.includes(ast.length)) {
@@ -287,6 +283,7 @@ export default (
 
     ast.push(tokenNode)
 
+    // console.log(tokenNode)
     return validate(tokenNode, tokenSpec)
 
   }

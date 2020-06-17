@@ -27,6 +27,10 @@ export default document => (ASTNode, spec) => {
     }
   }
 
+  if (!_.isEmpty(ASTNode?.filters)) {
+    // validate.filter(ASTNode, document, spec)
+  }
+
   if (ASTNode?.type === TokenType.object || !_.isEmpty(ASTNode?.objects)) {
     validate.object(ASTNode, document, spec)
   }

@@ -9,17 +9,35 @@
     "append": {
       "description": "Concatenates two strings and returns the concatenated value",
       "ref": "https://shopify.github.io/liquid/filters/append/",
-      "snippet": "append: ${0}"
+      "snippet": "append: ${0}",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        }
+      ]
     },
     "at_least": {
       "description": "Limits a number to a minimum value",
       "ref": "https://shopify.github.io/liquid/filters/at_least/",
-      "snippet": "at_least: ${0}"
+      "snippet": "at_least: ${0}",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        }
+      ]
     },
     "at_most": {
       "description": "Limits a number to a maximum value",
       "ref": "https://shopify.github.io/liquid/filters/at_most/",
-      "snippet": "at_most: ${0}"
+      "snippet": "at_most: ${0}",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        }
+      ]
     },
     "capitalize": {
       "description": "Makes the first character of a string capitalized",
@@ -36,22 +54,46 @@
     "concat": {
       "description": "Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",
       "ref": "https://shopify.github.io/liquid/filters/concat/",
-      "snippet": "concat: ${0}"
+      "snippet": "concat: ${0}",
+      "parameters": [
+        {
+          "type": "variable",
+          "required": true
+        }
+      ]
     },
     "date": {
       "description": "Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby’s `Time.parse`",
       "ref": "https://shopify.github.io/liquid/filters/date/",
-      "snippet": "date: '${0}'"
+      "snippet": "date: '${0}'",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        }
+      ]
     },
     "default": {
       "description": "Allows you to specify a fallback in case a value doesn’t exist. default will show its value if the left side is `nil`, `false`, or `empty`",
       "ref": "https://shopify.github.io/liquid/filters/default/",
-      "snippet": "default: '${0}'"
+      "snippet": "default: '${0}'",
+      "parameters": [
+        {
+          "accepts": "any",
+          "required": true
+        }
+      ]
     },
     "divided_by": {
       "description": "Divides a number by another number",
       "ref": "https://shopify.github.io/liquid/filters/divided_by/",
-      "snippet": "divided_by: '${0}'"
+      "snippet": "divided_by: '${0}'",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        }
+      ]
     },
     "downcase": {
       "description": "Makes each character in a string lowercase. It has no effect on strings which are already all lowercase",
@@ -76,7 +118,13 @@
     "join": {
       "description": "Joins the elements of an array with the character passed as the parameter. The result is a single string.",
       "ref": "https://shopify.github.io/liquid/filters/join/",
-      "snippet": "join: '${0}'"
+      "snippet": "join: '${0}'",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        }
+      ]
     },
     "last": {
       "description": "Gets the last element in an array",
@@ -89,17 +137,35 @@
     "map": {
       "description": "Accepts an array element’s attribute as a parameter and creates a string out of each array element’s value.",
       "ref": "https://shopify.github.io/liquid/filters/map/",
-      "snippet": "map: '${0}'"
+      "snippet": "map: '${0}'",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        }
+      ]
     },
     "minus": {
       "description": "Subtracts a number from another number",
       "ref": "https://shopify.github.io/liquid/filters/minus/",
-      "snippet": "minus: '${0}'"
+      "snippet": "minus: '${0}'",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        }
+      ]
     },
     "modulo": {
       "description": "Returns the remainder of a division operation",
       "ref": "https://shopify.github.io/liquid/filters/modulo/",
-      "snippet": "modulo: '${0}'"
+      "snippet": "modulo: '${0}'",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        }
+      ]
     },
     "newline_to_br": {
       "description": "Replaces every newline in a string with an HTML line break (`<br />`)",
@@ -108,32 +174,71 @@
     "plus": {
       "description": "Adds a number to another number",
       "ref": "https://shopify.github.io/liquid/filters/plus/",
-      "snippet": "plus: '${0}'"
+      "snippet": "plus: '${0}'",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        }
+      ]
     },
     "prepend": {
       "description": "Adds the specified string to the beginning of another string",
       "ref": "https://shopify.github.io/liquid/filters/prepend/",
-      "snippet": "prepend: '${0}'"
+      "snippet": "prepend: '${0}'",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        }
+      ]
     },
     "remove": {
       "description": "Removes every occurrence of the specified substring from a string",
       "ref": "https://shopify.github.io/liquid/filters/remove/",
-      "snippet": "remove: '${0}'"
+      "snippet": "remove: '${0}'",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        }
+      ]
     },
     "remove_first": {
       "description": "Removes only the first occurrence of the specified substring from a string",
       "ref": "https://shopify.github.io/liquid/filters/remove_first/",
-      "snippet": "remove_first: '${0}'"
+      "snippet": "remove_first: '${0}'",
+      "parameters": 1
     },
     "replace": {
       "description": "Replaces every occurrence of the first argument in a string with the second argument",
       "ref": "https://shopify.github.io/liquid/filters/replace/",
-      "snippet": "replace: '${1}', '${2}' ${0}"
+      "snippet": "replace: '${1}', '${2}' ${0}",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        },
+        {
+          "accepts": "string",
+          "required": true
+        }
+      ]
     },
     "replace_first": {
       "description": "Replaces only the first occurrence of the first argument in a string with the second argument",
       "ref": "https://shopify.github.io/liquid/filters/replace_first/",
-      "snippet": "replace_first: '${1}', '${2}' ${0}"
+      "snippet": "replace_first: '${1}', '${2}' ${0}",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        },
+        {
+          "accepts": "string",
+          "required": true
+        }
+      ]
     },
     "reverse": {
       "description": "Reverses the order of the items in an array. `reverse` cannot reverse a string",
@@ -154,12 +259,26 @@
     "slice": {
       "description": "Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",
       "ref": "https://shopify.github.io/liquid/filters/slice/",
-      "snippet": "slice: '${0}'"
+      "snippet": "slice: '${0}'",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        },
+        {
+          "accepts": "number"
+        }
+      ]
     },
     "sort": {
       "description": "Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting",
       "ref": "https://shopify.github.io/liquid/filters/sort/",
-      "snippet": "${1|sort,sort:|} ${2}"
+      "snippet": "${1|sort,sort:|} ${2}",
+      "parameters": [
+        {
+          "accepts": "number"
+        }
+      ]
     },
     "sort_natural": {
       "description": "Sorts items in an array in case-insensitive order",
@@ -168,7 +287,13 @@
     "split": {
       "description": "Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",
       "ref": "https://shopify.github.io/liquid/filters/split/",
-      "snippet": "split: '${0}'"
+      "snippet": "split: '${0}'",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        }
+      ]
     },
     "strip": {
       "description": "Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words",
@@ -185,17 +310,41 @@
     "times": {
       "description": "Multiplies a number by another number",
       "ref": "https://shopify.github.io/liquid/filters/times/",
-      "snippet": "times: '${0}'"
+      "snippet": "times: '${0}'",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        }
+      ]
     },
     "truncate": {
       "description": "Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (…) is appended to the string and is included in the character count",
       "ref": "https://shopify.github.io/liquid/filters/truncate/",
-      "snippet": "truncate: ${0}"
+      "snippet": "truncate: ${0}",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        },
+        {
+          "accepts": "string"
+        }
+      ]
     },
     "truncatewords": {
       "description": "Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (…) is appended to the string",
       "ref": "https://shopify.github.io/liquid/filters/truncatewords/",
-      "snippet": "truncatewords: ${0}"
+      "snippet": "truncatewords: ${0}",
+      "parameters": [
+        {
+          "accepts": "number",
+          "required": true
+        },
+        {
+          "accepts": "string"
+        }
+      ]
     },
     "uniq": {
       "description": "Removes any duplicate elements in an array",
@@ -215,7 +364,16 @@
     },
     "where": {
       "description": "Creates an array including only the objects with a given property value, or any truthy value by default",
-      "ref": "https://shopify.github.io/liquid/filters/where/"
+      "ref": "https://shopify.github.io/liquid/filters/where/",
+      "parameters": [
+        {
+          "accepts": "string",
+          "required": true
+        },
+        {
+          "accepts": "string"
+        }
+      ]
     }
   },
   "tags": {
@@ -286,7 +444,7 @@
     },
     "for": {
       "description": "Repeatedly executes a block of code.",
-      "parameters": [
+      "params": [
         {
           "description": "Begins the loop at the specified index",
           "name": "offset",
@@ -330,7 +488,7 @@
     },
     "tablerow": {
       "description": "Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",
-      "parameters": [
+      "params": [
         {
           "description": "Defines a range of numbers to loop through. The range can be defined by both literal and variable numbers",
           "name": "range",

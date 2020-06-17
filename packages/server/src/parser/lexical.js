@@ -43,7 +43,7 @@ export const Expressions = {
    *
    * Liquid tag blocks or singular tags.
    */
-  parameters: /(?<=,|\s)(\w+\s*[:=]\s*)["']?(.*?)(?=,|["']|-?%})/g,
+  parameters: /(?<=,|\s)([_a-z-A-Z0-9-]+)\s*([:=])\s*["']?(.+?)(?=,|["']|-?%})/g,
 
   /**
    * `{{ tag }}`

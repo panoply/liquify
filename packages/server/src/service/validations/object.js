@@ -1,5 +1,4 @@
 import { DiagnosticSeverity } from 'vscode-languageserver'
-
 /* -------------------------------------------- */
 /*                   CONSTANTS                  */
 /* -------------------------------------------- */
@@ -31,7 +30,7 @@ export default (
 
     // object exists
     if (object?.[key]) {
-      console.log(object[key][0], prop)
+      // console.log(object[key][0], prop)
     }
 
   }

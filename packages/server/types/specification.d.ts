@@ -1,4 +1,5 @@
 import { TokenTypes } from "./parser";
+import { type } from "os";
 
 /* -------------------------------------------- */
 /*                    ENGINE                    */
@@ -87,6 +88,84 @@ export declare type Objects = { [name: string]: Object };
 /*                    FILTERS                   */
 /* -------------------------------------------- */
 
+interface ArgumentParameterAccepts {
+  /**
+   * Name of the parameter this tag accepts
+   */
+  readonly name: string;
+  /**
+   * Description of this paramter
+   */
+  readonly description?: string;
+}
+
+interface ArgumentParameters {
+  /**
+   * Name of the parameter this tag accepts
+   */
+  readonly name: string;
+  /**
+   * Description of this paramter
+   */
+  readonly description?: string;
+  /**
+   * A list of parameters that are required when using this paramater.
+   * Hierarchy is respected, and matches will begin searching from the
+   * parameters define `name` value, In the below example
+   * the `for` parameter would use the `requires` property
+   *
+   * @example
+   *
+   * // if the `as` parameter was missing, parse would fail
+   * {% include 'post' for collection.posts as post %}
+   *
+   * @default undefined
+   */
+  readonly requires?: string[];
+  /**
+   * Filter Seperation character. In most cases this will be a `,` comma
+   * value, however this is not always the case, as some tags will require
+   * only a space, for example the Jekyll `{% include param="foo"%}` tag
+   * and Standard `{% for i in arr limit: 1%}` tag uses a space seperator.
+   *
+   * @example
+   *
+   * // A filter like this would use `colon`
+   * {% tag | filter: argument: 'params' %}
+   *
+   * @default "space"
+   */
+  readonly seperator?: "space" | "comma" | "colon";
+  /**
+   * Supply a snippet to be used in completions
+   *
+   * @default undefined
+   */
+  readonly snippet?: string;
+  /**
+   * What the parameter meter value should accept, for example
+   * filter param can accept basic strings, number and at times even
+   * Liquid output `{{ tag }}` tags. The spec attempts to cover most
+   * use cases or tags.
+   *
+   * You can pass a string regex expression to the property, which can
+   * be used to validate the string values.
+   *
+   * @example
+   *
+   * {{ tag | filter: 'hello' }} // Basic string
+   * {% include a.liquid | output: {{ page.url }} %} // Liquid output
+   * {{ tag | filter: 10 }} // Number
+   *
+   * @default undefined
+   */
+  readonly accepts?:
+    | "string"
+    | "number"
+    | "output"
+    | ArgumentParameterAccepts[];
+}
+
 export interface Filter {
   /**
    * The automatically applied tag type, which is "filter"
@@ -112,6 +191,19 @@ export interface Filter {
    * @default undefined
    */
   readonly snippet?: string;
+  /**
+   * Filter argument parameters can differ greatly, depending on how they are
+   * implemented. The spec understands the below filter structures:
+   *
+   * @example
+   *
+   * {{ tag | filter: 'hello', param: 'world' }} // comma seperated params
+   * {{ tag | filter: 'arg1', 'arg2', }} // comma seperated string
+   * {{ tag | filter: argument: 'foo' }} // injected argument params
+   *
+   * @default undefined
+   */
+  readonly parameters?: ArgumentParameters[];
 }
 
 export declare type Filters = { [name: string]: Filter };
@@ -141,7 +233,7 @@ interface Parameters {
    *
    * @default "space"
    */
-  readonly preceding?: "space" | "comma" | "colon";
+  readonly seperator?: "space" | "comma" | "colon";
   /**
    * Supply a snippet to be used in completions
    *

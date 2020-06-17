@@ -54,7 +54,10 @@ interface AST {
   token: string[];
   offset: number[];
   objects?: Objects;
+  params?: object[];
+  filters?: object[];
   children?: Children[];
+  argument?: object[];
   languageId?: string;
   lineOffset?: number;
   embeddedDocument?: TextDocument;

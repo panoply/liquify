@@ -303,14 +303,21 @@ export class LiquidServer extends Config {
   #setParseExpressions = (settings) => {
 
     const { html, blocks, output } = Expressions
-    const { objects, filters } = this.specification
+    const { objects, filters, tags } = this.specification
+
+    const includes = Object
+      .entries(tags)
+      .filter(([ key, { type, params } ]) => type === 'include')
+      .map(([ key, { params } ]) => key)
+      .join('|')
 
     this.parser = {
       ...this.parser,
       parsing: regexp(`${html}|${blocks}|${output}`, 'g'),
       objects: regexp(`\\b(?:${Object.keys(objects).join('|')})\\.?(?:[^\\s\\n]*\\b)?`, 'g'),
       filters: regexp(Object.keys(filters).join('|'), 'g'),
-      frontmatter: Expressions.frontmatter
+      frontmatter: Expressions.frontmatter,
+      includes: new RegExp(`(?<=\\b(${includes})\\b\\s+)["']?([\\w.]+)["']?`)
     }
 
     return this.#setPathIncludes(settings)

@@ -12,23 +12,42 @@ import { TokenType } from '../parser/lexical'
  * @typedef {import('vscode-languageserver').Diagnostic} Diagnostic
  * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocumenr
  */
-export default (function () {
+export default (function ({
+  ast = document.ast
+  , content = document.textDocument.getText()
+  , isIncrement = false
+  , index = undefined
+} = {}) {
 
-  const documents = new Map()
+  function getText () {
 
-  // let uri,
-  //  textDocument
+  }
+
+  function getAST () {
+
+  }
+
+  function getNode () {
+
+  }
+
+  function getEmbeds () {
+
+  }
+
+  function getLinks () {
+
+  }
+
+  function setRange () {
+
+  }
 
   /**
    * Create - Creates a documents of the text document
    *
    */
-  function create ({
-    uri
-    , languageId
-    , version
-    , text
-  }) {
+  function create () {
 
     return fn => fn(documents.has(uri) ? documents.get(uri) : documents.set(uri, {
 
@@ -72,14 +91,7 @@ export default (function () {
        *
        * @type {number[]}
        */
-      embeddedDocuments: [],
-
-      /**
-       * Text Document
-       *
-       * @type {TextDocument}
-       */
-      textDocument: TextDocument.create(uri, languageId, version, text)
+      embeddedDocuments: []
 
     }).get(uri))
 
@@ -169,13 +181,20 @@ export default (function () {
   }
 
   return ({
-    ASTNode
-    , documents
+    getText
+    , getAST
+    , getNode
+    , getEmbeds
+    , getLinks
+    , setRange
     , create
-    , embeds
     , update
-    , includes
-    , links
   })
 
-})()
+})({
+
+  uri: null,
+  languageId: null,
+  documents: new Map()
+
+})

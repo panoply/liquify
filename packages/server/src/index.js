@@ -4,6 +4,8 @@ import { DidChangeConfigurationNotification, TextDocumentSyncKind } from 'vscode
 import { connection, Server, Service, Document, Parser } from './export'
 import { runAsync, runSync } from './utils/runners'
 import { performance } from 'perf_hooks'
+import { mark, stop } from 'marky'
+import pretty from 'pretty-ms'
 
 const { documents } = Document
 
@@ -63,7 +65,7 @@ connection.onInitialize(initializeParams => (
 
 connection.onInitialized(() => {
 
-  console.log('onInitialized')
+  connection.console.log('onInitialized')
 
   if (Server.hasConfigurationCapability) {
     connection.client.register(DidChangeConfigurationNotification.type, undefined)
@@ -71,7 +73,7 @@ connection.onInitialized(() => {
 
   if (Server.hasWorkspaceFolderCapability) {
     connection.workspace.onDidChangeWorkspaceFolders(event => {
-      connection.console.log('Workspace folder change event received.')
+      connection.connection.console.log('Workspace folder change event received.')
     })
   }
 
@@ -85,7 +87,7 @@ connection.onInitialized(() => {
 
 connection.onDidChangeConfiguration(change => {
 
-  console.log('onDidChangeConfiguration')
+  connection.console.log('onDidChangeConfiguration')
 
   Server.configure('onDidChangeConfiguration', change.settings)
 
@@ -98,9 +100,9 @@ connection.onDidChangeConfiguration(change => {
 /* ---------------------------------------------------------------- */
 connection.onDidOpenTextDocument(({ textDocument }) => {
 
-  console.log('onDidOpenTextDocument')
+  connection.console.log('onDidOpenTextDocument')
 
-  // console.log(Server)
+  // connection.console.log(Server)
 
   Document.create(textDocument)(Parser.scanner)
 
@@ -127,9 +129,9 @@ connection.onDidChangeTextDocument(({
   , textDocument: { uri }
 }) => {
 
-  console.log('onDidChangeTextDocument', uri)
+  connection.console.log('onDidChangeTextDocument', uri)
 
-  const v1 = performance.now()
+  mark('onDidChangeTextDocument')
 
   const document = documents.get(uri)
 
@@ -139,9 +141,9 @@ connection.onDidChangeTextDocument(({
 
   Parser.increment(document, ...changes)
 
-  const v2 = performance.now()
+  connection.console.log(`Parsed in ${stop('onDidChangeTextDocument').duration}`)
 
-  console.log(document.ast)
+  // connection.console.log(document.ast)
   // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
 
   // return Documents.set(textDocument.uri)
@@ -159,8 +161,6 @@ connection.onDidChangeTextDocument(({
   ))
 
   // const v2 = performance.now()
-
-  console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
 
 })
 
@@ -180,7 +180,7 @@ connection.onDidCloseTextDocument(({ textDocument: { uri } }) => (
 
 connection.onDidChangeWatchedFiles(change => {
 
-  console.log('onDidChangeWatchedFiles')
+  connection.console.log('onDidChangeWatchedFiles')
 
   Server.configure('onDidChangeWatchedFiles', change)
 

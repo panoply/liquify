@@ -59,11 +59,13 @@
       "type": "import",
       "description": "The include tag allows you to include the content from another file stored in the _includes folder",
       "singular": true,
+      "seperator": "space",
       "ref": "https://jekyllrb.com/docs/includes"
     },
     "include_relative": {
       "type": "import",
-      "description": "Iinclude file fragments relative to the current file by using the include_relative tag:",
+      "description": "Iinclude file fragments relative to the current file by using the include_relative tag",
+      "seperator": "space",
       "singular": true,
       "ref": "https://jekyllrb.com/docs/includes/#including-files-relative-to-another-file"
     },

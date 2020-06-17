@@ -14,12 +14,8 @@ export default function (options = {}) {
   const crypto = cryptographer(options.password)
   const merge = json => {
 
-    Object
-    .keys(json)
-    .forEach(
-      key => options.defaults[key] && Object
-      .keys(json[key])
-      .forEach(
+    Object.keys(json).forEach(
+      key => options.defaults[key] && Object.keys(json[key]).forEach(
         prop => (
           json[key][prop] = {
             ...options.defaults[key],
