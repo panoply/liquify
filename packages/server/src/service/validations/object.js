@@ -17,8 +17,7 @@ const regexObjects = /(?<=[^.])\.[_\w-]+(?:\[[0-9]+\])?\.?(?=\W)/g
  */
 export default (
   { objects, token: [ tag ], offset: [ start, end ] }
-  , { textDocument, diagnostics }
-  , specification
+  , { diagnostics }
 ) => {
 
   const matches = tag.match(regexObjects)

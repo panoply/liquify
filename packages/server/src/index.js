@@ -3,11 +3,7 @@
 import { DidChangeConfigurationNotification, TextDocumentSyncKind } from 'vscode-languageserver'
 import { connection, Server, Service, Document, Parser } from './export'
 import { runAsync, runSync } from './utils/runners'
-import { performance } from 'perf_hooks'
 import { mark, stop } from 'marky'
-import pretty from 'pretty-ms'
-
-const { documents } = Document
 
 /* ---------------------------------------------------------------- */
 /* onInitialize                                                     */
@@ -103,8 +99,8 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
   connection.console.log('onDidOpenTextDocument')
 
   // connection.console.log(Server)
-
   Document.create(textDocument)(Parser.scanner)
+  // Document.create(textDocument)(Parser.scanner)
 
   // documents.forEach(Service.doValidation)
 
@@ -124,45 +120,44 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 /* onDidChangeTextDocument                                          */
 /* ---------------------------------------------------------------- */
 
-connection.onDidChangeTextDocument(({
-  contentChanges
-  , textDocument: { uri }
-}) => {
+connection.onDidChangeTextDocument(
+  ({
+    contentChanges
+    , textDocument
+  }) => {
 
-  connection.console.log('onDidChangeTextDocument', uri)
+    connection.console.log('onDidChangeTextDocument', textDocument.uri)
 
-  mark('onDidChangeTextDocument')
+    mark('onDidChangeTextDocument')
 
-  const document = documents.get(uri)
+    const { document, changes } = Document.update(textDocument, contentChanges)
 
-  if (!document?.textDocument) return null
+    if (!document?.uri) return null
 
-  const changes = Document.update(document.textDocument, contentChanges)
+    Parser.increment(document, ...changes)
 
-  Parser.increment(document, ...changes)
+    console.log(document)
 
-  connection.console.log(`Parsed in ${stop('onDidChangeTextDocument').duration}`)
+    // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
 
-  // connection.console.log(document.ast)
-  // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
+    // return Documents.set(textDocument.uri)
 
-  // return Documents.set(textDocument.uri)
+    // const parserd = await Parser(document, contentChanges)
 
-  // const parserd = await Parser(document, contentChanges)
+    Service.doValidation(document).then(({
+      uri
+      , diagnostics
+    }) => (
+      connection.sendDiagnostics({
+        uri,
+        diagnostics
+      })
+    ))
 
-  Service.doValidation(document).then(({
-    uri
-    , diagnostics
-  }) => (
-    connection.sendDiagnostics({
-      uri,
-      diagnostics
-    })
-  ))
+    // const v2 = performance.now()
 
-  // const v2 = performance.now()
-
-})
+  }
+)
 
 /* ---------------------------------------------------------------- */
 /* onDidClose                                                       */
@@ -195,9 +190,10 @@ connection.onDocumentRangeFormatting(
     textDocument: { uri }
   }, token) => !Server.provider.format || runSync(() => {
 
+    return null
     const document = documents.get(uri)
 
-    if (!document.textDocument) return null
+    if (!document.uri) return null
 
     return Service.doFormat(document, Server.format)
 
@@ -214,9 +210,11 @@ connection.onHover(
     , textDocument: { uri }
   }, token) => !Server.provider.hover || runSync(() => {
 
+    return null
+
     const document = documents.get(uri)
 
-    if (!document.textDocument) return null
+    if (!document.uri) return null
 
     return Service.doHover(document, position)
 
@@ -227,7 +225,7 @@ connection.onHover(
 /* onCodeLens                                                       */
 /* ---------------------------------------------------------------- */
 
-connection.onCodeLens(
+/* connection.onCodeLens(
   ({
     partialResultToken,
     textDocument: { uri }
@@ -235,18 +233,18 @@ connection.onCodeLens(
 
     const document = documents.get(uri)
 
-    if (!document.textDocument) return null
+    if (!document.uri) return null
 
     return Document.includes(uri)
 
   }, null, `Error while computing completion for ${uri}`, token)
-)
+) */
 
 /* ---------------------------------------------------------------- */
 /* onCodeLensResolve                                                */
 /* ---------------------------------------------------------------- */
 
-connection.onCodeLensResolve(
+/* connection.onCodeLensResolve(
   (
     item
     , token
@@ -256,7 +254,7 @@ connection.onCodeLensResolve(
 
   }, item, 'Error while resolving completion proposal', token)
 )
-
+*/
 /* ---------------------------------------------------------------- */
 /* onDocumentLinks                                            */
 /* ---------------------------------------------------------------- */
@@ -266,9 +264,11 @@ connection.onDocumentLinks(
     textDocument: { uri }
   }, token) => runSync(() => {
 
+    return null
+
     const document = documents.get(uri)
 
-    if (!document.textDocument) return null
+    if (!document.uri) return null
 
     return Document.links(uri)
 
@@ -284,6 +284,8 @@ connection.onDocumentLinkResolve(
     item
     , token
   ) => runSync(() => {
+
+    return null
 
     return item
 
@@ -301,9 +303,11 @@ connection.onCompletion(
     , context
   }, token) => !Server.provider.completion || runAsync(async () => {
 
+    return null
+
     const document = documents.get(uri)
 
-    if (!document.textDocument) return null
+    if (!document.uri) return null
 
     const onComplete = await Service.doComplete(document, position, context)
 
@@ -322,6 +326,8 @@ connection.onCompletionResolve(
     , token
   ) => runSync(() => {
 
+    return null
+
     return Service.doCompleteResolve(item)
 
   }, item, 'Error while resolving completion proposal', token)
@@ -336,6 +342,8 @@ connection.onExecuteCommand(
     item
     , token
   ) => runSync(() => {
+
+    return null
 
     return item.arguments[0]
 

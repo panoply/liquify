@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { copySync, statSync } = require('fs-extra')
+/* const { copySync, statSync } = require('fs-extra')
 const modules = [
   'vscode-languageserver-protocol',
   'vscode-languageserver-types',

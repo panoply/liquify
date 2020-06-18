@@ -1,5 +1,7 @@
 import _ from 'lodash'
 import { DiagnosticSeverity } from 'vscode-languageserver'
+import { Document } from './../../export'
+
 import validateObject from './object'
 
 /* -------------------------------------------- */
@@ -42,9 +44,8 @@ const regexConditionTruth = /.*?(?=-?%})/s
  * @param {import('types/document').Document} Document
  */
 export default (
-  { name, objects, token: [ tag ], offset: [ start, end ] }
-  , { textDocument, diagnostics }
-  , specification
+  { name, token: [ tag ], offset: [ start, end ] }
+  , { diagnostics }
 ) => {
 
   const isEmpty = new RegExp(`(?<=${name})\\s*(?=-?%})`).exec(tag)
@@ -58,10 +59,7 @@ export default (
     return diagnostics.push({
       severity: DiagnosticSeverity.Warning,
       message: 'Empty condition expression detected',
-      range: {
-        start: textDocument.positionAt(start + charOffset),
-        end: textDocument.positionAt(start + charOffset + isEmpty[0].length)
-      }
+      range: Document.range(start + charOffset, start + charOffset + isEmpty[0].length)
     })
   }
 
@@ -82,10 +80,7 @@ export default (
         severity: DiagnosticSeverity.Error,
         source: 'liquify',
         message: `Invalid condition was expressed at: ${condition[0]}`,
-        range: {
-          start: textDocument.positionAt(start),
-          end: textDocument.positionAt(end)
-        }
+        range: Document.range(start, end)
       })
     }
 
@@ -95,10 +90,7 @@ export default (
         severity: DiagnosticSeverity.Warning,
         source: 'liquify',
         message: `Condition is indentical to comparison: ${compare} is equal to ${name[0]}`,
-        range: {
-          start: textDocument.positionAt(start),
-          end: textDocument.positionAt(end)
-        }
+        range: Document.range(start, end)
       })
     }
 
@@ -124,10 +116,7 @@ export default (
             message: `Extrenous operator values: "${operators[0].trim()}"`,
             source: 'liquify',
             tags: [ 1 ],
-            range: {
-              start: textDocument.positionAt(position),
-              end: textDocument.positionAt(position + operators[0].length - chars[0].length)
-            }
+            range: Document.range(position, position + operators[0].length - chars[0].length)
           })
         }
 
@@ -141,10 +130,7 @@ export default (
         severity: DiagnosticSeverity.Error,
         message: `Invalid operator sequence at: ${condition[0].trim()}`,
         source: 'liquify',
-        range: {
-          start: textDocument.positionAt(position - operators[0].length),
-          end: textDocument.positionAt(position)
-        }
+        range: Document.range(position - operators[0].length, position)
       })
 
       return walk(string)
@@ -161,10 +147,7 @@ export default (
       return diagnostics.push({
         severity: DiagnosticSeverity.Error,
         message: `Invalid characters in condition at: ${truth[0]}`,
-        range: {
-          start: textDocument.positionAt(position),
-          end: textDocument.positionAt(position + truth[0].length)
-        }
+        range: Document.range(position, position + truth[0].length)
       })
     }
 

@@ -1,28 +1,25 @@
 import _ from 'lodash'
 import { DiagnosticSeverity } from 'vscode-languageserver'
 import { TokenType } from '../parser/lexical'
+import { Document } from './../export'
 import * as validate from './validations/index'
 
-export default document => (ASTNode, spec) => {
+export default textDocument => (ASTNode, spec) => {
 
   if (!spec || !ASTNode) return
 
-  const { diagnostics, textDocument } = document
   const { token: [ token ] } = ASTNode
 
   if (spec.whitespace) {
     if (token.startsWith('-') || token.endsWith('-')) {
 
-      diagnostics.push({
+      textDocument.diagnostics.push({
         severity: DiagnosticSeverity.Error,
         message: 'Tag does not accept whitespace dashes!',
-        range: {
-          start: textDocument.positionAt(ASTNode.offset[0]),
-          end: textDocument.positionAt(ASTNode.offset[1])
-        }
+        range: Document.range(ASTNode.offset[0], ASTNode.offset[1])
       })
 
-      return diagnostics
+      return textDocument.diagnostics
 
     }
   }
@@ -32,11 +29,11 @@ export default document => (ASTNode, spec) => {
   }
 
   if (ASTNode?.type === TokenType.object || !_.isEmpty(ASTNode?.objects)) {
-    validate.object(ASTNode, document, spec)
+    validate.object(ASTNode, textDocument)
   }
 
   if (ASTNode?.type === TokenType.control) {
-    validate.control(ASTNode, document, spec)
+    validate.control(ASTNode, textDocument)
   }
 
   if (ASTNode?.type === TokenType.iteration) {
@@ -47,5 +44,5 @@ export default document => (ASTNode, spec) => {
     // variableValidation(ASTNode, document)
   }
 
-  return diagnostics
+  return textDocument.diagnostics
 }

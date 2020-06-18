@@ -1,4 +1,4 @@
-import { Server } from '../../export'
+import { Server, Document } from '../../export'
 import { DiagnosticSeverity } from 'vscode-languageserver'
 
 /* -------------------------------------------- */
@@ -12,18 +12,16 @@ import { DiagnosticSeverity } from 'vscode-languageserver'
  */
 export default (
   { name, token: [ token ], offset: [ start, end ] }
+  , { diagnostics }
   , { filters }
-  , { textDocument, diagnostics }
+
 ) => {
 
   if (filters === false) {
     return diagnostics.push({
       severity: DiagnosticSeverity.Error,
       message: 'Tag does not accept filters',
-      range: {
-        start: textDocument.positionAt(start + token.indexOf(name) + name.length),
-        end: textDocument.positionAt(end)
-      }
+      range: Document.range(start + token.indexOf(name) + name.length, end)
     })
   }
 
@@ -37,10 +35,7 @@ export default (
       return diagnostics.push({
         severity: DiagnosticSeverity.Warning,
         message: 'Empty filter',
-        range: {
-          start: textDocument.positionAt(start + m.index - 1),
-          end: textDocument.positionAt(start + filter.length + m.index)
-        }
+        range: Document.range(start + m.index - 1, start + filter.length + m.index)
       })
     }
 
@@ -54,10 +49,7 @@ export default (
       return diagnostics.push({
         severity: DiagnosticSeverity.Warning,
         message: 'Empty filter expression',
-        range: {
-          start: textDocument.positionAt(offset),
-          end: textDocument.positionAt(offset + value.length)
-        }
+        range: Document.range(offset, offset + value.length)
       })
     }
 
@@ -72,15 +64,13 @@ export default (
       return diagnostics.push({
         severity: DiagnosticSeverity.Error,
         message: `The "${filter}" filter requires ${message}, recieved ${parameters.length}`,
-        range: {
-          start: textDocument.positionAt(offset + 1),
-          end: textDocument.positionAt(offset + value.length)
-        }
+        range: Document.range(offset + 1, offset + value.length)
       })
     }
 
-    let i = 0
     const length = parameters.length
+
+    let i = 0
 
     for (; i < length; i++) {
       if (parameters[i].trim().length > 0) continue
@@ -88,14 +78,10 @@ export default (
         return diagnostics.push({
           severity: DiagnosticSeverity.Error,
           message: `Parameter ${i + 1} must be a string value`,
-          range: {
-            start: textDocument.positionAt(offset + parameters[i].length),
-            end: textDocument.positionAt(offset + value.length)
-          }
+          range: Document.range(offset + parameters[i].length, offset + value.length)
         })
       }
     }
 
   }
-
 }

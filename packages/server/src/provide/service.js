@@ -3,7 +3,7 @@
 import _ from 'lodash'
 import { TextEdit, Position } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import Documents from '../provide/document'
+import Documents from '../provide/documents'
 import { Server } from '../export'
 import { CSSService } from '../service/modes/css'
 import { SCSSService } from '../service/modes/scss'
@@ -76,12 +76,9 @@ export default new class LiquidService {
    * @param {*} diagnostics
    * @memberof LiquidService
    */
-  async doValidation ({ textDocument, diagnostics }) {
+  async doValidation ({ uri, diagnostics }) {
 
-    return {
-      uri: textDocument.uri,
-      diagnostics
-    }
+    return { uri, diagnostics }
 
     const embedded = Documents.embeds(textDocument.uri)
     // const promise = Diagnostic.resolve(textDocument)
@@ -110,17 +107,18 @@ export default new class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doFormat ({ textDocument }, formattingRules) {
+  doFormat (document, formattingRules) {
 
     // const filename = path.basename(uri)
     // if (settings.ignore.files.includes(filename)) return
 
-    const { uri, version, languageId } = textDocument
+    return null
+    const { uri, version, languageId } = document
     const embedded = Documents.embeds(uri)
 
     if (embedded.length < 0) return null
 
-    const content = textDocument.getText()
+    const content = document.getText()
     const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
     const regions = embedded.map((embed) => Format.embeds(literal, embed))
 
@@ -129,7 +127,7 @@ export default new class LiquidService {
       TextEdit.replace(
         {
           start: Position.create(0, 0),
-          end: textDocument.positionAt(content.length)
+          end: document.positionAt(content.length)
         }
         , Format.markup(TextDocument.applyEdits(literal, regions))
       )
@@ -143,7 +141,7 @@ export default new class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doHover ({ textDocument }, position) {
+  doHover (document, position) {
 
     // const [ node ] = Documents.ASTNode(textDocument.uri, textDocument.offsetAt(position))
     /*
@@ -155,7 +153,7 @@ export default new class LiquidService {
       }
     } */
 
-    const name = Hover.getWordAtPosition(textDocument, position)
+    const name = Hover.getWordAtPosition(document, position)
 
     let spec
 
@@ -190,9 +188,8 @@ export default new class LiquidService {
    */
   async doComplete (document, position, { triggerKind }) {
 
-    const { textDocument } = document
-    const offset = textDocument.offsetAt(position)
-    const [ node ] = Documents.ASTNode(textDocument.uri, offset)
+    const offset = document.offsetAt(position)
+    const [ node ] = Documents.ASTNode(document.uri, offset)
 
     let doComplete
 

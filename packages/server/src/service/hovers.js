@@ -42,9 +42,9 @@ function getLine (document, position) {
  * @param {import("vscode-languageserver").Position} position
  * @returns {string}
  */
-export function getWordAtPosition (document, position) {
+export function getWordAtPosition (textDocument, position) {
 
-  const { content, character } = getLine(document, position)
+  const { content, character } = getLine(textDocument, position)
   const first = content.lastIndexOf(' ', character)
   const last = content.indexOf(' ', character)
 

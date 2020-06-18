@@ -87,13 +87,13 @@ export async function getObjectCompletion (ASTnode, offset) {
  * Get Trigger Completion
  *
  * @export
- * @param {import("vscode-languageserver").TextDocument} document
+ * @param {import("vscode-languageserver").TextDocument}textDocument
  * @param {import("vscode-languageserver").Position} position
  * @returns
  */
-export function getTiggerCompletion (document, position) {
+export function getTiggerCompletion (textDocument, position) {
 
-  const type = document.getText({
+  const type = textDocument.getText({
     start: {
       line: position.line,
       character: position.character - 3

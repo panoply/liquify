@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { basename } from 'path'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { TokenTag, TokenType, Expressions, Characters } from './lexical'
-import { Server, Document } from '../export'
+import { Server } from '../export'
 import YAML from 'yamljs'
 import * as diagnostic from '../service/validations/index'
 import diagnostics from '../service/diagnostics'
@@ -14,17 +14,17 @@ import * as parse from './utils'
  * Parsing is execute on each document change. When changes length is of value 1
  * and the change is detected within a token in range parsing will begin from the
  * offset starting position of that token, this allows for a more incremental parse
- * opposed the full textDocument.
+ * opposed the full document.
  *
  * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} changes[]
  * @param {object} options
  * @returns
  */
 export default (
-  textDocument
+  document
   , {
-    ast = textDocument.ast
-    , content = textDocument.getText()
+    ast = document.ast
+    , content = document.textDocument.getText()
     , isIncrement = false
     , index = undefined
   } = {}
@@ -32,15 +32,15 @@ export default (
 
   let run = 0
 
-  const { linkedDocuments, embeddedDocuments } = textDocument
-  const validate = diagnostics(textDocument)
+  const { textDocument, documentLinks, embeddedDocuments } = document
+  const validate = diagnostics(document)
 
   return (
 
     parsed => {
 
-      // const frontmatter = Server.parser.frontmatter.exec(content)
-      // if (frontmatter) textDocument.frontmatter = YAML.parse(frontmatter[0])
+      const frontmatter = Server.parser.frontmatter.exec(content)
+      if (frontmatter) document.frontmatter = YAML.parse(frontmatter[0])
 
       const matches = content.matchAll(Server.parser.parsing)
 
@@ -50,7 +50,7 @@ export default (
       return parsed
     }
 
-  )(isIncrement ? ast : textDocument)
+  )(isIncrement ? ast : document)
 
   /**
    * Parse Text
@@ -64,7 +64,7 @@ export default (
     const node = parse.ASTNode(name, token, match, index)
     const spec = parse.getTokenSpec(token, name)
 
-    return !spec || spec.singular ? (
+    !spec || spec.singular ? (
       spec?.within
         ? childToken(node, spec)
         : singularToken(node, spec)
@@ -85,7 +85,10 @@ export default (
 
     run = run + 1
 
-    const range = Document.range(parentNode.offset[1], tokenNode.offset[0])
+    const range = {
+      start: textDocument.positionAt(parentNode.offset[1]),
+      end: textDocument.positionAt(tokenNode.offset[0])
+    }
 
     parentNode.lineOffset = range.start.line
     parentNode.embeddedDocument = TextDocument.create(
@@ -209,7 +212,7 @@ export default (
       offset: [ offset ]
     } = tokenNode
 
-    diagnostic.filter(tokenNode, textDocument, tokenSpec)
+    diagnostic.filter(tokenNode, tokenSpec, document)
 
   }
 
@@ -241,15 +244,18 @@ export default (
    * @param {object} { name, token: [ token ], offset: [ start ] }
    * @returns
    */
-  function documentLinks ({ name, token: [ token ], offset: [ start ] }) {
+  function linkedDocument ({ name, token: [ token ], offset: [ start ] }) {
 
     const link = new RegExp(`(?<=\\b${name}\\b)\\s*["']?([\\w.]+)["']?`).exec(token)
     const offset = start + token.indexOf(link[1])
 
     return {
       target: Server.paths[name].find(i => basename(i, '.liquid') === link[1]),
-      range: Document.range(offset, offset + link[1].length),
-      tooltip: 'Hello World'
+      tooltip: 'Hello World',
+      range: {
+        start: textDocument.positionAt(offset),
+        end: textDocument.positionAt(offset + link[1].length)
+      }
     }
   }
 
@@ -268,10 +274,10 @@ export default (
 
     if (tokenSpec?.parameters) tokenNode.params = parseParameters(tokenNode, tokenSpec)
     if (tokenNode.type === TokenType.include) {
-      tokenNode.link = documentLinks(tokenNode)
-      if (!linkedDocuments.includes(ast.length)) {
-        linkedDocuments.push(ast.length)
-        tokenNode.linkId = linkedDocuments.length - 1
+      tokenNode.link = linkedDocument(tokenNode)
+      if (!documentLinks.includes(ast.length)) {
+        documentLinks.push(ast.length)
+        tokenNode.linkId = documentLinks.length - 1
       }
     }
 

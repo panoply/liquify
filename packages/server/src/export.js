@@ -19,7 +19,7 @@ export { default as Service } from './provide/service'
 /**
  * Liquid Documents
  */
-export { default as Document } from './provide/document'
+export { default as Document } from './provide/documents'
 
 /**
  * Liquid Service

@@ -14,11 +14,11 @@ export default {
   output: {
     file: 'package/server.js',
     format: 'cjs',
-    sourcemap: !process.env.prod,
-    banner: banner({
-      ...pkg,
-      main: 'package/server.js'
-    })
+    sourcemap: !process.env.prod
+    /* banner: banner({
+      ...pkg
+      // main: 'package/server.js'
+    }) */
 
   },
   external: [
