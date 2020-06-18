@@ -7,6 +7,21 @@ An extension/package tool for the [Liquid Templating Language](#). Liquify uses 
 
 ### Packages
 
+- [@liquify/liquid-language-server](#)
+- [@liquify/liquid-language-specs](#)
+- [@liquify/cli](#)
+- [@liquify/cryptographer](#)
+- [@liquify/rollup-plugin-cryptospec](#)
+- [@liquify/rollup-plugin-globs](#)
+- [@liquify/rollup-plugin-logger](#)
+- [@liquify/rollup-plugin-obfuscator](#)
+- [@liquify/rollup-plugin-supplant](#)
+- [@liquify/rollup-plugin-utils](#)
+- [@liquify/rollup-plugins](#)
+- [@liquify/rollup-plugins](#)
+- [@liquify/rollup-plugins](#)
+- [@liquify/rollup-plugins](#)
+
 | Repository                          | Description                                          | License              |
 | ----------------------------------- | ---------------------------------------------------- | -------------------- |
 | [@liquify/cli](#)                   | CLI tool used for development on Liquify packages.   | [CC BY-NC-ND 4.0](#) |

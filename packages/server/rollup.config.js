@@ -1,24 +1,29 @@
+import { plugins, jsonmin, banner } from '@liquify/rollup-plugin-utils'
+import { terser } from 'rollup-plugin-terser'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
-import { join } from 'path'
+import filesize from 'rollup-plugin-filesize'
 import obfuscator from '@liquify/rollup-plugin-obfuscator'
 import noderesolve from '@rollup/plugin-node-resolve'
 import globs from '@liquify/rollup-plugin-globs'
-import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
-import { terser } from 'rollup-plugin-terser'
+import pkg from './package.json'
 
 export default {
   input: 'src/index.js',
   output: {
     file: 'package/server.js',
     format: 'cjs',
-    sourcemap: true
+    sourcemap: !process.env.prod,
+    banner: banner({
+      ...pkg,
+      main: 'package/server.js'
+    })
+
   },
-  watch: process.env.prod && undefined,
   external: [
     'lodash',
-    !process.env.prod && '@liquify/liquid-language-specs',
+    '@liquify/liquid-language-specs',
     'prettydiff',
     'vscode-languageserver',
     'vscode-css-languageservice',
@@ -28,7 +33,6 @@ export default {
     'vscode-languageserver-textdocument',
     'vscode-uri',
     'fs',
-    'perf_hooks',
     'path'
   ],
   plugins: plugins([
@@ -40,9 +44,8 @@ export default {
       babelHelpers: 'runtime',
       configFile: './.babelrc'
     }),
-    process.env.prod ? noderesolve() : null,
     commonjs(),
-    !process.env.prod && globs({
+    globs({
       globs: [
         'package.json',
         'readme.md',
@@ -61,12 +64,14 @@ export default {
     })
   ],
   [
+    noderesolve(),
     terser({
       ecma: 6
       , warnings: 'verbose'
       , compress: { passes: 2 }
     }),
     obfuscator({
+      target: 'node',
       compact: true,
       controlFlowFlattening: false,
       deadCodeInjection: false,
@@ -84,8 +89,11 @@ export default {
       stringArray: true,
       stringArrayEncoding: false,
       stringArrayThreshold: 0.75,
-      unicodeEscapeSequence: false,
-      target: 'node'
+      unicodeEscapeSequence: false
+    }),
+    filesize({
+      showGzippedSize: false,
+      showMinifiedSize: true
     })
   ])
 }

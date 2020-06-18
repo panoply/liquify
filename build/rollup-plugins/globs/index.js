@@ -1,15 +1,13 @@
 import { join, basename } from 'path'
 import chokidar from 'chokidar'
 import minimatch from 'minimatch'
-import { readFile, outputFile, copy, remove, exists } from 'fs-extra'
+import { readFile, outputFile, copy, remove, existsSync } from 'fs-extra'
 import { mark, stop } from 'marky'
 import pretty from 'pretty-ms'
 import chalk from 'chalk'
 import { version } from './package.json'
 
 const { log } = console
-
-/* ----------------- FUNCTIONS ---------------- */
 
 /**
  * Transform file contents, when returning `false` transform is
@@ -27,7 +25,7 @@ const transformer = (dest, transform) => async (base, file) => {
     throw new Error(`${file} transform must be of type object or function`)
   }
 
-  try { await exists(file) } catch (error) { throw new Error(error) }
+  try { existsSync(file) } catch (error) { throw new Error(error) }
 
   const content = await readFile(file)
 
@@ -59,7 +57,7 @@ const transformer = (dest, transform) => async (base, file) => {
  *
  * @param {string} base
  * @param {object} file
- * @param {MapConstructor} files
+ * @param {Map} files
  * @param {string} item
  */
 const rename = (base, file, item, files) => {
@@ -89,7 +87,7 @@ const rename = (base, file, item, files) => {
  *
  * @param {string} base
  * @param {object} file
- * @param {string} item
+ * @param {string} dest
  */
 const repath = (base, file, dest) => {
 
@@ -106,10 +104,10 @@ const repath = (base, file, dest) => {
 /**
  * Changed Event
  *
- * @param {string} files
+ * @param {Map} files
  * @param {string} dest
  * @param {function|object|false} transform
- * @returns {(item: string) => Promise<string>}
+ * @returns {(item: string) => Promise<void>}
  */
 const changes = (files, dest, transform) => async item => {
 
@@ -153,9 +151,9 @@ const changes = (files, dest, transform) => async item => {
 /**
  * Remove Event
  *
- * @param {MapConstructor} files
+ * @param {Map} files
  * @param {string} dest
- * @returns {(item: string) => Promise<string>}
+ * @returns {(item: string) => Promise<void>}
  */
 const removal = (files, dest) => async item => {
 
@@ -164,7 +162,9 @@ const removal = (files, dest) => async item => {
   const path = join(dest, basename(item))
 
   await remove(path)
+
   files.delete(item)
+
   log(chalk`{bold.red deleted} {red ${path}} in {dim ${pretty(stop(item).duration)}}`)
 
 }
@@ -172,8 +172,7 @@ const removal = (files, dest) => async item => {
 /**
  * Chokidor is ready
  *
- * @param {MapConstructor} files
- * @param {import('chokidar').FSWatcher} watch
+ * @param {object} watch
  * @returns {(resolve: function) => function}
  */
 const ready = watch => resolve => watch.on('ready', () => {
@@ -192,11 +191,9 @@ const ready = watch => resolve => watch.on('ready', () => {
  * @param {array} globs
  */
 const patterns = (globs, dest) => ([
-
   ...globs.filter(Boolean),
   '!**/node_modules/**',
   `!${dest}/**`
-
 ])
 
 /**
@@ -208,9 +205,8 @@ const patterns = (globs, dest) => ([
  * brought support for file transformations that do what the fuck they
  * are intended to do, transform files.
  *
- * @param {import('.').GlobsOptions} options
  */
-export default (options = false) => {
+export default (options = {}) => {
 
   const {
     globs = false
@@ -218,7 +214,6 @@ export default (options = false) => {
     , dest = './package'
     , cwd = process.cwd()
     , transform = false
-    , watcher = false
   } = options
 
   if (!globs) throw new Error('Missing { globs: [] } in rollup-plugin-globs')

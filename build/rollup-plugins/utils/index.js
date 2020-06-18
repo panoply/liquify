@@ -1,9 +1,7 @@
 import jsonStrip from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
-// import { basename } from 'path'
-// import { statSync } from 'fs-extra'
-
-// export { default as banner } from './utils/banner'
+import { basename } from 'path'
+import { statSync } from 'fs-extra'
 
 /**
  * Minify JSON and strip JSONC files
@@ -32,4 +30,45 @@ export const plugins = (devPlugins, prodPlugins) => {
 
   return devPlugins
 
+}
+
+/**
+ * License banner applied to javascript files
+ *
+ * @param {object} package
+ * @returns {string}
+ */
+export const banner = ({
+  name
+  , main
+  , version
+  , author
+  , owner
+}) => {
+
+  owner = owner || author
+
+  const date = new Date(statSync(main).mtimeMs)
+    .toISOString()
+    .replace(/T/, ' ')
+    .substr(0, 19)
+
+  return `/**
+ *
+ * THIS IS PROPRIETARY CODE
+ *
+ * @license
+ *
+ * ${basename(main)}
+ *
+ * Copyright of ${owner} - All Rights Reserved.
+ * Unauthorized copying or modification of this file, via any medium is strictly prohibited.
+ * Please refer to the LICENSE.txt and/or ThirdPartyNotices.txt files included in bundle.
+ *
+ * Package:  ${name}
+ * Version:  ${version}
+ * Updated:  ${date}
+ *
+ */
+`
 }
