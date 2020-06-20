@@ -8,7 +8,9 @@ import { DiagnosticSeverity } from 'vscode-languageserver'
 /**
  * Control Validation
  *
- * @param {import('types/ast').AST} AST[]
+ * @param {Parser.AST} ASTNodeParams
+ * @param {Document.Scope} DocumentScope
+ * @param {Specification.Variation} Specification
  */
 export default (
   { name, token: [ token ], offset: [ start, end ] }

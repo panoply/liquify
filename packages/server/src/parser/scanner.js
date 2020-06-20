@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { basename } from 'path'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { TokenTag, TokenType, Expressions, Characters } from './lexical'
+import { TokenTag, TokenType } from './lexical'
 import { Server, Document } from '../export'
 import YAML from 'yamljs'
 import * as diagnostic from '../service/validations/index'
@@ -16,9 +16,9 @@ import * as parse from './utils'
  * offset starting position of that token, this allows for a more incremental parse
  * opposed the full textDocument.
  *
- * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} changes[]
- * @param {object} options
- * @returns
+ * @param {Document.Scope} textDocument
+ * @param {Parser.ScannerOptions} options
+ * @returns (Parser.AST[]  | Document.scope)
  */
 export default (
   textDocument
@@ -55,8 +55,8 @@ export default (
   /**
    * Parse Text
    *
-   * @param {object} tokenNode
-   * @param {object} tokenSpec
+   * @param {RegExpMatchArray} match
+   * @returns {void}
    */
   function parseText (match) {
 
@@ -77,9 +77,45 @@ export default (
   }
 
   /**
+   * Start Token
+   *
+   * @param {Parser.AST} tokenNode
+   * @param {Specification.Tag} tokenSpec
+   */
+  function startToken (tokenNode, tokenSpec) {
+
+    const type = TokenType[tokenSpec.type]
+
+    tokenNode.type = type
+    tokenNode.tag = TokenTag.start
+
+    if (type === TokenType.control || type === TokenType.iteration) {
+
+      tokenNode.children = []
+      tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
+
+      if (tokenSpec?.parameters) {
+        tokenNode.parameters = parseParameters(tokenNode, tokenSpec)
+      }
+    } else if (type === TokenType.embedded || type === TokenType.associate) {
+
+      tokenNode.languageId = tokenSpec.language
+
+      if (!embeddedDocuments.includes(ast.length)) {
+        embeddedDocuments.push(ast.length)
+        tokenNode.embeddedId = embeddedDocuments.length - 1
+      }
+    }
+
+    ast.push(tokenNode)
+
+  }
+
+  /**
    * Embedded Token
    *
-   * @param {object} tokenNode
+   * @param {Parser.AST} parentNode
+   * @param {Parser.AST} tokenNode
    */
   function embeddedDocument (parentNode, tokenNode) {
 
@@ -97,43 +133,10 @@ export default (
   }
 
   /**
-   * Start Token
-   *
-   * @param {object} tokenNode
-   * @param {object} tokenSpec
-   */
-  function startToken (tokenNode, tokenSpec) {
-
-    const type = TokenType[tokenSpec.type]
-
-    tokenNode.type = type
-    tokenNode.tag = TokenTag.start
-
-    if (type === TokenType.control || type === TokenType.iteration) {
-
-      tokenNode.children = []
-      tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
-
-      if (tokenSpec?.parameters) tokenNode.params = parseParameters(tokenNode, tokenSpec)
-
-    } else if (type === TokenType.embedded || type === TokenType.associate) {
-
-      tokenNode.languageId = tokenSpec.language
-
-      if (!embeddedDocuments.includes(ast.length)) {
-        embeddedDocuments.push(ast.length)
-        tokenNode.embeddedId = embeddedDocuments.length - 1
-      }
-    }
-
-    ast.push(tokenNode)
-
-  }
-
-  /**
    * Close Token
    *
-   * @param {object} tokenNode
+   * @param {Parser.AST} tokenNode
+   * @param {Specification.Tag} tokenSpec
    */
   function closeToken (tokenNode, tokenSpec) {
 
@@ -154,8 +157,8 @@ export default (
   /**
    * Child Token
    *
-   * @param {object} tokenNode
-   * @param {object} tokenSpec
+   * @param {Parser.AST} tokenNode
+   * @param {Specification.Tag} tokenSpec
    */
   function childToken (tokenNode, tokenSpec) {
 
@@ -179,9 +182,9 @@ export default (
    * This function will assign the offset indexes of Liquid objects used
    * within tags which are used by validations and completion capabilities.
    *
-   * @param {number} offset The current offset (used to fill position offset)
-   * @param {string} token The token (tag) to parse
-   * @returns {Object|Boolean}
+   * @param {number} offset
+   * @param {string} token
+   * @returns {(Parser.Objects)}
    */
   function parseObjects (offset, token) {
 
@@ -216,7 +219,7 @@ export default (
   /**
    * Get Token Parameters
    *
-   * @param {number} offset The current offset (used to fill position offset)
+   * @param {Parser.AST} offset The current offset (used to fill position offset)
    * @param {string} token The token (tag) to parse
    * @returns {Object|Boolean}
    */
@@ -238,40 +241,43 @@ export default (
    * Linked Documents - The resolved LSP Document links
    * tokens, these are served up to to the Document manager
    *
-   * @param {object} { name, token: [ token ], offset: [ start ] }
-   * @returns
+   * @param {Parser.AST} ASTNodeParam
+   * @returns {LSP.DocumentLink}
    */
   function documentLinks ({ name, token: [ token ], offset: [ start ] }) {
 
     const link = new RegExp(`(?<=\\b${name}\\b)\\s*["']?([\\w.]+)["']?`).exec(token)
+
+    if (!link) return {}
     const offset = start + token.indexOf(link[1])
 
     return {
       target: Server.paths[name].find(i => basename(i, '.liquid') === link[1]),
-      range: Document.range(offset, offset + link[1].length),
-      tooltip: 'Hello World'
+      range: Document.range(offset, offset + link[1].length)
     }
   }
 
   /**
    * Singular Token
    *
-   * @param {object} tokenNode
-   * @param {object} tokenSpec
+   * @param {Parser.AST} tokenNode
+   * @param {Specification.NodeSpecification} tokenSpec
    */
   function singularToken (tokenNode, tokenSpec) {
+
+    if (!tokenSpec?.type) return ast
 
     tokenNode.tag = TokenTag.singular
     tokenNode.type = TokenType[tokenSpec.type]
     tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
-    tokenNode.filters = parseFilters(tokenNode, tokenSpec)
+    //  tokenNode.filters = parseFilters(tokenNode, tokenSpec)
 
     if (tokenSpec?.parameters) tokenNode.params = parseParameters(tokenNode, tokenSpec)
     if (tokenNode.type === TokenType.include) {
-      tokenNode.link = documentLinks(tokenNode)
+      tokenNode.linkedDocument = documentLinks(tokenNode)
       if (!linkedDocuments.includes(ast.length)) {
         linkedDocuments.push(ast.length)
-        tokenNode.linkId = linkedDocuments.length - 1
+        tokenNode.linkedId = linkedDocuments.length - 1
       }
     }
 

@@ -41,7 +41,7 @@ const regexConditionTruth = /.*?(?=-?%})/s
  * Control Validation
  *
  * @param {import('types/ast').AST} AST[]
- * @param {import('types/document').Document} Document
+ * @param {import('src/provide/documents').Document} Document
  */
 export default (
   { name, token: [ tag ], offset: [ start, end ] }

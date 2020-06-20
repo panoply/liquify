@@ -1,5 +1,4 @@
 import { TokenTypes } from "./parser";
-import { type } from "os";
 
 /* -------------------------------------------- */
 /*                    ENGINE                    */
@@ -351,29 +350,16 @@ export declare type Tags = { [name: string]: Tag };
 
 export declare type NodeSpecification = Object | Tag | Filter;
 
-export interface StandardSpecification {
+export interface Variation {
   readonly engine: string;
   readonly updated: string;
   readonly filters: Filters;
+  readonly objects?: Object;
   readonly tags: Tags;
 }
-
-export interface VariationSpecification {
-  readonly engine: string;
-  readonly updated: string;
-  readonly filters: Filters;
-  readonly objects?: Objects;
-  readonly tags: Tags;
-}
-
-export type Specifications = {
-  readonly standard: StandardSpecification;
-  readonly jekyll: VariationSpecification;
-  readonly shopify: VariationSpecification;
-};
 
 /* -------------------------------------------- */
 /*                 SPECIFICATION                */
 /* -------------------------------------------- */
 
-export type Specification = VariationSpecification;
+export as namespace Specification;

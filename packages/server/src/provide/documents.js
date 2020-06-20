@@ -1,18 +1,8 @@
 import _ from 'lodash'
 
-/**
- * Documents Manager
- *
- * This file manages document state and configuration for each open file
- * in the workspace. The module extends upon the vscode textdocument
- * manager and uses `Map()` storage to maintain each document.
- *
- * For more information see:
- *
- * TextDocument
- * @see https://github.com/microsoft/vscode-languageserver-node
- *
- */
+/* -------------------------------------------- */
+/*                   UTILITIES                  */
+/* -------------------------------------------- */
 
 /**
  * Merge Sort
@@ -102,23 +92,24 @@ const getWellformedEdit = textEdit => {
 }
 
 /**
- * Documents
+ * Documents Manager
  *
- * Provides a documents documents for Liquid Language documents somewhat extending
- * upon the vscodes text document module.
+ * This file manages document state and configuration for each open file
+ * in the workspace. The module extends upon the vscode textdocument
+ * manager and uses `Map()` storage to maintain each document.
  *
- * @typedef {import('types/ast').AST} AST
- * @typedef {import('vscode-languageserver').DidOpenTextDocumentParams} onDocumentOpen
- * @typedef {import('vscode-languageserver').Diagnostic} Diagnostic
- * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
- * @typedef {import('vscode-languageserver').DidChangeTextDocumentParams} onDocumentChange
+ * For more information see:
+ *
+ * TextDocument
+ * @see https://github.com/microsoft/vscode-languageserver-node
  */
 export default (function () {
 
   /**
-   * Model Scope
+   * Model Scope - Value held in this variable will change
+   * and match the current active document
    *
-   * @type {object}
+   * @type {Document.Scope}
    */
   let document
 
@@ -133,9 +124,8 @@ export default (function () {
    * GetText function - stores the document content text
    * as a function value, assigned to each document model.
    *
-   *
-   * @param {object} [content=undefined]
-   * @returns {(range: object) => string}
+   * @param {string} [content=undefined]
+   * @returns {(range: LSP.Range) => string}
    */
   const getText = content => range => range
     ? content.substring(offsetAt(range.start), offsetAt(range.end))
@@ -145,93 +135,32 @@ export default (function () {
    * Creates a document model manager for the text document, this
    * function is executed per document open.
    *
-   * @typedef {onDocumentOpen}
+   * @param {LSP.TextDocumentItem} textDocumentItem
+   * @param {boolean} cb
+   * @returns {function | Document.Scope}
    */
-  function create ({ uri, languageId, version, text }, cb = true) {
+  function create (textDocumentItem, cb = true) {
+
+    const { uri, languageId, version, text } = textDocumentItem
 
     document = documents.has(uri) ? documents.get(uri) : documents.set(uri, {
 
-      /**
-       * uri indentifier
-       *
-       * @type {string}
-       */
-      uri,
-
-      /**
-       * Language ID
-       *
-       * @type {string}
-       */
-      languageId,
-
-      /**
-       * Version
-       *
-       * @type {number}
-       */
-      version,
-
-      /**
-       * AST
-       *
-       * @type {AST[]}
-       */
-      ast: [],
-
-      /**
-       * Document Settings
-       *
-       * @type {object}
-       */
-      settings: {},
-
-      /**
-       * Diagnostics
-       *
-       * @type {Diagnostic[]}
-       */
-      diagnostics: [],
-
-      /**
-       * Frontmatter
-       *
-       * @type {object}
-       */
-      frontmatter: {},
-
-      /**
-       * Links
-       *
-       * @type {number[]}
-       */
-      linkedDocuments: [],
-
-      /**
-       * Embedded Documents
-       *
-       * @type {number[]}
-       */
-      embeddedDocuments: [],
-
-      /**
-       * Line Offsets
-       *
-       * @type {number[]}
-       */
-      lineOffsets: undefined,
-
-      /**
-       * Document Text
-       *
-       * @type {function}
-       */
-      getText: getText(text)
+      uri
+      , languageId
+      , version
+      , getText: getText(text)
+      , ast: []
+      , settings: {}
+      , diagnostics: []
+      , frontmatter: {}
+      , embeddedDocuments: []
+      , linkedDocuments: []
+      , lineOffsets: undefined
 
     }).get(uri)
 
     // Detect a change in Language ID and update the document model
-    if (document.languageId !== languageId) return create(document, cb)
+    if (document.languageId !== languageId) return create(textDocumentItem, cb)
 
     // Document creation is executed via the `onDidOpenTextDocument`
     // the model will be passed to the Parser
@@ -244,16 +173,13 @@ export default (function () {
    * content changes and is called via the `onDidChangeTextDocument` event. Majority
    * of this logic was lifted from the 'vscode-textdocument' module.
    *
-   * @param {object} textDocument
-   * @param {object} changes
+   * @param {LSP.VersionedTextDocumentIdentifier} textDocument
+   * @returns {{ document: Document.Scope, changes: LSP.TextDocumentChangeEvent }}
    */
   function update (textDocument, changes) {
 
-    document = documents.has(textDocument.uri)
-      ? documents.get(textDocument.uri)
-      : create(textDocument, false)
-
-    if (document.languageId !== textDocument.languageId) document = create(textDocument, false)
+    if (documents.has(textDocument.uri)) document = documents.get(textDocument.uri)
+    else return null
 
     const content = document.getText()
 
@@ -367,7 +293,7 @@ export default (function () {
    */
   function getLinks () {
 
-    return document.linkedDocuments.map(link => document.ast[link].link)
+    return document.linkedDocuments.map(link => document.ast[link].linkedDocument)
 
   }
 
@@ -377,6 +303,8 @@ export default (function () {
    * @param {string} uri
    * @returns
    */
+
+  // @ts-ignore
   function getIncludes (uri) {
 
     const document = documents.get(uri)
@@ -402,7 +330,7 @@ export default (function () {
    * Set document range from offset index positioning.
    * This function does a lot of heavy lifting.
    *
-   * @returns
+   * @returns {LSP.Range}
    */
   function range (start, end) {
 
@@ -416,7 +344,7 @@ export default (function () {
   /**
    * Get line offsets
    *
-   * @returns
+   * @returns {number[]}
    */
   function getLineOffsets () {
 
@@ -431,8 +359,8 @@ export default (function () {
   /**
    * Returns the document offset location from a range Position
    *
-   * @param {object} position
-   * @returns
+   * @param {LSP.Position} position
+   * @returns {number}
    */
   function offsetAt (position) {
 
@@ -455,7 +383,7 @@ export default (function () {
    * Returns the document position from an offset location
    *
    * @param {number} offset
-   * @returns
+   * @returns {LSP.Position}
    */
   function positionAt (offset) {
 
@@ -489,9 +417,9 @@ export default (function () {
   /**
    * Apply edits to a document literal
    *
-   * @param {TextDocument} document
+   * @param {LSP.TextDocument} document
    * @param {array} edits
-   * @returns
+   * @returns {string}
    */
   function applyEdits (document, edits) {
 

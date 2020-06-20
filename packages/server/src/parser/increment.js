@@ -17,7 +17,7 @@ const closest = (index, { offset }) => offset.reduce((prev, current) => (
  * incremental parsing on a per-change basis.
  *
  * @export
- * @param {import('types/document').Document} Document
+ * @param {import('src/provide/documents').Document} Document
  * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} {params}
  * @returns
  */
@@ -35,13 +35,13 @@ export default (
 
   document.ast = []
   document.diagnostics = []
-  // if (!document.ast.length) return scan(document)
+  if (!document.ast.length) return scan(document)
 
   return scan(document)
 
   const { ast } = document
   const increment = parse.setTokenOffset(rangeLength, text.length)
-  const getText = parse.getRange(document.textDocument)
+  const getText = parse.getRange(document.getText())
   const astIndex = ast.findIndex(({ offset }) => (
     parse.inRange(start, offset[0], offset[1]) ||
     parse.inRange(start, offset[2], offset[3])

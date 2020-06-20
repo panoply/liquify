@@ -10,7 +10,7 @@ import { mark, stop } from 'marky'
 /* ---------------------------------------------------------------- */
 
 /**
- * @param {import('vscode-languageserver').InitializeParams} initializeParams
+ * @param {LSP.InitializeParams} initializeParams
  */
 connection.onInitialize(initializeParams => (
 
@@ -34,7 +34,13 @@ connection.onInitialize(initializeParams => (
     }, */
     completionProvider: {
       resolveProvider: true,
-      triggerCharacters: [ '"', ':', '|', '.', '<' ]
+      triggerCharacters: [
+        '"',
+        ':',
+        '|',
+        '.',
+        '<'
+      ]
     },
     implementationProvider: true,
     executeCommandProvider: {
@@ -137,12 +143,7 @@ connection.onDidChangeTextDocument(
     Parser.increment(document, ...changes)
 
     console.log(document)
-
-    // return connection.console.log('total time  taken = ' + (v2 - v1) + 'milliseconds')
-
-    // return Documents.set(textDocument.uri)
-
-    // const parserd = await Parser(document, contentChanges)
+    console.log(`Parsed in ${stop('onDidChangeTextDocument').duration}`)
 
     Service.doValidation(document).then(({
       uri

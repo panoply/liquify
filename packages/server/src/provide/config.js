@@ -12,7 +12,7 @@ export class Config {
   /**
    * Engine Variation Specification
    *
-   * @type {import('types/specification').Engine}
+   * @type {Specification.Engine}
    * @memberof Config
    */
   engine = null
@@ -20,7 +20,7 @@ export class Config {
   /**
    * Specification References
    *
-   * @type {import('types/specification').Specification}
+   * @type {Specification.Variation}
    * @memberof Config
    */
   specification = null

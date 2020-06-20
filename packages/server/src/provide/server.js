@@ -13,12 +13,6 @@ import specs from '@liquify/liquid-language-specs'
  * Liquid Language Server
  *
  * @export
- * @typedef {import('vscode-languageserver').InitializeParams} InitializeParams
- * @typedef {import('vscode-languageserver').ServerCapabilities} ServerCapabilities
- * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
- * @typedef {import('vscode-languageserver').TextEdit} TextEdit
- * @typedef {import('types/specification').Specification} Specification
- * @typedef {import('types/specification').Engine} Engine
  * @class LiquidServer
  * @extends {Config}
  */
@@ -27,8 +21,8 @@ export class LiquidServer extends Config {
   /**
    * Configuration - The `onInitialize` event handler.
    *
-   * @param {InitializeParams} initializeParams
-   * @param {ServerCapabilities} capabilities
+   * @param {LSP.InitializeParams} initializeParams
+   * @param {LSP.ServerCapabilities} capabilities
    * @memberof LiquidServer
    */
   capabilities ({
@@ -297,7 +291,7 @@ export class LiquidServer extends Config {
    * Set Specification
    *
    * @private
-   * @param {Specification} settings
+   * @param {object} settings
    * @memberof LiquidServer
    */
   #setParseExpressions = (settings) => {

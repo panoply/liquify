@@ -5,26 +5,6 @@ import { Characters, TokenTag } from './lexical'
 import { Range } from 'vscode-languageserver'
 
 /**
- * Parsing utilities
- *
- * A series of functions used by the parser and tokenizer. Each function holds
- * no `this` scope as functions listed here are merely utility type functions.
- * If you're contributing try to keep these functions as small as possible
- * and avoid brackets, use parenthesis returns, eg: `const fn = () => ()`.
- *
- * Type Definitions
- *
- * @typedef {import('vscode-languageserver-textdocument').TextDocument} TextDocument
- * @typedef {import('vscode-languageserver').TextDocumentContentChangeEvent} changeEvent
- * @typedef {import('types/ast').AST} ASTNode
- * @typedef {import('types/specification').Specification} Specification
- */
-
-/* ---------------------------------------------------------------- */
-/* PUBLIC                                                           */
-/* ---------------------------------------------------------------- */
-
-/**
  * In Range
  *
  * Checks if n is between start and up to, but not including, end.
@@ -49,8 +29,11 @@ export const inRange = (
  * Helper function which will generate the global node
  * defaults required by each token on the tree
  *
- * @param {object} tokenNode
- * @param {object} tokenSpec
+ * @param {string} name
+ * @param {string} token
+ * @param {RegExpMatchArray} match
+ * @param {number} index
+ * @returns {Parser.AST}
  */
 export const ASTNode = (
   name
@@ -116,10 +99,10 @@ export const isTokenTagEnd = (token, tag) => {
  * Increment / Decrement Nodes
  *
  * @export
- * @param {AST[]} ASTNodes
+ * @param {Parser.AST[]} ASTNodes
  * @param {number} index
  * @param {(increment: number) => number} increment
- * @returns {AST[]}
+ * @returns {void}
  */
 export const incrementNodes = (ASTNodes, index, increment) => {
 
@@ -173,9 +156,9 @@ export const getTokenSpec = (token, name) => {
   const kind = token.charCodeAt(0) === Characters.LAN ? 'html' : 'liquid'
   const find = Server.formatRules.associateTags.filter(i => i.name === name && i.kind === kind)
 
-  return find.length > 0
+  return find ? find.length > 0
     ? find.filter(({ attr }) => !attr || new RegExp(attr).test(token))[0]
-    : find[0]
+    : find[0] : null
 }
 
 /**
