@@ -39,15 +39,15 @@ export default (
 
     parsed => {
 
-      // const frontmatter = Server.parser.frontmatter.exec(content)
-      // if (frontmatter) textDocument.frontmatter = YAML.parse(frontmatter[0])
+      const frontmatter = Server.parser.frontmatter.exec(content)
+      if (frontmatter) textDocument.frontmatter = YAML.parse(frontmatter[0])
 
       const matches = content.matchAll(Server.parser.parsing)
 
       if (!matches) return parsed
       for (const match of matches) parseText(match)
-
       return parsed
+
     }
 
   )(isIncrement ? ast : textDocument)
@@ -261,7 +261,7 @@ export default (
    * Singular Token
    *
    * @param {Parser.AST} tokenNode
-   * @param {Specification.NodeSpecification} tokenSpec
+   * @param {Specification.Tag} tokenSpec
    */
   function singularToken (tokenNode, tokenSpec) {
 
@@ -272,7 +272,10 @@ export default (
     tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
     //  tokenNode.filters = parseFilters(tokenNode, tokenSpec)
 
-    if (tokenSpec?.parameters) tokenNode.params = parseParameters(tokenNode, tokenSpec)
+    if (tokenSpec?.parameters) {
+      tokenNode.parameters = parseParameters(tokenNode, tokenSpec)
+    }
+
     if (tokenNode.type === TokenType.include) {
       tokenNode.linkedDocument = documentLinks(tokenNode)
       if (!linkedDocuments.includes(ast.length)) {

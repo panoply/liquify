@@ -142,7 +142,7 @@ connection.onDidChangeTextDocument(
 
     Parser.increment(document, ...changes)
 
-    console.log(document)
+    // console.log(document.ast)
     console.log(`Parsed in ${stop('onDidChangeTextDocument').duration}`)
 
     Service.doValidation(document).then(({

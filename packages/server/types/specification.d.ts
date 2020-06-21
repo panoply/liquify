@@ -340,15 +340,21 @@ export interface Tag {
    * @default undefined
    */
   readonly types?: Types[];
+  /**
+   * List of arguments available to this tag
+   *
+   * @default undefined
+   */
+  readonly objects?: Object;
 }
 
-export declare type Tags = { [name: string]: Tag };
+export type Tags = { [name: string]: Tag };
 
 /* -------------------------------------------- */
 /*            DEFAULT SPECIFICATIONS            */
 /* -------------------------------------------- */
 
-export declare type NodeSpecification = Object | Tag | Filter;
+export type NodeSpecification = Object | Tag | Filter;
 
 export interface Variation {
   readonly engine: string;

@@ -36,3 +36,51 @@ const validation = async () => {
 validation() */
 
 export class License {}
+
+
+ if (start <= offset[0] && end >= offset[offset.length - 1]) {
+
+      ast.splice(i, 1)
+      console.log('removed start or singular', name)
+      continue
+
+    } else if (offset.length <= 2) {
+
+      if (start <= offset[0] && end > offset[0] && end < offset[1]) {
+
+        ast.splice(i, 1)
+        console.log('{% or {{ left delimeter', name)
+        continue
+
+      } else if (start >= offset[0] && start < offset[1] && end >= offset[1]) {
+
+        ast.splice(i, 1)
+        console.log('%} or }}, rightdelimeter removed', name)
+        continue
+
+      }
+    } else if (start <= offset[0] && end >= offset[3]) {
+
+      ast.splice(i, 1)
+      console.log('removed block tag', name)
+      continue
+
+    } else if (start < offset[2] && end > offset[2] && end < offset[3]) {
+
+      ast.splice(i, 1)
+      console.log('{%, left delimeter:', name)
+      continue
+
+    } else if (start > offset[2] && start < offset[3] && end >= offset[3]) {
+
+      ast.splice(i, 1)
+      console.log('%}, right delimeter:', name)
+      continue
+
+    } else if (start <= offset[2] && end > offset[3]) {
+
+      ast.splice(i, 1)
+      console.log('removed end block', name)
+      continue
+
+    }

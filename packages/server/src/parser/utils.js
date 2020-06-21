@@ -1,6 +1,6 @@
 // @ts-check
 // import _ from 'lodash'
-import { Server } from '../export'
+import { Server, Document } from '../export'
 import { Characters, TokenTag } from './lexical'
 import { Range } from 'vscode-languageserver'
 
@@ -10,17 +10,17 @@ import { Range } from 'vscode-languageserver'
  * Checks if n is between start and up to, but not including, end.
  *
  * @param {number} offset
- * @param {number} rangeStart
- * @param {number} rangeEnd
+ * @param {number} start
+ * @param {number} end
  */
 export const inRange = (
   offset
-  , rangeStart
-  , rangeEnd = 0
-) => typeof rangeStart === 'number' && ((
-  rangeStart < offset && offset < rangeEnd
+  , start
+  , end = 0
+) => typeof start === 'number' && ((
+  start < offset && offset < end
 ) || (
-  rangeEnd < offset && offset < rangeStart
+  end < offset && offset < start
 ))
 
 /**
@@ -61,7 +61,7 @@ export const ASTNode = (
  * in an `end` tag offset.
  *
  * @export
- * @param {ASTNode} ASTNode
+ * @param {Parser.AST} ASTNode
  * @param {number} index
  */
 export const isOffsetInToken = (ASTNode, index) => (
@@ -166,18 +166,13 @@ export const getTokenSpec = (token, name) => {
  *
  * Returns a substring of the text document
  *
- * @param {TextDocument} document
+ * @param {Document.Scope} document
  * @returns {(start: number, end: number) => string}
  */
 export const getRange = document => (
   start
   , end = document.getText().length
-) => document.getText(
-  Range.create(
-    document.positionAt(start)
-    , document.positionAt(end)
-  )
-)
+) => document.getText(Document.range(start, end))
 
 /**
  * Set Token Offset
@@ -190,11 +185,8 @@ export const getRange = document => (
  * @param {number} textLength The changes text length
  * @returns {(offset: number) => number}
  */
-export const setTokenOffset = (
-  rangeLength
-  , textLength
-) => offset => (
-  rangeLength > 0
-    ? offset - rangeLength < 0 ? 0 : offset - rangeLength
-    : offset + textLength
-)
+export const setTokenOffset = (rangeLength, textLength) => offset => rangeLength > 0
+  ? offset - rangeLength < 0
+    ? 0
+    : offset - rangeLength
+  : offset + textLength
