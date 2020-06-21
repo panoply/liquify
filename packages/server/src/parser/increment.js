@@ -38,55 +38,24 @@ export default (
 
   if (!ast.length) return scan(document)
 
-  let astIndex = []
+  const cast = [ ]
 
   for (let i = 0; i < ast.length; i++) {
 
-    const { name, offset } = ast[i]
+    const { offset } = ast[i]
 
-    if (start <= offset[0] && end > offset[0] && end < offset[1]) {
-      astIndex.push(i)
-
-      console.log('{% or {{ left delimeter', name)
-
-    } else if (start >= offset[0] && start < offset[1] && end >= offset[1]) {
-      astIndex.push(i)
-
-      console.log('%} or }}, rightdelimeter removed', name)
+    if (start <= offset[0] && end >= offset[1]) cast.push(i, 1)
+    else if (start <= offset[0] && end > offset[0] && end < offset[1]) cast.push(i, 1)
+    else if (start >= offset[0] && start < offset[1] && end >= offset[1]) cast.push(i, 1)
+    else if (offset.length > 2) {
+      if (start <= offset[2] && end >= offset[3]) cast.push(i, 1)
+      else if (start < offset[2] && end > offset[2] && end < offset[3]) cast.push(i, 1)
+      else if (start > offset[2] && start < offset[3] && end >= offset[3]) cast.push(i, 1)
     }
-
-    if (offset.length > 2) {
-
-      if (start <= offset[2] && end >= offset[3]) {
-        astIndex.push(i)
-
-        console.log('removed block tag', name)
-
-      } else if (start < offset[2] && end > offset[2] && end < offset[3]) {
-        astIndex.push(i)
-
-        console.log('{%, left delimeter:', name)
-
-      } else if (start > offset[2] && start < offset[3] && end >= offset[3]) {
-        astIndex.push(i)
-
-        console.log('%}, right delimeter:', name)
-
-      }
-    }
-
   }
-
-  if (astIndex.length) {
-    console.log(astIndex)
-    return document
-  }
-
-  return
-
-  // return scan(document)
+  console.log(cast)
   const increment = parse.setTokenOffset(rangeLength, text.length)
-  astIndex = ast.findIndex(({ offset }) => (
+  const astIndex = ast.findIndex(({ offset }) => (
     parse.inRange(start, offset[0], offset[1]) ||
     parse.inRange(start, offset[2], offset[3])
   ))
@@ -130,12 +99,6 @@ export default (
     }
 
   } else if (rangeLength > 0 && astIndex < 0) {
-
-    if (rangeLength > 2) {
-
-      // console.log(it)
-
-    }
 
     const change = ast.findIndex(({ offset: [ offset ] }) => offset > start)
 
