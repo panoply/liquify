@@ -3,8 +3,7 @@
 import _ from 'lodash'
 import { TextEdit, Position } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import Documents from '../provide/documents'
-import { Server } from '../export'
+import { Server, Document } from '../export'
 import { CSSService } from '../service/modes/css'
 import { SCSSService } from '../service/modes/scss'
 import { JSONService } from '../service/modes/json'
@@ -72,31 +71,21 @@ export default new class LiquidService {
   /**
    * `doValidation`
    *
-   * @param {*} document
-   * @param {*} diagnostics
+   * @param {Document.Scope} parameters
    * @memberof LiquidService
    */
   async doValidation ({ uri, diagnostics }) {
 
     return { uri, diagnostics }
 
-    const embedded = Documents.embeds(textDocument.uri)
     // const promise = Diagnostic.resolve(textDocument)
     // const validations = (await Promise.all(diagnostics.map(promise)))
-
-    if (embedded) {
-      for (const i of embedded) {
-        const region = await this.modes[i.embeddedDocument.languageId].doValidation(i)
-        if (region) validations.push(...region)
-      }
+    const embedded = Document.getEmbeds()
+    for (const i of embedded) {
+      const region = await this.modes[i.embeddedDocument.languageId].doValidation(i)
+      if (region) diagnostics.push(...region)
     }
 
-    if (validations.length > 0) {
-      return {
-        uri: textDocument.uri,
-        diagnostics: validations.filter(Boolean)
-      }
-    }
   }
 
   /**
@@ -188,12 +177,12 @@ export default new class LiquidService {
    */
   async doComplete (document, position, { triggerKind }) {
 
-    const offset = document.offsetAt(position)
-    const [ node ] = Documents.ASTNode(document.uri, offset)
+    const offset = Document.offsetAt(position)
+    const [ node ] = Document.getNode(offset)
 
     let doComplete
 
-    if (_.has(node, 'embeddedDocument')) {
+    if (node?.embeddedDocument) {
       const { languageId } = node.embeddedDocument
       if (this.modes[languageId]) {
         doComplete = await this.modes[languageId].doComplete(node, position)
@@ -219,7 +208,7 @@ export default new class LiquidService {
    */
   doCompleteResolve (completionItem) {
 
-    if (_.has(completionItem.data, 'languageId')) {
+    if (completionItem.data?.languageId) {
       return this.modes[completionItem.data.languageId].doResolve(completionItem)
     }
 

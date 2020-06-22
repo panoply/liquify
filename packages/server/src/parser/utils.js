@@ -171,7 +171,7 @@ export const getTokenSpec = (token, name) => {
  */
 export const getRange = document => (
   start
-  , end = document.getText().length
+  , end = document.content.length
 ) => document.getText(Document.range(start, end))
 
 /**

@@ -126,39 +126,36 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 /* onDidChangeTextDocument                                          */
 /* ---------------------------------------------------------------- */
 
-connection.onDidChangeTextDocument(
-  ({
-    contentChanges
-    , textDocument
-  }) => {
+connection.onDidChangeTextDocument(({
+  contentChanges
+  , textDocument
+}) => {
 
-    connection.console.log('onDidChangeTextDocument', textDocument.uri)
+  console.log('onDidChangeTextDocument', textDocument.uri)
 
-    mark('onDidChangeTextDocument')
+  mark('onDidChangeTextDocument')
 
-    const { document, changes } = Document.update(textDocument, contentChanges)
+  const document = Document.update(textDocument, contentChanges)
 
-    if (!document?.uri) return null
+  if (!document?.uri) return null
 
-    Parser.increment(document, ...changes)
+  Parser.increment(document)
 
-    console.log(document.ast)
-    console.log(`Parsed in ${stop('onDidChangeTextDocument').duration}`)
+  Service.doValidation(document).then(({
+    uri
+    , diagnostics
+  }) => (
+    connection.sendDiagnostics({
+      uri,
+      diagnostics
+    })
+  ))
 
-    Service.doValidation(document).then(({
-      uri
-      , diagnostics
-    }) => (
-      connection.sendDiagnostics({
-        uri,
-        diagnostics
-      })
-    ))
+  // console.log(document)
 
-    // const v2 = performance.now()
+  console.log(`Parsed in ${stop('onDidChangeTextDocument').duration}`)
 
-  }
-)
+})
 
 /* ---------------------------------------------------------------- */
 /* onDidClose                                                       */
@@ -211,9 +208,7 @@ connection.onHover(
     , textDocument: { uri }
   }, token) => !Server.provider.hover || runSync(() => {
 
-    return null
-
-    const document = documents.get(uri)
+    const document = Document.get(uri)
 
     if (!document.uri) return null
 
@@ -304,9 +299,7 @@ connection.onCompletion(
     , context
   }, token) => !Server.provider.completion || runAsync(async () => {
 
-    return null
-
-    const document = documents.get(uri)
+    const document = Document.get(uri)
 
     if (!document.uri) return null
 
@@ -326,8 +319,6 @@ connection.onCompletionResolve(
     item
     , token
   ) => runSync(() => {
-
-    return null
 
     return Service.doCompleteResolve(item)
 

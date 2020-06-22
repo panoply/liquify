@@ -148,11 +148,10 @@ export default (function () {
       uri
       , languageId
       , version
+      , content: text
       , getText: getText(text)
       , ast: []
-      , settings: {}
       , diagnostics: []
-      , frontmatter: {}
       , embeddedDocuments: []
       , linkedDocuments: []
       , lineOffsets: undefined
@@ -170,37 +169,42 @@ export default (function () {
 
   /**
    * Update the text document model, this is execute each time the document
-   * content changes and is called via the `onDidChangeTextDocument` event. Majority
+   * content content and is called via the `onDidChangeTextDocument` event. Majority
    * of this logic was lifted from the 'vscode-textdocument' module.
    *
    * @param {LSP.VersionedTextDocumentIdentifier} textDocument
-   * @returns {{ document: Document.Scope, changes: LSP.TextDocumentChangeEvent }}
+   * @param {Document.ContentChanges[]} contentChanges
+   * @returns {Document.Scope}
    */
-  function update (textDocument, changes) {
+  function update (textDocument, contentChanges) {
 
-    if (documents.has(textDocument.uri)) document = documents.get(textDocument.uri)
-    else return null
+    if (documents.has(textDocument.uri)) {
+      document = documents.get(textDocument.uri)
+    } else {
+      return null
+    }
 
-    const content = document.getText()
+    console.log(document)
 
-    for (const change of changes) {
+    for (const change of contentChanges) {
 
       const range = getWellformedRange(change.range)
       const start = offsetAt(range.start)
       const end = offsetAt(range.end)
 
-      // Re-assign the getText() function
-      document.getText = getText(
-        content.substring(0, start) +
-        change.text +
-        content.substring(end, content.length)
+      document.content = document.content.substring(
+        0
+        , start
+      ) + change.text + document.content.substring(
+        end
+        , document.content.length
       )
 
       const startLine = Math.max(range.start.line, 0)
       const endLine = Math.max(range.end.line, 0)
       const newLines = computeLineOffsets(change.text, false, start)
 
-      let { lineOffsets } = document
+      let lineOffsets = document.lineOffsets
 
       if (endLine - startLine === newLines.length) {
         for (let i = 0, len = newLines.length; i < len; i++) {
@@ -219,8 +223,10 @@ export default (function () {
       const diff = change.text.length - (end - start)
 
       if (diff !== 0) {
-        for (let i = startLine + 1 + newLines.length
-          , len = lineOffsets.length; i < len; i++) lineOffsets[i] = lineOffsets[i] + diff
+        for (
+          let i = startLine + 1 + newLines.length
+            , l = lineOffsets.length; i < l; i++
+        ) lineOffsets[i] = lineOffsets[i] + diff
       }
 
       // Convert range position to offsets, the parser works using index
@@ -230,13 +236,11 @@ export default (function () {
 
     }
 
-    return {
-      changes,
-      document: {
-        ...document,
-        version: textDocument.version
-      }
-    }
+    document.contentChanges = contentChanges
+    document.version = textDocument.version
+
+    // console.log('\n--------------------------\n', document)
+    return document
 
   }
 
@@ -342,6 +346,22 @@ export default (function () {
   }
 
   /**
+   * Get the document matching the uri, a simple helper
+   * function for fetching the document model from Map.
+   *
+   * @param {string} uri
+   * @returns {LSP.Range}
+   */
+  function get (uri) {
+
+    if (documents.has(uri)) {
+      document = documents.get(uri)
+      return document
+    }
+
+  }
+
+  /**
    * Get line offsets
    *
    * @returns {number[]}
@@ -365,7 +385,7 @@ export default (function () {
   function offsetAt (position) {
 
     const lineOffsets = getLineOffsets()
-    const content = document.getText()
+    const { content } = document
 
     if (position.line >= lineOffsets.length) return content.length
     if (position.line < 0) return 0
@@ -453,6 +473,7 @@ export default (function () {
 
   return {
     create
+    , get
     , update
     , applyEdits
     , getNode

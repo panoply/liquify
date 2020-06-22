@@ -3,9 +3,8 @@ import { basename } from 'path'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { TokenTag, TokenType } from './lexical'
 import { Server, Document } from '../export'
-import YAML from 'yamljs'
-import * as diagnostic from '../service/validations/index'
-import diagnostics from '../service/diagnostics'
+// import YAML from 'yamljs'
+import validate from '../service/diagnostics'
 import * as parse from './utils'
 
 /**
@@ -21,36 +20,21 @@ import * as parse from './utils'
  * @returns (Parser.AST[]  | Document.scope)
  */
 export default (
-  textDocument
+  document
   , {
-    ast = textDocument.ast
-    , content = textDocument.getText()
-    , isIncrement = false
+    ast = document.ast
+    , content = document.content
     , index = undefined
   } = {}
 ) => {
 
   let run = 0
 
-  const { linkedDocuments, embeddedDocuments } = textDocument
-  const validate = diagnostics(textDocument)
+  const matches = content.matchAll(Server.parser.parsing)
 
-  return (
-
-    parsed => {
-
-      const frontmatter = Server.parser.frontmatter.exec(content)
-      if (frontmatter) textDocument.frontmatter = YAML.parse(frontmatter[0])
-
-      const matches = content.matchAll(Server.parser.parsing)
-
-      if (!matches) return parsed
-      for (const match of matches) parseText(match)
-      return parsed
-
-    }
-
-  )(isIncrement ? ast : textDocument)
+  if (!matches) return ast
+  for (const match of matches) parseText(match)
+  return typeof index === 'undefined' ? document : ast
 
   /**
    * Parse Text
@@ -64,7 +48,11 @@ export default (
     const node = parse.ASTNode(name, token, match, index)
     const spec = parse.getTokenSpec(token, name)
 
-    return !spec || spec.singular ? (
+    /* console.log(textDocument.getText(Document.range(
+      node.offset[0], node.offset[node.offset.length - 1]
+    ))) */
+
+    !spec || spec.singular ? (
       spec?.within
         ? childToken(node, spec)
         : singularToken(node, spec)
@@ -101,9 +89,9 @@ export default (
 
       tokenNode.languageId = tokenSpec.language
 
-      if (!embeddedDocuments.includes(ast.length)) {
-        embeddedDocuments.push(ast.length)
-        tokenNode.embeddedId = embeddedDocuments.length - 1
+      if (!document.embeddedDocuments.includes(ast.length)) {
+        document.embeddedDocuments.push(ast.length)
+        tokenNode.embeddedId = document.embeddedDocuments.length - 1
       }
     }
 
@@ -125,10 +113,10 @@ export default (
 
     parentNode.lineOffset = range.start.line
     parentNode.embeddedDocument = TextDocument.create(
-      textDocument.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
+      document.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
       , parentNode.languageId
-      , textDocument.version
-      , textDocument.getText(range)
+      , document.version
+      , document.getText(range)
     )
   }
 
@@ -140,7 +128,10 @@ export default (
    */
   function closeToken (tokenNode, tokenSpec) {
 
-    const parentNode = _.findLast(ast, { name: tokenNode.name, tag: TokenTag.start })
+    const parentNode = _.findLast(ast, {
+      name: tokenNode.name,
+      tag: TokenTag.start
+    })
 
     if (!parentNode) return validate({ ...tokenNode, tag: TokenTag.close })
 
@@ -150,7 +141,7 @@ export default (
 
     if (parentNode?.languageId) embeddedDocument(parentNode, tokenNode)
 
-    return validate(parentNode, tokenSpec)
+    return validate(document, parentNode, tokenSpec)
 
   }
 
@@ -172,7 +163,11 @@ export default (
       objects: parseObjects(tokenNode.offset[0], tokenNode.token[0])
     })
 
-    return validate(ast[id].children[ast[id].children.length - 1], tokenSpec)
+    return validate(
+      document
+      , ast[id].children[ast[id].children.length - 1]
+      , tokenSpec
+    )
 
   }
 
@@ -212,7 +207,7 @@ export default (
       offset: [ offset ]
     } = tokenNode
 
-    diagnostic.filter(tokenNode, textDocument, tokenSpec)
+    diagnostic.filter(tokenNode, document, tokenSpec)
 
   }
 
@@ -278,15 +273,14 @@ export default (
 
     if (tokenNode.type === TokenType.include) {
       tokenNode.linkedDocument = documentLinks(tokenNode)
-      if (!linkedDocuments.includes(ast.length)) {
-        linkedDocuments.push(ast.length)
-        tokenNode.linkedId = linkedDocuments.length - 1
+      if (!document.linkedDocuments.includes(ast.length)) {
+        document.linkedDocuments.push(ast.length)
+        tokenNode.linkedId = document.linkedDocuments.length - 1
       }
     }
 
     ast.push(tokenNode)
 
-    // console.log(tokenNode)
     return validate(tokenNode, tokenSpec)
 
   }

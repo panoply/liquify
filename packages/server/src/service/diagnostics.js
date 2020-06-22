@@ -4,7 +4,7 @@ import { TokenType } from '../parser/lexical'
 import { Document } from './../export'
 import * as validate from './validations/index'
 
-export default textDocument => (ASTNode, spec) => {
+export default (textDocument, ASTNode, spec) => {
 
   if (!spec || !ASTNode) return
 
