@@ -2,8 +2,6 @@ import _ from 'lodash'
 import { DiagnosticSeverity } from 'vscode-languageserver'
 import { Document } from './../../export'
 
-import validateObject from './object'
-
 /* -------------------------------------------- */
 /*                   CONSTANTS                  */
 /* -------------------------------------------- */

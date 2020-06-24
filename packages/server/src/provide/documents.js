@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { TextDocument } from 'vscode-languageserver-textdocument'
 
 /* -------------------------------------------- */
 /*                   UTILITIES                  */
@@ -124,12 +125,23 @@ export default (function () {
    * GetText function - stores the document content text
    * as a function value, assigned to each document model.
    *
-   * @param {string} [content=undefined]
-   * @returns {(range: LSP.Range) => string}
+   * @param {object} [range]
+   * @returns {string}
    */
-  const getText = content => range => range
-    ? content.substring(offsetAt(range.start), offsetAt(range.end))
-    : content
+  function getText (range) {
+
+    if (typeof range === 'undefined') return document.content
+    if (typeof range.start === 'object') {
+      range.start = offsetAt(range.start)
+      range.end = offsetAt(range.end)
+    }
+
+    return document.content.substring(
+      range.start
+      , range.end
+    )
+
+  }
 
   /**
    * Creates a document model manager for the text document, this
@@ -149,11 +161,10 @@ export default (function () {
       , languageId
       , version
       , content: text
-      , getText: getText(text)
       , ast: []
       , diagnostics: []
-      , embeddedDocuments: []
       , linkedDocuments: []
+      , embeddedDocuments: new Map()
       , lineOffsets: undefined
 
     }).get(uri)
@@ -184,20 +195,16 @@ export default (function () {
       return null
     }
 
-    console.log(document)
-
     for (const change of contentChanges) {
 
       const range = getWellformedRange(change.range)
       const start = offsetAt(range.start)
       const end = offsetAt(range.end)
 
-      document.content = document.content.substring(
-        0
-        , start
-      ) + change.text + document.content.substring(
-        end
-        , document.content.length
+      document.content = (
+        document.content.substring(0, start) +
+        change.text +
+        document.content.substring(end, document.content.length)
       )
 
       const startLine = Math.max(range.start.line, 0)
@@ -245,6 +252,46 @@ export default (function () {
   }
 
   /**
+   * Embedded Document update - Provides document management for
+   * embedded regions
+   *
+   * @param {Parser.AST} ASTNode
+   * @param {(offset: (string|number), compare?: (string|number)) => number} increment
+   * @returns {TextDocument}
+   */
+  function embeddedUpdate (ASTNode, increment) {
+
+    const { lineOffset, embeddedDocument } = ASTNode
+    const version = embeddedDocument.version + 1
+
+    const changes = document.contentChanges.map(({
+      rangeLength,
+      text,
+      range
+    }) => {
+      const start = positionAt(range.start)
+      const end = positionAt(range.end)
+      return ({
+        rangeLength,
+        text,
+        range: {
+          start: {
+            line: increment(start.line, lineOffset),
+            character: start.character
+          },
+          end: {
+            line: increment(end.line, lineOffset),
+            character: end.character
+          }
+        }
+      })
+    })
+
+    return TextDocument.update(embeddedDocument, changes, version)
+
+  }
+
+  /**
    * Get a node in the AST tree that matches a supplied
    * offset index position.
    *
@@ -269,8 +316,8 @@ export default (function () {
       ]
     }) => (
       _.inRange(offset, TL, TR) ||
-      _.inRange(offset, BL, BR) ||
-      _.inRange(offset, TR, BL)
+        _.inRange(offset, BL, BR) ||
+        _.inRange(offset, TR, BL)
     ))
 
     return [ ast[index], index ]
@@ -350,14 +397,18 @@ export default (function () {
    * function for fetching the document model from Map.
    *
    * @param {string} uri
-   * @returns {LSP.Range}
+   * @returns {Document.Scope}
    */
   function get (uri) {
+
+    if (document.uri === uri) return document
 
     if (documents.has(uri)) {
       document = documents.get(uri)
       return document
     }
+
+    return null
 
   }
 
@@ -369,7 +420,7 @@ export default (function () {
   function getLineOffsets () {
 
     if (document.lineOffsets === undefined) {
-      document.lineOffsets = computeLineOffsets(document.getText(), true)
+      document.lineOffsets = computeLineOffsets(document.content, true)
     }
 
     return document.lineOffsets
@@ -385,17 +436,22 @@ export default (function () {
   function offsetAt (position) {
 
     const lineOffsets = getLineOffsets()
-    const { content } = document
 
-    if (position.line >= lineOffsets.length) return content.length
+    if (position.line >= lineOffsets.length) return document.content.length
     if (position.line < 0) return 0
 
     const lineOffset = lineOffsets[position.line]
     const nextLineOffset = (position.line + 1 < lineOffsets.length)
       ? lineOffsets[position.line + 1]
-      : content.length
+      : document.content.length
 
-    return Math.max(Math.min(lineOffset + position.character, nextLineOffset), lineOffset)
+    return Math.max(
+      Math.min(
+        lineOffset + position.character
+        , nextLineOffset
+      )
+      , lineOffset
+    )
 
   }
 
@@ -407,19 +463,14 @@ export default (function () {
    */
   function positionAt (offset) {
 
-    offset = Math.max(Math.min(offset, document.getText().length), 0)
+    offset = Math.max(Math.min(offset, getText().length), 0)
 
     const lineOffsets = getLineOffsets()
 
     let low = 0
       , high = lineOffsets.length
 
-    if (high === 0) {
-      return {
-        line: 0,
-        character: offset
-      }
-    }
+    if (high === 0) return { line: 0, character: offset }
 
     while (low < high) {
       const mid = Math.floor((low + high) / 2)
@@ -428,10 +479,7 @@ export default (function () {
 
     const line = low - 1
 
-    return {
-      line,
-      character: offset - lineOffsets[line]
-    }
+    return { line, character: offset - lineOffsets[line] }
   }
 
   /**
@@ -444,7 +492,7 @@ export default (function () {
   function applyEdits (document, edits) {
 
     const spans = []
-    const text = document.getText()
+    const text = getText()
     const sortedEdits = mergeSort(edits.map(getWellformedEdit), (
       begin
       , end
@@ -476,11 +524,13 @@ export default (function () {
     , get
     , update
     , applyEdits
+    , getText
     , getNode
     , getEmbeds
     , getLinks
     , getLineOffsets
     , range
+    , embeddedUpdate
     , positionAt
     , offsetAt
   }

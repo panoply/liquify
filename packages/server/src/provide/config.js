@@ -201,6 +201,13 @@ export class Config {
     validate: true,
 
     /**
+     * Enable/Disable validations running on document open
+     *
+     * @type {boolean}
+     */
+    validateOnOpen: true,
+
+    /**
      * Enable/Disable Liquid document links, ie: include
      *
      * @type {boolean}

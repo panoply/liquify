@@ -266,6 +266,11 @@
           "default": true,
           "description": "Whether to enable/disable hover tooltip tag descriptions."
         },
+        "liquid.validateOnOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to vaidate documents upon opening. When set to false, validations will run only when a document is touched (changed)"
+        },
         "liquid.validate.enable": {
           "type": "boolean",
           "default": true,

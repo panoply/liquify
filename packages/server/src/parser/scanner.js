@@ -19,22 +19,15 @@ import * as parse from './utils'
  * @param {Parser.ScannerOptions} options
  * @returns (Parser.AST[]  | Document.scope)
  */
-export default (
-  document
-  , {
-    ast = document.ast
-    , content = document.content
-    , index = undefined
-  } = {}
-) => {
+export default (document, index = undefined) => {
 
   let run = 0
 
-  const matches = content.matchAll(Server.parser.parsing)
+  const matches = document.content.matchAll(Server.parser.parsing)
 
-  if (!matches) return ast
+  if (!matches) return document.ast
   for (const match of matches) parseText(match)
-  return typeof index === 'undefined' ? document : ast
+  return document
 
   /**
    * Parse Text
@@ -89,13 +82,9 @@ export default (
 
       tokenNode.languageId = tokenSpec.language
 
-      if (!document.embeddedDocuments.includes(ast.length)) {
-        document.embeddedDocuments.push(ast.length)
-        tokenNode.embeddedId = document.embeddedDocuments.length - 1
-      }
     }
 
-    ast.push(tokenNode)
+    document.ast.push(tokenNode)
 
   }
 
@@ -110,14 +99,16 @@ export default (
     run = run + 1
 
     const range = Document.range(parentNode.offset[1], tokenNode.offset[0])
+    const uri = document.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
 
     parentNode.lineOffset = range.start.line
     parentNode.embeddedDocument = TextDocument.create(
-      document.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
+      uri
       , parentNode.languageId
       , document.version
-      , document.getText(range)
+      , Document.getText(range)
     )
+
   }
 
   /**
@@ -128,7 +119,7 @@ export default (
    */
   function closeToken (tokenNode, tokenSpec) {
 
-    const parentNode = _.findLast(ast, {
+    const parentNode = _.findLast(document.ast, {
       name: tokenNode.name,
       tag: TokenTag.start
     })
@@ -141,7 +132,11 @@ export default (
 
     if (parentNode?.languageId) embeddedDocument(parentNode, tokenNode)
 
-    return validate(document, parentNode, tokenSpec)
+    // const before = document.diagnostics.length
+    validate(document, parentNode, tokenSpec)
+    // const after = document.diagnostics.length
+
+    // console.log(before, after)
 
   }
 
@@ -153,11 +148,11 @@ export default (
    */
   function childToken (tokenNode, tokenSpec) {
 
-    const id = _.findLastKey(ast, { tag: TokenTag.start })
+    const id = _.findLastKey(document.ast, { tag: TokenTag.start })
 
-    if (!ast[id]?.children) return ast[id]
+    if (!document.ast[id]?.children) return document.ast[id]
 
-    ast[id].children.push({
+    document.ast[id].children.push({
       ...tokenNode,
       tag: TokenTag.child,
       objects: parseObjects(tokenNode.offset[0], tokenNode.token[0])
@@ -165,7 +160,7 @@ export default (
 
     return validate(
       document
-      , ast[id].children[ast[id].children.length - 1]
+      , document.ast[id].children[document.ast[id].children.length - 1]
       , tokenSpec
     )
 
@@ -260,7 +255,7 @@ export default (
    */
   function singularToken (tokenNode, tokenSpec) {
 
-    if (!tokenSpec?.type) return ast
+    if (!tokenSpec?.type) return document.ast
 
     tokenNode.tag = TokenTag.singular
     tokenNode.type = TokenType[tokenSpec.type]
@@ -273,13 +268,13 @@ export default (
 
     if (tokenNode.type === TokenType.include) {
       tokenNode.linkedDocument = documentLinks(tokenNode)
-      if (!document.linkedDocuments.includes(ast.length)) {
-        document.linkedDocuments.push(ast.length)
+      if (!document.linkedDocuments.includes(document.ast.length)) {
+        document.linkedDocuments.push(document.ast.length)
         tokenNode.linkedId = document.linkedDocuments.length - 1
       }
     }
 
-    ast.push(tokenNode)
+    document.ast.push(tokenNode)
 
     return validate(tokenNode, tokenSpec)
 

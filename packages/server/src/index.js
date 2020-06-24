@@ -105,21 +105,21 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
   connection.console.log('onDidOpenTextDocument')
 
   // connection.console.log(Server)
-  Document.create(textDocument)(Parser.scanner)
+  const document = Document.create(textDocument)(Parser.scanner)
   // Document.create(textDocument)(Parser.scanner)
 
-  // documents.forEach(Service.doValidation)
+  if (Server.provider.validateOnOpen) {
+    return Service.doValidation(document).then(({
+      uri
+      , diagnostics
+    }) => (
+      connection.sendDiagnostics({
+        uri,
+        diagnostics
+      })
+    ))
 
-  /* return Service.doValidation(document).then(({
-    uri
-    , diagnostics
-  }) => (
-    connection.sendDiagnostics({
-      uri,
-      diagnostics
-    })
-  )) */
-
+  }
 })
 
 /* ---------------------------------------------------------------- */

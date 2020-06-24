@@ -2,7 +2,6 @@
 // import _ from 'lodash'
 import { Server, Document } from '../export'
 import { Characters, TokenTag } from './lexical'
-import { Range } from 'vscode-languageserver'
 
 /**
  * In Range
@@ -172,7 +171,7 @@ export const getTokenSpec = (token, name) => {
 export const getRange = document => (
   start
   , end = document.content.length
-) => document.getText(Document.range(start, end))
+) => Document.getText({ start, end })
 
 /**
  * Set Token Offset
@@ -183,10 +182,16 @@ export const getRange = document => (
  * @export
  * @param {number} rangeLength The deleted/removed string length
  * @param {number} textLength The changes text length
- * @returns {(offset: number) => number}
+ * @returns {(offset: (string|number), compare?: (string|number)) => number}
  */
-export const setTokenOffset = (rangeLength, textLength) => offset => rangeLength > 0
-  ? offset - rangeLength < 0
-    ? 0
-    : offset - rangeLength
-  : offset + textLength
+export const setTokenOffset = (rangeLength, textLength) => (offset, compare) => {
+
+  if (typeof offset === 'string') offset = parseInt(offset)
+  if (typeof compare === 'string') compare = parseInt(compare)
+
+  const rng = compare || rangeLength
+  const txt = compare || textLength
+
+  return rangeLength > 0 ? offset - rng < 0 ? 0 : offset - rng : offset + txt
+
+}

@@ -19,6 +19,8 @@ export default (textDocument, ASTNode, spec) => {
         range: Document.range(ASTNode.offset[0], ASTNode.offset[1])
       })
 
+      ASTNode.errors.push(textDocument.diagnostics.length - 1)
+
       return textDocument.diagnostics
 
     }

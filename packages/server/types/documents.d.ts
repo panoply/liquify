@@ -1,4 +1,4 @@
-import { Diagnostic, Range } from "vscode-languageserver";
+import { Diagnostic, Range, TextDocument } from "vscode-languageserver";
 import { AST } from "./parser";
 
 /* -------------------------------------------- */
@@ -74,8 +74,6 @@ export interface Scope {
 
   /**
    * Diagnostics validations for the document
-   *
-   * @type {Diagnostic[]}
    */
   diagnostics: Diagnostic[];
 
@@ -94,7 +92,7 @@ export interface Scope {
    * Embedded Documents index key locations
    * that exist in the AST
    */
-  embeddedDocuments: number[];
+  embeddedDocuments: Map<string, TextDocument>;
 
   /**
    * Line Offsets
@@ -109,8 +107,6 @@ export interface Scope {
    * @type {function}
    */
   content: string;
-
-  getText: (range?: Range) => string;
 }
 
 /* -------------------------------------------- */

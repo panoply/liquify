@@ -16,7 +16,7 @@ const regexObjects = /(?<=[^.])\.[_\w-]+(?:\[[0-9]+\])?\.?(?=\W)/g
  * @param {import('src/provide/documents').Document} Document
  */
 export default (
-  { objects, token: [ tag ], offset: [ start, end ] }
+  { objects, token: [ tag ], offset: [ start, end ], errors }
   , { diagnostics }
 ) => {
 

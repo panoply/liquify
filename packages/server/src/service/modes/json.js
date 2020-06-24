@@ -35,7 +35,6 @@ export class JSONService {
 
     this.service.configure({
       validate: true,
-      // allowComments: true,
       schemas: [
         {
           uri: 'http://json-schema.org/draft-07/schema',
