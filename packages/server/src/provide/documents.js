@@ -295,7 +295,7 @@ export default (function () {
    * Get a node in the AST tree that matches a supplied
    * offset index position.
    *
-   * @param {number} [offset=undefined]
+   * @param {number|object} [offset=undefined]
    * @param {string} [uri=undefined]
    * @returns
    */
@@ -306,6 +306,10 @@ export default (function () {
     const { ast } = (typeof uri === 'string' && documents.has(uri))
       ? documents.get(uri)
       : document
+
+    if (typeof offset === 'object') {
+      offset = offsetAt(offset)
+    }
 
     const index = document.ast.findIndex(({
       offset: [
@@ -332,7 +336,7 @@ export default (function () {
    */
   function getEmbeds () {
 
-    return document.embeddedDocuments.map(link => document.ast[link].embeddedDocument)
+    return document.ast.filter(({ languageId }) => languageId)
 
   }
 
@@ -519,10 +523,17 @@ export default (function () {
 
   }
 
+  function clear (uri) {
+
+    return documents.delete(uri)
+
+  }
+
   return {
     create
     , get
     , update
+    , clear
     , applyEdits
     , getText
     , getNode

@@ -139,7 +139,7 @@ connection.onDidChangeTextDocument(({
 
   if (!document?.uri) return null
 
-  Parser.increment(document)
+  Parser.increment(document, ...document.contentChanges)
 
   Service.doValidation(document).then(({
     uri
@@ -163,7 +163,7 @@ connection.onDidChangeTextDocument(({
 
 connection.onDidCloseTextDocument(({ textDocument: { uri } }) => (
 
-  documents.delete(uri)
+  Document.clear(uri)
 
 ))
 
@@ -188,8 +188,7 @@ connection.onDocumentRangeFormatting(
     textDocument: { uri }
   }, token) => !Server.provider.format || runSync(() => {
 
-    return null
-    const document = documents.get(uri)
+    const document = Document.get(uri)
 
     if (!document.uri) return null
 
@@ -260,13 +259,11 @@ connection.onDocumentLinks(
     textDocument: { uri }
   }, token) => runSync(() => {
 
-    return null
-
-    const document = documents.get(uri)
+    const document = Document.get(uri)
 
     if (!document.uri) return null
 
-    return Document.links(uri)
+    return Document.getLinks()
 
   }, null, `Error while computing completion for ${uri}`, token)
 )
@@ -280,8 +277,6 @@ connection.onDocumentLinkResolve(
     item
     , token
   ) => runSync(() => {
-
-    return null
 
     return item
 

@@ -76,15 +76,16 @@ export default new class LiquidService {
    */
   async doValidation ({ uri, diagnostics }) {
 
-    return { uri, diagnostics }
-
     // const promise = Diagnostic.resolve(textDocument)
     // const validations = (await Promise.all(diagnostics.map(promise)))
     const embedded = Document.getEmbeds()
+
     for (const i of embedded) {
       const region = await this.modes[i.embeddedDocument.languageId].doValidation(i)
       if (region) diagnostics.push(...region)
     }
+
+    return { uri, diagnostics }
 
   }
 
@@ -101,13 +102,12 @@ export default new class LiquidService {
     // const filename = path.basename(uri)
     // if (settings.ignore.files.includes(filename)) return
 
-    return null
     const { uri, version, languageId } = document
-    const embedded = Documents.embeds(uri)
+    const embedded = Document.getEmbeds()
 
     if (embedded.length < 0) return null
 
-    const content = document.getText()
+    const content = Document.getText()
     const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
     const regions = embedded.map((embed) => Format.embeds(literal, embed))
 
@@ -116,7 +116,7 @@ export default new class LiquidService {
       TextEdit.replace(
         {
           start: Position.create(0, 0),
-          end: document.positionAt(content.length)
+          end: Document.positionAt(content.length)
         }
         , Format.markup(TextDocument.applyEdits(literal, regions))
       )
@@ -132,15 +132,10 @@ export default new class LiquidService {
    */
   doHover (document, position) {
 
-    // const [ node ] = Documents.ASTNode(textDocument.uri, textDocument.offsetAt(position))
-    /*
-    if (node && this.modes?.[node.embeddedDocument.languageId]) {
-      if (this.modes[node.embeddedDocument.languageId]) {
-        return this.modes[node.embeddedDocument.languageId].doHover(node.embeddedDocument, position)
-      } else {
-        return null
-      }
-    } */
+    const [ node ] = Document.getNode(position)
+    if (node && this.modes?.[node.languageId]) {
+      return this.modes[node.languageId].doHover(node, position)
+    }
 
     const name = Hover.getWordAtPosition(document, position)
 

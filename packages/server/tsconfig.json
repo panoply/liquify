@@ -2,7 +2,7 @@
   "exclude": ["node_modules", "package"],
   "typeAcquisition": {
     "enable": true,
-    "include": ["vscode-languageserver"]
+    "include": ["vscode-languageserver", "lodash"]
   },
   "compilerOptions": {
     "target": "es2020",

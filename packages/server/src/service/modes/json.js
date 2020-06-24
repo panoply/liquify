@@ -99,10 +99,12 @@ export class JSONService {
     , character
   }) {
 
+    console.log('DO HOVER', embeddedDocument, line)
+
     // Correct line offsets
     const position = { character, line: _.subtract(line, lineOffset) }
     const JSONDocument = this.service.parseJSONDocument(embeddedDocument)
-    const doHover = (await this.service.doHover(embeddedDocument, position, JSONDocument))
+    const doHover = await this.service.doHover(embeddedDocument, position, JSONDocument)
 
     return _.merge(doHover, {
       range: {

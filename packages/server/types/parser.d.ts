@@ -97,7 +97,7 @@ export interface AST {
   name: string;
   token: Token;
   tag?: TokenTags;
-  type?: TokenTypes;
+  type: TokenTypes;
   kind?: TokenKinds;
   offset: Offsets;
   objects?: Objects;

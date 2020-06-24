@@ -1,3 +1,5 @@
+import { Document } from '../export'
+
 /* ---------------------------------------------------------------- */
 /* PRIVATE                                                          */
 /* ---------------------------------------------------------------- */
@@ -13,14 +15,16 @@
 function getLine (document, position) {
 
   const start = { line: position.line, character: 0 }
-  const character = document.offsetAt(position) - document.offsetAt(start)
-  const content = document.getText({
+  const character = Document.offsetAt(position) - Document.offsetAt(start)
+  const content = Document.getText({
     start,
     end: {
       line: position.line + 1,
       character: 0
     }
   })
+
+  console.log(content)
 
   return { content, character }
 

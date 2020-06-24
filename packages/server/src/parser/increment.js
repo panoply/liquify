@@ -29,6 +29,11 @@ export default (document) => {
 
   if (!document.ast.length) return scan(document)
 
+  document.ast = []
+  document.diagnostics = []
+
+  return scan(document)
+
   document.contentChanges.forEach(({
     rangeLength
     , text
@@ -36,12 +41,8 @@ export default (document) => {
       start
       , end
     }
-
   }) => {
 
-    console.log(document.contentChanges)
-
-    // const validate = diagnostic(document)
     const increment = setTokenOffset(rangeLength, text.length)
     const index = document.ast.findIndex(({ offset, type }) => (
       inRange(start, offset[0], offset[1]) ||
@@ -54,7 +55,7 @@ export default (document) => {
       )
     ))
 
-    if (index >= 0) {
+    if (rangeLength === 0 && index >= 0) {
 
       const { type, offset } = document.ast[index]
 
@@ -62,6 +63,15 @@ export default (document) => {
 
         Document.embeddedUpdate(document.ast[index], increment)
 
+        diagnostic(
+          document,
+          document.ast[index], getTokenSpec(
+            document.ast[index].token[0]
+            , document.ast[index].name
+          )
+        )
+
+        console.log(document.ast[index])
       } else {
 
         const token = isOffsetInToken(document.ast[index], start)
@@ -71,12 +81,7 @@ export default (document) => {
           let $1 = 0
             , $2 = 1
 
-          // Changed node is a start tag, eg: `{% tag %}`
-          // Adjust the offsets to use end position offsets
-          if (token.tag === TokenTag.start) {
-            $1 = 2
-            $2 = 3
-          }
+          if (token.tag === TokenTag.start) $1 = 2; $2 = 3
 
           const parsed = scan({
             ...document
@@ -99,10 +104,7 @@ export default (document) => {
             }
 
             document.ast.splice(index, 1, node)
-            // document.diagnostics = parsed.diagnostics
-
             diagnostic(document, node, getTokenSpec(node.token[0], node.name))
-
           }
 
           if (type === TokenType.control || type === TokenType.iteration) {
@@ -110,6 +112,13 @@ export default (document) => {
           }
         }
       }
+    } else if (text.length > 0 && !/\s+/.test(text)) {
+
+      document.ast = []
+      document.diagnostics = []
+
+      return scan(document)
+
     }
 
     document.ast.forEach(({
@@ -120,6 +129,39 @@ export default (document) => {
       , objects
       , children
     }, i) => {
+
+      if (rangeLength > 0) {
+        return ((
+          start <= offset[0] && end >= offset[1]
+        ) ? (
+            document.ast.splice(i, 1)
+          ) : (
+            offset.length <= 2
+          ) && (
+            (
+              start <= offset[0] && end > offset[0] && end < offset[1]
+            ) || (
+              start >= offset[0] && start < offset[1] && end >= offset[1]
+            )
+          ) ? (
+              document.ast.splice(i, 1)
+            ) : (
+              start <= offset[2] && end >= offset[3]
+            ) || (
+              start > offset[2] && start < offset[3] && end >= offset[3]
+            ) || (
+              start <= offset[2] && end > offset[2] && end < offset[3]
+            )) && document.ast.splice(
+          i
+          , 1
+          , {
+            ...document.ast[i],
+            tag: TokenTag.start,
+            token: [ token[0] ],
+            offset: offset.slice(0, 2)
+          }
+        )
+      }
 
       if (i === index) return
 
@@ -134,7 +176,7 @@ export default (document) => {
             })[prop]
           }
 
-          console.log(objects, document.ast[i], rangeLength, text, text.length)
+          // console.log(objects, document.ast[i], rangeLength, text, text.length)
 
         }
 
