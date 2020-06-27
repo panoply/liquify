@@ -2,8 +2,8 @@
 // @ts-ignore
 import prettydiff from 'prettydiff'
 import _ from 'lodash'
-import { Server, Document, connection } from '../export'
 import { TokenKind } from '../parser/lexical'
+import Document from '../provide/document'
 
 /**
  * Formatting Functions

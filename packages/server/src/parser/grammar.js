@@ -36,7 +36,7 @@ export const Expressions = {
    *
    * Liquid tag blocks or singular tags.
    */
-  blocks: /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}/.source,
+  LiquidTags: /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}/.source,
 
   /**
    * `{% tag %}{% endtag %}` or `{% tag %}`
@@ -50,7 +50,7 @@ export const Expressions = {
    *
    *  Liquid singular output tags, generally objects
    */
-  output: /{{2}-?\s*\b(\w+)\b.?(?:[^{}]{2})*-?}{2}/.source,
+  LiquidObjects: /{{2}-?\s*\b(\w+)\b.?(?:[^{}]{2})*-?}{2}/.source,
 
   /**
    * `<!-- text -->` or `/* text ` or `// text `
@@ -104,17 +104,8 @@ export const ControlExpressions = {
  * @readonly
  */
 export const TokenKind = {
-
-  /**
-   * Describes a HTML token kind, eg: `<tag>` | `</tag>`
-   */
   html: 1,
-
-  /**
-   * Describes a Liquid token kind, eg: `{{ tag }}` or `{% tag %}` | `{% endtag %}`
-   */
   liquid: 2
-
 }
 
 /**
@@ -124,32 +115,11 @@ export const TokenKind = {
  * @readonly
  */
 export const TokenTag = {
-
-  /**
-   * `1` - Start Tag
-   */
   start: 1,
-
-  /**
-   * `2` - Close Tag
-   */
   close: 2,
-
-  /**
-   * `3` - Child Tag
-   */
   child: 3,
-
-  /**
-   * `4` - Singular Tags
-   */
   singular: 4,
-
-  /**
-   * `3` - Pair
-   */
   pair: 5
-
 }
 
 /**
@@ -159,47 +129,14 @@ export const TokenTag = {
  * @readonly
  */
 export const TokenType = {
-
-  /**
-   * `1` Associate Type, eg: `<tag> </tag>` | `{% tag %} {% endtag %}`
-   */
   associate: 1,
-
-  /**
-   * `2` Control Type, eg: `{% if %}` | `{% unless %}`
-   */
   control: 2,
-
-  /**
-   * `3` Comment Type, eg: `{% comment %} {% endcomment %}`
-   */
   comment: 3,
-
-  /**
-   * `4` Embedded Type, eg: `{% schema %} {% endschema %}`
-   */
   embedded: 4,
-
-  /**
-   * `5` Include Type, eg: `{% include '' %}` | `{% render '' %}`
-   */
   include: 5,
-
-  /**
-   * `6` Iteration Type, eg: `{% for %} {% endfor %}` | `{% cycle %} {% endcycle %}`
-   */
   iteration: 6,
-
-  /**
-   * `7` Object Type, eg: `{{ tag }}`
-   */
   object: 7,
-
-  /**
-   * `8` Output Type, eg: `{% assign = '' %}` | `{% capture %}`
-   */
   variable: 8
-
 }
 
 /**

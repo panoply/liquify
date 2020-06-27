@@ -4,7 +4,8 @@ import _ from 'lodash'
 import {
   getCSSLanguageService,
   getSCSSLanguageService,
-  LanguageService
+  LanguageService,
+  ClientCapabilities
 } from 'vscode-css-languageservice'
 
 /**
@@ -25,7 +26,34 @@ export class CSSService {
    * @memberof CSSService
    * @private
    */
-    this.service = getCSSLanguageService()
+    this.service = getCSSLanguageService({
+      clientCapabilities: ClientCapabilities.LATEST,
+      customDataProviders: [
+        {
+          providePseudoClasses: () => [
+            {
+              name: 'sissel'
+            }
+          ],
+          provideProperties: () => [
+            {
+              name: 'sissel'
+            }
+          ],
+          provideAtDirectives: () => [
+            {
+              name: 'sissel'
+            }
+          ],
+          providePseudoElements: () => [
+            {
+              name: 'sissel'
+            }
+          ]
+        }
+      ]
+
+    })
 
   }
 
@@ -64,7 +92,31 @@ export class CSSService {
    * @returns {array}
    * @memberof CSSService
    */
-  doValidation (textDocument, { ast }) {
+  async doValidation ({
+    embeddedDocument
+    , lineOffset
+  }) {
+
+    const CSSDocument = this.service.parseStylesheet(embeddedDocument)
+    const diagnostics = await this.service.doValidation(embeddedDocument, CSSDocument, {
+      validate: false
+    })
+
+    return diagnostics.map(diagnostic => (
+      {
+        ...diagnostic,
+        range: {
+          start: {
+            ...diagnostic.range.start,
+            line: diagnostic.range.start.line + lineOffset
+          },
+          end: {
+            ...diagnostic.range.end,
+            line: diagnostic.range.end.line + lineOffset
+          }
+        }
+      }
+    ))
 
   }
 
@@ -74,35 +126,62 @@ export class CSSService {
    * @param {import('vscode-languageserver').TextDocument} textDocument
    * @param {string} content The text document content
    */
-  doHover (
-    textDocument
-    , { embeddedDocument, lineOffset }
-    , { line, character }
-    , position = {
-      character,
-      line: _.subtract(line, lineOffset)
-    }
-  ) {
+  async doHover ({
+    embeddedDocument
+    , lineOffset
+  }, {
+    line
+    , character
+  }) {
+
+    console.log('DO HOVER', embeddedDocument, line)
+
+    // Correct line offsets
+    const position = { character, line: _.subtract(line, lineOffset) }
+    const CSSDocument = this.service.parseStylesheet(embeddedDocument)
+    const doHover = await this.service.doHover(embeddedDocument, position, CSSDocument)
+
+    return _.merge(doHover, {
+      range: {
+        start: { line },
+        end: { line }
+      }
+    })
 
   }
 
   /**
    * JSON completion feature
    *
-   * @param {import('vscode-languageserver').TextDocument} textDocument
-   * @param {object} position The position of completion
-   * @param {number} lineOffset The line offset of embedded region
+   * @param {Parser.AST} ASTNode
+   * @param {LSP.Position} Position
    * @return {Promise}
    */
-  doComplete (
-    textDocument
-    , { embeddedDocument, lineOffset }
-    , { line, character }
-    , position = {
-      character,
-      line: _.subtract(line, lineOffset)
-    }
-  ) {
+  async doComplete ({
+    embeddedDocument
+    , lineOffset
+  }, {
+    line
+    , character
+  }) {
+
+    // Correct line offsets
+    const position = { character, line: _.subtract(line, lineOffset) }
+    const StyleDocument = this.service.parseStylesheet(embeddedDocument)
+    const doComplete = this.service.doComplete(
+      embeddedDocument,
+      position,
+      StyleDocument
+    )
+
+    doComplete.items.forEach(({ textEdit: { range } }) => (
+      _.merge(range, {
+        start: { line },
+        end: { line }
+      })
+    ))
+
+    return doComplete
 
   }
 
@@ -114,7 +193,7 @@ export class CSSService {
   */
   doResolve (completionItem) {
 
-    // return this.service.doResolve(completionItem)
+    //  return this.service..doResolve(completionItem)
 
   }
 

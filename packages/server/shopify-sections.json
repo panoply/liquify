@@ -141,7 +141,7 @@
             "description": "A value for the input's placeholder text. This is for text-based setting types only."
           },
           "default": {
-            "type": "string",
+            "type": ["number", "string", "boolean"],
             "title": "Default",
             "description": "A value to which the setting can default."
           }
@@ -162,13 +162,15 @@
                 "step": {
                   "type": "number",
                   "title": "Step",
-                  "minimum": 3,
+                  "minimum": 0.1,
+                  "default": 1,
                   "description": "The step refers to the step count for the slider values. For example, if you set the step to 5, then the range slider will count by fives. By default, the step is set to 1."
                 },
                 "min": {
                   "type": "number",
                   "title": "Min",
-                  "minimum": 3,
+                  "minimum": 0,
+                  "maximum": 100,
                   "description": "The minimum number of steps"
                 },
                 "max": {

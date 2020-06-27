@@ -1,9 +1,8 @@
 import _ from 'lodash'
 import { basename } from 'path'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { Regexp, TokenTag, TokenType } from './lexical'
-import Document from '../provide/document'
-import { Server } from '../export'
+import { TokenTag, TokenType } from './regexp'
+import { Server, Document } from '../export'
 // import YAML from 'yamljs'
 import validate from '../service/diagnostics'
 import * as parse from './utils'
@@ -11,21 +10,23 @@ import * as parse from './utils'
 /**
  * Parser
  *
+ * Parsing is execute on each document change. When changes length is of value 1
+ * and the change is detected within a token in range parsing will begin from the
+ * offset starting position of that token, this allows for a more incremental parse
+ * opposed the full textDocument.
+ *
  * @param {Document.Scope} textDocument
  * @param {Parser.ScannerOptions} options
  * @returns (Parser.AST[]  | Document.scope)
  */
-export default function (document, index = undefined) {
+export default (document, index = undefined) => {
 
   let run = 0
 
-  const content = document.textDocument.getText()
-  const matches = content.matchAll(Regexp.)
+  const matches = document.content.matchAll(Server.parser.parsing)
 
-  console.log(content)
   if (!matches) return document.ast
   for (const match of matches) parseText(match)
-
   return document
 
   /**
@@ -69,10 +70,10 @@ export default function (document, index = undefined) {
     if (type === TokenType.control || type === TokenType.iteration) {
 
       tokenNode.children = []
-      tokenNode.objects = tokenObjects(tokenNode.offset[0], tokenNode.token[0])
+      tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
 
       if (tokenSpec?.parameters) {
-        tokenNode.parameters = tokenParameters(tokenNode, tokenSpec)
+        tokenNode.parameters = parseParameters(tokenNode, tokenSpec)
       }
     } else if (type === TokenType.embedded || type === TokenType.associate) {
 
@@ -83,6 +84,29 @@ export default function (document, index = undefined) {
     document.ast.push(tokenNode)
 
     return tokenNode
+
+  }
+
+  /**
+   * Embedded Token
+   *
+   * @param {Parser.AST} parentNode
+   * @param {Parser.AST} tokenNode
+   */
+  function embeddedDocument (parentNode, tokenNode) {
+
+    run = run + 1
+
+    const range = Document.range(parentNode.offset[1], tokenNode.offset[0])
+    const uri = document.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
+
+    parentNode.lineOffset = range.start.line
+    parentNode.embeddedDocument = TextDocument.create(
+      uri
+      , parentNode.languageId
+      , document.version
+      , Document.getText(range)
+    )
 
   }
 
@@ -120,29 +144,6 @@ export default function (document, index = undefined) {
   }
 
   /**
-   * Embedded Token
-   *
-   * @param {Parser.AST} parentNode
-   * @param {Parser.AST} tokenNode
-   */
-  function embeddedDocument (parentNode, tokenNode) {
-
-    run = run + 1
-
-    const range = Document.getRange(parentNode.offset[1], tokenNode.offset[0])
-    const uri = document.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
-
-    parentNode.lineOffset = range.start.line
-    parentNode.embeddedDocument = TextDocument.create(
-      uri
-      , parentNode.languageId
-      , document.version
-      , document.textDocument.getText(range)
-    )
-
-  }
-
-  /**
    * Singular Token
    *
    * @param {Parser.AST} tokenNode
@@ -154,11 +155,11 @@ export default function (document, index = undefined) {
 
     tokenNode.tag = TokenTag.singular
     tokenNode.type = TokenType[tokenSpec.type]
-    tokenNode.objects = tokenObjects(tokenNode.offset[0], tokenNode.token[0])
-    //  tokenNode.filters = tokenFilters(tokenNode, tokenSpec)
+    tokenNode.objects = parseObjects(tokenNode.offset[0], tokenNode.token[0])
+    //  tokenNode.filters = parseFilters(tokenNode, tokenSpec)
 
     if (tokenSpec?.parameters) {
-      tokenNode.parameters = tokenParameters(tokenNode, tokenSpec)
+      tokenNode.parameters = parseParameters(tokenNode, tokenSpec)
     }
 
     if (tokenNode.type === TokenType.include) {
@@ -193,7 +194,7 @@ export default function (document, index = undefined) {
     document.ast[id].children.push({
       ...tokenNode,
       tag: TokenTag.child,
-      objects: tokenObjects(tokenNode.offset[0], tokenNode.token[0])
+      objects: parseObjects(tokenNode.offset[0], tokenNode.token[0])
     })
 
     validate(
@@ -215,7 +216,7 @@ export default function (document, index = undefined) {
    * @param {string} token
    * @returns {(Parser.Objects)}
    */
-  function tokenObjects (offset, token) {
+  function parseObjects (offset, token) {
 
     return Array
       .from(token.matchAll(Server.parser.objects))
@@ -234,7 +235,7 @@ export default function (document, index = undefined) {
 
   }
 
-  function tokenFilters (tokenNode, tokenSpec) {
+  function parseFilters (tokenNode, tokenSpec) {
 
     const {
       token: [ token ],
@@ -252,7 +253,7 @@ export default function (document, index = undefined) {
    * @param {string} token The token (tag) to parse
    * @returns {Object|Boolean}
    */
-  function tokenParameters ({
+  function parseParameters ({
     token: [ token ]
     , offset: [ offset ]
   }, {
@@ -282,7 +283,7 @@ export default function (document, index = undefined) {
 
     return {
       target: Server.paths[name].find(i => basename(i, '.liquid') === link[1]),
-      range: Document.getRange(offset, offset + link[1].length)
+      range: Document.range(offset, offset + link[1].length)
     }
   }
 

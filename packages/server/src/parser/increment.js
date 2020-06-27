@@ -1,8 +1,8 @@
 import scan from './scanner'
 import _ from 'lodash'
-import { Characters, TokenTag, TokenType } from './lexical'
+import { TokenTag, TokenType } from './lexical'
 import { inRange, setTokenOffset, isOffsetInToken, getTokenSpec } from './utils'
-import { Document, Server } from '../export'
+import Document from '../provide/document'
 import diagnostic from './../service/diagnostics/'
 
 const closest = (index, { offset }) => offset.reduce((prev, current) => (
@@ -21,20 +21,19 @@ const closest = (index, { offset }) => offset.reduce((prev, current) => (
  * @param {Document.Scope} document
  * @returns
  */
-export default (document) => {
+export default (document, contentChanges) => {
 
   // document.ast = []
   // document.diagnostics = []
-  // return scan(document)
 
   if (!document.ast.length) return scan(document)
 
-  document.ast = []
-  document.diagnostics = []
+  // document.ast = []
+  // document.diagnostics = []
 
-  return scan(document)
+  // return scan(document)
 
-  document.contentChanges.forEach(({
+  contentChanges.forEach(({
     rangeLength
     , text
     , range: {
@@ -44,16 +43,97 @@ export default (document) => {
   }) => {
 
     const increment = setTokenOffset(rangeLength, text.length)
+
+    document.ast.forEach((node, i) => {
+
+      const {
+        offset
+        , token
+        , type
+        , lineOffset
+        , objects
+        , diagnostics
+        , children
+      } = node
+
+      if (offset[0] < start) return
+
+      document.ast[i].offset = offset.map(_i => increment(_i))
+
+      if (objects) {
+        for (const prop in objects) {
+          delete Object.assign(document.ast[i].objects, {
+            [increment(prop)]: objects[prop]
+          })[prop]
+        }
+      }
+
+      if (type === TokenType.control || type === TokenType.iteration) {
+        if (children && children.length > 0 && children.some(child => child?.objects)) {
+          children.forEach((c, k) => {
+            if (c?.objects) document.ast[i].children[k].objects = tagObjects(c.objects)
+          })
+        }
+      }
+
+      if (lineOffset) {
+        document.ast[i].lineOffset = Document.positionAt(document.ast[i].offset[0]).line
+      }
+
+    })
+
+    return
+
     const index = document.ast.findIndex(({ offset, type }) => (
-      inRange(start, offset[0], offset[1]) ||
-      inRange(start, offset[2], offset[3]) || (
-        type === TokenType.embedded && inRange(
-          start
-          , offset[1]
-          , offset[2]
-        )
-      )
+      inRange(start, offset[0], offset[offset.length - 1]) // ||
+      // inRange(start, offset[2], offset[3]) || (
+      //   type === TokenType.embedded && inRange(
+      //     start
+      //     , offset[1]
+      //     , offset[2]
+      //   )
+      // )
     ))
+
+    console.log(document.ast)
+
+    if (rangeLength === 0 && index >= 0) {
+
+      const { offset } = document.ast[index]
+      // const token = isOffsetInToken(document.ast[index], start)
+
+      const parsed = scan({
+        ...document
+        , ast: []
+        , diagnostics: []
+        , content: Document.getText({
+          start: offset[0],
+          end: offset[offset.length] + text.length
+        })
+      }, offset[0])
+
+      if (parsed.ast.length > 0) {
+
+        // const [ node ] = parsed.ast
+
+        /* if (node?.tag === TokenTag.start) {
+          node.tag = TokenTag.pair
+          node.token.push(token.token[0])
+          node.offset.push(...token.offset.map(increment))
+        } */
+
+        document.ast.splice(
+          index
+          , document.ast.length - index - 1
+          , ...parsed.ast
+        )
+
+        //  const d = diagnostic(document, node, getTokenSpec(node.token[0], node.name))
+
+        return document
+      }
+
+    }
 
     if (rangeLength === 0 && index >= 0) {
 
@@ -72,6 +152,7 @@ export default (document) => {
         )
 
         console.log(document.ast[index])
+
       } else {
 
         const token = isOffsetInToken(document.ast[index], start)
@@ -104,7 +185,8 @@ export default (document) => {
             }
 
             document.ast.splice(index, 1, node)
-            diagnostic(document, node, getTokenSpec(node.token[0], node.name))
+            // diagnostic(document, node, getTokenSpec(node.token[0], node.name))
+
           }
 
           if (type === TokenType.control || type === TokenType.iteration) {
@@ -121,14 +203,16 @@ export default (document) => {
 
     }
 
-    document.ast.forEach(({
-      offset
-      , token
-      , type
-      , lineOffset
-      , objects
-      , children
-    }, i) => {
+    document.ast.forEach((node, i) => {
+
+      const {
+        offset
+        , token
+        , type
+        , lineOffset
+        , objects
+        , children
+      } = node
 
       if (rangeLength > 0) {
         return ((

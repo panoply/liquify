@@ -209,7 +209,7 @@ export default (context) => {
        */
       service: {
         json: true,
-        css: false,
+        css: true,
         scss: false, // NOT YET IMPLEMENTED
         javascript: false // NOT YET IMPLEMENTED
       }

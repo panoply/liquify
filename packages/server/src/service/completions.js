@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { CompletionItemKind, InsertTextFormat } from 'vscode-languageserver'
-import { Server } from '../export'
 
 /**
  * Completion Functions

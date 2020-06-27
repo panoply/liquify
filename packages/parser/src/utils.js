@@ -1,8 +1,7 @@
 // @ts-check
 // import _ from 'lodash'
-import { Server } from '../export'
-import Document from '../provide/document'
-import { FWS, LCB, LAN, TokenTag } from './lexical'
+import { Server, Document } from '../export'
+import { Characters, TokenTag } from './regexp'
 
 /**
  * In Range
@@ -92,7 +91,7 @@ export const isOffsetInToken = (ASTNode, index) => (
 export const isTokenTagEnd = (token, tag) => {
   const index = token.indexOf(tag)
   const name = token.substring(index - 3, index)
-  return name === 'end' || token.charCodeAt(1) === FWS
+  return name === 'end' || token.charCodeAt(1) === Characters.FWS
 }
 
 /**
@@ -152,13 +151,13 @@ export const getTokenSpec = (token, name) => {
 
   // Patch an object type that matches a tag type
   if (Server.specification.objects?.[name] && Server.specification.tags?.[name]) {
-    if (token.charCodeAt(1) === LCB) return Server.specification.objects?.[name]
+    if (token.charCodeAt(1) === Characters.LCB) return Server.specification.objects?.[name]
   }
 
   if (Server.specification.tags?.[name]) return Server.specification.tags[name]
   if (Server.specification.objects?.[name]) return Server.specification.objects[name]
 
-  const kind = token.charCodeAt(0) === LAN ? 'html' : 'liquid'
+  const kind = token.charCodeAt(0) === Characters.LAN ? 'html' : 'liquid'
   const find = Server.formatRules.associateTags.filter(i => i.name === name && i.kind === kind)
 
   return find ? find.length > 0

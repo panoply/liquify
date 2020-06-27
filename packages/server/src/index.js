@@ -1,9 +1,37 @@
 // @ts-nocheck
 
-import { DidChangeConfigurationNotification, TextDocumentSyncKind } from 'vscode-languageserver'
-import { connection, Server, Service, Document, Parser } from './export'
+import { DidChangeConfigurationNotification, TextDocumentSyncKind, createConnection, ProposedFeatures } from 'vscode-languageserver'
+import { Server } from './provide/server'
+import { Service } from './provide/service'
+// import LiquidDocument from './parser/scanner'
+import LiquidParser from './parser/scanner'
+import LiquidDocument from './provide/document'
 import { runAsync, runSync } from './utils/runners'
 import { mark, stop } from 'marky'
+
+/* ---------------------------------------------------------------- */
+/* Providers                                                        */
+/* ---------------------------------------------------------------- */
+
+/**
+ * Server Connection
+ */
+const connection = createConnection(ProposedFeatures.all)
+
+/**
+ * Liquid Documents
+ */
+const documents = new Map()
+
+/**
+ * Liquid Documents
+ */
+const Document = LiquidDocument(documents)
+
+/**
+ * Liquid Parser
+ */
+const Parser = LiquidParser()
 
 /* ---------------------------------------------------------------- */
 /* onInitialize                                                     */
@@ -75,7 +103,7 @@ connection.onInitialized(() => {
 
   if (Server.hasWorkspaceFolderCapability) {
     connection.workspace.onDidChangeWorkspaceFolders(event => {
-      connection.connection.console.log('Workspace folder change event received.')
+      connection.console.log('Workspace folder change event received.')
     })
   }
 
@@ -91,7 +119,15 @@ connection.onDidChangeConfiguration(change => {
 
   connection.console.log('onDidChangeConfiguration')
 
-  Server.configure('onDidChangeConfiguration', change.settings)
+  Server.configure('onDidChangeConfiguration', change.settings).then(
+    ({
+
+    }) => {
+
+      return Parser.configure(Server.parser)
+
+    }
+  )
 
   // documents.forEach(Service.doValidation)
 
@@ -100,14 +136,15 @@ connection.onDidChangeConfiguration(change => {
 /* ---------------------------------------------------------------- */
 /* onDidOpenTextDocument                                            */
 /* ---------------------------------------------------------------- */
-connection.onDidOpenTextDocument(({ textDocument }) => {
+connection.onDidOpenTextDocument(({
+  textDocument
+}) => {
 
   connection.console.log('onDidOpenTextDocument')
 
-  // connection.console.log(Server)
-  const document = Document.create(textDocument)(Parser.scanner)
-  // Document.create(textDocument)(Parser.scanner)
+  const document = Document.create(textDocument)
 
+  return
   if (Server.provider.validateOnOpen) {
     return Service.doValidation(document).then(({
       uri
@@ -128,19 +165,28 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
 connection.onDidChangeTextDocument(({
   contentChanges
-  , textDocument
+  , textDocument: {
+    uri,
+    version
+  }
 }) => {
 
-  console.log('onDidChangeTextDocument', textDocument.uri)
+  console.log('onDidChangeTextDocument', uri)
 
   mark('onDidChangeTextDocument')
 
-  const document = Document.update(textDocument, contentChanges)
+  const { textDocument } = Document.update(uri, contentChanges, version)
 
-  if (!document?.uri) return null
+  if (!textDocument?.uri) return null
 
-  Parser.increment(document, ...document.contentChanges)
+  // const changes = Document.update(document, contentChanges, version)
 
+  // Document creation is executed via the `onDidOpenTextDocument`
+  // the model will be passed to the Parser
+  console.log(documents)
+  // await Parser.increment(document, changes)
+
+  return
   Service.doValidation(document).then(({
     uri
     , diagnostics
@@ -151,9 +197,9 @@ connection.onDidChangeTextDocument(({
     })
   ))
 
-  // console.log(document)
+  console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
-  console.log(`Parsed in ${stop('onDidChangeTextDocument').duration}`)
+  // console.log(document)
 
 })
 
@@ -163,7 +209,7 @@ connection.onDidChangeTextDocument(({
 
 connection.onDidCloseTextDocument(({ textDocument: { uri } }) => (
 
-  Document.clear(uri)
+  documents.delete(uri)
 
 ))
 
@@ -188,9 +234,11 @@ connection.onDocumentRangeFormatting(
     textDocument: { uri }
   }, token) => !Server.provider.format || runSync(() => {
 
-    const document = Document.get(uri)
+    return null
 
-    if (!document.uri) return null
+    const document = documents.get(uri)
+
+    if (!document?.uri) return null
 
     return Service.doFormat(document, Server.format)
 
@@ -207,9 +255,11 @@ connection.onHover(
     , textDocument: { uri }
   }, token) => !Server.provider.hover || runSync(() => {
 
-    const document = Document.get(uri)
+    return null
 
-    if (!document.uri) return null
+    const document = documents.get(uri)
+
+    if (!document?.uri) return null
 
     return Service.doHover(document, position)
 
@@ -259,11 +309,13 @@ connection.onDocumentLinks(
     textDocument: { uri }
   }, token) => runSync(() => {
 
-    const document = Document.get(uri)
+    return null
+
+    const document = documents.get(uri)
 
     if (!document.uri) return null
 
-    return Document.getLinks()
+    return Parser.scanner.getLinks()
 
   }, null, `Error while computing completion for ${uri}`, token)
 )
@@ -277,6 +329,8 @@ connection.onDocumentLinkResolve(
     item
     , token
   ) => runSync(() => {
+
+    return null
 
     return item
 
@@ -294,7 +348,9 @@ connection.onCompletion(
     , context
   }, token) => !Server.provider.completion || runAsync(async () => {
 
-    const document = Document.get(uri)
+    return null
+
+    const document = documents.get(uri)
 
     if (!document.uri) return null
 
@@ -314,6 +370,7 @@ connection.onCompletionResolve(
     item
     , token
   ) => runSync(() => {
+    return null
 
     return Service.doCompleteResolve(item)
 

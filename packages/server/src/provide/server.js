@@ -5,7 +5,6 @@ import R from 'ramda'
 import { readFileSync, readdirSync, existsSync } from 'fs-extra'
 import { basename, resolve, join, normalize } from 'path'
 import { Config } from './config'
-import { Expressions } from '../parser/lexical'
 import { regexp } from '../utils/functions'
 import specs from '@liquify/liquid-language-specs'
 
@@ -16,7 +15,7 @@ import specs from '@liquify/liquid-language-specs'
  * @class LiquidServer
  * @extends {Config}
  */
-export class LiquidServer extends Config {
+class LiquidServer extends Config {
 
   /**
    * Configuration - The `onInitialize` event handler.
@@ -103,18 +102,19 @@ export class LiquidServer extends Config {
    */
   configure (event, settings) {
 
-    /**
-     * Configuration changed
-     */
-    return {
-      onDidChangeConfiguration: this.#setProviders,
-      onDidChangeWatchedFiles: (
-        {
-          changes: [ { uri } ]
-        }
-      ) => basename(this.rcfile) !== basename(uri) ? null : this.#setUserSettings()
+    if (event === 'onDidChangeConfiguration') {
 
-    }[event](settings)
+      return this.#setProviders(settings)
+
+    } else if (event === 'onDidChangeWatchedFiles') {
+
+      return (({ changes: [ { uri } ] }) => (
+        basename(this.rcfile) !== basename(uri)
+          ? null
+          : this.#setUserSettings()
+      ))(settings)
+
+    }
 
   }
 
@@ -342,6 +342,6 @@ export class LiquidServer extends Config {
 
 }
 
-// const Server = new LiquidServer()
+export const Server = new LiquidServer()
 // Server
 // const s = new LanguageServerService()

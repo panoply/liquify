@@ -1,5 +1,6 @@
-import { Server, Document } from '../../export'
+import { Server } from '../../export'
 import { DiagnosticSeverity } from 'vscode-languageserver'
+import Document from './../../provide/document'
 
 /* -------------------------------------------- */
 /*                  VALIDATION                  */
@@ -13,10 +14,7 @@ import { DiagnosticSeverity } from 'vscode-languageserver'
  * @param {Specification.Variation} Specification
  */
 export default (
-  { name, token: [ token ], offset: [ start, end ] }
-  , { diagnostics }
-  , { filters }
-
+  { name, diagnostics, token: [ token ], offset: [ start, end ] }
 ) => {
 
   if (filters === false) {

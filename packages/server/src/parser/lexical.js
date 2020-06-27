@@ -1,102 +1,4 @@
-// @ts-check
-
-/**
- * Lexicals
- *
- * Exports defined here are used by the parser/tokenizer and help give context to
- * Liquid tags located in each text document.
- *
- * @param {import('types/defs').DocumentModel} params
- * @param {import('vscode-languageserver').TextDocumentContentChangeEvent} changes[]
- * @param {object} options
- * @returns
- */
-
-/* ---------------------------------------------------------------- */
-/* PUBLIC                                                           */
-/* ---------------------------------------------------------------- */
-
-/**
- * Regular expressions used to parse the document,
- * we will connects these together at server intialisation
- *
- * @see https://regex101.com/r/xRMug9/6
- */
-export const Expressions = {
-
-  /**
-   * `<tag></tag>`
-   *
-   * HTML tag captures
-   */
-  html: /<\/?\b(script|style)\b[^<>]*>/.source,
-
-  /**
-   * `{% tag %}{% endtag %}` or `{% tag %}`
-   *
-   * Liquid tag blocks or singular tags.
-   */
-  blocks: /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}/.source,
-
-  /**
-   * `{% tag %}{% endtag %}` or `{% tag %}`
-   *
-   * Liquid tag blocks or singular tags.
-   */
-  parameters: /(?<=,|\s)([_a-z-A-Z0-9-]+)\s*([:=])\s*["']?(.+?)(?=,|["']|-?%})/g,
-
-  /**
-   * `{{ tag }}`
-   *
-   *  Liquid singular output tags, generally objects
-   */
-  output: /{{2}-?\s*\b(\w+)\b.?(?:[^{}]{2})*-?}{2}/.source,
-
-  /**
-   * `<!-- text -->` or `/* text ` or `// text `
-   *
-   * HTML, JavaScript and CSS/SCSS comment tags
-   */
-  comments: /(?:<!--|\/\*).*?(?:\*\/|-->)/.source,
-
-  /**
-   * `---`
-   *
-   * Frontmatter blocks
-   */
-  frontmatter: /(?<=-{3}\n).*?(?=\n-{3})/s,
-
-  /**
-   * `{% tag 'ref' %}` or `{% tag file.html %}` to `ref` and `file.html`
-   */
-  reference: /(?<=['"]?)\b[_a-zA-Z0-9.-]+\b(?=["']?)/
-
-}
-
-/**
- * The token kind used to distinguish the
- * language type of the the token.
- *
- * @readonly
- */
-export const ControlExpressions = {
-
-  /**
-   * Captures condition, eg: `{% if condition  == compare %}` > `condition`
-   */
-  condition: /.*?(?=[!=<>]+|\bor\b|\band\b)/s,
-
-  /**
-   * Captures control operators, eg: `{% if condition == true %}` > `==`
-   */
-  operators: /[!=<>]+|\bor\b|\band\b/,
-
-  /**
-   * Captures a valid operator sequence, eg: `!===` > `!=`
-   */
-  characters: /<=|>=|==|>|<|!=|\bor\b|\band\b/
-}
-
+import _ from 'lodash'
 /**
  * The token kind used to distinguish the
  * language type of the the token.
@@ -140,104 +42,272 @@ export const TokenType = {
 }
 
 /**
- * The token characters that are found within
- * HTML or Liquid tags.
+ * Regular expressions used to parse the document,
+ * we will connects these together at server intialisation
+ *
+ * @see https://regex101.com/r/xRMug9/6
  */
-export const Characters = {
+export const Patterns = ({ html, includes }) => ({
+
+  parse: [
+
+    /**
+     * `<tag></tag>`
+     *
+     * HTML tag captures
+     */
+    `<\\/?\\b(${html.join('|')})\\b[^<>]*>`,
+
+    /**
+     * `{% tag %}{% endtag %}` or `{% tag %}`
+     *
+     * Liquid tag blocks or singular tags.
+     */
+    /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}/.source,
+
+    /**
+     * `{{ tag }}`
+     *
+     *  Liquid singular output tags, generally objects
+     */
+    /{{2}-?\s*\b(\w+)\b.?(?:[^{}]{2})*-?}{2}/.source
+
+  ]
+  ,
+  /**
+   * `<!-- text -->` or `/* text ` or `// text `
+   *
+   * HTML, JavaScript and CSS/SCSS comment tags
+   */
+
+  comments: [
+
+    /(?:<!--|\/\*).*?(?:\*\/|-->)/
+
+  ]
+  ,
+  /**
+   * `---`
+   *
+   * Frontmatter blocks
+   */
+  frontmatter: [
+
+    /(?<=-{3}\n).*?(?=\n-{3})/s
+
+  ]
+  ,
+  /**
+   * `{% tag %}{% endtag %}` or `{% tag %}`
+   *
+   * Liquid tag blocks or singular tags.
+   */
+  filters: [
+
+    /(?<=\|[\s]+)([_a-zA-Z]+)?:?(.*?)(?=\||-?[%}]})/gs
+
+  ]
+  ,
+  /**
+   * `{% tag %}{% endtag %}` or `{% tag %}`
+   *
+   * Liquid tag blocks or singular tags.
+   */
+  parameters: [
+
+    /(?<=,|\s)([_a-z-A-Z0-9-]+)\s*([:=])\s*["']?(.+?)(?=,|["']|-?%})/g
+
+  ]
+  ,
 
   /**
-   * `<` – Left Angle Bracket - Used in HTML delimeters and Liquid operators
+   * `{% tag 'ref' %}` or `{% tag file.html %}` to `ref` and `file.html`
+   *
    */
-  LAN: '<'.charCodeAt(0),
+  paths: [
 
+    /(?<=['"]?)\b[_a-zA-Z0-9.-]+\b(?=["']?)/
+
+  ]
+  ,
   /**
-   * `<` – Right Angle Bracket - Used in HTML delimeters and Liquid operators
+   * `{% include file.ext %}`
+   *
+   * Liquid include tags
    */
-  RAN: '>'.charCodeAt(0),
+  includes: [
 
-  /**
-   * `{` – Left Curly Brace - Used in Liquid delimeters
-   */
-  LCB: '{'.charCodeAt(0),
+    new RegExp(`(?<=\\b(${includes})\\b\\s+)["']?([\\w.]+)["']?`)
 
-  /**
-   * `}` – Right Curly Brace - Used in Liquid delimeters
-   */
-  RCB: '}'.charCodeAt(0),
+  ]
 
-  /**
-   * `!` – Bang chacter - Used in HTML comments and Liquid operators
-   */
-  BNG: '!'.charCodeAt(0),
+})
 
-  /**
-   * `-` – Dash character - Used in Liquid delimeters (whitespace)
-   */
-  DSH: '-'.charCodeAt(0),
+/**
+ * The token kind used to distinguish the
+ * language type of the the token.
+ *
+ * @readonly
+ */
+export const Contexts = {
 
-  /**
-   * `%` – Percent character - Used in Liquid delimeters
-   */
-  PER: '%'.charCodeAt(0),
+  control: {
+    /**
+     * Captures condition, eg: `{% if condition  == compare %}` > `condition`
+     */
+    condition: (
+      {
+        /**
+         * Captures condition, eg: `{% if condition  == compare %}` is `condition`
+         */
+        capture: (
 
-  /**
-   * `|` – Pipe character - Used in Liquid filters
-   */
-  PIP: '|'.charCodeAt(0),
+          /.*?(?=[!=<>]+|\b(?:and|or)\b|-?%})/s
 
-  /**
-   * `.` – Dot chacter - Used in Liquid object properties
-   */
-  DOT: '.'.charCodeAt(0),
+        )
+        ,
+        /**
+         * Captures a valid condition block, eg: `(conditon)` is invalid
+         */
+        validate: (
 
-  /**
-   * `:` – Colon character - Used in Liquid filter and iteration parameters
-   */
-  COL: ':'.charCodeAt(0),
+          /(?<=\w|\s+)(?:[<>]|<=|>=|==|!=|\bor\b|\band\b)/
 
-  /**
-   * `,` – Comma character - Used in Liquid filter parameters
-   */
-  COM: ','.charCodeAt(0),
+        )
+      }
+    )
+    ,
+    /**
+     * Captures control operators, eg: `{% if condition == true %}` > `==`
+     */
+    operators: (
+      {
+        /**
+         * Captures control operators, eg: `{% if condition == true %}` > `==`
+         */
+        capture: (
 
-  /**
-   * `=` – Equals character - Used in Liquid operators and assignments
-   */
-  EQS: '='.charCodeAt(0),
+          /[!=<>]+|\bor\b|\band\b/
 
-  /**
-   * `/` – Forward Slash Character - Used in HTML closing tags
-   */
-  FWS: '/'.charCodeAt(0),
+        )
+        ,
+        /**
+         * Captures a valid operator sequence, eg: `!===` > `!=`
+         */
+        validate: (
 
-  /**
-   * `"` – Double Quoted Character - Used in Liquid to define string values
-   */
-  DQO: '"'.charCodeAt(0),
+          /(?<=\w|\s+)(?:[<>]|<=|>=|==|!=|\bor\b|\band\b)/
 
-  /**
-   * `'` – Single Quoted Character - Used in Liquid to define string values
-   */
-  SQO: '\''.charCodeAt(0),
+        )
+      }
+    )
+    ,
+    /**
+     * Captures the end and/or truthy portion of a control eg: `{% if tag %}` > `tag %}`
+     */
+    truthy: (
+      {
+        capture: (
 
-  /**
-   * `\n` – Newline Character - Used to check newlines
-   */
-  NWL: '\n'.charCodeAt(0),
+          /.*?(?=-?%})/s
 
-  /**
-   * `\r` – Carriage Return Character - Used to check newlines
-   */
-  CAR: '\r'.charCodeAt(0),
-
-  /**
-   * `\s` – Whitespace - Used to space characters
-   */
-  WSP: ' '.charCodeAt(0),
-
-  /**
-   * `\t` – Tabs - Used for tab spaces
-   */
-  TAB: '\t'.charCodeAt(0)
-
+        )
+      }
+    )
+  }
 }
+
+/**
+ * `<` – Left Angle Bracket - Used in HTML delimeters and Liquid operators
+ */
+export const LAN = '<'.charCodeAt(0)
+
+/**
+ * `<` – Right Angle Bracket - Used in HTML delimeters and Liquid operators
+ */
+export const RAN = '>'.charCodeAt(0)
+
+/**
+ * `{` – Left Curly Brace - Used in Liquid delimeters
+ */
+export const LCB = '{'.charCodeAt(0)
+
+/**
+ * `}` – Right Curly Brace - Used in Liquid delimeters
+ */
+export const RCB = '}'.charCodeAt(0)
+
+/**
+ * `!` – Bang chacter - Used in HTML comments and Liquid operators
+ */
+export const BNG = '!'.charCodeAt(0)
+
+/**
+ * `-` – Dash character - Used in Liquid delimeters (whitespace)
+ */
+export const DSH = '-'.charCodeAt(0)
+
+/**
+ * `%` – Percent character - Used in Liquid delimeters
+ */
+export const PER = '%'.charCodeAt(0)
+
+/**
+ * `|` – Pipe character - Used in Liquid filters
+ */
+export const PIP = '|'.charCodeAt(0)
+
+/**
+ * `.` – Dot chacter - Used in Liquid object properties
+ */
+export const DOT = '.'.charCodeAt(0)
+
+/**
+ * `:` – Colon character - Used in Liquid filter and iteration parameters
+ */
+export const COL = ':'.charCodeAt(0)
+
+/**
+ * `,` – Comma character - Used in Liquid filter parameters
+ */
+export const COM = ','.charCodeAt(0)
+
+/**
+ * `=` – Equals character - Used in Liquid operators and assignments
+ */
+export const EQS = '='.charCodeAt(0)
+
+/**
+ * `/` – Forward Slash Character - Used in HTML closing tags
+ */
+export const FWS = '/'.charCodeAt(0)
+
+/**
+ * `"` – Double Quoted Character - Used in Liquid to define string values
+ */
+export const DQO = '"'.charCodeAt(0)
+
+/**
+ * `'` – Single Quoted Character - Used in Liquid to define string values
+ */
+export const SQO = '\''.charCodeAt(0)
+
+/**
+ * `\n` – Newline Character - Used to check newlines
+ */
+export const NWL = '\n'.charCodeAt(0)
+
+/**
+ * `\r` – Carriage Return Character - Used to check newlines
+ */
+export const CAR = '\r'.charCodeAt(0)
+
+/**
+ * `\s` – Whitespace - Used to space characters
+ */
+export const WSP = ' '.charCodeAt(0)
+
+/**
+ * `\t` – Tabs - Used for tab spaces
+ */
+export const TAB = '\t'.charCodeAt(0)

@@ -110,6 +110,7 @@ export interface AST {
   embeddedDocument?: TextDocument;
   linkedId?: number;
   linkedDocument?: DocumentLink;
+  diagnostics?: Diagnostic[];
 }
 
 /* -------------------------------------------- */

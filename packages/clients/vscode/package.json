@@ -54,6 +54,9 @@
     "vscode.html-language-features"
   ],
   "contributes": {
+    "css.customData": [
+      "./liquid-css.json"
+    ],
     "themes": [
       {
         "label": "Potion Theme",

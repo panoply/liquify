@@ -21,6 +21,7 @@ export default {
     globs({
       globs: [
         'package.json',
+        'liquid-css.json',
         'LICENSE',
         'language-configuration.json',
         'readme.md',

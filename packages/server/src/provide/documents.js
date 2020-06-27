@@ -160,6 +160,7 @@ export default (function () {
       uri
       , languageId
       , version
+      , token: null
       , content: text
       , ast: []
       , diagnostics: []
@@ -514,7 +515,6 @@ export default (function () {
       if (newText.length) spans.push(newText)
 
       modified = offsetAt(range.end)
-
     }
 
     spans.push(text.substr(modified))
@@ -529,6 +529,17 @@ export default (function () {
 
   }
 
+  function getDiagnostics () {
+
+    return _.flatMap(
+      document.ast
+      , ({ diagnostics = [] }) => [ ...diagnostics ]
+    ).map(
+      x => ({ ...x, range: range(x[0], x[1]) })
+    ).filter(Boolean)
+
+  }
+
   return {
     create
     , get
@@ -540,6 +551,7 @@ export default (function () {
     , getEmbeds
     , getLinks
     , getLineOffsets
+    , getDiagnostics
     , range
     , embeddedUpdate
     , positionAt

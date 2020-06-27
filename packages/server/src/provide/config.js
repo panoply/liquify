@@ -59,21 +59,6 @@ export class Config {
   paths = {}
 
   /**
-   * Specification References
-   *
-   * @type {import('types/parser').ParseExpressions}
-   * @memberof Config
-  */
-  parser = {
-    comment: null,
-    filters: null,
-    objects: null,
-    parsing: null,
-    frontmatter: null,
-    params: {}
-  }
-
-  /**
    * Server Document Settings - Records settings of documents
    *
    * @memberof LiquidServer
@@ -138,7 +123,7 @@ export class Config {
   /**
    * Server tracing (LSP related)
    */
-  trace ={
+  trace = {
 
     /**
      * Trace LSP

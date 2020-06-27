@@ -3,10 +3,10 @@
 import _ from 'lodash'
 import { TextEdit, Position } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { Server, Document } from '../export'
 import { CSSService } from '../service/modes/css'
 import { SCSSService } from '../service/modes/scss'
 import { JSONService } from '../service/modes/json'
+import Document from '../provide/document'
 import * as Format from '../service/formats'
 import * as Completion from '../service/completions'
 import * as Hover from '../service/hovers'
@@ -30,7 +30,7 @@ import * as Hover from '../service/hovers'
  * @typedef {import('defs').FormattingRules} FormattingRules
  * @typedef {import('defs').ValidationPromises} ValidationPromises
  */
-export default new class LiquidService {
+class LiquidService {
 
   /**
    * Service Modes
@@ -43,7 +43,8 @@ export default new class LiquidService {
   modes = ({
     css: null,
     scss: null,
-    json: null
+    json: null,
+    html: true
   })
 
   /**
@@ -71,21 +72,28 @@ export default new class LiquidService {
   /**
    * `doValidation`
    *
-   * @param {Document.Scope} parameters
+   * @param {Document.Scope} textDocument
    * @memberof LiquidService
    */
-  async doValidation ({ uri, diagnostics }) {
+  async doValidation ({
+    ast
+    , diagnostics = []
+    , textDocument: { uri }
+  }) {
 
     // const promise = Diagnostic.resolve(textDocument)
     // const validations = (await Promise.all(diagnostics.map(promise)))
-    const embedded = Document.getEmbeds()
+    const nodes = ast.filter(({ embeddedDocument: { languageId } }) => this.modes?.[languageId])
 
-    for (const i of embedded) {
-      const region = await this.modes[i.embeddedDocument.languageId].doValidation(i)
+    for (const node of nodes) {
+      const region = await this.modes[node.embeddedDocument.languageId].doValidation(node)
       if (region) diagnostics.push(...region)
     }
 
-    return { uri, diagnostics }
+    return {
+      uri
+      , diagnostics
+    }
 
   }
 
@@ -130,7 +138,7 @@ export default new class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doHover (document, position) {
+  async doHover (document, position) {
 
     const [ node ] = Document.getNode(position)
     if (node && this.modes?.[node.languageId]) {
@@ -162,6 +170,7 @@ export default new class LiquidService {
       `\n[${engine} Liquid](${reference})`
       ].join('\n')
     }
+
   }
 
   /**
@@ -211,6 +220,6 @@ export default new class LiquidService {
 
   }
 
-}()
+}
 
-// export const Server = new LiquidService()
+export const Service = new LiquidService()

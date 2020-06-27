@@ -1524,6 +1524,24 @@
           "description": "Returns an array of transactions from the order."
         }
       ]
+    },
+    "section": {
+      "description": "The section object lets you access a section's properties and setting values.",
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/section",
+      "properties": [
+        {
+          "description": "Returns an array of the section's blocks.",
+          "name": "blocks"
+        },
+        {
+          "name": "id",
+          "description": "For static sections, returns the section's file name without \".liquid\". For dynamic sections, returns a dynamically generated ID."
+        },
+        {
+          "name": "settings",
+          "description": "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id."
+        }
+      ]
     }
   },
   "tags": {

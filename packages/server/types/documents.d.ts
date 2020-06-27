@@ -37,19 +37,19 @@ export interface Scope {
   /**
    * Document URI indentifier
    */
-  readonly uri: string;
+  //readonly uri: string;
 
   /**
    * Document Language ID
    */
-  languageId: LanguageIds;
+  // languageId: LanguageIds;
 
   /**
    * Document Version
    *
    * @type {number}
    */
-  version: number;
+  // version: number;
 
   /**
    * AST
@@ -59,18 +59,25 @@ export interface Scope {
   ast: AST[];
 
   /**
-   * Document Settings
+   * TextDocument
    *
-   * @type {object}
+   * @type {AST[]}
    */
-  settings: object;
+  textDocument: TextDocument;
 
   /**
    * Document Settings
    *
    * @type {object}
    */
-  contentChanges: ContentChanges[];
+  // settings: object;
+
+  /**
+   * Document Settings
+   *
+   * @type {object}
+   */
+  //contentChanges: ContentChanges[];
 
   /**
    * Diagnostics validations for the document
@@ -80,7 +87,7 @@ export interface Scope {
   /**
    * Frontmatter converted to JSON
    */
-  frontmatter: object;
+  frontmatter?: object;
 
   /**
    * Linked Document index key locations
@@ -92,21 +99,21 @@ export interface Scope {
    * Embedded Documents index key locations
    * that exist in the AST
    */
-  embeddedDocuments: Map<string, TextDocument>;
+  // embeddedDocuments: Map<string, TextDocument>;
 
   /**
    * Line Offsets
    *
    * @type {number[]}
    */
-  lineOffsets: number[];
+  //  lineOffsets: number[];
 
   /**
    * Document Text
    *
    * @type {function}
    */
-  content: string;
+  // content: string;
 }
 
 /* -------------------------------------------- */
