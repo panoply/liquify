@@ -1,0 +1,17 @@
+{% if foo  %}
+  {{ tag }}
+{% endif %}
+
+{{ object_tag }}
+
+{% for value in values  %}
+  {% if foo  %} {{ tag }} {% endif %}
+{% endfor %}
+
+{% if foo  %}
+  {{ tag }}
+{% endif %}
+
+{% if foo  %}
+  {{ tag }}
+{% endif %}

@@ -1,11 +1,11 @@
 // @ts-check
 
 import _ from 'lodash'
-import R from 'ramda'
 import { readFileSync, readdirSync, existsSync } from 'fs-extra'
 import { basename, resolve, join, normalize } from 'path'
+import { Expressions } from '../parser/lexical'
 import { Config } from './config'
-import { regexp } from '../utils/functions'
+import stripJSONC from 'strip-json-comments'
 import specs from '@liquify/liquid-language-specs'
 
 /**
@@ -45,9 +45,10 @@ class LiquidServer extends Config {
     this.rcfile = rcfile
     this.license = license
     this.service = { ...this.service, ...service }
+
     this.capability.hasConfigurationCapability = !!(workspace && !!workspace.configuration)
     this.capability.hasWorkspaceFolderCapability = !!(workspace && !!workspace.workspaceFolders)
-    this.hasDiagnosticRelatedInformationCapability = !!(
+    this.capability.hasDiagnosticRelatedInformationCapability = !!(
       textDocument &&
       textDocument.publishDiagnostics &&
       textDocument.publishDiagnostics.relatedInformation
@@ -62,6 +63,32 @@ class LiquidServer extends Config {
     }
 
     return { capabilities }
+
+  }
+
+  /**
+   * Configure Server Settings
+   *
+   * @param {object} settings
+   * @memberof LiquidServer
+   */
+  configure (event, settings) {
+
+    if (event === 'onDidChangeConfiguration') {
+
+      return this.#setProviders(settings)
+
+    } else if (event === 'onDidChangeWatchedFiles') {
+
+      return (({ changes: [ { uri } ] }) => (
+
+        basename(this.rcfile) !== basename(uri)
+          ? null
+          : this.#setUserSettings()
+
+      ))(settings)
+
+    }
 
   }
 
@@ -95,45 +122,19 @@ class LiquidServer extends Config {
   }
 
   /**
-   * Configure Server Settings
-   *
-   * @param {object} settings
-   * @memberof LiquidServer
-   */
-  configure (event, settings) {
-
-    if (event === 'onDidChangeConfiguration') {
-
-      return this.#setProviders(settings)
-
-    } else if (event === 'onDidChangeWatchedFiles') {
-
-      return (({ changes: [ { uri } ] }) => (
-        basename(this.rcfile) !== basename(uri)
-          ? null
-          : this.#setUserSettings()
-      ))(settings)
-
-    }
-
-  }
-
-  /**
    * Set Provider Services
    *
    * @private
    * @param {string} rcfile
    */
-  #setLiquidrc = (rcfile) => {
+  #parseLiquidrcFile = rcfile => {
 
     if (!rcfile) return null
 
     try {
 
       const read = readFileSync(rcfile).toString()
-      const rules = JSON.parse(require('strip-json-comments')(read, {
-        whitespace: false
-      }))
+      const rules = JSON.parse(stripJSONC(read, { whitespace: false }))
 
       return rules
 
@@ -153,13 +154,11 @@ class LiquidServer extends Config {
    */
   #setProviders = ({ liquid }) => {
 
-    Object
-      .entries(liquid)
-      .forEach(([ prop, setting ]) => {
-        if (this.provider?.[prop] && setting?.enable) {
-          this.provider[prop] = setting.enable
-        }
-      })
+    Object.entries(liquid).forEach(([ prop, setting ]) => {
+      if (this.provider?.[prop] && setting?.enable) {
+        this.provider[prop] = setting.enable
+      }
+    })
 
     return this.#setUserSettings()
 
@@ -175,7 +174,7 @@ class LiquidServer extends Config {
    */
   #setUserSettings = () => {
 
-    const settings = this.#setLiquidrc(this.rcfile)
+    const settings = this.#parseLiquidrcFile(this.rcfile)
 
     return this.#setLiquidEngine(settings)
 
@@ -201,9 +200,7 @@ class LiquidServer extends Config {
    */
   #setSpecification = async settings => {
 
-    const spec = await specs(this.license)
-
-    this.specification = spec[this.engine]()
+    this.specification = (await specs(this.license))[this.engine]()
 
     return this.#setFormattingRules(settings)
 
@@ -253,32 +250,32 @@ class LiquidServer extends Config {
       'tag_spacing'
     ]
 
-    for (const language in settings.format) {
+    for (const lang in settings.format) {
 
-      const rules = settings.format[language]
+      const rules = settings.format[lang]
 
       if (rules?.tags) {
         rules.tags.forEach(associate => {
-          this.formatRules.associateTags.push({
+          this.formatting.associateTags.push({
             ...associate
-            , language
+            , lang
             , type: 'associate'
           })
         })
       }
 
-      if (this.formatRules.customRules?.[language]) {
-        this.formatRules.customRules[language] = R.pick(
-          Object.keys(this.formatRules.customRules[language]),
+      if (this.formatting.customRules?.[lang]) {
+        this.formatting.customRules[lang] = _.pick(
+          Object.keys(this.formatting.customRules[lang]),
           rules
         )
       }
 
-      if (this.formatRules.languageRules?.[language]) {
-        this.formatRules.languageRules[language] = {
-          ...this.formatRules.languageRules[language]
+      if (this.formatting.languageRules?.[lang]) {
+        this.formatting.languageRules[lang] = {
+          ...this.formatting.languageRules[lang]
           , ..._.omit(rules, enforce)
-          , ...this.formatRules.editorRules
+          , ...this.formatting.editorRules
         }
       }
     }
@@ -294,25 +291,21 @@ class LiquidServer extends Config {
    * @param {object} settings
    * @memberof LiquidServer
    */
-  #setParseExpressions = (settings) => {
+  #setParseExpressions = settings => {
 
-    const { html, blocks, output } = Expressions
-    const { objects, filters, tags } = this.specification
-
-    const includes = Object
-      .entries(tags)
-      .filter(([ key, { type, params } ]) => type === 'include')
-      .map(([ key, { params } ]) => key)
-      .join('|')
-
-    this.parser = {
-      ...this.parser,
-      parsing: regexp(`${html}|${blocks}|${output}`, 'g'),
-      objects: regexp(`\\b(?:${Object.keys(objects).join('|')})\\.?(?:[^\\s\\n]*\\b)?`, 'g'),
-      filters: regexp(Object.keys(filters).join('|'), 'g'),
-      frontmatter: Expressions.frontmatter,
-      includes: new RegExp(`(?<=\\b(${includes})\\b\\s+)["']?([\\w.]+)["']?`)
-    }
+    this.lexical = Expressions({
+      tags: {
+        objects: Object.keys(this.specification.objects)
+      },
+      html: {
+        comments: [ 'liquid-(format|linter)-(ignore|enable|disable)' ],
+        tokens: [ 'script', 'style' ],
+        tokens_with_attribute: [
+          [ 'script' ],
+          [ 'application/type="ld+json"' ]
+        ]
+      }
+    })
 
     return this.#setPathIncludes(settings)
 
@@ -343,5 +336,3 @@ class LiquidServer extends Config {
 }
 
 export const Server = new LiquidServer()
-// Server
-// const s = new LanguageServerService()

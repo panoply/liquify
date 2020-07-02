@@ -20,16 +20,17 @@
   ],
   "ava": {
     "require": [
+      "esm",
       "@babel/register"
     ],
     "babel": {
       "testOptions": {
-        "babelrc": false,
+        "babelrc": true,
         "configFile": false
       }
     },
     "files": [
-      "test/**/**"
+      "test/parsing/**"
     ],
     "concurrency": 5
   },
@@ -65,10 +66,19 @@
     "@rollup/plugin-commonjs": "^12.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
     "ava": "^3.8.2",
+    "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-ramda": "^2.0.0",
+    "cli-columns": "^3.1.2",
+    "cli-table": "^0.3.1",
+    "cliui": "^6.0.0",
+    "colm": "^0.1.1",
     "copy-node-modules": "^1.1.1",
+    "esm": "^3.2.25",
+    "jsome": "^2.5.0",
     "marky": "^1.2.1",
+    "pretty-columns": "^1.2.1",
     "pretty-ms": "^7.0.0",
+    "prettyoutput": "^1.2.0",
     "rollup-plugin-filesize": "^9.0.1"
   }
 }

@@ -1,0 +1,29 @@
+NESTING CASES
+
+{% if foo  %}
+
+  {{ tag }}
+  {{ object_tag }}
+
+  {% for value in values  %}
+    {% if bar %}
+      {% unless product.title == 'Awesome Shoes' %}
+        {% if foo  %} {{ tag }} {% endif %}
+      {% endunless %}
+    {% endif %}
+  {% endfor %}
+
+
+  {% for value in values  %}
+    {% if bar %}
+      {% for nest in nesting  %}
+          {% unless condition %}
+            {% if another_condition  %} {{ tag }} {% endif %}
+          {% endunless %}
+      {% endfor %}
+    {% elsif %}
+      {% assign var = 'foo' %}
+    {% endif %}
+  {% endfor %}
+
+{% endif %}

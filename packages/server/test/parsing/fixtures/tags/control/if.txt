@@ -1,0 +1,11 @@
+{% if product.title == 'Awesome Shoes' %}
+  You are buying some awesome shoes!
+{% endif %}
+
+{% if truthy %}
+  single condition
+{% endif %}
+
+{% if truthy %}
+  single condition
+{% endif %}

@@ -3,9 +3,8 @@
 import { DidChangeConfigurationNotification, TextDocumentSyncKind, createConnection, ProposedFeatures } from 'vscode-languageserver'
 import { Server } from './provide/server'
 import { Service } from './provide/service'
-// import LiquidDocument from './parser/scanner'
-import LiquidParser from './parser/scanner'
-import LiquidDocument from './provide/document'
+import { Document } from './provide/document'
+import * as Parser from './parser/export'
 import { runAsync, runSync } from './utils/runners'
 import { mark, stop } from 'marky'
 
@@ -21,17 +20,7 @@ const connection = createConnection(ProposedFeatures.all)
 /**
  * Liquid Documents
  */
-const documents = new Map()
-
-/**
- * Liquid Documents
- */
-const Document = LiquidDocument(documents)
-
-/**
- * Liquid Parser
- */
-const Parser = LiquidParser()
+const { documents } = Document
 
 /* ---------------------------------------------------------------- */
 /* onInitialize                                                     */
@@ -119,15 +108,7 @@ connection.onDidChangeConfiguration(change => {
 
   connection.console.log('onDidChangeConfiguration')
 
-  Server.configure('onDidChangeConfiguration', change.settings).then(
-    ({
-
-    }) => {
-
-      return Parser.configure(Server.parser)
-
-    }
-  )
+  Server.configure('onDidChangeConfiguration', change.settings)
 
   // documents.forEach(Service.doValidation)
 
@@ -136,17 +117,24 @@ connection.onDidChangeConfiguration(change => {
 /* ---------------------------------------------------------------- */
 /* onDidOpenTextDocument                                            */
 /* ---------------------------------------------------------------- */
-connection.onDidOpenTextDocument(({
-  textDocument
-}) => {
+connection.onDidOpenTextDocument(({ textDocument }) => {
 
   connection.console.log('onDidOpenTextDocument')
 
-  const document = Document.create(textDocument)
+  mark('onDidOpenTextDocument')
+
+  const document = Document.create(textDocument)(Parser.scanner)
+
+  // console.log(document.ast[document.ast.length - 2])
+  // console.log(document.ast[document.ast.length - 2])
+  console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
+
+  //   if (!document) return null
 
   return
   if (Server.provider.validateOnOpen) {
-    return Service.doValidation(document).then(({
+
+    Service.doValidation(document).then(({
       uri
       , diagnostics
     }) => (
@@ -163,27 +151,27 @@ connection.onDidOpenTextDocument(({
 /* onDidChangeTextDocument                                          */
 /* ---------------------------------------------------------------- */
 
-connection.onDidChangeTextDocument(({
-  contentChanges
-  , textDocument: {
-    uri,
-    version
-  }
-}) => {
-
-  console.log('onDidChangeTextDocument', uri)
+connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   mark('onDidChangeTextDocument')
+  console.log('onDidChangeTextDocument', textDocument.uri, contentChanges[0])
 
-  const { textDocument } = Document.update(uri, contentChanges, version)
+  const document = Document.update(textDocument, contentChanges)
 
-  if (!textDocument?.uri) return null
+  if (!document) return null
 
-  // const changes = Document.update(document, contentChanges, version)
+  Parser.increment(document, contentChanges)
+
+  // console.log()
+
+  // console.log(documents)
+
+  // console.log(document)
+  console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
   // Document creation is executed via the `onDidOpenTextDocument`
   // the model will be passed to the Parser
-  console.log(documents)
+  // console.log(documents)
   // await Parser.increment(document, changes)
 
   return
@@ -196,8 +184,6 @@ connection.onDidChangeTextDocument(({
       diagnostics
     })
   ))
-
-  console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
   // console.log(document)
 

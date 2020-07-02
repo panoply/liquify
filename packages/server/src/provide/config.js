@@ -241,7 +241,7 @@ export class Config {
    *
    * @type {FormattingRules}
    */
-  formatRules = {
+  formatting = {
 
     /**
      * Files and tags to be ignored by formatter

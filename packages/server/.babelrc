@@ -14,8 +14,7 @@
   "inputSourceMap": true,
   "retainLines": true,
   "plugins": [
-    "ramda",
-    "lodash",
+    "babel-plugin-lodash",
     "@babel/plugin-proposal-optional-chaining",
     "@babel/plugin-proposal-private-methods",
     "@babel/plugin-proposal-class-properties",

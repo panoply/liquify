@@ -3,7 +3,7 @@
 import prettydiff from 'prettydiff'
 import _ from 'lodash'
 import { TokenKind } from '../parser/lexical'
-import Document from '../provide/document'
+import { Document } from '../provide/document'
 
 /**
  * Formatting Functions

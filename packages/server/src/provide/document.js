@@ -4,11 +4,11 @@ import { TextDocument } from 'vscode-languageserver-textdocument'
 /**
  * Documents Manager
  *
- * This file manages document state and configuration for each open file
+ * Manages the document state and configuration of each open file
  * in the workspace. The module extends upon the vscode textdocument
  * manager and uses `Map()` storage to maintain each document.
  */
-export default function (documents) {
+function LiquidDocuments (documents = new Map()) {
 
   /**
    * Model Scope - Value held in this variable will change
@@ -29,9 +29,9 @@ export default function (documents) {
   function create ({ uri, languageId, version, text }) {
 
     document = documents.has(uri) ? documents.get(uri) : documents.set(uri, {
-      ast: [],
       diagnostics: [],
       documentLinks: [],
+      ast: [],
       textDocument: TextDocument.create(
         uri
         , languageId
@@ -40,7 +40,7 @@ export default function (documents) {
       )
     }).get(uri)
 
-    return document
+    return parser => parser(document)
 
   }
 
@@ -49,32 +49,27 @@ export default function (documents) {
    * content content and is called via the `onDidChangeTextDocument` event. Majority
    * of this logic was lifted from the 'vscode-textdocument' module.
    *
-   * @param {string} textDocument
+   * @param {LSP.VersionedTextDocumentIdentifier} textDocument
    * @param {Document.ContentChanges[]} contentChanges
-   * @returns {Document.ContentChanges[]}
+   * @returns {Document.Scope}
    */
-  function update (uri, contentChanges, version) {
+  function update ({ uri, version }, contentChanges) {
 
-    if (documents.has(uri)) {
+    if (!document || document.textDocument.uri !== uri) {
+      if (!documents.has(uri)) return null
       document = documents.get(uri)
-    } else {
-      return null
     }
 
-    TextDocument.update(document.textDocument, contentChanges, version)
-
-    // Document creation is executed via the `onDidOpenTextDocument`
-    // the model will be passed to the Parser
-    return contentChanges.map(
-      change => ({
-        ...change,
-        range: {
-          start: document.textDocument.offsetAt(change.range.start),
-          end: document.textDocument.offsetAt(change.range.end)
-        }
-      })
+    TextDocument.update(
+      document.textDocument
+      , contentChanges
+      , version
     )
+
+    return document
+
   }
+
   /**
    * Get a node in the AST tree that matches a supplied
    * offset index position.
@@ -118,6 +113,7 @@ export default function (documents) {
    *
    * @returns
    */
+  // @ts-ignore
   function getEmbeds (uri) {
 
     return document.ast.filter(({ languageId }) => languageId)
@@ -130,6 +126,7 @@ export default function (documents) {
    *
    * @returns
    */
+  // @ts-ignore
   function getLinks (uri) {
 
     return document.ast.filter(({ linkedDocument }) => linkedDocument)
@@ -175,6 +172,9 @@ export default function (documents) {
     , getLinks
     , getRange
     , getDiagnostics
+    , documents
   }
 
 }
+
+export const Document = LiquidDocuments()

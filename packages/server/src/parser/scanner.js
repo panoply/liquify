@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import { basename } from 'path'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { Regexp, TokenTag, TokenType } from './lexical'
-import Document from '../provide/document'
-import { Server } from '../export'
+import { TokenTag, TokenType } from './lexical'
+import { Document } from '../provide/document'
+import { Server } from '../provide/server'
 // import YAML from 'yamljs'
 import validate from '../service/diagnostics'
 import * as parse from './utils'
@@ -20,9 +20,8 @@ export default function (document, index = undefined) {
   let run = 0
 
   const content = document.textDocument.getText()
-  const matches = content.matchAll(Regexp.)
+  const matches = content.matchAll(Server.lexical.tokens)
 
-  console.log(content)
   if (!matches) return document.ast
   for (const match of matches) parseText(match)
 
@@ -42,12 +41,12 @@ export default function (document, index = undefined) {
 
     !spec || spec.singular ? (
       spec?.within
-        ? childToken(node, spec)
-        : singularToken(node, spec)
+        ? ChildToken(node, spec)
+        : SingularToken(node, spec)
     ) : (
       parse.isTokenTagEnd(token, name)
-        ? closeToken(node, spec)
-        : startToken(node, spec)
+        ? EndToken(node, spec)
+        : StartToken(node, spec)
     )
 
   }
@@ -58,7 +57,7 @@ export default function (document, index = undefined) {
    * @param {Parser.AST} tokenNode
    * @param {Specification.Tag} tokenSpec
    */
-  function startToken (tokenNode, tokenSpec) {
+  function StartToken (tokenNode, tokenSpec) {
 
     const type = TokenType[tokenSpec.type]
 
@@ -69,10 +68,10 @@ export default function (document, index = undefined) {
     if (type === TokenType.control || type === TokenType.iteration) {
 
       tokenNode.children = []
-      tokenNode.objects = tokenObjects(tokenNode.offset[0], tokenNode.token[0])
+      tokenNode.objects = TagObjects(tokenNode.offset[0], tokenNode.token[0])
 
       if (tokenSpec?.parameters) {
-        tokenNode.parameters = tokenParameters(tokenNode, tokenSpec)
+      //  tokenNode.parameters = TagParameters(tokenNode, tokenSpec)
       }
     } else if (type === TokenType.embedded || type === TokenType.associate) {
 
@@ -92,7 +91,7 @@ export default function (document, index = undefined) {
    * @param {Parser.AST} tokenNode
    * @param {Specification.Tag} tokenSpec
    */
-  function closeToken (tokenNode, tokenSpec) {
+  function EndToken (tokenNode, tokenSpec) {
 
     let parentNode = document.ast[document.ast.length]
 
@@ -107,12 +106,12 @@ export default function (document, index = undefined) {
     parentNode.token = [ parentNode.token[0], tokenNode.token[0] ]
     parentNode.offset = [ ...parentNode.offset, ...tokenNode.offset ]
 
-    if (parentNode?.languageId) embeddedDocument(parentNode, tokenNode)
+    if (parentNode?.languageId) EmbeddedDocument(parentNode, tokenNode)
 
     // const before = document.diagnostics.length
-    validate(parentNode, tokenSpec)
+    // validate(parentNode, tokenSpec)
     // const after = document.diagnostics.length
-    console.log(parentNode)
+    // console.log(parentNode)
 
     // console.log(before, after)
 
@@ -125,18 +124,18 @@ export default function (document, index = undefined) {
    * @param {Parser.AST} parentNode
    * @param {Parser.AST} tokenNode
    */
-  function embeddedDocument (parentNode, tokenNode) {
+  function EmbeddedDocument (parentNode, tokenNode) {
 
     run = run + 1
 
     const range = Document.getRange(parentNode.offset[1], tokenNode.offset[0])
-    const uri = document.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
+    const uri = document.textDocument.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
 
     parentNode.lineOffset = range.start.line
     parentNode.embeddedDocument = TextDocument.create(
       uri
       , parentNode.languageId
-      , document.version
+      , document.textDocument.version
       , document.textDocument.getText(range)
     )
 
@@ -148,29 +147,28 @@ export default function (document, index = undefined) {
    * @param {Parser.AST} tokenNode
    * @param {Specification.Tag} tokenSpec
    */
-  function singularToken (tokenNode, tokenSpec) {
+  function SingularToken (tokenNode, tokenSpec) {
 
     if (!tokenSpec?.type) return document.ast
 
     tokenNode.tag = TokenTag.singular
     tokenNode.type = TokenType[tokenSpec.type]
-    tokenNode.objects = tokenObjects(tokenNode.offset[0], tokenNode.token[0])
-    //  tokenNode.filters = tokenFilters(tokenNode, tokenSpec)
+    tokenNode.objects = TagObjects(tokenNode.offset[0], tokenNode.token[0])
+    //  tokenNode.filters = TagFilters(tokenNode, tokenSpec)
 
     if (tokenSpec?.parameters) {
-      tokenNode.parameters = tokenParameters(tokenNode, tokenSpec)
+      // tokenNode.parameters = TagParameters(tokenNode, tokenSpec)
     }
 
     if (tokenNode.type === TokenType.include) {
-      // console.log(tokenSpec)
-      tokenNode.linkedDocument = documentLinks(tokenNode)
-      if (!document.linkedDocuments.includes(document.ast.length)) {
-        document.linkedDocuments.push(document.ast.length)
-        tokenNode.linkedId = document.linkedDocuments.length - 1
-      }
+      // tokenNode.linkedDocument = LinkedDocuments(tokenNode)
+      // if (!document?.linkedDocuments?.includes(document.ast.length)) {
+      // document.linkedDocuments.push(document.ast.length)
+      // tokenNode.linkedId = document.linkedDocuments.length - 1
+      // }
     }
 
-    validate(tokenNode, tokenSpec)
+    // validate(tokenNode, tokenSpec)
 
     document.ast.push(tokenNode)
 
@@ -184,7 +182,7 @@ export default function (document, index = undefined) {
    * @param {Parser.AST} tokenNode
    * @param {Specification.Tag} tokenSpec
    */
-  function childToken (tokenNode, tokenSpec) {
+  function ChildToken (tokenNode, tokenSpec) {
 
     const id = _.findLastKey(document.ast, { tag: TokenTag.start })
 
@@ -193,14 +191,14 @@ export default function (document, index = undefined) {
     document.ast[id].children.push({
       ...tokenNode,
       tag: TokenTag.child,
-      objects: tokenObjects(tokenNode.offset[0], tokenNode.token[0])
+      objects: TagObjects(tokenNode.offset[0], tokenNode.token[0])
     })
 
-    validate(
-      document
-      , document.ast[id].children[document.ast[id].children.length - 1]
-      , tokenSpec
-    )
+    // validate(
+    //  document
+    //  , document.ast[id].children[document.ast[id].children.length - 1]
+    //  , tokenSpec
+    // )
 
     return document.ast[id]
   }
@@ -215,10 +213,11 @@ export default function (document, index = undefined) {
    * @param {string} token
    * @returns {(Parser.Objects)}
    */
-  function tokenObjects (offset, token) {
+  function TagObjects (offset, token) {
 
+    return {}
     return Array
-      .from(token.matchAll(Server.parser.objects))
+      .from(token.matchAll(Server.lexical.tag_objects))
       .reduce((object, match) => {
 
         const props = match[0].split('.').filter(Boolean)
@@ -234,7 +233,7 @@ export default function (document, index = undefined) {
 
   }
 
-  function tokenFilters (tokenNode, tokenSpec) {
+  function TagFilters (tokenNode, tokenSpec) {
 
     const {
       token: [ token ],
@@ -252,7 +251,7 @@ export default function (document, index = undefined) {
    * @param {string} token The token (tag) to parse
    * @returns {Object|Boolean}
    */
-  function tokenParameters ({
+  function TagParameters ({
     token: [ token ]
     , offset: [ offset ]
   }, {
@@ -260,6 +259,7 @@ export default function (document, index = undefined) {
     , params
   }) {
 
+    return []
     return Array
       .from(token.matchAll(/[_a-zA-Z0-9-]+(?=\s*[:=]\s*[_a-zA-Z0-9-"'])/g))
       .map(([ match ]) => match)
@@ -273,8 +273,9 @@ export default function (document, index = undefined) {
    * @param {Parser.AST} ASTNodeParam
    * @returns {LSP.DocumentLink}
    */
-  function documentLinks ({ name, token: [ token ], offset: [ start ] }) {
+  function LinkedDocuments ({ name, token: [ token ], offset: [ start ] }) {
 
+    return []
     const link = new RegExp(`(?<=\\b${name}\\b)\\s*["']?([\\w.]+)["']?`).exec(token)
     if (!link) return null
 

@@ -2,9 +2,10 @@
   "exclude": ["node_modules", "package"],
   "typeAcquisition": {
     "enable": true,
-    "include": ["vscode-languageserver", "lodash"]
+    "include": ["vscode-languageserver", "lodash", "node"]
   },
   "compilerOptions": {
+    "types": ["node", "lodash"],
     "target": "es2020",
     "lib": ["es2020"],
     "module": "commonjs",

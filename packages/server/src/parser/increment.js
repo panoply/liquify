@@ -2,14 +2,6 @@ import scan from './scanner'
 import _ from 'lodash'
 import { TokenTag, TokenType } from './lexical'
 import { inRange, setTokenOffset, isOffsetInToken, getTokenSpec } from './utils'
-import Document from '../provide/document'
-import diagnostic from './../service/diagnostics/'
-
-const closest = (index, { offset }) => offset.reduce((prev, current) => (
-  Math.abs(current - index) <= Math.abs(prev - index)
-    ? current
-    : prev
-))
 
 /**
  * Increment AST Nodes
@@ -31,23 +23,21 @@ export default (document, contentChanges) => {
   // document.ast = []
   // document.diagnostics = []
 
-  // return scan(document)
+  console.log(contentChanges)
 
-  contentChanges.forEach(({
-    rangeLength
-    , text
-    , range: {
-      start
-      , end
-    }
-  }) => {
+  for (const { rangeLength, text, range } of contentChanges) {
 
-    const increment = setTokenOffset(rangeLength, text.length)
+    const start = document.textDocument.offsetAt(range.start)
+    const end = rangeLength > 0
+      ? start + rangeLength
+      : document.textDocument.offsetAt(range.end)
 
-    document.ast.forEach((node, i) => {
+    const positions = setTokenOffset(rangeLength, text.length)
+    const increment = document.ast.map((node, i) => {
 
       const {
         offset
+        , name
         , token
         , type
         , lineOffset
@@ -56,289 +46,167 @@ export default (document, contentChanges) => {
         , children
       } = node
 
-      if (offset[0] < start) return
+      // Skip tokens before change position
+      console.log(name)
 
-      document.ast[i].offset = offset.map(_i => increment(_i))
+      // Skip all tokens at a pre-change location
+      if (start > offset[0] && end > offset[offset.length - 1]) {
 
-      if (objects) {
-        for (const prop in objects) {
-          delete Object.assign(document.ast[i].objects, {
-            [increment(prop)]: objects[prop]
-          })[prop]
-        }
-      }
+        console.log(`Skip index ${i} of`, offset, name)
 
-      if (type === TokenType.control || type === TokenType.iteration) {
-        if (children && children.length > 0 && children.some(child => child?.objects)) {
-          children.forEach((c, k) => {
-            if (c?.objects) document.ast[i].children[k].objects = tagObjects(c.objects)
-          })
-        }
-      }
+        // support for partial deletions of tag from right side
+        // eg: {{ tag
+        if (rangeLength > 0 && start < offset[offset.length - 1]) {
 
-      if (lineOffset) {
-        document.ast[i].lineOffset = Document.positionAt(document.ast[i].offset[0]).line
-      }
+          // Incase we remove a partial part of an end token
+          if (offset.length > 2) {
 
-    })
+            console.log(`Remove index ${i} PARTIAL removal`, offset, name)
 
-    return
+            node.token = [ token[0] ]
+            node.tag = TokenTag.start
+            node.offset = [ offset[0], offset[1] ]
 
-    const index = document.ast.findIndex(({ offset, type }) => (
-      inRange(start, offset[0], offset[offset.length - 1]) // ||
-      // inRange(start, offset[2], offset[3]) || (
-      //   type === TokenType.embedded && inRange(
-      //     start
-      //     , offset[1]
-      //     , offset[2]
-      //   )
-      // )
-    ))
-
-    console.log(document.ast)
-
-    if (rangeLength === 0 && index >= 0) {
-
-      const { offset } = document.ast[index]
-      // const token = isOffsetInToken(document.ast[index], start)
-
-      const parsed = scan({
-        ...document
-        , ast: []
-        , diagnostics: []
-        , content: Document.getText({
-          start: offset[0],
-          end: offset[offset.length] + text.length
-        })
-      }, offset[0])
-
-      if (parsed.ast.length > 0) {
-
-        // const [ node ] = parsed.ast
-
-        /* if (node?.tag === TokenTag.start) {
-          node.tag = TokenTag.pair
-          node.token.push(token.token[0])
-          node.offset.push(...token.offset.map(increment))
-        } */
-
-        document.ast.splice(
-          index
-          , document.ast.length - index - 1
-          , ...parsed.ast
-        )
-
-        //  const d = diagnostic(document, node, getTokenSpec(node.token[0], node.name))
-
-        return document
-      }
-
-    }
-
-    if (rangeLength === 0 && index >= 0) {
-
-      const { type, offset } = document.ast[index]
-
-      if (type === TokenType.embedded && inRange(start, offset[2], offset[3])) {
-
-        Document.embeddedUpdate(document.ast[index], increment)
-
-        diagnostic(
-          document,
-          document.ast[index], getTokenSpec(
-            document.ast[index].token[0]
-            , document.ast[index].name
-          )
-        )
-
-        console.log(document.ast[index])
-
-      } else {
-
-        const token = isOffsetInToken(document.ast[index], start)
-
-        if (token) {
-
-          let $1 = 0
-            , $2 = 1
-
-          if (token.tag === TokenTag.start) $1 = 2; $2 = 3
-
-          const parsed = scan({
-            ...document
-            , ast: []
-            , diagnostics: []
-            , content: Document.getText({
-              start: offset[$1],
-              end: offset[$2] + text.length
-            })
-          }, offset[$1])
-
-          if (parsed.ast.length > 0) {
-
-            const [ node ] = parsed.ast
-
-            if (node?.tag === TokenTag.start) {
-              node.tag = TokenTag.pair
-              node.token.push(token.token[0])
-              node.offset.push(...token.offset.map(increment))
-            }
-
-            document.ast.splice(index, 1, node)
-            // diagnostic(document, node, getTokenSpec(node.token[0], node.name))
+            return node
 
           }
 
-          if (type === TokenType.control || type === TokenType.iteration) {
+          console.log(`Remove index ${i} from within a token`, offset, name)
 
-          }
+          return false
+
         }
+
+        return node
+
       }
-    } else if (text.length > 0 && !/\s+/.test(text)) {
-
-      document.ast = []
-      document.diagnostics = []
-
-      return scan(document)
-
-    }
-
-    document.ast.forEach((node, i) => {
-
-      const {
-        offset
-        , token
-        , type
-        , lineOffset
-        , objects
-        , children
-      } = node
 
       if (rangeLength > 0) {
-        return ((
-          start <= offset[0] && end >= offset[1]
-        ) ? (
-            document.ast.splice(i, 1)
-          ) : (
-            offset.length <= 2
-          ) && (
-            (
-              start <= offset[0] && end > offset[0] && end < offset[1]
-            ) || (
-              start >= offset[0] && start < offset[1] && end >= offset[1]
-            )
-          ) ? (
-              document.ast.splice(i, 1)
-            ) : (
-              start <= offset[2] && end >= offset[3]
-            ) || (
-              start > offset[2] && start < offset[3] && end >= offset[3]
-            ) || (
-              start <= offset[2] && end > offset[2] && end < offset[3]
-            )) && document.ast.splice(
-          i
-          , 1
-          , {
-            ...document.ast[i],
-            tag: TokenTag.start,
-            token: [ token[0] ],
-            offset: offset.slice(0, 2)
+
+        // Full token removal
+        // Changes must exceed start and end token positions
+        if (start <= offset[0] && end >= offset[offset.length - 1]) {
+
+          console.log(`Remove index ${i} of`, offset, name)
+
+          return false
+
+        }
+
+        if ((
+          start <= offset[0] && end > offset[0] && end <= offset[1]
+        ) || (
+          start > offset[0] && start <= offset[1] && end >= offset[1]
+        )) {
+
+          if (offset.length > 2 && start > offset[1]) {
+
+            node.token = [ token[1] ]
+            node.tag = TokenTag.close
+            node.offset = [ offset[2] - rangeLength, offset[3] - rangeLength ]
+
+            console.log(`Deletion within Single START tag at index ${i} of`, offset, name)
+
+            return node
+
           }
-        )
+
+          console.log(`Deletion contained in SINGULAR tag at index ${i} of`, offset, name)
+
+          // delete singular object tags
+          return false
+
+        // Deletion on end tag of left side: ` endtag %}`
+        // OR
+        // Deletion on end tag of right side: `{% endtag `
+        }
+
+        if (offset.length > 2) {
+
+          if (start <= offset[0] && end >= offset[1] && end < offset[2]) {
+
+            node.token = [ token[1] ]
+            node.tag = TokenTag.close
+            node.offset = [ offset[2], offset[3] ]
+
+            console.log(`Deletion contained in START tag at index ${i} of`, offset, name)
+
+            return node
+
+          } else if ((
+            start > offset[1] && start <= offset[2] && end >= offset[3]
+          ) || (
+            start <= offset[2] && end > offset[2] && end <= offset[3]
+          ) || (
+            start > offset[2] && start <= offset[3] && end >= offset[3]
+          )) {
+
+            if (offset.length > 2 && start > offset[1]) {
+
+              node.token = [ token[0] ]
+              node.tag = TokenTag.start
+              node.offset = [ offset[1], offset[2] ]
+
+              console.log(`Deletion contained in END tag at index ${i} of`, offset, name)
+
+              return node
+
+            }
+
+            console.log(`Deletion contained in START AND END tag at index ${i} of`, offset, name)
+
+            return false
+
+          }
+        }
       }
 
-      if (i === index) return
+      if (node?.offset) {
 
-      if (offset[0] > start) {
-        document.ast[i].offset = offset.map(inc => increment(inc))
+        node.offset = node.offset.map(positions)
 
         if (objects) {
-
           for (const prop in objects) {
-            delete Object.assign(document.ast[i].objects, {
-              [increment(prop)]: objects[prop]
-            })[prop]
+            delete Object.assign(node.objects, { [positions(prop)]: objects[prop] })[prop]
           }
-
-          // console.log(objects, document.ast[i], rangeLength, text, text.length)
-
         }
 
         if (type === TokenType.control || type === TokenType.iteration) {
           if (children && children.length > 0 && children.some(child => child?.objects)) {
             children.forEach((c, k) => {
-              if (c?.objects) document.ast[i].children[k].objects = tagObjects(c.objects)
+            // if (c?.objects) node.children[k].objects = tagObjects(c.objects)
             })
           }
         }
 
-      } else if (offset.length > 2 && offset[2] > start) {
-        document.ast[i].offset.splice(2, 2, ...offset.slice(2).map(inc => increment(inc)))
+        if (lineOffset) {
+          node.lineOffset = document.textDocument.positionAt(node.offset[0]).line
+        }
+
       }
 
-      if (lineOffset) {
-        document.ast[i].lineOffset = Document.positionAt(document.ast[i].offset[0]).line
-      }
+      console.log(`Incremented index ${i} of`, offset, name)
+      return node
 
     })
 
-  })
+    document.ast = increment.filter(Boolean)
 
-  // console.log(document.ast)
-
-  return document
-
-  function tagObjects (objects) {
-
-    const keys = Object.keys(objects)
-
-    return keys.length > 0 ? keys.reduce((object, prop) => {
-
-      object[increment(prop)] = objects[prop]
-
-      return object
-
-    }, {}) : objects
+    // console.log(document.ast)
 
   }
 
-  function removal (offset, token, i) {
+  /* console.log(document.textDocument.getText({
+    start: document.textDocument.positionAt(document.ast[document.ast.length - 2].offset[2]),
+    end: document.textDocument.positionAt(document.ast[document.ast.length - 2].offset[3])
+  }))
 
-    return ((
-      start <= offset[0] && end >= offset[1]
-    ) ? (
-        document.ast.splice(i, 1)
-      ) : (
-        offset.length <= 2
-      ) && (
-        (
-          start <= offset[0] && end > offset[0] && end < offset[1]
-        ) || (
-          start >= offset[0] && start < offset[1] && end >= offset[1]
-        )
-      ) ? (
-          document.ast.splice(i, 1)
-        ) : (
-          start <= offset[2] && end >= offset[3]
-        ) || (
-          start > offset[2] && start < offset[3] && end >= offset[3]
-        ) || (
-          start <= offset[2] && end > offset[2] && end < offset[3]
-        )
-    ) && document.ast.splice(
-      i
-      , 1
-      , {
-        ...document.ast[i],
-        tag: TokenTag.start,
-        token: [ token[0] ],
-        offset: offset.slice(0, 2)
-      }
-    )
+  console.log(document.textDocument.getText({
+    start: document.textDocument.positionAt(document.ast[document.ast.length - 1].offset[0]),
+    end: document.textDocument.positionAt(document.ast[document.ast.length - 1].offset[1])
+  })) */
 
-  }
-
-  //  console.log(ast)
+  console.log(document.ast)
   return document
 
 }
