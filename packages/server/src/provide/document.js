@@ -23,7 +23,6 @@ function LiquidDocuments (documents = new Map()) {
    * function is executed per document open.
    *
    * @param {LSP.TextDocumentItem} textDocumentItem
-   * @param {boolean} cb
    * @returns {function | Document.Scope}
    */
   function create ({ uri, languageId, version, text }) {
@@ -60,11 +59,7 @@ function LiquidDocuments (documents = new Map()) {
       document = documents.get(uri)
     }
 
-    TextDocument.update(
-      document.textDocument
-      , contentChanges
-      , version
-    )
+    TextDocument.update(document.textDocument, contentChanges, version)
 
     return document
 
@@ -126,10 +121,34 @@ function LiquidDocuments (documents = new Map()) {
    *
    * @returns
    */
-  // @ts-ignore
   function getLinks (uri) {
 
     return document.ast.filter(({ linkedDocument }) => linkedDocument)
+
+  }
+
+  /**
+   * Set document range from offset index positioning.
+   * This function does a lot of heavy lifting.
+   *
+   * @returns {TextDocument}
+   */
+  function getTextDocument (uri = undefined) {
+
+    if (typeof uri === 'undefined' && document?.textDocument) return document.textDocument
+
+    return documents.get(uri)
+  }
+
+  /**
+   * Set document range from offset index positioning.
+   * This function does a lot of heavy lifting.
+   *
+   * @returns {string}
+   */
+  function getText (start, end) {
+
+    return document.textDocument.getText(getRange(start, end))
 
   }
 
@@ -171,6 +190,8 @@ function LiquidDocuments (documents = new Map()) {
     , getEmbeds
     , getLinks
     , getRange
+    , getText
+    , getTextDocument
     , getDiagnostics
     , documents
   }

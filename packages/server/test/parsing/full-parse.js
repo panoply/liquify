@@ -1,12 +1,11 @@
 // @ts-nocheck
 
 import test from 'ava'
-import { TextDocument } from 'vscode-languageserver-textdocument'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { Server } from '../../src/provide/server'
 import specs from '@liquify/liquid-language-specs'
-import Scanner from '../../src/parser/scanner'
+import Scanner from '../../src/parser/parse'
 import { Expressions } from '../../src/parser/lexical'
 import { Document } from '../../src/provide/document'
 
@@ -20,7 +19,6 @@ const options = {
 test.before('Language Server Initialize', async t => {
 
   Server.specification = (await specs('sissel siv')).shopify()
-
   Server.lexical = Expressions({
     tags: {
       objects: Object.keys(Server.specification.objects)

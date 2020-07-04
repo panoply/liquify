@@ -4,28 +4,32 @@ import { TextDocument } from 'vscode-languageserver-textdocument'
 import { TokenTag, TokenType } from './lexical'
 import { Document } from '../provide/document'
 import { Server } from '../provide/server'
-// import YAML from 'yamljs'
 import validate from '../service/diagnostics'
 import * as parse from './utils'
 
 /**
  * Parser
  *
- * @param {Document.Scope} textDocument
- * @param {Parser.ScannerOptions} options
+ * @param {Document.Scope} document
+ * @param {number} [index]
  * @returns (Parser.AST[]  | Document.scope)
  */
-export default function (document, index = undefined) {
+export default function (document, index = undefined, text = document.textDocument.getText()) {
 
-  let run = 0
+  /* -------------------------------------------- */
+  /* EXECUTE                                      */
+  /* -------------------------------------------- */
 
-  const content = document.textDocument.getText()
-  const matches = content.matchAll(Server.lexical.tokens)
+  const matches = text.matchAll(Server.lexical.tokens)
 
   if (!matches) return document.ast
-  for (const match of matches) parseText(match)
+  for (const match of matches) ParseText(match)
 
-  return document
+  return typeof index === 'undefined' ? document : document.ast[0]
+
+  /* -------------------------------------------- */
+  /* FUNCTIONS                                    */
+  /* -------------------------------------------- */
 
   /**
    * Parse Text
@@ -33,13 +37,13 @@ export default function (document, index = undefined) {
    * @param {RegExpMatchArray} match
    * @returns {void}
    */
-  function parseText (match) {
+  function ParseText (match) {
 
     const [ token, name ] = match.filter(Boolean)
     const node = parse.ASTNode(name, token, match, index)
     const spec = parse.getTokenSpec(token, name)
 
-    !spec || spec.singular ? (
+    return !spec || spec.singular ? (
       spec?.within
         ? ChildToken(node, spec)
         : SingularToken(node, spec)
@@ -93,13 +97,12 @@ export default function (document, index = undefined) {
    */
   function EndToken (tokenNode, tokenSpec) {
 
-    let parentNode = document.ast[document.ast.length]
+    const parentNode = _.findLast(document.ast, { tag: TokenTag.start, name: tokenNode.name })
+
+    // console.log('PARENT NODE ', parentNode, '-----------------------')
 
     if (!parentNode) {
-      parentNode = _.findLast(document.ast, { tag: TokenTag.start, name: tokenNode.name })
-      if (!parentNode) {
-        return validate({ ...tokenNode, tag: TokenTag.close })
-      }
+      return validate({ ...tokenNode, tag: TokenTag.close })
     }
 
     parentNode.tag = TokenTag.pair
@@ -116,29 +119,6 @@ export default function (document, index = undefined) {
     // console.log(before, after)
 
     return parentNode
-  }
-
-  /**
-   * Embedded Token
-   *
-   * @param {Parser.AST} parentNode
-   * @param {Parser.AST} tokenNode
-   */
-  function EmbeddedDocument (parentNode, tokenNode) {
-
-    run = run + 1
-
-    const range = Document.getRange(parentNode.offset[1], tokenNode.offset[0])
-    const uri = document.textDocument.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
-
-    parentNode.lineOffset = range.start.line
-    parentNode.embeddedDocument = TextDocument.create(
-      uri
-      , parentNode.languageId
-      , document.textDocument.version
-      , document.textDocument.getText(range)
-    )
-
   }
 
   /**
@@ -263,6 +243,28 @@ export default function (document, index = undefined) {
     return Array
       .from(token.matchAll(/[_a-zA-Z0-9-]+(?=\s*[:=]\s*[_a-zA-Z0-9-"'])/g))
       .map(([ match ]) => match)
+
+  }
+
+  /**
+   * Embedded Token
+   *
+   * @param {Parser.AST} parentNode
+   * @param {Parser.AST} tokenNode
+   */
+  function EmbeddedDocument (parentNode, tokenNode) {
+
+    const run = 1
+    const range = Document.getRange(parentNode.offset[1], tokenNode.offset[0])
+    const uri = document.textDocument.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
+
+    parentNode.lineOffset = range.start.line
+    parentNode.embeddedDocument = TextDocument.create(
+      uri
+      , parentNode.languageId
+      , document.textDocument.version
+      , document.textDocument.getText(range)
+    )
 
   }
 

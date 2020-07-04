@@ -1,6 +1,6 @@
 /**
  * Regular expressions used to parse the document.
- * We will connect these together at server intialisation,
+ * We will connect these together at server intialization,
  * expression that contain `GROUP_1` or `GROUP_2` will have
  * an array of string matches applied to them.
  *
@@ -87,43 +87,44 @@ export function Expressions (options) {
   /*               EXPRESSION MODEL¸              */
   /* -------------------------------------------- */
 
-  return (({ html, tags }) => {
+  return (
+    ({ html, tags }) => {
 
-    const match = /\bGROUP_[0-9]/g
-    const regex = [ liquid_token, liquid_object ]
+      const match = /\bGROUP_[0-9]/g
+      const regex = [ liquid_token, liquid_object ]
 
-    if (html?.tokens) {
-      html_token = html_token.replace(match, html.tokens.join('|'))
-      regex.push(html_token)
+      if (html?.tokens) {
+        html_token = html_token.replace(match, html.tokens.join('|'))
+        regex.push(html_token)
+      }
+
+      if (html?.comments) {
+        html_comments = html_comments.replace(match, html.comments.join('|'))
+        regex.push(html_comments)
+      }
+
+      if (html?.tokens_with_attribute) {
+        let i = 0
+        const cb = () => html.tokens_with_attribute[i++].join('|')
+        html_token_with_attrs = html_token_with_attrs.replace(match, cb)
+        regex.push(html_token_with_attrs)
+      }
+
+      if (tags?.objects) {
+        const captures = tag_objects.source.replace(match, tags.objects.join('|'))
+        tag_objects = new RegExp(captures, tag_objects.flags)
+      }
+
+      return {
+        frontmatter
+        , tag_filters
+        , tag_params
+        , tag_path
+        , tag_objects
+        , tokens: new RegExp(regex.join('|'), 'gs')
+      }
     }
-
-    if (html?.comments) {
-      html_comments = html_comments.replace(match, html.comments.join('|'))
-      regex.push(html_comments)
-    }
-
-    if (html?.tokens_with_attribute) {
-      let i = 0
-      const cb = () => html.tokens_with_attribute[i++].join('|')
-      html_token_with_attrs = html_token_with_attrs.replace(match, cb)
-      regex.push(html_token_with_attrs)
-    }
-
-    if (tags?.objects) {
-      const captures = tag_objects.source.replace(match, tags.objects.join('|'))
-      tag_objects = new RegExp(captures, tag_objects.flags)
-    }
-
-    return ({
-      frontmatter
-      , tag_filters
-      , tag_params
-      , tag_path
-      , tag_objects
-      , tokens: new RegExp(regex.join('|'), 'gs')
-    })
-
-  })(options)
+  )(options)
 
 }
 

@@ -2,7 +2,7 @@
 // import _ from 'lodash'
 import { Server } from '../provide/server'
 import { Document } from '../provide/document'
-import { Characters, TokenTag } from './lexical'
+import { Characters, TokenTag, TokenType } from './lexical'
 
 /**
  * In Range
@@ -156,7 +156,14 @@ export const getTokenSpec = (token, name) => {
   }
 
   if (Server.specification.tags?.[name]) return Server.specification.tags[name]
-  if (Server.specification.objects?.[name]) return Server.specification.objects[name]
+
+  if (token.charCodeAt(1) === Characters.LCB) {
+    return {
+      singular: true,
+      type: 'object',
+      filters: true
+    }
+  }
 
   const kind = token.charCodeAt(0) === Characters.LAN ? 'html' : 'liquid'
   const find = Server.formatting.associateTags.filter(i => i.name === name && i.kind === kind)

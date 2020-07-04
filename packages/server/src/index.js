@@ -125,11 +125,9 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   const document = Document.create(textDocument)(Parser.scanner)
 
-  // console.log(document.ast[document.ast.length - 2])
-  // console.log(document.ast[document.ast.length - 2])
-  console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
+  if (!document) return null
 
-  //   if (!document) return null
+  console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
 
   return
   if (Server.provider.validateOnOpen) {
@@ -154,7 +152,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   mark('onDidChangeTextDocument')
-  console.log('onDidChangeTextDocument', textDocument.uri, contentChanges[0])
+  console.log('onDidChangeTextDocument', textDocument.uri)
 
   const document = Document.update(textDocument, contentChanges)
 
@@ -215,21 +213,20 @@ connection.onDidChangeWatchedFiles(change => {
 /* onDocumentRangeFormatting                                        */
 /* ---------------------------------------------------------------- */
 
-connection.onDocumentRangeFormatting(
-  ({
-    textDocument: { uri }
-  }, token) => !Server.provider.format || runSync(() => {
+connection.onDocumentRangeFormatting((
+  { textDocument: { uri } }
+  , token
+) => !Server.provider.format || runSync(() => {
 
-    return null
+  return null
 
-    const document = documents.get(uri)
+  const document = documents.get(uri)
 
-    if (!document?.uri) return null
+  if (!document?.uri) return null
 
-    return Service.doFormat(document, Server.format)
+  return Service.doFormat(document, Server.format)
 
-  }, null, `Error while computing formatting for ${uri}`, token)
-)
+}, null, `Error while computing formatting for ${uri}`, token))
 
 /* ---------------------------------------------------------------- */
 /* onHover                                                          */
@@ -290,95 +287,88 @@ connection.onHover(
 /* onDocumentLinks                                            */
 /* ---------------------------------------------------------------- */
 
-connection.onDocumentLinks(
-  ({
-    textDocument: { uri }
-  }, token) => runSync(() => {
+connection.onDocumentLinks((
+  { textDocument: { uri } }
+  , token
+) => runSync(() => {
 
-    return null
+  return null
 
-    const document = documents.get(uri)
+  const document = documents.get(uri)
 
-    if (!document.uri) return null
+  if (!document.uri) return null
 
-    return Parser.scanner.getLinks()
+  return Parser.scanner.getLinks()
 
-  }, null, `Error while computing completion for ${uri}`, token)
-)
+}, null, `Error while computing completion for ${uri}`, token))
 
 /* ---------------------------------------------------------------- */
 /* onDocumentLinkResolve                                            */
 /* ---------------------------------------------------------------- */
 
-connection.onDocumentLinkResolve(
-  (
-    item
-    , token
-  ) => runSync(() => {
+connection.onDocumentLinkResolve((
+  item
+  , token
+) => runSync(() => {
 
-    return null
+  return null
 
-    return item
+  return item
 
-  }, item, 'Error while resolving completion proposal', token)
-)
+}, item, 'Error while resolving completion proposal', token))
 
 /* ---------------------------------------------------------------- */
 /* onCompletion                                                     */
 /* ---------------------------------------------------------------- */
 
-connection.onCompletion(
-  ({
+connection.onCompletion((
+  {
     position
     , textDocument: { uri }
     , context
-  }, token) => !Server.provider.completion || runAsync(async () => {
+  }, token
+) => !Server.provider.completion || runAsync(async () => {
 
-    return null
+  return null
 
-    const document = documents.get(uri)
+  const document = documents.get(uri)
 
-    if (!document.uri) return null
+  if (!document.uri) return null
 
-    const onComplete = await Service.doComplete(document, position, context)
+  const onComplete = await Service.doComplete(document, position, context)
 
-    return onComplete
+  return onComplete
 
-  }, null, `Error while computing completion for ${uri}`, token)
-)
+}, null, `Error while computing completion for ${uri}`, token))
 
 /* ---------------------------------------------------------------- */
 /* onCompletionResolve                                              */
 /* ---------------------------------------------------------------- */
 
-connection.onCompletionResolve(
-  (
-    item
-    , token
-  ) => runSync(() => {
-    return null
+connection.onCompletionResolve((
+  item
+  , token
+) => runSync(() => {
+  return null
 
-    return Service.doCompleteResolve(item)
+  return Service.doCompleteResolve(item)
 
-  }, item, 'Error while resolving completion proposal', token)
-)
+}, item, 'Error while resolving completion proposal', token))
 
 /* ---------------------------------------------------------------- */
 /* onExecuteCommand                                                 */
 /* ---------------------------------------------------------------- */
 
-connection.onExecuteCommand(
-  (
-    item
-    , token
-  ) => runSync(() => {
+connection.onExecuteCommand((
+  item
+  , token
+) => runSync(() => {
 
-    return null
+  return null
 
-    return item.arguments[0]
+  return item.arguments[0]
 
-  }, item, 'Error while resolving completion proposal', token)
-)
+}, item, 'Error while resolving completion proposal', token))
 
 /* ---------------------------------------------------------------- */
 /* Connection Listener                                              */
