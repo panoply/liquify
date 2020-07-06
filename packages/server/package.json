@@ -30,7 +30,7 @@
       }
     },
     "files": [
-      "test/parsing/**"
+      "test/parsing/parser.js"
     ],
     "concurrency": 5
   },

@@ -67,7 +67,7 @@ export function Expressions (options) {
    *
    * Liquid tag blocks or singular tags.
    */
-  const liquid_token = /{%-?\s*\b(?:end)?(\w+)\b.?(?:[^%}]*})*[^%}]*%}/.source
+  const liquid_token = /{%-?\s*\b(?:end)?(\w+)\b(?:[^'"][^{%}]*)*?[^{%]*%}/.source
 
   /**
    * `{{ tag }}`
@@ -222,7 +222,7 @@ export const Characters = ({
   LAN: '<'.charCodeAt(0),
 
   /**
-   * `<` – Right Angle Bracket - Used in HTML delimeters and Liquid operators
+   * `>` – Right Angle Bracket - Used in HTML delimeters and Liquid operators
    */
   RAN: '>'.charCodeAt(0),
 
@@ -280,6 +280,11 @@ export const Characters = ({
    * `/` – Forward Slash Character - Used in HTML closing tags
    */
   FWS: '/'.charCodeAt(0),
+
+  /**
+   * `/` – Backward Slash Character - Used in HTML closing tags
+   */
+  BWS: '\\'.charCodeAt(0),
 
   /**
    * `"` – Double Quoted Character - Used in Liquid to define string values
