@@ -217,6 +217,11 @@ export const TokenType = ({
 export const Characters = ({
 
   /**
+   * `*` – Whitespace - Used to space characters
+   */
+  ARS: '*'.charCodeAt(0),
+
+  /**
    * `<` – Left Angle Bracket - Used in HTML delimeters and Liquid operators
    */
   LAN: '<'.charCodeAt(0),
