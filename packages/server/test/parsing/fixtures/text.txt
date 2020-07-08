@@ -1,2 +1,12 @@
-{%- assign item = section.settings    -%}
-{%- assign size = item.height | prepend: 'gallery-' -%}
+    <div
+          class=" {{- item.type }} d-flex {{ align }} justify-content-center"
+          style="background-color: rgba(0, 0, 0, {{ item.overlay }});">
+          <a
+            href="{{- collection.url -}}">
+            {%- if block.settings.title -%}
+              {{ block.settings.title }}
+            {%- else -%}
+              {{ block.settings.collection }}
+            {%- endif -%}
+          </a>
+        </div>

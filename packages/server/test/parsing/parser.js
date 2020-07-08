@@ -10,7 +10,7 @@ function Stream (text, initial = 0) {
 
   let pos = initial
 
-  function prev (n) {
+  function prev (n = 1) {
 
     pos -= n
 
@@ -27,7 +27,6 @@ function Stream (text, initial = 0) {
     const tag = text.slice(pos).match(exp)
 
     if (tag) {
-      console.log(tag)
       pos += tag.index + tag[0].length
       return tag[0]
     }
@@ -42,9 +41,16 @@ function Stream (text, initial = 0) {
 
   }
 
+  /**
+   * Goto position, ie: 'advance' the index within the
+   * document string. We subtract '1' from the position
+   * to keep iteration loop correct
+   *
+   * @param {number} n
+   */
   function goto (n) {
 
-    pos = pos + n
+    pos = n
 
   }
 
@@ -64,21 +70,13 @@ function Stream (text, initial = 0) {
 
   function eachChar (ch) {
 
-    if (ch.split('').every(c => c.charCodeAt(0) === nextChar())) {
-
-      pos += ch.length
-
-      return true
-
-    }
-
-    return false
+    return ch.split('').every((c, i) => c.charCodeAt(0) === peekChar(pos + i))
 
   }
 
   function nextChar (ch) {
 
-    const char = txt.charCodeAt(Math.abs(pos + 1))
+    const char = txt.charCodeAt(pos + 1)
 
     return ch ? char === ch : char || 0
 
@@ -140,44 +138,57 @@ const {
   WSP, NWL, TAB, CAR, BWS
 } = Characters
 
+const Grammar = {
+  YAMLFrontmatter: [
+    '---', '---'
+  ],
+  HTMLComment: [
+    '<!--', '-->'
+  ]
+}
+
+const RGX = /\b(?:script|style)/
+
 function Scanner (text) {
 
+  const ast = []
   const stream = Stream(text)
 
-  let inLiquidToken = -1
-  const inHTMLToken = -1
-  const inString = -1
-  const inComment = -1
-  const inLiquidBlock = false
-  const inHTMLBlock = false
+  let ASTNode
+  let inToken = -1
 
   while (stream.eos()) {
 
-    console.log(stream.getPosition())
+    const N = stream.getPosition()
+
+    // if (inString >= 0) {
+    // console.log(text.charAt(N))
+    // }
 
     switch (stream.peekChar()) {
       case (DSH):
-        if (stream.eachChar('--')) {
-          // YAMLFrontmatter()
+        if (stream.eachChar('---')) {
+          Frontmatter(N)
         }
         break
       case (LCB):
+        if ((stream.nextChar(PER) || stream.nextChar(LCB)) && inToken < 0) {
+          LiquidTag(N, TokenTag.start)
+        }
+        break
       case (PER):
-        if (stream.nextChar(PER)) {
-          StartLiquidTag(TokenTag.start)
-        } else if (stream.nextChar(LCB)) {
-          LiquidObject(TokenTag.start)
-        } else if (stream.nextChar(RCB)) {
-          LiquidObject(TokenTag.close)
+      case (RCB):
+        if (stream.nextChar(RCB) && inToken >= 0) {
+          LiquidTag(N, TokenTag.close)
         }
         break
       case (LAN):
-        if (stream.regex(/\b(?:script|style)/)) {
-          StartHTMLTag()
+        if (stream.regex(RGX)) {
+          HTMLTag(N)
         } else if (stream.nextChar(FWS)) {
           EndHTMLTag()
-        } else if (stream.eachChar('!--')) {
-          HTMLComment()
+        } else if (stream.eachChar('<!--')) {
+          HTMLComment(N)
         }
         break
       case (FWS):
@@ -189,18 +200,21 @@ function Scanner (text) {
         break
       case (SQO):
       case (DQO):
-        // stream.next(1)
-        SkipString()
+        if (inToken >= 0) {
+          SkipString(N)
+        }
         break
-      case (BWS):
-      //  SkipString()
-        break
-      case (WSP):
-      case (NWL):
-      case (TAB):
-      case (CAR):
+        //  case (BWS):
+        //  SkipString()
+        // break
+      // case (WSP):
+      // case (NWL):
+      // case (TAB):
+      // case (CAR):
         //   SkipString()
-        break
+        // break
+     // default: stream.next(1)
+       // break
 
     }
 
@@ -208,19 +222,98 @@ function Scanner (text) {
 
   }
 
-  function YAMLFrontmatter () {
+  function SkipString (pos) {
+
+    const next = text.indexOf(text.charAt(pos), pos)
+
+    if (stream.peekChar(next - 1) === BWS) return SkipString(next + 1)
+
+    stream.goto(next)
+
+    // console.log(text.slice(pos, stream.getPosition()))
+  }
+
+  function LiquidTag (pos, type) {
+
+    if (type === TokenTag.start) {
+
+      inToken = pos
+      const name = stream.regex(/[a-zA-Z0-9_]+(?![^.+'"|=<>\-\s}%])/)
+
+      if (!name) return console.log('Parse Error')
+
+      ASTNode = ast.push({
+        name
+        , token: []
+        , offset: [ pos ]
+      }) - 1
+
+      // console.log(ast[ASTNode])
+
+      // stream.goto(pos)
+
+    } else if (type === TokenTag.close) {
+
+      ast[ASTNode].offset.push(pos + 2)
+      ast[ASTNode].token.push(text.substring(ast[ASTNode].offset[0], pos + 2))
+
+      //  console.log('LiquidTag', ast[ASTNode])
+
+      inToken = -1
+      console.log(ast[ASTNode])
+
+      // stream.next()
+
+    }
+    // stream.gotoEnd()
+  }
+
+  function Frontmatter (pos) {
+
+    if (pos > 0 && text.slice(0, pos).trim().length > 0) return null
+
+    const end = text.indexOf('---', pos + 3) + 3
+
+    ASTNode = ast.push({
+      name: 'frontmatter'
+      , offset: [ pos, end ]
+      , content: text.substring(pos, end)
+    }) - 1
+
+    console.log(ast[ASTNode])
+
+    // Forward (moves to end of frontmatter)
+    stream.goto(end)
 
   }
 
-  function StartHTMLTag () {
+  function HTMLTag (pos) {
 
+    const end = text.indexOf('>', pos) + 1
+
+    console.log(text.slice(pos, end))
   }
 
   function EndHTMLTag () {
 
   }
 
-  function HTMLComment () {
+  function HTMLComment (pos) {
+
+    const end = text.indexOf('-->', pos) + 3
+
+    ASTNode = ast.push({
+      name: 'comment'
+      , offset: [ pos, end ]
+      , content: text.substring(pos, end)
+    }) - 1
+
+    console.log(ast[ASTNode])
+
+    // Forward (moves to end of comment)
+    stream.goto(end)
+
+    // console.log(text.slice(stream.getPosition()))
 
   }
 
@@ -228,23 +321,9 @@ function Scanner (text) {
 
   }
 
-  function StartLiquidTag (type) {
-
-    inLiquidToken = stream.getPosition()
-
-    const name = stream.regex(/[a-zA-Z0-9_]+(?![^.+'"|=<>\-\s}%])/)
-
-    console.log('LiquidTag', name, stream.getString(inLiquidToken))
-    // stream.gotoEnd()
-  }
-
   function LiquidObject (type) {
-    console.log('LiquidObject')
+    // console.log('LiquidObject')
     // stream.gotoEnd()
-  }
-
-  function SkipString () {
-
   }
 
   function SinglelineComment () {

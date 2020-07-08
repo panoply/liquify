@@ -64,7 +64,7 @@
     "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
     "@rollup/plugin-commonjs": "^12.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
-    "ava": "^3.8.2",
+    "ava": "^3.10.1",
     "babel-plugin-lodash": "^3.3.4",
     "cli-table": "^0.3.1",
     "colm": "^0.1.1",
