@@ -2,341 +2,331 @@ import test from 'ava'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { Characters, TokenTag, TokenKind } from '../../src/parser/lexical'
-
-function Stream (text, initial = 0) {
-
-  const txt = text
-  const len = text.length
-
-  let pos = initial
-
-  function prev (n = 1) {
-
-    pos -= n
-
-  }
-
-  function next (n = 1) {
-
-    pos += n
-
-  }
-
-  function regex (exp) {
-
-    const tag = text.slice(pos).match(exp)
-
-    if (tag) {
-      pos += tag.index + tag[0].length
-      return tag[0]
-    }
-
-    return false
-
-  }
-
-  function eos () {
-
-    return pos <= len
-
-  }
-
-  /**
-   * Goto position, ie: 'advance' the index within the
-   * document string. We subtract '1' from the position
-   * to keep iteration loop correct
-   *
-   * @param {number} n
-   */
-  function goto (n) {
-
-    pos = n
-
-  }
-
-  function gotoEnd () {
-
-    pos = len
-
-  }
-
-  function prevChar (ch) {
-
-    const char = txt.charCodeAt(Math.abs(pos - 1))
-
-    return ch ? char === ch : char || 0
-
-  }
-
-  function eachChar (ch) {
-
-    return ch.split('').every((c, i) => c.charCodeAt(0) === peekChar(pos + i))
-
-  }
-
-  function nextChar (ch) {
-
-    const char = txt.charCodeAt(pos + 1)
-
-    return ch ? char === ch : char || 0
-
-  }
-
-  function peekChar (n) {
-
-    return txt.charCodeAt(n || pos)
-
-  }
-
-  function getPosition () {
-
-    return pos
-
-  }
-
-  function getSource () {
-
-    return txt
-
-  }
-
-  function getString (start, end = next()) {
-
-    return txt.substring(start, end)
-
-  }
-
-  function skipString (start, end) {
-
-    return txt.substring(start, end)
-
-  }
-
-  return {
-    regex
-    , prev
-    , next
-    , eos
-    , goto
-    , gotoEnd
-    , getPosition
-    , getSource
-    , getString
-    , skipString
-    , prevChar
-    , nextChar
-    , peekChar
-    , eachChar
-  }
-
-}
-
-/* eslint one-var: ["error", { let: "never" } ] */
+import { Stream } from '../../src/parser/stream'
+import * as TokenTypes from '../../src/parser/lexical/types'
+import specs from '@liquify/liquid-language-specs'
+import _ from 'lodash'
 
 const {
   ARS, DSH, LCB, RCB, PER, RAN, LAN, FWS, SQO, DQO,
-  WSP, NWL, TAB, CAR, BWS
+  WSP, NWL, TAB, CAR, BWS, BNG, LFD
 } = Characters
 
-const Grammar = {
-  YAMLFrontmatter: [
-    '---', '---'
-  ],
-  HTMLComment: [
-    '<!--', '-->'
-  ]
-}
+/* eslint one-var: ["error", { let: "never" } ] */
 
 const RGX = /\b(?:script|style)/
 
-function Scanner (text) {
+function Scanner (
+  text
+  , specs
+  , {
+    errors = {},
+    frontmatter = {},
+    variables = {},
+    ast = [],
+    strict = true
+  } = {}
+) {
 
-  const ast = []
   const stream = Stream(text)
 
-  let ASTNode
-  let inToken = -1
+  /**
+   * Node index contained within the AST
+   *
+   * @type {object}
+   */
+  let HTMLNode = -1
+
+  /**
+   * Current position is contained within HTML token
+   *
+   * @type {object}
+   */
+  let HTMLToken = -1
+
+  /**
+   * Node index contained within the AST
+   *
+   * @type {object}
+   */
+  let HTMLAttribute = -1
+
+  /**
+   * Node index contained within the AST
+   *
+   * @type {object}
+   */
+  let LiquidNode = -1
+
+  /**
+   * Current position is contained within Liquid token
+   *
+   * @type {object}
+   */
+  let LiquidToken = -1
+
+  /**
+   * Current position is contained within Liquid token
+   *
+   * @type {object}
+   */
+  let LiquidTag = -1
+
+  let inString
+
+  /* SCAN ----------------------------------------- */
 
   while (stream.eos()) {
 
     const N = stream.getPosition()
 
-    // if (inString >= 0) {
-    // console.log(text.charAt(N))
-    // }
+    console.log('before', stream.getPosition())
 
-    switch (stream.peekChar()) {
+    switch (stream.getCodeChar()) {
       case (DSH):
-        if (stream.eachChar('---')) {
+        if (stream.eachCodeChar('---')) {
           Frontmatter(N)
         }
         break
       case (LCB):
-        if ((stream.nextChar(PER) || stream.nextChar(LCB)) && inToken < 0) {
-          LiquidTag(N, TokenTag.start)
+        if ((stream.nextCodeChar(PER) || stream.nextCodeChar(LCB)) && LiquidToken < 0) {
+          OpenLiquidToken(N)
         }
         break
       case (PER):
       case (RCB):
-        if (stream.nextChar(RCB) && inToken >= 0) {
-          LiquidTag(N, TokenTag.close)
+        if (stream.nextCodeChar(RCB) && LiquidToken >= 0) {
+          CloseLiquidToken(N + 2)
         }
         break
       case (LAN):
-        if (stream.regex(RGX)) {
-          HTMLTag(N)
-        } else if (stream.nextChar(FWS)) {
-          EndHTMLTag()
-        } else if (stream.eachChar('<!--')) {
-          HTMLComment(N)
+        if (HTMLToken < 0) {
+          OpenHTMLToken(N)
+        } else if (stream.nextCodeChar(LAN) && stream.eachCodeChar('!--')) {
+          CommentToken(N, '-->')
+        }
+        break
+      case (RAN):
+        if (!HTMLNode && HTMLToken > 0) {
+          CloseHTMLToken(N)
         }
         break
       case (FWS):
-        if (stream.nextChar(ARS)) {
-          MultilineComment()
-        } else if (stream.nextChar(FWS)) {
-          SinglelineComment()
+        if (stream.nextCodeChar(ARS)) {
+          CommentToken(N, '*/')
+        } else if (stream.nextCodeChar(FWS)) {
+          CommentToken(N, '\n')
         }
         break
       case (SQO):
       case (DQO):
-        if (inToken >= 0) {
-          SkipString(N)
+        if (LiquidToken >= 0) {
+          stream.skipString(N)
         }
         break
-        //  case (BWS):
-        //  SkipString()
+      // default: stream.next(1)
         // break
-      // case (WSP):
-      // case (NWL):
-      // case (TAB):
-      // case (CAR):
-        //   SkipString()
-        // break
-     // default: stream.next(1)
-       // break
-
     }
 
     stream.next(1)
 
   }
 
-  function SkipString (pos) {
+  /**
+   * Open HTML Tag - The LEFT side delimeter `<tag `
+   *
+   * @param {number} n
+   */
+  function OpenHTMLToken (n) {
 
-    const next = text.indexOf(text.charAt(pos), pos)
+    HTMLToken = n
 
-    if (stream.peekChar(next - 1) === BWS) return SkipString(next + 1)
-
-    stream.goto(next)
-
-    // console.log(text.slice(pos, stream.getPosition()))
   }
 
-  function LiquidTag (pos, type) {
+  function CloseHTMLToken (n) {
 
-    if (type === TokenTag.start) {
+    HTMLNode.offset.push(n)
+    HTMLNode.token.push(text.substring(HTMLNode.offset[0], n))
+    HTMLToken = -1
+    HTMLNode = undefined
 
-      inToken = pos
-      const name = stream.regex(/[a-zA-Z0-9_]+(?![^.+'"|=<>\-\s}%])/)
+  }
 
-      if (!name) return console.log('Parse Error')
+  /**
+   * Open Liquid Tag - The LEFT side delimeter `{% tag ` or `{{ tag`
+   *
+   * @param {number} n
+   * @returns
+   */
+  function OpenLiquidToken (n) {
 
-      ASTNode = ast.push({
-        name
-        , token: []
-        , offset: [ pos ]
-      }) - 1
+    const name = stream.regex(/[a-zA-Z0-9_]+(?![^.+'"|=<>\-\s}%])/)
 
-      // console.log(ast[ASTNode])
+    if (!name) return console.log('Parse Error, Tag name is incorrect')
 
-      // stream.goto(pos)
+    LiquidToken = n
+    LiquidNode = { name, token: [], offset: [ n ] }
 
-    } else if (type === TokenTag.close) {
+    if (name.slice(0, 3) === 'end') {
+      LiquidNode.tag = TokenTag.close
+      return
+    }
 
-      ast[ASTNode].offset.push(pos + 2)
-      ast[ASTNode].token.push(text.substring(ast[ASTNode].offset[0], pos + 2))
+    const spec = stream.nextCodeChar(LCB)
+      ? specs.objects[name]
+      : specs.tags[name]
 
-      //  console.log('LiquidTag', ast[ASTNode])
+    if (typeof spec === 'object') {
 
-      inToken = -1
-      console.log(ast[ASTNode])
+      LiquidNode.type = TokenTypes[spec.type]
 
-      // stream.next()
+      if (spec?.singular) {
+
+        if (spec?.within) {
+          LiquidNode.tag = TokenTag.child
+        } else {
+          LiquidNode.tag = TokenTag.singular
+        }
+
+      } else {
+
+        LiquidNode.tag = TokenTag.start
+
+        if (
+          LiquidNode.type === TokenTypes.control ||
+          LiquidNode.type === TokenTypes.iteration
+        ) {
+          LiquidNode.children = []
+          LiquidNode.objects = {}
+        } else if (
+          LiquidNode.type === TokenTypes.embedded ||
+          LiquidNode.type === TokenTypes.associate
+        ) {
+          LiquidNode.languageId = spec.language
+        }
+      }
+    }
+  }
+
+  /**
+   * Close Liquid Tag - The RIGHT side delimeter `tag %}` or `tag }}`
+   *
+   * @param {number} n
+   * @returns
+   */
+  function CloseLiquidToken (n) {
+
+    console.log(text.slice(n))
+
+    LiquidNode.offset.push(n)
+    LiquidNode.token.push(text.substring(LiquidNode.offset[0], n))
+    // LiquidNode.tag = TokenTag.pair
+
+    if (LiquidNode.tag === TokenTag.child) {
+      if (LiquidTag?.children) LiquidTag.children.push(LiquidNode)
+    } else if (LiquidNode.tag === TokenTag.close) {
+      LiquidTag.close = LiquidNode
+      LiquidTag.tag = TokenTag.pair
+    } else {
+      ast.push(LiquidNode)
+    }
+
+    if (LiquidTag && LiquidNode.tag === TokenTag.start) {
+      LiquidTag = ast[ast.length - 1]
+    } else if (LiquidNode.tag === TokenTag.pair) {
+      LiquidTag = false
+    }
+
+    LiquidToken = -1
+    LiquidNode = undefined
+
+    console.log(ast)
+
+  }
+
+  /**
+   * HTML Comments - Advances stream to end position
+   *
+   * @param {number} n
+   */
+  function Frontmatter (n) {
+
+    // handle errors with frontmatter is not initial contents
+    if (n > 0 && text.slice(0, n).trim().length > 0) {
+      return console.log('Parse Error, content before frontmatter')
+    }
+
+    const end = stream.fastForward('---')
+
+    if (end) {
+
+      frontmatter = { offset: [ n, end ], content: text.substring(n, end) }
+
+      // Forward (moves to end of frontmatter)
+      stream.goto(end)
 
     }
-    // stream.gotoEnd()
-  }
 
-  function Frontmatter (pos) {
-
-    if (pos > 0 && text.slice(0, pos).trim().length > 0) return null
-
-    const end = text.indexOf('---', pos + 3) + 3
-
-    ASTNode = ast.push({
-      name: 'frontmatter'
-      , offset: [ pos, end ]
-      , content: text.substring(pos, end)
-    }) - 1
-
-    console.log(ast[ASTNode])
-
-    // Forward (moves to end of frontmatter)
-    stream.goto(end)
+    return console.log('Parse Error, frontmatter is unclosed')
 
   }
 
-  function HTMLTag (pos) {
+  /**
+   * HTML Comments - Advances stream to end position
+   *
+   * @param {number} n
+   * @param {string} str
+   */
+  function CommentToken (n, str) {
 
-    const end = text.indexOf('>', pos) + 1
+    const end = stream.fastForward(str)
 
-    console.log(text.slice(pos, end))
-  }
+    if (end === false) return console.log('Parse Error, frontmatter is unclosed')
 
-  function EndHTMLTag () {
-
-  }
-
-  function HTMLComment (pos) {
-
-    const end = text.indexOf('-->', pos) + 3
-
-    ASTNode = ast.push({
-      name: 'comment'
-      , offset: [ pos, end ]
-      , content: text.substring(pos, end)
-    }) - 1
-
-    console.log(ast[ASTNode])
-
-    // Forward (moves to end of comment)
-    stream.goto(end)
-
-    // console.log(text.slice(stream.getPosition()))
+    ast.push({
+      name: 'html-comment'
+      , offset: [ n, end ]
+      , content: text.substring(n, end)
+    })
 
   }
 
-  function MultilineComment () {
+  /**
+   * Skip Whitespace
+   *
+   * @param {number} n
+   */
+  function SkipWhitespace (n) {
 
-  }
+    const name = text.slice(HTMLToken + 1, n)
 
-  function LiquidObject (type) {
-    // console.log('LiquidObject')
-    // stream.gotoEnd()
-  }
+    if (RGX.test(name)) {
 
-  function SinglelineComment () {
+      ast.push({ name, token: [], offset: [ HTMLToken ] })
 
+      HTMLAttribute = n
+      HTMLNode = ast[ast.length - 1]
+
+      console.log(HTMLNode)
+
+    } else {
+      HTMLAttribute = -1
+    }
   }
 
 }
 
 const text = readFileSync(resolve('test/parsing/fixtures/text.txt'), 'utf8').toString()
 
+test.before('Language Server Initialize', async t => {
+
+  t.context.spec = (await specs('sissel siv')).shopify()
+  t.pass('Specification Applied')
+
+})
+
 test('parser', t => {
 
-  const scan = Scanner(text)
-  console.log(scan)
+  const scan = Scanner(text, t.context.spec)
 
 })

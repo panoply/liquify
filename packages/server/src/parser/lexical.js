@@ -312,6 +312,11 @@ export const Characters = ({
   CAR: '\r'.charCodeAt(0),
 
   /**
+   * `\f` – Form Return Character - Used to check newlines
+   */
+  LFD: '\f'.charCodeAt(0),
+
+  /**
    * `\s` – Whitespace - Used to space characters
    */
   WSP: ' '.charCodeAt(0),

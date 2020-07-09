@@ -1,0 +1,292 @@
+import {
+  WSP, TAB, NWL, LFD, CAR, FWS, BWS, DQO, SQO
+} from './lexical/characters'
+
+/**
+ * Contents Stream - Supplies methods to the parsing scanner
+ *
+ * @export
+ * @param {string} text
+ * @param {number} [initial=0]
+ * @returns
+ */
+export function Stream (text, initial = 0) {
+
+  /**
+   * Position Offset
+   *
+   * @type {number}
+   */
+  let index = initial
+
+  /**
+   * Source Text
+   *
+   * @type {string}
+   */
+  const txt = text
+
+  /**
+   * Text Length (cache)
+   *
+   * @type {number}
+   */
+  const len = text.length
+
+  /**
+   * Previous position
+   *
+   * @param {number} [n=1]
+   */
+  function prev (n = 1) {
+
+    index -= n
+
+  }
+
+  /**
+   * Next Position
+   *
+   * @param {number} [n=1]
+   */
+  function next (n = 1) {
+
+    index += n
+
+  }
+
+  /**
+   * Regex Expression Match
+   *
+   * @param {RegExp} exp
+   * @returns {(string|false)}
+   */
+  function regex (exp) {
+
+    const tag = text.slice(index).match(exp)
+
+    if (!tag) return false
+
+    // index += tag.index + tag[0].length
+
+    return tag[0]
+
+  }
+
+  /**
+   * End of Stream
+   *
+   * @returns {boolean}
+   */
+  function eos () {
+
+    return index <= len
+
+  }
+
+  /**
+   * Goto Position
+   *
+   * @param {number} n
+   */
+  function goto (n) {
+
+    index = n
+
+  }
+
+  /**
+   * Goto End Position
+   *
+   */
+  function gotoEnd () {
+
+    index = len
+
+  }
+
+  /**
+   * Previous Code Character
+   *
+   * @param {number} char
+   * @returns
+   */
+  function prevCodeChar (char) {
+
+    return txt.charCodeAt(index - 1) === char
+
+  }
+
+  /**
+   * Each Code Character - Converts and match string sequence
+   *
+   * @param {string} str
+   * @returns {boolean}
+   */
+  function eachCodeChar (str) {
+
+    return str.split('').every((c, i) => c.charCodeAt(0) === getCodeChar(index + i))
+
+  }
+
+  /**
+   * Next Code Character
+   *
+   * @param {number} char
+   * @returns
+   */
+  function nextCodeChar (char) {
+
+    return txt.charCodeAt(index + 1) === char
+
+  }
+
+  /**
+   * While Character
+   *
+   * @param {function} condition
+   * @returns {number}
+   */
+  function whileChar (condition) {
+
+    while (index < len && condition(txt.charCodeAt(index))) next()
+
+    index += 1
+
+    return index
+
+  }
+
+  /**
+   * Get Code Character
+   *
+   * @param {number} [n]
+   * @returns {number}
+   */
+  function getCodeChar (n = getPosition()) {
+
+    return txt.charCodeAt(n)
+
+  }
+
+  /**
+   * Get Current Position
+   *
+   * @returns {number}
+   */
+  function getPosition () {
+
+    return index
+
+  }
+
+  /**
+   * Get Source
+   *
+   * @returns {string}
+   */
+  function getSource () {
+
+    return txt
+
+  }
+
+  /**
+   * Get String
+   *
+   * @param {number} start
+   * @param {number} end
+   * @returns {string}
+   */
+  function getString (start, end) {
+
+    return txt.substring(start, end)
+
+  }
+
+  /**
+   * Skip String
+   *
+   * @param {number} n
+   */
+  function skipString (n) {
+
+    const next = txt.indexOf(txt.charAt(n), n + 1)
+
+    // consume escaped strings, eg: \" or \'
+    if (getCodeChar(next - 1) === BWS) return skipString(next + 1)
+
+    goto(next)
+
+  }
+
+  /**
+   * Skip Whitespace
+   *
+   * @returns {boolean}
+   */
+  function skipWhitespace () {
+
+    return whileChar(c => (
+      c === WSP ||
+      c === TAB ||
+      c === NWL ||
+      c === LFD ||
+      c === CAR
+    )) > 0
+
+  }
+
+  function gotoChar (char) {
+
+    while (index < len) {
+      if (txt.charCodeAt(index) === char) return true
+      index++
+      goto(1)
+    }
+
+    return false
+
+  }
+
+  /**
+   * Fast Forward - Consumes a position LTR
+   *
+   * @param {string} str
+   * @returns
+   */
+  function fastForward (str, skipStrings = true) {
+
+    const pos = text.indexOf(str, index) + str.length
+
+    if (pos < 0) return false
+
+    // advance index position
+    goto(pos)
+
+    return pos
+
+  }
+
+  return {
+    regex
+    , prev
+    , next
+    , eos
+    , goto
+    , gotoChar
+    , gotoEnd
+    , getPosition
+    , getSource
+    , getString
+    , getCodeChar
+    , prevCodeChar
+    , nextCodeChar
+    , eachCodeChar
+    , whileChar
+    , skipString
+    , skipWhitespace
+    , fastForward
+  }
+
+}
