@@ -34,6 +34,33 @@ export function Stream (text, initial = 0) {
   const len = text.length
 
   /**
+   * Returned function methods
+   *
+   * @type {object}
+   */
+  const methods = {
+    regex
+    , prev
+    , next
+    , eos
+    , goto
+    , gotoChar
+    , gotoEnd
+    , getPosition
+    , getSource
+    , getString
+    , getCodeChar
+    , prevCodeChar
+    , nextCodeChar
+    , nextRegex
+    , eachCodeChar
+    , whileChar
+    , skipString
+    , skipWhitespace
+    , fastForward
+  }
+
+  /**
    * Previous position
    *
    * @param {number} [n=1]
@@ -67,9 +94,27 @@ export function Stream (text, initial = 0) {
 
     if (!tag) return false
 
-    // index += tag.index + tag[0].length
+    index += tag.index + tag[0].length
 
     return tag[0]
+
+  }
+
+  /**
+   * Regex Expression Match
+   *
+   * @param {RegExp} exp
+   * @returns {(number|false)}
+   */
+  function nextRegex (exp) {
+
+    const find = text.slice(index).search(exp)
+
+    if (!find) return index
+
+    index += find
+
+    return index
 
   }
 
@@ -209,9 +254,11 @@ export function Stream (text, initial = 0) {
    *
    * @param {number} n
    */
-  function skipString (n) {
+  function skipString (n = getPosition()) {
 
-    const next = txt.indexOf(txt.charAt(n), n + 1)
+    const next = txt.indexOf(txt.charAt(n), n)
+
+    if (!next) return false
 
     // consume escaped strings, eg: \" or \'
     if (getCodeChar(next - 1) === BWS) return skipString(next + 1)
@@ -255,38 +302,19 @@ export function Stream (text, initial = 0) {
    * @param {string} str
    * @returns
    */
-  function fastForward (str, skipStrings = true) {
+  function fastForward (str) {
 
-    const pos = text.indexOf(str, index) + str.length
+    const pos = txt.indexOf(str, index + 1) + str.length
 
     if (pos < 0) return false
 
     // advance index position
-    goto(pos)
+    index = pos
 
-    return pos
+    return index
 
   }
 
-  return {
-    regex
-    , prev
-    , next
-    , eos
-    , goto
-    , gotoChar
-    , gotoEnd
-    , getPosition
-    , getSource
-    , getString
-    , getCodeChar
-    , prevCodeChar
-    , nextCodeChar
-    , eachCodeChar
-    , whileChar
-    , skipString
-    , skipWhitespace
-    , fastForward
-  }
+  return methods
 
 }

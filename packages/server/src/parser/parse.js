@@ -1,292 +1,265 @@
-import _ from 'lodash'
-import { basename } from 'path'
-import { TextDocument } from 'vscode-languageserver-textdocument'
-import { TokenTag, TokenType } from './lexical'
-import { Document } from '../provide/document'
-import { Server } from '../provide/server'
-import validate from '../service/diagnostics'
-import * as parse from './utils'
+import { Stream } from './stream'
+import * as TokenTypes from './lexical/types'
+import * as TokenTag from './lexical/tokens'
+import { ARS, DSH, LCB, RCB, PER, RAN, LAN, FWS } from './lexical/characters'
+/* eslint one-var: ["error", { let: "never" } ] */
 
-/**
- * Parser
- *
- * @param {Document.Scope} document
- * @param {number} [index]
- * @returns (Parser.AST[]  | Document.scope)
- */
-export default function (document, index = undefined, text = document.textDocument.getText()) {
+export function Parser (text, specs, { ast = [] } = {}) {
 
-  /* -------------------------------------------- */
-  /* EXECUTE                                      */
-  /* -------------------------------------------- */
-
-  const matches = text.matchAll(Server.lexical.tokens)
-
-  if (!matches) return document.ast
-  for (const match of matches) ParseText(match)
-
-  return typeof index === 'undefined' ? document : document.ast[0]
-
-  /* -------------------------------------------- */
-  /* FUNCTIONS                                    */
-  /* -------------------------------------------- */
+  const stream = Stream(text)
 
   /**
-   * Parse Text
+   * HTML Token Context Node
    *
-   * @param {RegExpMatchArray} match
-   * @returns {void}
+   * @type {object}
    */
-  function ParseText (match) {
+  let HTMLNode
 
-    const [ token, name ] = match.filter(Boolean)
-    const node = parse.ASTNode(name, token, match, index)
-    const spec = parse.getTokenSpec(token, name)
+  /**
+   * Liquid Token Context Node
+   *
+   * @type {object}
+   */
+  let LiquidNode
 
-    return !spec || spec.singular ? (
-      spec?.within
-        ? ChildToken(node, spec)
-        : SingularToken(node, spec)
-    ) : (
-      parse.isTokenTagEnd(token, name)
-        ? EndToken(node, spec)
-        : StartToken(node, spec)
+  /**
+   * Current Liquid Tag within stream
+   *
+   * @type {object}
+   */
+  let LiquidTag
+
+  /**
+   * Liquid Children - Ensures correct token hierarchy
+   *
+   * @type {object}
+   */
+  let LiquidChildren = []
+
+  function scan (offset = 0) {
+
+    stream.goto(offset)
+
+    while (stream.eos()) {
+
+      const N = stream.getPosition()
+
+      switch (stream.getCodeChar()) {
+        case (DSH):
+          if (specs.frontmatter && stream.eachCodeChar('---')) {
+            Frontmatter(N)
+          }
+          break
+        case (LCB):
+          if (!LiquidNode && (stream.nextCodeChar(PER) || stream.nextCodeChar(LCB))) {
+            OpenLiquidToken(N)
+          }
+          break
+        case (PER):
+        case (RCB):
+          if (LiquidNode && stream.nextCodeChar(RCB)) {
+            CloseLiquidToken(N + 2)
+          }
+          break
+        case (LAN):
+          if (!HTMLNode) {
+            OpenHTMLToken(N)
+          } else if (HTMLNode && stream.nextCodeChar(FWS)) {
+            CloseHTMLToken(N + 1)
+          } else if (stream.eachCodeChar('!--')) {
+            CommentToken(N, '-->')
+          }
+          break
+        case (FWS):
+          if (stream.nextCodeChar(ARS)) {
+            CommentToken(N, '*/')
+          } else if (stream.nextCodeChar(FWS)) {
+            CommentToken(N, '\n')
+          }
+          break
+      }
+
+      stream.next(1)
+
+    }
+  }
+  /**
+   * Open HTML Tag - The LEFT side delimeter `<tag `
+   *
+   * @param {number} n
+   */
+  function OpenHTMLToken (n) {
+
+    const next = stream.nextRegex(/[\s>](?![<"'])/)
+    const name = stream.getString(n + 1, next)
+
+    if (!/\b(?:script|style)/.test(name)) return null
+
+    const spec = specs[name]
+
+    HTMLNode = { name, token: [], offset: [ n ] }
+
+    if (spec?.language) HTMLNode.languageId = spec.language
+    if (stream.getCodeChar(next) !== RAN) {
+
+      const close = stream.nextRegex(/>(?!["'])/)
+      const slice = stream.getString(next, close)
+
+      if (/[<>](?!["'])/.test(slice)) {
+        return console.log('Parse Error, HTML Tag not closed correctly')
+      }
+
+      if (spec?.mimetype && new RegExp(spec.mimetype).test(slice)) {
+        HTMLNode.offset.push(close)
+        HTMLNode.token.push(stream.getString(n, close + 1))
+      }
+
+    } else {
+      HTMLNode.offset.push(next)
+      HTMLNode.token.push(stream.getString(n, next + 1))
+    }
+
+  }
+
+  function CloseHTMLToken (n) {
+
+    const close = stream.nextRegex(/[>](?!["'])/)
+
+    if (!close) return console.log('Parse Error, HTML Tag not closed correctly')
+
+    const name = stream.getString(n - 1, close + 1)
+
+    if (!/\b(?:script|style)/.test(name)) return null
+
+    HTMLNode.offset.push(n - 1, close + 1)
+    HTMLNode.token.push(stream.getString(n - 1, close + 1))
+
+    ast.push(HTMLNode)
+
+    HTMLNode = undefined
+
+  }
+
+  /**
+   * Open Liquid Tag - The LEFT side delimeter `{% tag ` or `{{ tag`
+   *
+   * @param {number} n
+   * @returns
+   */
+  function OpenLiquidToken (n) {
+
+    const name = stream.regex(/[a-zA-Z0-9_]+(?![^.+'"|=<>\-\s}%])/)
+
+    if (!name) return console.log('Parse Error, Tag name is incorrect')
+
+    let isEndTag
+
+    if (name.slice(0, 3) === 'end') isEndTag = name.substring(3)
+
+    const prop = isEndTag || name
+    const spec = stream.prevCodeChar(LCB) ? specs.objects[prop] : specs.tags[prop]
+
+    LiquidNode = { name, token: [], offset: [ n ] }
+
+    if (typeof spec !== 'object') return
+
+    if (spec?.language) LiquidNode.languageId = spec.language
+
+    LiquidNode.type = TokenTypes[spec.type]
+    LiquidNode.tag = (spec?.singular
+      ? spec?.within
+        ? TokenTag.child
+        : TokenTag.singular
+      : isEndTag
+        ? TokenTag.close
+        : TokenTag.start
     )
 
+    stream.skipString()
+
   }
 
   /**
-   * Start Token
+   * Close Liquid Tag - The RIGHT side delimeter `tag %}` or `tag }}`
    *
-   * @param {Parser.AST} tokenNode
-   * @param {Specification.Tag} tokenSpec
+   * @param {number} n
+   * @returns
    */
-  function StartToken (tokenNode, tokenSpec) {
+  function CloseLiquidToken (n) {
 
-    const type = TokenType[tokenSpec.type]
+    if (LiquidNode.tag === TokenTag.close) {
 
-    tokenNode.type = type
-    tokenNode.tag = TokenTag.start
-    tokenNode.diagnostics = []
+      LiquidTag.tag = TokenTag.pair
+      LiquidTag.offset.push(LiquidNode.offset[0], n)
+      LiquidTag.token.push(text.substring(LiquidNode.offset[0], n))
 
-    if (type === TokenType.control || type === TokenType.iteration) {
+      LiquidChildren.splice(LiquidChildren.length - 1, 1)
+      LiquidTag = LiquidChildren[LiquidChildren.length - 1]
 
-      tokenNode.children = []
-      tokenNode.objects = TagObjects(tokenNode.offset[0], tokenNode.token[0])
+    } else {
 
-      if (tokenSpec?.parameters) {
-      //  tokenNode.parameters = TagParameters(tokenNode, tokenSpec)
+      LiquidNode.offset.push(n)
+      LiquidNode.token.push(text.substring(LiquidNode.offset[0], n))
+
+      if (LiquidNode.tag === TokenTag.child) {
+        if (LiquidTag?.children) LiquidTag.children.push(LiquidNode)
+        else LiquidTag.children = [ LiquidNode ]
+      } else {
+        ast.push(LiquidNode)
       }
-    } else if (type === TokenType.embedded || type === TokenType.associate) {
-
-      tokenNode.languageId = tokenSpec.language
-
     }
 
-    document.ast.push(tokenNode)
+    if (LiquidNode.tag === TokenTag.start) {
+      LiquidChildren = [ ...LiquidChildren, ast[ast.length - 1] ]
+      LiquidTag = LiquidChildren[LiquidChildren.length - 1]
+    }
 
-    return tokenNode
+    LiquidNode = undefined
 
   }
 
   /**
-   * Close Token
+   * HTML Comments - Advances stream to end position
    *
-   * @param {Parser.AST} tokenNode
-   * @param {Specification.Tag} tokenSpec
+   * @param {number} n
    */
-  function EndToken (tokenNode, tokenSpec) {
+  function Frontmatter (n) {
 
-    const parentNode = _.findLast(document.ast, { tag: TokenTag.start, name: tokenNode.name })
-
-    // console.log('PARENT NODE ', parentNode, '-----------------------')
-
-    if (!parentNode) {
-      return validate({ ...tokenNode, tag: TokenTag.close })
+    // handle errors with frontmatter is not initial contents
+    if (n > 0 && text.slice(0, n).trim().length > 0) {
+      return console.log('Parse Error, content before frontmatter')
     }
 
-    parentNode.tag = TokenTag.pair
-    parentNode.token = [ parentNode.token[0], tokenNode.token[0] ]
-    parentNode.offset = [ ...parentNode.offset, ...tokenNode.offset ]
+    const end = stream.fastForward('---')
 
-    if (parentNode?.languageId) EmbeddedDocument(parentNode, tokenNode)
+    if (!end) return console.log('Parse Error, frontmatter is unclosed')
 
-    // const before = document.diagnostics.length
-    // validate(parentNode, tokenSpec)
-    // const after = document.diagnostics.length
-    // console.log(parentNode)
-
-    // console.log(before, after)
-
-    return parentNode
-  }
-
-  /**
-   * Singular Token
-   *
-   * @param {Parser.AST} tokenNode
-   * @param {Specification.Tag} tokenSpec
-   */
-  function SingularToken (tokenNode, tokenSpec) {
-
-    if (!tokenSpec?.type) return document.ast
-
-    tokenNode.tag = TokenTag.singular
-    tokenNode.type = TokenType[tokenSpec.type]
-    tokenNode.objects = TagObjects(tokenNode.offset[0], tokenNode.token[0])
-    //  tokenNode.filters = TagFilters(tokenNode, tokenSpec)
-
-    if (tokenSpec?.parameters) {
-      // tokenNode.parameters = TagParameters(tokenNode, tokenSpec)
-    }
-
-    if (tokenNode.type === TokenType.include) {
-      // tokenNode.linkedDocument = LinkedDocuments(tokenNode)
-      // if (!document?.linkedDocuments?.includes(document.ast.length)) {
-      // document.linkedDocuments.push(document.ast.length)
-      // tokenNode.linkedId = document.linkedDocuments.length - 1
-      // }
-    }
-
-    // validate(tokenNode, tokenSpec)
-
-    document.ast.push(tokenNode)
-
-    return tokenNode
+    frontmatter = { offset: [ n, end ], content: text.substring(n, end) }
+    stream.goto(end)
 
   }
 
   /**
-   * Child Token
+   * HTML Comments - Advances stream to end position
    *
-   * @param {Parser.AST} tokenNode
-   * @param {Specification.Tag} tokenSpec
+   * @param {number} n
+   * @param {string} str
    */
-  function ChildToken (tokenNode, tokenSpec) {
+  function CommentToken (n, str) {
 
-    const id = _.findLastKey(document.ast, { tag: TokenTag.start })
+    const end = stream.fastForward(str)
 
-    if (!document.ast[id]?.children) return document.ast[id]
+    if (end === false) return console.log('Parse Error, frontmatter is unclosed')
 
-    document.ast[id].children.push({
-      ...tokenNode,
-      tag: TokenTag.child,
-      objects: TagObjects(tokenNode.offset[0], tokenNode.token[0])
+    ast.push({
+      name: 'html-comment'
+      , offset: [ n, end ]
+      , content: text.substring(n, end)
     })
 
-    // validate(
-    //  document
-    //  , document.ast[id].children[document.ast[id].children.length - 1]
-    //  , tokenSpec
-    // )
-
-    return document.ast[id]
   }
 
-  /**
-   * Get Token Objects
-   *
-   * This function will assign the offset indexes of Liquid objects used
-   * within tags which are used by validations and completion capabilities.
-   *
-   * @param {number} offset
-   * @param {string} token
-   * @returns {(Parser.Objects)}
-   */
-  function TagObjects (offset, token) {
-
-    return {}
-    return Array
-      .from(token.matchAll(Server.lexical.tag_objects))
-      .reduce((object, match) => {
-
-        const props = match[0].split('.').filter(Boolean)
-        const position = offset + match.index + match[0].length
-        const key = props.length > 1 ? position + 1 : position
-
-        object[key] = props
-
-        return object
-
-      }
-      , {})
-
+  return {
+    scan
   }
-
-  function TagFilters (tokenNode, tokenSpec) {
-
-    const {
-      token: [ token ],
-      offset: [ offset ]
-    } = tokenNode
-
-    // diagnostic.filter(tokenNode, document, tokenSpec)
-
-  }
-
-  /**
-   * Get Token Parameters
-   *
-   * @param {Parser.AST} offset The current offset (used to fill position offset)
-   * @param {string} token The token (tag) to parse
-   * @returns {Object|Boolean}
-   */
-  function TagParameters ({
-    token: [ token ]
-    , offset: [ offset ]
-  }, {
-    type
-    , params
-  }) {
-
-    return []
-    return Array
-      .from(token.matchAll(/[_a-zA-Z0-9-]+(?=\s*[:=]\s*[_a-zA-Z0-9-"'])/g))
-      .map(([ match ]) => match)
-
-  }
-
-  /**
-   * Embedded Token
-   *
-   * @param {Parser.AST} parentNode
-   * @param {Parser.AST} tokenNode
-   */
-  function EmbeddedDocument (parentNode, tokenNode) {
-
-    const run = 1
-    const range = Document.getRange(parentNode.offset[1], tokenNode.offset[0])
-    const uri = document.textDocument.uri.replace('.liquid', `@${run}.${parentNode.languageId}`)
-
-    parentNode.lineOffset = range.start.line
-    parentNode.embeddedDocument = TextDocument.create(
-      uri
-      , parentNode.languageId
-      , document.textDocument.version
-      , document.textDocument.getText(range)
-    )
-
-  }
-
-  /**
-   * Linked Documents - The resolved LSP Document links
-   * tokens, these are served up to to the Document manager
-   *
-   * @param {Parser.AST} ASTNodeParam
-   * @returns {LSP.DocumentLink}
-   */
-  function LinkedDocuments ({ name, token: [ token ], offset: [ start ] }) {
-
-    return []
-    const link = new RegExp(`(?<=\\b${name}\\b)\\s*["']?([\\w.]+)["']?`).exec(token)
-    if (!link) return null
-
-    const offset = start + token.indexOf(link[1])
-
-    return {
-      target: Server.paths[name].find(i => basename(i, '.liquid') === link[1]),
-      range: Document.getRange(offset, offset + link[1].length)
-    }
-  }
-
 }

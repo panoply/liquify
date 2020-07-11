@@ -102,7 +102,7 @@
         },
         "ImportDeclaration": {
           "multiline": true,
-          "minProperties": 7,
+          "minProperties": 15,
           "consistent": true
         },
         "ExportDeclaration": {

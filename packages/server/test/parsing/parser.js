@@ -4,6 +4,7 @@ import { resolve } from 'path'
 import { Characters, TokenTag, TokenKind } from '../../src/parser/lexical'
 import { Stream } from '../../src/parser/stream'
 import * as TokenTypes from '../../src/parser/lexical/types'
+import { TokenType } from '../../src/parser/lexical/lexme'
 import specs from '@liquify/liquid-language-specs'
 import _ from 'lodash'
 
@@ -16,120 +17,92 @@ const {
 
 const RGX = /\b(?:script|style)/
 
-function Scanner (
-  text
-  , specs
-  , {
-    errors = {},
-    frontmatter = {},
-    variables = {},
-    ast = [],
-    strict = true
-  } = {}
-) {
+function Scanner (text, specs, { ast = [] } = {}) {
 
   const stream = Stream(text)
 
   /**
-   * Node index contained within the AST
+   * HTML Token Context Node
    *
    * @type {object}
    */
-  let HTMLNode = -1
+  let HTMLNode
 
   /**
-   * Current position is contained within HTML token
+   * Liquid Token Context Node
    *
    * @type {object}
    */
-  let HTMLToken = -1
+  let LiquidNode
 
   /**
-   * Node index contained within the AST
+   * Current Liquid Tag within stream
    *
    * @type {object}
    */
-  let HTMLAttribute = -1
+  let LiquidTag
 
   /**
-   * Node index contained within the AST
+   * Liquid Children - Ensures correct token hierarchy
    *
    * @type {object}
    */
-  let LiquidNode = -1
+  let LiquidChildren = []
 
-  /**
-   * Current position is contained within Liquid token
-   *
-   * @type {object}
-   */
-  let LiquidToken = -1
+  function scan (offset = 0) {
 
-  /**
-   * Current position is contained within Liquid token
-   *
-   * @type {object}
-   */
-  let LiquidTag = -1
+    stream.goto(offset)
 
-  let inString
+    while (stream.eos()) {
 
-  /* SCAN ----------------------------------------- */
+      const N = stream.getPosition()
 
-  while (stream.eos()) {
+      switch (stream.getCodeChar()) {
+        case (DSH):
+          if (specs.frontmatter && stream.eachCodeChar('---')) {
 
-    const N = stream.getPosition()
+            // handle errors with frontmatter is not initial contents
+            if (N > 0 && text.slice(0, N).trim().length > 0) {
+              return console.log('Parse Error, content before frontmatter')
+            }
 
-    console.log('before', stream.getPosition())
+            const end = stream.fastForward('---')
 
-    switch (stream.getCodeChar()) {
-      case (DSH):
-        if (stream.eachCodeChar('---')) {
-          Frontmatter(N)
-        }
-        break
-      case (LCB):
-        if ((stream.nextCodeChar(PER) || stream.nextCodeChar(LCB)) && LiquidToken < 0) {
-          OpenLiquidToken(N)
-        }
-        break
-      case (PER):
-      case (RCB):
-        if (stream.nextCodeChar(RCB) && LiquidToken >= 0) {
-          CloseLiquidToken(N + 2)
-        }
-        break
-      case (LAN):
-        if (HTMLToken < 0) {
-          OpenHTMLToken(N)
-        } else if (stream.nextCodeChar(LAN) && stream.eachCodeChar('!--')) {
-          CommentToken(N, '-->')
-        }
-        break
-      case (RAN):
-        if (!HTMLNode && HTMLToken > 0) {
-          CloseHTMLToken(N)
-        }
-        break
-      case (FWS):
-        if (stream.nextCodeChar(ARS)) {
-          CommentToken(N, '*/')
-        } else if (stream.nextCodeChar(FWS)) {
-          CommentToken(N, '\n')
-        }
-        break
-      case (SQO):
-      case (DQO):
-        if (LiquidToken >= 0) {
-          stream.skipString(N)
-        }
-        break
-      // default: stream.next(1)
-        // break
+            text.substring(N, stream.fastForward('---'))
+          }
+          break
+        case (LCB):
+          if (!LiquidNode && (stream.nextCodeChar(PER) || stream.nextCodeChar(LCB))) {
+            OpenLiquidToken(N)
+          }
+          break
+        case (PER):
+        case (RCB):
+          if (LiquidNode && stream.nextCodeChar(RCB)) {
+            CloseLiquidToken(N + 2)
+          }
+          break
+        case (LAN):
+          if (!HTMLNode) {
+            OpenHTMLToken(N)
+          } else if (HTMLNode && stream.nextCodeChar(FWS)) {
+            CloseHTMLToken(N + 1)
+          } else if (stream.eachCodeChar('!--')) {
+            CommentToken(N, '-->')
+          }
+          break
+        case (FWS):
+          if (stream.nextCodeChar(ARS)) {
+            CommentToken(N, '*/')
+          } else if (stream.nextCodeChar(FWS)) {
+            CommentToken(N, '\n')
+          }
+          break
+      }
+
+      stream.next(1)
+
     }
-
-    stream.next(1)
-
   }
 
   /**
@@ -139,15 +112,62 @@ function Scanner (
    */
   function OpenHTMLToken (n) {
 
-    HTMLToken = n
+    const next = stream.nextRegex(/[\s>](?![<"'])/)
+    const name = stream.getString(n + 1, next)
+
+    if (!/\b(?:script|style)/.test(name)) return null
+
+    const spec = specs[name]
+
+    HTMLNode = {
+      name
+      , token: []
+      , offset: [ n ]
+    }
+
+    if (spec?.language) HTMLNode.languageId = spec.language
+
+    if (stream.getCodeChar(next) !== RAN) {
+
+      const close = stream.nextRegex(/>(?!["'])/)
+      const slice = stream.getString(next, close)
+
+      if (/[<>](?!["'])/.test(slice)) {
+        return console.log('Parse Error, HTML Tag not closed correctly')
+      }
+
+      if (spec?.mimetype && new RegExp(spec.mimetype).test(slice)) {
+        HTMLNode.offset.push(close)
+        HTMLNode.token.push(stream.getString(n, close + 1))
+      }
+
+    } else {
+      HTMLNode.offset.push(next)
+      HTMLNode.token.push(stream.getString(n, next + 1))
+    }
 
   }
 
   function CloseHTMLToken (n) {
 
-    HTMLNode.offset.push(n)
-    HTMLNode.token.push(text.substring(HTMLNode.offset[0], n))
-    HTMLToken = -1
+    const close = stream.nextRegex(/[>](?!["'])/)
+    const name = stream.getString(n - 1, close + 1)
+
+    if (!/\b(?:script|style)/.test(name)) return null
+
+    console.log(stream.getString(n, close + 1))
+
+    if (!close) {
+      return console.log('Parse Error, HTML Tag not closed correctly')
+    }
+
+    HTMLNode.offset.push(n - 1, close + 1)
+    HTMLNode.token.push(stream.getString(n - 1, close + 1))
+
+    ast.push(HTMLNode)
+
+    console.log(ast)
+
     HTMLNode = undefined
 
   }
@@ -164,48 +184,36 @@ function Scanner (
 
     if (!name) return console.log('Parse Error, Tag name is incorrect')
 
-    LiquidToken = n
-    LiquidNode = { name, token: [], offset: [ n ] }
+    let isEndTag
 
-    if (name.slice(0, 3) === 'end') {
-      LiquidNode.tag = TokenTag.close
-      return
+    if (name.slice(0, 3) === 'end') isEndTag = name.substring(3)
+
+    const prop = isEndTag || name
+    const spec = stream.prevCodeChar(LCB) ? specs.objects[prop] : specs.tags[prop]
+
+    LiquidNode = {
+      name
+      , token: []
+      , offset: [ n ]
     }
 
-    const spec = stream.nextCodeChar(LCB)
-      ? specs.objects[name]
-      : specs.tags[name]
+    if (typeof spec !== 'object') return
 
-    if (typeof spec === 'object') {
+    if (spec?.language) LiquidNode.languageId = spec.language
 
-      LiquidNode.type = TokenTypes[spec.type]
+    LiquidNode.type = TokenTypes[spec.type]
+    LiquidNode.tag = (spec?.singular
+      ? spec?.within
+        ? TokenTag.child
+        : TokenTag.singular
+      : isEndTag
+        ? TokenTag.close
+        : TokenTag.start
+    )
 
-      if (spec?.singular) {
+    // console.log(LiquidNode)
+    stream.skipString()
 
-        if (spec?.within) {
-          LiquidNode.tag = TokenTag.child
-        } else {
-          LiquidNode.tag = TokenTag.singular
-        }
-
-      } else {
-
-        LiquidNode.tag = TokenTag.start
-
-        if (
-          LiquidNode.type === TokenTypes.control ||
-          LiquidNode.type === TokenTypes.iteration
-        ) {
-          LiquidNode.children = []
-          LiquidNode.objects = {}
-        } else if (
-          LiquidNode.type === TokenTypes.embedded ||
-          LiquidNode.type === TokenTypes.associate
-        ) {
-          LiquidNode.languageId = spec.language
-        }
-      }
-    }
   }
 
   /**
@@ -216,28 +224,33 @@ function Scanner (
    */
   function CloseLiquidToken (n) {
 
-    console.log(text.slice(n))
+    if (LiquidNode.tag === TokenTag.close) {
 
-    LiquidNode.offset.push(n)
-    LiquidNode.token.push(text.substring(LiquidNode.offset[0], n))
-    // LiquidNode.tag = TokenTag.pair
-
-    if (LiquidNode.tag === TokenTag.child) {
-      if (LiquidTag?.children) LiquidTag.children.push(LiquidNode)
-    } else if (LiquidNode.tag === TokenTag.close) {
-      LiquidTag.close = LiquidNode
       LiquidTag.tag = TokenTag.pair
+      LiquidTag.offset.push(LiquidNode.offset[0], n)
+      LiquidTag.token.push(text.substring(LiquidNode.offset[0], n))
+
+      LiquidChildren.splice(LiquidChildren.length - 1, 1)
+      LiquidTag = LiquidChildren[LiquidChildren.length - 1]
+
     } else {
-      ast.push(LiquidNode)
+
+      LiquidNode.offset.push(n)
+      LiquidNode.token.push(text.substring(LiquidNode.offset[0], n))
+
+      if (LiquidNode.tag === TokenTag.child) {
+        if (LiquidTag?.children) LiquidTag.children.push(LiquidNode)
+        else LiquidTag.children = [ LiquidNode ]
+      } else {
+        ast.push(LiquidNode)
+      }
     }
 
-    if (LiquidTag && LiquidNode.tag === TokenTag.start) {
-      LiquidTag = ast[ast.length - 1]
-    } else if (LiquidNode.tag === TokenTag.pair) {
-      LiquidTag = false
+    if (LiquidNode.tag === TokenTag.start) {
+      LiquidChildren = [ ...LiquidChildren, ast[ast.length - 1] ]
+      LiquidTag = LiquidChildren[LiquidChildren.length - 1]
     }
 
-    LiquidToken = -1
     LiquidNode = undefined
 
     console.log(ast)
@@ -291,27 +304,8 @@ function Scanner (
 
   }
 
-  /**
-   * Skip Whitespace
-   *
-   * @param {number} n
-   */
-  function SkipWhitespace (n) {
-
-    const name = text.slice(HTMLToken + 1, n)
-
-    if (RGX.test(name)) {
-
-      ast.push({ name, token: [], offset: [ HTMLToken ] })
-
-      HTMLAttribute = n
-      HTMLNode = ast[ast.length - 1]
-
-      console.log(HTMLNode)
-
-    } else {
-      HTMLAttribute = -1
-    }
+  return {
+    scan
   }
 
 }
@@ -321,6 +315,19 @@ const text = readFileSync(resolve('test/parsing/fixtures/text.txt'), 'utf8').toS
 test.before('Language Server Initialize', async t => {
 
   t.context.spec = (await specs('sissel siv')).shopify()
+
+  t.context.spec.script = {
+    kind: 'html',
+    language: 'javascript',
+    mimetype: 'application/json'
+  }
+
+  t.context.spec.style = {
+    kind: 'html',
+    language: 'css',
+    attr: 'data-attr="test"'
+  }
+
   t.pass('Specification Applied')
 
 })
