@@ -1,175 +1,154 @@
+/**
+ * Whitespace Characters `\s\t\r\f\n`
+ */
+export const Whitespace = 1
 
-/* ------------------ LIQUID ------------------ */
-/* eslint key-spacing: ["error", { "align": "value" }] */
+/**
+ * Unknown Characters
+ */
+export const Unknown = 2
+
+/**
+ * Last Chacters in stream
+ */
+export const EOS = 3
 
 /**
  * After Delimeter `---`
  */
-export const YAMLFrontmatterStart = 1
+export const YAMLFrontmatterStart = 4
 
 /**
  * After Delimeter `---`
  */
-export const YAMLFrontmatterClose = 2
+export const YAMLFrontmatterClose = 5
 
 /**
  * Before Delimeter `#` _when_ `# comment`
  */
-export const YAMLCommentStart = 3
+export const YAMLCommentStart = 6
 
 /**
  * Within Tag `# comment`
  */
-export const YAMLComment = 4
+export const YAMLComment = 7
 
 /**
  * After Delimeter `\n` _when_ `# comment`
  */
-export const YAMLCommentClose = 5
+export const YAMLCommentClose = 8
 
 /**
  * Before Delimeter `{%` _when_ `{%- start -%}`
  */
-export const LiquidStartTagOpen = 6
+export const LiquidStartTagOpen = 9
 
 /**
  * Within Tag `{%- start -%}`
  */
-export const LiquidStartTag = 7
+export const LiquidStartTag = 10
 
 /**
  * After Delimeter `%}` _when_ `{%- start -%}`
  */
-export const LiquidStartTagClose = 8
+export const LiquidStartTagClose = 11
 
 /**
  * Before Delimeter `{%` _when_ `{%- endstart -%}`
  */
-export const LiquidEndTagOpen = 9
+export const LiquidEndTagOpen = 12
 
 /**
  * Within Tag `{%- endstart -%}`
  */
-export const LiquidEndTag = 10
+export const LiquidEndTag = 13
 
 /**
  * After Delimeter `%}` _when_ `{%- endstart -%}`
  */
-export const LiquidEndTagClose = 11
+export const LiquidEndTagClose = 14
 
 /**
  * Before Delimeter `{%` _when_ `{%- tag -%}`
  */
-export const LiquidSingularTagOpen = 12
+export const LiquidSingularTagOpen = 15
 
 /**
  * Within Tag  `{%- tag -%}`
  */
-export const LiquidSingularTag = 13
+export const LiquidSingularTag = 16
 
 /**
  * After Delimeter `%}` _when_ `{%- tag -%}`
  */
-export const LiquidSingularTagClose = 14
+export const LiquidSingularTagClose = 17
 
 /**
  * Before Delimeter `{{` _when_ `{{- object -}}`
  */
-export const LiquidObjectTagOpen = 15
+export const LiquidObjectTagOpen = 18
 
 /**
  * Within Tag `{{- object -}}`
  */
-export const LiquidObjectTag = 16
+export const LiquidObjectTag = 19
 
 /**
  * After Delimeter `}}` _when_ `{{- tag -}}`
  */
-export const LiquidObjectTagClose = 17
+export const LiquidObjectTagClose = 20
 
 /**
  * Before Delimeter `<` _when_ `<tag>`
  */
-export const HTMLStartTagOpen = 18
+export const HTMLStartTagOpen = 21
 
 /**
  * Within Tag `<tag>`
  */
-export const HTMLStartTag = 19
+export const HTMLStartTag = 22
 
 /**
  * After Delimeter `>` _when_ `<tag>`
  */
-export const HTMLStartTagClose = 20
+export const HTMLStartTagClose = 23
 
 /**
  * Before Delimeter `<` _when_ `</tag>`
  */
-export const HTMLEndTagOpen = 21
+export const HTMLEndTagOpen = 24
 
 /**
  * Within Tag `</tag>`
  */
-export const HTMLEndTag = 22
+export const HTMLEndTag = 25
 
 /**
  * After Delimeter `>` _when_ `</tag>`
  */
-export const HTMLEndTagClose = 23
+export const HTMLEndTagClose = 26
 
 /**
  * Before Delimeter `<` _when_ `<!-- comment -->`
  */
-export const HTMLStartCommentTag = 24
+export const HTMLStartCommentTag = 27
 
 /**
  * Within Tag `<!-- comment -->`
  */
-export const HTMLComment = 25
+export const HTMLComment = 28
 
 /**
  * After Delimeter `>` _when_ `<!-- comment -->`
  */
-export const HTMLEndCommentTag = 26
+export const HTMLEndCommentTag = 29
 
 /**
  * Attribute `attr` _when_ `<tag attr="value">`
  */
-export const HTMLAttributeName = 27
+export const HTMLAttributeName = 30
 
 /**
  * Value `"value"` _when_ `<tag attr="value">`
  */
-export const HTMLAttributeValue = 28
-
-/* -------------------------------------------- */
-/*                     STATE                    */
-/* -------------------------------------------- */
-
-/*
-export enum TokenType {
-	StartCommentTag,
-	Comment,
-	EndCommentTag,
-	StartTagOpen,
-	StartTagClose,
-	StartTagSelfClose,
-	StartTag,
-	EndTagOpen,
-	EndTagClose,
-	EndTag,
-	DelimiterAssign,
-	AttributeName,
-	AttributeValue,
-	StartDoctypeTag,
-	Doctype,
-	EndDoctypeTag,
-	Content,
-	Whitespace,
-	Unknown,
-	Script,
-	Styles,
-	EOS
-}
-
-*/
+export const HTMLAttributeValue = 31

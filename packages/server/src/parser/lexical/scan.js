@@ -97,19 +97,29 @@ export const WithinLiquidComment = 19
 /**
  * After `PIP |`  _when_ `{{ tag | filter }}`
  */
-export const BeforeLiquidFilter = 20
+export const BeforeLiquidFilterName = 20
+
+/**
+ * After `value`  _when_ `{{ tag | filter: value }}`
+ */
+export const AfterLiquidFilterValue = 21
 
 /**
  * After `=` _or_ `:` _when_ `{% tag param: 5 %}`
  */
-export const BeforeLiquidParameterValue = 21
+export const BeforeLiquidParameterValue = 22
 
 /**
  * After `DSH -` _when_ `{%- tag -%}` _or_ `{{- object -}}`
  */
-export const BeforeLiquidTagName = 22
+export const BeforeLiquidTagName = 23
 
 /**
  * Before `DQO "` _or_ `'` _when_ `{% tag 'attribute' %}`
  */
-export const BeforeLiquidAttribute = 23
+export const BeforeLiquidAttribute = 24
+
+/**
+ * Before `EQL =` _when_ `{% if tag == value %}`
+ */
+export const BeforeLiquidOperator = 25
