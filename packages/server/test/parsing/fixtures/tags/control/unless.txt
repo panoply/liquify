@@ -1,9 +1,0 @@
-{% unless product.title == 'Awesome Shoes' %}
-  You are not buying awesome shoes.
-{% endunless %}
-
-{% unless condition %}
-  Hello World
-  {% else %}
-  Validate the else
-{% endunless %}

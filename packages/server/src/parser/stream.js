@@ -6,32 +6,32 @@ import {
  * Contents Stream - Supplies methods to the parsing scanner
  *
  * @export
- * @param {string} text
+ * @param {Document.Scope} text
  * @param {number} [initial=0]
  * @returns
  */
-export function Stream (text, initial = 0) {
+export function Stream ({ textDocument }) {
 
   /**
    * Position Offset
    *
    * @type {number}
    */
-  let index = initial
+  let index = 0
 
   /**
    * Source Text
    *
    * @type {string}
    */
-  const txt = text
+  const txt = textDocument.getText()
 
   /**
    * Text Length (cache)
    *
    * @type {number}
    */
-  const len = text.length
+  const len = txt.length
 
   /**
    * Returned function methods
@@ -90,11 +90,15 @@ export function Stream (text, initial = 0) {
    */
   function regex (exp) {
 
-    const tag = text.slice(index).match(exp)
+    // next(1)
 
-    if (!tag) return false
+    const tag = txt.substring(index).match(exp)
 
-    index += tag.index + tag[0].length
+    console.log('REGEX', tag)
+
+    if (!tag) return ''
+
+    index += tag.index + tag[0].length + 1
 
     return tag[0]
 
@@ -108,9 +112,9 @@ export function Stream (text, initial = 0) {
    */
   function nextRegex (exp) {
 
-    const find = text.slice(index).search(exp)
+    const find = txt.substring(index).search(exp)
 
-    if (!find) return index
+    if (!find) return getPosition()
 
     index += find
 
@@ -196,8 +200,6 @@ export function Stream (text, initial = 0) {
 
     while (index < len && condition(txt.charCodeAt(index))) next()
 
-    index += 1
-
     return index
 
   }
@@ -254,14 +256,14 @@ export function Stream (text, initial = 0) {
    *
    * @param {number} n
    */
-  function skipString (n = getPosition()) {
+  function skipString (n) {
 
-    const next = txt.indexOf(txt.charAt(n), n)
+    const next = txt.indexOf(txt.charAt(n), n + 1)
 
     if (!next) return false
 
     // consume escaped strings, eg: \" or \'
-    if (getCodeChar(next - 1) === BWS) return skipString(next + 1)
+    if (getCodeChar(next - 1) === BWS) return skipString(next)
 
     goto(next)
 

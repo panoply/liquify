@@ -72,6 +72,12 @@
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
+    "./testae": {
+      "path": "build/testae",
+      "name": "@liquify/testae",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
     "./atom": {
       "path": "packages/clients/atom",
       "name": "atom-liquid",

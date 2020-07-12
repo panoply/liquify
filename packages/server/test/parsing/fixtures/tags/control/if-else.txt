@@ -1,5 +1,0 @@
-{% if customer.tags contains 'VIP' or customer.email contains 'mycompany.com' %}
-  Welcome! We're pleased to offer you a special discount of 15% on all products.
-{% else %}
-  Welcome to our store!
-{% endif %}
