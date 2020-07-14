@@ -1,5 +1,5 @@
 import {
-  WSP, TAB, NWL, LFD, CAR, FWS, BWS, DQO, SQO
+  WSP, TAB, NWL, LFD, CAR, FWS, BWS, DQO, SQO, RAN, LAN
 } from './lexical/characters'
 
 /**
@@ -7,7 +7,6 @@ import {
  *
  * @export
  * @param {Document.Scope} text
- * @param {number} [initial=0]
  * @returns
  */
 export function Stream ({ textDocument }) {
@@ -48,16 +47,17 @@ export function Stream ({ textDocument }) {
     , gotoEnd
     , getPosition
     , getSource
-    , getString
+    , getText
     , getCodeChar
     , prevCodeChar
     , nextCodeChar
+    , isCodeChar
     , nextRegex
     , eachCodeChar
     , whileChar
     , skipString
-    , skipWhitespace
-    , fastForward
+    , whitespace
+    , forward
   }
 
   /**
@@ -68,6 +68,8 @@ export function Stream ({ textDocument }) {
   function prev (n = 1) {
 
     index -= n
+
+    return index
 
   }
 
@@ -80,6 +82,8 @@ export function Stream ({ textDocument }) {
 
     index += n
 
+    return index
+
   }
 
   /**
@@ -88,17 +92,17 @@ export function Stream ({ textDocument }) {
    * @param {RegExp} exp
    * @returns {(string|false)}
    */
-  function regex (exp) {
+  function regex (exp, run = 0) {
 
-    // next(1)
+    if (run > 0) goto(run)
 
     const tag = txt.substring(index).match(exp)
 
-    console.log('REGEX', tag)
+    // console.log('REGEX', tag)
 
     if (!tag) return ''
 
-    index += tag.index + tag[0].length + 1
+    index += tag.index + tag[0].length
 
     return tag[0]
 
@@ -127,9 +131,9 @@ export function Stream ({ textDocument }) {
    *
    * @returns {boolean}
    */
-  function eos () {
+  function eos (pos) {
 
-    return index <= len
+    return index <= (pos || len)
 
   }
 
@@ -141,6 +145,8 @@ export function Stream ({ textDocument }) {
   function goto (n) {
 
     index = n
+
+    return index
 
   }
 
@@ -191,6 +197,18 @@ export function Stream ({ textDocument }) {
   }
 
   /**
+   * Next Code Character
+   *
+   * @param {number} char
+   * @returns
+   */
+  function isCodeChar (char) {
+
+    return txt.charCodeAt(index) === char
+
+  }
+
+  /**
    * While Character
    *
    * @param {function} condition
@@ -198,9 +216,11 @@ export function Stream ({ textDocument }) {
    */
   function whileChar (condition) {
 
-    while (index < len && condition(txt.charCodeAt(index))) next()
+    const pos = index
 
-    return index
+    while (index < len && condition(txt.charCodeAt(index))) index++
+
+    return index - pos
 
   }
 
@@ -217,13 +237,15 @@ export function Stream ({ textDocument }) {
   }
 
   /**
-   * Get Current Position
+   * Get Current Position - If a number is passed, return value
+   * will be added to current index, but index will not be adjusted.
    *
+   * @param {number} [n]
    * @returns {number}
    */
-  function getPosition () {
+  function getPosition (n) {
 
-    return index
+    return n ? (index + n) : index
 
   }
 
@@ -245,27 +267,47 @@ export function Stream ({ textDocument }) {
    * @param {number} end
    * @returns {string}
    */
-  function getString (start, end) {
+  function getText (start, end) {
 
     return txt.substring(start, end)
 
   }
 
   /**
-   * Skip String
+   * Skip String - Consumes a string value between 2 quotes.
+   * By default, the stream index is advanced, to end of string.
+   * Passing `false` will preserve position index but still return
+   * the advancement.
    *
    * @param {number} n
+   * @param {boolean} [advance=false]
+   * @returns {(number|false)}
    */
-  function skipString (n) {
+  function skipString (n, advance = true) {
 
-    const next = txt.indexOf(txt.charAt(n), n + 1)
+    const offset = txt.indexOf(txt.charAt(n), n + 1)
 
-    if (!next) return false
+    if (!offset) return false
 
     // consume escaped strings, eg: \" or \'
-    if (getCodeChar(next - 1) === BWS) return skipString(next)
+    if (getCodeChar(offset - 1) === BWS) return skipString(offset)
 
-    goto(next)
+    return advance ? goto(offset) : offset
+
+  }
+
+  /**
+   * Skip Whitespace
+   *
+   * @returns {(string|boolean)}
+   */
+  function getString (n) {
+
+    const capture = skipString(n, false)
+
+    if (!capture) return false
+
+    return getText(n + 1, capture)
 
   }
 
@@ -274,7 +316,7 @@ export function Stream ({ textDocument }) {
    *
    * @returns {boolean}
    */
-  function skipWhitespace () {
+  function whitespace () {
 
     return whileChar(c => (
       c === WSP ||
@@ -304,7 +346,7 @@ export function Stream ({ textDocument }) {
    * @param {string} str
    * @returns
    */
-  function fastForward (str) {
+  function forward (str) {
 
     const pos = txt.indexOf(str, index + 1) + str.length
 
@@ -317,6 +359,28 @@ export function Stream ({ textDocument }) {
 
   }
 
-  return methods
+  return {
+    regex
+    , prev
+    , next
+    , eos
+    , goto
+    , gotoChar
+    , gotoEnd
+    , getPosition
+    , getSource
+    , getText
+    , getCodeChar
+    , prevCodeChar
+    , nextCodeChar
+    , isCodeChar
+    , nextRegex
+    , eachCodeChar
+    , getString
+    , whileChar
+    , skipString
+    , whitespace
+    , forward
+  }
 
 }

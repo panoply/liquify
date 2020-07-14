@@ -1,11 +1,14 @@
 import { Stream } from './stream'
 import * as TokenTypes from './lexical/types'
 import * as TokenTag from './lexical/tokens'
+import * as TokenKind from './lexical/kinds'
+
 import _ from 'lodash'
-import { ARS, DSH, LCB, RCB, PER, RAN, LAN, FWS, SQO, DQO, BWS } from './lexical/characters'
+import { ARS, DSH, LCB, RCB, PER, RAN, LAN, FWS, SQO, DQO, BWS, EQS } from './lexical/characters'
 /* eslint one-var: ["error", { let: "never" } ] */
 
 const RGX = /\b(?:script|style)/
+
 export function Parser (document, specs) {
 
   const stream = Stream(document)
@@ -19,18 +22,18 @@ export function Parser (document, specs) {
   let HTMLNode
 
   /**
-   * HTML Token Context Node
-   *
-   * @type {number}
-   */
-  const HTMLTagClose = []
-
-  /**
    * Liquid Token Context Node
    *
    * @type {object}
    */
   let LiquidNode
+
+  /**
+   * HTML Token Context Node
+   *
+   * @type {object}
+   */
+  let WithinString
 
   /**
    * Current Liquid Tag within stream
@@ -56,66 +59,69 @@ export function Parser (document, specs) {
 
     if (offset > 0) stream.goto(offset)
 
+    //    console.log(stream.getCodeChar())
     while (stream.eos()) {
-
-      const N = stream.getPosition()
-
       switch (stream.getCodeChar()) {
         case (DSH):
           if (specs.frontmatter && stream.eachCodeChar('---')) {
-            Frontmatter(N)
+            Frontmatter(offset)
           }
           break
         case (LCB):
           if (!LiquidNode && (stream.nextCodeChar(PER) || stream.nextCodeChar(LCB))) {
-            OpenLiquidToken(N)
+            OpenLiquidToken(offset)
           }
           break
-        case (PER):
         case (RCB):
-          if (LiquidNode && stream.nextCodeChar(RCB)) {
-            CloseLiquidToken(N + 2)
+          if (stream.nextCodeChar(RCB)) offset = stream.next()
+          if (LiquidNode || (LiquidNode && stream.prevCodeChar(PER))) {
+            CloseLiquidToken(offset)
           }
           break
         case (LAN):
-          if (!HTMLNode && !stream.nextCodeChar(FWS)) {
-            OpenHTMLToken(N)
+          if (!HTMLNode) {
+            OpenHTMLToken(offset)
           } else if (stream.eachCodeChar('!--')) {
-            CommentToken(N, '-->')
+            CommentToken(offset, '-->')
           }
           break
         case (RAN):
           if (HTMLNode) {
-            CloseHTMLToken(N + 1)
+            offset = stream.next()
+            CloseHTMLToken(offset)
           }
           break
         case (FWS):
           if (HTMLNode && stream.prevCodeChar(LAN)) {
-            OpenHTMLToken(N)
+            OpenHTMLToken(offset)
           } else if (stream.nextCodeChar(ARS)) {
-            CommentToken(N, '*/')
+            CommentToken(offset, '*/')
           } else if (stream.nextCodeChar(FWS)) {
-            CommentToken(N, '\n')
+            CommentToken(offset, '\n')
           }
           break
         case (BWS):
-          if (LiquidNode) {
-            stream.next(1)
-          }
+          if (LiquidNode) offset = stream.next(1)
           break
         case (SQO):
         case (DQO):
-          if (LiquidNode) {
-            stream.skipString(N)
+          if (LiquidNode && !HTMLNode) {
+            stream.skipString(offset)
           } else if (HTMLNode) {
+            // console.log(HTMLNode)
+            // WithinString = true
+            // skipString(offset)
+            // stream.charString(/\{[{%]/, [ RAN, LAN ])
+            // const ff = scan(offset, stream.getString(/\{[{%]/))
 
-            const end = stream.fastForward('>')
-            console.log(stream.getString(N, end))
+            // console.log(ff)
+            // stream.forward('>')
           }
           break
       }
 
-      stream.next(1)
+      // update
+      offset = stream.next(1)
 
     }
 
@@ -123,60 +129,139 @@ export function Parser (document, specs) {
 
   }
 
-  /**
-   * Open HTML Tag - The LEFT side delimeter `<tag `
-   *
-   * @param {number} n
-   */
-  function OpenHTMLToken (n) {
+  const ASTNode = (name, kind, offset) => (typeof offset === 'number' ? {
+    name,
+    kind,
+    token: [],
+    offset: [ offset ]
+  } : {
+    name,
+    kind,
+    token: [ stream.getText(offset[0], offset[1]) ],
+    offset: offset
+  })
 
-    const name = stream.regex(/^[^\s"'></=]*/)
+  function skipString (n) {
 
-    if (!name) return null
+    const text = stream.getSource()
+    const next = text.indexOf(text.charAt(n), n + 1)
+
+    // console.log('item', text)
+    if (next < 0) {
+      return false
+    }
+
+    // consume escaped strings, eg: \" or \'
+    if (stream.getCodeChar(next - 1) === BWS) return skipString(next)
+
+    stream.goto(next)
 
     if (HTMLNode) {
 
-      if (HTMLNode.name === name) HTMLNode.offset.push(n - 1)
-      else HTMLNode.attrs = { [name]: '' }
+      const string = text.substring(n + 1, next)
+      const html = string.indexOf('>')
+      console.log(string)
 
-      console.log(HTMLNode)
+      if (html >= 0) {
+        // console.log('item', stream.getSource().charAt(stream.getPosition()))
+        // stream.goto(next + html)
+        console.log('part', text.substring(stream.getPosition()))
+        // console.log('item', stream.getSource().charAt(stream.getPosition()))
+        // return skipString(stream.getPosition(1))
+      }
 
-    } else {
+      // Check HTML Attribute string value for Liquid tag
+      const search = string.search(/\{[{%]/)
 
-      const spec = associates.filter(i => i.name === name && i.kind === 'html')
+      // align position to liquid tag in string
+      if (search > 0) {
 
-      if (!spec.some(i => i.name === name)) return null
+        // console.log('has liquid', stream.getSource().charAt(stream.getPosition()))
+        stream.goto(next + search)
+        console.log('has liquid', stream.getSource().charAt(stream.getPosition()))
 
-      HTMLNode = { name, token: [], offset: [ n ] }
-
-      if (spec?.language) HTMLNode.languageId = spec.language
-
-      stream.next(1)
-
-      return OpenHTMLToken(n + 2)
-
+      }
     }
-    // stream.goto(n + 1)
 
   }
 
-  function CloseHTMLToken (n) {
+  /**
+   * Open HTML Tag - The LEFT side delimeter `<tag `
+   *
+   * @param {number} offset
+   */
+  function OpenHTMLToken (offset) {
 
-    HTMLNode.token.push(stream.getString(HTMLNode.offset[HTMLNode.offset.length - 1], n))
-    HTMLNode.offset.push(n)
+    stream.next()
 
-    if (HTMLNode.offset.length === 2) {
+    // console.log(stream.getSource().charAt(stream.getPosition()))
+    const name = stream.regex(/^[^\s"'></=]*/)
 
-      // HTMLNode.token[0]
-      console.log(HTMLNode.token[0])
-
-    } else if (HTMLNode.offset.length > 3) {
-      if (HTMLNode.offset.length === 4) document.ast.push(HTMLNode)
-      HTMLNode = undefined
+    // console.log(name, stream.getSource().charAt(n))
+    if (!name) {
+      console.log('NO HTML NAME', offset)
+      // return OpenHTMLToken(stream.getPosition())
     }
 
-    // console.log(HTMLNode)
+    if (stream.whitespace()) { // Tag has whitespace after name
+      if (stream.isCodeChar(RAN)) { // Tag has attributes but does have spaces (`<tag  >`)
+        if (HTMLNode && HTMLNode.name === name) { // we are in a close tag, eg: `</tag>`
+          HTMLNode.offset.push(offset - 1) // Align LAN `<` as position here is `/`
+          return CloseHTMLToken(stream.next())
+        } else if (!HTMLNode) {
+          HTMLNode = ASTNode(name, TokenKind.html, [ offset, stream.next() ])
+        }
+      } else { // Tag contains a value,(attribute) re-run function
+        HTMLNode = ASTNode(name, TokenKind.html, offset)
+        return OpenHTMLToken(stream.prev())
+      }
+    } else if (stream.isCodeChar(RAN)) { // Tag has no whitespace, ends with RAN
+      if (!HTMLNode) {
+        HTMLNode = ASTNode(name, TokenKind.html, [ offset, stream.getPosition(1) ])
+      } else if (HTMLNode && HTMLNode.name === name) {
+        HTMLNode.offset.push(offset - 1) // Align LAN `<` as position here is `/`
+        return CloseHTMLToken(stream.next())
+      }
+    } else if (HTMLNode) {
+      if (name && HTMLNode.name !== name) {
+        HTMLNode.attrs = { [name]: '' }
+        if (stream.isCodeChar(EQS)) {
+          HTMLNode.attrs[name] = stream.getString(stream.next())
+        }
+      }
+      // console.log(stream.getPosition())
+      return OpenHTMLToken(stream.getPosition())
+    }
 
+    // stream.next()
+    // console.log(stream.getPosition())
+
+    // return CloseHTMLToken(stream.getPosition())
+
+  }
+
+  function CloseHTMLToken (offset) {
+
+    // stream.next()
+    HTMLNode.token.push(stream.getText(HTMLNode.offset[HTMLNode.offset.length - 1], offset))
+    HTMLNode.offset.push(offset)
+
+    // console.log('new', document.ast)
+
+    if (HTMLNode.offset.length === 4) {
+      document.ast.push(HTMLNode)
+      HTMLNode = undefined
+    } else {
+
+    }
+
+    // if (HTMLNode.token.length === 2) {
+    //  document.ast.push(HTMLNode)
+    // HTMLNode = undefined
+    // console.log(document.ast)
+
+    // }
+    // stream.next()
   }
 
   /**
@@ -194,21 +279,18 @@ export function Parser (document, specs) {
     const end = name.slice(0, 3) === 'end' ? name.substring(3) : name
     const spec = stream.prevCodeChar(LCB) ? specs.objects[end] : specs.tags[end]
 
-    LiquidNode = { name, token: [], offset: [ n ] }
+    LiquidNode = ASTNode(name, TokenKind.liquid, n)
 
     if (typeof spec === 'object') {
-
       if (spec?.language) LiquidNode.languageId = spec.language
-
       LiquidNode.type = TokenTypes[spec.type]
-      LiquidNode.tag = (spec?.singular
+      LiquidNode.tag = spec?.singular
         ? spec?.within
           ? TokenTag.child
           : TokenTag.singular
         : end
           ? TokenTag.close
           : TokenTag.start
-      )
     }
 
   }
@@ -221,21 +303,23 @@ export function Parser (document, specs) {
    */
   function CloseLiquidToken (n) {
 
-    if (LiquidNode.tag === TokenTag.close) {
+    // increment once
+    n = stream.next()
 
+    if (LiquidNode.tag === TokenTag.close) {
       LiquidTag.tag = TokenTag.pair
       LiquidTag.offset.push(LiquidNode.offset[0], n)
-      LiquidTag.token.push(stream.getString(LiquidNode.offset[0], n))
+      LiquidTag.token.push(stream.getText(LiquidNode.offset[0], n))
 
       LiquidChildren.splice(LiquidChildren.length - 1, 1)
       LiquidTag = LiquidChildren[LiquidChildren.length - 1]
 
     } else {
 
-      // console.log(LiquidNode)
+      //  console.log(LiquidNode)
 
       LiquidNode.offset.push(n)
-      LiquidNode.token.push(stream.getString(LiquidNode.offset[0], n))
+      LiquidNode.token.push(stream.getText(LiquidNode.offset[0], n))
 
       //  console.log(LiquidNode)
 
@@ -269,11 +353,11 @@ export function Parser (document, specs) {
       return console.log('Parse Error, content before frontmatter')
     }
 
-    const end = stream.fastForward('---')
+    const end = stream.forward('---')
 
     if (!end) return console.log('Parse Error, frontmatter is unclosed')
 
-    frontmatter = { offset: [ n, end ], content: stream.getString(n, end) }
+    frontmatter = { offset: [ n, end ], content: stream.getText(n, end) }
     stream.goto(end)
 
   }
@@ -286,14 +370,14 @@ export function Parser (document, specs) {
    */
   function CommentToken (n, str) {
 
-    const end = stream.fastForward(str)
+    const end = stream.forward(str)
 
     if (end === false) return console.log('Parse Error, frontmatter is unclosed')
 
     document.ast.push({
       name: 'html-comment'
       , offset: [ n, end ]
-      , content: stream.getString(n, end)
+      , content: stream.getText(n, end)
     })
 
   }

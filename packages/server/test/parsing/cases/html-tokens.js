@@ -59,9 +59,15 @@ export default ([
     },
     tests: ([
       [
-        '<script data-attr="<script>">',
-        '</script>',
-        '<style data-attr=">><< >>>">',
+        '<script data-attr="<nested> {% tag %}">',
+        '</script>'
+      ],
+      [
+        '<script data-attr="<nested> {% tag %}" second="test">',
+        '</script>'
+      ],
+      [
+        '<style data-attr="<>{{ liquid_object }}">',
         '</style>'
       ]
     ])

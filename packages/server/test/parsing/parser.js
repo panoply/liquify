@@ -66,31 +66,39 @@ function grammar (string, capture) {
 
 }
 
-html_tokens.forEach(({ title, capture, tests }) => {
+html_tokens.forEach(({ title, capture, tests, nodes }) => {
 
   const string = tests.flat(1).join('\n')
 
+  // console.log(string)
   test(title, t => {
 
     const node = AST({ fixture: string }, t.context)
 
-    for (let x = 0; x < tests.length; x++) {
+    return console.log(node)
 
-      const token = tests[x]
-      const newline = x === tests.length - 1 ? '\n' : ''
-      const ln = x >= 10 ? `${x}` : ` ${x}`
+    if (node) {
+      for (let x = 0; x < tests.length; x++) {
 
-      // console.log(token, node[x].token, node[x].token.every((i, k) => i === token[k]))
+        const token = tests[x]
+        const newline = x === tests.length - 1 ? '\n' : ''
+        const ln = x >= 10 ? `${x}` : ` ${x}`
 
-      if (node[x].token.every((i, k) => i === token[k])) {
-        t.log(ctx.dim(ln), ctx.green('✔'), grammar(token.join(' '), capture), newline)
-        // t.log(node[x])
-      } else {
-        t.deepEqual(token, node[x].token)
-        t.log(ctx.red.dim(ln), ctx.red('✖'), ctx.red(node[x].token))
-        throw t.log(ctx.magentaBright('ASTNode'), node[x])
+        // console.log(token, nodes[x], nodes[x].every((i, k) => i === token[k]))
+        if (nodes[x].every((i, k) => i === token[k])) {
+          t.log(ctx.dim(ln), ctx.green('✔'), grammar(token.join(' '), capture), newline)
+          t.log(nodes[x])
+        } else if (node[x].token.every((i, k) => i === token[k])) {
+          t.log(ctx.dim(ln), ctx.green('✔'), grammar(token.join(' '), capture), newline)
+          t.log(node[x])
+        } else {
+          console.log(token, nodes[x])
+          // t.deepEqual(token, node[x].token)
+          t.log(ctx.red.dim(ln), ctx.red('✖'), ctx.red(node[x].token))
+          throw t.log(ctx.magentaBright('ASTNode'), node[x])
+        }
+
       }
-
     }
 
     t.pass()
