@@ -3,7 +3,7 @@ export default ([
     title: 'HTML TAG\n',
     capture: {
       regex: /[\w]+/g,
-      colour: 'redBright',
+      colour: 'greenBright',
       stringify: false
     },
     tests: ([
@@ -63,7 +63,7 @@ export default ([
         '</script>'
       ],
       [
-        '<script data-attr="<nested> {% tag %}" second="test">',
+        '<script data-attr="<nested> {{ tag }} " second="test <another> /> </">',
         '</script>'
       ],
       [

@@ -2,8 +2,6 @@ import { Stream } from './stream'
 import * as TokenTypes from './lexical/types'
 import * as TokenTag from './lexical/tokens'
 import * as TokenKind from './lexical/kinds'
-
-import _ from 'lodash'
 import { ARS, DSH, LCB, RCB, PER, RAN, LAN, FWS, SQO, DQO, BWS, EQS } from './lexical/characters'
 /* eslint one-var: ["error", { let: "never" } ] */
 
@@ -12,7 +10,12 @@ const RGX = /\b(?:script|style)/
 export function Parser (document, specs) {
 
   const stream = Stream(document)
-  const { associates } = document.__test
+
+  let associates = []
+  if (document?.__test) {
+
+    associates = document.__test.associates
+  }
 
   /**
    * HTML Token Context Node
@@ -27,13 +30,6 @@ export function Parser (document, specs) {
    * @type {object}
    */
   let LiquidNode
-
-  /**
-   * HTML Token Context Node
-   *
-   * @type {object}
-   */
-  let WithinString
 
   /**
    * Current Liquid Tag within stream
@@ -55,12 +51,12 @@ export function Parser (document, specs) {
    * @param {number} [offset=0]
    * @returns
    */
-  function scan (offset = 0) {
+  function scan (offset = 0, eos = undefined) {
 
     if (offset > 0) stream.goto(offset)
 
     //    console.log(stream.getCodeChar())
-    while (stream.eos()) {
+    while (stream.eos(eos)) {
       switch (stream.getCodeChar()) {
         case (DSH):
           if (specs.frontmatter && stream.eachCodeChar('---')) {
@@ -107,22 +103,12 @@ export function Parser (document, specs) {
         case (DQO):
           if (LiquidNode && !HTMLNode) {
             stream.skipString(offset)
-          } else if (HTMLNode) {
-            // console.log(HTMLNode)
-            // WithinString = true
-            // skipString(offset)
-            // stream.charString(/\{[{%]/, [ RAN, LAN ])
-            // const ff = scan(offset, stream.getString(/\{[{%]/))
-
-            // console.log(ff)
-            // stream.forward('>')
           }
           break
       }
 
       // update
       offset = stream.next(1)
-
     }
 
     return document
@@ -141,50 +127,6 @@ export function Parser (document, specs) {
     offset: offset
   })
 
-  function skipString (n) {
-
-    const text = stream.getSource()
-    const next = text.indexOf(text.charAt(n), n + 1)
-
-    // console.log('item', text)
-    if (next < 0) {
-      return false
-    }
-
-    // consume escaped strings, eg: \" or \'
-    if (stream.getCodeChar(next - 1) === BWS) return skipString(next)
-
-    stream.goto(next)
-
-    if (HTMLNode) {
-
-      const string = text.substring(n + 1, next)
-      const html = string.indexOf('>')
-      console.log(string)
-
-      if (html >= 0) {
-        // console.log('item', stream.getSource().charAt(stream.getPosition()))
-        // stream.goto(next + html)
-        console.log('part', text.substring(stream.getPosition()))
-        // console.log('item', stream.getSource().charAt(stream.getPosition()))
-        // return skipString(stream.getPosition(1))
-      }
-
-      // Check HTML Attribute string value for Liquid tag
-      const search = string.search(/\{[{%]/)
-
-      // align position to liquid tag in string
-      if (search > 0) {
-
-        // console.log('has liquid', stream.getSource().charAt(stream.getPosition()))
-        stream.goto(next + search)
-        console.log('has liquid', stream.getSource().charAt(stream.getPosition()))
-
-      }
-    }
-
-  }
-
   /**
    * Open HTML Tag - The LEFT side delimeter `<tag `
    *
@@ -194,16 +136,12 @@ export function Parser (document, specs) {
 
     stream.next()
 
-    // console.log(stream.getSource().charAt(stream.getPosition()))
     const name = stream.regex(/^[^\s"'></=]*/)
+    const spec = associates.filter(i => i.name === name && i.kind === 'html')
 
-    // console.log(name, stream.getSource().charAt(n))
-    if (!name) {
-      console.log('NO HTML NAME', offset)
-      // return OpenHTMLToken(stream.getPosition())
-    }
+    if (!spec.some(i => i.name === name)) return null
 
-    if (stream.whitespace()) { // Tag has whitespace after name
+    if (stream.whitespace()) {
       if (stream.isCodeChar(RAN)) { // Tag has attributes but does have spaces (`<tag  >`)
         if (HTMLNode && HTMLNode.name === name) { // we are in a close tag, eg: `</tag>`
           HTMLNode.offset.push(offset - 1) // Align LAN `<` as position here is `/`
@@ -211,57 +149,46 @@ export function Parser (document, specs) {
         } else if (!HTMLNode) {
           HTMLNode = ASTNode(name, TokenKind.html, [ offset, stream.next() ])
         }
-      } else { // Tag contains a value,(attribute) re-run function
+      } else if (!HTMLNode) { // Tag contains a value,(attribute) re-run function
         HTMLNode = ASTNode(name, TokenKind.html, offset)
         return OpenHTMLToken(stream.prev())
       }
-    } else if (stream.isCodeChar(RAN)) { // Tag has no whitespace, ends with RAN
+    } else if (stream.isCodeChar(RAN)) { // Tag has no whitespace, ends with RAN `>`
       if (!HTMLNode) {
         HTMLNode = ASTNode(name, TokenKind.html, [ offset, stream.getPosition(1) ])
-      } else if (HTMLNode && HTMLNode.name === name) {
+      } else {
         HTMLNode.offset.push(offset - 1) // Align LAN `<` as position here is `/`
         return CloseHTMLToken(stream.next())
       }
     } else if (HTMLNode) {
       if (name && HTMLNode.name !== name) {
-        HTMLNode.attrs = { [name]: '' }
+        if (HTMLNode?.attrs) HTMLNode.attrs.push([ name ])
+        else HTMLNode.attrs = [ [ name ] ]
         if (stream.isCodeChar(EQS)) {
-          HTMLNode.attrs[name] = stream.getString(stream.next())
+          const string = stream.getString(stream.next(), [ LAN, RAN, BWS, FWS ])
+
+          HTMLNode.attrs[HTMLNode.attrs.length - 1].push(string.text)
+          stream.goto(string.ends)
+
+          if (stream.nextCodeChar(RAN)) return CloseHTMLToken(stream.next(2))
+          return OpenHTMLToken(stream.next(1))
+
         }
       }
-      // console.log(stream.getPosition())
-      return OpenHTMLToken(stream.getPosition())
     }
-
-    // stream.next()
-    // console.log(stream.getPosition())
-
-    // return CloseHTMLToken(stream.getPosition())
 
   }
 
   function CloseHTMLToken (offset) {
 
-    // stream.next()
     HTMLNode.token.push(stream.getText(HTMLNode.offset[HTMLNode.offset.length - 1], offset))
     HTMLNode.offset.push(offset)
-
-    // console.log('new', document.ast)
 
     if (HTMLNode.offset.length === 4) {
       document.ast.push(HTMLNode)
       HTMLNode = undefined
-    } else {
-
     }
 
-    // if (HTMLNode.token.length === 2) {
-    //  document.ast.push(HTMLNode)
-    // HTMLNode = undefined
-    // console.log(document.ast)
-
-    // }
-    // stream.next()
   }
 
   /**
@@ -276,22 +203,27 @@ export function Parser (document, specs) {
 
     if (!name) return console.log('Parse Error, Tag name is incorrect')
 
-    const end = name.slice(0, 3) === 'end' ? name.substring(3) : name
-    const spec = stream.prevCodeChar(LCB) ? specs.objects[end] : specs.tags[end]
+    let isEndTag
+
+    if (name.slice(0, 3) === 'end') isEndTag = name.substring(3)
+
+    const prop = isEndTag || name
+    const spec = stream.prevCodeChar(LCB) ? specs.objects[prop] : specs.tags[prop]
 
     LiquidNode = ASTNode(name, TokenKind.liquid, n)
 
-    if (typeof spec === 'object') {
-      if (spec?.language) LiquidNode.languageId = spec.language
-      LiquidNode.type = TokenTypes[spec.type]
-      LiquidNode.tag = spec?.singular
-        ? spec?.within
-          ? TokenTag.child
-          : TokenTag.singular
-        : end
-          ? TokenTag.close
-          : TokenTag.start
-    }
+    if (typeof spec !== 'object') return
+
+    if (spec?.language) LiquidNode.languageId = spec.language
+    LiquidNode.type = TokenTypes[spec.type]
+    LiquidNode.tag = (spec?.singular
+      ? spec?.within
+        ? TokenTag.child
+        : TokenTag.singular
+      : isEndTag
+        ? TokenTag.close
+        : TokenTag.start
+    )
 
   }
 
@@ -316,12 +248,8 @@ export function Parser (document, specs) {
 
     } else {
 
-      //  console.log(LiquidNode)
-
       LiquidNode.offset.push(n)
       LiquidNode.token.push(stream.getText(LiquidNode.offset[0], n))
-
-      //  console.log(LiquidNode)
 
       if (LiquidNode.tag === TokenTag.child) {
         if (LiquidTag?.children) LiquidTag.children.push(LiquidNode)
@@ -336,7 +264,6 @@ export function Parser (document, specs) {
       LiquidTag = LiquidChildren[LiquidChildren.length - 1]
     }
 
-    // console.log(document.ast)
     LiquidNode = undefined
 
   }

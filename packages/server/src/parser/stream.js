@@ -280,10 +280,10 @@ export function Stream ({ textDocument }) {
    * the advancement.
    *
    * @param {number} n
+   * @param {number[]} [consume]
    * @param {boolean} [advance=false]
-   * @returns {(number|false)}
    */
-  function skipString (n, advance = true) {
+  function skipString (n, consume = undefined, advance = true) {
 
     const offset = txt.indexOf(txt.charAt(n), n + 1)
 
@@ -292,6 +292,11 @@ export function Stream ({ textDocument }) {
     // consume escaped strings, eg: \" or \'
     if (getCodeChar(offset - 1) === BWS) return skipString(offset)
 
+    // custom consumed character codes
+    if (consume) {
+      if (consume.includes(getCodeChar(offset))) return skipString(offset)
+    }
+
     return advance ? goto(offset) : offset
 
   }
@@ -299,15 +304,17 @@ export function Stream ({ textDocument }) {
   /**
    * Skip Whitespace
    *
-   * @returns {(string|boolean)}
    */
-  function getString (n) {
+  function getString (n, consume) {
 
-    const capture = skipString(n, false)
+    const capture = skipString(n, consume, false)
 
     if (!capture) return false
 
-    return getText(n + 1, capture)
+    return {
+      text: getText(n + 1, capture),
+      ends: capture
+    }
 
   }
 

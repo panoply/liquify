@@ -4,6 +4,8 @@ import specs from '@liquify/liquid-language-specs'
 import chalk from 'chalk'
 import liquid_tokens from './cases/liquid-tokens'
 import html_tokens from './cases/html-tokens'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
 
 const ctx = new chalk.Instance({
   level: 2
@@ -65,7 +67,7 @@ function grammar (string, capture) {
   ).replace(capture.regex, i => ctx[capture.colour](i))
 
 }
-
+/*
 html_tokens.forEach(({ title, capture, tests, nodes }) => {
 
   const string = tests.flat(1).join('\n')
@@ -75,8 +77,6 @@ html_tokens.forEach(({ title, capture, tests, nodes }) => {
 
     const node = AST({ fixture: string }, t.context)
 
-    return console.log(node)
-
     if (node) {
       for (let x = 0; x < tests.length; x++) {
 
@@ -85,15 +85,11 @@ html_tokens.forEach(({ title, capture, tests, nodes }) => {
         const ln = x >= 10 ? `${x}` : ` ${x}`
 
         // console.log(token, nodes[x], nodes[x].every((i, k) => i === token[k]))
-        if (nodes[x].every((i, k) => i === token[k])) {
+        if (node[x].token.every((i, k) => i === token[k])) {
           t.log(ctx.dim(ln), ctx.green('✔'), grammar(token.join(' '), capture), newline)
-          t.log(nodes[x])
-        } else if (node[x].token.every((i, k) => i === token[k])) {
-          t.log(ctx.dim(ln), ctx.green('✔'), grammar(token.join(' '), capture), newline)
-          t.log(node[x])
+          // t.log(node[x])
         } else {
-          console.log(token, nodes[x])
-          // t.deepEqual(token, node[x].token)
+          t.deepEqual(token, node[x].token)
           t.log(ctx.red.dim(ln), ctx.red('✖'), ctx.red(node[x].token))
           throw t.log(ctx.magentaBright('ASTNode'), node[x])
         }
@@ -109,10 +105,9 @@ html_tokens.forEach(({ title, capture, tests, nodes }) => {
 
 liquid_tokens.forEach(({ title, capture, tests }) => {
 
-  return
   const string = tests.join('\n')
 
-  test.skip(title, t => {
+  test(title, t => {
 
     const node = AST({ fixture: string }, t.context)
 
@@ -134,5 +129,16 @@ liquid_tokens.forEach(({ title, capture, tests }) => {
     t.pass()
 
   })
+
+}) */
+test('FullDocument Parse', t => {
+
+  const node = AST({
+    fixture: readFileSync(resolve('test/fixtures/text.txt'), 'utf8').toString()
+  }, t.context)
+
+  console.log(node)
+
+  t.pass()
 
 })

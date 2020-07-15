@@ -4,7 +4,7 @@ import { DidChangeConfigurationNotification, TextDocumentSyncKind, createConnect
 import { Server } from './provide/server'
 import { Service } from './provide/service'
 import { Document } from './provide/document'
-import * as Parser from './parser/export'
+import { Parser } from './parser/parse'
 import { runAsync, runSync } from './utils/runners'
 import { mark, stop } from 'marky'
 
@@ -123,7 +123,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   mark('onDidOpenTextDocument')
 
-  const document = Document.create(textDocument)(Parser.scanner)
+  const document = Document.create(textDocument)(Parser)
 
   if (!document) return null
 
@@ -158,9 +158,9 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   if (!document) return null
 
-  Parser.increment(document, contentChanges)
-
-  // console.log()
+  // Parser.increment(document, contentChanges)
+  const parsed = Parser(document, Server.specification).scan()
+  console.log(parsed.ast)
 
   // console.log(documents)
 
