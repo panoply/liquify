@@ -410,23 +410,66 @@ export function createScanner (input, initialOffset = 0, initialState = ScannerS
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *-------------------------------------------------------------------------------------------- */
 
-export class Node {
+function findFirst (array, p) {
+  let low = 0, high = array.length
+  if (high === 0) {
+    return 0 // no children
+  }
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2)
+    if (p(array[mid])) {
+      high = mid
+    } else {
+      low = mid + 1
+    }
+  }
+  return low
+}
+export function binarySearch (array, key, comparator) {
+  let low = 0, high = array.length - 1
+  while (low <= high) {
+    const mid = ((low + high) / 2) | 0
+    const comp = comparator(array[mid], key)
+    if (comp < 0) {
+      low = mid + 1
+    } else if (comp > 0) {
+      high = mid - 1
+    } else {
+      return mid
+    }
+  }
+  return -(low + 1)
+}
+
+class Node {
 
   constructor (start, end, children, parent) {
+    this.tag = undefined
     this.start = start
     this.end = end
     this.children = children
     this.parent = parent
     this.closed = false
+    this.attributes = undefined
+
   }
 
-  get attributeNames () { return this.attributes ? Object.keys(this.attributes) : [] }
+  get attributeNames () {
+    return this.attributes ? Object.keys(this.attributes) : []
+  }
+
   isSameTag (tagInLowerCase) {
     return this.tag && tagInLowerCase && this.tag.length === tagInLowerCase.length && this.tag.toLowerCase() === tagInLowerCase
   }
 
-  get firstChild () { return this.children[0] }
-  get lastChild () { return this.children.length ? this.children[this.children.length - 1] : void 0 }
+  get firstChild () {
+    return this.children[0]
+  }
+
+  get lastChild () {
+    return this.children.length ? this.children[this.children.length - 1] : 0
+  }
+
   findNodeBefore (offset) {
     const idx = findFirst(this.children, c => offset <= c.start) - 1
     if (idx >= 0) {
@@ -457,6 +500,7 @@ export class Node {
   }
 
 }
+
 export function parse (text) {
   const scanner = createScanner(text, undefined, undefined, true)
   const htmlDocument = new Node(0, text.length, [], void 0)

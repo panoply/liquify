@@ -13,204 +13,225 @@ export const Whitespace = 1
 export const Unknown = 2
 
 /**
+ * Unknown Characters
+ *
+ * @enum {number}
+ */
+export const Content = 3
+
+/**
  * Last Chacters in stream
  *
  * @enum {number}
  */
-export const EOS = 3
+export const EOS = 4
 
 /**
  * After Delimeter `---`
  *
  * @enum {number}
  */
-export const YAMLFrontmatterStart = 4
+export const YAMLFrontmatterStart = 5
 
 /**
  * After Delimeter `---`
  *
  * @enum {number}
  */
-export const YAMLFrontmatterClose = 5
+export const YAMLFrontmatterClose = 6
 
 /**
  * Before Delimeter `#` _when_ `# comment`
  *
  * @enum {number}
  */
-export const YAMLCommentStart = 6
+export const YAMLCommentStart = 7
 
 /**
  * Within Tag `# comment`
  *
  * @enum {number}
  */
-export const YAMLComment = 7
+export const YAMLComment = 8
 
 /**
  * After Delimeter `\n` _when_ `# comment`
  *
  * @enum {number}
  */
-export const YAMLCommentClose = 8
+export const YAMLCommentClose = 9
 
 /**
  * Before Delimeter `{%` _when_ `{%- start -%}`
  *
  * @enum {number}
  */
-export const LiquidStartTagOpen = 9
+export const LiquidStartTagOpen = 10
 
 /**
  * Within Tag `{%- start -%}`
  *
  * @enum {number}
  */
-export const LiquidStartTag = 10
+export const LiquidStartTag = 11
 
 /**
  * After Delimeter `%}` _when_ `{%- start -%}`
  *
  * @enum {number}
  */
-export const LiquidStartTagClose = 11
+export const LiquidStartTagClose = 12
 
 /**
  * Before Delimeter `{%` _when_ `{%- endstart -%}`
  *
  * @enum {number}
  */
-export const LiquidEndTagOpen = 12
+export const LiquidEndTagOpen = 13
 
 /**
  * Within Tag `{%- endstart -%}`
  *
  * @enum {number}
  */
-export const LiquidEndTag = 13
+export const LiquidEndTag = 14
 
 /**
  * After Delimeter `%}` _when_ `{%- endstart -%}`
  *
  * @enum {number}
  */
-export const LiquidEndTagClose = 14
+export const LiquidEndTagClose = 15
 
 /**
  * Before Delimeter `{%` _when_ `{%- tag -%}`
  *
  * @enum {number}
  */
-export const LiquidSingularTagOpen = 15
+export const LiquidSingularTagOpen = 16
 
 /**
  * Within Tag  `{%- tag -%}`
  *
  * @enum {number}
  */
-export const LiquidSingularTag = 16
+export const LiquidSingularTag = 17
 
 /**
  * After Delimeter `%}` _when_ `{%- tag -%}`
  *
  * @enum {number}
  */
-export const LiquidSingularTagClose = 17
+export const LiquidSingularTagClose = 18
 
 /**
  * Before Delimeter `{{` _when_ `{{- object -}}`
  *
  * @enum {number}
  */
-export const LiquidObjectTagOpen = 18
+export const LiquidObjectTagOpen = 19
 
 /**
  * Within Tag `{{- object -}}`
  *
  * @enum {number}
  */
-export const LiquidObjectTag = 19
+export const LiquidObjectTag = 20
 
 /**
  * After Delimeter `}}` _when_ `{{- tag -}}`
  *
  * @enum {number}
  */
-export const LiquidObjectTagClose = 20
+export const LiquidObjectTagClose = 21
 
 /**
  * Before Delimeter `<` _when_ `<tag>`
  *
  * @enum {number}
  */
-export const HTMLStartTagOpen = 21
+export const HTMLStartTagOpen = 22
 
 /**
  * Within Tag `<tag>`
  *
  * @enum {number}
  */
-export const HTMLStartTag = 22
+export const HTMLStartTag = 23
 
 /**
  * After Delimeter `>` _when_ `<tag>`
  *
  * @enum {number}
  */
-export const HTMLStartTagClose = 23
+export const HTMLStartTagClose = 24
+
+/**
+ * After Delimeter `/>` _when_ `<tag />`
+ *
+ * @enum {number}
+ */
+export const HTMLStartTagSelfClose = 25
 
 /**
  * Before Delimeter `<` _when_ `</tag>`
  *
  * @enum {number}
  */
-export const HTMLEndTagOpen = 24
+export const HTMLEndTagOpen = 26
 
 /**
  * Within Tag `</tag>`
  *
  * @enum {number}
  */
-export const HTMLEndTag = 25
+export const HTMLEndTag = 27
 
 /**
  * After Delimeter `>` _when_ `</tag>`
  *
  * @enum {number}
  */
-export const HTMLEndTagClose = 26
+export const HTMLEndTagClose = 28
 
 /**
  * Before Delimeter `<` _when_ `<!-- comment -->`
  *
  * @enum {number}
  */
-export const HTMLStartCommentTag = 27
+export const HTMLStartCommentTag = 29
 
 /**
  * Within Tag `<!-- comment -->`
  *
  * @enum {number}
  */
-export const HTMLComment = 28
+export const HTMLComment = 30
 
 /**
  * After Delimeter `>` _when_ `<!-- comment -->`
  *
  * @enum {number}
  */
-export const HTMLEndCommentTag = 29
+export const HTMLEndCommentTag = 31
 
 /**
  * Attribute `attr` _when_ `<tag attr="value">`
  *
  * @enum {number}
  */
-export const HTMLAttributeName = 30
+export const HTMLAttributeName = 32
+
+/**
+ * Attribute `attr` _when_ `<tag attr="value">`
+ *
+ * @enum {number}
+ */
+export const HTMLOperatorValue = 33
 
 /**
  * Value `"value"` _when_ `<tag attr="value">`
  *
  * @enum {number}
  */
-export const HTMLAttributeValue = 31
+export const HTMLAttributeValue = 34

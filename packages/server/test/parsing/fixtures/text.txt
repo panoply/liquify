@@ -56,7 +56,7 @@
   {%- endfor -%}
 </div>
 
-<script>
+<script data-attr="test">
 const test =
 </script>
 
