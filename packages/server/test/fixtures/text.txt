@@ -1,4 +1,7 @@
+<script></script>
+<script
+  data-liquid="{% if cond %}{{ tag }}{%- endif-%}"
+  data-two="{{ two}}"
+  three="hpp"></script>
 
-<script data-liquid="{% if cond %}{{ tag }}{%- endif-%}" data-two="{{ two}}"></script>
-
-<script type="application/json"></script>
+<script type="application/json" ></script>

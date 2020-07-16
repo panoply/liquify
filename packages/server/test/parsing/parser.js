@@ -136,8 +136,9 @@ test('FullDocument Parse', t => {
   const node = AST({
     fixture: readFileSync(resolve('test/fixtures/text.txt'), 'utf8').toString()
   }, t.context)
-
   console.log(node)
+
+  console.log(node[3])
 
   t.pass()
 

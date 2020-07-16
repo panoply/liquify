@@ -97,7 +97,7 @@ export function Parser (document, specs) {
           break
         case (RAN):
           if (WithinHTMLString < 0 && HTMLNode) {
-            offset = stream.next()
+          //  offset = stream.next()
             CloseHTMLToken(offset)
           }
           break
@@ -154,57 +154,92 @@ export function Parser (document, specs) {
     const name = stream.regex(/^[^\s"'></=]*/)
     const spec = associates.filter(i => i.name === name && i.kind === 'html')
 
+    // if (offset > WithinHTMLString) WithinHTMLString = -1
+
     // if (!spec.some(i => i.name === name)) return null
 
     if (WithinHTMLString < 0 && stream.whitespace()) {
-      if (stream.isCodeChar(RAN)) { // Tag has attributes but does have spaces (`<tag  >`)
-        if (HTMLNode && HTMLNode.name === name) { // we are in a close tag, eg: `</tag>`
-          HTMLNode.offset.push(offset - 1) // Align LAN `<` as position here is `/`
+      if (stream.isCodeChar(RAN)) { // Tag has no attributes but does have spaces `<tag  >`
+
+        if (HTMLNode && HTMLNode.name === name) { // We are in a close tag, eg: `</tag>`
+          HTMLNode.offset.push(offset) // Align LAN `<` as position here is `/`
           return CloseHTMLToken(stream.next())
         } else if (!HTMLNode) {
+
+          // RETURNS VOID: FUNCTION FALLS THROUGH `scan()` ▼
           HTMLNode = ASTNode(name, TokenKind.html, [ offset, stream.next() ])
+          // RETURNS VOID: FUNCTION FALLS THROUGH `scan()` ▼
+
         }
-      } else if (!HTMLNode) { // Tag contains a value,(attribute) re-run function
+      } else if (!HTMLNode) { // Tag contains attribute, re-run function
+
         HTMLNode = ASTNode(name, TokenKind.html, offset)
         return OpenHTMLToken(stream.prev())
+
       }
-    } else if (stream.isCodeChar(RAN)) { // Tag has no whitespace, ends with RAN `>`
+    } else if (stream.isCodeChar(RAN)) { // Tag has no whitespace and ends with RAN `>`
 
       if (HTMLNode) {
         HTMLNode.offset.push(offset - 1) // Align LAN `<` as position here is `/`
-        return CloseHTMLToken(stream.next())
+        return CloseHTMLToken(stream.next()) // Next offset, post RAN `>`
       }
 
+      // RETURNS VOID: FUNCTION FALLS THROUGH `scan()` ▼
       HTMLNode = ASTNode(name, TokenKind.html, [ offset, stream.getPosition(1) ])
+      // RETURNS VOID: FUNCTION FALLS THROUGH `scan()` ▼
 
-    } else if (HTMLNode && ((WithinHTMLString === offset) || (HTMLNode?.name !== name))) {
+    } else if (HTMLNode?.name !== name) {
+
+      if (stream.whitespace()) return OpenHTMLToken(stream.getPosition(1))
+
+      if (WithinHTMLString === offset) {
+        if (stream.isCodeChar(RAN)) {
+          WithinHTMLString = -1
+          return CloseHTMLToken(stream.getPosition())
+        }
+
+        return OpenHTMLToken(stream.getPosition())
+
+        // WithinHTMLString = -1
+      } else if (offset > WithinHTMLString) WithinHTMLString = -1
+
+      if (stream.isCodeChar(EQS)) {
 
         HTMLNode?.attrs ? HTMLNode.attrs.push([ name ]) : (HTMLNode.attrs = [ [ name ] ])
-        WithinHTMLString = -1
 
-        if (stream.isCodeChar(EQS)) {
-          const string = stream.getString(stream.next(), [ LAN, RAN, BWS, FWS ])
-          const search = string.text.search(/{[{%]/)
+        const string = stream.getString(stream.next(), [ LAN, RAN, BWS, FWS ])
+        const search = string.text.search(/{[{%]/)
 
-          HTMLNode.attrs[HTMLNode.attrs.length - 1].push(string.text)
+        HTMLNode.attrs[HTMLNode.attrs.length - 1].push(string.text)
 
-          if (search >= 0) WithinHTMLString = stream.getPosition(1)
-          else {
-            stream.goto(string.ends)
-            return (stream.nextCodeChar(RAN)
-              ? CloseHTMLToken(stream.next(2))
-              : OpenHTMLToken(stream.next(1))
-            )
-          }
+        // RETURNS VOID: FUNCTION FALLS THROUGH `scan()` ▼
+        if (search >= 0) WithinHTMLString = stream.getPosition(1)
+        // RETURNS VOID: FUNCTION FALLS THROUGH `scan()` ▼
 
-        } else HTMLNode.attrs[HTMLNode.attrs.length - 1].push(name)
+        else {
+          stream.goto(string.ends)
 
-    }
+          return (stream.nextCodeChar(RAN)
+            ? CloseHTMLToken(stream.next(2)) // Align After RAN `>` - position here is `">`
+            : OpenHTMLToken(stream.getPosition(1))
+          )
+        }
+
+      } else {
+
+        // RETURNS VOID: FUNCTION FALLS THROUGH `scan()` ▼
+        // HTMLNode.attrs[HTMLNode.attrs.length - 1].push(name)
+        // RETURNS VOID: FUNCTION FALLS THROUGH `scan()` ▼
+
+        if (stream.advanceIfChar(RAN)) CloseHTMLToken(stream.next())
+      }
+    } // else return OpenHTMLToken(stream.getPosition())
 
   }
 
   function CloseHTMLToken (offset) {
 
+    console.log('OFFSET SENT ', offset)
     HTMLNode.token.push(stream.getText(HTMLNode.offset[HTMLNode.offset.length - 1], offset))
     HTMLNode.offset.push(offset)
 
@@ -296,7 +331,7 @@ export function Parser (document, specs) {
       const value = HTMLNode.attrs[HTMLNode.attrs.length - 1][1].length + WithinHTMLString
       if (value === n) {
         WithinHTMLString = value
-        console.log('close liquid', value, n)
+        console.log('close liquid', value, n, WithinHTMLString)
         return OpenHTMLToken(n)
       }
     }

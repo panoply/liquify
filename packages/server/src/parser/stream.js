@@ -366,6 +366,27 @@ export function Stream ({ textDocument }) {
 
   }
 
+  function advanceUntilChar (char) {
+
+    while (index < txt.length) {
+      if (txt.charCodeAt(index) === char) return true
+      next(1)
+    }
+
+    return false
+
+  }
+
+  function advanceIfChar (char) {
+
+    if (char !== txt.charCodeAt(index)) return false
+
+    index++
+
+    return true
+
+  }
+
   return {
     regex
     , prev
@@ -388,6 +409,8 @@ export function Stream ({ textDocument }) {
     , skipString
     , whitespace
     , forward
+    , advanceUntilChar
+    , advanceIfChar
   }
 
 }
