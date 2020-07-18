@@ -13,11 +13,11 @@ export const WithinContent = 1
 export const BeforeYAMLFrontmatter = 2
 
 /**
- * Between `---` _and_ `---`
+ * After ending `---` _when_ `--- ---`
  *
  * @enum {number}
  */
-export const WithinYAMLFrontmatter = 3
+export const AfterYAMLFrontmatter = 3
 
 /**
  * After `LAN <` Delimeter, `t` _when_ `<tag>`

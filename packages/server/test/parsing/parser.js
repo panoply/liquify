@@ -52,7 +52,7 @@ test.before('TOKEN STRING PARSING', async t => {
 
 function AST (data, { spec }) {
 
-  return Parser(fixture(data), spec).scan().ast
+  return Parser(fixture(data), spec).ast
 
 }
 
@@ -136,9 +136,8 @@ test('FullDocument Parse', t => {
   const node = AST({
     fixture: readFileSync(resolve('test/fixtures/text.txt'), 'utf8').toString()
   }, t.context)
-  console.log(node)
 
-  console.log(node[3])
+  t.log(node)
 
   t.pass()
 

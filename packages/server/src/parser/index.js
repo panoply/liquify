@@ -405,11 +405,6 @@ export function createScanner (input, initialOffset = 0, initialState = ScannerS
   }
 }
 
-/* ---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *-------------------------------------------------------------------------------------------- */
-
 function findFirst (array, p) {
   let low = 0, high = array.length
   if (high === 0) {

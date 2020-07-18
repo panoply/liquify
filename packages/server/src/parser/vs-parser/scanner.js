@@ -1,7 +1,8 @@
-import * as TokenType from './lexical/lexme'
-import * as ScanState from './lexical/scan'
-import { Stream } from './streamer'
-import { ARS, DSH, BNG, LCB, RCB, PER, RAN, LAN, FWS, SQO, DQO, BWS, EQS } from './lexical/characters'
+import * as TokenType from '../lexical/lexme'
+import * as ScanState from '../lexical/scan'
+import * as Character from '../lexical/characters'
+import { Stream } from '../streamer'
+import { ARS, DSH, BNG, LCB, RCB, PER, RAN, LAN, FWS, SQO, DQO, BWS, EQS } from '../lexical/characters'
 
 export function Scanner (
   input
@@ -24,6 +25,8 @@ export function Scanner (
       getText: () => input
     }
   }, initialOffset)
+
+  state = stream.advanceIfRegExp(/[<]/).charCodeAt(0)
 
   /* -------------------------------------------- */
   /*                   FUNCTIONS                  */
@@ -53,27 +56,7 @@ export function Scanner (
 
   function scan () {
 
-    const offset = stream.position()
-    const oldState = state
     const token = internalScan()
-
-    if (token !== TokenType.EOS && offset === stream.position() && !(emitPseudoCloseTags && (
-      token === TokenType.LiquidStartTagClose ||
-      token === TokenType.LiquidEndTagClose ||
-      token === TokenType.LiquidObjectTagClose ||
-      token === TokenType.LiquidSingularTagClose ||
-      token === TokenType.HTMLStartTagClose ||
-      token === TokenType.HTMLEndTagClose ||
-      token === TokenType.LiquidEndTagClose
-    ))) {
-
-      console.log('Scanner.scan has not advanced at offset ' + offset + ', state before: ' + oldState + ' after: ' + state)
-
-      stream.next(1)
-
-      return tokenize(offset, TokenType.Unknown)
-
-    }
 
     return token
 
@@ -89,32 +72,24 @@ export function Scanner (
 
     switch (state) {
 
-      case ScanState.WithinContent:
+      case Character.LAN:
 
-        if (stream.advanceIfChar(LAN)) { // <
-
-          if (!stream.eos() && stream.peekChar() === BNG) { // !
-            if (stream.advanceIfChars([ BNG, DSH, DSH ])) { // <!--
-              state = ScanState.WithinHTMLComment
-              return tokenize(offset, TokenType.HTMLStartCommentTag)
-            }
+        if (!stream.eos() && stream.peekChar() === BNG) { // !
+          if (stream.advanceIfChars([ BNG, DSH, DSH ])) { // <!--
+            state = ScanState.WithinHTMLComment
+            return tokenize(offset, TokenType.HTMLStartCommentTag)
           }
-
-          if (stream.advanceIfChar(FWS)) { // /
-            state = ScanState.AfterOpeningHTMLEndTag
-            return tokenize(offset, TokenType.HTMLEndTagOpen)
-          }
-
-          state = ScanState.AfterOpeningHTMLStartTag
-          return tokenize(offset, TokenType.HTMLStartTagOpen)
-
-        } else {
-
-          stream.advanceUntilChar(LAN)
-
         }
 
-        return tokenize(offset, TokenType.Content)
+        if (stream.advanceIfChar(FWS)) { // /
+          state = ScanState.AfterOpeningHTMLEndTag
+          return tokenize(offset, TokenType.HTMLEndTagOpen)
+        }
+
+        state = ScanState.AfterOpeningHTMLStartTag
+        return tokenize(offset, TokenType.HTMLStartTagOpen)
+
+        // return tokenize(offset, TokenType.Content)
 
       case ScanState.WithinHTMLComment:
 
@@ -293,7 +268,9 @@ export function Scanner (
     }
 
     stream.next(1)
-    state = ScanState.WithinContent
+    console.log(offset)
+
+    state = stream.advanceIfRegExp(/[<]/).charCodeAt(0)
 
     return tokenize(offset, TokenType.Unknown, errorMessage)
 
@@ -414,10 +391,11 @@ function isVoidElement (e) {
 export function Parse (text) {
 
   const scanner = Scanner(text, undefined, undefined, true)
+  const htmlDocument = new Node(0, text.length, [], 0)
+  let node
+  const ast = []
 
-  const htmlDocument = {
-    children: []
-  }
+  node = {}
 
   let curr = htmlDocument,
     endTagStart = -1,
@@ -428,41 +406,55 @@ export function Parse (text) {
   while (token !== TokenType.EOS) {
 
     switch (token) {
+
       case TokenType.HTMLStartTagOpen:
 
-        // eslint-disable-next-line
-        const child = htmlDocument
+        const child = new Node(scanner.getTokenOffset(), text.length, [], curr)
+
+        console.log('HTMLStartTagOpen')
+        node.kind = 2 // html
+        node.offset = [ scanner.getTokenOffset() ]
+
         curr.children.push(child)
         curr = child
+
         break
 
       case TokenType.HTMLStartTag:
+        node.name = scanner.getTokenText()
         curr.tag = scanner.getTokenText()
+        console.log('HTMLStartTag')
+
         break
 
       case TokenType.HTMLStartTagClose:
+        console.log('HTMLStartTagClose')
+
         if (curr.parent) {
+
           curr.end = scanner.getTokenEnd() // might be later set to end tag position
+
           if (scanner.getTokenLength()) {
+
             curr.startTagEnd = scanner.getTokenEnd()
+            node.startTagEnd = scanner.getTokenEnd() // might be later set to end tag position
+
             if (curr.tag && isVoidElement(curr.tag)) {
               curr.closed = true
               curr = curr.parent
             }
+
           } else {
             // pseudo close token from an incomplete start tag
             curr = curr.parent
           }
+
+          ast.push(node)
+
+          node = {}
         }
         break
-      case TokenType.HTMLStartTagSelfClose:
-        if (curr.parent) {
-          curr.closed = true
-          curr.end = scanner.getTokenEnd()
-          curr.startTagEnd = scanner.getTokenEnd()
-          curr = curr.parent
-        }
-        break
+
       case TokenType.HTMLEndTagOpen:
         endTagStart = scanner.getTokenOffset()
         endTagName = null
@@ -471,14 +463,21 @@ export function Parse (text) {
         endTagName = scanner.getTokenText().toLowerCase()
         break
       case TokenType.HTMLEndTagClose:
+
+        console.log('HTMLEndTagClose')
+
         if (endTagName) {
-          const node = curr
+
+          const nodez = curr
           // see if we can find a matching tag
           // while (!node.isSameTag(endTagName) && node.parent) {
           // node = node.parent
           // }
-          if (node.parent) {
-            while (curr !== node) {
+
+          ast[ast.length - 1].offset.push(endTagStart)
+
+          if (nodez.parent) {
+            while (curr !== nodez) {
               curr.end = endTagStart
               curr.closed = false
               curr = curr.parent
@@ -488,6 +487,7 @@ export function Parse (text) {
             curr.end = scanner.getTokenEnd()
             curr = curr.parent
           }
+          // ast.push(node)
         }
         break
       case TokenType.HTMLAttributeName: {
@@ -495,13 +495,15 @@ export function Parse (text) {
         let attributes = curr.attributes
         if (!attributes) {
           curr.attributes = attributes = {}
+          node.attributes = attributes = {}
+
         }
         attributes[pendingAttribute] = null // Support valueless attributes such as 'checked'
         break
       }
       case TokenType.HTMLAttributeValue: {
         const value = scanner.getTokenText()
-        const attributes = curr.attributes
+        const attributes = node.attributes
         if (attributes && pendingAttribute) {
           attributes[pendingAttribute] = value
           pendingAttribute = null
@@ -519,8 +521,8 @@ export function Parse (text) {
     curr = curr.parent
   }
 
-  return {
-    roots: htmlDocument.children
+  // htmlDocument.findNodeAt.bind(htmlDocument)
 
-  }
+  return ast
+
 }

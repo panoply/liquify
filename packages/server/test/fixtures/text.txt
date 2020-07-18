@@ -1,7 +1,36 @@
-<script></script>
-<script
-  data-liquid="{% if cond %}{{ tag }}{%- endif-%}"
-  data-two="{{ two}}"
-  three="hpp"></script>
+---
+frontmatter: true
+prop:
+  - array_item_1
+  - array_item_2
+string: 'foo'
+---
 
-<script type="application/json" ></script>
+{%- if
+section.settings.show_announcement | filter: '%}' -%}
+  {%- if section.settings.home_page_only == false or template.name == 'index' -%}
+
+    {%- if section.settings.link == blank -%}
+      <div>
+    {%- else -%}
+      <a href="{{ section.settings.link }}" >
+    {%- endif -%}
+
+      <p>{{ section.settings.text | escape }}</p>
+
+    {%- if section.settings.link == blank -%}
+      </div>
+    {%- else -%}
+      </a>
+    {%- endif -%}
+
+  {%- endif -%}
+{%- endif -%}
+
+
+<script
+ data-liquid="{% if cond %}{{ tag }}{% endif-%}"
+
+></script>
+
+<script type="application/json"></script>

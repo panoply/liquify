@@ -1,13 +1,15 @@
-import {
-  WSP, TAB, NWL, LFD, CAR, FWS, BWS, DQO, SQO, RAN, LAN
-} from './lexical/characters'
+import { WSP, TAB, NWL, LFD, CAR, BWS } from './lexical/characters'
 
 /**
- * Contents Stream - Supplies methods to the parsing scanner
+ * Stream
+ *
+ * Supplies methods to the parsing scanner. This is a modified variation
+ * and was lifted from the `vscode-html-languageservice` module.
  *
  * @export
- * @param {Document.Scope} text
- * @returns
+ * @param {Document.Scope} document
+ * @returns {object}
+ * @see https://git.io/JJnqz
  */
 export function Stream ({ textDocument }) {
 
@@ -23,206 +25,103 @@ export function Stream ({ textDocument }) {
    *
    * @type {string}
    */
-  const txt = textDocument.getText()
+  const text = textDocument.getText()
 
   /**
    * Text Length (cache)
    *
    * @type {number}
    */
-  const len = txt.length
+  const length = text.length
 
-  /**
-   * Returned function methods
-   *
-   * @type {object}
-   */
-  const methods = {
-    regex
-    , prev
-    , next
-    , eos
-    , goto
-    , gotoChar
-    , gotoEnd
-    , getPosition
-    , getSource
-    , getText
-    , getCodeChar
-    , prevCodeChar
-    , nextCodeChar
-    , isCodeChar
-    , nextRegex
-    , eachCodeChar
-    , whileChar
-    , skipString
-    , whitespace
-    , forward
-  }
-
-  /**
-   * Previous position
-   *
-   * @param {number} [n=1]
-   */
-  function prev (n = 1) {
-
-    index -= n
-
-    return index
-
-  }
-
-  /**
-   * Next Position
-   *
-   * @param {number} [n=1]
-   */
-  function next (n = 1) {
-
-    index += n
-
-    return index
-
-  }
-
-  /**
-   * Regex Expression Match
-   *
-   * @param {RegExp} exp
-   * @returns {(string|false)}
-   */
-  function regex (exp, run = 0) {
-
-    if (run > 0) goto(run)
-
-    const tag = txt.substring(index).match(exp)
-
-    // console.log('REGEX', tag)
-
-    if (!tag) return ''
-
-    index += tag.index + tag[0].length
-
-    return tag[0]
-
-  }
-
-  /**
-   * Regex Expression Match
-   *
-   * @param {RegExp} exp
-   * @returns {(number|false)}
-   */
-  function nextRegex (exp) {
-
-    const find = txt.substring(index).search(exp)
-
-    if (!find) return getPosition()
-
-    index += find
-
-    return index
-
-  }
+  /* -------------------------------------------- */
+  /*                   FUNCTIONS                  */
+  /* -------------------------------------------- */
 
   /**
    * End of Stream
    *
    * @returns {boolean}
    */
-  function eos (pos) {
+  const eos = () => (length <= index)
 
-    return index <= (pos || len)
+  /**
+   * Previous position
+   *
+   * WILL MODIFY POSITION
+   *
+   * @param {number} [n=1]
+   * @returns {number}
+   */
+  const prev = (n = 1) => (index -= n)
 
-  }
+  /**
+   * Next Position
+   *
+   * WILL MODIFY POSITION
+   *
+   * @param {number} [n=1]
+   * @returns {number}
+   */
+  const next = (n = 1) => (index += n)
 
   /**
    * Goto Position
    *
+   * WILL MODIFY POSITION
+   *
    * @param {number} n
+   * @returns {number}
    */
-  function goto (n) {
-
-    index = n
-
-    return index
-
-  }
+  const goto = n => (index = n)
 
   /**
    * Goto End Position
    *
+   * WILL MODIFY POSITION
+   *
+   * @returns {number}
    */
-  function gotoEnd () {
-
-    index = len
-
-  }
+  const end = () => (index = length)
 
   /**
    * Previous Code Character
    *
-   * @param {number} char
-   * @returns
-   */
-  function prevCodeChar (char) {
-
-    return txt.charCodeAt(index - 1) === char
-
-  }
-
-  /**
-   * Each Code Character - Converts and match string sequence
+   * WILL NOT MODIFY POSITION
    *
-   * @param {string} str
+   * @param {number} char
    * @returns {boolean}
    */
-  function eachCodeChar (str) {
-
-    return str.split('').every((c, i) => c.charCodeAt(0) === getCodeChar(index + i))
-
-  }
+  const prevCodeChar = char => text.charCodeAt(index - 1) === char
 
   /**
    * Next Code Character
    *
-   * @param {number} char
-   * @returns
-   */
-  function nextCodeChar (char) {
-
-    return txt.charCodeAt(index + 1) === char
-
-  }
-
-  /**
-   * Next Code Character
+   * WILL NOT MODIFY POSITION
    *
    * @param {number} char
-   * @returns
+   * @returns {boolean}
    */
-  function isCodeChar (char) {
-
-    return txt.charCodeAt(index) === char
-
-  }
+  const nextCodeChar = char => text.charCodeAt(index + 1) === char
 
   /**
-   * While Character
+   * Current Code Character Truthy
    *
-   * @param {function} condition
+   * @param {number} char
+   * @returns {boolean}
+   */
+  const isCodeChar = char => text.charCodeAt(index) === char
+
+  /**
+   * Get Current Position - If a number is passed, return value
+   * will be added to current index, but index will not be adjusted.
+   *
+   * WILL NOT MODIFY POSITION
+   *
+   * @param {number} [n]
    * @returns {number}
    */
-  function whileChar (condition) {
-
-    const pos = index
-
-    while (index < len && condition(txt.charCodeAt(index))) index++
-
-    return index - pos
-
-  }
+  const position = (n = undefined) => n ? (index + n) : index
 
   /**
    * Get Code Character
@@ -230,35 +129,14 @@ export function Stream ({ textDocument }) {
    * @param {number} [n]
    * @returns {number}
    */
-  function getCodeChar (n = getPosition()) {
-
-    return txt.charCodeAt(n)
-
-  }
-
-  /**
-   * Get Current Position - If a number is passed, return value
-   * will be added to current index, but index will not be adjusted.
-   *
-   * @param {number} [n]
-   * @returns {number}
-   */
-  function getPosition (n) {
-
-    return n ? (index + n) : index
-
-  }
+  const getCodeChar = (n = undefined) => text.charCodeAt(n || index)
 
   /**
    * Get Source
    *
    * @returns {string}
    */
-  function getSource () {
-
-    return txt
-
-  }
+  const source = () => text
 
   /**
    * Get String
@@ -267,65 +145,59 @@ export function Stream ({ textDocument }) {
    * @param {number} end
    * @returns {string}
    */
-  function getText (start, end) {
+  const getText = (start, end) => text.substring(start, end)
 
-    return txt.substring(start, end)
+  /**
+   * While Character
+   *
+   * WILL MODIFY POSITION
+   *
+   * @param {function} condition
+   * @returns {number}
+   */
+  const advanceWhileChar = (condition) => {
+
+    const pos = index
+
+    while (index < length && condition(text.charCodeAt(index))) index++
+    return index - pos
 
   }
 
   /**
-   * Skip String - Consumes a string value between 2 quotes.
-   * By default, the stream index is advanced, to end of string.
-   * Passing `false` will preserve position index but still return
-   * the advancement.
+   * Skip String - Consumes a string value between 2 quotes
+   *
+   * WILL MODIFY POSITION
    *
    * @param {number} n
    * @param {number[]} [consume]
-   * @param {boolean} [advance=false]
+   * @returns {(number|false)}
    */
-  function skipString (n, consume = undefined, advance = true) {
+  const skipString = (n, consume = undefined) => {
 
-    const offset = txt.indexOf(txt.charAt(n), n + 1)
+    const offset = text.indexOf(text.charAt(n), n + 1)
 
     if (!offset) return false
-
     // consume escaped strings, eg: \" or \'
     if (getCodeChar(offset - 1) === BWS) return skipString(offset)
-
     // custom consumed character codes
-    if (consume) {
-      if (consume.includes(getCodeChar(offset))) return skipString(offset)
-    }
+    if (consume && consume.includes(getCodeChar(offset))) return skipString(offset)
 
-    return advance ? goto(offset) : offset
+    return goto(offset)
 
   }
 
   /**
    * Skip Whitespace
    *
-   */
-  function getString (n, consume) {
-
-    const capture = skipString(n, consume, false)
-
-    if (!capture) return false
-
-    return {
-      text: getText(n + 1, capture),
-      ends: capture
-    }
-
-  }
-
-  /**
-   * Skip Whitespace
+   * WILL MODIFY POSITION
    *
    * @returns {boolean}
+   * @see https://git.io/JJnq8
    */
-  function whitespace () {
+  const whitespace = () => {
 
-    return whileChar(c => (
+    return advanceWhileChar(c => (
       c === WSP ||
       c === TAB ||
       c === NWL ||
@@ -335,12 +207,64 @@ export function Stream ({ textDocument }) {
 
   }
 
-  function gotoChar (char) {
+  /**
+   * Advances Stream when Regular Expression finds a match
+   *
+   * WILL MODIFY POSITION
+   *
+   * @param {RegExp} regex
+   * @returns {(string|false)}
+   * @see https://git.io/JJnqC
+   */
+  const advanceIfRegExp = (regex) => {
 
-    while (index < len) {
-      if (txt.charCodeAt(index) === char) return true
-      index++
-      goto(1)
+    const match = text.substring(index + 1).match(regex)
+
+    if (!match) return false
+
+    index = index + match.index + match[0].length
+    return match[0]
+
+  }
+
+  /**
+   * Advances Stream until a Regular Expression match is found
+   *
+   * WILL MODIFY POSITION
+   *
+   * @param {RegExp} regex
+   * @returns {(string|false)}
+   * @see https://git.io/JJnqn
+   */
+  const advanceUntilRegExp = (regex) => {
+
+    const match = text.substring(index).match(regex)
+
+    if (!match) {
+      end()
+      return ''
+    }
+
+    index = index + match.index
+    return match[0]
+
+  }
+
+  /**
+   * Advances Stream until a single matching Character Code is found
+   *
+   * WILL MODIFY POSITION
+   *
+   * @param {number} char
+   * @returns {boolean}
+   * @see https://git.io/JJnqt
+   */
+  const advanceUntilChar = char => {
+
+    while (index < length) {
+      if (text.charCodeAt(index) !== char) index++
+      next()
+      return true
     }
 
     return false
@@ -348,69 +272,70 @@ export function Stream ({ textDocument }) {
   }
 
   /**
-   * Fast Forward - Consumes a position LTR
+   * Advances Stream until a single matching Character Code is found
    *
-   * @param {string} str
-   * @returns
+   * WILL MODIFY POSITION
+   *
+   * @param {number} char
+   * @returns {boolean}
+   * @see https://git.io/JJnq3
    */
-  function forward (str) {
+  const advanceIfChar = (char) => {
 
-    const pos = txt.indexOf(str, index + 1) + str.length
+    // console.log(index, char, text.charAt(index + 1))
 
-    if (pos < 0) return false
+    if (char !== text.charCodeAt(index + 1)) return false
 
-    // advance index position
-    index = pos
-
-    return index
+    index++
+    return true
 
   }
 
-  function advanceUntilChar (char) {
+  /**
+   * Each Code Character - Converts and match string sequence
+   *
+   * @param {number[]} codes
+   * @returns {boolean}
+   * @see https://git.io/JJnqt
+   */
+  const advanceIfChars = (codes) => {
 
-    while (index < txt.length) {
-      if (txt.charCodeAt(index) === char) return true
-      next(1)
+    if (codes.every((c, i) => c === getCodeChar(index + i))) {
+      next(codes.length)
+      return true
     }
 
     return false
 
   }
 
-  function advanceIfChar (char) {
+  /* -------------------------------------------- */
+  /*                    CLOSURE                   */
+  /* -------------------------------------------- */
 
-    if (char !== txt.charCodeAt(index)) return false
-
-    index++
-
-    return true
-
-  }
-
-  return {
-    regex
-    , prev
-    , next
-    , eos
-    , goto
-    , gotoChar
-    , gotoEnd
-    , getPosition
-    , getSource
-    , getText
-    , getCodeChar
-    , prevCodeChar
-    , nextCodeChar
-    , isCodeChar
-    , nextRegex
-    , eachCodeChar
-    , getString
-    , whileChar
-    , skipString
-    , whitespace
-    , forward
-    , advanceUntilChar
-    , advanceIfChar
-  }
+  return (
+    {
+      goto
+      , prev
+      , next
+      , eos
+      , end
+      , position
+      , source
+      , getText
+      , getCodeChar
+      , prevCodeChar
+      , nextCodeChar
+      , isCodeChar
+      , skipString
+      , whitespace
+      , advanceWhileChar
+      , advanceUntilRegExp
+      , advanceUntilChar
+      , advanceIfChar
+      , advanceIfChars
+      , advanceIfRegExp
+    }
+  )
 
 }

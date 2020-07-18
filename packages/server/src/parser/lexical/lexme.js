@@ -157,7 +157,7 @@ export const HTMLStartTagOpen = 22
  *
  * @enum {number}
  */
-export const HTMLStartTag = 23
+export const HTMLTagName = 23
 
 /**
  * After Delimeter `>` _when_ `<tag>`
