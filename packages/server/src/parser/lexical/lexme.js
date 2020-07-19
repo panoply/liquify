@@ -66,21 +66,28 @@ export const YAMLCommentClose = 9
  *
  * @enum {number}
  */
-export const LiquidStartTagOpen = 10
+export const LiquidTagOpen = 10
+
+/**
+ * Before Delimeter `{%` _when_ `{%- start -%}`
+ *
+ * @enum {number}
+ */
+export const LiquidWhitespaceDash = 35
 
 /**
  * Within Tag `{%- start -%}`
  *
  * @enum {number}
  */
-export const LiquidStartTag = 11
+export const LiquidTag = 11
 
 /**
  * After Delimeter `%}` _when_ `{%- start -%}`
  *
  * @enum {number}
  */
-export const LiquidStartTagClose = 12
+export const LiquidTagClose = 12
 
 /**
  * Before Delimeter `{%` _when_ `{%- endstart -%}`
@@ -108,7 +115,7 @@ export const LiquidEndTagClose = 15
  *
  * @enum {number}
  */
-export const LiquidSingularTagOpen = 16
+export const LiquidTagName = 16
 
 /**
  * Within Tag  `{%- tag -%}`
@@ -129,21 +136,21 @@ export const LiquidSingularTagClose = 18
  *
  * @enum {number}
  */
-export const LiquidObjectTagOpen = 19
+export const LiquidObjectOpen = 19
 
 /**
  * Within Tag `{{- object -}}`
  *
  * @enum {number}
  */
-export const LiquidObjectTag = 20
+export const LiquidObject = 20
 
 /**
  * After Delimeter `}}` _when_ `{{- tag -}}`
  *
  * @enum {number}
  */
-export const LiquidObjectTagClose = 21
+export const LiquidObjectClose = 21
 
 /**
  * Before Delimeter `<` _when_ `<tag>`

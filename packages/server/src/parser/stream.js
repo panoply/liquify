@@ -1,4 +1,6 @@
-import { WSP, TAB, NWL, LFD, CAR, BWS } from './lexical/characters'
+/* eslint one-var: ["error", { let: "never" } ] */
+
+import { WSP, TAB, NWL, LFD, CAR, BWS, SQO, DQO } from './lexical/characters'
 
 /**
  * Stream
@@ -8,7 +10,6 @@ import { WSP, TAB, NWL, LFD, CAR, BWS } from './lexical/characters'
  *
  * @export
  * @param {Document.Scope} document
- * @returns {object}
  * @see https://git.io/JJnqz
  */
 export function Stream ({ textDocument }) {
@@ -19,6 +20,13 @@ export function Stream ({ textDocument }) {
    * @type {number}
    */
   let index = 0
+
+  /**
+   * Captured Token
+   *
+   * @type {string}
+   */
+  let token
 
   /**
    * Source Text
@@ -60,10 +68,10 @@ export function Stream ({ textDocument }) {
    *
    * WILL MODIFY POSITION
    *
-   * @param {number} [n=1]
+   * @param {number} n
    * @returns {number}
    */
-  const next = (n = 1) => (index += n)
+  const advance = n => (index += n)
 
   /**
    * Goto Position
@@ -82,7 +90,7 @@ export function Stream ({ textDocument }) {
    *
    * @returns {number}
    */
-  const end = () => (index = length)
+  const gotoEnd = () => (index = length)
 
   /**
    * Previous Code Character
@@ -132,6 +140,14 @@ export function Stream ({ textDocument }) {
   const getCodeChar = (n = undefined) => text.charCodeAt(n || index)
 
   /**
+   * Get Character
+   *
+   * @param {number} [n]
+   * @returns {string}
+   */
+  const getChar = (n = undefined) => text.charAt(n || index)
+
+  /**
    * Get Source
    *
    * @returns {string}
@@ -142,10 +158,10 @@ export function Stream ({ textDocument }) {
    * Get String
    *
    * @param {number} start
-   * @param {number} end
+   * @param {number} [end]
    * @returns {string}
    */
-  const getText = (start, end) => text.substring(start, end)
+  const getText = (start, end = undefined) => text.substring(start, end || index)
 
   /**
    * While Character
@@ -208,22 +224,36 @@ export function Stream ({ textDocument }) {
   }
 
   /**
+   * Get RegExp Match - Returns matched string token when
+   * advance methods have ben executed
+   *
+   * WILL MODIFY POSITION
+   *
+   * @returns {string}
+   * @see https://git.io/JJnq8
+   */
+  const getRegExpMatch = () => token
+
+  /**
    * Advances Stream when Regular Expression finds a match
    *
    * WILL MODIFY POSITION
    *
    * @param {RegExp} regex
-   * @returns {(string|false)}
+   * @param {boolean} consume
+   * @returns {boolean}
    * @see https://git.io/JJnqC
    */
   const advanceIfRegExp = (regex) => {
 
-    const match = text.substring(index + 1).match(regex)
+    const match = text.substring(index).match(regex)
 
     if (!match) return false
 
-    index = index + match.index + match[0].length
-    return match[0]
+    index += match.index + match[0].length
+    token = match[0]
+
+    return true
 
   }
 
@@ -233,19 +263,25 @@ export function Stream ({ textDocument }) {
    * WILL MODIFY POSITION
    *
    * @param {RegExp} regex
-   * @returns {(string|false)}
+   * @param {boolean} consume
+   * @returns {string}
    * @see https://git.io/JJnqn
    */
-  const advanceUntilRegExp = (regex) => {
+  const advanceUntilRegExp = (regex, consume = false) => {
 
     const match = text.substring(index).match(regex)
 
     if (!match) {
-      end()
+      gotoEnd()
       return ''
     }
 
-    index = index + match.index
+    index = index + (
+      consume
+        ? match.index + match[0].length
+        : match.index
+    )
+
     return match[0]
 
   }
@@ -263,7 +299,6 @@ export function Stream ({ textDocument }) {
 
     while (index < length) {
       if (text.charCodeAt(index) !== char) index++
-      next()
       return true
     }
 
@@ -283,11 +318,12 @@ export function Stream ({ textDocument }) {
   const advanceIfChar = (char) => {
 
     // console.log(index, char, text.charAt(index + 1))
+    if (char === text.charCodeAt(index)) {
+      advance(1)
+      return true
+    }
 
-    if (char !== text.charCodeAt(index + 1)) return false
-
-    index++
-    return true
+    return false
 
   }
 
@@ -301,9 +337,40 @@ export function Stream ({ textDocument }) {
   const advanceIfChars = (codes) => {
 
     if (codes.every((c, i) => c === getCodeChar(index + i))) {
-      next(codes.length)
+
+      index += codes.length
+
       return true
+
     }
+
+    return false
+
+  }
+
+  /**
+   * Each Code Character - Converts and match string sequence
+   *
+   * @param {string|number[]} string
+   * @returns {boolean}
+   */
+  const advanceUntilChars = (string, consume = false) => {
+
+    if (typeof string !== 'string') {
+      string = string.reduce((s, c) => (s += String.fromCharCode(c)), '')
+    }
+
+    const offset = text.indexOf(string, index)
+
+    if (offset >= 0) {
+
+      goto(consume ? offset + string.length : offset)
+
+      return true
+
+    }
+
+    gotoEnd()
 
     return false
 
@@ -315,15 +382,17 @@ export function Stream ({ textDocument }) {
 
   return (
     {
-      goto
+      eos
+      , goto
+      , gotoEnd
       , prev
-      , next
-      , eos
-      , end
+      , advance
       , position
       , source
       , getText
       , getCodeChar
+      , getChar
+      , getRegExpMatch
       , prevCodeChar
       , nextCodeChar
       , isCodeChar
@@ -332,6 +401,7 @@ export function Stream ({ textDocument }) {
       , advanceWhileChar
       , advanceUntilRegExp
       , advanceUntilChar
+      , advanceUntilChars
       , advanceIfChar
       , advanceIfChars
       , advanceIfRegExp

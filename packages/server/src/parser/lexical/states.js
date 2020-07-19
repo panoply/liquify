@@ -31,7 +31,7 @@ export const WithinHTMLComment = 4
  *
  * @enum {number}
  */
-export const WithinLiquidStartTag = 5
+export const WithinLiquidTag = 5
 
 /**
  * Within `- endtag -` _when_ `{%- endtag -%}`
@@ -67,3 +67,5 @@ export const WithinLiquidComment = 9
  * @enum {number}
  */
 export const WithinUnkown = 10
+
+export const WhitespaceDash = 11

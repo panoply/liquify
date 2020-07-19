@@ -17,7 +17,7 @@ export const BeforeYAMLFrontmatter = 2
  *
  * @enum {number}
  */
-export const AfterYAMLFrontmatter = 3
+export const AfterOpeningFrontmatter = 3
 
 /**
  * After `LAN <` Delimeter, `t` _when_ `<tag>`
@@ -38,7 +38,7 @@ export const AfterOpeningHTMLEndTag = 5
  *
  * @enum {number}
  */
-export const WithinHTMLTag = 6
+export const AfterOpeningHTMLComment = 6
 
 /**
  * Within ` >` _when_ `</tag >`

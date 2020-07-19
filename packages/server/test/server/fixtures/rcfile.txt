@@ -1,0 +1,141 @@
+    switch (char.charCodeAt(0)) {
+
+      // DASH                                                         -
+      // --------------------------------------------------------------
+      case (Character.DSH):
+
+        // LIQUID TAG NAME
+
+        if (is.LiquidToken(token)) {
+          stream.advance(1)
+          state = ScanState.WhitespaceDash
+          return token
+        }
+
+        // FRONTMATTER: ---
+        if (stream.advanceIfChars([
+          Character.DSH,
+          Character.DSH,
+          Character.DSH
+        ])) {
+
+          if (token === TokenType.YAMLFrontmatterStart) {
+            index = stream.position(1)
+            token = TokenType.YAMLFrontmatterClose
+            return token
+          }
+
+          state = ScanState.WithinYAMLFrontmatter
+          token = TokenType.YAMLFrontmatterStart
+          return token
+        }
+
+        break
+
+      // LEFT CURLY BRACE                                             {
+      // --------------------------------------------------------------
+      case (Character.LCB):
+
+        // LIQUID DELIMETER: {%
+        if (stream.advanceIfChar(Character.PER)) {
+          state = ScanState.WithinLiquidTag
+          token = TokenType.LiquidTagOpen
+          return tokenize(token)
+
+        }
+
+        // LIQUID DELIMETER: {{
+        if (stream.advanceIfChar(Character.LCB)) {
+          state = ScanState.WithinLiquidObjectTag
+          token = TokenType.LiquidObjectOpen
+          return token
+        }
+
+        break
+
+      // PERCENTAGE                                                   %
+      // --------------------------------------------------------------
+      case (Character.PER):
+
+        // %}
+        if (stream.advanceIfChar(Character.RCB)) {
+          index = stream.advance(1)
+          state = ScanState.WithinUnkown
+          token = TokenType.LiquidTagClose
+          return token
+        }
+
+        break
+
+      // RIGHT CURLY BRACE                                            }
+      // --------------------------------------------------------------
+      case (Character.RCB):
+
+        // }}
+        if (stream.advanceIfChar(Character.RCB)) {
+          index = stream.advance(1)
+          state = ScanState.WithinUnkown
+          token = TokenType.LiquidObjectClose
+          return token
+        }
+
+        break
+
+      // LEFT ANGLE                                                   <
+      // --------------------------------------------------------------
+      case (Character.LAN):
+
+        // < or </
+        if (stream.advanceIfChar(Character.FWS)) {
+          state = ScanState.WithinHTMLEndTag
+          token = TokenType.HTMLEndTagOpen
+        } else {
+          state = ScanState.WithinHTMLStartTag
+          token = TokenType.HTMLStartTagOpen
+        }
+
+        if (stream.advanceIfRegExp(/^[^\s"'></=]*/)) {
+          return token
+        }
+
+        break
+
+      // RIGHT ANGLE                                                  >
+      // --------------------------------------------------------------
+      case (Character.RAN):
+
+        index = stream.advance(1)
+
+        // <>
+        if (token === TokenType.HTMLStartTagOpen) {
+          state = ScanState.WithinUnkown
+          return TokenType.HTMLStartTagClose
+        }
+
+        // </>
+        if (token === TokenType.HTMLEndTagOpen) {
+          state = ScanState.WithinUnkown
+          return TokenType.HTMLEndTagClose
+        }
+
+        break
+
+      // SINGLE/DOUBLE QUOTE                                         "'
+      // --------------------------------------------------------------
+      case (Character.SQO):
+      case (Character.DQO):
+
+        // "" or ''
+        stream.skipString(stream.position())
+
+        break
+
+      // PIPE CHARACTER                                               |
+      // --------------------------------------------------------------
+     // case (Character.PIP):
+
+        // "" or ''
+        // stream.skipString(stream.position())
+
+    //    break
+    }

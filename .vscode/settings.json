@@ -12,6 +12,18 @@
     "source.deleteSemicolons": true,
     "source.fixAll.eslint": true
   },
+  "highlight.regexes": {
+    "\\b(ScanState|TokenType|Characters)\\b\\.": {
+      "regexFlags": "g",
+      "filterLanguageRegex": "javascript",
+      "filterFileRegex": ".*\\.js",
+      "decorations": [
+        {
+          "color": "#81D4FA"
+        }
+      ]
+    }
+  },
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {

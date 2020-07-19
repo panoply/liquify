@@ -3,10 +3,12 @@ import { terser } from 'rollup-plugin-terser'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
+import replace from '@rollup/plugin-replace'
 import filesize from 'rollup-plugin-filesize'
 import obfuscator from '@liquify/rollup-plugin-obfuscator'
 import noderesolve from '@rollup/plugin-node-resolve'
 import globs from '@liquify/rollup-plugin-globs'
+import * as Lexical from './src/parser/lexical/liquid'
 import pkg from './package.json'
 
 export default {
@@ -40,6 +42,7 @@ export default {
       preferConst: true,
       compact: !!process.env.prod
     }),
+
     babel({
       babelHelpers: 'runtime',
       configFile: './.babelrc'
