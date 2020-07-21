@@ -390,7 +390,12 @@
       "ref": "https://shopify.github.io/liquid/tags/iteration/#break",
       "singular": true,
       "type": "iteration",
-      "within": ["case", "for", "if", "unless"]
+      "within": [
+        "case",
+        "for",
+        "if",
+        "unless"
+      ]
     },
     "capture": {
       "description": "Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.",
@@ -413,14 +418,18 @@
       "ref": "https://shopify.github.io/liquid/tags/iteration/#continue",
       "singular": true,
       "type": "iteration",
-      "within": ["for"]
+      "within": [
+        "for"
+      ]
     },
     "cycle": {
       "description": "Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",
       "ref": "https://shopify.github.io/liquid/tags/iteration/#cycle",
       "singular": true,
       "type": "iteration",
-      "within": ["for"]
+      "within": [
+        "for"
+      ]
     },
     "decrement": {
       "description": "Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",
@@ -433,14 +442,22 @@
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "within": ["case", "elsif", "if", "unless", "when"]
+      "within": [
+        "case",
+        "elsif",
+        "if",
+        "unless",
+        "when"
+      ]
     },
     "elsif": {
       "description": "Adds more conditions within an if or unless block.",
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "within": ["if"]
+      "within": [
+        "if"
+      ]
     },
     "for": {
       "description": "Repeatedly executes a block of code.",
@@ -448,7 +465,13 @@
         {
           "description": "Begins the loop at the specified index",
           "name": "offset",
-          "snippet": "offset:${0}"
+          "snippet": "offset: ${0}",
+          "grammar": [
+            "offset",
+            ":",
+            "$SPACE",
+            "$NUMBER|$VARIABLE"
+          ]
         },
         {
           "description": "Defines a range of numbers to loop through. The range can be defined by both literal and variable numbers",
@@ -458,22 +481,57 @@
         {
           "description": "Limits the loop to the specified number of iterations",
           "name": "limit",
-          "snippet": "limit:${0}"
+          "snippet": "limit:${0}",
+          "grammar": [
+            "limit",
+            ":",
+            "$SPACE",
+            "$NUMBER|$VARIABLE"
+          ]
         },
         {
           "description": "Reverses the order of the loop. Note that this flag’s spelling is different from the filter `reverse`",
-          "name": "reversed"
+          "name": "reversed",
+          "grammar": [
+            "reversed"
+          ]
         }
       ],
       "ref": "https://shopify.github.io/liquid/tags/iteration/#for",
       "snippet": "for ${1:item} in ${2|collection,(${3}..${4})|} ${0}",
-      "type": "iteration"
+      "type": "iteration",
+      "grammar": [
+        "$NAME",
+        "$SPACE",
+        "$ARGUMENT",
+        "$SPACE",
+        "in",
+        [
+          "$ARGUMENT",
+          [
+            "(",
+            "$NUMBER|$VARIABLE",
+            ".",
+            ".",
+            "$NUMBER|$VARIABLE",
+            ")"
+          ]
+        ],
+        "$PARAMS?"
+      ]
     },
     "if": {
       "description": "Executes a block of code only if a certain condition is met.",
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#if",
       "snippet": "if ${1} ${2|==,!=,or,and|} ${3} ",
-      "type": "control"
+      "type": "control",
+      "grammar": [
+        "$ARGUMENT",
+        "$SPACE",
+        "$OPERATORS?",
+        "$SPACE",
+        "$ARGUMENT?"
+      ]
     },
     "increment": {
       "description": "Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",
@@ -523,7 +581,9 @@
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#casewhen",
       "singular": true,
       "type": "control",
-      "within": ["case"]
+      "within": [
+        "case"
+      ]
     }
   }
 }

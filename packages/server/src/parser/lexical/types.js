@@ -38,3 +38,8 @@ export const object = 7
  * `8` Output Type, eg: `{% assign = '' %}` | `{% capture %}`
  */
 export const variable = 8
+
+/**
+ * `9` Raw Type, eg: `{% raw %}`
+ */
+export const raw = 9

@@ -238,3 +238,5 @@ export const TokenDelimeters = 33
  * @enum {number}
  */
 export const TokenUnknown = 34
+
+export const ControlToken = 35

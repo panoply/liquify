@@ -74,6 +74,7 @@ export enum TokenTypes {
   iteration = 6,
   object = 7,
   variable = 8,
+  raw = 8,
 }
 
 /**

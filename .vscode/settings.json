@@ -22,6 +22,37 @@
           "color": "#81D4FA"
         }
       ]
+    },
+    "(\"|\\|)(\\$)\\b(OPERATORS|ARGUMENT|PARAMS|NAME|VARIABLE|NUMBER)\\b(\\?)?": {
+      "regexFlags": "g",
+      "filterLanguageRegex": "json",
+      "filterFileRegex": ".*\\.json",
+      "decorations": [
+        {},
+        {
+          "color": "#81D4FA"
+        },
+        {
+          "color": "#fd557f"
+        },
+        {
+          "color": "#3af59e"
+        }
+      ]
+    },
+    "(\"|\\|)(\\$)\\b(SPACE)\\b": {
+      "regexFlags": "g",
+      "filterLanguageRegex": "json",
+      "filterFileRegex": ".*\\.json",
+      "decorations": [
+        {},
+        {
+          "color": "#81D4FA"
+        },
+        {
+          "color": "#c374f0"
+        }
+      ]
     }
   },
   "files.trimTrailingWhitespace": true,
@@ -52,11 +83,18 @@
   "typescript.suggest.autoImports": false,
   "eslint.alwaysShowStatus": true,
   "eslint.codeActionsOnSave.mode": "all",
-  "eslint.validate": ["html", "javascript"],
-  "eslint.options.extension": [".js"],
+  "eslint.validate": [
+    "html",
+    "javascript"
+  ],
+  "eslint.options.extension": [
+    ".js"
+  ],
   "prettier.useEditorConfig": true,
   "prettier.requireConfig": true,
-  "prettier.disableLanguages": ["html"],
+  "prettier.disableLanguages": [
+    "html"
+  ],
   "vsicons.associations.files": [
     {
       "icon": "vscode",
@@ -70,7 +108,9 @@
     },
     {
       "icon": "package",
-      "extensions": [".packages.json"],
+      "extensions": [
+        ".packages.json"
+      ],
       "filename": true,
       "format": "svg"
     },
@@ -91,7 +131,10 @@
     },
     {
       "icon": "babel2",
-      "extensions": [".babelrc", "babel.config.json"],
+      "extensions": [
+        ".babelrc",
+        "babel.config.json"
+      ],
       "filename": true,
       "format": "svg"
     },
@@ -108,7 +151,10 @@
     },
     {
       "icon": "netlify",
-      "extensions": ["_redirects", "_headers"],
+      "extensions": [
+        "_redirects",
+        "_headers"
+      ],
       "filename": true,
       "format": "svg"
     }

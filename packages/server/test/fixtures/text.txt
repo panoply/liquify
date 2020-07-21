@@ -6,31 +6,4 @@ prop:
 string: 'foo'
 ---
 
-{%- if
-section.settings.show_announcement | filter: '%}' -%}
-  {%- if section.settings.home_page_only == false or template.name == 'index' -%}
-
-    {%- if section.settings.link == blank -%}
-      <div>
-    {%- else -%}
-      <a href="{{ section.settings.link }}" >
-    {%- endif -%}
-
-      <p>{{ section.settings.text | escape }}</p>
-
-    {%- if section.settings.link == blank -%}
-      </div>
-    {%- else -%}
-      </a>
-    {%- endif -%}
-
-  {%- endif -%}
-{%- endif -%}
-
-
-<script
- data-liquid="{% if cond %}{{ tag }}{% endif-%}"
-
-></script>
-
-<script type="application/json"></script>
+{%-  if section.settings.show_announcement == boolean or    foo and bar !=    foo-%}

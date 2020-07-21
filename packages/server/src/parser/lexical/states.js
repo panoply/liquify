@@ -69,3 +69,5 @@ export const WithinLiquidComment = 9
 export const WithinUnkown = 10
 
 export const WhitespaceDash = 11
+
+export const ControlTag = 12

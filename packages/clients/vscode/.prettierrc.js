@@ -1,9 +1,9 @@
 module.exports = {
   overrides: [
     {
-      files: ['*.jsonc', '.liquidrc'],
+      files: ['*.jsonc', '.liquidrc', '*.json'],
       options: {
-        parser: 'json',
+        parser: 'json-stringify',
         arrowParens: 'avoid',
         bracketSpacing: true,
         htmlWhitespaceSensitivity: 'css',

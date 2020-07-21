@@ -356,6 +356,8 @@ export type Tags = { [name: string]: Tag };
 
 export type NodeSpecification = Object | Tag | Filter;
 
+export type Records = "filters" | "objects" | "filters";
+
 export interface Variation {
   readonly engine: string;
   readonly updated: string;

@@ -208,7 +208,7 @@ export function Stream ({ textDocument }) {
    *
    * WILL MODIFY POSITION
    *
-   * @returns {boolean}
+   * @returns {number}
    * @see https://git.io/JJnq8
    */
   const whitespace = () => {
@@ -219,7 +219,7 @@ export function Stream ({ textDocument }) {
       c === NWL ||
       c === LFD ||
       c === CAR
-    )) > 0
+    ))
 
   }
 
@@ -240,7 +240,6 @@ export function Stream ({ textDocument }) {
    * WILL MODIFY POSITION
    *
    * @param {RegExp} regex
-   * @param {boolean} consume
    * @returns {boolean}
    * @see https://git.io/JJnqC
    */
@@ -251,7 +250,7 @@ export function Stream ({ textDocument }) {
     if (!match) return false
 
     index += match.index + match[0].length
-    token = match[0]
+    // token = match[0]
 
     return true
 
@@ -278,7 +277,7 @@ export function Stream ({ textDocument }) {
 
     index = index + (
       consume
-        ? match.index + match[0].length
+        ? match.index + match[0].length + 1
         : match.index
     )
 
@@ -315,11 +314,11 @@ export function Stream ({ textDocument }) {
    * @returns {boolean}
    * @see https://git.io/JJnq3
    */
-  const advanceIfChar = (char) => {
+  const advanceIfChar = (char, next = false) => {
 
     // console.log(index, char, text.charAt(index + 1))
-    if (char === text.charCodeAt(index)) {
-      advance(1)
+    if (char === text.charCodeAt(next ? index + 1 : index)) {
+      advance(next ? 2 : 1)
       return true
     }
 
