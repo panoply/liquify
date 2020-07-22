@@ -8,7 +8,7 @@ A [rollup](https://rollupjs.org) plugin used by the [Liquify](#) IDE extension/p
 
 ## Why?
 
-The vast majority of rollup plugins which provide file transforms and/or copies were a bunch of smoke and mirrors and kept falling short in what I required in the [Liquify](#) development workspace. The plugin is essentially a stripped down and hard-fork extended version of [rollup-plugin-globsync](https://github.com/tivac/) that has been re-written, uses different dependencies and facilitates file transformations + type delcarations.
+The vast majority of rollup plugins which provide file transforms and/or copies were a bunch of smoke and mirrors and kept falling short in what was required in the [Liquify](#) development workspace. The plugin is essentially a stripped down and hard-fork extended version of [rollup-plugin-globsync](https://github.com/tivac/) that has been re-written, uses different dependencies and facilitates file transformations + type declarations.
 
 ## Install
 

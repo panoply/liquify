@@ -1,0 +1,43 @@
+{
+  "exclude": [
+    "node_modules",
+    "package"
+  ],
+  "typeAcquisition": {
+    "enable": true,
+    "include": [
+      "lodash",
+      "node"
+    ]
+  },
+  "compilerOptions": {
+    "types": [
+      "node",
+      "lodash"
+    ],
+    "target": "es2020",
+    "lib": [
+      "es2020"
+    ],
+    "module": "commonjs",
+    "checkJs": true,
+    "allowJs": true,
+    "allowUmdGlobalAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "preserveSymlinks": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noEmitOnError": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": ".",
+    "pretty": true,
+    "paths": {
+      "specification": [
+        "./types/specification.d.ts"
+      ]
+    }
+  }
+}

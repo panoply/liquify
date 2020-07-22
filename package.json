@@ -90,6 +90,12 @@
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.1"
     },
+    "./parser": {
+      "path": "packages/parser",
+      "name": "@liquify/liquid-parser",
+      "repo": "github.com/panoply/liquid-parser",
+      "version": "0.0.0"
+    },
     "./schema": {
       "path": "packages/schema",
       "name": "@liquify/schema-stores",

@@ -107,3 +107,23 @@ export const TAB = '\t'.charCodeAt(0)
  * `\s` – Whitespace - Used to space characters
  */
 export const WSP = ' '.charCodeAt(0)
+
+/**
+ * `[` – Left Open Bracket - Used to Liquid arrays
+ */
+export const LOB = '['.charCodeAt(0)
+
+/**
+ * `]` – Left Open Bracket - Used to Liquid arrays
+ */
+export const ROB = ']'.charCodeAt(0)
+
+/**
+ * `(` – Left Open Parenthesis - Used to Liquid Iterations
+ */
+export const LOP = '('.charCodeAt(0)
+
+/**
+ * `)` – Right Open Parenthesis - Used to Liquid Iterations
+ */
+export const ROP = ')'.charCodeAt(0)

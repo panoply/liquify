@@ -1,0 +1,21 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": {
+          "node": true
+        }
+      }
+    ]
+  ],
+  "sourceMaps": true,
+  "inputSourceMap": true,
+  "retainLines": true,
+  "plugins": [
+    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-transform-runtime"
+  ]
+}

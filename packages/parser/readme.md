@@ -2,13 +2,19 @@
 
 # @liquify/liquid-parser
 
-An incremental parser for the Liquid Templating Language written in JavaScript and is used by the [Liquify IDE](#) text editor plugin to construct a workable AST in documents that contain Liquid syntax. The parser is used in combination with the [Node LSP](#) (Language Server Protocol) implementation.
+An incremental parser/scanner for the Liquid Templating Language. Written in JavaScript and used by the [Liquify IDE](#) text editor plugin to construct a workable Abstract Syntax Tree. The parser is used in combination with the [Node LSP](#) (Language Server Protocol) implementation.
 
-> This parser is used to construct an AST, not perform actions on parsed code. Please use [liquidjs](#) by [Harttle](#) for engine support in JavaScript.
+- Performant. Supports incremental updates on the AST.
+- Lightweight. Tips the scales at 10kb.
+- Simple. Pass in a string, get back the AST.
+- Waterproof. No leaks, heavily tested. Really though, [see here](#)
+- Fast. Can processes 10k lines in 12ms and 0.5ms on each length of 2 change
+
+> **IMPORTANT** This parser is used to construct an AST, not perform actions on parsed code. Use [liquidjs](#) by [Harttle](#) for Liquid engine support in JavaScript, and consider supporting that project.
 
 ## Why?
 
-In order to facilitate modern IDE capabilties when working with the Liquid Templating Language in text editors like vscode, sublime, atom etc. The parser provides a detailed representation of Liquid syntax contained in documents.
+Facilitating modern IDE capabilties when working with the Liquid Templating Language in text editors required a performant parser to construct a detailed representation of Liquid syntax contained in documents.
 
 ## Install
 
@@ -16,14 +22,16 @@ In order to facilitate modern IDE capabilties when working with the Liquid Templ
 <pnpm|npm|yarn> i @liquify/liquid-parser --save
 ```
 
+_You should use [PNPM](#). PNPM is dope and does dope shit_
+
 ## Usage
 
-Please note that there would be very little use cases where you would require this parser. Generally speaking, the Liquify IDE plugin which consumes this package should suffice and facilitate most if not all your requirements when working with Liquid.
+**Please note:** there are very little use cases where you would require this parser. Generally speaking, the Liquify IDE plugin which consumes this package should suffice and facilitate most if not all your requirements when developing with Liquid, which is what this parsed is designed for.
 
 ```js
-import LiquidParser from "@liquify/liquid-parser";
+import { Parser } from "@liquify/liquid-parser";
 
-const parse = new LiquidParser();
+const parse = new Parser();
 
 // Full Document Parse
 const { ast } = await parse.full(String);
@@ -32,13 +40,13 @@ const { ast } = await parse.full(String);
 const { ast } = await parse.increment(String, { changes });
 ```
 
-### AST Nodes
+### Nodes
 
-Nodes contained on the AST will return an object. Depending on what type of node (tag) that is parsed some properties may differ, essentially it all boils down to the below:
+Each nodes contained on the AST will is a class instance. Depending on what type of node (tag) that is parsed some properties may differ, essentially it all boils down to the below:
 
 ```ts
 [
-  {
+  Node {
     name: string
     token: string[]
     type: number
@@ -77,8 +85,10 @@ Nodes contained on the AST will return an object. Depending on what type of node
 
 ## Tests
 
-Tests are provided using [AVA](#).
+Tests are provided using [AVA](#) and can be found in the `/test` directory. When running `pnpm dev` and launching development, tests will run along side bundling.
 
 `pnpm test`
 
 ## License
+
+[CC BY-NC-ND 4.0](#)

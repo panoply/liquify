@@ -1,0 +1,19 @@
+singular:
+  - include
+  - render
+  - assign
+  - increment
+  - decrement
+  - break
+  - continue
+  - else
+  - elsif
+blocks:
+  - if
+  - capture
+  - unless
+  - for
+  - tablerow
+  - cycle
+  - comment
+  - raw
