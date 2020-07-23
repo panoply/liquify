@@ -4,13 +4,13 @@
 
 An incremental parser/scanner for the Liquid Templating Language. Written in JavaScript and used by the [Liquify IDE](#) text editor plugin to construct a workable Abstract Syntax Tree. The parser is used in combination with the [Node LSP](#) (Language Server Protocol) implementation.
 
-- Performant. Supports incremental updates on the AST.
-- Lightweight. Tips the scales at 10kb.
-- Simple. Pass in a string, get back the AST.
-- Waterproof. No leaks, heavily tested. Really though, [see here](#)
-- Fast. Can processes 10k lines in 12ms and 0.5ms on each length of 2 change
+- Performant. _Supports incremental updates on the AST_
+- Lightweight. _Tips the scales at 10kb minified_
+- Simple. _Pass in a string, get back the AST_
+- Tested. _Heavily tested. Really though, [see here](#)_
+- Fast. _Processes 10k lines in 12ms on initial and 0.19ms increments_
 
-> **IMPORTANT** This parser is used to construct an AST, not perform actions on parsed code. Use [liquidjs](#) by [Harttle](#) for Liquid engine support in JavaScript, and consider supporting that project.
+> **IMPORTANT** This parser is used to construct and query AST, not perform actions on parsed code. Use [liquidjs](#) by [Harttle](#) for Liquid engine support in JavaScript, and consider supporting that project.
 
 ## Why?
 
@@ -22,16 +22,28 @@ Facilitating modern IDE capabilties when working with the Liquid Templating Lang
 <pnpm|npm|yarn> i @liquify/liquid-parser --save
 ```
 
-_You should use [PNPM](#). PNPM is dope and does dope shit_
-
 ## Usage
 
-**Please note:** there are very little use cases where you would require this parser. Generally speaking, the Liquify IDE plugin which consumes this package should suffice and facilitate most if not all your requirements when developing with Liquid, which is what this parsed is designed for.
+**Please note:** there are very little use cases where you would require this parser. Generally speaking, the Liquify IDE plugin which consumes this package should suffice and facilitate most if not all your requirements when developing with Liquid, which is what this parser is designed for.
 
 ```js
 import { Parser } from "@liquify/liquid-parser";
 
-const parse = new Parser();
+const parse = new Parser({
+  frontmatter: false,
+  spaces: true,
+  range: true,
+  offsets: true,
+  process_unknown: true,
+  parse_html: false,
+  skip_strings: false,
+  html_comments: false,
+  multiline_comments: true,
+  inline_comments: true,
+  track_variables: true,
+  error_tolerance: 1,
+  exclude: [],
+});
 
 // Full Document Parse
 const { ast } = await parse.full(String);
@@ -40,9 +52,9 @@ const { ast } = await parse.full(String);
 const { ast } = await parse.increment(String, { changes });
 ```
 
-### Nodes
+### AST Nodes
 
-Each nodes contained on the AST will is a class instance. Depending on what type of node (tag) that is parsed some properties may differ, essentially it all boils down to the below:
+Each node contained on the AST is a class instance. Depending on what type of node (tag) that is parsed some properties may differ, essentially it all boils down to the below:
 
 ```ts
 [
@@ -82,6 +94,12 @@ Each nodes contained on the AST will is a class instance. Depending on what type
   }
 ]
 ```
+
+## Development
+
+The Liquid Parser is written in ES2020 JavaScript using a combination of Babel and Bublé for transpilation. Type checking is processed with JSDocs and TypeScript declarations files are leveraged for the more complex structures. Declarations are declared globally and referenced where necessary in jsdoc comment/type params. TypeScript is also leveraged for numeric/string enums.
+
+> TypeScript files are not processed with the TypeScript compiler but instead using Babel and Terser. The `tsconfig.json` located at root exists to provide vscode intellisense features, for bundle configuration, see the `rollup.config.js` file.
 
 ## Tests
 

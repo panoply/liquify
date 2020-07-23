@@ -3,44 +3,36 @@ import { terser } from 'rollup-plugin-terser'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
-// import replace from '@rollup/plugin-replace'
+import replace from '@rollup/plugin-replace'
 import filesize from 'rollup-plugin-filesize'
 import noderesolve from '@rollup/plugin-node-resolve'
 import globs from '@liquify/rollup-plugin-globs'
 import pkg from './package.json'
 
-/**
- * Lexical imports will have `const` references
- * replaced with their number equivalents
- */
-// import * as TokenTypes from './src/lexical/types'
-// import * as Characters from './src/lexical/characters'
-// import * as ScanStates from 'src/lexical/states'
-// import * as TokenTags from './src/lexical/tags'
-// import * as ParseErrors from './src/lexical/errors'
-
 export default {
   input: 'src/index.js',
+  exclude: [
+    ''
+  ],
   output: [
     {
       format: 'cjs',
       file: pkg.main,
-      sourcemap: process.env.prod ? false : 'inline'
+      sourcemap: process.env.prod ? false : 'inline',
+      preferConst: true
     },
     {
       format: 'module',
       file: pkg.module,
-      sourcemap: process.env.prod ? false : 'inline'
+      sourcemap: process.env.prod ? false : 'inline',
+      preferConst: true
     }
   ],
   plugins: plugins([
-    json({
-      preferConst: true,
-      compact: !!process.env.prod
-    }),
     babel({
       babelHelpers: 'runtime',
-      configFile: './.babelrc'
+      configFile: './.babelrc',
+      extensions: [ '.ts', '.js' ]
     }),
     commonjs(),
     globs({

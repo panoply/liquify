@@ -1,31 +1,36 @@
 
-class Node {
+export default (function () {
 
-  constructor (kind) {
+  let range
+    , space
 
-    this.kind = kind
-    this.offset = []
-    this.token = []
+  return class Node {
+
+    token = []
+    offset = []
+
+    get range () {
+
+      return range
+    }
+
+    get space () {
+
+      return space
+    }
+
+    set space (level) {
+
+      if (!Array.isArray(level)) {
+        space = []
+      }
+    }
+
+    set errors (error) {
+
+      Object.assign(this, { error })
+
+    }
+
   }
-
-  set errors (error) {
-
-    Object.assign(this, { error })
-
-  }
-
-  create (name, offset) {
-
-    return Object.assign(this, (typeof offset === 'number' ? {
-      name,
-      token: [],
-      offset: [ offset ]
-    } : {
-      name,
-      token: [ stream.getText(offset[0], offset[1]) ],
-      offset: offset
-    }))
-
-  }
-
-}
+})()

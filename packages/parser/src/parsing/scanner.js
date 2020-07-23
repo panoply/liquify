@@ -1,10 +1,10 @@
 /* eslint one-var: ["error", { let: "never" } ] */
 
-import { Stream } from './stream'
-import * as TokenTag from '../lexical/tags'
-import * as TokenType from '../lexical/types'
-import * as ScanState from '../lexical/states'
+import stream from './stream'
 import * as Characters from '../lexical/characters'
+import { TokenType } from '../enums/types.ts'
+import { ScanState } from '../enums/state.ts'
+import { TagType } from '../enums/tags.ts'
 
 /**
  * Scanner
@@ -14,16 +14,8 @@ import * as Characters from '../lexical/characters'
  * resolves in a vastly different manner.
  *
  * @export
- * @param {Document.Scope} document
- * @param {Specification.Variation} specs
  */
-export function Scanner (document, specs) {
-
-  /* -------------------------------------------- */
-  /*                    STREAM                    */
-  /* -------------------------------------------- */
-
-  const stream = Stream(document)
+export default (function () {
 
   /* -------------------------------------------- */
   /*                    SCOPES                    */
@@ -78,27 +70,25 @@ export function Scanner (document, specs) {
    */
   let error
 
+  let specs
   /* -------------------------------------------- */
   /*                   FUNCTIONS                  */
   /* -------------------------------------------- */
 
   const getToken = () => stream.getText(index, stream.position())
 
-  const getSpec = () => (spec = specs[
-    token !== TokenTag.object
-      ? 'tags'
-      : 'objects'
-  ][getToken()])
-
   /**
    * Runs document scan
    *
    * @param {number} [initialOffset=0]
+   * @param {object} speck
    * @returns {number}
    */
-  function scan (initialOffset = 0) {
+  function scan (initialOffset = 0, speck) {
 
-    if (initialOffset > 0) stream.goto(initialOffset)
+    specs = speck
+
+    if (initialOffset > 0) stream.offset(initialOffset)
     if (stream.eos()) return TokenType.EOS
 
     state = state || ScanState.TokenUnknown
@@ -157,13 +147,16 @@ export function Scanner (document, specs) {
           state = ScanState.AfterTagName
 
           // Retrive the token specification
-          spec = getSpec()
+          spec = specs && specs[token !== TagType.object
+            ? 'tags'
+            : 'objects'
+          ][getToken()]
 
           // When no specification is found, break
           if (!spec) break
 
           // Assert the token type based on specification
-          type = TokenTag[spec.type]
+          type = TagType[`${spec.type}`]
 
           // return the token type, next scan will run in the 'AfterTagName' case
           return TokenType.LiquidTagName
@@ -179,7 +172,7 @@ export function Scanner (document, specs) {
         // capture and strip whitespace, eg: \s\n\t\r\f
         space = stream.whitespace()
 
-        if (type === TokenTag.object && stream.advanceIfChars(
+        if (type === TagType.object && stream.advanceIfChars(
           [
             Characters.RCB,
             Characters.RCB
@@ -194,20 +187,20 @@ export function Scanner (document, specs) {
          * Send token to appropriate case
          */
         switch (type) {
-          case TokenTag.control:
+          case TagType.control:
             state = ScanState.ControlToken
-            return Tokenize()
-          case TokenTag.include:
+            return tokenize()
+          case TagType.include:
             if (stream.advanceIfRegExp(/^[^\s%}]*/)) {
               state = ScanState.AfterIncludePath
             }
             break
-          case TokenTag.iteration:
+          case TagType.iteration:
             if (stream.advanceIfRegExp(/^[^\s]*/)) {
               state = ScanState.AfterForLoopIteree
             }
             break
-          case TokenTag.variable:
+          case TagType.variable:
             if (stream.advanceIfRegExp(/^[^\s=%}]*/)) {
               state = ScanState.AfterVariableName
             }
@@ -306,7 +299,7 @@ export function Scanner (document, specs) {
             if (!stream.advanceUntilRegExp(/[{%]/, true)) break
 
             // if this character is curly '{' define object curly
-            if (stream.isCodeChar(Characters.LCB)) token = TokenTag.object
+            if (stream.isCodeChar(Characters.LCB)) token = TagType.object
 
             // we are at an opening liquid tag, eg: {{ or {%
             state = ScanState.AfterOpeningTag
@@ -358,7 +351,6 @@ export function Scanner (document, specs) {
     {
       scan
       , getToken
-      , getSpec
       , getType: () => type
       , getError: () => error
       , getState: () => state
@@ -367,4 +359,5 @@ export function Scanner (document, specs) {
       , getRange: () => ({ start: index, end: stream.position() })
     }
   )
-}
+
+})()

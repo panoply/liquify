@@ -6,6 +6,7 @@
  * should be parsed/skipped/included etc etc.
  */
 export default {
+  engine: 'standard',
   frontmatter: false,
   spaces: true,
   range: true,

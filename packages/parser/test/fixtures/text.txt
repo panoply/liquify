@@ -1,0 +1,4 @@
+ {%- if block.settings.image -%}
+
+          {%- else -%}
+{% endif %}

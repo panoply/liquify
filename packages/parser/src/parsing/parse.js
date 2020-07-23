@@ -1,13 +1,11 @@
-import { Scanner } from './scanner'
-import { Node } from './node'
+import { TokenType } from '../enums/types.ts'
+import scanner from './scanner'
+import Node from './node'
 
-import * as TokenType from '../lexical/types'
+export function parse (document, specs) {
 
-export function Parser (document, specs) {
-
-  const scanner = Scanner(document, specs)
-
-  let token = scanner.scan()
+  let node
+    , token = scanner.scan(0, specs)
 
   while (token !== TokenType.EOS) {
 
@@ -26,12 +24,16 @@ export function Parser (document, specs) {
         break
       case TokenType.LiquidTagOpen:
         console.log(scanner.getRange(), 'Liquid Tag Open', scanner.getToken())
+
+        node = new Node()
+        node.offset.push(scanner.getRange())
+
         break
 
       case TokenType.LiquidWhitespaceDash:
 
         console.log(scanner.getRange(), 'Liquid Whitespace Dash', scanner.getToken())
-        // document.ast.push(curr)
+        document.ast.push(node)
         // curr = {}
 
         break
