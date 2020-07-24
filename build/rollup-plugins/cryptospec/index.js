@@ -14,18 +14,19 @@ export default function (options = {}) {
   const crypto = cryptographer(options.password)
   const merge = json => {
 
-    Object.keys(json).forEach(
-      key => options.defaults[key] && Object.keys(json[key]).forEach(
-        prop => (
+    for (const key of Object.keys(json)) {
+      if (options.defaults[key]) {
+        for (const prop of Object.keys(json[key])) {
           json[key][prop] = {
             ...options.defaults[key],
             ...json[key][prop]
           }
-        )
-      )
-    )
+        }
+      }
+    }
 
     return crypto.encode(json)
+
   }
 
   let runner = 0
@@ -65,34 +66,42 @@ export default function (options = {}) {
         : `${k}: () => decrypt(${k}, crypto.decode(${base}))`
       ))
 
-      return `
+      return /* js */`
+
       import cryptographer from '@liquify/cryptographer'
+
       export default async iv => {
+
         const crypto = cryptographer(iv);
+
         function decrypt(id, json) {
+
           if(typeof json !== 'object') return new Error("Invalid IV password was supplied!")
+
           if(id === 'standard') return json;
+
           const variant = crypto.decode(id)
-          return {
-            ...variant,
-            filters: {
-              ...variant.filters,
-              ...json.filters
-            },
-            tags: {
-              ...variant.tags,
-              ...json.tags
+
+          return (
+            {
+              ...variant,
+              tags: { ...variant.tags, ...json.tags },
+              filters: { ...variant.filters, ...json.filters }
             }
-          }
+          )
+
         }
 
         ${modules.join(';\n')}
 
         return { ${decoded.join(',\n')} }
 
-      }`
+      }
+
+      `
 
     },
+
     transform (code, id) {
 
       if (!filter(id)) return null

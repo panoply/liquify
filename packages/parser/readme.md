@@ -4,17 +4,15 @@
 
 An incremental parser/scanner for the Liquid Templating Language. Written in JavaScript and used by the [Liquify IDE](#) text editor plugin to construct a workable Abstract Syntax Tree. The parser is used in combination with the [Node LSP](#) (Language Server Protocol) implementation.
 
-- Performant. _Supports incremental updates on the AST_
-- Lightweight. _Tips the scales at 10kb minified_
-- Simple. _Pass in a string, get back the AST_
-- Tested. _Heavily tested. Really though, [see here](#)_
-- Fast. _Processes 10k lines in 12ms on initial and 0.19ms increments_
-
 > **IMPORTANT** This parser is used to construct and query AST, not perform actions on parsed code. Use [liquidjs](#) by [Harttle](#) for Liquid engine support in JavaScript, and consider supporting that project.
 
 ## Why?
 
 Facilitating modern IDE capabilties when working with the Liquid Templating Language in text editors required a performant parser to construct a detailed representation of Liquid syntax contained in documents.
+
+## Grammar
+
+Liquid exists in a multitude of variations and no official/formal grammar exists for the language outside of its [standard](#) open sourced variation. Liquify does use
 
 ## Install
 
@@ -29,7 +27,7 @@ Facilitating modern IDE capabilties when working with the Liquid Templating Lang
 ```js
 import { Parser } from "@liquify/liquid-parser";
 
-const parse = new Parser({
+const parse = new Parser("standard", {
   frontmatter: false,
   spaces: true,
   range: true,

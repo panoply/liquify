@@ -379,8 +379,8 @@
   "tags": {
     "assign": {
       "description": "Creates a new variable.",
-      "filters": true,
       "ref": "https://shopify.github.io/liquid/tags/variable/#assign",
+      "filters": true,
       "singular": true,
       "snippet": "assign ${1:var} = ${2:value}",
       "type": "variable"
@@ -390,7 +390,7 @@
       "ref": "https://shopify.github.io/liquid/tags/iteration/#break",
       "singular": true,
       "type": "iteration",
-      "within": [
+      "parents": [
         "case",
         "for",
         "if",
@@ -418,7 +418,7 @@
       "ref": "https://shopify.github.io/liquid/tags/iteration/#continue",
       "singular": true,
       "type": "iteration",
-      "within": [
+      "parents": [
         "for"
       ]
     },
@@ -427,7 +427,7 @@
       "ref": "https://shopify.github.io/liquid/tags/iteration/#cycle",
       "singular": true,
       "type": "iteration",
-      "within": [
+      "parents": [
         "for"
       ]
     },
@@ -442,7 +442,7 @@
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "within": [
+      "parents": [
         "case",
         "elsif",
         "if",
@@ -455,7 +455,7 @@
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "within": [
+      "parents": [
         "if"
       ]
     },
@@ -581,7 +581,7 @@
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#casewhen",
       "singular": true,
       "type": "control",
-      "within": [
+      "parents": [
         "case"
       ]
     }

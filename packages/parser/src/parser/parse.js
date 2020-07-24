@@ -1,11 +1,13 @@
 import { TokenType } from '../enums/types.ts'
 import scanner from './scanner'
+import specs from './specs'
 import Node from './node'
 
-export function parse (document, specs) {
+export function parse (document) {
 
   let node
-    , token = scanner.scan(0, specs)
+    , curr
+    , token = scanner.scan()
 
   while (token !== TokenType.EOS) {
 
@@ -22,27 +24,34 @@ export function parse (document, specs) {
         console.log(scanner.getRange(), 'YAML Frontmatter Close', scanner.getToken())
 
         break
-      case TokenType.LiquidTagOpen:
-        console.log(scanner.getRange(), 'Liquid Tag Open', scanner.getToken())
 
-        node = new Node()
-        node.offset.push(scanner.getRange())
+      case TokenType.LiquidTagOpen:
+
+        curr = new Node()
+        node = document.ast[document.ast.push(curr) - 1]
+        node.type = specs.type
+        node.offset.push(scanner.getPosition())
+
+        // active = scanner.getOffset()
+        // console.log(node, 'Liquid Tag Open', scanner.getToken())
 
         break
 
       case TokenType.LiquidWhitespaceDash:
 
-        console.log(scanner.getRange(), 'Liquid Whitespace Dash', scanner.getToken())
-        document.ast.push(node)
+        node.context.push(scanner.getToken())
+        // console.log(scanner.getLocation(), 'Liquid Whitespace Dash', scanner.getToken())
         // curr = {}
 
         break
       case TokenType.LiquidTagName:
-        // console.log('Liquid Name', curr)
+        console.log('Liquid Name', curr)
 
-        console.log('Spaces:', scanner.getSpace())
+        node.name = scanner.getToken()
 
-        console.log(scanner.getRange(), 'Liquid Tag Name', scanner.getToken())
+        // console.log('Spaces:', scanner.getSpace())
+
+        // console.log(curr, 'Liquid Tag Name', scanner.getToken())
 
         //  console.log('Spec:', scanner.getSpec())
 
@@ -50,13 +59,14 @@ export function parse (document, specs) {
 
         break
 
-      case TokenType.LiquidObject:
-      case TokenType.LiquidTag:
-        // document.ast.push(scanner.getRange())
-        console.log(scanner.getRange(), 'Liquid Token', scanner.getToken())
+      case TokenType.LiquidObjectClose:
+      case TokenType.LiquidTagClose:
+
+        node.offset.push(scanner.getPosition())
+        node.token.push(scanner.getToken(node.start))
+        // console.log(scanner.getRange(), 'Liquid Token Closed', scanner.getToken(active))
 
         break
-
     /*  case TokenType.LiquidObjectOpen:
       case TokenType.LiquidTagOpen:
 
@@ -72,16 +82,6 @@ export function parse (document, specs) {
 
       case TokenType.LiquidTag:
         // console.log('here')
-        break
-
-      case TokenType.LiquidTagClose:
-      case TokenType.LiquidObjectClose:
-
-        curr.end = scanner.getIndex()
-        curr.token = scanner.getToken(curr.start, curr.end)
-        document.ast.push(curr)
-        curr = {}
-
         break
 
       case TokenType.HTMLStartTagOpen:

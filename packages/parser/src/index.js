@@ -1,7 +1,8 @@
-import stream from './parsing/stream'
-import increment from './parsing/increment'
-import { parse } from './parsing/parse'
-import options from './parsing/options'
+import stream from './parser/stream'
+import specs from './parser/specs'
+import increment from './parser/increment'
+import { parse } from './parser/parse'
+import options from './parser/options'
 
 export class LiquidParser {
 
@@ -12,11 +13,12 @@ export class LiquidParser {
 
   }
 
-  parse (document, spec) {
+  parse (document, specification) {
 
     stream.source = document.textDocument.getText()
+    specs.spec = specification
 
-    return parse(document, spec)
+    return parse.bind(this.options)(document)
 
   }
 
@@ -31,6 +33,8 @@ export class LiquidParser {
   }
 
   getSpec () {
+
+    return specs.spec
 
   }
 

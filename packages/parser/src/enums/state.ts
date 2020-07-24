@@ -20,12 +20,12 @@ export const enum ScanState {
   /**
    * `{% tag^`
    */
-  AfterTagName,
+  TagName,
 
   /**
-   * `{{ object^` - Excludes `.` seperator
+   * `{% tag %}^` or `{{ tag }}^`
    */
-  AfterObjectName,
+  TagClose,
 
   /**
    * `{{ object^` - Excludes `.` seperator
