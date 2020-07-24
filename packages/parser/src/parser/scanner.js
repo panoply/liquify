@@ -1,12 +1,11 @@
 /* eslint one-var: ["error", { let: "never" } ] */
 
+import { TokenType } from '../enums/types'
+import { ScanState } from '../enums/state'
 import stream from './stream'
 import specs from './specs'
 import * as Characters from '../lexical/characters'
-import { TokenType } from '../enums/types.ts'
-import { ScanState } from '../enums/state.ts'
-import { TagType } from '../enums/tags.ts'
-
+import * as TokenTag from '../lexical/tags'
 /**
  * Scanner
  *
@@ -122,7 +121,7 @@ export default (function () {
 
         if (stream.whitespace() > 0) return; else index = stream.position()
         if (!stream.advanceUntilRegExp(/[{%]/, true)) return delimeters()
-        if (stream.isCodeChar(Characters.LCB)) specs.type = TagType.object
+        if (stream.isCodeChar(Characters.LCB)) specs.type = TokenTag.object
 
         state = ScanState.AfterOpeningTag
         return TokenType.LiquidTagOpen
@@ -217,9 +216,9 @@ export default (function () {
         index = stream.position()
 
         if (stream.advanceIfRegExp(/^[^\s'"|!=<>%}.-]*/)) {
-          if (specs.type) specs.type = TagType[specs.type]
-          console.log(specs.type)
+          specs.name = getToken()
           state = ScanState.TagName
+          if (!specs.type) specs.type = TokenTag[specs.spec.type]
           return TokenType.LiquidTagName
         }
 
@@ -235,6 +234,17 @@ export default (function () {
         space = stream.whitespace()
         index = stream.position()
         state = ScanState.TagClose
+
+        switch (specs.type) {
+
+          case TokenTag.control:
+            if (stream.advanceIfRegExp(/^-?%\}/)) return TokenType.ParseError
+            if (stream.advanceIfRegExp(/^[^\s%}-]*/)) {
+              state = ScanState.TagClose
+              return TokenType.ControlCondition
+            }
+            break
+        }
 
         if (stream.advanceIfRegExp(/^-(?=[%}]\})/)) {
           return TokenType.LiquidWhitespaceDash

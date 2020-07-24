@@ -1,4 +1,4 @@
-import { TagType } from "../src/enums/tags";
+import { TagType } from "../src/lexical/tags";
 import { TokenType } from "../src/enums/types";
 import { TokenKind } from "../src/enums/kinds";
 import { Errors } from "../src/enums/errors";

@@ -64,7 +64,7 @@
     "@liquify/rollup-plugin-obfuscator": "workspace:^0.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
     "@liquify/testae": "workspace:^0.0.0",
-    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@rollup/plugin-replace": "^2.3.3",
     "ava": "^3.10.1",

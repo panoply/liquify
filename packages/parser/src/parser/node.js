@@ -1,20 +1,23 @@
 
-import { object } from './utils'
-
 export default (function () {
 
-  let range
-    , space
+  let space
+    , context = {}
 
   return class Node {
 
     /**
      * Tag Name
      *
-     * @type{string}
+     * @type {string}
      */
     name = undefined
 
+    /**
+     * Tag Type
+     *
+     * @type {string}
+     */
     type = undefined
 
     /**
@@ -45,11 +48,6 @@ export default (function () {
      */
     range = {}
 
-    /**
-     * Range - Line/character position
-     *
-     * @type {array}
-     */
     context = []
 
     /**

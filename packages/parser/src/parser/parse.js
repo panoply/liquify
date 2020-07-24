@@ -1,4 +1,4 @@
-import { TokenType } from '../enums/types.ts'
+import { TokenType } from '../enums/types'
 import scanner from './scanner'
 import specs from './specs'
 import Node from './node'
@@ -39,15 +39,38 @@ export function parse (document) {
 
       case TokenType.LiquidWhitespaceDash:
 
-        node.context.push(scanner.getToken())
+        node.context.push({
+          type: 'Dash',
+          value: scanner.getToken(),
+          range: scanner.getRange()
+        })
+
+        node.context.push({
+          type: 'Whitespace',
+          value: scanner.getSpace(),
+          range: scanner.getRange()
+
+        })
         // console.log(scanner.getLocation(), 'Liquid Whitespace Dash', scanner.getToken())
         // curr = {}
 
         break
       case TokenType.LiquidTagName:
-        console.log('Liquid Name', curr)
+        // console.log('Liquid Name', curr)
 
         node.name = scanner.getToken()
+        node.context.push({
+          type: 'Indentifier',
+          value: scanner.getToken(),
+          range: scanner.getRange()
+        })
+
+        node.context.push({
+          type: 'Whitespace',
+          value: scanner.getSpace(),
+          range: scanner.getRange()
+
+        })
 
         // console.log('Spaces:', scanner.getSpace())
 
@@ -66,6 +89,23 @@ export function parse (document) {
         node.token.push(scanner.getToken(node.start))
         // console.log(scanner.getRange(), 'Liquid Token Closed', scanner.getToken(active))
 
+        break
+
+      case TokenType.ControlCondition:
+
+        node.context.push({
+          type: 'Condition',
+          value: scanner.getToken(),
+          range: scanner.getRange()
+
+        })
+
+        node.context.push({
+          type: 'Whitespace',
+          value: scanner.getSpace(),
+          range: scanner.getRange()
+
+        })
         break
     /*  case TokenType.LiquidObjectOpen:
       case TokenType.LiquidTagOpen:

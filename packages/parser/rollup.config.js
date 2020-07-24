@@ -29,6 +29,7 @@ export default {
     }
   ],
   plugins: plugins([
+    noderesolve({ extensions: [ '.ts', '.js' ] }),
     babel({
       babelHelpers: 'runtime',
       configFile: './.babelrc',
@@ -51,7 +52,7 @@ export default {
     })
   ],
   [
-    noderesolve(),
+    noderesolve({ extensions: [ '.ts', '.js' ] }),
     terser({
       ecma: 6
       , warnings: 'verbose'

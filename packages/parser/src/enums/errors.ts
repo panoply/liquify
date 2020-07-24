@@ -2,7 +2,7 @@ export const enum ParseError {
   /**
    * Reports an error.
    */
-  Error = 1,
+  Errors = 1,
 
   /**
    * Reports a warning.

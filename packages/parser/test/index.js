@@ -60,7 +60,7 @@ test('FullDocument Parse', t => {
   const node = AST({ fixture: doc }, t.context)
   const end = process.hrtime(start)
 
-  console.log(node)
+  console.log(node[0])
   t.log(time(end, { verbose: true }))
   t.pass()
 

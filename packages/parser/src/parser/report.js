@@ -1,16 +1,14 @@
-function Errors (document) {
+import { ParseError } from '../enums/errors'
 
-  return (error, start, end) => ({
+export function ReportError (document) {
 
-    incomplete: {
-      severity: Severities.Error,
-      message: '',
-      range: {
-        start: document.positionAt(start),
-        end: document.positionAt(end)
-      }
+  return (severity = ParseError.Error, message, range) => (
+    {
+      severity,
+      message,
+      range
     }
 
-  }[error])
+  )
 
 }

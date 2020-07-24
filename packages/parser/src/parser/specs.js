@@ -1,4 +1,4 @@
-import { TagType } from '../enums/tags.ts'
+import * as TokenTag from '../lexical/tags'
 
 export default (function () {
 
@@ -34,7 +34,7 @@ export default (function () {
 
     get spec () {
 
-      return spec[this.type === TagType.object ? 'objects' : 'tags'][this.name]
+      return spec[this.type === TokenTag.object ? 'objects' : 'tags'][this.name]
 
     }
 
