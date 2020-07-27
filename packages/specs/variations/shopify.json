@@ -15,7 +15,9 @@
     "currency_selector": {
       "description": "Generates a drop-down list that customers can use to select an accepted currency on your storefront. This filter must be used on the form object within a currency form",
       "snippet": "class: ${1}, id: ${2}",
-      "within": ["form"],
+      "within": [
+        "form"
+      ],
       "parameters": [
         {
           "name": "class",
@@ -84,6 +86,11 @@
       "description": "font_modify takes two arguments. The first indicates which property should be modified and the second is the modification to be made.",
       "snippet": "font_modify:  '${1|normal,italic,oblique|}', '${2|100,200,300,400,500,600,700,800,900,lighter,normal,bold,bolder|}'",
       "ref": "https://help.shopify.com/en/themes/liquid/filters/font-filters#font_face",
+      "context": [
+        "$string",
+        "$comma?",
+        "$string"
+      ],
       "parameters": [
         {
           "name": "style",
@@ -122,7 +129,16 @@
               "description": "Returns a bolder variant of the same style by applying the rules used by the CSS font-weight property and browser fallback weights (if it exists)."
             },
             {
-              "name": ["100", "200", "300", "400", "500", "600", "700", "800"],
+              "name": [
+                "100",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+              ],
               "description": "Returns a variant of the same style with the given weight (if it exists)."
             },
             {
@@ -163,6 +179,9 @@
         {
           "type": "string"
         }
+      ],
+      "context": [
+        "$string?"
       ]
     },
     "global_asset_url": {
@@ -182,22 +201,36 @@
     "link_to": {
       "description": "Generates an HTML link. The first parameter is the URL of the link, and the optional second parameter is the title of the link.",
       "snippet": "link_to: '${1:url}', '${2:title}'",
-      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to",
+      "context": [
+        "$string|$variable|$object",
+        "$comma?",
+        "$string|$variable|$object"
+      ]
     },
     "link_to_add_tag": {
       "description": "Creates a link to all products in a collection that have a given tag as well as any tags that have been already selected.",
       "snippet": "link_to_add_tag: ${1}",
-      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_add_tag"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_add_tag",
+      "context": [
+        "$string|$variable|$object"
+      ]
     },
     "link_to_remove_tag": {
       "description": "Generates a link to all products in a collection that have the given tag and all the previous tags that might have been added already.",
       "snippet": "link_to_remove_tag: ${1}",
-      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_remove_tag"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_remove_tag",
+      "context": [
+        "$string|$variable|$object"
+      ]
     },
     "link_to_tag": {
       "description": "Creates a link to all products in a collection that have a given tag.",
       "snippet": "link_to_tag: ${1}",
-      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_tag"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_tag",
+      "context": [
+        "$string|$variable|$object"
+      ]
     },
     "link_to_type": {
       "description": "Creates an HTML link to a collection page that lists all products belonging to a product type.",
@@ -206,7 +239,12 @@
     "link_to_vendor": {
       "description": "Creates an HTML link to a collection page that lists all products belonging to a vendor.",
       "snippet": "link_to_vendor: '${1:url}', '${2:title}'",
-      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_vendor"
+      "ref": "https://help.shopify.com/themes/liquid/filters/url-filters#link_to_vendor",
+      "context": [
+        "$string|$variable|$object",
+        "$comma?",
+        "$string|$variable|$object"
+      ]
     },
     "money": {
       "description": "Formats the price based on the shop’s `HTML without currency` setting",
@@ -1063,7 +1101,9 @@
     "form": {
       "description": "The form object is used within the form tag. It contains attributes of its parent form.",
       "filters": false,
-      "within": ["form"],
+      "within": [
+        "form"
+      ],
       "properties": [
         {
           "name": "address1",
@@ -1174,7 +1214,9 @@
       ],
       "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/for-loops",
       "whitespace": false,
-      "within": ["for"]
+      "within": [
+        "for"
+      ]
     },
     "fulfillment": {
       "description": "The fulfillment object",
@@ -1555,6 +1597,10 @@
       "type": "output",
       "description": "Creates an HTML <form> element along with the required <input> elements to submit the form to a particular endpoint.",
       "ref": "https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form",
+      "context": [
+        "$types~{$comma}?",
+        "$parameters"
+      ],
       "parameters": [
         {
           "name": "article",
@@ -1649,7 +1695,10 @@
       "parameters": false,
       "filters": false,
       "type": "include",
-      "ref": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"
+      "ref": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
+      "context": [
+        "$string"
+      ]
     },
     "paginate": {
       "description": "Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",
@@ -1662,6 +1711,11 @@
           "name": "by",
           "description": "The by parameter is followed by an integer between 1 and 50 that tells the paginate tag how many results it should output per page."
         }
+      ],
+      "context": [
+        "$iteree",
+        "$keyword",
+        "$number"
       ]
     },
     "render": {
@@ -1670,20 +1724,38 @@
       "singular": true,
       "ref": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
       "type": "include",
+      "context": [
+        "$string",
+        "$parameters"
+      ],
       "parameters": [
         {
           "name": "for",
           "seperator": "space",
-          "requires": ["as"],
+          "requires": [
+            "as"
+          ],
           "snippet": "for ${1} as ${2} ${0}",
-          "description": "A snippet can be rendered once for each value of an enumerable object by using the `for` and `as` parameters.\n\nWhen using the for parameter, the forloop object is accessible within the snippet."
+          "description": "A snippet can be rendered once for each value of an enumerable object by using the `for` and `as` parameters.\n\nWhen using the for parameter, the forloop object is accessible within the snippet.",
+          "context": [
+            "$array",
+            "$keyword",
+            "$iteree"
+          ]
         },
         {
           "name": "with",
           "separator": "space",
-          "requires": ["as"],
-          "snippet": "with ${1} for ${1} as ${2} ${0}",
-          "description": "A single object can be passed to a snippet by using the `with` and `as` parameters."
+          "requires": [
+            "as"
+          ],
+          "snippet": "with ${1} as ${2} ${0}",
+          "description": "A single object can be passed to a snippet by using the `with` and `as` parameters.",
+          "context": [
+            "$variable",
+            "$keyword",
+            "$iteree"
+          ]
         }
       ]
     },
@@ -1694,7 +1766,10 @@
       "ref": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
       "singular": true,
       "parameters": false,
-      "type": "include"
+      "type": "include",
+      "context": [
+        "$string"
+      ]
     },
     "schema": {
       "description": "The javascript tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",
@@ -1725,6 +1800,9 @@
           "name": "scss",
           "description": "SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."
         }
+      ],
+      "context": [
+        "$string"
       ]
     },
     "javascript": {

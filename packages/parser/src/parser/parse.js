@@ -1,111 +1,86 @@
 import { TokenType } from '../enums/types'
+import { TokenContext } from '../enums/context'
+import { TokenKind } from '../enums/kinds'
 import scanner from './scanner'
 import specs from './specs'
 import Node from './node'
+import * as TokenTags from '../lexical/tags'
+import * as Characters from '../lexical/characters'
 
 export function parse (document) {
 
   let node
-    , curr
     , token = scanner.scan()
 
   while (token !== TokenType.EOS) {
 
+    console.log(node)
+
     switch (token) {
+
+      case TokenType.Whitespace:
+
+        node.context = TokenContext.Whitespace
+
+        break
 
       case TokenType.YAMLFrontmatterStart:
 
-        console.log(scanner.getRange(), 'YAML Frontmatter Start', scanner.getToken())
+        node = document.ast[document.ast.push(new Node()) - 1]
+        node.type = TokenTags.embedded
+        node.kind = TokenKind.Yaml
+        node.token.push(scanner.getText(0, scanner.end + 1))
+        node.offsets.push(0, scanner.end + 1)
 
         break
 
       case TokenType.YAMLFrontmatterClose:
 
-        console.log(scanner.getRange(), 'YAML Frontmatter Close', scanner.getToken())
+        node.name = 'frontmatter'
+        node.offsets.push(scanner.getIndex, scanner.end)
+        node.token.push(scanner.getText(scanner.getIndex))
 
         break
 
       case TokenType.LiquidTagOpen:
 
-        curr = new Node()
-        node = document.ast[document.ast.push(curr) - 1]
+        node = document.ast[document.ast.push(new Node()) - 1]
         node.type = specs.type
-        node.offset.push(scanner.getPosition())
-
-        // active = scanner.getOffset()
-        // console.log(node, 'Liquid Tag Open', scanner.getToken())
+        node.offsets.push(scanner.start)
 
         break
 
       case TokenType.LiquidWhitespaceDash:
 
-        node.context.push({
-          type: 'Dash',
-          value: scanner.getToken(),
-          range: scanner.getRange()
-        })
-
-        node.context.push({
-          type: 'Whitespace',
-          value: scanner.getSpace(),
-          range: scanner.getRange()
-
-        })
-        // console.log(scanner.getLocation(), 'Liquid Whitespace Dash', scanner.getToken())
-        // curr = {}
+        node.context = TokenContext.Dash
 
         break
+
       case TokenType.LiquidTagName:
-        // console.log('Liquid Name', curr)
 
-        node.name = scanner.getToken()
-        node.context.push({
-          type: 'Indentifier',
-          value: scanner.getToken(),
-          range: scanner.getRange()
-        })
-
-        node.context.push({
-          type: 'Whitespace',
-          value: scanner.getSpace(),
-          range: scanner.getRange()
-
-        })
-
-        // console.log('Spaces:', scanner.getSpace())
-
-        // console.log(curr, 'Liquid Tag Name', scanner.getToken())
-
-        //  console.log('Spec:', scanner.getSpec())
-
-        // curr = {}
+        node.name = scanner.string
+        node.context = TokenContext.Indentifier
 
         break
 
       case TokenType.LiquidObjectClose:
       case TokenType.LiquidTagClose:
 
-        node.offset.push(scanner.getPosition())
-        node.token.push(scanner.getToken(node.start))
-        // console.log(scanner.getRange(), 'Liquid Token Closed', scanner.getToken(active))
+        node.offsets.push(scanner.start)
+        node.token.push(scanner.getText(node.start, scanner.start))
 
         break
 
       case TokenType.ControlCondition:
 
-        node.context.push({
-          type: 'Condition',
-          value: scanner.getToken(),
-          range: scanner.getRange()
+        node.context = TokenContext.Condition
 
-        })
+        break
 
-        node.context.push({
-          type: 'Whitespace',
-          value: scanner.getSpace(),
-          range: scanner.getRange()
+      case TokenType.ControlOperator:
 
-        })
+        node.context = TokenContext.Operator
+
         break
     /*  case TokenType.LiquidObjectOpen:
       case TokenType.LiquidTagOpen:

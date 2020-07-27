@@ -10,7 +10,7 @@ export const enum ScanState {
   /**
    * `{%^`
    */
-  AfterOpeningTag,
+  TagOpen,
 
   /**
    * `{{^`
@@ -26,6 +26,10 @@ export const enum ScanState {
    * `{% tag %}^` or `{{ tag }}^`
    */
   TagClose,
+
+  TagWhitespaceDash,
+
+  Whitespace,
 
   /**
    * `{{ object^` - Excludes `.` seperator

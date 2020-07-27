@@ -6,6 +6,7 @@ import stream from './stream'
 import specs from './specs'
 import * as Characters from '../lexical/characters'
 import * as TokenTag from '../lexical/tags'
+
 /**
  * Scanner
  *
@@ -25,11 +26,11 @@ export default (function () {
   let state = ScanState.TokenUnknown
 
   /**
-   * Position Index
+   * Start Offsets - Location state
    *
    * @type {number}
    */
-  let index
+  let start
 
   /**
    * Line Number
@@ -56,8 +57,6 @@ export default (function () {
   /*                   FUNCTIONS                  */
   /* -------------------------------------------- */
 
-  const getToken = (start = index) => stream.getText(start, stream.position())
-
   /**
    * Runs document scan
    *
@@ -67,15 +66,15 @@ export default (function () {
   function scan (initialOffset = 0) {
 
     if (initialOffset > 0) stream.offset(initialOffset)
-    if (stream.eos()) return TokenType.EOS
+    if (stream.eos) return TokenType.EOS
 
     state = state || ScanState.TokenUnknown
-    index = stream.position()
+    start = stream.position()
 
-    return tokenize() || (() => {
+    return liquid() || (() => {
 
       space = undefined
-      index = stream.advance(1)
+      start = stream.advance(1)
       state = ScanState.TokenUnknown
 
       return TokenType.Unknown
@@ -92,7 +91,7 @@ export default (function () {
    */
   function delimeters () {
 
-    return ({
+    switch (stream.advanceUntilRegExp(/[\r\n'"{<-]/).charCodeAt(0)) {
 
       /**
        * After Frontmatter YAML
@@ -101,14 +100,14 @@ export default (function () {
        *
        * @returns {void|number}
        */
-      [Characters.DSH]: () => {
+      case Characters.DSH:
 
-        if (stream.advanceIfChars([ Characters.DSH, Characters.DSH, Characters.DSH ])) {
+        if (stream.advanceIfChars([ Characters.DSH, Characters.DSH ])) {
           state = ScanState.AfterOpeningFrontmatter
           return TokenType.YAMLFrontmatterStart
         }
 
-      },
+        break
 
       /**
        * After Liquid Tag Open Delimeter
@@ -117,16 +116,15 @@ export default (function () {
        *
        * @returns {void|number}
        */
-      [Characters.LCB]: () => {
+      case Characters.LCB:
 
-        if (stream.whitespace() > 0) return; else index = stream.position()
-        if (!stream.advanceUntilRegExp(/[{%]/, true)) return delimeters()
-        if (stream.isCodeChar(Characters.LCB)) specs.type = TokenTag.object
+        if (stream.whitespace() > 0) return; else start = stream.position()
+        if (stream.nextCodeChar(Characters.LCB)) specs.type = TokenTag.object
+        if (!stream.advanceIfRegExp(/{[{%]/)) return delimeters()
 
-        state = ScanState.AfterOpeningTag
+        state = ScanState.TagOpen
+        // start = stream.position()
         return TokenType.LiquidTagOpen
-
-      },
 
       /**
        * After HTML Open Delimeter
@@ -135,7 +133,7 @@ export default (function () {
        *
        * @returns {void|number}
        */
-      [Characters.LAN]: () => {
+      case Characters.LAN:
 
         if (stream.advanceUntilChar(Characters.FWS)) {
           state = ScanState.AfterOpeningHTMLEndTag
@@ -150,8 +148,6 @@ export default (function () {
         state = ScanState.AfterOpeningHTMLStartTag
         return TokenType.HTMLStartTagOpen
 
-      },
-
       /**
        * After Newline or Carriage Return
        *
@@ -159,171 +155,164 @@ export default (function () {
        *
        * @returns {void|number}
        */
-      [Characters.NWL || Characters.CAR]: () => {
+      case Characters.NWL:
+      case Characters.CAR:
 
         stream.advance(1)
         line += 1
         char = stream.position()
 
-        // return delimeters()
+        break
 
-      }
-
-    }[stream.advanceUntilRegExp(/\r\n?|[\n'"{<]|-{3}/).charCodeAt(0)]())
+    }
 
   }
 
   /**
-   * Tokenize
+   * After Opening Frontmatter
+   *
+   * @returns {void|number}
+   */
+  function frontmatter () {
+
+    if (stream.advanceUntilChars('---', true)) {
+      start = stream.position(-3)
+      state = ScanState.TokenUnknown
+      return TokenType.YAMLFrontmatterClose
+    }
+
+    state = ScanState.TokenUnknown
+
+    return liquid()
+
+  }
+
+  /**
+   * liquid
    *
    */
-  function tokenize () {
+  function liquid () {
 
     if (state === ScanState.TokenUnknown) return delimeters()
 
-    return ({
+    if (state === ScanState.AfterOpeningFrontmatter) {
+      if (stream.position(-2) !== 0) console.log('Frontmatter should start at position 0')
+      return frontmatter()
+    }
 
-      /**
-       * After Opening Frontmatter
-       *
-       * @returns {void|number}
-       */
-      [ScanState.AfterOpeningFrontmatter]: () => {
+    if (state !== ScanState.TagClose && stream.isRegExpMatch(/^-?[%}]\}/)) {
+      state = ScanState.TagClose
+    }
 
-        if (stream.advanceUntilChars('---', true)) {
-          index = stream.position(-3)
-          state = ScanState.TokenUnknown
-          return TokenType.YAMLFrontmatterClose
-        }
+    // if (!stream.advanceUntilChars('%}')) {
+    console.log('fails')
+    // }
 
-        return tokenize()
+    switch (state) {
 
-      },
+      case ScanState.Whitespace:
 
+        space = stream.whitespace()
+
+        break
       /**
        * After Opening Liquid Tag
        *
        * @returns {number}
        */
-      [ScanState.AfterOpeningTag]: () => {
+      case ScanState.TagOpen:
 
         if (stream.advanceIfChar(Characters.DSH)) {
-          space = stream.whitespace()
+          console.log(stream.getChar(start))
           return TokenType.LiquidWhitespaceDash
         }
 
         space = stream.whitespace()
-        index = stream.position()
+        start = stream.position()
 
         if (stream.advanceIfRegExp(/^[^\s'"|!=<>%}.-]*/)) {
-          specs.name = getToken()
+
+          specs.name = stream.getText(start)
           state = ScanState.TagName
+
+          // set the spec type if tag was not an object
           if (!specs.type) specs.type = TokenTag[specs.spec.type]
           return TokenType.LiquidTagName
         }
 
-      },
+        break
 
       /**
        * Liquid Tag Name
        *
        * @returns {number|void}
        */
-      [ScanState.TagName]: () => {
+      case ScanState.TagName:
 
         space = stream.whitespace()
-        index = stream.position()
-        state = ScanState.TagClose
+        start = stream.position()
 
         switch (specs.type) {
 
           case TokenTag.control:
-            if (stream.advanceIfRegExp(/^-?%\}/)) return TokenType.ParseError
-            if (stream.advanceIfRegExp(/^[^\s%}-]*/)) {
-              state = ScanState.TagClose
-              return TokenType.ControlCondition
-            }
-            break
+            state = ScanState.ControlToken
+            return liquid()
+
         }
 
-        if (stream.advanceIfRegExp(/^-(?=[%}]\})/)) {
-          return TokenType.LiquidWhitespaceDash
-        }
-
-        return tokenize()
-
-      },
-
+        break
       /**
        * Liquid Tag Close
        *
        * @returns {number|void}
        */
-      [ScanState.TagClose]: () => {
+      case ScanState.TagClose:
 
-        state = ScanState.TokenUnknown
+        if (stream.advanceIfRegExp(/^-(?=[%}]\})/)) {
+          return TokenType.LiquidWhitespaceDash
+        }
 
         if (stream.advanceIfChars([ Characters.RCB, Characters.RCB ])) {
-          index = stream.position()
+          start = stream.position()
+          state = ScanState.TokenUnknown
           return TokenType.LiquidObjectClose
         }
 
         if (stream.advanceIfChars([ Characters.PER, Characters.RCB ])) {
-          index = stream.position()
+          start = stream.position()
+          state = ScanState.TokenUnknown
           return TokenType.LiquidTagClose
         }
 
-      },
+        break
 
       /**
        * Liquid Control Tag
        *
        * @returns {number|void}
        */
-      [ScanState.ControlToken]: () => {
+      case ScanState.AfterConditionValue:
+      case ScanState.ControlToken:
 
         space = stream.whitespace()
+        start = stream.position()
 
-        if (stream.advanceIfRegExp(/^[^\s!=<>%}-]*/)) {
-          // capture and strip whitespace, eg: \s\n\t\r\f
+        if (stream.advanceIfRegExp(/^[^\s%}-]*/)) {
 
-          console.log('Spaces:', space)
-          console.log(
-            'Control Condition',
-            getToken()
+          if (state === ScanState.ControlToken) {
+            state = ScanState.AfterConditionValue
+            return TokenType.ControlCondition
 
-          )
-          state = ScanState.AfterConditionValue
+          }
 
-        }
-
-      },
-
-      /**
-       * Liquid Control Condition/Comparison Values
-       *
-       * @returns {number|void}
-       */
-      [ScanState.AfterConditionValue]: () => {
-
-        if (stream.advanceIfChars([ Characters.PER, Characters.RCB ])) {
-          console.log('Control Closed')
-          return TokenType.LiquidTagClose
-        }
-
-        // capture and strip whitespace, eg: \s\n\t\r\f
-        space = stream.whitespace()
-
-        if (stream.advanceIfRegExp(/(==|!=|>=|<=|<|>|\b(?:or|and)\b)/)) {
-          console.log('Control Operator', getToken())
           state = ScanState.ControlToken
+          return TokenType.ControlOperator
 
         }
 
-      }
+        break
 
-    }[state]())
-
+    }
   }
 
   function html () {
@@ -356,27 +345,71 @@ export default (function () {
   /*                    METHODS                   */
   /* -------------------------------------------- */
 
-  return (
-    {
-      scan
-      , getToken
-      , getPosition: () => index
-      , getType: () => specs.type
-      , getState: () => state
-      , getSpace: () => space
-      , getOffset: ({ offset }) => ([
-        ...offset,
-        index
-      ])
-      , getLocation: () => ({
-        start: index,
-        end: stream.position()
-      })
-      , getRange: () => ({
-        line,
-        character: index - char
-      })
-    }
-  )
+  return ({
+
+    /**
+     * Scan Contents
+     */
+    scan
+
+    /**
+     * Get start
+     */
+    , get start () { return start }
+
+    /**
+     * Get Position
+     */
+    , get end () { return stream.position() }
+
+    , get string () { return stream.token }
+
+    /**
+     * Get Token - Returns the current token string in stream,
+     * optionall return a boolean by passing Character code in param.
+     *
+     * @param {number} at Return a specific character
+     * @returns {(string|boolean)}
+     */
+    , getToken: at => at ? stream.getText(start)[at] : stream.getText(start)
+
+    /**
+     * Get Text - Returning a substring
+     *
+     * @param {number} from starting offset of token
+     * @param {number} [end] ending offset of token
+     */
+    , getText: (from, end = stream.position()) => stream.getText(from, end)
+
+    /**
+     * Get Text - Returning a substring
+     *
+     * @param {number} start starting offset of token
+     * @param {number} [end] ending offset of token
+     */
+    , getLine: () => line
+
+    /**
+     * Get State - Returning a substring
+     *
+     * @returns {ScanState}
+     */
+    , getState: () => state
+
+    /**
+     * Get Space
+     *
+     * @returns {number}
+     */
+    , getSpace: () => space
+
+    /**
+     * Get Range
+     *
+     * @returns {object}
+     */
+    , getRange: () => ({ line, character: start - char })
+
+  })
 
 })()

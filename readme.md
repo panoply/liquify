@@ -9,6 +9,10 @@ An extension/package tool for the [Liquid Templating Language](#). Liquify uses 
 
 - [@liquify/cli](#)
 - [@liquify/liquid-language-server](#)
+- [@liquify/liquid-parser](#)
+- [@liquify/liquid-grammar](#)
+- [@liquify/liquid-linter](#)
+- [@liquify/liquid-schema-stores](#)
 - [@liquify/liquid-language-specs](#)
 - [@liquify/cryptographer](#)
 - [@liquify/rollup-plugin-cryptospec](#)

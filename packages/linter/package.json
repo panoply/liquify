@@ -1,0 +1,82 @@
+{
+  "name": "@liquify/liquid-language-server",
+  "version": "0.0.0",
+  "description": "Language Server for Liquid Templating Language",
+  "scripts": {
+    "watch": "rollup -c -w",
+    "build": "rollup -c --environment prod",
+    "rollup": "rollup -c",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava --color --watch",
+    "test:parser": "ava --color --verbose --watch"
+  },
+  "private": false,
+  "author": "",
+  "owner": "SISSEL | ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
+  "license": "see LICENSE.txt",
+  "main": "./server.js",
+  "bundledDependencies": [
+    "vscode-css-languageservice",
+    "vscode-languageserver"
+  ],
+  "ava": {
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "babel": {
+      "testOptions": {
+        "babelrc": true,
+        "configFile": false
+      }
+    },
+    "files": [
+      "test/parsing/parser.js"
+    ],
+    "concurrency": 5
+  },
+  "dependencies": {
+    "@liquify/cryptographer": "workspace:^0.0.0",
+    "@liquify/liquid-language-specs": "workspace:^0.0.0",
+    "fs-extra": "^9.0.1",
+    "netlicensing-client": "^1.2.24",
+    "prettydiff": "^101.2.6",
+    "strip-json-comments": "^3.1.1",
+    "vscode-css-languageservice": "^4.3.0",
+    "vscode-emmet-helper": "^1.2.17",
+    "vscode-html-languageservice": "^3.1.0",
+    "vscode-json-languageservice": "^3.7.0",
+    "vscode-languageserver": "^6.1.1",
+    "vscode-languageserver-textdocument": "^1.0.1",
+    "vscode-languageserver-types": "^3.15.1",
+    "vscode-uri": "^2.1.2",
+    "yamljs": "^0.3.0"
+  },
+  "repository": {
+    "url": "https://github.com/panoply/liquify"
+  },
+  "devDependencies": {
+    "@ava/babel": "^1.0.1",
+    "@ava/babel-preset-stage-4": "^4.0.0",
+    "@babel/plugin-proposal-private-methods": "^7.10.4",
+    "@babel/register": "^7.10.5",
+    "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-obfuscator": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
+    "@liquify/testae": "workspace:^0.0.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "@rollup/plugin-replace": "^2.3.3",
+    "ava": "^3.10.1",
+    "babel-plugin-lodash": "^3.3.4",
+    "chalk": "^4.1.0",
+    "cli-table": "^0.3.1",
+    "colm": "^0.1.1",
+    "copy-node-modules": "^1.1.1",
+    "esm": "^3.2.25",
+    "marky": "^1.2.1",
+    "pretty-ms": "^7.0.0",
+    "prettyoutput": "^1.2.0",
+    "rollup-plugin-filesize": "^9.0.2"
+  }
+}

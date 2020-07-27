@@ -23,12 +23,30 @@
         }
       ]
     },
-    "(\"|\\|)(\\$)\\b(OPERATORS|ARGUMENT|PARAMS|NAME|VARIABLE|NUMBER)\\b(\\?)?": {
+    "(\\$)\\b(seperator|filters|parameters|attributes)": {
+      "regexFlags": "g",
+      "filterLanguageRegex": "json",
+      "filterFileRegex": ".*\\.json",
+      "decorations": [
+        {
+          "color": "#888888",
+          //"fontStyle": "italic"
+        },
+        {
+          "color": "#888888",
+          //"fontStyle": "italic"
+        }
+      ]
+    },
+    "(\"|\\||)([{(]|)(\\$)\\b([A-Za-z]*)\\b([)}]{0,}|)(\\?|)": {
       "regexFlags": "g",
       "filterLanguageRegex": "json",
       "filterFileRegex": ".*\\.json",
       "decorations": [
         {},
+        {
+          "color": "#3af59e"
+        },
         {
           "color": "#81D4FA"
         },
@@ -37,20 +55,20 @@
         },
         {
           "color": "#3af59e"
+        },
+        {
+          "color": "#3af59e"
         }
       ]
     },
-    "(\"|\\|)(\\$)\\b(SPACE)\\b": {
+    "\"?([\\|~-])[{}]?(?=\\$)": {
       "regexFlags": "g",
       "filterLanguageRegex": "json",
       "filterFileRegex": ".*\\.json",
       "decorations": [
-        {},
         {
-          "color": "#81D4FA"
-        },
-        {
-          "color": "#c374f0"
+          "color": "#ff9408",
+          "border": "5px"
         }
       ]
     }

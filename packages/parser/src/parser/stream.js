@@ -1,6 +1,6 @@
 /* eslint one-var: ["error", { let: "never" } ] */
 
-import { WSP, TAB, NWL, LFD, CAR, BWS, SQO, DQO } from '../lexical/characters'
+import { WSP, TAB, NWL, LFD, CAR, BWS } from '../lexical/characters'
 
 /**
  * Stream
@@ -28,11 +28,60 @@ export default (function () {
    */
   let source = ''
 
-  return new class Stream {
+  /**
+   * Source Text Length - (cached for optimisation)
+   *
+   * @type {number}
+   */
+  let length = -1
+
+  /**
+   * Token Text
+   *
+   * @type {string}
+   */
+  let token = ''
+
+  return ({
 
     /* -------------------------------------------- */
-    /*                 GETTER/SETTER                */
+    /*               GETTERS / SETTERS              */
     /* -------------------------------------------- */
+
+    /**
+     * End of Stream
+     *
+     * @memberof Stream
+     * @returns {boolean}
+     */
+    get eos () {
+
+      return (length <= index)
+
+    },
+
+    /**
+     * Token Getter
+     *
+     * @memberof Stream
+     * @returns {string}
+     */
+    get token () {
+
+      return token
+
+    },
+
+    /**
+     * Token Setter
+     *
+     * @memberof Stream
+     */
+    set token (text) {
+
+      token = text
+
+    },
 
     /**
      * Source Getter
@@ -43,7 +92,8 @@ export default (function () {
     get source () {
 
       return source
-    }
+
+    },
 
     /**
      * Source Setter
@@ -53,8 +103,9 @@ export default (function () {
     set source (text) {
 
       source = text
+      length = text.length
 
-    }
+    },
 
     /* -------------------------------------------- */
     /*                   FUNCTIONS                  */
@@ -73,19 +124,7 @@ export default (function () {
 
       return (index = n < 0 ? 0 : n)
 
-    }
-
-    /**
-     * End of Stream
-     *
-     * @memberof Stream
-     * @returns {boolean}
-     */
-    eos () {
-
-      return (this.source.length <= index)
-
-    }
+    },
 
     /**
      * Previous position
@@ -100,7 +139,7 @@ export default (function () {
 
       return (index -= n)
 
-    }
+    },
 
     /**
      * Next Position
@@ -114,7 +153,7 @@ export default (function () {
 
       return (index += n)
 
-    }
+    },
 
     /**
      * Goto Position
@@ -127,9 +166,11 @@ export default (function () {
      */
     goto (n) {
 
+      if (n > length) return this.gotoEnd()
+
       return (index = n)
 
-    }
+    },
 
     /**
      * Goto End Position
@@ -141,9 +182,12 @@ export default (function () {
      */
     gotoEnd () {
 
-      return (index = this.source.length)
+      // reset stream position
+      index = 0
 
-    }
+      return length
+
+    },
 
     /**
      * Previous Code Character
@@ -158,7 +202,7 @@ export default (function () {
 
       return this.source.charCodeAt(index - 1) === char
 
-    }
+    },
 
     /**
      * Next Code Character
@@ -173,7 +217,7 @@ export default (function () {
 
       return this.source.charCodeAt(index + 1) === char
 
-    }
+    },
 
     /**
      * Current Code Character Truthy
@@ -186,7 +230,7 @@ export default (function () {
 
       return this.source.charCodeAt(index) === char
 
-    }
+    },
 
     /**
      * Get Current Position - If a number is passed, return value
@@ -202,7 +246,7 @@ export default (function () {
 
       return n ? (index + n) : index
 
-    }
+    },
 
     /**
      * Get Code Character
@@ -215,7 +259,7 @@ export default (function () {
 
       return this.source.charCodeAt(n || index)
 
-    }
+    },
 
     /**
      * Get Character
@@ -228,7 +272,7 @@ export default (function () {
 
       return this.source.charAt(n || index)
 
-    }
+    },
 
     /**
      * Get String
@@ -240,9 +284,13 @@ export default (function () {
      */
     getText (start, end = undefined) {
 
-      return this.source.substring(start, end || index)
+      const name = this.source.substring(start, end || this.position())
 
-    }
+      if (name.slice(0, 3) === 'end') return name.substring(3)
+
+      return name
+
+    },
 
     /**
      * While Character
@@ -257,14 +305,10 @@ export default (function () {
 
       const pos = index
 
-      while (
-        index < this.source.length &&
-        condition(this.source.charCodeAt(index))
-      ) index++
-
+      while (index < length && condition(this.source.charCodeAt(index))) index++
       return index - pos
 
-    }
+    },
 
     /**
      * Skip String - Consumes a string value between 2 quotes
@@ -288,7 +332,7 @@ export default (function () {
 
       return this.offset(offset)
 
-    }
+    },
 
     /**
      * Skip Whitespace
@@ -299,7 +343,7 @@ export default (function () {
      * @returns {number}
      * @see https://git.io/JJnq8
      */
-    whitespace () {
+    whitespace (n) {
 
       return this.advanceWhileChar(c => (
         c === WSP ||
@@ -309,7 +353,13 @@ export default (function () {
         c === CAR
       ))
 
-    }
+    },
+
+    isRegExpMatch (regex, n = index) {
+
+      return regex.test(this.source.substring(n))
+
+    },
 
     /**
      * Advances Stream when Regular Expression finds a match
@@ -327,12 +377,14 @@ export default (function () {
 
       if (!match) return false
 
+      this.token = match[0]
       index += match.index + match[0].length
-      // token = match[0]
+
+      // console.log(match[0])
 
       return true
 
-    }
+    },
 
     /**
      * Advances Stream until a Regular Expression match is found
@@ -360,9 +412,11 @@ export default (function () {
           : match.index
       )
 
-      return match[0]
+      this.token = match[0]
 
-    }
+      return this.token
+
+    },
 
     /**
      * Advances Stream until a single matching Character Code is found
@@ -376,14 +430,16 @@ export default (function () {
      */
     advanceUntilChar (char) {
 
-      while (index < this.source.length) {
+      index = 0
+
+      while (index < length) {
         if (this.source.charCodeAt(index) !== char) index++
         return true
       }
 
       return false
 
-    }
+    },
 
     /**
      * Advances Stream until a single matching Character Code is found
@@ -405,7 +461,7 @@ export default (function () {
 
       return false
 
-    }
+    },
 
     /**
      * Each Code Character - Converts and match string sequence
@@ -427,7 +483,7 @@ export default (function () {
 
       return false
 
-    }
+    },
 
     /**
      * Each Code Character - Converts and match string sequence
@@ -444,6 +500,7 @@ export default (function () {
 
       const offset = this.source.indexOf(string, index)
 
+      console.log(offset)
       if (offset >= 0) {
 
         this.offset(consume ? offset + string.length : offset)
@@ -458,6 +515,6 @@ export default (function () {
 
     }
 
-  }()
+  })
 
 })()

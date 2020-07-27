@@ -17,6 +17,11 @@ export const enum TokenType {
   /**
    * Unknown Characters
    */
+  ControlOperator,
+
+  /**
+   * Unknown Characters
+   */
   ParseError,
 
   /**

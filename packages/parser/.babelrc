@@ -15,6 +15,7 @@
   "inputSourceMap": true,
   "retainLines": true,
   "plugins": [
+    ["@babel/plugin-proposal-private-methods", { "loose": true }],
     ["@babel/plugin-proposal-optional-chaining"],
     ["@babel/plugin-proposal-class-properties", { "loose": true }],
     ["@babel/plugin-syntax-dynamic-import"],

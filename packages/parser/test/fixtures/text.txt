@@ -1,7 +1,7 @@
- {%- if condifiton -%}
 
 
+ {%-
 
-          {%- else -%}
+        if   condifiton == something and foo ===== bar -
 
-{% endif %}
+

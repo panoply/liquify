@@ -12,7 +12,7 @@
       "snippet": "append: ${0}",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         }
       ]
@@ -23,7 +23,7 @@
       "snippet": "at_least: ${0}",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         }
       ]
@@ -34,7 +34,7 @@
       "snippet": "at_most: ${0}",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         }
       ]
@@ -68,7 +68,7 @@
       "snippet": "date: '${0}'",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         }
       ]
@@ -90,7 +90,7 @@
       "snippet": "divided_by: '${0}'",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         }
       ]
@@ -121,7 +121,7 @@
       "snippet": "join: '${0}'",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         }
       ]
@@ -140,7 +140,7 @@
       "snippet": "map: '${0}'",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         }
       ]
@@ -151,7 +151,7 @@
       "snippet": "minus: '${0}'",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         }
       ]
@@ -162,7 +162,7 @@
       "snippet": "modulo: '${0}'",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         }
       ]
@@ -177,7 +177,7 @@
       "snippet": "plus: '${0}'",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         }
       ]
@@ -188,7 +188,7 @@
       "snippet": "prepend: '${0}'",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         }
       ]
@@ -199,7 +199,7 @@
       "snippet": "remove: '${0}'",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         }
       ]
@@ -216,11 +216,11 @@
       "snippet": "replace: '${1}', '${2}' ${0}",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         },
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         }
       ]
@@ -231,11 +231,11 @@
       "snippet": "replace_first: '${1}', '${2}' ${0}",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         },
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         }
       ]
@@ -262,11 +262,11 @@
       "snippet": "slice: '${0}'",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number|$variable",
           "required": true
         },
         {
-          "accepts": "number"
+          "accepts": "$number|$variable"
         }
       ]
     },
@@ -276,7 +276,7 @@
       "snippet": "${1|sort,sort:|} ${2}",
       "parameters": [
         {
-          "accepts": "number"
+          "accepts": "$number|$variable"
         }
       ]
     },
@@ -290,7 +290,7 @@
       "snippet": "split: '${0}'",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number|$variable",
           "required": true
         }
       ]
@@ -313,7 +313,7 @@
       "snippet": "times: '${0}'",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         }
       ]
@@ -324,11 +324,11 @@
       "snippet": "truncate: ${0}",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         },
         {
-          "accepts": "string"
+          "accepts": "$string"
         }
       ]
     },
@@ -338,11 +338,11 @@
       "snippet": "truncatewords: ${0}",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "$number",
           "required": true
         },
         {
-          "accepts": "string"
+          "accepts": "$string"
         }
       ]
     },
@@ -367,11 +367,11 @@
       "ref": "https://shopify.github.io/liquid/filters/where/",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "$string",
           "required": true
         },
         {
-          "accepts": "string"
+          "accepts": "$string"
         }
       ]
     }
@@ -383,7 +383,13 @@
       "filters": true,
       "singular": true,
       "snippet": "assign ${1:var} = ${2:value}",
-      "type": "variable"
+      "type": "variable",
+      "context": [
+        "$variable",
+        "$equals",
+        "$assignment",
+        "$filters"
+      ]
     },
     "break": {
       "description": "Causes the loop to stop iterating when it encounters the break tag.",
@@ -401,12 +407,18 @@
       "description": "Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.",
       "ref": "https://shopify.github.io/liquid/tags/variable/#capture",
       "snippet": "capture ${1:var}",
-      "type": "variable"
+      "type": "variable",
+      "context": [
+        "$keyword"
+      ]
     },
     "case": {
       "description": "Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#case",
-      "type": "control"
+      "type": "control",
+      "context": [
+        "$condition"
+      ]
     },
     "comment": {
       "description": "Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.            sssss ",
@@ -429,13 +441,20 @@
       "type": "iteration",
       "parents": [
         "for"
+      ],
+      "context": [
+        "$string{$colon}?",
+        "$string|$string~$comma"
       ]
     },
     "decrement": {
       "description": "Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",
       "ref": "https://shopify.github.io/liquid/tags/variable/#decrement",
       "singular": true,
-      "type": "variable"
+      "type": "variable",
+      "context": [
+        "$number|$variable"
+      ]
     },
     "else": {
       "description": "Add condition within an if or unless block.",
@@ -443,9 +462,9 @@
       "singular": true,
       "type": "control",
       "parents": [
-        "case",
-        "elsif",
         "if",
+        "elsif",
+        "case",
         "unless",
         "when"
       ]
@@ -457,6 +476,11 @@
       "type": "control",
       "parents": [
         "if"
+      ],
+      "context": [
+        "$condition",
+        "$operators?",
+        "$condition"
       ]
     },
     "for": {
@@ -466,58 +490,44 @@
           "description": "Begins the loop at the specified index",
           "name": "offset",
           "snippet": "offset: ${0}",
-          "grammar": [
-            "offset",
-            ":",
-            "$SPACE",
-            "$NUMBER|$VARIABLE"
+          "context": [
+            "$keyword~$colon",
+            "$number|$variable"
           ]
         },
         {
           "description": "Defines a range of numbers to loop through. The range can be defined by both literal and variable numbers",
           "name": "range",
-          "snippet": "(${1}..${2})${0}"
+          "snippet": "(${1}..${2})${0}",
+          "context": [
+            "$parenthesis~{$number|$variable}~$dot~$dot~{$number|$variable}~$parenthesis"
+          ]
         },
         {
           "description": "Limits the loop to the specified number of iterations",
           "name": "limit",
-          "snippet": "limit:${0}",
-          "grammar": [
-            "limit",
-            ":",
-            "$SPACE",
-            "$NUMBER|$VARIABLE"
+          "snippet": "limit: ${1} ${0}",
+          "context": [
+            "$keyword~$colon",
+            "$number|$variable"
           ]
         },
         {
           "description": "Reverses the order of the loop. Note that this flag’s spelling is different from the filter `reverse`",
           "name": "reversed",
-          "grammar": [
-            "reversed"
+          "context": [
+            "$keyword"
           ]
         }
       ],
       "ref": "https://shopify.github.io/liquid/tags/iteration/#for",
       "snippet": "for ${1:item} in ${2|collection,(${3}..${4})|} ${0}",
       "type": "iteration",
-      "grammar": [
-        "$NAME",
-        "$SPACE",
-        "$ARGUMENT",
-        "$SPACE",
-        "in",
-        [
-          "$ARGUMENT",
-          [
-            "(",
-            "$NUMBER|$VARIABLE",
-            ".",
-            ".",
-            "$NUMBER|$VARIABLE",
-            ")"
-          ]
-        ],
-        "$PARAMS?"
+      "context": [
+        "$iteree",
+        "$keyword",
+        "$array|$variable|$range",
+        "$parameters"
       ]
     },
     "if": {
@@ -525,19 +535,20 @@
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#if",
       "snippet": "if ${1} ${2|==,!=,or,and|} ${3} ",
       "type": "control",
-      "grammar": [
-        "$ARGUMENT",
-        "$SPACE",
-        "$OPERATORS?",
-        "$SPACE",
-        "$ARGUMENT?"
+      "context": [
+        "$condition",
+        "$operator?",
+        "$condition"
       ]
     },
     "increment": {
       "description": "Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",
       "ref": "https://shopify.github.io/liquid/tags/variable/#increment",
       "singular": true,
-      "type": "variable"
+      "type": "variable",
+      "grammar": [
+        "$keyword"
+      ]
     },
     "raw": {
       "description": "Allows output of Liquid code on a page without being parsed.",
@@ -550,22 +561,37 @@
         {
           "description": "Defines a range of numbers to loop through. The range can be defined by both literal and variable numbers",
           "name": "range",
-          "snippet": "(${1}..${2})${0}"
+          "snippet": "(${1}..${2})${0}",
+          "context": [
+            "$paren{$number|$variable}$dot$dot{$number|$variable}$paren"
+          ]
         },
         {
           "description": "Defines how many columns the tables should have",
           "name": "cols",
-          "snippet": "cols:${0}"
+          "snippet": "cols: ${0}",
+          "context": [
+            "$keyword$colon",
+            "$number|$variable"
+          ]
         },
         {
           "description": "Exits the tablerow after a specific index",
           "name": "limit",
-          "snippet": "limit:${0}"
+          "snippet": "limit: ${0}",
+          "context": [
+            "$keyword~$colon",
+            "$number|$variable"
+          ]
         },
         {
           "description": "Starts the tablerow after a specific index",
           "name": "offset",
-          "snippet": "offset:${0}"
+          "snippet": "offset: ${0}",
+          "context": [
+            "$keyword~$colon",
+            "$number|$variable"
+          ]
         }
       ],
       "ref": "https://shopify.github.io/liquid/tags/iteration/#tablerow",
@@ -574,7 +600,12 @@
     "unless": {
       "description": "The opposite of if – executes a block of code only if a certain condition is not met.",
       "ref": "https://shopify.github.io/liquid/tags/control-flow/#unless",
-      "type": "control"
+      "type": "control",
+      "context": [
+        "$condition",
+        "$operators?",
+        "$condition"
+      ]
     },
     "when": {
       "description": "Define the various conditions set by the \"{% case %}\" tag",
@@ -583,6 +614,9 @@
       "type": "control",
       "parents": [
         "case"
+      ],
+      "context": [
+        "$condition"
       ]
     }
   }
