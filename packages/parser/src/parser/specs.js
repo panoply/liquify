@@ -34,7 +34,21 @@ export default (function () {
 
     get spec () {
 
-      return spec[this.type === TokenTag.object ? 'objects' : 'tags'][this.name]
+      const nodeSpec = (
+        (
+          this.type && spec[this.type]?.[this.name]
+        ) || (
+          spec?.tags?.[this.name]
+        ) || (
+          !this.type && spec?.objects?.[this.name]
+        )
+      ) || false
+
+      if (nodeSpec) {
+        this.type = TokenTag[nodeSpec.type]
+      }
+
+      return nodeSpec
 
     }
 

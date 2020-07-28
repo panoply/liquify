@@ -4,6 +4,8 @@ export const enum TokenType {
    */
   Whitespace,
 
+  String,
+
   /**
    * Unknown Characters
    */
@@ -18,6 +20,14 @@ export const enum TokenType {
    * Unknown Characters
    */
   ControlOperator,
+
+  IterationIteree,
+
+  IterationOperator,
+
+  IterationArray,
+
+  IterationParameters,
 
   /**
    * Unknown Characters
@@ -67,7 +77,7 @@ export const enum TokenType {
   /**
    * Before Delimeter `{%` _when_ `{%- start -%}`
    */
-  LiquidWhitespaceDash,
+  WhitespaceDash,
 
   /**
    * Within Tag `{%- start -%}`

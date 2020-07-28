@@ -15,14 +15,14 @@ export default class Node {
    *
    * @type {string}
    */
-  name = ''
+  name = undefined
 
   /**
    * Tag Type
    *
    * @type {string}
    */
-  type = undefined
+  type = 'unknown'
 
   /**
    * Tag Kind
@@ -50,7 +50,7 @@ export default class Node {
    *
    * @type {number[]}
    */
-  offsets = []
+  // offsets = []
 
   /**
    * Offset - Index position offsets
@@ -66,6 +66,15 @@ export default class Node {
    * @private
    */
   #context = []
+
+  /**
+   * String Literal tokens
+   *
+   * @type{boolean}
+   */
+  closed = false
+
+  errors = []
 
   /**
    * Range - Line/character position
@@ -118,36 +127,26 @@ export default class Node {
    */
   set context (type) {
 
-    if (scanner.getToken().length > 0) {
-      this.offsets.push(scanner.start)
-      this.#context.push({
-        type,
-        value: scanner.getToken()
-      })
-    }
+    // this.offsets.push(scanner.start)
+    this.#context.push(typeof type === 'object' ? type : {
+      type,
+      value: scanner.getToken()
+    })
 
   }
 
   /**
    * Start Offset - Left most starting index
    *
-   * @type {object}
+   * @type {number}
    */
-  get start () {
-
-    return this.offsets[0]
-
-  }
+  start = undefined
 
   /**
    * End Offset - right most starting index
    *
    * @type {object}
    */
-  get end () {
-
-    return this.offsets[this.offsets.length - 1]
-
-  }
+  end = undefined
 
 }

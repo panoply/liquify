@@ -78,7 +78,7 @@ class MultiLineStream {
   }
 
   advanceUntilRegExp (regex) {
-    const str = this.source.substr(this.position)
+    const str = this.source.substring(this.position)
     const match = str.match(regex)
     if (match) {
       this.position = this.position + match.index

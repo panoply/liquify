@@ -43,3 +43,8 @@ export const variable = 8
  * `9` Raw Type, eg: `{% raw %}`
  */
 export const raw = 9
+
+/**
+ * `10` Unkown Type, eg: `{% no_spec %}`
+ */
+export const unknown = 10

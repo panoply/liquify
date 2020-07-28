@@ -15,7 +15,7 @@ export const enum ScanState {
   /**
    * `{{^`
    */
-  AfterOpeningObject,
+  TagType,
 
   /**
    * `{% tag^`
@@ -134,12 +134,12 @@ export const enum ScanState {
   /**
    * `<^`
    */
-  AfterOpeningHTMLStartTag,
+  HTMLOpenStartTag,
 
   /**
    * `</^`
    */
-  AfterOpeningHTMLEndTag,
+  HTMLOpenEndTag,
 
   /**
    * `</tag^`
@@ -154,12 +154,12 @@ export const enum ScanState {
   /**
    * `<tag attr^`
    */
-  AfterHTMLAttribute,
+  HTMLAttribute,
 
   /**
    * `<tag attr="value"^`
    */
-  AfterHTMLAttributeValue,
+  HTMLAttributeValue,
 
   /**
    * `<!--`
@@ -176,5 +176,10 @@ export const enum ScanState {
    */
   TokenUnknown,
 
-  ControlToken,
+  ControlCondition,
+  ControlOperator,
+  IterationIteree,
+  IterationOperator,
+  IterationArray,
+  IterationParameters,
 }

@@ -1,7 +1,12 @@
 
-
- {%-
-
-        if   condifiton == something and foo ===== bar -
+ {%-    if   condifiton == something and foo == bar -%}
 
 
+
+
+{% endif %}
+
+{% for item in collection limit: 10 %}
+
+
+{% endfor %}

@@ -1,6 +1,6 @@
 /* eslint one-var: ["error", { let: "never" } ] */
 
-import { WSP, TAB, NWL, LFD, CAR, BWS } from '../lexical/characters'
+import { WSP, TAB, NWL, LFD, CAR, BWS, DQO, SQO } from '../lexical/characters'
 
 /**
  * Stream
@@ -12,7 +12,7 @@ import { WSP, TAB, NWL, LFD, CAR, BWS } from '../lexical/characters'
  * @see https://git.io/JJnqz
  */
 
-export default (function () {
+export default (function Stream (string) {
 
   /**
    * Index Offset
@@ -26,14 +26,7 @@ export default (function () {
    *
    * @type {string}
    */
-  let source = ''
-
-  /**
-   * Source Text Length - (cached for optimisation)
-   *
-   * @type {number}
-   */
-  let length = -1
+  let source = string
 
   /**
    * Token Text
@@ -42,7 +35,16 @@ export default (function () {
    */
   let token = ''
 
-  return ({
+  /**
+   * Source Text Length - (cached for optimisation)
+   *
+   * @type {number}
+   */
+  let length = -1
+
+  return {
+
+    create: string => Stream(string || ''),
 
     /* -------------------------------------------- */
     /*               GETTERS / SETTERS              */
@@ -54,32 +56,24 @@ export default (function () {
      * @memberof Stream
      * @returns {boolean}
      */
-    get eos () {
+    get EOS () {
 
-      return (length <= index)
+      return length <= index
 
     },
 
-    /**
-     * Token Getter
-     *
-     * @memberof Stream
-     * @returns {string}
-     */
     get token () {
 
       return token
 
     },
 
-    /**
-     * Token Setter
-     *
-     * @memberof Stream
-     */
-    set token (text) {
+    get location () {
 
-      token = text
+      return {
+        line: this.source.substring(0, index).split(/[\n\r\f]/).length - 1,
+        character: this.source.substring(index).length
+      }
 
     },
 
@@ -120,7 +114,7 @@ export default (function () {
      * @param {number} n
      * @returns {number}
      */
-    offset (n) {
+    jump (n) {
 
       return (index = n < 0 ? 0 : n)
 
@@ -183,7 +177,7 @@ export default (function () {
     gotoEnd () {
 
       // reset stream position
-      index = 0
+      index = length
 
       return length
 
@@ -223,18 +217,20 @@ export default (function () {
      * Current Code Character Truthy
      *
      * @memberof Stream
-     * @param {number} char
+     * @param {number|number[]} char
+     * @param {number} from
      * @returns {boolean}
      */
-    isCodeChar (char) {
+    isCodeChar (char, from = index) {
 
-      return this.source.charCodeAt(index) === char
-
+      return typeof char === 'number'
+        ? char === this.getCodeChar(from)
+        : char.includes(this.getCodeChar(from))
     },
 
     /**
      * Get Current Position - If a number is passed, return value
-     * will be added to current index, but index will not be adjusted.
+     * will be added to current index, but will not be adjusted.
      *
      * WILL NOT MODIFY POSITION
      *
@@ -293,6 +289,137 @@ export default (function () {
     },
 
     /**
+     * Skip String - Consumes a string value between 2 quotes
+     *
+     * WILL MODIFY POSITION
+     *
+     * @memberof Stream
+     * @param {number} n
+     * @param {number[]} [consume]
+     * @returns {boolean}
+     */
+    skipQuotedString (n = index, consume = undefined) {
+
+      if (!this.isCodeChar([ DQO, SQO ], n)) return false
+
+      const offset = this.source.indexOf(this.source.charAt(n), n + 1)
+
+      if (!offset) return false
+
+      // consume escaped strings, eg: \" or \'
+      if (this.getCodeChar(offset - 1) === BWS) return this.skipQuotedString(offset)
+
+      // custom consumed character codes
+      if (consume && consume.includes(this.getCodeChar(offset))) {
+        return this.skipQuotedString(offset)
+      }
+
+      this.jump(offset + 1)
+
+      return true
+
+    },
+
+    /**
+     * Skip skipWhitespace
+     *
+     * WILL MODIFY POSITION
+     *
+     * @memberof Stream
+     * @returns {boolean}
+     * @see https://git.io/JJnq8
+     */
+    skipWhitespace () {
+
+      return this.advanceWhileChar(c => (
+        c === WSP ||
+        c === TAB ||
+        c === NWL ||
+        c === LFD ||
+        c === CAR
+      )) > 0
+
+    },
+
+    isValidToken (regex) {
+
+      return regex.test(token)
+
+    },
+
+    /**
+     * Advances Stream until a Regular Expression match is found
+     *
+     * WILL MODIFY POSITION
+     *
+     * @memberof Stream
+     * @param {RegExp} regex
+     * @param {RegExp} unless
+     * @returns {boolean}
+     * @see https://git.io/JJnqn
+     */
+    advanceUnless (regex, unless) {
+
+      const match = this.source.substring(index).search(regex)
+
+      if (match < 0) return false
+
+      if (!unless.test(this.source.substring(index, this.position(match)))) {
+        this.advance(match)
+        return true
+      }
+
+      // this.advance(1)
+      return false
+
+    },
+
+    /**
+     * Advances Stream until a Regular Expression match is found
+     *
+     * WILL MODIFY POSITION
+     *
+     * @memberof Stream
+     * @param {RegExp} regex
+     * @returns {(NaN|number)}
+     * @see https://git.io/JJnqn
+     */
+    advanceSequence (regex) {
+
+      const match = this.source.substring(index).search(regex)
+
+      if (match < 0) {
+        this.gotoEnd()
+        return NaN
+      }
+
+      return this.source.charCodeAt(this.advance(match))
+
+    },
+
+    /**
+     * Advances Stream until a Regular Expression match is found
+     *
+     * WILL MODIFY POSITION
+     *
+     * @memberof Stream
+     * @param {RegExp} regex
+     * @returns {(boolean)}
+     * @see https://git.io/JJnqn
+     */
+    advanceIfSequence (regex) {
+
+      const match = this.source.substring(index).search(regex)
+
+      if (match < 0) return false
+
+      this.advance(match)
+
+      return true
+
+    },
+
+    /**
      * While Character
      *
      * WILL MODIFY POSITION
@@ -306,58 +433,8 @@ export default (function () {
       const pos = index
 
       while (index < length && condition(this.source.charCodeAt(index))) index++
+
       return index - pos
-
-    },
-
-    /**
-     * Skip String - Consumes a string value between 2 quotes
-     *
-     * WILL MODIFY POSITION
-     *
-     * @memberof Stream
-     * @param {number} n
-     * @param {number[]} [consume]
-     * @returns {(number|false)}
-     */
-    skipString (n, consume = undefined) {
-
-      const offset = this.source.indexOf(this.source.charAt(n), n + 1)
-
-      if (!offset) return false
-      // consume escaped strings, eg: \" or \'
-      if (this.getCodeChar(offset - 1) === BWS) return this.skipString(offset)
-      // custom consumed character codes
-      if (consume && consume.includes(this.getCodeChar(offset))) return this.skipString(offset)
-
-      return this.offset(offset)
-
-    },
-
-    /**
-     * Skip Whitespace
-     *
-     * WILL MODIFY POSITION
-     *
-     * @memberof Stream
-     * @returns {number}
-     * @see https://git.io/JJnq8
-     */
-    whitespace (n) {
-
-      return this.advanceWhileChar(c => (
-        c === WSP ||
-        c === TAB ||
-        c === NWL ||
-        c === LFD ||
-        c === CAR
-      ))
-
-    },
-
-    isRegExpMatch (regex, n = index) {
-
-      return regex.test(this.source.substring(n))
 
     },
 
@@ -377,10 +454,8 @@ export default (function () {
 
       if (!match) return false
 
-      this.token = match[0]
       index += match.index + match[0].length
-
-      // console.log(match[0])
+      token = match[0]
 
       return true
 
@@ -412,32 +487,7 @@ export default (function () {
           : match.index
       )
 
-      this.token = match[0]
-
-      return this.token
-
-    },
-
-    /**
-     * Advances Stream until a single matching Character Code is found
-     *
-     * WILL MODIFY POSITION
-     *
-     * @memberof Stream
-     * @param {number} char
-     * @returns {boolean}
-     * @see https://git.io/JJnqt
-     */
-    advanceUntilChar (char) {
-
-      index = 0
-
-      while (index < length) {
-        if (this.source.charCodeAt(index) !== char) index++
-        return true
-      }
-
-      return false
+      return match[0]
 
     },
 
@@ -486,6 +536,27 @@ export default (function () {
     },
 
     /**
+     * Advances Stream until a single matching Character Code is found
+     *
+     * WILL MODIFY POSITION
+     *
+     * @memberof Stream
+     * @param {number} char
+     * @returns {boolean}
+     * @see https://git.io/JJnqt
+     */
+    advanceUntilChar (char) {
+
+      while (index < this.source.length) {
+        if (this.source.charCodeAt(index) === char) return true
+        this.advance(1)
+      }
+
+      return false
+
+    },
+
+    /**
      * Each Code Character - Converts and match string sequence
      *
      * @memberof Stream
@@ -500,21 +571,16 @@ export default (function () {
 
       const offset = this.source.indexOf(string, index)
 
-      console.log(offset)
       if (offset >= 0) {
-
-        this.offset(consume ? offset + string.length : offset)
-
+        this.jump(consume ? offset + string.length : offset)
         return true
-
       }
 
       this.gotoEnd()
-
       return false
 
     }
 
-  })
+  }
 
-})()
+}(''))

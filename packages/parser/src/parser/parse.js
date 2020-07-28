@@ -1,29 +1,33 @@
 import { TokenType } from '../enums/types'
 import { TokenContext } from '../enums/context'
 import { TokenKind } from '../enums/kinds'
+import Node from './node'
 import scanner from './scanner'
 import specs from './specs'
-import Node from './node'
 import * as TokenTags from '../lexical/tags'
-import * as Characters from '../lexical/characters'
 
 export function parse (document) {
 
   let node
+    , errors = []
     , token = scanner.scan()
 
   while (token !== TokenType.EOS) {
 
-    console.log(node)
+    //  console.log(String.fromCharCode(token))
 
     switch (token) {
 
-      case TokenType.Whitespace:
+      case TokenType.ParseError:
 
-        node.context = TokenContext.Whitespace
+        node.end = scanner.position
+        node.token.push(scanner.getText(node.start))
+        // console.log('error at', scanner.getRange())
 
         break
 
+      // YAML FRONTMATTER OPEN
+      // -----------------------------------------------------------------
       case TokenType.YAMLFrontmatterStart:
 
         node = document.ast[document.ast.push(new Node()) - 1]
@@ -34,6 +38,8 @@ export function parse (document) {
 
         break
 
+      // YAML FRONTMATTER CLOSE
+      // -----------------------------------------------------------------
       case TokenType.YAMLFrontmatterClose:
 
         node.name = 'frontmatter'
@@ -42,86 +48,121 @@ export function parse (document) {
 
         break
 
+      // LIQUID TAG OPEN
+      // -----------------------------------------------------------------
       case TokenType.LiquidTagOpen:
 
         node = document.ast[document.ast.push(new Node()) - 1]
-        node.type = specs.type
-        node.offsets.push(scanner.start)
+        node.start = scanner.index
 
         break
 
-      case TokenType.LiquidWhitespaceDash:
+      // LIQUID WHITESPACE DASH
+      // -----------------------------------------------------------------
+      case TokenType.WhitespaceDash:
 
         node.context = TokenContext.Dash
 
         break
 
+      // LIQUID TAG NAME KEYWORD
+      // -----------------------------------------------------------------
       case TokenType.LiquidTagName:
 
-        node.name = scanner.string
-        node.context = TokenContext.Indentifier
+        node.name = scanner.getToken()
+        node.type = TokenTags[specs.spec.type] || TokenTags.unknown
+        node.context = TokenContext.Keyword
 
         break
 
-      case TokenType.LiquidObjectClose:
+      // LIQUID TAG CLOSE
+      // -----------------------------------------------------------------
       case TokenType.LiquidTagClose:
 
-        node.offsets.push(scanner.start)
-        node.token.push(scanner.getText(node.start, scanner.start))
+        //  node.offsets.push(scanner.start)
+        node.end = scanner.position
+        node.token.push(scanner.getText(node.start))
 
         break
 
+      // LIQUID CONTROL CONDITION
+      // -----------------------------------------------------------------
       case TokenType.ControlCondition:
 
-        node.context = TokenContext.Condition
+        node.context = TokenContext.Indentifier
 
-        break
-
-      case TokenType.ControlOperator:
-
-        node.context = TokenContext.Operator
-
-        break
-    /*  case TokenType.LiquidObjectOpen:
-      case TokenType.LiquidTagOpen:
-
-        if (scanner.getState(ScanState.WhitespaceDash)) {
-          if (curr?.hasWhitespace) {
-            curr.hasWhitespace.push(scanner.getIndex())
-          } else curr.hasWhitespace = [ scanner.getIndex() ]
-        } else {
-          curr.start = scanner.getIndex()
+        if (!/^(?:[^"'\W\s]+|[.-]+)+/.test(scanner.getToken())) {
+          node.errors.push('Invalid characters used for condition')
         }
 
         break
 
-      case TokenType.LiquidTag:
-        // console.log('here')
+      // LIQUID CONTROL OPERATOR
+      // -----------------------------------------------------------------
+      case TokenType.ControlOperator:
+
+        node.context = TokenContext.Operator
+
+        if (!/==|!=|>=|<=|<|>/.test(scanner.token)) {
+          if (!/\band\b|\bor\b/.test(scanner.token)) {
+            node.errors.push('Invalid Logical Operator')
+          } else if (scanner.token.length > 3) {
+            node.errors.push('Extrenous Operators')
+          } else {
+            node.errors.push('Invalid Operator Sequence')
+          }
+        }
+
+        break
+
+      // LIQUID ITERATION ITEREE
+      // -----------------------------------------------------------------
+      case TokenType.IterationIteree:
+
+        node.context = TokenContext.Iteree
+
+        if (!/^(?:[^\W\s]+|[.-]+)+/.test(scanner.getToken())) {
+          node.errors.push('Invalid characters detected in iteree')
+        }
+
+        break
+
+      // LIQUID ITERATION OPERATOR
+      // -----------------------------------------------------------------
+      case TokenType.IterationOperator:
+
+        node.context = TokenContext.Operator
+
+        if (!/\bin\b/.test(scanner.token)) {
+          node.errors.push('Invalid Logical Operator')
+        }
+
+        break
+
+      // LIQUID ITERATION ARRAY
+      // -----------------------------------------------------------------
+      case TokenType.IterationArray:
+
+        node.context = TokenContext.Array
+
+        break
+
+      // LIQUID ITERATION PARAMETERS
+      // -----------------------------------------------------------------
+      case TokenType.IterationParameters:
+
+        node.context = TokenContext.Keyword
+
         break
 
       case TokenType.HTMLStartTagOpen:
-        curr.start = scanner.getIndex()
-        //  curr.name = scanner.getToken(curr.start + 1)
+
+        node = document.ast[document.ast.push(new Node()) - 1]
+        node.start = scanner.index
+        node.name = scanner.getToken()
+
         break
 
-      case TokenType.HTMLStartTagClose:
-        curr.end = scanner.getIndex()
-        curr.token = scanner.getToken(curr.start, curr.end)
-        document.ast.push(curr)
-        curr = {}
-        break
-
-      case TokenType.HTMLEndTagOpen:
-        curr.start = scanner.getIndex()
-        //    curr.name = scanner.getToken(curr.start + 2)
-        break
-
-      case TokenType.HTMLEndTagClose:
-        curr.end = scanner.getIndex()
-        curr.token = scanner.getToken(curr.start, curr.end)
-        document.ast.push(curr)
-        curr = {}
-        break */
     }
 
     token = scanner.scan()
