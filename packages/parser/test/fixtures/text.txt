@@ -1,12 +1,10 @@
+{{ tag.prop.prop2.prop3 }}
 
- {%-    if   condifiton == something and foo == bar -%}
-
-
-
-
-{% endif %}
-
-{% for item in collection limit: 10 %}
+{% if foo ==== %}{%endif%}
 
 
-{% endfor %}
+{%- for item in collection limit: 10 -%}
+
+
+
+{%- endfor %}

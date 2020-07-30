@@ -1,5 +1,6 @@
 import { TokenKind } from '../enums/kinds'
 import { TokenContext } from '../enums/context'
+import { object } from './utils'
 import scanner from './scanner'
 import yamljs from 'yamljs'
 /**
@@ -10,12 +11,35 @@ import yamljs from 'yamljs'
  */
 export default class Node {
 
+  static register = {}
+
   /**
    * Tag Name
    *
    * @type {string}
    */
   name = undefined
+
+  /**
+   * Start Offset - Left most starting index
+   *
+   * @type {number}
+   */
+  start = Node.register.start
+
+  /**
+   * End Offset - right most starting index
+   *
+   * @type {object}
+   */
+  end = undefined
+
+  /**
+   * Start Offset - Left most starting index
+   *
+   * @type {object}
+   */
+  range = { start: scanner.getRange(), end: object() }
 
   /**
    * Tag Type
@@ -32,13 +56,6 @@ export default class Node {
   kind = TokenKind.Liquid
 
   /**
-   * Tag Kind
-   *
-   * @type{number}
-   */
-  line = scanner.getLine()
-
-  /**
    * String Literal tokens
    *
    * @type{string[]}
@@ -46,11 +63,18 @@ export default class Node {
   token = []
 
   /**
-   * Offset - Index position offsets
+   * String Literal tokens
    *
-   * @type {number[]}
+   * @type{number[]}
    */
-  // offsets = []
+  offsets = [ this.start ]
+
+  /**
+   * Errors
+   *
+   * @type{number[]}
+   */
+  errors = []
 
   /**
    * Offset - Index position offsets
@@ -65,16 +89,14 @@ export default class Node {
    * @type {object[]}
    * @private
    */
-  #context = []
+  #context = Node.register?.whitespace ? [ TokenContext.Dash ] : []
 
   /**
-   * String Literal tokens
+   * Objects
    *
-   * @type{boolean}
+   * @type{number[]}
    */
-  closed = false
-
-  errors = []
+  objects = object()
 
   /**
    * Range - Line/character position
@@ -84,17 +106,6 @@ export default class Node {
   get children () {
 
     return this.#children
-
-  }
-
-  /**
-   * Range - Line/character position
-   *
-   * @type {object}
-   */
-  get range () {
-
-    return scanner.getRange()
 
   }
 
@@ -128,25 +139,8 @@ export default class Node {
   set context (type) {
 
     // this.offsets.push(scanner.start)
-    this.#context.push(typeof type === 'object' ? type : {
-      type,
-      value: scanner.getToken()
-    })
+    this.#context.push(typeof type === 'object' ? type : { type, value: scanner.getToken() })
 
   }
-
-  /**
-   * Start Offset - Left most starting index
-   *
-   * @type {number}
-   */
-  start = undefined
-
-  /**
-   * End Offset - right most starting index
-   *
-   * @type {object}
-   */
-  end = undefined
 
 }

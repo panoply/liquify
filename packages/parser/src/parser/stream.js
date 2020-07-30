@@ -62,12 +62,6 @@ export default (function Stream (string) {
 
     },
 
-    get token () {
-
-      return token
-
-    },
-
     get location () {
 
       return {
@@ -101,6 +95,19 @@ export default (function Stream (string) {
 
     },
 
+    /**
+     * Get Token
+     *
+     * @memberof Stream
+     * @param {number} from
+     * @returns {string}
+     */
+    token (from = undefined) {
+
+      return from ? (token = this.source.substring(from)) : token
+
+    },
+
     /* -------------------------------------------- */
     /*                   FUNCTIONS                  */
     /* -------------------------------------------- */
@@ -115,6 +122,8 @@ export default (function Stream (string) {
      * @returns {number}
      */
     jump (n) {
+
+      if (n > length) return this.gotoEnd()
 
       return (index = n < 0 ? 0 : n)
 
@@ -146,23 +155,6 @@ export default (function Stream (string) {
     advance (n) {
 
       return (index += n)
-
-    },
-
-    /**
-     * Goto Position
-     *
-     * WILL MODIFY POSITION
-     *
-     * @memberof Stream
-     * @param {number} n
-     * @returns {number}
-     */
-    goto (n) {
-
-      if (n > length) return this.gotoEnd()
-
-      return (index = n)
 
     },
 
@@ -217,15 +209,11 @@ export default (function Stream (string) {
      * Current Code Character Truthy
      *
      * @memberof Stream
-     * @param {number|number[]} char
-     * @param {number} from
+     * @param {number} char
      * @returns {boolean}
      */
-    isCodeChar (char, from = index) {
-
-      return typeof char === 'number'
-        ? char === this.getCodeChar(from)
-        : char.includes(this.getCodeChar(from))
+    isCodeChar (char) {
+      return char === this.getCodeChar(index)
     },
 
     /**
@@ -251,9 +239,9 @@ export default (function Stream (string) {
      * @param {number} [n]
      * @returns {number}
      */
-    getCodeChar (n = undefined) {
+    getCodeChar (n = 0) {
 
-      return this.source.charCodeAt(n || index)
+      return this.source.charCodeAt(n > 0 ? index + n : index)
 
     },
 
@@ -261,12 +249,12 @@ export default (function Stream (string) {
      * Get Character
      *
      * @memberof Stream
-     * @param {number} [n]
+     * @param {number} [advance]
      * @returns {string}
      */
-    getChar (n = undefined) {
+    getChar (advance = 0) {
 
-      return this.source.charAt(n || index)
+      return this.source.charAt(advance > 0 ? index + advance : index)
 
     },
 
@@ -280,11 +268,9 @@ export default (function Stream (string) {
      */
     getText (start, end = undefined) {
 
-      const name = this.source.substring(start, end || this.position())
+      // token = this.source.substring(start, end || index)
 
-      if (name.slice(0, 3) === 'end') return name.substring(3)
-
-      return name
+      return this.source.substring(start, end || index)
 
     },
 
@@ -300,7 +286,7 @@ export default (function Stream (string) {
      */
     skipQuotedString (n = index, consume = undefined) {
 
-      if (!this.isCodeChar([ DQO, SQO ], n)) return false
+      if (!/["']/.test(this.source)) return false
 
       const offset = this.source.indexOf(this.source.charAt(n), n + 1)
 
@@ -331,19 +317,13 @@ export default (function Stream (string) {
      */
     skipWhitespace () {
 
-      return this.advanceWhileChar(c => (
+      return this.whileChar(c => (
         c === WSP ||
         c === TAB ||
         c === NWL ||
         c === LFD ||
         c === CAR
       )) > 0
-
-    },
-
-    isValidToken (regex) {
-
-      return regex.test(token)
 
     },
 
@@ -358,7 +338,7 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqn
      */
-    advanceUnless (regex, unless) {
+    consumeUnless (regex, unless) {
 
       const match = this.source.substring(index).search(regex)
 
@@ -384,7 +364,7 @@ export default (function Stream (string) {
      * @returns {(NaN|number)}
      * @see https://git.io/JJnqn
      */
-    advanceSequence (regex) {
+    untilSequence (regex) {
 
       const match = this.source.substring(index).search(regex)
 
@@ -393,7 +373,7 @@ export default (function Stream (string) {
         return NaN
       }
 
-      return this.source.charCodeAt(this.advance(match))
+      return this.source.charCodeAt(index += match)
 
     },
 
@@ -407,7 +387,7 @@ export default (function Stream (string) {
      * @returns {(boolean)}
      * @see https://git.io/JJnqn
      */
-    advanceIfSequence (regex) {
+    ifSequence (regex) {
 
       const match = this.source.substring(index).search(regex)
 
@@ -428,7 +408,7 @@ export default (function Stream (string) {
      * @param {function} condition
      * @returns {number}
      */
-    advanceWhileChar (condition) {
+    whileChar (condition) {
 
       const pos = index
 
@@ -448,7 +428,7 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqC
      */
-    advanceIfRegExp (regex) {
+    ifRegExp (regex) {
 
       const match = this.source.substring(index).match(regex)
 
@@ -472,7 +452,7 @@ export default (function Stream (string) {
      * @returns {string}
      * @see https://git.io/JJnqn
      */
-    advanceUntilRegExp (regex, consume = false) {
+    untilRegExp (regex, consume = false) {
 
       const match = this.source.substring(index).match(regex)
 
@@ -501,7 +481,7 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnq3
      */
-    advanceIfChar (char, next = false) {
+    ifChar (char, next = false) {
 
       // console.log(index, char, text.charAt(index + 1))
       if (char === this.source.charCodeAt(next ? index + 1 : index)) {
@@ -521,7 +501,7 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqt
      */
-    advanceIfChars (codes) {
+    ifChars (codes) {
 
       if (codes.every((c, i) => c === this.getCodeChar(index + i))) {
 
@@ -545,7 +525,7 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqt
      */
-    advanceUntilChar (char) {
+    untilChar (char) {
 
       while (index < this.source.length) {
         if (this.source.charCodeAt(index) === char) return true
@@ -563,7 +543,7 @@ export default (function Stream (string) {
      * @param {string|number[]} string
      * @returns {boolean}
      */
-    advanceUntilChars (string, consume = false) {
+    untilChars (string, consume = false) {
 
       if (typeof string !== 'string') {
         string = string.reduce((s, c) => (s += String.fromCharCode(c)), '')

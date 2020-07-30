@@ -6,6 +6,8 @@ export const enum TokenType {
 
   String,
 
+  Seperator,
+
   /**
    * Unknown Characters
    */
@@ -27,7 +29,13 @@ export const enum TokenType {
 
   IterationArray,
 
-  IterationParameters,
+  IterationParameter,
+
+  IterationParameterValue,
+
+  Object,
+
+  ObjectProperties,
 
   /**
    * Unknown Characters
@@ -47,12 +55,12 @@ export const enum TokenType {
   /**
    * After Delimeter `---`
    */
-  YAMLFrontmatterStart,
+  FrontmatterStart,
 
   /**
    * After Delimeter `---`
    */
-  YAMLFrontmatterClose,
+  FrontmatterEnd,
 
   /**
    * Before Delimeter `#` _when_ `# comment`

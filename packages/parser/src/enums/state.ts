@@ -6,16 +6,34 @@ export const enum ScanState {
   /**
    * `---^`
    */
-  AfterOpeningFrontmatter = 1,
+  FrontmatterOpen = 1,
+
+  /**
+   * `---^`
+   */
+  FrontmatterClose = 1,
+
   /**
    * `{%^`
    */
   TagOpen,
 
+  TagOpenDash,
+
+  /**
+   * `%}^`
+   */
+  TagStartClose,
+
+  WithinEndTag,
+
   /**
    * `{{^`
    */
   TagType,
+
+  ObjectName,
+  ObjectProperties,
 
   /**
    * `{% tag^`
@@ -26,8 +44,7 @@ export const enum ScanState {
    * `{% tag %}^` or `{{ tag }}^`
    */
   TagClose,
-
-  TagWhitespaceDash,
+  TagCloseDash,
 
   Whitespace,
 
@@ -179,7 +196,9 @@ export const enum ScanState {
   ControlCondition,
   ControlOperator,
   IterationIteree,
+  IterationParameterSeperator,
   IterationOperator,
   IterationArray,
-  IterationParameters,
+  IterationParameter,
+  IterationParameterValue,
 }

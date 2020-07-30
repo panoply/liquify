@@ -23,6 +23,11 @@ export const enum TokenContext {
   /**
    * Newlines: `\n`
    */
+  Invalid = "Invalid",
+
+  /**
+   * Newlines: `\n`
+   */
   Newline = "Newline",
 
   /**
@@ -84,6 +89,11 @@ export const enum TokenContext {
    * An object value: `object.prop`
    */
   Object = "Object",
+
+  /**
+   * An object value: `object.prop`
+   */
+  Property = "Property",
 
   /**
    * Array value (used in iteration)

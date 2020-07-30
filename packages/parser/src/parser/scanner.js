@@ -5,7 +5,7 @@ import { ScanState } from '../enums/state'
 import { TokenContext } from '../enums/context'
 import stream from './stream'
 import specs from './specs'
-import * as Characters from '../lexical/characters'
+import { DSH, NWL, LCB, DOT, LAN, BNG, FWS } from '../lexical/characters'
 import * as TokenTag from '../lexical/tags'
 
 const example = [
@@ -46,12 +46,22 @@ export default (function () {
    * Runs document scan
    *
    * @param {number} offset
+   * @param {object} options
    * @returns {number}
    */
-  function scan (offset = 0) {
+  function scan (offset = 0, options = {}) {
 
     if (offset > 0) stream.jump(offset)
     if (stream.EOS) return TokenType.EOS
+
+    // frontmatter must start at position 0
+    /* if (offset === 0 && options.frontmatter) {
+      if (stream.skipWhitespace()) return TokenType.ParseError
+      if (stream.ifChars([ DSH, DSH, DSH ])) {
+        state = ScanState.FrontmatterOpen
+        return TokenType.FrontmatterStart
+      }
+    } */
 
     return state === ScanState.TokenUnknown ? charseq() : liquid()
 
@@ -65,67 +75,55 @@ export default (function () {
    */
   function charseq () {
 
-    switch (stream.advanceSequence(/[{-]/)) {
+    const delimeter = stream.untilSequence(/[{]/)
 
-      // YAML FRONTMATTER                                              ---
-      // -----------------------------------------------------------------
-      case Characters.DSH:
+    // LIQUID OPEN TAG DELIMETERS                                {% | {{
+    // -----------------------------------------------------------------
 
-        if (stream.advanceIfChars([
-          Characters.DSH,
-          Characters.DSH,
-          Characters.NWL
-        ])) {
-          state = ScanState.AfterOpeningFrontmatter
-          return TokenType.YAMLFrontmatterStart
-        }
+    if (delimeter === LCB) {
 
-        break
-      // LIQUID OPEN TAG DELIMETERS                                {% | {{
-      // -----------------------------------------------------------------
-      case Characters.LCB:
+      if (stream.skipWhitespace()) return TokenType.Whitespace
+      if (stream.nextCodeChar(LCB)) specs.type = TokenTag.object
 
-        if (stream.skipWhitespace()) return TokenType.Whitespace
-        if (stream.nextCodeChar(Characters.LCB)) specs.type = TokenTag.object
+      index = stream.position()
 
-        index = stream.position()
-
-        if (stream.advanceIfRegExp(/^{[{%]/)) {
-          state = ScanState.TagOpen
-          return TokenType.LiquidTagOpen
-        }
-
-        return charseq()
-
-      // HTML OPEN TAG DELIMETERS                            < | </ | <!--
-      // -----------------------------------------------------------------
-      case Characters.LAN:
-
-        stream.advance(1)
-        index = stream.position()
-
-        if (stream.skipWhitespace()) return TokenType.ParseError
-
-        if (stream.advanceIfChar(Characters.FWS)) {
-          // state = ScanState.AfterOpeningHTMLEndTag
-          // return TokenType.HTMLEndTagOpen
-        }
-
-        if (stream.advanceIfChars([ Characters.BNG, Characters.DSH, Characters.DSH ])) {
-        //  state = ScanState.AfterOpeningHTMLComment
-          // return TokenType.HTMLStartCommentTag
-        }
-
-        if (stream.advanceIfRegExp(/^[^\s"'>]+/)) {
-          if (stream.getText(index) === 'script') {
-            return TokenType.HTMLStartTagOpen
-          }
-        }
-
-        return charseq()
+      if (stream.ifRegExp(/^\{[{%]/)) {
+        state = stream.ifChar(DSH) ? ScanState.TagOpenDash : ScanState.TagOpen
+        return TokenType.LiquidTagOpen
+      }
 
     }
 
+    // HTML OPEN TAG DELIMETERS                            < | </ | <!--
+    // -----------------------------------------------------------------
+    if (delimeter === LAN) {
+
+      index = stream.position()
+      stream.advance(1)
+
+      if (stream.skipWhitespace()) return TokenType.ParseError
+
+      if (stream.ifChar(FWS)) {
+        // state = ScanState.AfterOpeningHTMLEndTag
+        // return TokenType.HTMLEndTagOpen
+      }
+
+      if (stream.ifChars([ BNG, DSH, DSH ])) {
+        //  state = ScanState.AfterOpeningHTMLComment
+        // return TokenType.HTMLStartCommentTag
+      }
+
+      if (stream.ifRegExp(/^[^\s"'>]+/)) {
+        if (stream.getText(index) === 'script') {
+          return TokenType.HTMLStartTagOpen
+        }
+      }
+
+      return charseq()
+
+    }
+
+    // stream.advance(1)
     state = ScanState.TokenUnknown
 
   }
@@ -137,10 +135,10 @@ export default (function () {
    */
   function frontmatter () {
 
-    if (stream.advanceUntilChars('---', true)) {
+    if (stream.untilChars('---', true)) {
       index = stream.position(-3)
       state = ScanState.TokenUnknown
-      return TokenType.YAMLFrontmatterClose
+      return TokenType.FrontmatterEnd
     }
 
     state = ScanState.TokenUnknown
@@ -155,32 +153,40 @@ export default (function () {
    */
   function liquid () {
 
-    if (state === ScanState.AfterOpeningFrontmatter) {
-      if (stream.position(-2) !== 0) return
-      return frontmatter()
-    }
-
     switch (state) {
 
       // LIQUID OPENING TAG DELIMTERS
       // -----------------------------------------------------------------
       case ScanState.TagOpen:
-
-        if (stream.advanceIfChar(Characters.DSH)) {
-          index = stream.position(-1)
-          return TokenType.WhitespaceDash
-        }
+      case ScanState.TagOpenDash:
 
         if (stream.skipWhitespace()) {
           index = stream.position()
           return TokenType.Whitespace
         }
 
-        if (stream.advanceIfRegExp(/^[^\s|%}-]*/)) {
-          specs.name = stream.getText(index)
+        if (stream.ifRegExp(/^\bend/)) {
+          index = stream.position()
+          state = ScanState.WithinEndTag
+        }
+
+        if (stream.ifRegExp(/^[^\W]*/)) {
+
+          specs.name = stream.token() // spec is defined
+
+          if (state !== ScanState.WithinEndTag) {
+
+            if (specs.type === TokenTag.object) {
+              state = ScanState.ObjectName
+              return liquid()
+            }
+
+            state = ScanState.TagType
+            return TokenType.LiquidTagName
+          }
+
           if (!specs.spec) state = ScanState.TagClose
-          state = ScanState.TagType
-          return TokenType.LiquidTagName
+
         }
 
         index = stream.position()
@@ -188,24 +194,47 @@ export default (function () {
 
         return liquid()
 
-      // LIQUID CLOSING TAG DELIMETER
+      // LIQUID OBJECT PROPERTIES
       // -----------------------------------------------------------------
-      case ScanState.TagClose:
+      case ScanState.ObjectName:
+      case ScanState.ObjectProperties:
 
-        if (stream.advanceIfChar(Characters.DSH)) {
-          console.log(stream.getChar(), specs.name)
-          return TokenType.WhitespaceDash
+        if (stream.skipWhitespace()) {
+          index = stream.position()
+          return TokenType.Whitespace
         }
 
-        if (stream.advanceIfRegExp(/^[%}]\}/)) {
+        if (stream.ifRegExp(/^\.?[^\s]*\b/)) {
+          return TokenType.ObjectProperties
+        }
+
+        index = stream.position()
+
+        if (stream.ifRegExp(/^-?[%}]\}/)) {
+          state = ScanState.TokenUnknown
+          return TokenType.LiquidTagClose
+        }
+
+        break
+
+      // LIQUID CLOSING TAG DELIMETER
+      // -----------------------------------------------------------------
+      case ScanState.WithinEndTag:
+      case ScanState.TagClose:
+      case ScanState.TagCloseDash:
+
+        if (stream.ifChar(DSH)) {
+          state = ScanState.TagCloseDash
+          return TokenType.LiquidTagClose
+        }
+
+        if (stream.ifRegExp(/^-?[%}]\}/)) {
           state = ScanState.TokenUnknown
           return TokenType.LiquidTagClose
         }
 
         // re-run
-        if (stream.advanceUnless(/[%}]\}/, /\{[{%]/)) {
-          return liquid()
-        }
+        if (stream.consumeUnless(/-?[%}]\}/, /\{[{%]/)) return liquid()
 
         state = ScanState.TokenUnknown
         return TokenType.ParseError
@@ -241,7 +270,7 @@ export default (function () {
           return TokenType.Whitespace
         }
 
-        if (!stream.advanceIfRegExp(/^[^\s{%}-]+/)) {
+        if (!stream.ifRegExp(/^[^\s{%}-]+/)) {
           state = ScanState.TagClose
           return liquid()
         }
@@ -256,39 +285,49 @@ export default (function () {
         state = ScanState.ControlCondition
         return TokenType.ControlOperator
 
-      // LIQUID ITERATION TAGS
+      // LIQUID ITERATION TAG
       // -----------------------------------------------------------------
       case ScanState.IterationIteree:
       case ScanState.IterationOperator:
       case ScanState.IterationArray:
-      case ScanState.IterationParameters:
+      case ScanState.IterationParameter:
+      case ScanState.IterationParameterValue:
 
         if (stream.skipWhitespace()) {
           index = stream.position()
           return TokenType.Whitespace
         }
 
-        if (!stream.advanceIfRegExp(/^[^\s{%}-]+/)) {
+        if (!stream.ifRegExp(/^[^\s{%}-]+/)) {
           state = ScanState.TagClose
           return liquid()
         }
 
+        // first
         if (state === ScanState.IterationIteree) {
           state = ScanState.IterationOperator
           return TokenType.IterationIteree
         }
 
+        // second
         if (state === ScanState.IterationOperator) {
           state = ScanState.IterationArray
           return TokenType.IterationOperator
         }
 
+        // third
         if (state === ScanState.IterationArray) {
-          state = ScanState.IterationParameters
+          state = ScanState.IterationParameter
           return TokenType.IterationArray
         }
 
-        return TokenType.IterationParameters
+        // fourth
+        if (state === ScanState.IterationParameter) {
+          state = ScanState.IterationParameterValue
+          return TokenType.IterationParameter
+        }
+
+        return TokenType.IterationParameterValue
 
       // HTML COMMENT OPEN                                           <!--^
       // -----------------------------------------------------------------
@@ -336,9 +375,9 @@ export default (function () {
     , get position () { return stream.position() }
 
     /**
-     * Get String
+     * Get Token
      */
-    , get token () { return stream.token }
+    , get token () { return stream.token() }
 
     /**
      * Get Token - Returns the current token string in stream,
@@ -370,7 +409,14 @@ export default (function () {
      *
      * @returns {ScanState}
      */
-    , getState: () => state
+    , getState: code => (state === code)
+
+    /**
+     * Get Space - Returns spaces
+     *
+     * @returns {ScanState}
+     */
+    , getSpace: () => stream.position(-index)
 
     /**
      * Get Range
