@@ -1,12 +1,11 @@
 {
-  "name": "@liquify/testae",
+  "name": "@liquify/licensing",
   "version": "0.0.0",
-  "description": "Test utilities and wrappers for Ava that are used by various packages and modules within the Liquify monorepo.",
+  "description": "Liquify Licensing",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "main": "./package/index.cjs.js",
   "module": "./package/index.es.js",
-  "types": "index.d.ts",
   "private": false,
   "repository": {
     "type": "git",
@@ -23,6 +22,10 @@
     "test": "ava --watch --verbose"
   },
   "ava": {
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
     "babel": true,
     "files": [
       "test/**/*"
@@ -35,6 +38,7 @@
     "@types/node": "^14.0.25",
     "ava": "^3.10.1",
     "chalk": "^4.1.0",
+    "esm": "^3.2.25",
     "rollup-plugin-terser": "^6.1.0"
   }
 }

@@ -24,7 +24,7 @@ const crypto = cryptographer("secret", "aes-256-ctr");
 // Encoding
 crypto.encode({ foo: "bar" });
 
-// Decoding
+// Decoding, eg: { foo: "bar" }
 crypto.decode("12345678910abcdefghijkmnopqrstuvwxyz");
 
 // Ciphers

@@ -2,7 +2,7 @@ import jsonStrip from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import { basename } from 'path'
 import { statSync } from 'fs-extra'
-
+import stripIndent from 'strip-indent'
 /**
  * Minify JSON and strip JSONC files
  *
@@ -44,7 +44,8 @@ export const banner = ({
   , version
   , author
   , owner
-}) => {
+  , created
+}, license = 'PROPRIETARY') => {
 
   owner = owner || author
 
@@ -53,22 +54,51 @@ export const banner = ({
     .replace(/T/, ' ')
     .substr(0, 19)
 
-  return `/**
- *
- * THIS IS PROPRIETARY CODE
- *
- * @license
- *
- * ${basename(main)}
- *
- * Copyright of ${owner} - All Rights Reserved.
- * Unauthorized copying or modification of this file, via any medium is strictly prohibited.
- * Please refer to the LICENSE.txt and/or ThirdPartyNotices.txt files included in bundle.
- *
- * Package:  ${name}
- * Version:  ${version}
- * Updated:  ${date}
- *
- */
-`
+  switch (license) {
+    case 'PROPRIETARY': return stripIndent(
+      `
+      /**
+      *
+      * !! THIS IS PROPRIETARY SOFTWARE !!
+      *
+      * @license
+      *
+      * ${basename(main)}
+      *
+      * Copyright © of ${owner} - All Rights Reserved.
+      *
+      * Unauthorized copying or modification of this file, via any medium is strictly
+      * prohibited. Please refer to the LICENSE.txt and/or ThirdPartyNotices.txt files
+      * included in bundle.
+      *
+      * License:  ${license}
+      * Package:  ${name}
+      * Version:  ${version}
+      * Updated:  ${date}
+      * Created:  ${created}
+      *
+      */`
+    )
+    case 'MIT':
+    case 'CC BY-NC-ND 4.0': return stripIndent(
+      `
+      /**
+      *
+      * @license
+      *
+      * ${basename(main)}
+      *
+      * Copyright © ${owner}
+      *
+      * License:  ${license}
+      * Package:  ${name}
+      * Version:  ${version}
+      * Updated:  ${date}
+      * Created:  ${created}
+      *
+      * Please refer to the LICENSE.txt and/or ThirdPartyNotices.txt files included in bundle.
+      *
+      */`
+    )
+  }
 }

@@ -21,8 +21,11 @@ export function plugins(devPlugins: Array, prodPlugins: Array): Array;
  * Banner - Applies a licence banner to output bundles generated
  * by rollup for proprietary software of the project
  */
-export function banner(options: {
-  readonly name: string;
-  readonly main: string;
-  readonly version: string;
-}): (path: PathOptions) => string;
+export function banner(
+  options: {
+    name: string;
+    main: string;
+    version: string;
+  },
+  license: "PROPRIETARY" | "MIT" | "CC BY-NC-ND 4.0"
+): (path: PathOptions) => string;

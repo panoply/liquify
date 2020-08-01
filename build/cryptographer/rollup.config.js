@@ -1,5 +1,7 @@
 import { terser } from 'rollup-plugin-terser'
 import commonjs from '@rollup/plugin-commonjs'
+import { banner } from '@liquify/rollup-plugin-utils'
+import pkg from './package.json'
 
 export default {
   input: 'index.js',
@@ -7,12 +9,15 @@ export default {
     {
       format: 'cjs',
       file: 'package/index.cjs.js',
-      sourcemap: process.env.prod ? false : 'inline'
+      sourcemap: process.env.prod ? false : 'inline',
+      banner: banner(pkg, 'PROPRIETARY')
     },
     {
       format: 'es',
       file: 'package/index.es.js',
-      sourcemap: process.env.prod ? false : 'inline'
+      sourcemap: process.env.prod ? false : 'inline',
+      banner: banner(pkg, 'PROPRIETARY')
+
     }
   ],
   external: [ 'crypto' ],
@@ -23,5 +28,6 @@ export default {
       , warnings: 'verbose'
       , compress: { passes: 2 }
     })
+
   ]
 }

@@ -1,4 +1,5 @@
 import { terser } from 'rollup-plugin-terser'
+import obfuscator from '@liquify/rollup-plugin-obfuscator'
 import pkg from './package.json'
 
 export default {
@@ -7,12 +8,14 @@ export default {
     {
       format: 'cjs',
       file: pkg.main,
-      sourcemap: process.env.prod ? false : 'inline'
+      sourcemap: process.env.prod ? false : 'inline',
+      exports: 'named'
     },
     {
       format: 'module',
       file: pkg.module,
-      sourcemap: process.env.prod ? false : 'inline'
+      sourcemap: process.env.prod ? false : 'inline',
+      exports: 'named'
     }
   ],
   external: [ ...Object.keys(pkg.dependencies), 'path', 'crypto' ],
@@ -22,5 +25,6 @@ export default {
       , warnings: 'verbose'
       , compress: { passes: 2 }
     })
+
   ]
 }

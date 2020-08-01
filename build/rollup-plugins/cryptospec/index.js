@@ -1,5 +1,5 @@
 import { createFilter } from '@rollup/pluginutils'
-import cryptographer from '@liquify/cryptographer'
+import * as cryptographer from '@liquify/cryptographer'
 import { extname } from 'path'
 
 /**
@@ -10,17 +10,20 @@ import { extname } from 'path'
 export default function (options = {}) {
 
   const parse = {}
+  const pass = {}
+
   const filter = createFilter(options.include, options.exclude)
-  const crypto = cryptographer(options.password)
+
+  for (const key in options.keychain) options.keychain[key].push(options.master)
+
+  cryptographer.keychain(options.keychain)
+
   const merge = json => {
 
     for (const key of Object.keys(json)) {
       if (options.defaults[key]) {
         for (const prop of Object.keys(json[key])) {
-          json[key][prop] = {
-            ...options.defaults[key],
-            ...json[key][prop]
-          }
+          json[key][prop] = { ...options.defaults[key], ...json[key][prop] }
         }
       }
     }
@@ -42,9 +45,13 @@ export default function (options = {}) {
       config.input.index = 'index.js'
 
       for (const prop in config.input) {
+
         if (prop === 'index') continue
+
         config.input[crypto.encode(prop)] = config.input[prop]
+
         delete config.input[prop]
+
       }
 
       return config
@@ -60,28 +67,25 @@ export default function (options = {}) {
       if (id !== 'index.js') return null
 
       const [ base ] = parse.input.find(([ k ]) => k === 'standard')
-      const modules = parse.input.map(([ k, v ]) => `const ${k} = await import('./${v}')`)
+
+      const modules = (sync) => parse.input.map(
+        ([ k, v ]) => sync
+          ? `const ${k} = import('./${v}')`
+          : `const ${k} = await import('./${v}')`
+      )
       const decoded = parse.input.map(([ k ]) => (k === 'standard'
-        ? `${k}: () => decrypt(${k}, crypto.decode(${k}))`
-        : `${k}: () => decrypt(${k}, crypto.decode(${base}))`
+        ? `get ${k}(){ return decrypt(${k}, crypto.decode(${k})) }`
+        : `get ${k}(){ return decrypt(${k}, crypto.decode(${base})) }`
       ))
 
-      return /* js */`
-
-      import cryptographer from '@liquify/cryptographer'
-
-      export default async iv => {
+      const virtual = sync => /* js */`
 
         const crypto = cryptographer(iv);
 
-        function decrypt(id, json) {
-
+        const decrypt = (id, json) => {
           if(typeof json !== 'object') return new Error("Invalid IV password was supplied!")
-
           if(id === 'standard') return json;
-
           const variant = crypto.decode(id)
-
           return (
             {
               ...variant,
@@ -89,13 +93,19 @@ export default function (options = {}) {
               filters: { ...variant.filters, ...json.filters }
             }
           )
-
         }
 
-        ${modules.join(';\n')}
+        ${modules(sync).join(';\n')}
+        return ({ ${decoded.join(',\n')} })
 
-        return { ${decoded.join(',\n')} }
+      `
+      return /* js */`
 
+      import cryptographer from '@liquify/cryptographer'
+
+      export default {
+        async getSpecs(iv) { ${virtual(false)}  },
+        getSpecsSync(iv)  { ${virtual(true)} }
       }
 
       `

@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
+    "@liquify/rollup-plugin-obfuscator": "workspace:^0.0.0",
     "ava": "^3.10.1",
     "rollup-plugin-terser": "^6.1.0"
   },

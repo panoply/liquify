@@ -60,22 +60,10 @@
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
-    "./supplant": {
-      "path": "build/rollup-plugins/supplant",
-      "name": "@liquify/rollup-plugin-supplant",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
     "./utils": {
       "path": "build/rollup-plugins/utils",
       "name": "@liquify/rollup-plugin-utils",
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "./testae": {
-      "path": "build/testae",
-      "name": "@liquify/testae",
-      "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.0"
     },
     "./atom": {
@@ -89,6 +77,18 @@
       "name": "liquify-vscode",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.1"
+    },
+    "./licensing": {
+      "path": "packages/licensing",
+      "name": "@liquify/licensing",
+      "repo": "github.com/panoply/vscode-liquid.git",
+      "version": "0.0.0"
+    },
+    "./linter": {
+      "path": "packages/linter",
+      "name": "@liquify/liquid-language-server",
+      "repo": "github.com/panoply/liquify",
+      "version": "0.0.0"
     },
     "./parser": {
       "path": "packages/parser",

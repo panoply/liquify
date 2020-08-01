@@ -1,11 +1,13 @@
 {
   "name": "@liquify/liquid-language-specs",
   "version": "0.0.0",
+  "created": "2020",
   "private": false,
   "author": "Nikolas Savvidis <nicos@gmx.com>",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
-  "main": "package/index.js",
+  "main": "./package/index.js",
+  "types": "./index.d.ts",
   "engines": {
     "pnpm": ">=4",
     "node": ">=12"
@@ -17,12 +19,24 @@
     "watch": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava --verbose"
+  },
+  "ava": {
+    "babel": true,
+    "files": [
+      "test/**/**"
+    ],
+    "concurrency": 5
   },
   "devDependencies": {
+    "@ava/babel": "^1.0.1",
     "@liquify/rollup-plugin-cryptospec": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-obfuscator": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.4.0",
+    "ava": "^3.11.0",
     "rollup-plugin-terser": "^6.1.0"
   },
   "dependencies": {
