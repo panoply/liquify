@@ -1,28 +1,22 @@
+// @ts-nocheck
+
 import test from 'ava'
-import * as crypto from '../package/index.es'
+import * as crypto from '../package/index.cjs'
 import time from 'pretty-hrtime'
 
-test('Add secrets to Keychain', async t => {
-
-  crypto.keychain('sissel siv', {
-    standard: [
-      'standard'
-    ],
-    jekyll: [
-      'jekyll'
-    ],
-    shopify: [
-      'clockwork-orange'
-    ]
-  })
-
-  t.pass()
-
-})
+const seed = require('./data/example.json')
 
 test.before(t => {
 
+  crypto.keychain('sissel siv', {
+    standard: [],
+    jekyll: [],
+    shopify: [],
+    eleventy: []
+  })
+
   t.context.start_time = process.hrtime()
+  t.context.crypto = crypto.secret('jekyll')
 
 })
 
@@ -32,14 +26,12 @@ test.after(t => {
 
 })
 
-test('Cryptographer', t => {
+test.serial('Cryptographer', t => {
 
-  const crypt = crypto.authenticate('standard')
+  const encode = t.context.crypto.encode(seed)
+  const decode = t.context.crypto.decode(encode)
 
-  crypt.encode({ foo: 'bar', hello: 'world' })
-
-  t.log(crypt.decode('standard'))
-
+  t.log(decode.engine, t.context.crypto)
   t.pass()
 
 })

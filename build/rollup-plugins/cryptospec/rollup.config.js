@@ -10,12 +10,6 @@ export default {
       file: pkg.main,
       sourcemap: process.env.prod ? false : 'inline',
       exports: 'named'
-    },
-    {
-      format: 'module',
-      file: pkg.module,
-      sourcemap: process.env.prod ? false : 'inline',
-      exports: 'named'
     }
   ],
   external: [ ...Object.keys(pkg.dependencies), 'path', 'crypto' ],

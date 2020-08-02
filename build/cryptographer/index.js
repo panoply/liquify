@@ -1,141 +1,34 @@
-import crypto from 'crypto'
-
-/**
- * Supported Encryption algorithms
- */
-const algorithms = [
-  'aes-256-cbc',
-  'aes-256-cbc-hmac-sha1',
-  'aes-256-cbc-hmac-sha256',
-  'aes-256-cfb',
-  'aes-256-cfb1',
-  'aes-256-cfb8',
-  'aes-256-ctr',
-  'aes-256-ofb',
-  'aes256',
-  'camellia-256-cbc',
-  'camellia-256-cfb',
-  'camellia-256-cfb1',
-  'camellia-256-cfb8',
-  'camellia-256-ofb',
-  'camellia256'
-]
+import { createHash, createDecipheriv, createCipheriv, getCiphers, getHashes } from 'crypto'
+import os from 'os'
 
 /**
  * Creates hash of an string based on available hashes of platform
  * @param {string} input
- * @param {number} iv
  * @param {string} hash
- * @returns {*}
+ * @returns {string}
  */
-const hash = (input, iv = 0, hash = 'md5') => {
+const hash = (input, hash = 'md5') => {
 
-  if (crypto.getHashes().indexOf(hash) !== -1) {
-    const key = crypto.createHash(hash).update(input).digest('hex')
-    return iv > 0 ? { key, iv: key.substr(iv) } : key
-  } else {
-    throw new Error('hash ' + hash + ' not found in your platform')
+  if (getHashes().indexOf(hash) !== -1) {
+    return createHash(hash).update(input).digest('hex')
   }
+
+  throw new Error('hash ' + hash + ' not found in your platform')
+
 }
 
 /**
- * State Config - provides model of each cipher
+ * Generate IV
+ *
+ * @param {string} key
+ * @param {number} [length=16]
+ * @returns {string}
  */
-const state = (function (keychain) {
+const iv = (key, length = 16) => {
 
-  let auth,
-    secret,
-    master
+  return key.substr(length)
 
-  return {
-    /**
-     * Get Master key - Returns the master key encode
-     *
-     * @returns {string}
-     */
-    get reveal () {
-      return master
-    },
-
-    /**
-     * Get Master key - Returns the master key encode
-     *
-     * @returns {string}
-     */
-    get master () {
-      return master
-    },
-
-    /**
-     * Master key hash and IV setter, master keys
-     * remains in cache, setter for master assigns
-     * 1 time, on initialisation.
-     *
-     * @param {string} key The master password
-     */
-    set master (key) {
-      master = hash(key, 16)
-    },
-
-    /**
-     * Keychain model - Saves the keychain
-     *
-     * - Left value is encoded secret key
-     * - Right value is encoded value
-     *
-     * @example ['password', 'name']
-     */
-    get keychain () {
-      return keychain
-    },
-
-    /**
-     * Key hash and IV setter
-     *
-     * - Left value is encoded variation name
-     * - Right value is encoded secret key
-     *
-     * @example ['standard', 'password']
-     */
-    set key (value) {
-      secret = hash(value, 16)
-    },
-
-    /**
-     * Key hash getter - MD5 by default, (see `hash()`)
-     *
-     * @returns {String}
-     */
-    get key () {
-      return secret.key
-    },
-
-    /**
-     * IV hash getter - Partial slice from `key`
-     *
-     * @example '123456789' > '6789'
-     * @returns {String}
-     */
-    get iv () {
-      return secret.iv
-    },
-
-    /**
-     * Encryption algorithm
-     *
-     * @type {string}
-     */
-    algorithm: 'aes-256-ctr',
-
-    /**
-     * Empty options object - passed to crypto
-     *
-     * @type {string}
-     */
-    options: Object.create(null)
-  }
-
-})(new Map())
+}
 
 /**
  * Normalize string
@@ -159,6 +52,7 @@ const normalizeInput = input => {
  * @returns {*}
  */
 const normalizeOutput = input => {
+
   try {
     return JSON.parse(input)
   } catch (e) {
@@ -169,32 +63,229 @@ const normalizeOutput = input => {
 /**
  * Encode string
  * @param input
- * @return {(input: string) => string}
+ * @return {string}
  */
-const encode = ({ algorithm, key, iv, options }) => input => {
+function encode (input) {
+
   input = normalizeInput(input)
-  const cipher = crypto.createCipheriv(algorithm, key, iv, options)
+
+  const cipher = createCipheriv(this.algorithm, this.key, this.iv, this.options)
   return cipher.update(input, 'utf8', 'hex') + cipher.final('hex')
+
 }
 
 /**
  * Decode string
  * @param input
- * @return {(input: string) => string}
+ * @return {string}
  */
-const decode = ({ algorithm, key, iv, options }) => input => {
+function decode (input) {
 
   input = normalizeInput(input)
 
-  const decipher = crypto.createDecipheriv(algorithm, key, iv, options)
+  const decipher = createDecipheriv(this.algorithm, this.key, this.iv, this.options)
   const decoded = decipher.update(input, 'hex', 'utf8') + decipher.final('utf8')
+
   return normalizeOutput(decoded)
 
 }
 
-const matchSecret = () => {
+/**
+ * State Config - provides model of each cipher
+ */
+const state = (
 
-}
+  function (keychain) {
+
+    /**
+     * Supported Encryption algorithms
+     */
+    const algorithms = [
+      'aes-256-cbc',
+      'aes-256-cbc-hmac-sha1',
+      'aes-256-cbc-hmac-sha256',
+      'aes-256-cfb',
+      'aes-256-cfb1',
+      'aes-256-cfb8',
+      'aes-256-ctr',
+      'aes-256-ofb',
+      'aes256',
+      'camellia-256-cbc',
+      'camellia-256-cfb',
+      'camellia-256-cfb1',
+      'camellia-256-cfb8',
+      'camellia-256-ofb',
+      'camellia256'
+    ]
+
+    /* -------------------------------------------- */
+    /*                    PRIVATE                   */
+    /* -------------------------------------------- */
+
+    /**
+     * Secret
+     *
+     * @type {object}
+     */
+    let secret
+
+    /**
+     * Master
+     *
+     * @type {string}
+     */
+    let master
+
+    /**
+     * Algorithm
+     *
+     * @type {string}
+     */
+    let algorithm = 'aes-256-ctr'
+
+    /* -------------------------------------------- */
+    /*                    CLOSURE                   */
+    /* -------------------------------------------- */
+
+    return {
+
+      /**
+       * Get Master key - Returns the master key encode
+       *
+       * @returns {string}
+       */
+      get master () {
+
+        return master
+
+      },
+
+      /**
+       * Master key hash and IV setter, master keys
+       * remains in cache, setter for master assigns
+       * 1 time, on initialisation.
+       *
+       * @param {string} key The master password
+       */
+      set master (key) {
+
+        master = hash(key)
+
+      },
+
+      /**
+       * Keychain model - Saves the keychain
+       *
+       * - Left value is encoded secret key
+       * - Right value is encoded value
+       *
+       * @example ['password', 'name']
+       */
+      get keychain () {
+
+        // @ts-ignore
+        return keychain
+
+      },
+
+      /**
+       * Keychain model - Saves the keychain
+       *
+       * - Left value is encoded secret key
+       * - Right value is encoded value
+       *
+       * @example ['password', 'name']
+       * @param {string} value
+       */
+      set keychain (value) {
+
+        secret = hash(value)
+
+        if (!keychain.has(secret)) {
+          keychain.set(secret, {
+            iv: this.iv,
+            key: encode.bind(this)(secret),
+            secret: ''
+          })
+        }
+
+      },
+
+      /**
+       * Key hash and IV setter
+       *
+       * - Left value is encoded variation name
+       * - Right value is encoded secret key
+       *
+       * @example ['standard', 'password']
+       */
+      set key (value) {
+
+        secret = hash(value)
+
+      },
+
+      /**
+       * Key hash getter - MD5 by default, (see `hash()`)
+       *
+       * @returns {String}
+       */
+      get key () {
+
+        return secret
+
+      },
+
+      /**
+       * IV hash getter - Partial slice from `key`
+       *
+       * @example '123456789' > '6789'
+       * @returns {String}
+       */
+      get iv () {
+
+        return iv(this.key)
+
+      },
+
+      /**
+       * Set Encryption algorithm
+       *
+       * @type {string}
+       */
+      set algorithm (value) {
+
+        if (value !== algorithm && algorithms.indexOf(algorithm) < 0) {
+          throw new Error(`"${algorithm}" is not supported`)
+        }
+
+        algorithm = value
+
+      },
+
+      /**
+       * Get Encryption algorithm
+       *
+       * @returns {string}
+       */
+      get algorithm () {
+
+        return algorithm
+
+      },
+      /**
+       * Empty options object - passed to crypto
+       *
+       * @type {object}
+       */
+      options: Object.create(null)
+
+    }
+  }
+
+)(new Map())
+
+export const identity = () => createHash('sha256').update(os.homedir(), 'utf8').digest('hex')
 
 /**
  * Keychain Supplier - Used for public exposed keychains
@@ -212,53 +303,33 @@ export const keychain = (master, keys = undefined) => {
 
   state.master = master
 
-  for (const k in keys) {
-    state.key = encode(state)(k)
-    for (const p of keys[k]) {
-      state.keychain.set(encode(state)(p), state.key)
+  for (const key in keys) {
+    state.keychain = key
+    console.log(key, encode.bind(state)(key))
+    for (const password of keys[key]) {
+      state.keychain.get(state.key).secret = encode.bind(state)(password)
     }
   }
 
+  console.log(state.keychain)
 }
 
 /**
  * Cryptographer
  */
-export const authenticate = (key, algorithm = undefined) => {
+export const secret = (key, algorithm = undefined, options = undefined) => {
 
-  // Required
-  if (typeof key !== 'string') throw new Error('required an string key')
-
-  // Not Empty
-  if (key === '') throw new Error('key cannot be empty')
-
-  if (typeof algorithm === 'string') {
-    if (algorithm !== state.algorithm && algorithms.indexOf(algorithm) < 0) {
-      throw new Error(`"${algorithm}" is not supported, use:\n${algorithms.join(',\n')}`)
-    } else state.algorithm = algorithm
-  }
+  if (typeof key !== 'string' || key === '') throw new Error('required an string key')
+  if (typeof algorithm === 'string') state.algorithm = algorithm
+  if (typeof options === 'object') Object.assign(state.options, options)
 
   state.key = key
-  key = encode(state)(key)
 
-  if (state.keychain.has(key)) {
-    state.key = state.keychain.get(key)
-  }
-  // state.key = key
-  // const get = encode(state)(state.key = key)
-  console.log(state.key, state.keychain)
-  const options = Object.freeze(state)
+  // console.log(state, encode.bind(state)(key))
 
   return {
-    encode: encode(options),
-    decode: decode(options),
-    hash,
-    get ciphers () {
-
-      return crypto.getCiphers()
-
-    }
-
+    encode: encode.bind(state),
+    decode: decode.bind(state)
   }
 
 }

@@ -3,7 +3,7 @@
 const os = require('os')
 const qs = require('qs')
 const { createHash } = require('crypto')
-
+createHash('sha256').update(os.homedir(), 'utf8').digest('hex')
 const NetLicensing = require('netlicensing-client/dist/netlicensing-client.node')
 
 const apiKey = '59b5079f-7a84-4f35-af7f-cdedf187a6a3'

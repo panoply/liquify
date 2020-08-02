@@ -10,14 +10,8 @@ export default {
       format: 'cjs',
       file: 'package/index.cjs.js',
       sourcemap: process.env.prod ? false : 'inline',
-      banner: banner(pkg, 'PROPRIETARY')
-    },
-    {
-      format: 'es',
-      file: 'package/index.es.js',
-      sourcemap: process.env.prod ? false : 'inline',
-      banner: banner(pkg, 'PROPRIETARY')
-
+      banner: banner(pkg, 'PROPRIETARY'),
+      exports: 'named'
     }
   ],
   external: [ 'crypto' ],

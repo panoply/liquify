@@ -6,7 +6,6 @@
   "license": "MIT",
   "created": "06-10-2020",
   "main": "package/index.cjs.js",
-  "module": "package/index.es.js",
   "types": "index.d.ts",
   "private": false,
   "repository": {
