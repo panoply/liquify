@@ -83,9 +83,9 @@ export const enum TokenType {
   LiquidTagOpen,
 
   /**
-   * Before Delimeter `{%` _when_ `{%- start -%}`
+   * After Left side Whitespace Dash `-` _when_ `{%- tag %}`
    */
-  WhitespaceDash,
+  LiquidWhitespaceDash,
 
   /**
    * Within Tag `{%- start -%}`
@@ -130,17 +130,17 @@ export const enum TokenType {
   /**
    * Before Delimeter `{{` _when_ `{{- object -}}`
    */
-  LiquidObjectOpen,
+  LiquidObjectTagOpen,
 
   /**
    * Within Tag `{{- object -}}`
    */
-  LiquidObject,
+  LiquidObjectTag,
 
   /**
    * After Delimeter `}}` _when_ `{{- tag -}}`
    */
-  LiquidObjectClose,
+  LiquidObjectTagClose,
 
   /**
    * Before Delimeter `<` _when_ `<tag>`

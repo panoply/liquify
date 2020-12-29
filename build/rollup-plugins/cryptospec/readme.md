@@ -6,7 +6,7 @@ A Rollup plugin used for development on the [Liquify IDE](#) extension/package c
 
 ## Why?
 
-Liquify operates on a freemium license model. Some parts of the codebase can be consumed via the public NPM registry which exposes closed source code and data. This module facilitates encryption so proprietary code and/or data becomes enigmaticwhich prevent reverse engineering without capable context.
+Liquify operates on a freemium license model. Some parts of the codebase can be consumed via the public NPM registry which exposes closed source code and data. This module facilitates encryption so proprietary code and/or data becomes enigmatic so as to prevent reverse engineering the tool without capable context.
 
 ## Install
 

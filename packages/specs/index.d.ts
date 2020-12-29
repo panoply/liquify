@@ -1,14 +1,3 @@
-export enum TokenTypes {
-  "associate" = 1,
-  "control",
-  "comment",
-  "embedded",
-  "include",
-  "iteration",
-  "object",
-  "variable",
-  "raw",
-}
 
 export interface Attributes {
   name: string;
@@ -30,11 +19,24 @@ export interface Params {
   ];
 }
 
+
+export enum TokenTypes {
+  "associate" = 1,
+  "control",
+  "comment",
+  "embedded",
+  "include",
+  "iteration",
+  "object",
+  "variable",
+  "raw",
+}
+
 /* -------------------------------------------- */
 /*                    ENGINE                    */
 /* -------------------------------------------- */
 
-export declare type Engine = "standard" | "shopify" | "jekyll" | "11ty";
+export type Engine = "standard" | "shopify" | "jekyll" | "11ty";
 
 /* -------------------------------------------- */
 /*                    OBJECTS                   */
@@ -221,7 +223,7 @@ export interface Filter {
    */
   readonly snippet?: string;
   /**
-   * Filter argument parameters can differ greatly, depending on how they are
+   * Filter argument parameters can differ greatly depending on how they are
    * implemented. The spec understands the below filter structures:
    *
    * @example
@@ -400,9 +402,9 @@ export interface Variation {
 /*                 SPECIFICATION                */
 /* -------------------------------------------- */
 
-interface Initialize {
+export default interface Initialize {
   getSpecs(password: string): Promise<Variation[]>;
   getSpecsSync(password: string): Variation[];
 }
 
-export default Initialize;
+export as namespace Specs;

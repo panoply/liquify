@@ -4,15 +4,11 @@
 
 An incremental parser/scanner for the Liquid Templating Language. Written in JavaScript and used by the [Liquify IDE](#) text editor plugin to construct a workable Abstract Syntax Tree. The parser is used in combination with the [Node LSP](#) (Language Server Protocol) implementation.
 
-> **IMPORTANT** This parser is used to construct and query AST, not perform actions on parsed code. Use [liquidjs](#) by [Harttle](#) for Liquid engine support in JavaScript, and consider supporting that project.
+> **IMPORTANT** This parser is used to construct and query an AST, not perform actions on parsed code. Use [liquidjs](#) by [Harttle](#) for Liquid engine support in JavaScript, and consider supporting that project.
 
 ## Why?
 
-Facilitating modern IDE capabilties when working with the Liquid Templating Language in text editors required a performant parser to construct a detailed representation of Liquid syntax contained in documents.
-
-## Grammar
-
-Liquid exists in a multitude of variations and no official/formal grammar exists for the language outside of its [standard](#) open sourced variation. Liquify does use
+Facilitating modern IDE capabilities when working with the Liquid Template Language in text editors required a performant parser to construct a detailed representation of Liquid syntax contained in documents.
 
 ## Install
 
@@ -22,7 +18,7 @@ Liquid exists in a multitude of variations and no official/formal grammar exists
 
 ## Usage
 
-**Please note:** there are very little use cases where you would require this parser. Generally speaking, the Liquify IDE plugin which consumes this package should suffice and facilitate most if not all your requirements when developing with Liquid, which is what this parser is designed for.
+**Please note:** there are very little use cases where you would require this parser. The Liquify IDE plugin that consumes this package should suffice and facilitate most (if not all) your requirements when developing with Liquid.
 
 ```js
 import { Parser } from "@liquify/liquid-parser";
@@ -57,21 +53,22 @@ Each node contained on the AST is a class instance. Depending on what type of no
 ```ts
 [
   Node {
-    name: string
-    token: string[]
-    type: number
-    tag: number
-    offset: number[]
-    languageId?: string
-    lineOffset?: number
-    embeddedDocument?: number
+    name: string,
+    token: string[],
+    kind: number,
+    type: number,
+    tag: number,
+    offset: number[],
+    languageId?: string,
+    lineOffset?: number,
+    embeddedDocument?: number,
     children?: [
       {
-        name: string
-        token: string
-        offset: number[]
-        type: number
-        tag: number
+        name: string,
+        token: string,
+        offset: number[],
+        type: number,
+        tag: number,
         objects?: objects
       }
     ]
@@ -92,6 +89,10 @@ Each node contained on the AST is a class instance. Depending on what type of no
   }
 ]
 ```
+
+## Grammar
+
+Liquid exists in a multitude of variations and no official/formal grammar exists for the language outside of its [standard](#) open sourced variation. In order for the parser to compose the AST it leverages a collection of grammars made available via liquid language variation specifications. These specs are data reference files that describe Liquid syntax and provide a way to compose formal grammars for the Liquid Language.
 
 ## Development
 

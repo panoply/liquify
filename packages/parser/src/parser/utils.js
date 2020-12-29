@@ -1,3 +1,4 @@
+
 /**
  * Creates an empty object
  *

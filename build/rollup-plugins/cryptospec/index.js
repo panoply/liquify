@@ -16,8 +16,6 @@ export default function (options = {}) {
 
   for (const key in options.keychain) options.keychain[key].push(options.master)
 
-  cryptographer.keychain(options.keychain)
-
   const merge = json => {
 
     for (const key of Object.keys(json)) {
@@ -99,13 +97,22 @@ export default function (options = {}) {
         return ({ ${decoded.join(',\n')} })
 
       `
+
       return /* js */`
 
       import cryptographer from '@liquify/cryptographer'
 
-      export default {
-        async getSpecs(iv) { ${virtual(false)}  },
-        getSpecsSync(iv)  { ${virtual(true)} }
+      export async function getSpecs (iv) {
+
+        ${virtual(false)}
+
+      }
+
+
+      export function getSpecsSync (iv) {
+
+        ${virtual(true)}
+
       }
 
       `

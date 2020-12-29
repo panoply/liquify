@@ -1,10 +1,6 @@
-{{ tag.prop.prop2.prop3 }}
 
-{% if foo ==== %}{%endif%}
+{% if foo.bar ordd 'bar ' == 20 %}
 
+{{ product }}
 
-{%- for item in collection limit: 10 -%}
-
-
-
-{%- endfor %}
+{% unless foo === %}

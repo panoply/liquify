@@ -14,6 +14,6 @@
     "url": "https://github.com/panoply/liquify"
   },
   "devDependencies": {
-    "rollup-plugin-terser": "^6.1.0"
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

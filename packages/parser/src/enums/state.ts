@@ -3,6 +3,7 @@
 /* -------------------------------------------- */
 
 export const enum ScanState {
+
   /**
    * `---^`
    */
@@ -201,4 +202,11 @@ export const enum ScanState {
   IterationArray,
   IterationParameter,
   IterationParameterValue,
+
+  StringQuotation,
+
+/**PARE ISSUES */
+  ParseError,
+  TagUnknown,
+  CharSeq
 }

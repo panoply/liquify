@@ -7,8 +7,10 @@
  */
 export default {
   engine: 'standard',
+  secret: '',
+  context: true,
   frontmatter: false,
-  spaces: true,
+  whitespace: true,
   range: true,
   offsets: true,
   process_unknown: true,
@@ -20,4 +22,11 @@ export default {
   track_variables: true,
   error_tolerance: 1,
   exclude: []
+}
+
+export const Engines = {
+  Standard: 'standard',
+  Shopify: 'shopify',
+  Jekyll: 'jekyll',
+  '11ty': '11ty'
 }

@@ -8,7 +8,6 @@
  * - Context starts from the opening delimeter, eg: `{{` or `{%`
  * - Context ends before the closing delimeter, eg: `}}` or `%}`
  */
-
 export const enum TokenContext {
   /**
    * Whitespace Delimeter Dash: `-`
@@ -21,7 +20,7 @@ export const enum TokenContext {
   Whitespace = "Whitespace",
 
   /**
-   * Newlines: `\n`
+   * Invalid: `\n`
    */
   Invalid = "Invalid",
 
@@ -76,7 +75,7 @@ export const enum TokenContext {
   String = "String",
 
   /**
-   * Number Value
+   * Number Value: `1, 2, 3`
    */
   Number = "Number",
 

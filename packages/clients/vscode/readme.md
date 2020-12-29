@@ -2,7 +2,7 @@
 
 # Liquify (vscode)
 
-💧A vscode extension for the [Liquid Templating Language](https://shopify.github.io/liquid/). Liquify brings intelliSense features for multiple [Liquid variations](#) to vscode which provides modern IDE tooling to developers who are working the language.
+💧 A vscode extension for the [Liquid Templating Language](https://shopify.github.io/liquid/). Liquify brings intelliSense features for multiple [Liquid variations](#) to vscode which provides modern IDE tooling to developers who are working the language.
 
 - [Documentation](https://liquify.dev)
 - [Playground](https://liquify.dev)

@@ -19,6 +19,13 @@ export default (function Stream (string) {
    *
    * @type {number}
    */
+  let cursor = 0
+
+  /**
+   * Index Offset
+   *
+   * @type {number}
+   */
   let index = 0
 
   /**
@@ -95,6 +102,14 @@ export default (function Stream (string) {
 
     },
 
+    cursor (n = 0) {
+
+      cursor = n + index
+
+      return cursor
+
+    },
+
     /**
      * Get Token
      *
@@ -105,6 +120,29 @@ export default (function Stream (string) {
     token (from = undefined) {
 
       return from ? (token = this.source.substring(from)) : token
+
+    },
+
+    /**
+     * Matches a RegExp
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * @memberof Stream
+     * @param {RegExp} regex
+     * @returns {boolean}
+     * @see https://git.io/JJnqC
+     */
+    tokenContains (regex) {
+
+      const match = token.match(regex)
+
+      if (!match) return false
+
+      index += match.index + match[0].length - token.length
+      token = token.substring(0, match.index)
+
+      return true
 
     },
 
@@ -170,6 +208,7 @@ export default (function Stream (string) {
 
       // reset stream position
       index = length
+      cursor = index
 
       return length
 
@@ -178,7 +217,7 @@ export default (function Stream (string) {
     /**
      * Previous Code Character
      *
-     * WILL NOT MODIFY POSITION
+     * WILL NOT MODIFY OFFSET POSITION
      *
      * @memberof Stream
      * @param {number} char
@@ -193,7 +232,7 @@ export default (function Stream (string) {
     /**
      * Next Code Character
      *
-     * WILL NOT MODIFY POSITION
+     * WILL NOT MODIFY OFFSET POSITION
      *
      * @memberof Stream
      * @param {number} char
@@ -213,14 +252,14 @@ export default (function Stream (string) {
      * @returns {boolean}
      */
     isCodeChar (char) {
-      return char === this.getCodeChar(index)
+      return char === this.getCodeChar()
     },
 
     /**
      * Get Current Position - If a number is passed, return value
      * will be added to current index, but will not be adjusted.
      *
-     * WILL NOT MODIFY POSITION
+     * WILL NOT MODIFY OFFSET POSITION
      *
      * @memberof Stream
      * @param {number} [n]
@@ -275,18 +314,23 @@ export default (function Stream (string) {
     },
 
     /**
-     * Skip String - Consumes a string value between 2 quotes
+     * Skip String
+     * Consumes a string value between 2 quotes
      *
-     * WILL MODIFY POSITION
+     * WILL MODIFIES POSITION
+     *
+     * @param {number} n
+     * The position offset, default is current stream position
+     *
+     * @param {number[]} [consume]
+     * Custom characters to be consumed within the string
      *
      * @memberof Stream
-     * @param {number} n
-     * @param {number[]} [consume]
      * @returns {boolean}
      */
     skipQuotedString (n = index, consume = undefined) {
 
-      if (!/["']/.test(this.source)) return false
+      if (!/^["']/.test(this.source.substring(n))) return false
 
       const offset = this.source.indexOf(this.source.charAt(n), n + 1)
 
@@ -296,8 +340,10 @@ export default (function Stream (string) {
       if (this.getCodeChar(offset - 1) === BWS) return this.skipQuotedString(offset)
 
       // custom consumed character codes
-      if (consume && consume.includes(this.getCodeChar(offset))) {
-        return this.skipQuotedString(offset)
+      if (consume) {
+        if (consume.includes(this.getCodeChar(offset))) {
+          return this.skipQuotedString(offset)
+        }
       }
 
       this.jump(offset + 1)
@@ -345,6 +391,8 @@ export default (function Stream (string) {
       if (match < 0) return false
 
       if (!unless.test(this.source.substring(index, this.position(match)))) {
+        // console.log(this.source.substring(index), match)
+
         this.advance(match)
         return true
       }
@@ -438,6 +486,22 @@ export default (function Stream (string) {
       token = match[0]
 
       return true
+
+    },
+
+    /**
+     * Matches a RegExp
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * @memberof Stream
+     * @param {RegExp} regex
+     * @returns {boolean}
+     * @see https://git.io/JJnqC
+     */
+    isRegExp (regex) {
+
+      return regex.test(this.source.substring(index))
 
     },
 

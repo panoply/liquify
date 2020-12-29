@@ -38,11 +38,11 @@
   "devDependencies": {
     "@ava/babel": "^1.0.1",
     "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
-    "ava": "^3.10.1",
-    "rollup-plugin-terser": "^6.1.0"
+    "ava": "^3.12.1",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "@rollup/pluginutils": "^3.1.0",
-    "javascript-obfuscator": "^1.7.0"
+    "@rollup/pluginutils": "^4.0.0",
+    "javascript-obfuscator": "^2.3.0"
   }
 }

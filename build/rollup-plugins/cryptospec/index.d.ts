@@ -49,7 +49,7 @@ interface Options {
 }
 
 /**
- * Cryptospec Rollup plugin used by the Liquify IDE plugin which will
+ * Cryptospec Rollup plugin used by the Liquify IDE plugin to
  * encrypt JSON input files.
  */
 export default function cryptospec(options: Options): rollup.Plugin;

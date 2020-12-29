@@ -5,11 +5,12 @@
       {
         "modules": false,
         "targets": {
-          "node": true
+          "node": 12
         }
       }
     ],
-    ["@babel/preset-typescript"]
+    ["@babel/preset-typescript"],
+    ["const-enum"]
   ],
   "sourceMaps": true,
   "inputSourceMap": true,

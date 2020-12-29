@@ -35,7 +35,9 @@ export default {
       configFile: './.babelrc',
       extensions: [ '.ts', '.js' ]
     }),
-    commonjs(),
+    commonjs({
+      requireReturnsDefault: 'namespace'
+    }),
     globs({
       globs: [
         'package.json',

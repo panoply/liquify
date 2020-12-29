@@ -6,19 +6,22 @@ import options from './parser/options'
 
 export class LiquidParser {
 
-  constructor (parser, configuration) {
+  constructor (configuration) {
 
-    this.parser = parser
-    this.options = { ...options, ...configuration }
+    this.config = { ...options, ...configuration }
 
   }
 
-  parse (document, specification) {
+  spec (ref) {
+    specs.ref(ref[this.config.engine])
+
+  }
+
+  parse (document) {
 
     stream.source = document.textDocument.getText()
-    specs.spec = specification
 
-    return parse.bind(this.options)(document)
+    return parse.bind(this.config)(document)
 
   }
 
@@ -29,12 +32,6 @@ export class LiquidParser {
   }
 
   getNode () {
-
-  }
-
-  getSpec () {
-
-    return specs.spec
 
   }
 

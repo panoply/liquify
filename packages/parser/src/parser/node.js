@@ -1,17 +1,63 @@
 import { TokenKind } from '../enums/kinds'
-import { TokenContext } from '../enums/context'
-import { object } from './utils'
 import scanner from './scanner'
+import specs from './specs'
+import Errors from './errors'
+
 import yamljs from 'yamljs'
+
 /**
  * AST Node
  *
  * Creates token nodes on the AST
  *
+ * @type {Parser.ASTNode}
  */
 export default class Node {
 
-  static register = {}
+  /**
+   * Presets
+   *
+   * Disposable static object used to preset
+   * values before a specification is matched.
+   *
+   * @static
+   * @memberof Node
+   * @type {object}
+   */
+  static preset = {}
+
+  /**
+   * AST Node Hierarch
+   *
+   * Tracks each node and their placements
+   *
+   * @static
+   * @memberof Node
+   * @type {number[]}
+   */
+  static hierarch = []
+
+  /**
+   * Errors
+   *
+   * Tracks each node and their placements
+   *
+   * @static
+   * @memberof Node
+   * @type {object[]}
+   */
+  static errors = []
+
+  /**
+   * Size
+   *
+   * AST Node size
+   *
+   * @static
+   * @memberof Node
+   * @type {number}
+   */
+  static size = 0
 
   /**
    * Tag Name
@@ -23,30 +69,30 @@ export default class Node {
   /**
    * Start Offset - Left most starting index
    *
-   * @type {number}
+   * @type {Parser.Range}
    */
-  start = Node.register.start
-
-  /**
-   * End Offset - right most starting index
-   *
-   * @type {object}
-   */
-  end = undefined
+  range = { start: scanner.getRange() }
 
   /**
    * Start Offset - Left most starting index
    *
-   * @type {object}
+   * @type {number}
    */
-  range = { start: scanner.getRange(), end: object() }
+  start = Node.preset.start
+
+  /**
+   * End Offset - right most starting index
+   *
+   * @type {number}
+   */
+  end = undefined
 
   /**
    * Tag Type
    *
-   * @type {string}
+   * @type {number}
    */
-  type = 'unknown'
+  type = specs.type
 
   /**
    * Tag Kind
@@ -67,21 +113,21 @@ export default class Node {
    *
    * @type{number[]}
    */
-  offsets = [ this.start ]
+  offsets = [ Node.preset.start ]
 
   /**
    * Errors
    *
    * @type{number[]}
    */
-  errors = []
+  _errors = []
 
   /**
-   * Offset - Index position offsets
+   * Children - Index position offsets
    *
    * @type {number[]}
    */
-  #children = []
+  _children = []
 
   /**
    * Context Stream
@@ -89,14 +135,14 @@ export default class Node {
    * @type {object[]}
    * @private
    */
-  #context = Node.register?.whitespace ? [ TokenContext.Dash ] : []
+  _context = []
 
   /**
    * Objects
    *
-   * @type{number[]}
+   * @type{object[]}
    */
-  objects = object()
+  _objects = []
 
   /**
    * Range - Line/character position
@@ -105,13 +151,15 @@ export default class Node {
    */
   get children () {
 
-    return this.#children
+    return this._children
 
   }
 
   /**
-   * Get Contents - Returns a tags innner content
+   * Get Contents
    *
+   * @readonly
+   * @memberof Node
    * @returns {string}
    */
   get content () {
@@ -125,21 +173,106 @@ export default class Node {
   }
 
   /**
-   * Get Context
+   * Get Objects
    *
    */
-  get context () {
+  get objects () {
 
-    return this.#context
+    return this._objects
   }
 
   /**
-   * Set Context
+   * Set Objects
    */
-  set context (type) {
+  set objects (object) {
 
-    // this.offsets.push(scanner.start)
-    this.#context.push(typeof type === 'object' ? type : { type, value: scanner.getToken() })
+    // eslint-disable-next-line
+    this._objects = [...this._objects, object]
+
+  }
+
+  /**
+   * Get Errors
+   *
+   */
+  get errors () {
+
+    return Node.errors
+  }
+
+  /**
+   * Set Errors
+   *
+   * @param {number} error
+   * @memberof Node
+   */
+  error (error = undefined) {
+
+    console.log('IN AERROR', error)
+
+    if (!error) return Node.errors
+
+    const diagnostic = {
+      ...Errors(error)
+      , range: scanner.getRange()
+      , node: Node.size
+    }
+
+    Node.errors.push(diagnostic)
+    this._errors.push(Node.errors.length - 1)
+
+    return diagnostic
+
+  }
+
+  hierarch (index) {
+
+    if (!specs.singular) {
+      Node.hierarch.push(index)
+    }
+  }
+
+  /**
+   * Context
+   *
+   * @param {string} [type=undefined]
+   * @return {object[]}
+   * @memberof Node
+   */
+  context (type = undefined) {
+
+    if (type) {
+      this._context = [
+        ...this._context
+        , {
+          type,
+          value: scanner.getToken()
+          // range: scanner.getRange()
+        }
+      ]
+    }
+
+    return this._context
+
+  }
+
+  /**
+   * Reset Node Presets
+   *
+   * Resets the static presets
+   *
+   */
+  reset (length) {
+
+    Node.size = length
+
+    const prop = Object.getOwnPropertyNames(Node.preset)
+    const size = prop.length
+
+    if (size > 0) {
+      let i = 0
+      for (; i < size; i++) delete Node.preset[prop[i]]
+    }
 
   }
 
