@@ -76,7 +76,7 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {
-    "**/node_modules": false,
+    "**/node_modules": true,
     "**/package/node_modules": false,
     "**/versions": true,
     "**/.git": true,
@@ -96,7 +96,6 @@
   "javascript.validate.enable": true,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "javascript.suggest.autoImports": false,
-  "javascript.implicitProjectConfig.checkJs": true,
   "typescript.disableAutomaticTypeAcquisition": true,
   "typescript.suggest.autoImports": false,
   "eslint.alwaysShowStatus": true,
@@ -179,5 +178,8 @@
   ],
   "cSpell.enableFiletypes": [
     "javascript"
+  ],
+  "cSpell.words": [
+    "pluginutils"
   ]
 }

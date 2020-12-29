@@ -150,7 +150,7 @@
     "fs-extra": "^9.0.1",
     "husky": "^4.3.6",
     "inquirer": "^7.3.3",
-    "javascript-obfuscator": "^2.9.4",
+    "javascript-obfuscator": "^2.9.6",
     "jsonminify": "^0.4.1",
     "lodash": "^4.17.20",
     "mocha": "^8.2.1",
@@ -161,7 +161,7 @@
     "rollup": "^2.35.1",
     "rollup-plugin-javascript-obfuscator": "^1.0.4",
     "rollup-plugin-terser": "^7.0.2",
-    "semantic-release": "^17.3.0",
+    "semantic-release": "^17.3.1",
     "strip-json-comments": "^3.1.1"
   },
   "publishConfig": {

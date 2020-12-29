@@ -4,14 +4,12 @@ import { extname } from 'path'
 
 /**
  * Replace - Runs a regular expression and replaces
- * all matched tag occurances
+ * all matched tag occurrences
  *
  */
 export default function (options = {}) {
 
   const parse = {}
-  const pass = {}
-
   const filter = createFilter(options.include, options.exclude)
 
   for (const key in options.keychain) options.keychain[key].push(options.master)

@@ -1,8 +1,8 @@
 export default (
   [
     {
-      title: 'LIQUID TAG DELIMETERS\n',
-      description: 'Test Liquid tag delimeters',
+      title: 'LIQUID TAG DELIMITERS\n',
+      description: 'Test Liquid tag delimiters',
       capture: {
         regex: /[\s]/g,
         colour: 'bgGrey',
@@ -21,8 +21,8 @@ export default (
       )
     },
     {
-      title: 'LIQUID OBJECT TAG DELIMETERS\n',
-      description: 'Test Liquid object tag delimeters',
+      title: 'LIQUID OBJECT TAG DELIMITERS\n',
+      description: 'Test Liquid object tag delimiters',
       capture: {
         regex: /[\s]/g,
         colour: 'bgGrey',

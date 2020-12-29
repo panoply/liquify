@@ -34,9 +34,9 @@
     "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
     "@liquify/rollup-plugin-obfuscator": "workspace:^0.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
-    "@rollup/plugin-commonjs": "^15.0.0",
-    "@rollup/plugin-node-resolve": "^9.0.0",
-    "ava": "^3.12.1",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "ava": "^3.14.0",
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {

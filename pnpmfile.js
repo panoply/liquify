@@ -1,7 +1,7 @@
 'use strict'
 
 const { writeFileSync } = require('fs')
-const { basename } = require('path')
+const { basename, resolve } = require('path')
 const chalk = require('chalk')
 const { log } = console
 
@@ -17,7 +17,7 @@ module.exports = {
 
     afterAllResolved (lockfile) {
 
-      const file = `${__dirname}/package.json`
+      const file = `${resolve()}/package.json`
       const pkg = require(file)
       const pkgs = Object.keys(lockfile.importers)
 
