@@ -6,7 +6,7 @@ export const enum TokenType {
 
   String,
 
-  Seperator,
+  Separator,
 
   /**
    * Unknown Characters

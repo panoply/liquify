@@ -6,7 +6,7 @@ A Rollup plugin which implements [JavaScript Obfuscator](https://github.com/java
 
 ## Why?
 
-The current version of the official JavaScript Obfuscator [rollup-plugin](https://github.com/javascript-obfuscator/) is using a deprecated API. Additionally, I wanted type declartions.
+The current version of the official JavaScript Obfuscator [rollup-plugin](https://github.com/javascript-obfuscator/) is using a deprecated API. Additionally, I wanted type declarations.
 
 ## Install
 

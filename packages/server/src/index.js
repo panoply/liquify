@@ -53,6 +53,7 @@ connection.onInitialize(initializeParams => (
       resolveProvider: true,
       triggerCharacters: [
         '"',
+        '\'',
         ':',
         '|',
         '.',
@@ -71,7 +72,8 @@ connection.onInitialize(initializeParams => (
         'liquid.enableValidation',
         'liquid.disableValidation',
         'liquid.changeEngine',
-        'liquid.codelens'
+        'liquid.codelens',
+        'liquid.updateWizard'
       ]
     }
   })

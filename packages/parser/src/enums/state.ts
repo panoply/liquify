@@ -205,6 +205,9 @@ export const enum ScanState {
 
   StringQuotation,
 
+  FilterSeparator,
+
+
 /**PARE ISSUES */
   ParseError,
   TagUnknown,

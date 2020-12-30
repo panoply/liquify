@@ -71,9 +71,11 @@ export default (function Stream (string) {
 
     get location () {
 
+      const line = this.source.substring(0, index).split(/[\n\r\f]/).length - 1
+      const character = this.source.substring(index).search(/[\n\r\f]/)
       return {
-        line: this.source.substring(0, index).split(/[\n\r\f]/).length - 1,
-        character: this.source.substring(index).length
+        line,
+        character: this.source.substring(character).length - 1
       }
 
     },
@@ -334,8 +336,10 @@ export default (function Stream (string) {
 
       const offset = this.source.indexOf(this.source.charAt(n), n + 1)
 
-      if (!offset) return false
-
+      if (offset < 0) {
+        index = this.advance(1)
+        return false
+      }
       // consume escaped strings, eg: \" or \'
       if (this.getCodeChar(offset - 1) === BWS) return this.skipQuotedString(offset)
 

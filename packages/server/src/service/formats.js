@@ -10,7 +10,7 @@ import { Document } from '../provide/document'
  *
  * Formatting is provided by leveraging the language aware
  * beautification tool known as PrettyDiff. PrettyDiff ships with
- * some minor issues when deeply intergrated with Liquid and so
+ * some minor issues when deeply integrated with Liquid and so
  * the private functions here are used to patch those issues.
  *
  * For more information see:
@@ -22,7 +22,7 @@ import { Document } from '../provide/document'
  * @see https://sparser.io/docs-html/tech-documentation.xhtml
  *
  * @typedef {import("vscode-languageserver").TextDocument} TextDocument
- * @typedef {import('../../../release/vscode-liquify/server/node_modules/defs').ASTEmbeddedRegion} ASTEmbeddedRegion
+ * @typedef {import('./defs').ASTEmbeddedRegion} ASTEmbeddedRegion
  * @typedef {import('vscode-languageserver').TextEdit} TextEdit
  */
 
@@ -38,8 +38,8 @@ const defaultRules = _.cloneDeep(prettydiff.options)
 /**
  * Indentation Levels
  *
- * Used for embedded blocks of code that are neseted or child
- * nodes contiained within HTML elements which must adhere to an
+ * Used for embedded blocks of code that are nested or child
+ * nodes contained within HTML elements which must adhere to an
  * indentation level
  *
  * @param {TextDocument} document
@@ -65,7 +65,7 @@ function indentLevel (document, kind, offset) {
  * Format Replacements
  *
  * Removes patched document content manipulations which help
- * prevent errors from occuring at the Sparser parsing level.
+ * prevent errors from occurring at the Sparser parsing level.
  *
  * @param {string} content
  * @returns {string}
@@ -210,7 +210,7 @@ export function markup (source) {
 
   // Check Sparser for errors
   // Validations will handle missing pairs
-  // We still echo Sparsers log for additional context.
+  // We still echo Sparser log for additional context.
   if (prettydiff.sparser.parseerror.length > 0) {
     connection.console.error(prettydiff.sparser.parseerror)
     return formatReplace(source)

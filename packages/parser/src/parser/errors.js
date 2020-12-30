@@ -35,59 +35,66 @@ export default (error = 0) => ({
       range: {}
     }
   ),
-  [ParseError.MissingOpenDelimeter]: (
+  [ParseError.MissingOpenDelimiter]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing opening tag delimeter',
+      message: 'Missing opening tag delimiter',
       range: {}
     }
   ),
-  [ParseError.MissingCloseDelimeter]: (
+  [ParseError.MissingCloseDelimiter]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing closing tag delimeter',
+      message: 'Missing closing tag delimiter',
       range: {}
     }
   ),
   [ParseError.MissingColon]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Missing colon separator',
+      range: {}
+    }
+  ),
+  [ParseError.MissingQuotation]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Malformed string, missing quote',
       range: {}
     }
   ),
   [ParseError.MissingProperty]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Missing object property',
       range: {}
     }
   ),
   [ParseError.MissingCondition]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Missing conditional value',
       range: {}
     }
   ),
   [ParseError.InvalidTagName]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Invalid tag name',
       range: {}
     }
   ),
   [ParseError.InvalidCharacter]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Invalid character',
       range: {}
     }
   ),
   [ParseError.InvalidSyntactic]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Invalid syntactic tag placement',
       range: {}
     }
   ),

@@ -116,7 +116,7 @@ export class Config {
     /**
      * JS Beautify - NOT YET AVAILABLE - DO NOT USE
      */
-    jsbeautiy: null
+    jsbeautify: null
 
   }
 
@@ -144,7 +144,7 @@ export class Config {
     releases: true,
 
     /**
-     * Project reccomendation - Show project recommendations
+     * Project recommendation - Show project recommendations
      */
     recommendations: true,
 
@@ -278,7 +278,7 @@ export class Config {
     },
 
     /**
-     * Custom Rules - Langauge Server extended rulesets
+     * Custom Rules - Language Server extended rule sets
      */
     customRules: {
 
@@ -378,7 +378,7 @@ export class Config {
       },
 
       /**
-       * PrettyDiff options the JavaScript language
+       * PrettyDiff options for the JavaScript language
        *
        * @type {object}
        */
@@ -397,7 +397,7 @@ export class Config {
       },
 
       /**
-       * PrettyDiff options the JSON language
+       * PrettyDiff options for the JSON language
        *
        * @type {object}
        */
@@ -418,7 +418,7 @@ export class Config {
       },
 
       /**
-       * PrettyDiff options the SCSS language
+       * PrettyDiff options for the SCSS language
        *
        * @type {object}
        */
@@ -438,7 +438,7 @@ export class Config {
       },
 
       /**
-       * PrettyDiff options the CSS language
+       * PrettyDiff options for the CSS language
        *
        * @type {object}
        */
@@ -541,8 +541,8 @@ export class Config {
       name: true,
 
       /**
-       * Validates object propery existense and value, For example, `{{ tag. }}`
-       * would fail and `{{ object.does_not_exist }}` would aswell.
+       * Validates object property existence and value, For example, `{{ tag. }}`
+       * would fail and `{{ object.does_not_exist }}` would as well.
        */
       property: true
 

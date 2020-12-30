@@ -33,13 +33,13 @@ export function parse (document) {
 
     switch (token) {
 
-      // CONTEXT - SEPERATOR CHARACTER
+      // CONTEXT - SEPARATOR CHARACTER
       //
-      // Pushes seperator characters to stack
+      // Pushes separator characters to stack
       // -----------------------------------------------------------------
-      case TokenType.Seperator:
+      case TokenType.Separator:
 
-        node.context(TokenContext.Seperator)
+        node.context(TokenContext.Separator)
 
         break
 
@@ -64,7 +64,7 @@ export function parse (document) {
       case TokenType.LiquidWhitespaceDash:
 
         if (this.context) {
-          Node.preset.context(TokenContext.Dash)
+          Node.preset.dash = TokenContext.Dash
         }
 
         break
@@ -75,17 +75,14 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.ParseError:
 
-        console.log(node)
-
         node.end = scan.position
         node.range.end = scan.getRange()
         node.offsets.push(node.end)
         node.error(scan.error)
 
-        document.ast.push(node)
+        console.log('parse erroor', node)
 
-        node.reset() // RESET PRESET
-        spec.reset() // RESET SPEC
+        //  document.ast.push(node)
 
         break
 
@@ -122,13 +119,16 @@ export function parse (document) {
         node.name = scan.token
 
         if (this.context) {
+          if (Node.preset.dash) {
+            node.context(Node.preset.dash)
+          }
           node.context((token === TokenType.LiquidObjectTag
             ? TokenContext.Object
             : TokenContext.Keyword
           ))
         }
 
-        // Push non-singular tags onto hierarach
+        // Push non-singular tags onto hierarch
         if (token === TokenType.LiquidTag) {
           Node.hierarch.push(document.ast.length)
         }
@@ -152,7 +152,7 @@ export function parse (document) {
           break
         }
 
-        // The endtag is invalid - missing parental hierarach
+        // The endtag is invalid - missing parental hierarch
         // create a new node on the AST representing this invalid node
         // @ts-ignore
         node = new Node()
@@ -166,7 +166,7 @@ export function parse (document) {
 
       // LIQUID TAG CLOSE
       //
-      // Closing delimeters of Liquid tags
+      // Closing delimiters of Liquid tags
       //
       // %}^
       // }}^
@@ -188,9 +188,7 @@ export function parse (document) {
         // We will splice this out in "LiquidEndTag"
         if (token === TokenType.LiquidTagClose) {
           node.error(ParseError.MissingEndTag)
-        }
-
-        if (token === TokenType.LiquidEndTagClose) {
+        } else if (token === TokenType.LiquidEndTagClose) {
           Node.hierarch.splice(Node.hierarch.length - 1, 1)
           Node.errors.splice(Node.hierarch.length - 1, 1)
         }
@@ -229,7 +227,7 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.ControlCondition:
 
-        node.context(TokenContext.Indentifier)
+        node.context(TokenContext.Identifier)
 
         break
 

@@ -55,7 +55,7 @@ export const enum ParseError {
    * tag %}
    * object -}}
    */
-  MissingOpenDelimeter,
+  MissingOpenDelimiter,
   /**
    * Missing close delimeter
    *
@@ -63,7 +63,7 @@ export const enum ParseError {
    * {% tag %
    * {{ objects | filter: '' }
    */
-  MissingCloseDelimeter,
+  MissingCloseDelimiter,
   /**
    * Missing colon
    *

@@ -33,7 +33,7 @@ export default new class Specs {
    */
   get type () {
 
-    return this.#type || this.#cursor.type
+    return this.#type
 
   }
 
@@ -95,8 +95,8 @@ export default new class Specs {
    *
    * Cursor represents an in-stream specification.
    * The cursor is changed each time a new tag with
-   * a reference specification is encounted it will
-   * be made available on pribate `this.#cursor` prop.
+   * a reference specification is encountered it will
+   * be made available on private `this.#cursor` prop.
    *
    * @param {string} [name=undefined]
    * Tag name value to match with a specification
@@ -119,7 +119,7 @@ export default new class Specs {
     ) || undefined
 
     // Reset type to align its value with current spec
-    if (this.#cursor) {
+    if (this.#cursor?.type) {
       this.#type = TokenTag[this.#cursor.type]
     }
 

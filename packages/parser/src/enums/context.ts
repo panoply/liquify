@@ -32,7 +32,7 @@ export const enum TokenContext {
   /**
    * The tag name
    */
-  Indentifier = "Indentifier",
+  Identifier = "Indentifier",
 
   /**
    * Control Operators `!=|==|<|>|<=|=>|and|or`
@@ -67,7 +67,7 @@ export const enum TokenContext {
   /**
    * Seperator character: `,` or `|`
    */
-  Seperator = "Seperator",
+  Separator = "Seperator",
 
   /**
    * Value between:  `""` or `''`

@@ -3,7 +3,7 @@
 
 # Liquify
 
-An extension/package tool for the [Liquid Templating Language](#). Liquify uses the [Language Sever Protocol](#) implementation to provide modern IDE tooling and features to developers working with Liquid and using text editors like [VSCode](#), [Sublime](#) and [Atom](#). The tool operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licenced packages.
+An extension/package tool for the [Liquid Template Language](#). Liquify uses the [Language Sever Protocol](#) implementation to provide modern IDE tooling and features to developers working with Liquid and using text editors like [VSCode](#), [Sublime](#) and [Atom](#). The tool operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licenced packages.
 
 ### Packages
 
@@ -108,4 +108,4 @@ pnpm run test
 
 <img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />
 
-🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+🥛 <small>[Sissel SaaS](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />

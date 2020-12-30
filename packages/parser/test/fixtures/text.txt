@@ -1,6 +1,14 @@
+{% if condition                        k  %}
+  {{ tag      }}
+{% endif  %}
 
-{% if foo.bar ordd 'bar ' == 20 %}
+{{ object_tag }}
 
-{{ product }}
+ {% if foo  %}
 
-{% unless foo === %}
+{{ tag  }}
+   {% endif %}
+{% endfor   k %}
+
+
+

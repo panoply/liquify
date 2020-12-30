@@ -6,7 +6,7 @@ Repository for the [Liquify](https://liquify.dev) IDE text editor extension/pack
 
 ## Install
 
-If you're using this as a boilerplate or wish to contribute to the [Liquify](#) project, clone the repository and run `npm install` to install all dependences.
+If you're using this as a boilerplate or wish to contribute to the [Liquify](#) project, clone the repository and run `npm install` to install all dependencies.
 
 ## Services
 
@@ -27,7 +27,7 @@ The website functions and operates by leveraging the following services:
 
 ## VS Code
 
-Refer to the `.vscode` directory for workspace settings. Required extensions will be automatically reccomended. Launch with the pre-configured preferences.
+Refer to the `.vscode` directory for workspace settings. Required extensions will be automatically recommended. Launch with the pre-configured preferences.
 
 #### Linting Extensions
 

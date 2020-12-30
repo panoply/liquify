@@ -208,7 +208,7 @@ export default class Node {
    */
   error (error = undefined) {
 
-    console.log('IN AERROR', error)
+    console.log('IN A ERROR', error)
 
     if (!error) return Node.errors
 

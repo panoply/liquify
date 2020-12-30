@@ -204,6 +204,7 @@ export default (context) => {
        * Embedded Languages
        *
        * *IMPORTANT*
+       *
        * Language set to `false` are not yet implemented
        * so setting `true` will not active their Language Servers.
        */

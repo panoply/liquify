@@ -1,4 +1,4 @@
-import { DSH, LCB, LAN, BNG, FWS, RCB } from '../lexical/characters'
+import { DSH, LCB, LAN, BNG, FWS, RCB, PIP } from '../lexical/characters'
 import { TokenType } from '../enums/types'
 import { ScanState } from '../enums/state'
 import { TokenTags } from '../enums/parse'
@@ -44,7 +44,7 @@ export default (function () {
   /**
    * Character Sequencing
    *
-   * Advances source to delimeter start characters.
+   * Advances source to delimiter start characters.
    * Sequence will capture HTML or Liquid characters.
    *
    * @returns {number}
@@ -71,7 +71,7 @@ export default (function () {
 
     }
 
-    // HTML OPEN TAG DELIMETERS < | </ | <!--
+    // HTML OPEN TAG DELIMITERS < | </ | <!--
     //
     // ---------------------------------------------
     if (stream.ifChar(LAN)) {
@@ -141,12 +141,15 @@ export default (function () {
 
     index = stream.position()
 
-    if (stream.skipWhitespace()) {
-      return TokenType.Whitespace
-    }
+    if (state !== ScanState.ParseError) {
 
-    if (stream.isRegExp(/^-?[%}]{1}\}/)) {
-      state = ScanState.TagClose
+      if (stream.skipWhitespace()) {
+        return TokenType.Whitespace
+      }
+
+      if (stream.isRegExp(/^-?[%}]{1}\}/)) {
+        state = ScanState.TagClose
+      }
     }
 
     console.log('start of liquid', index, stream.token())
@@ -180,9 +183,9 @@ export default (function () {
             return TokenType.LiquidEndTag
           }
 
-          // Object tag references the predefined tag type in `charseq`
+          // Object tag references the predefined tag type in `charset`
           if (specs.type === TokenTags.object) {
-            state = ScanState.ObjectName
+            state = ScanState.ObjectProperties
             return TokenType.LiquidObjectTag
           }
 
@@ -208,10 +211,10 @@ export default (function () {
         if (stream.consumeUnless(/-?[%}]\}/, /\{[{%]-?/)) {
           console.log('Parse Error', stream.token())
           state = ScanState.TagClose
-          return TokenType.LiquidTagClose
+          return TokenType.ParseError
         }
 
-        error = ParseError.MissingCloseDelimeter
+        error = ParseError.MissingCloseDelimiter
         state = ScanState.CharSeq
 
         return TokenType.LiquidEndTag
@@ -267,7 +270,30 @@ export default (function () {
       // ---------------------------------------------
       case ScanState.ObjectProperties: {
 
-        if (stream.ifRegExp(/^[^\s]*\b/)) return TokenType.ObjectProperties
+        if (stream.ifRegExp(/^[^\s|]+\b/)) {
+
+          // Check if last character is a pipe
+          if (stream.prevCodeChar(PIP)) {
+            state = ScanState.FilterSeparator
+          }
+
+          return TokenType.ObjectProperties
+        }
+
+        state = ScanState.TagClose
+        return TokenType.LiquidObjectTagClose
+
+      }
+
+      // LIQUID OBJECT PROPERTIES
+      //
+      // ---------------------------------------------
+      case ScanState.FilterSeparator: {
+
+        if (stream.ifRegExp(/^[^\s|]+\b/)) {
+          state = ScanState.FilterSeparator
+          return TokenType.ObjectProperties
+        }
 
         console.log(stream.token())
 
@@ -288,7 +314,7 @@ export default (function () {
             // Missing a quote " or '
             state = ScanState.ParseError
             error = ParseError.MissingQuotation
-            return TokenType.ParseError
+            return ScanLiquid()
           }
         }
 
@@ -371,7 +397,7 @@ export default (function () {
           return TokenType.LiquidWhitespaceDash
         }
 
-        if (stream.ifRegExp(/^-?[%}]{1}\}/)) {
+        if (stream.ifRegExp(/^-?[%}]\}/)) {
 
           state = ScanState.CharSeq
 
@@ -388,8 +414,7 @@ export default (function () {
         }
 
         state = ScanState.ParseError
-        error = ParseError.MissingCloseDelimeter
-
+        error = ParseError.MissingCloseDelimiter
         return TokenType.ParseError
 
       }

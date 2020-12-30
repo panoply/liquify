@@ -27,25 +27,27 @@ function LiquidDocuments (documents = new Map()) {
    */
   function create ({ uri, languageId, version, text }) {
 
-    document = documents.has(uri) ? documents.get(uri) : documents.set(uri, {
-      diagnostics: [],
-      documentLinks: [],
-      ast: [],
-      textDocument: TextDocument.create(
-        uri
-        , languageId
-        , version
-        , text
-      )
-    }).get(uri)
+    document = documents.has(uri)
+      ? documents.get(uri)
+      : documents.set(uri, {
+        diagnostics: [],
+        documentLinks: [],
+        ast: [],
+        textDocument: TextDocument.create(
+          uri
+          , languageId
+          , version
+          , text
+        )
+      }).get(uri)
 
     return parser => parser(document)
 
   }
 
   /**
-   * Update the text document model, this is execute each time the document
-   * content content and is called via the `onDidChangeTextDocument` event. Majority
+   * Update the text document model, this is executed each time the document
+   * content changes and is called via the `onDidChangeTextDocument` event. Majority
    * of this logic was lifted from the 'vscode-textdocument' module.
    *
    * @param {LSP.VersionedTextDocumentIdentifier} textDocument
