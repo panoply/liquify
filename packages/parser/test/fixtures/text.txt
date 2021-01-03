@@ -1,14 +1,1 @@
-{% if condition                        k  %}
-  {{ tag      }}
-{% endif  %}
-
-{{ object_tag }}
-
- {% if foo  %}
-
-{{ tag  }}
-   {% endif %}
-{% endfor   k %}
-
-
-
+{{- order | replace: 'foo', 'bar' }}

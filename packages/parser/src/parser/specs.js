@@ -1,4 +1,4 @@
-import * as TokenTag from '../lexical/tags'
+import { TokenTags } from '../enums/parse'
 import { Engines } from './options'
 
 export default new class Specs {
@@ -20,7 +20,7 @@ export default new class Specs {
   /**
    * Cursor (currently active tag in parse)
    *
-   * @type {object}
+   * @type {Parser.NodeSpecification}
    */
   #cursor = undefined
 
@@ -46,6 +46,7 @@ export default new class Specs {
    */
   get singular () {
 
+    // @ts-ignore
     return this.#cursor?.singular
 
   }
@@ -67,10 +68,25 @@ export default new class Specs {
    *
    * @readonly
    * @memberof Specs
+   * @returns {string|boolean}
    */
   get name () {
 
+    // @ts-ignore
     return this.#cursor.name
+
+  }
+
+  /**
+   * Set Type
+   *
+   * @readonly
+   * @memberof Specs
+   */
+  get params () {
+
+    // @ts-ignore
+    return this.#cursor?.parameters
 
   }
 
@@ -108,20 +124,27 @@ export default new class Specs {
 
     if (!name) return this.#cursor
 
-    this.#cursor = (
-      this.#ref?.tags?.[name]
-    ) || ((
-      this.#ref?.engine !== Engines.Standard
-    ) && (
-      this.#ref?.objects?.[name]
-    )) || (
-      this.#ref?.filters?.[name]
-    ) || undefined
-
-    // Reset type to align its value with current spec
-    if (this.#cursor?.type) {
-      this.#type = TokenTag[this.#cursor.type]
+    if (this.#ref?.tags?.[name]) {
+      this.#cursor = this.#ref?.tags?.[name]
+      this.#type = TokenTags[this.#cursor.type]
+      return this.#cursor
     }
+
+    if (this.#ref?.engine !== Engines.Standard) {
+      if (this.#ref?.objects?.[name]) {
+        this.#cursor = this.#ref?.objects?.[name]
+        this.#type = TokenTags[this.#cursor.type]
+        return this.#cursor
+      }
+    }
+
+    if (this.#ref?.filters?.[name]) {
+      this.#cursor = this.#ref?.filters?.[name]
+      return this.#cursor
+    }
+
+    this.#cursor = undefined
+    this.#type = undefined
 
     return this.#cursor
 

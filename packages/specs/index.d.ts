@@ -19,18 +19,19 @@ export interface Params {
   ];
 }
 
+export type TokenTypes = (
+    "associate" |
+    "control"   |
+    "comment"   |
+    "embedded"  |
+    "include"   |
+    "iteration" |
+    "object"    |
+    "variable"  |
+    "raw"
+)
 
-export enum TokenTypes {
-  "associate" = 1,
-  "control",
-  "comment",
-  "embedded",
-  "include",
-  "iteration",
-  "object",
-  "variable",
-  "raw",
-}
+
 
 /* -------------------------------------------- */
 /*                    ENGINE                    */
@@ -58,6 +59,10 @@ interface Properties {
 }
 
 export interface Object {
+  /**
+   * Name of the Object
+   */
+  readonly name: string;
   /**
    * The automatically applied tag type, which is "object"
    */
@@ -386,7 +391,7 @@ export type Tags = { [name: string]: Tag };
 /*            DEFAULT SPECIFICATIONS            */
 /* -------------------------------------------- */
 
-export type NodeSpecification = Object | Tag | Filter;
+export type NodeSpecification = (Object | Tag | Filter);
 
 export type Records = "filters" | "objects" | "filters";
 

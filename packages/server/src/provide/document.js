@@ -30,9 +30,16 @@ function LiquidDocuments (documents = new Map()) {
     document = documents.has(uri)
       ? documents.get(uri)
       : documents.set(uri, {
+        engine: '',
         diagnostics: [],
         documentLinks: [],
         ast: [],
+        scopes: {
+          // Maps types to variable scopes
+          typeMaps: {},
+          variables: {},
+          objects: []
+        },
         textDocument: TextDocument.create(
           uri
           , languageId

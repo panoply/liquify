@@ -40,7 +40,7 @@ export default (function Stream (string) {
    *
    * @type {string}
    */
-  let token = ''
+  let token
 
   /**
    * Source Text Length - (cached for optimisation)
@@ -60,6 +60,8 @@ export default (function Stream (string) {
     /**
      * End of Stream
      *
+     * Checks to see if stream has reached end of string
+     *
      * @memberof Stream
      * @returns {boolean}
      */
@@ -69,6 +71,40 @@ export default (function Stream (string) {
 
     },
 
+    /**
+     * Range
+     *
+     * Returns `start` and `end` range information
+     *
+     * @memberof Stream
+     * @returns {object}
+     */
+    get range () {
+
+      const line = this.source.substring(0, index).split(/[\n\r\f]/).length - 1
+      const character = this.source.substring(index).search(/[\n\r\f]/)
+
+      return {
+        start: {
+          line,
+          character: this.source.substring(character).length - 1
+        },
+        end: {
+          line: 0,
+          character: 0
+        }
+      }
+
+    },
+
+    /**
+     * Range
+     *
+     * Returns `start` and `end` range information
+     *
+     * @memberof Stream
+     * @returns {object}
+     */
     get location () {
 
       const line = this.source.substring(0, index).split(/[\n\r\f]/).length - 1
@@ -104,11 +140,36 @@ export default (function Stream (string) {
 
     },
 
-    cursor (n = 0) {
+    Cursor (n = 0) {
 
       cursor = n + index
 
       return cursor
+
+    },
+
+    /**
+     * Range
+     *
+     * Returns `start` and `end` range information
+     *
+     * @param {number} start
+     * @param {number} end
+     * @memberof Stream
+     * @returns {object}
+     */
+    Range (start, end = 0) {
+
+      return {
+        start: {
+          line: 0,
+          character: start
+        },
+        end: {
+          line: 0,
+          character: end
+        }
+      }
 
     },
 
@@ -119,7 +180,7 @@ export default (function Stream (string) {
      * @param {number} from
      * @returns {string}
      */
-    token (from = undefined) {
+    Token (from = undefined) {
 
       return from ? (token = this.source.substring(from)) : token
 
@@ -135,7 +196,7 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqC
      */
-    tokenContains (regex) {
+    TokenContains (regex) {
 
       const match = token.match(regex)
 
@@ -161,9 +222,9 @@ export default (function Stream (string) {
      * @param {number} n
      * @returns {number}
      */
-    jump (n) {
+    Jump (n) {
 
-      if (n > length) return this.gotoEnd()
+      if (n > length) return this.GotoEnd()
 
       return (index = n < 0 ? 0 : n)
 
@@ -178,7 +239,7 @@ export default (function Stream (string) {
      * @param {number} [n=1]
      * @returns {number}
      */
-    prev (n = 1) {
+    Prev (n = 1) {
 
       return (index -= n)
 
@@ -189,12 +250,12 @@ export default (function Stream (string) {
      *
      * WILL MODIFY POSITION
      *
-     * @param {number} n
+     * @param {number} offset
      * @returns {number}
      */
-    advance (n) {
+    Advance (offset) {
 
-      return (index += n)
+      return (index += offset)
 
     },
 
@@ -206,7 +267,7 @@ export default (function Stream (string) {
      * @memberof Stream
      * @returns {number}
      */
-    gotoEnd () {
+    GotoEnd () {
 
       // reset stream position
       index = length
@@ -225,7 +286,7 @@ export default (function Stream (string) {
      * @param {number} char
      * @returns {boolean}
      */
-    prevCodeChar (char) {
+    IfPrevCodeChar (char) {
 
       return this.source.charCodeAt(index - 1) === char
 
@@ -237,12 +298,12 @@ export default (function Stream (string) {
      * WILL NOT MODIFY OFFSET POSITION
      *
      * @memberof Stream
-     * @param {number} char
+     * @param {number} code
      * @returns {boolean}
      */
-    nextCodeChar (char) {
+    IfNextCodeChar (code) {
 
-      return this.source.charCodeAt(index + 1) === char
+      return this.source.charCodeAt(index + 1) === code
 
     },
 
@@ -250,26 +311,30 @@ export default (function Stream (string) {
      * Current Code Character Truthy
      *
      * @memberof Stream
-     * @param {number} char
+     * @param {number} code
      * @returns {boolean}
      */
-    isCodeChar (char) {
-      return char === this.getCodeChar()
+    IsCodeChar (code) {
+
+      return code === this.GetCodeChar()
+
     },
 
     /**
-     * Get Current Position - If a number is passed, return value
+     * Get Current Position
+     *
+     * If a number is passed, return value
      * will be added to current index, but will not be adjusted.
      *
      * WILL NOT MODIFY OFFSET POSITION
      *
      * @memberof Stream
-     * @param {number} [n]
+     * @param {number} [offset]
      * @returns {number}
      */
-    position (n = undefined) {
+    Offset (offset = undefined) {
 
-      return n ? (index + n) : index
+      return offset ? (index + offset) : index
 
     },
 
@@ -277,12 +342,12 @@ export default (function Stream (string) {
      * Get Code Character
      *
      * @memberof Stream
-     * @param {number} [n]
+     * @param {number} [advance]
      * @returns {number}
      */
-    getCodeChar (n = 0) {
+    GetCodeChar (advance = 0) {
 
-      return this.source.charCodeAt(n > 0 ? index + n : index)
+      return this.source.charCodeAt(advance > index ? index + advance : advance)
 
     },
 
@@ -293,9 +358,9 @@ export default (function Stream (string) {
      * @param {number} [advance]
      * @returns {string}
      */
-    getChar (advance = 0) {
+    GetChar (advance = 0) {
 
-      return this.source.charAt(advance > 0 ? index + advance : index)
+      return this.source.charAt(advance > index ? index + advance : advance)
 
     },
 
@@ -307,7 +372,7 @@ export default (function Stream (string) {
      * @param {number} [end]
      * @returns {string}
      */
-    getText (start, end = undefined) {
+    GetText (start, end = undefined) {
 
       // token = this.source.substring(start, end || index)
 
@@ -330,27 +395,28 @@ export default (function Stream (string) {
      * @memberof Stream
      * @returns {boolean}
      */
-    skipQuotedString (n = index, consume = undefined) {
+    SkipQuotedString (n = index, consume = undefined) {
 
       if (!/^["']/.test(this.source.substring(n))) return false
 
       const offset = this.source.indexOf(this.source.charAt(n), n + 1)
 
       if (offset < 0) {
-        index = this.advance(1)
+        index = this.Advance(1)
         return false
       }
       // consume escaped strings, eg: \" or \'
-      if (this.getCodeChar(offset - 1) === BWS) return this.skipQuotedString(offset)
+      if (this.GetCodeChar(offset - 1) === BWS) return this.SkipQuotedString(offset)
 
       // custom consumed character codes
       if (consume) {
-        if (consume.includes(this.getCodeChar(offset))) {
-          return this.skipQuotedString(offset)
+        if (consume.includes(this.GetCodeChar(offset))) {
+          return this.SkipQuotedString(offset)
         }
       }
 
-      this.jump(offset + 1)
+      index = offset + 1
+      token = this.source.substring(n + 1, offset)
 
       return true
 
@@ -365,14 +431,14 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnq8
      */
-    skipWhitespace () {
+    SkipWhitespace () {
 
-      return this.whileChar(c => (
-        c === WSP ||
-        c === TAB ||
-        c === NWL ||
-        c === LFD ||
-        c === CAR
+      return this.WhileChar(charCode => (
+        charCode === WSP ||
+        charCode === TAB ||
+        charCode === NWL ||
+        charCode === LFD ||
+        charCode === CAR
       )) > 0
 
     },
@@ -388,16 +454,16 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqn
      */
-    consumeUnless (regex, unless) {
+    ConsumeUnless (regex, unless) {
 
       const match = this.source.substring(index).search(regex)
 
       if (match < 0) return false
 
-      if (!unless.test(this.source.substring(index, this.position(match)))) {
+      if (!unless.test(this.source.substring(index, this.Offset(match)))) {
         // console.log(this.source.substring(index), match)
 
-        this.advance(match)
+        this.Advance(match)
         return true
       }
 
@@ -416,12 +482,12 @@ export default (function Stream (string) {
      * @returns {(NaN|number)}
      * @see https://git.io/JJnqn
      */
-    untilSequence (regex) {
+    UntilSequence (regex) {
 
       const match = this.source.substring(index).search(regex)
 
       if (match < 0) {
-        this.gotoEnd()
+        this.GotoEnd()
         return NaN
       }
 
@@ -439,13 +505,13 @@ export default (function Stream (string) {
      * @returns {(boolean)}
      * @see https://git.io/JJnqn
      */
-    ifSequence (regex) {
+    IfSequence (regex) {
 
       const match = this.source.substring(index).search(regex)
 
       if (match < 0) return false
 
-      this.advance(match)
+      this.Advance(match)
 
       return true
 
@@ -460,7 +526,7 @@ export default (function Stream (string) {
      * @param {function} condition
      * @returns {number}
      */
-    whileChar (condition) {
+    WhileChar (condition) {
 
       const pos = index
 
@@ -480,7 +546,7 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqC
      */
-    ifRegExp (regex) {
+    IfRegExp (regex) {
 
       const match = this.source.substring(index).match(regex)
 
@@ -503,7 +569,7 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqC
      */
-    isRegExp (regex) {
+    IsRegExp (regex) {
 
       return regex.test(this.source.substring(index))
 
@@ -520,12 +586,12 @@ export default (function Stream (string) {
      * @returns {string}
      * @see https://git.io/JJnqn
      */
-    untilRegExp (regex, consume = false) {
+    UntilRegExp (regex, consume = false) {
 
       const match = this.source.substring(index).match(regex)
 
       if (!match) {
-        this.gotoEnd()
+        this.GotoEnd()
         return ''
       }
 
@@ -542,18 +608,25 @@ export default (function Stream (string) {
     /**
      * Advances Stream until a single matching Character Code is found
      *
-     * WILL MODIFY POSITION
+     * WILL MODIFY POSITION BY 1
      *
      * @memberof Stream
-     * @param {number} char
+     *
+     * @param {number} code
+     * The character code number
+     *
+     * @param {boolean} [tokenize=true]
+     * Defaults to `true` wherin matched character is
+     * applied to `token`
+     *
+     * @link https://git.io/JJnq3
      * @returns {boolean}
-     * @see https://git.io/JJnq3
      */
-    ifChar (char, next = false) {
+    IfCodeChar (code, tokenize = true) {
 
-      // console.log(index, char, text.charAt(index + 1))
-      if (char === this.source.charCodeAt(next ? index + 1 : index)) {
-        this.advance(next ? 2 : 1)
+      if (code === this.source.charCodeAt(index)) {
+        if (tokenize) token = this.source.charAt(index)
+        this.Advance(1)
         return true
       }
 
@@ -569,9 +642,9 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqt
      */
-    ifChars (codes) {
+    IfChars (codes) {
 
-      if (codes.every((c, i) => c === this.getCodeChar(index + i))) {
+      if (codes.every((c, i) => c === this.GetCodeChar(index + i))) {
 
         index += codes.length
 
@@ -593,11 +666,11 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqt
      */
-    untilChar (char) {
+    UntilChar (char) {
 
       while (index < this.source.length) {
         if (this.source.charCodeAt(index) === char) return true
-        this.advance(1)
+        this.Advance(1)
       }
 
       return false
@@ -611,7 +684,7 @@ export default (function Stream (string) {
      * @param {string|number[]} string
      * @returns {boolean}
      */
-    untilChars (string, consume = false) {
+    UntilChars (string, consume = false) {
 
       if (typeof string !== 'string') {
         string = string.reduce((s, c) => (s += String.fromCharCode(c)), '')
@@ -620,11 +693,11 @@ export default (function Stream (string) {
       const offset = this.source.indexOf(string, index)
 
       if (offset >= 0) {
-        this.jump(consume ? offset + string.length : offset)
+        this.Jump(consume ? offset + string.length : offset)
         return true
       }
 
-      this.gotoEnd()
+      this.GotoEnd()
       return false
 
     }

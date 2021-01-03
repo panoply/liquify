@@ -72,12 +72,19 @@ export const enum ParseError {
    */
   MissingColon,
   /**
-   * Missing Propertty
+   * Missing Property
    *
    * @example
    * {{ object. }}
    */
   MissingProperty,
+  /**
+   * Missing Filter
+   *
+   * @example
+   * {{ tag | }}
+   */
+  MissingFilter,
   /**
    * Missing condition
    *
@@ -102,6 +109,14 @@ export const enum ParseError {
    * {% /tag/ %} // / is invalid
    */
   InvalidTagName,
+  /**
+   * Invalid Object Name
+   *
+   * @example
+   * {{ #tag }} // # is invalid
+   * {{ 100 }} // 100 is invalid
+   */
+  InvalidObjectName,
   /**
    * Invalid Character
    *
@@ -166,6 +181,13 @@ export const enum ParseError {
    * Reject Filters
    */
   RejectFilters,
+  /**
+   * Reject Whitespace
+   *
+   * @example
+   * {{ object['prop   '] }} // whitespace "\s\s\s" is not allowed
+   */
+  RejectWhitespace,
   /**
    * Reject Whitespace Control
    *

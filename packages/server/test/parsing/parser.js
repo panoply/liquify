@@ -67,7 +67,7 @@ function grammar (string, capture) {
   ).replace(capture.regex, i => ctx[capture.colour](i))
 
 }
-/*
+
 html_tokens.forEach(({ title, capture, tests, nodes }) => {
 
   const string = tests.flat(1).join('\n')

@@ -11,6 +11,15 @@ export function object () {
 
 }
 
+export function ForEach (array, fn) {
+
+  let i = 0
+  const l = array.length
+
+  for (; i < l.length; i++) fn(l[i], i)
+
+}
+
 export function parentNodes ({ ast }, parents = []) {
 
   let parent

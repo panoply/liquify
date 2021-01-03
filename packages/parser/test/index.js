@@ -4,7 +4,13 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import time from 'pretty-hrtime'
 import * as Specs from '@liquify/liquid-language-specs'
+import html_tokens from './cases/html_tags/embedded'
+import liquid_delimeters from './cases/liquid_tags/delimeters'
+import chalk from 'chalk'
 
+const ctx = new chalk.Instance({
+  level: 2
+})
 const fixture = ({ fixture }) => ({
   ast: [],
   parseErrors: [],
@@ -41,7 +47,7 @@ const fixture = ({ fixture }) => ({
 })
 
 const parser = new LiquidParser({
-  engine: 'standard',
+  engine: 'shopify',
   frontmatter: false,
   whitespace: false,
   range: true,
@@ -75,6 +81,7 @@ const doc = readFileSync(resolve('test/fixtures/text.txt'), 'utf8').toString()
 
 test('FullDocument Parse', t => {
 
+  // t.regex('fo%o', /^[^\s.[][a-zA-Z0-9$_-]+\b/)
   const start = process.hrtime()
   const node = AST({ fixture: doc })
   const end = process.hrtime(start)
@@ -85,3 +92,52 @@ test('FullDocument Parse', t => {
   t.pass()
 
 })
+
+/*
+function grammar (string, capture) {
+
+  const stringify = capture.stringify ? JSON.stringify(string) : string
+
+  return (
+    capture.stringify
+      ? stringify.substring(1, stringify.length - 1)
+      : stringify
+  ).replace(capture.regex, i => ctx[capture.colour](i))
+
+}
+
+liquid_delimeters.forEach(({ title, capture, tests, nodes }) => {
+
+  const string = tests.join('\n')
+
+  test(title, t => {
+
+    const node = AST({ fixture: string })
+
+    if (node) {
+      for (let x = 0; x < tests.length; x++) {
+
+        const token = tests[x]
+        const newline = x === tests.length - 1 ? '\n' : ''
+        const ln = x >= 10 ? `${x}` : ` ${x}`
+
+        // t.deepEqual(token, node)
+        console.log(string, node)
+        // console.log(token, nodes[x], nodes[x].every((i, k) => i === token[k]))
+       // if (node[x]?.token.every((i, k) => i === token[k])) {
+          // t.log(ctx.dim(ln), ctx.green('✔'), grammar(token.join(' '), capture), newline)
+         // t.log(node[x])
+       // } else {
+       //   t.deepEqual(token, node[x])
+       //   t.log(ctx.red.dim(ln), ctx.red('✖'), ctx.red(node[x]))
+        //  throw t.log(ctx.magentaBright('ASTNode'), node[x])
+        //}
+
+      }
+    }
+
+    t.pass()
+
+  })
+
+}) */

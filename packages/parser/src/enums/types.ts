@@ -8,6 +8,8 @@ export const enum TokenType {
 
   Separator,
 
+  Filter,
+
   /**
    * Unknown Characters
    */

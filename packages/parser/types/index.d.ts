@@ -3,9 +3,9 @@ import { TokenKind } from "../src/enums/kinds";
 import { TokenContext } from "../src/enums/context";
 import { Errors } from "../src/enums/errors";
 export { Options } from './options'
-import { Variation, NodeSpecification } from '@liquify/liquid-language-specs'
+import { Variation, NodeSpecification, Object as SpecObjects } from '@liquify/liquid-language-specs'
 
-export { Variation, NodeSpecification }
+export { Variation, NodeSpecification, SpecObjects }
 
 /**
  * Tags are captured and applied as an array of strings.

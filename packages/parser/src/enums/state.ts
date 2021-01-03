@@ -19,12 +19,16 @@ export const enum ScanState {
    */
   TagOpen,
 
+  /**
+   * `{%-^`
+   */
   TagOpenDash,
 
   /**
    * `%}^`
    */
   TagStartClose,
+
 
   WithinEndTag,
 
@@ -35,6 +39,9 @@ export const enum ScanState {
 
   ObjectName,
   ObjectProperties,
+  ObjectDotNotation,
+  ObjectBracketNotation,
+  ObjectUnknown,
 
   /**
    * `{% tag^`
@@ -205,7 +212,7 @@ export const enum ScanState {
 
   StringQuotation,
 
-  FilterSeparator,
+
 
 
 /**PARE ISSUES */

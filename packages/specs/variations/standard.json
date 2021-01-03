@@ -12,7 +12,7 @@
       "snippet": "append: ${0}",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "string",
           "required": true
         }
       ]
@@ -23,7 +23,7 @@
       "snippet": "at_least: ${0}",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "number",
           "required": true
         }
       ]
@@ -34,7 +34,7 @@
       "snippet": "at_most: ${0}",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "number",
           "required": true
         }
       ]
@@ -57,7 +57,7 @@
       "snippet": "concat: ${0}",
       "parameters": [
         {
-          "type": "variable",
+          "type": "array",
           "required": true
         }
       ]
@@ -491,7 +491,7 @@
           "name": "offset",
           "snippet": "offset: ${0}",
           "context": [
-            "$keyword~$colon",
+            "$keyword$colon",
             "$number|$variable"
           ]
         },
@@ -500,7 +500,7 @@
           "name": "range",
           "snippet": "(${1}..${2})${0}",
           "context": [
-            "$parenthesis~{$number|$variable}~$dot~$dot~{$number|$variable}~$parenthesis"
+            "$parenthesis{$number|$variable}~$dot~$dot~{$number|$variable}~$parenthesis"
           ]
         },
         {
@@ -508,7 +508,7 @@
           "name": "limit",
           "snippet": "limit: ${1} ${0}",
           "context": [
-            "$keyword~$colon",
+            "$keyword$colon",
             "$number|$variable"
           ]
         },
@@ -580,7 +580,7 @@
           "name": "limit",
           "snippet": "limit: ${0}",
           "context": [
-            "$keyword~$colon",
+            "$keyword$colon",
             "$number|$variable"
           ]
         },

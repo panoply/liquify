@@ -4,7 +4,7 @@ import { TokenKind } from '../enums/kinds'
 import { ParseError } from '../enums/errors'
 import * as TokenTags from '../lexical/tags'
 import Node from './node'
-import scan from './scanner'
+import scanner from './scanner'
 import spec from './specs'
 
 /**
@@ -22,7 +22,7 @@ export function parse (document) {
   /**
    * @type {number}
    */
-  let token = scan.scanner()
+  let token = scanner.scan()
 
   /**
    * @type {Parser.ASTNode}
@@ -63,10 +63,6 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.LiquidWhitespaceDash:
 
-        if (this.context) {
-          Node.preset.dash = TokenContext.Dash
-        }
-
         break
 
       // PARSER - PARSE ERROR
@@ -75,14 +71,17 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.ParseError:
 
-        node.end = scan.position
-        node.range.end = scan.getRange()
-        node.offsets.push(node.end)
-        node.error(scan.error)
+        // @ts-ignore - Create node if undefined
+        if (!node) node = new Node()
 
-        console.log('parse erroor', node)
+        node.end = scanner.offset
+        node.range.end = scanner.position
+        // node.offsets.push(node.end)
+        node.error(scanner.error)
 
-        //  document.ast.push(node)
+        console.log('parse error')
+
+        // document.ast.push(node)
 
         break
 
@@ -98,7 +97,30 @@ export function parse (document) {
       case TokenType.LiquidEndTagOpen:
       case TokenType.LiquidObjectTagOpen:
 
-        Node.preset.start = scan.index
+        break
+
+      // LIQUID TAG NAME KEYWORD
+      //
+      // Tag reference is created and added to the AST
+      //
+      // name^ }}
+      // -----------------------------------------------------------------
+      case TokenType.LiquidObjectTag:
+
+        console.log('get text: ' + scanner.dash)
+        // @ts-ignore
+        node = new Node()
+        node.name = scanner.token
+
+        if (this.context) {
+
+          if (scanner.dash) {
+            node.context(TokenContext.Dash)
+          }
+
+          node.context(TokenContext.Object)
+
+        }
 
         break
 
@@ -110,22 +132,22 @@ export function parse (document) {
       // name^ }}
       // -----------------------------------------------------------------
       case TokenType.LiquidTag:
-      case TokenType.LiquidObjectTag:
       case TokenType.LiquidSingularTag:
 
+        console.log('get text: ' + scanner.dash)
         // @ts-ignore
         node = new Node()
 
-        node.name = scan.token
+        node.name = scanner.token
 
         if (this.context) {
-          if (Node.preset.dash) {
-            node.context(Node.preset.dash)
+
+          if (scanner.dash) {
+            node.context(TokenContext.Dash)
           }
-          node.context((token === TokenType.LiquidObjectTag
-            ? TokenContext.Object
-            : TokenContext.Keyword
-          ))
+
+          node.context(TokenContext.Keyword)
+
         }
 
         // Push non-singular tags onto hierarch
@@ -147,8 +169,8 @@ export function parse (document) {
         node = document.ast[Node.hierarch[Node.hierarch.length - 1] - 1]
 
         // Checks for a matching parent
-        if (node?.name === scan.token) {
-          node.offsets.push(scan.index)
+        if (node?.name === scanner.token) {
+          node.offsets.push(scanner.offset)
           break
         }
 
@@ -158,7 +180,7 @@ export function parse (document) {
         node = new Node()
 
         // Populate node match
-        node.name = scan.token
+        node.name = scanner.token
 
         console.log('error, unmatched tag pair')
 
@@ -176,9 +198,9 @@ export function parse (document) {
       case TokenType.LiquidObjectTagClose:
       case TokenType.LiquidSingularTagClose:
 
-        node.end = scan.position
-        node.range.end = scan.getRange()
-        node.token.push(scan.getText(Node.preset.start))
+        node.end = scanner.offset
+        node.range.end = scanner.position
+        node.token.push(scanner.tag)
         node.offsets.push(node.end)
 
         // Push node onto AST stack
@@ -197,6 +219,9 @@ export function parse (document) {
         node.reset(document.ast.length - 1)
         spec.reset()
 
+        // Reset
+        node = undefined
+
         break
 
       case TokenType.Object:
@@ -205,13 +230,13 @@ export function parse (document) {
           node.context(TokenContext.Object)
         }
 
-        node.objects = scan.token
+        node.objects = scanner.token
           .split('.')
           .filter(Boolean)
           .reduce((objects, prop) => (
             {
               ...objects
-              , [scan.index + prop.length]: prop
+              , [scanner.offset + prop.length]: prop
             }
           ), {})
 
@@ -229,6 +254,8 @@ export function parse (document) {
 
         node.context(TokenContext.Identifier)
 
+        console.log('in here')
+
         break
 
       // LIQUID CONTROL OPERATOR
@@ -237,12 +264,12 @@ export function parse (document) {
 
         node.context(TokenContext.Operator)
 
-        if (/[=!><]/.test(scan.token) && scan.token.length > 2) {
+        if (/[=!><]/.test(scanner.token) && scanner.token.length > 2) {
           node.error(ParseError.InvalidOperator)
           break
         }
 
-        if (!/^(?:==|!=|>=|<=|<|>|\b(?:or|and)\b)$/.test(scan.token)) {
+        if (!/^(?:==|!=|>=|<=|<|>|\b(?:or|and)\b)$/.test(scanner.token)) {
           node.error(ParseError.InvalidOperator)
         }
 
@@ -254,7 +281,7 @@ export function parse (document) {
 
         node.context(TokenContext.Iteree)
 
-        if (!/^(?:[^\W\s]+|[.-]+)+/.test(scan.getToken())) {
+        if (!/^(?:[^\W\s]+|[.-]+)+/.test(scanner.token)) {
           node.errors.push('Invalid characters detected in iteree')
         }
 
@@ -266,7 +293,7 @@ export function parse (document) {
 
         node.context(TokenContext.Operator)
 
-        if (!/\bin\b/.test(scan.token)) {
+        if (!/\bin\b/.test(scanner.token)) {
           node.errors.push('Invalid Logical Operator')
         }
 
@@ -292,7 +319,7 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.IterationParameterValue:
 
-        if (/\d{1,}/.test(scan.token)) {
+        if (/\d{1,}/.test(scanner.token)) {
           node.context(TokenContext.Number)
         } else {
           node.context(TokenContext.Invalid)
@@ -306,8 +333,8 @@ export function parse (document) {
       case TokenType.HTMLStartTagOpen:
 
         node = document.ast[document.ast.push(new Node()) - 1]
-        node.start = scan.index
-        node.name = scan.getToken()
+        node.start = scanner.offset
+        node.name = scanner.token
 
         break
 
@@ -318,8 +345,8 @@ export function parse (document) {
         node = document.ast[document.ast.push(new Node()) - 1]
         node.type = TokenTags.embedded
         node.kind = TokenKind.Yaml
-        node.token.push(scan.getText(0, scan.end + 1))
-        node.offsets.push(0, scan.end + 1)
+        node.token.push(scanner.getText(0, scanner.end + 1))
+        node.offsets.push(0, scanner.end + 1)
 
         break
 
@@ -328,20 +355,20 @@ export function parse (document) {
       case TokenType.FrontmatterEnd:
 
         node.name = 'frontmatter'
-        node.offsets.push(scan.getIndex, scan.end)
-        node.token.push(scan.getText(scan.getIndex))
+        node.offsets.push(scanner.getIndex, scanner.end)
+        node.token.push(scanner.getText(scanner.getIndex))
 
         break
 
     }
 
-    token = scan.scanner()
+    token = scanner.scan()
 
   }
 
   document.parseErrors = [ ...document.parseErrors, ...Node.errors ]
 
-  console.log(Node.hierarch)
+  // console.log(Node.hierarch)
 
   return document
 

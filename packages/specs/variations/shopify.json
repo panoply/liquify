@@ -319,63 +319,78 @@
       "properties": [
         {
           "description": "Returns the abbreviated value of the Province/State field of the address.",
-          "name": "province_code"
+          "name": "province_code",
+          "type": "string"
         },
         {
           "description": "Returns the combined values of the Address1 and Address2 fields of the address.",
-          "name": "street"
+          "name": "street",
+          "type": "string"
         },
         {
           "description": "Returns the relative URL of the address.",
-          "name": "ref"
+          "name": "url",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Address1 field of the address.",
-          "name": "address1"
+          "name": "address1",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Address2 field of the address.",
-          "name": "address2"
+          "name": "address2",
+          "type": "string"
         },
         {
           "description": "Returns the value of the City field of the address.",
-          "name": "city"
+          "name": "city",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Company field of the address.",
-          "name": "company"
+          "name": "company",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Country field of the address in ISO 3166-2 standard format.",
-          "name": "country_code"
+          "name": "country_code",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Country field of the address.",
-          "name": "country"
+          "name": "country",
+          "type": "string"
         },
         {
           "description": "Returns the value of the First Name field of the address.",
-          "name": "first_name"
+          "name": "first_name",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Last Name field of the address.",
-          "name": "last_name"
+          "name": "last_name",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Phone field of the address.",
-          "name": "phone"
+          "name": "phone",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Postal/Zip field of the address.",
-          "name": "zip"
+          "name": "zip",
+          "type": "string"
         },
         {
           "description": "Returns the value of the Province/State field of the address.",
-          "name": "province"
+          "name": "province",
+          "type": "string"
         },
         {
           "description": "Returns the values of the First Name and Last Name fields of the address.",
-          "name": "name"
+          "name": "name",
+          "type": "string"
         }
       ],
       "ref": "https://help.shopify.com/en/themes/liquid/objects/address"
@@ -383,18 +398,22 @@
     "all_country_option_tags": {
       "description": "The all_country_option_tags object creates an <option> tag for each country. An attribute called data-provinces is set for each <option>, and contains a JSON-encoded array of the country's subregions. If a country doesn't have any subregions, then an empty array is set for its data-provinces attribute.",
       "filters": false,
-      "ref": "https://help.shopify.com/themes/liquid/objects#all_products"
+      "ref": "https://help.shopify.com/themes/liquid/objects#all_products",
+      "type": "array"
     },
     "all_products": {
       "description": "Returns a list of all the products in your store. You can use all_products to access products by their handles.",
-      "ref": "https://help.shopify.com/themes/liquid/objects#all_products"
+      "ref": "https://help.shopify.com/themes/liquid/objects#all_products",
+      "type": "array"
     },
     "article": {
       "description": "Returns a list of all the blog articles in a store.",
+      "type": "object",
       "properties": [
         {
           "description": "Returns all the tags for the article.",
-          "name": "tags"
+          "name": "tags",
+          "type": "array"
         },
         {
           "description": "Returns an object with information about the article's author.",
@@ -402,47 +421,57 @@
           "properties": [
             {
               "description": "Returns the bio of the author of the article.",
-              "name": "bio"
+              "name": "bio",
+              "type": "string"
             },
             {
               "description": "Returns the email of the author of the article.",
-              "name": "email"
+              "name": "email",
+              "type": "string"
             },
             {
               "description": "Returns the first name of the author of the article.",
-              "name": "first_name"
+              "name": "first_name",
+              "type": "string"
             },
             {
               "description": "Returns the home page of the article author.",
-              "name": "homepage"
+              "name": "homepage",
+              "type": "string"
             },
             {
               "description": "Returns the image object of the author of the article.",
               "name": "image",
+              "type": "object",
               "properties": [
                 {
                   "description": "Returns the article image's alt text.",
-                  "name": "alt"
+                  "name": "alt",
+                  "type": "string"
                 },
                 {
                   "description": "Returns the relative URL to the article image.",
-                  "name": "src"
+                  "name": "src",
+                  "type": "string"
                 }
               ]
             },
             {
               "description": "Returns the last name of the author of the article.",
-              "name": "last_name"
+              "name": "last_name",
+              "type": "string"
             },
             {
               "description": "Returns true if the author of the article is the account owner of the store. Returns false if the author is not the account owner.",
-              "name": "account_owner"
+              "name": "account_owner",
+              "type": "string"
             }
           ]
         },
         {
           "description": "Returns article.excerpt of the article if it exists. Returns article.content if an excerpt does not exist for the article.",
-          "name": "excerpt_or_content"
+          "name": "excerpt_or_content",
+          "type": "string"
         },
         {
           "description": "Returns the article's image object.",
@@ -450,14 +479,15 @@
           "properties": [
             {
               "description": "Returns the article image's alt text.",
-              "name": "alt"
+              "name": "alt",
+              "type": "string"
             },
             {
               "description": "Returns the relative URL to the article image.",
-              "name": "src"
+              "name": "src",
+              "type": "string"
             }
-          ],
-          "type": "object"
+          ]
         },
         {
           "description": "Returns the content of the article.",
@@ -489,30 +519,36 @@
         },
         {
           "description": "Returns the relative URL of the article.",
-          "name": "ref"
+          "name": "url",
+          "type": "string"
         },
         {
           "description": "Returns the relative URL where POST requests are sent to when creating new comments.",
-          "name": "comment_post_url"
+          "name": "comment_post_url",
+          "type": "string"
         },
         {
           "description": "Returns the timestamp of when the article was created. Use the date filter to format the timestamp.",
-          "name": "created_at"
+          "name": "created_at",
+          "type": "string"
         },
         {
           "description": "Returns the title of the article.",
-          "name": "title"
+          "name": "title",
+          "type": "string"
         },
         {
           "description": "Returns true if comments are enabled. Returns false if comments are disabled.",
-          "name": "comments_enabled"
+          "name": "comments_enabled",
+          "type": "boolean"
         },
         {
           "description": "Returns true if the blog that the article belongs to is set to moderate comments. Returns false if the blog is not moderated.",
-          "name": "moderated"
+          "name": "moderated",
+          "type": "boolean"
         }
       ],
-      "ref": "https://help.shopify.com/themes/liquid/objects#all_products"
+      "ref": "https://shopify.dev/docs/themes/liquid/reference/objects#articles"
     },
     "block": {
       "description": "A block represents the content and settings of a single block in an array of section blocks. The block object can be accessed in a section file by looping through section.blocks.",
@@ -852,71 +888,88 @@
       "properties": [
         {
           "description": "Returns `true` if the customer accepts marketing, returns `false` if the customer does not",
-          "name": "accepts_marketing"
+          "name": "accepts_marketing",
+          "type": "boolean"
         },
         {
           "description": "Returns an array of all addresses associated with a customer",
-          "name": "addresses"
+          "name": "addresses",
+          "type": "array"
         },
         {
           "description": "Returns an array of all orders placed by the customer",
-          "name": "orders"
+          "name": "orders",
+          "type": "array"
         },
         {
           "description": "Returns the default customer_address",
-          "name": "default_address"
+          "name": "default_address",
+          "type": "string"
         },
         {
           "description": "Returns the email address of the customer",
-          "name": "email"
+          "name": "email",
+          "type": "string"
         },
         {
           "description": "Returns the first name of the customer",
-          "name": "first_name"
+          "name": "first_name",
+          "type": "string"
         },
         {
           "description": "Returns the full name of the customer",
-          "name": "name"
+          "name": "name",
+          "type": "string"
         },
         {
           "description": "Returns the id of the customer",
-          "name": "id"
+          "name": "id",
+          "type": "number"
         },
         {
           "description": "Returns the last name of the customer",
-          "name": "last_name"
+          "name": "last_name",
+          "type": "string"
         },
         {
           "description": "Returns the last order placed by the customer, not including test orders",
-          "name": "last_order"
+          "name": "last_order",
+          "type": "string"
         },
         {
           "description": "Returns the list of tags associated with the customer",
-          "name": "tags"
+          "name": "tags",
+          "type": "array"
         },
         {
           "description": "Returns the number of addresses associated with a customer",
-          "name": "addresses_count"
+          "name": "addresses_count",
+          "type": "number"
         },
         {
           "description": "Returns the phone number of the customer",
-          "name": "phone"
+          "name": "phone",
+          "type": "string"
         },
         {
           "description": "Returns the total amount spent on all orders",
-          "name": "total_spent"
+          "name": "total_spent",
+          "type": "string"
         },
         {
           "description": "Returns the total number of orders a customer has placed",
-          "name": "orders_count"
+          "name": "orders_count",
+          "type": "number"
         },
         {
           "description": "Returns true if the email associated with an order is also tied to a customer account. Returns `false` if it is not. Helpful in email templates",
-          "name": "has_account"
+          "name": "has_account",
+          "type": "boolean"
         },
         {
           "description": "Returns whether or not the customer is exempt from taxes",
-          "name": "tax_exempt"
+          "name": "tax_exempt",
+          "type": "boolean"
         }
       ],
       "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/customer",
@@ -1074,11 +1127,13 @@
       "properties": [
         {
           "description": "Returns all of the variants within the font's family. Each of the variants is also a font object",
-          "name": "variants"
+          "name": "variants",
+          "type":"array"
         },
         {
           "description": "Returns the font's name",
-          "name": "family"
+          "name": "family",
+          "type": "string"
         },
         {
           "description": "Returns the position of the baseline within the em box (measured from the bottom). You can learn more about baseline ratios in the Plumber SASS documentation",
@@ -1086,15 +1141,18 @@
         },
         {
           "description": "Returns the selected font style",
-          "name": "style"
+          "name": "style",
+          "type": "string"
         },
         {
           "description": "Returns the selected font weight",
-          "name": "weight"
+          "name": "weight",
+          "type": "string"
         },
         {
           "description": "Returns the suggested fallback font families",
-          "name": "fallback_families"
+          "name": "fallback_families",
+          "type": "string"
         }
       ]
     },
@@ -1185,31 +1243,38 @@
       "properties": [
         {
           "description": "Returns forloop.index in reverse order.",
-          "name": "rindex"
+          "name": "rindex",
+          "type": "number"
         },
         {
           "description": "Returns forloop.index0 in reverse order.",
-          "name": "rindex0"
+          "name": "rindex0",
+          "type": "number"
         },
         {
           "description": "Returns the current index of the for loop, starting at 0.",
-          "name": "index0"
+          "name": "index0",
+          "type": "number"
         },
         {
           "description": "Returns the current index of the for loop, starting at 1.",
-          "name": "index"
+          "name": "index",
+          "type": "number"
         },
         {
           "description": "Returns the number of iterations of the loop.",
-          "name": "length"
+          "name": "length",
+          "type": "number"
         },
         {
           "description": "Returns true if it's the first iteration of the for loop. Returns false if it is not the first iteration.",
-          "name": "first"
+          "name": "first",
+          "type": "boolean"
         },
         {
           "description": "Returns true if it's the last iteration of the for loop. Returns false if it is not the last iteration.",
-          "name": "last"
+          "name": "last",
+          "type": "boolean"
         }
       ],
       "ref": "https://shopify.dev/docs/themes/liquid/reference/objects/for-loops",
@@ -1246,18 +1311,21 @@
     },
     "handle": {
       "description": "Returns the handle of the page that is being viewed",
-      "ref": "https://help.shopify.com/themes/liquid/objects#handle"
+      "ref": "https://help.shopify.com/themes/liquid/objects#handle",
+      "type": "string"
     },
     "image": {
       "description": "The image object returns information about an image.",
       "properties": [
         {
           "description": "Returns an array of attributes for the variant that the image is associated with.",
-          "name": "variants"
+          "name": "variants",
+          "type": "array"
         },
         {
           "description": "Returns the alt tag of the image, set in the Products page of the Admin.",
-          "name": "alt"
+          "name": "alt",
+          "type": "string"
         },
         {
           "description": "Returns the aspect ratio (width / height) of the image.",
@@ -1269,11 +1337,13 @@
         },
         {
           "description": "Returns the id of the image's product.",
-          "name": "product_id"
+          "name": "product_id",
+          "type": "number"
         },
         {
           "description": "Returns the id of the image.",
-          "name": "id"
+          "name": "id",
+          "type":"number"
         },
         {
           "description": "Returns the position of the image, starting at 1. This is the same as outputting forloop.index.",
@@ -1300,7 +1370,8 @@
     },
     "linklists": {
       "description": "Returns a list of all the menus (link lists) in your store. You can use linklists to access your link lists with their handles.",
-      "ref": "https://help.shopify.com/themes/liquid/objects#linklists"
+      "ref": "https://help.shopify.com/themes/liquid/objects#linklists",
+      "type": "array"
     },
     "product": {
       "description": "Product object",
@@ -1423,147 +1494,183 @@
       "properties": [
         {
           "name": "attributes",
-          "description": "Returns the custom cart attributes for the order, if there are any. You can add as many custom attributes to your cart as you like.\n\nWhen you're looping through attributes, use \"{{ attribute | first }}\" to get the name of the attribute, and \"{{ attribute | last }}\" to get its value."
+          "description": "Returns the custom cart attributes for the order, if there are any. You can add as many custom attributes to your cart as you like.\n\nWhen you're looping through attributes, use \"{{ attribute | first }}\" to get the name of the attribute, and \"{{ attribute | last }}\" to get its value.",
+          "type": "array"
         },
         {
           "name": "billing_address",
-          "description": "Returns the billing address of the order."
+          "description": "Returns the billing address of the order.",
+          "type": "string"
         },
         {
           "name": "cancelled",
-          "description": "Returns true if an order is canceled, or false if it is not."
+          "description": "Returns true if an order is canceled, or false if it is not.",
+          "type": "string"
         },
         {
           "name": "cancelled_at",
-          "description": "Returns the timestamp of when an order was canceled. Use the date filter to format the timestamp."
+          "description": "Returns the timestamp of when an order was canceled. Use the date filter to format the timestamp.",
+          "type": "string"
         },
         {
           "name": "cancel_reason",
-          "description": "Returns one of the following cancellation reasons, if an order was canceled:\n\n-items unavailable\n- fraudulent order\n- customer changed/cancelled order\n- other\n"
+          "description": "Returns one of the following cancellation reasons, if an order was canceled:\n\n-items unavailable\n- fraudulent order\n- customer changed/cancelled order\n- other\n",
+          "type": "string"
         },
         {
           "name": "cancel_reason_label",
-          "description": "Returns the translated output of an order's order.cancel_reason."
+          "description": "Returns the translated output of an order's order.cancel_reason.",
+          "type": "string"
         },
         {
           "name": "cart_level_discount_applications",
-          "description": "Returns an array of order-specific discount applications for an order."
+          "description": "Returns an array of order-specific discount applications for an order.",
+          "type": "array"
         },
         {
           "name": "created_at",
-          "description": "Returns the timestamp of when an order was created. Use the date filter to format the timestamp."
+          "description": "Returns the timestamp of when an order was created. Use the date filter to format the timestamp.",
+          "type": "string"
         },
         {
           "name": "customer",
-          "description": "Returns the customer associated with the order."
+          "description": "Returns the customer associated with the order.",
+          "type": "string"
         },
         {
           "name": "customer_url",
-          "description": "Returns a unique URL that the customer can use to access the order."
+          "description": "Returns a unique URL that the customer can use to access the order.",
+          "type": "string"
         },
         {
           "name": "discount_applications",
-          "description": "Returns an array of discount applications for an order."
+          "description": "Returns an array of discount applications for an order.",
+          "type": "string"
         },
         {
           "name": "email",
-          "description": "Returns the email address associated with an order, if it exists."
+          "description": "Returns the email address associated with an order, if it exists.",
+          "type": "string"
         },
         {
           "name": "financial_status",
-          "description": "Returns the financial status of an order. The possible values are:\n\n- pending\n- authorized\n- paid\n- partially_paid\n- refunded\n- partially_refunded\n- voided"
+          "description": "Returns the financial status of an order. The possible values are:\n\n- pending\n- authorized\n- paid\n- partially_paid\n- refunded\n- partially_refunded\n- voided",
+          "type": "string"
         },
         {
           "name": "financial_status_label",
-          "description": "Returns the translated output of an order's \"financial_status\"."
+          "description": "Returns the translated output of an order's \"financial_status\".",
+          "type": "string"
         },
         {
           "name": "fulfillment_status",
-          "description": "Returns the fulfillment status of an order."
+          "description": "Returns the fulfillment status of an order.",
+          "type": "string"
         },
         {
           "name": "fulfillment_status_label",
-          "description": "Returns the translated output of an order's fulfillment_status."
+          "description": "Returns the translated output of an order's fulfillment_status.",
+          "type": "string"
         },
         {
           "name": "line_items",
-          "description": "Returns an array of line items for the order."
+          "description": "Returns an array of line items for the order.",
+          "type": "array"
         },
         {
           "name": "line_items_subtotal_price",
-          "description": "Returns the sum of the order's line-item prices after any line item discounts have been applied. The subtotal amount doesn't include cart discounts, taxes (unless taxes are included in the prices), or shipping costs."
+          "description": "Returns the sum of the order's line-item prices after any line item discounts have been applied. The subtotal amount doesn't include cart discounts, taxes (unless taxes are included in the prices), or shipping costs.",
+          "type": "string"
         },
         {
           "name": "location",
-          "description": "(POS only) Returns the physical location of the order. You can configure locations in the Locations settings of your Shopify admin."
+          "description": "(POS only) Returns the physical location of the order. You can configure locations in the Locations settings of your Shopify admin.",
+          "type": "string"
         },
         {
           "name": "name",
-          "description": "Returns the name of the order in the format set in the Standards and formats section of the General settings of your Shopify admin."
+          "description": "Returns the name of the order in the format set in the Standards and formats section of the General settings of your Shopify admin.",
+          "type": "string"
         },
         {
           "name": "note",
-          "description": "Returns the note associated with a customer order."
+          "description": "Returns the note associated with a customer order.",
+          "type": "string"
         },
         {
           "name": "order_number",
-          "description": "Returns the integer representation of the order name."
+          "description": "Returns the integer representation of the order name.",
+          "type": "number"
         },
         {
           "name": "order_status_url",
-          "description": "Returns the unique URL for the order status page of the order."
+          "description": "Returns the unique URL for the order status page of the order.",
+          "type": "string"
         },
         {
           "name": "phone",
-          "description": "Returns the phone number associated with an order, if it exists."
+          "description": "Returns the phone number associated with an order, if it exists.",
+          "type": "string"
         },
         {
           "name": "shipping_address",
-          "description": "Returns the shipping address of the order."
+          "description": "Returns the shipping address of the order.",
+          "type": "string"
         },
         {
           "name": "shipping_methods",
-          "description": "Returns an array of shipping_method variables from the order."
+          "description": "Returns an array of shipping_method variables from the order.",
+          "type": "string"
         },
         {
           "name": "shipping_price",
-          "description": "Returns the shipping price of an order."
+          "description": "Returns the shipping price of an order.",
+          "type": "string"
         },
         {
           "name": "subtotal_price",
-          "description": "Returns the subtotal price of all the items in the order after both line-item and cart discounts have been applied. The subtotal doesn't include taxes (unless taxes are included in the prices) or shipping costs."
+          "description": "Returns the subtotal price of all the items in the order after both line-item and cart discounts have been applied. The subtotal doesn't include taxes (unless taxes are included in the prices) or shipping costs.",
+          "type": "string"
         },
         {
           "name": "tags",
-          "description": "Returns an array of all of the order's tags. The tags are returned in alphabetical order."
+          "description": "Returns an array of all of the order's tags. The tags are returned in alphabetical order.",
+          "type": "string"
         },
         {
           "name": "tax_lines",
-          "description": "Returns an array of tax_line variables for an order."
+          "description": "Returns an array of tax_line variables for an order.",
+          "type": "string"
         },
         {
           "name": "tax_price",
-          "description": "Returns the order's tax price."
+          "description": "Returns the order's tax price.",
+          "type": "string"
         },
         {
           "name": "total_discounts",
-          "description": "Returns the total value of all discounts applied to the order."
+          "description": "Returns the total value of all discounts applied to the order.",
+          "type": "string"
         },
         {
           "name": "total_net_amount",
-          "description": "Returns the net amount of the order.\n\nThe \"order.total_net_amount\" is calculated after refunds are applied. The value is equivalent to \"order.total_price minus\" \"order.total_refunded_amount\"."
+          "description": "Returns the net amount of the order.\n\nThe \"order.total_net_amount\" is calculated after refunds are applied. The value is equivalent to \"order.total_price minus\" \"order.total_refunded_amount\".",
+          "type": "string"
         },
         {
           "name": "total_price",
-          "description": "Returns the total price of an order.\n\nThe \"order.total_price amount\" is calculated before refunds are applied. To get the value of refunds, use the \"order.total_refunded_amount property.\""
+          "description": "Returns the total price of an order.\n\nThe \"order.total_price amount\" is calculated before refunds are applied. To get the value of refunds, use the \"order.total_refunded_amount property.\"",
+          "type": "string"
         },
         {
           "name": "total_refunded_amount",
-          "description": "Returns the total refunded amount of an order."
+          "description": "Returns the total refunded amount of an order.",
+          "type": "string"
         },
         {
           "name": "transactions",
-          "description": "Returns an array of transactions from the order."
+          "description": "Returns an array of transactions from the order.",
+          "type": "array"
         }
       ]
     },
@@ -1573,15 +1680,18 @@
       "properties": [
         {
           "description": "Returns an array of the section's blocks.",
-          "name": "blocks"
+          "name": "blocks",
+          "type": "array"
         },
         {
           "name": "id",
-          "description": "For static sections, returns the section's file name without \".liquid\". For dynamic sections, returns a dynamically generated ID."
+          "description": "For static sections, returns the section's file name without \".liquid\". For dynamic sections, returns a dynamically generated ID.",
+          "type": "number"
         },
         {
           "name": "settings",
-          "description": "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id."
+          "description": "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
+          "type": "object"
         }
       ]
     }

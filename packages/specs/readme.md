@@ -14,6 +14,25 @@ The [Liquid Language Server](#) requires these Liquid specification variation re
 
 In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax and enable developers to compose formal grammars. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation. Due to this versatile nature and endless implementations in which Liquid exists supporting intelliSense capabilities in text editors is made possible by providing the Language Server with project specific variation reference data.
 
+## Contextual Grammars
+
+Tags and Filters can take advantage of the `context[]` property to express the formation and structure of Liquid token syntax. Tag and Filter contexts are expressed using a simple meta-syntax notation.
+
+| Keyword        | Example                           |
+| -------------- | --------------------------------- |
+| `$keyword`     | `tag_name`                        |
+| `$variable`    | `variable`                        |
+| `$operator`    | `[<>=!]`, `and`, `or`             |
+| `$array`       | `array[0]` _or_ `array[variable]` |
+| `$object`      | `object.property`                 |
+| `$string`      | `"string"` _or_ `'string'`        |
+| `$boolean`     | `true` _or_ `false`               |
+| `$number`      | `[0-9]`                           |
+| `$parenthesis` | `(` _or_ `)`                      |
+| `$colon`       | `:`                               |
+| `$comma`       | `,`                               |
+| `$dot`         | `.`                               |
+
 ## Author
 
 🥛 [Νίκος Σαβίδης](mailto:nicos@gmx.com) <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />

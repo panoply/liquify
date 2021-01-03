@@ -84,6 +84,13 @@ export default (error = 0) => ({
       range: {}
     }
   ),
+  [ParseError.InvalidObjectName]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Invalid object name was expressed',
+      range: {}
+    }
+  ),
   [ParseError.InvalidCharacter]: (
     {
       severity: ErrorLevel.Error,
@@ -144,6 +151,13 @@ export default (error = 0) => ({
     {
       severity: ErrorLevel.Error,
       message: 'Missing tag name',
+      range: {}
+    }
+  ),
+  [ParseError.RejectWhitespace]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Extraneous and/or unnecessary spacing characters',
       range: {}
     }
   ),

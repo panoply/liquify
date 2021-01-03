@@ -64,21 +64,21 @@ export default class Node {
    *
    * @type {string}
    */
-  name = undefined
+  name = null
 
   /**
    * Start Offset - Left most starting index
    *
    * @type {Parser.Range}
    */
-  range = { start: scanner.getRange() }
+  range = { start: scanner.position }
 
   /**
    * Start Offset - Left most starting index
    *
    * @type {number}
    */
-  start = Node.preset.start
+  start = scanner.start
 
   /**
    * End Offset - right most starting index
@@ -113,7 +113,7 @@ export default class Node {
    *
    * @type{number[]}
    */
-  offsets = [ Node.preset.start ]
+  offsets = [ scanner.start ]
 
   /**
    * Errors
@@ -165,10 +165,10 @@ export default class Node {
   get content () {
 
     if (this.kind === TokenKind.Yaml) {
-      return yamljs.parse(scanner.getText(this.offsets[1], this.offsets[2]))
+      return yamljs.parse(scanner.GetText(this.offsets[1], this.offsets[2]))
     }
 
-    return scanner.getText(this.start, this.end)
+    return scanner.GetText(this.start, this.end)
 
   }
 
@@ -214,7 +214,7 @@ export default class Node {
 
     const diagnostic = {
       ...Errors(error)
-      , range: scanner.getRange()
+      , range: scanner.range
       , node: Node.size
     }
 
@@ -242,12 +242,13 @@ export default class Node {
   context (type = undefined) {
 
     if (type) {
+
       this._context = [
         ...this._context
         , {
           type,
-          value: scanner.getToken()
-          // range: scanner.getRange()
+          value: scanner.token,
+          range: scanner.range
         }
       ]
     }
