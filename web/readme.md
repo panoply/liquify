@@ -2,11 +2,11 @@
 
 # Liquify.dev
 
-Repository for the [Liquify](https://liquify.dev) IDE text editor extension/package tool. The website is a static hybrid, built using [11ty](https://11ty.dev) and served up via [Netlify](https://ww.netlify.com). The production version of the site builds into the [website/public](https://github.com/panoply/liquify/tree/public).
+Repository for the [Liquify](https://liquify.dev) IDE text editor tool. The website is a static hybrid, built using [11ty](https://11ty.dev) and served up via [Netlify](https://ww.netlify.com). The production version of the site builds into the [website/public](https://github.com/panoply/liquify/tree/public) branch.
 
 ## Install
 
-If you're using this as a boilerplate or wish to contribute to the [Liquify](#) project, clone the repository and run `npm install` to install all dependencies.
+If you're using this as a boilerplate or wish to contribute to the [Liquify](#) project, clone the repository and run `pnpm install` to install all dependencies.
 
 ## Services
 
@@ -14,6 +14,7 @@ The website functions and operates by leveraging the following services:
 
 - [Github](https://github.com/)
 - [Netlify](https://netlify.com/)
+- [FaunaDB](https://fauna.com)
 
 ## Deployment
 
@@ -23,7 +24,7 @@ The website functions and operates by leveraging the following services:
 
 - [VS Code](https://code.visualstudio.com/)
 - [Node](http://nodejs.org)
-- [PNPM](https://www.npmjs.com/)
+- [Pnpm](https://www.npmjs.com/)
 
 ## VS Code
 
@@ -65,7 +66,7 @@ The development environment provides a bunch of commands. If you're contributing
 
 #### Directory Structure
 
-The directory structure . This structure is far more logical and visually pleasing opposed to the standard stucture shipped with Jekyll.
+The directory structure . This structure is far more logical and visually pleasing opposed to the standard structure shipped with Jekyll.
 
 ```
 ├── .netlify

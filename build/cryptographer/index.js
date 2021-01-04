@@ -163,7 +163,7 @@ const state = (
       /**
        * Master key hash and IV setter, master keys
        * remains in cache, setter for master assigns
-       * 1 time, on initialisation.
+       * 1 time, on initialization.
        *
        * @param {string} key The master password
        */
@@ -325,7 +325,7 @@ export const secret = (key, algorithm = undefined, options = undefined) => {
 
   state.key = key
 
-  // console.log(state, encode.bind(state)(key))
+  console.log(state, encode.bind(state)(key))
 
   return {
     encode: encode.bind(state),

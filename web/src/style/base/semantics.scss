@@ -1,0 +1,71 @@
+/* -------------------------------------------- */
+/*                   SEMANTICS                  */
+/* -------------------------------------------- */
+
+html,
+body {
+  @include font-size($font-size-base);
+  font-family: $font-family-sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
+}
+
+html,
+body,
+canvas {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+img {
+  @include img-fluid;
+}
+
+main {
+}
+
+svg {
+  width: $svg-icon-width;
+  height: $svg-icon-width;
+  background-color: transparent;
+  fill: currentColor;
+}
+
+button {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+}
+
+article {
+  ul {
+    padding: 10px 0 40px;
+
+    li {
+      padding-left: 40px;
+      line-height: $line-height-base + 0.2;
+      list-style-type: none;
+      background-image: $icon-checkmark;
+      background-repeat: no-repeat;
+      background-size: 25px;
+    }
+  }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.color-gray {
+  color: darken($gray-500, 17%);
+}

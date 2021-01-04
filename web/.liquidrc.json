@@ -1,0 +1,87 @@
+{
+  "engine": "standard",
+  "validate": {
+    "tag": {
+      "newline": true,
+      "pair": true,
+      "placement": true,
+      "whitespace": true
+    },
+    "control": {
+      "condition": true,
+      "operator": true
+    },
+    "filter": {
+      "existence": true,
+      "parameter": true
+    },
+    "iteration": {
+      "operator": true,
+      "iteree": true,
+      "paramter": true
+    },
+    "object": {
+      "name": true,
+      "property": true
+    }
+  },
+  "format": {
+    "html": {
+      "force_attribute": true,
+      "braces": false,
+      "preserve": 5,
+      "tag_newline": true,
+      "tag_whitespace": "always",
+      "tags": [
+        {
+          "name": "testersss"
+        }
+      ]
+    },
+    "javascript": {
+      "preserve": 1,
+      "method_chain": 0,
+      "quote_convert": "none",
+      "format_array": "indent",
+      "format_object": "indent",
+      "braces": false,
+      "no_semicolon": true,
+      "brace_block": true
+    },
+    "scss": {
+      "css_insert_lines": true,
+      "preserve": 2,
+      "braces": false,
+      "brace_block": true,
+      "tags": [
+        {
+          "kind": "html",
+          "name": "style",
+          "attr": "lang=\"scss\""
+        }
+      ]
+    },
+    "css": {
+      "css_insert_lines": true,
+      "preserve": 2,
+      "braces": false,
+      "brace_block": true
+    },
+    "json": {
+      "preserve": 1,
+      "braces": false,
+      "brace_style": "expand",
+      "brace_line": false,
+      "brace_block": true,
+      "no_semicolon": true,
+      "format_array": "indent",
+      "format_object": "indent",
+      "tags": [
+        {
+          "name": "captures",
+          "attr": "json_tes"
+        }
+      ]
+    }
+  }
+}

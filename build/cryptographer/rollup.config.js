@@ -11,10 +11,15 @@ export default {
       file: 'package/index.cjs.js',
       sourcemap: process.env.prod ? false : 'inline',
       banner: banner(pkg, 'PROPRIETARY'),
-      exports: 'named'
+      exports: 'auto'
+    },
+    {
+      format: 'es',
+      file: 'package/index.es.js',
+      sourcemap: process.env.prod ? false : 'inline',
+      banner: banner(pkg, 'PROPRIETARY')
     }
   ],
-  external: [ 'crypto' ],
   plugins: [
     commonjs(),
     terser({

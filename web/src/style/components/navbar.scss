@@ -1,0 +1,257 @@
+/* -------------------------------------------- */
+/*                   VARIABLES                  */
+/* -------------------------------------------- */
+
+// Sizes
+$navbar-height-desktop: 15px;
+$navbar-height-mobile: 65px;
+
+// Logo
+$navbar-logo-height: 55px;
+$navbar-logo-width: 200px;
+
+// Navigation
+$navbar-nav-font-size: 0.975rem;
+$navbar-nav-font-weight: 600;
+$navbar-nav-link-color: $white;
+$navbar-nav-link-hover: $blue;
+
+// Icon sizes
+$navbar-icon-hamburger-size: 40px;
+$navbar-icon-flag-size: 45px;
+$navbar-icon-phone-size: 38px;
+$navbar-icon-email-size: 28px;
+$navbar-icon-whatsapp-size: 38px;
+
+// Styling
+$navbar-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.145);
+
+/* -------------------------------------------- */
+/*                    NAVBAR                    */
+/* -------------------------------------------- */
+
+.logo {
+  width: $navbar-logo-width;
+  height: auto;
+
+  > svg {
+    fill: $blue;
+    // stroke: $black-bg;
+    // stroke-width: 2px;
+    filter: drop-shadow(7px 14px 3px rgba(32, 30, 30, 0.245));
+  }
+}
+
+body {
+  font-family: commuters-sans, sans-serif;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: $zindex-header;
+  width: 100%;
+  background-color: $white;
+  box-shadow: $navbar-shadow;
+
+  &:before {
+    //margin-top: 75px;
+
+    @include media-breakpoint-down(md) {
+      margin-top: $navbar-height-mobile;
+    }
+  }
+
+  > .row {
+    height: $navbar-height-desktop;
+
+    @include media-breakpoint-down(md) {
+      height: $navbar-height-mobile;
+    }
+  }
+
+  &-offset {
+    margin-top: $navbar-height-desktop;
+    @include media-breakpoint-down(md) {
+      margin-top: $navbar-height-mobile;
+    }
+  }
+
+  // Border Overwrite
+
+  .bd-right {
+    border-color: $gray-100;
+  }
+
+  &__logo > .icon-logo {
+    width: $navbar-logo-width;
+    height: $navbar-logo-height;
+
+    /* ------------ RESPONSIVE DEGRADE ------------ */
+
+    @include media-breakpoint-down(xl) {
+      width: $navbar-logo-width - 20;
+    }
+
+    /* ------------ RESPONSIVE DEGRADE ------------ */
+
+    @include media-breakpoint-down(lg) {
+      width: $navbar-logo-width - 60;
+    }
+
+    @include media-breakpoint-down(md) {
+      width: $navbar-logo-width - 15;
+    }
+  }
+
+  &__hamburger {
+    background-color: transparent;
+    border: none;
+    color: $white;
+    > .icon-hamburger {
+      width: $navbar-icon-hamburger-size;
+      height: $navbar-icon-hamburger-size;
+
+      @include media-breakpoint-down(md) {
+        width: $navbar-icon-hamburger-size - 10;
+        height: $navbar-icon-hamburger-size - 10;
+      }
+    }
+  }
+
+  &__navigation {
+    font-weight: $navbar-nav-font-weight;
+    font-size: $navbar-nav-font-size;
+    text-transform: uppercase;
+
+    /* ------------ RESPONSIVE DEGRADE ------------ */
+
+    @include media-breakpoint-down(xl) {
+      font-size: $navbar-nav-font-size - 0.075;
+    }
+
+    li {
+      display: inline;
+      margin: 0;
+      padding: 0;
+    }
+
+    .subnav {
+      display: none;
+    }
+
+    a {
+      color: $navbar-nav-link-color;
+      font-size: inherit;
+
+      &.active,
+      &:hover {
+        color: $navbar-nav-link-hover;
+        text-decoration: none;
+
+        .subnav & {
+          display: block;
+        }
+      }
+    }
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  .navbar-contact {
+    color: $black-400;
+    font-weight: 600;
+    font-size: 1rem;
+    background: none;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+
+    &:hover {
+      color: $blue;
+
+      .icon-mail {
+        fill: $blue;
+      }
+    }
+
+    &:hover > .icon-phone {
+      perspective: 1000px;
+      animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      fill: $red;
+    }
+
+    img {
+      width: $navbar-icon-phone-size;
+    }
+
+    .icon-whatsapp {
+      width: $navbar-icon-whatsapp-size;
+      height: $navbar-icon-whatsapp-size;
+
+      @include media-breakpoint-down(lg) {
+        width: $navbar-icon-whatsapp-size - 7;
+        height: $navbar-icon-whatsapp-size - 7;
+      }
+    }
+
+    .icon-mail {
+      width: $navbar-icon-email-size;
+      height: $navbar-icon-email-size / 100 * 80;
+      fill: lighten($black-100, 5%);
+
+      /* ------------ RESPONSIVE DEGRADE ------------ */
+
+      @include media-breakpoint-down(lg) {
+        width: $navbar-icon-email-size - 5;
+        height: $navbar-icon-email-size - 5 / 100 * 80;
+      }
+    }
+
+    .icon-phone {
+      width: $navbar-icon-phone-size;
+      height: $navbar-icon-phone-size;
+      fill: $red;
+
+      /* ------------ RESPONSIVE DEGRADE ------------ */
+
+      @include media-breakpoint-down(lg) {
+        width: $navbar-icon-phone-size - 12;
+        height: $navbar-icon-phone-size - 12;
+      }
+    }
+  }
+}
+
+body {
+  padding-top: $navbar-height-desktop;
+  @include media-breakpoint-down(md) {
+    padding-top: $navbar-height-mobile;
+  }
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-2px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(2px, 0, 0);
+  }
+}

@@ -846,7 +846,7 @@
       "ref": "https://help.shopify.com/en/themes/liquid/objects#content-for-layout",
       "whitespace": false
     },
-    "country_option_tags ": {
+    "country_option_tags": {
       "description": "The country_option_tags object creates an <option> tag for each country that is included as a shipping zone on the Shipping page of the admin. An attribute called data-provinces is set for each <option>, and contains a JSON-encoded array of the country's subregions. If a country doesn't have any subregions, then an empty array is set for its data-provinces attribute",
       "filters": false,
       "ref": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags",

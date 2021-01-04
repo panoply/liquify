@@ -1,0 +1,30 @@
+/* -------------------------------------------- */
+/*               BACKGROUND COLORS              */
+/* -------------------------------------------- */
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .bg#{$infix}-none {
+      background-color: transparent;
+    }
+
+    .bg#{$infix}-white {
+      background-color: $white;
+    }
+
+    .bg#{$infix}-ghost {
+      background-color: #fbfbfc;
+    }
+
+    .bg#{$infix}-smoke {
+      background-color: $white-300;
+    }
+
+    .bg#{$infix}-black {
+      color: $white;
+      background-color: $black-bg;
+    }
+  }
+}

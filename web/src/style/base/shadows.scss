@@ -1,0 +1,33 @@
+/* -------------------------------------------- */
+/*                   VARIABLES                  */
+/* -------------------------------------------- */
+
+$box-shadow-sm: 0 0.125rem 0.25rem rgba($black, 0.075);
+$box-shadow: 0.025rem 0 0.75rem rgba($black, 0.075);
+$box-shadow-lg: 0 1rem 3rem rgba($black, 0.175);
+
+/* -------------------------------------------- */
+/*                  BOX SHADOWS                 */
+/* -------------------------------------------- */
+
+.shadow,
+.shadow-sm,
+.shadow-lg {
+  overflow: hidden !important;
+}
+
+.shadow {
+  box-shadow: $box-shadow !important;
+}
+
+.shadow-sm {
+  box-shadow: $box-shadow-sm !important;
+}
+
+.shadow-lg {
+  box-shadow: $box-shadow-lg !important;
+}
+
+.shadow-none {
+  box-shadow: none !important;
+}

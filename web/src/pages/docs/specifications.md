@@ -26,7 +26,6 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 
 ```javascript
 {
-  // Object tag: `{{- tag_name.property.another_property | filter -}}`
   "tag_object": {
     "type": "object",
     "description": "Object name description",
@@ -48,7 +47,6 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
       }
     ]
   }
-  // Import Tag: `{% tag_import = 'path/file' param: 'foo'  %}`
   "tag_import": {
     "type": "import",
     "description": "Description of import tag", // The tag description
@@ -60,7 +58,6 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
       }
     ]
   },
-  // Filter (replace) tag: `{{ tag | replace: 'foo', 'bar'  }}`
   "filter_replace": {
     "type": "filter",
     "description": "Description for tag filter",
@@ -81,7 +78,7 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 
 | Property      | Kind       | Default | Description                                                 |
 | ------------- | ---------- | ------- | ----------------------------------------------------------- |
-| `type`        | `string`   | `null`  | The tag type, see [type](#) for avaliable types             |
+| `type`        | `string`   | `null`  | The tag type, see [type](#) for available types             |
 | `filters`     | `boolean`  | `false` | Does this tag accept filter, eg: `\|` filters               |
 | `whitespace`  | `boolean`  | `true`  | Does this tag accept whitespace `-` dashes                  |
 | `description` | `string`   | `null`  | Short description which describes the tag                   |
@@ -89,7 +86,7 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 | `engine`      | `string`   | `null`  | The variation specification (engine) reference              |
 | `reference`   | `string`   | `null`  | The tag URL link, typically documentation reference         |
 | `snippet`     | `string`   | `null`  | The snippet completion tag should use                       |
-| `singular`    | `boolean`  | `false` | The tag is a non-void, does not required `{% end %}`        |
+| `singular`    | `boolean`  | `false` | The tag is a non-void, does not require end tag             |
 | `params`      | `object[]` | `null`  | List of parameters the tag uses, see [parameters](#)        |
 | `operators`   | `string[]` | `null`  | Tag operators, typically used on control type               |
 | `deprecated`  | `boolean`  | `false` | Used when the tag is deprecated                             |
@@ -105,18 +102,18 @@ Liquid variation specifications are written according to a [Schema Store](#) JSO
 </summary>
 <p>
 
-| Name        | Grammar Scope | Capture Example       | Description                                   |
-| ----------- | ------------- | --------------------- | --------------------------------------------- |
-| `comment`   | `comment`     | `{% comment %}`       | Allows un-rendered code                       |
-| `control`   | `keyword`     | `{% if ... }`         | Controls conditional execution of code        |
-| `embedded`  | `meta`        | `{% style %}`         | Contents of the tag contains another language |
-| `filter`    | `support`     | `{{ ... \| filter }}` | Attribute-like appendments to singular tags   |
-| `import`    | `meta`        | `{% include ... %}`   | Tags which import/reference outside files     |
-| `iteration` | `keyword`     | `{% for ... %}`       | Iteration tags run blocks of code repeatedly  |
-| `object`    | `storage`     | `{{ object.key }}`    | Singular tags that contains objects           |
-| `output`    | `meta`        | `{% form %}`          | Block tags that generate additional code      |
-| `raw`       | `raw`         | `{% raw %}`           | Raw temporarily disables tag processing       |
-| `variable`  | `variable`    | `{% capture %}`       | Variable tags create new Liquid variables.    |
+| Name        | Grammar Scope | Capture Example | Description                                   |
+| ----------- | ------------- | --------------- | --------------------------------------------- |
+| `comment`   | `comment`     | ``              | Allows un-rendered code                       |
+| `control`   | `keyword`     | ``              | Controls conditional execution of code        |
+| `embedded`  | `meta`        | ``              | Contents of the tag contains another language |
+| `filter`    | `support`     | ``              | Attribute-like amendments to singular tags    |
+| `import`    | `meta`        | ``              | Tags which import/reference outside files     |
+| `iteration` | `keyword`     | ``              | Iteration tags run blocks of code repeatedly  |
+| `object`    | `storage`     | ``              | Singular tags that contains objects           |
+| `output`    | `meta`        | ``              | Block tags that generate additional code      |
+| `raw`       | `raw`         | ``              | Raw temporarily disables tag processing       |
+| `variable`  | `variable`    | ``              | Variable tags create new Liquid variables.    |
 
 </p>
 </details>

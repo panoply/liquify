@@ -1,0 +1,45 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: $headings-margin-bottom;
+  color: $headings-color;
+  font-weight: $headings-font-weight;
+  font-family: "calling-code";
+  line-height: $headings-line-height;
+  text-transform: uppercase;
+}
+
+h1 {
+  @include font-size($h1-font-size);
+}
+
+h2 {
+  @include font-size($h2-font-size);
+}
+
+h3 {
+  @include font-size($h3-font-size);
+}
+
+h4 {
+  @include font-size($h4-font-size);
+}
+
+h5 {
+  @include font-size($h5-font-size);
+}
+
+h6 {
+  @include font-size($h6-font-size);
+}
+
+hgroup {
+  h4,
+  h5,
+  h6 {
+    font-weight: 400;
+  }
+}

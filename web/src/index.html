@@ -1,29 +1,30 @@
 ---
 
 ---
+
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Liquify | IDE IntelliSense</title>
-  </head>`
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link rel="stylesheet" href="https://use.typekit.net/zeg4olx.css">
+  <link href="{{- '/assets/stylesheet.css' | relative_url -}}" rel="stylesheet">
+  <script src="{{- '/assets/bundle.js' | relative_url -}}" defer></script>
+  <title>Liquify IDE</title>
+</head>
 
-  <body>
-    <header>
-      <nav>
-        <ul class="test">
-          <li>Documentation</li>
-          <li>Playground</li>
-          <li>License</li>
-        </ul>
-      </nav>
-    </header>
-    <h1>Liquify IDE Tool</h1>
+<body class="bg-black">
 
+  {% include components/drawer.html %}
+
+  <div class="container-fluid drawer-push">
+    {% include components/navbar.html %}
+    {% include components/blocks.html %}
     {{ content }}
+  </div>
 
-  </body>
+
+</body>
 
 </html>

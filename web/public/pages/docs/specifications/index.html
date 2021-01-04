@@ -1,0 +1,371 @@
+<h1>Specifications</h1>
+<p>This directory contains the default supported Liquid variation specifications which are used by the parser to construct a workable AST and provide code completions, formatting, hovers and diagnostic validation features for the <a href="#">Liquid Language Server</a>.</p>
+<h3>What are variation specifications?</h3>
+<p>In the context of the <a href="#">Liquid Language Server</a>, variation specifications are just data references that describe Liquids syntax like tags and filters. A templating language like Liquid exists in a multitude of variations that extend upon its default <a href="#">Standard Variation</a>. Templating engines interpolate variables and process dynamic content, they're these safe user facing languages that do not adhere to any type of specification and traditionally have never really required such a thing, until now.</p>
+<h3>Supported Variations</h3>
+<p>By default, all new projects will use the <strong>Standard</strong> variation of Liquid. The Liquid Language Server supports the following Liquid variations out of the box:</p>
+<ul>
+<li><a href="#">Liquid Standard</a></li>
+<li><a href="#">Liquid Shopify</a></li>
+<li><a href="#">Liquid Jekyll</a></li>
+</ul>
+<h1>Schema</h1>
+<p>Liquid variation specifications are written according to a <a href="#">Schema Store</a> JSON specification. Options are made available according to the defined Liquid tag <a href="#">type</a>. The below example is a spec sample which specifies 3 tags, you can also take a peak in the <a href="#">variations</a> directory for oversight on how default variations are specified.</p>
+<details>
+<summary>
+  <strong>View Example</strong>
+</summary>
+<p>
+<pre><code class="language-javascript">{
+  &quot;tag_object&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;description&quot;: &quot;Object name description&quot;,
+    &quot;filters&quot;: true, // tag accepts filters
+    &quot;whitespace&quot;: true, // tag accepts whitespace dash
+    &quot;engine&quot;: &quot;Standard&quot;, // This tag should extend upon the standard liquid variation
+    &quot;reference&quot;: &quot;https://liquify.dev/example-specification/tag_object&quot;,
+    &quot;properties&quot;: [ // Object has properties
+      {
+        &quot;name&quot;: &quot;property&quot;,
+        &quot;description&quot;: &quot;Description of first property&quot;,
+        &quot;type&quot;: &quot;object&quot;, // Use type `object` when defining another property
+        &quot;properties&quot;: [ // Another property (you can nest as many as you like)
+          {
+            &quot;name&quot;: &quot;another_property&quot;,
+            &quot;description&quot;: &quot;Description of second property&quot;,
+          }
+        ]
+      }
+    ]
+  }
+  &quot;tag_import&quot;: {
+    &quot;type&quot;: &quot;import&quot;,
+    &quot;description&quot;: &quot;Description of import tag&quot;, // The tag description
+    &quot;filters&quot;: false // Tag does not accept filters
+    &quot;params&quot;: [
+      {
+        &quot;name&quot;: &quot;param&quot;,
+        &quot;description&quot;: &quot;Parameter description to use&quot;
+      }
+    ]
+  },
+  &quot;filter_replace&quot;: {
+    &quot;type&quot;: &quot;filter&quot;,
+    &quot;description&quot;: &quot;Description for tag filter&quot;,
+    &quot;snippet&quot;: &quot;replace: $1, $2&quot;, // the snippet for the filter
+    &quot;engine&quot;: &quot;Shopify&quot;, // The Shopify Liquid variation
+  }
+}
+</code></pre>
+</p>
+</details>
+<details>
+<summary>
+  <strong>View Example</strong>
+</summary>
+<p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Kind</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The tag type, see <a href="#">type</a> for available types</td>
+</tr>
+<tr>
+<td><code>filters</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Does this tag accept filter, eg: <code>\|</code> filters</td>
+</tr>
+<tr>
+<td><code>whitespace</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Does this tag accept whitespace <code>-</code> dashes</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>Short description which describes the tag</td>
+</tr>
+<tr>
+<td><code>properties</code></td>
+<td><code>object[]</code></td>
+<td><code>null</code></td>
+<td>List of object properties the tag uses, see <a href="#">properties</a></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The variation specification (engine) reference</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The tag URL link, typically documentation reference</td>
+</tr>
+<tr>
+<td><code>snippet</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The snippet completion tag should use</td>
+</tr>
+<tr>
+<td><code>singular</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>The tag is a non-void, does not require end tag</td>
+</tr>
+<tr>
+<td><code>params</code></td>
+<td><code>object[]</code></td>
+<td><code>null</code></td>
+<td>List of parameters the tag uses, see <a href="#">parameters</a></td>
+</tr>
+<tr>
+<td><code>operators</code></td>
+<td><code>string[]</code></td>
+<td><code>null</code></td>
+<td>Tag operators, typically used on control type</td>
+</tr>
+<tr>
+<td><code>deprecated</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Used when the tag is deprecated</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The language of tag inner contents, see <a href="#">embedded</a></td>
+</tr>
+<tr>
+<td><code>attributes</code></td>
+<td><code>object[]</code></td>
+<td><code>null</code></td>
+<td>The attributes the tag accepts, see <a href="#">attributes</a></td>
+</tr>
+</tbody>
+</table>
+</p>
+</details>
+<details>
+<summary>
+  <strong>Type</strong>
+</summary>
+<p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Grammar Scope</th>
+<th>Capture Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>comment</code></td>
+<td><code>comment</code></td>
+<td>``</td>
+<td>Allows un-rendered code</td>
+</tr>
+<tr>
+<td><code>control</code></td>
+<td><code>keyword</code></td>
+<td>``</td>
+<td>Controls conditional execution of code</td>
+</tr>
+<tr>
+<td><code>embedded</code></td>
+<td><code>meta</code></td>
+<td>``</td>
+<td>Contents of the tag contains another language</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td><code>support</code></td>
+<td>``</td>
+<td>Attribute-like amendments to singular tags</td>
+</tr>
+<tr>
+<td><code>import</code></td>
+<td><code>meta</code></td>
+<td>``</td>
+<td>Tags which import/reference outside files</td>
+</tr>
+<tr>
+<td><code>iteration</code></td>
+<td><code>keyword</code></td>
+<td>``</td>
+<td>Iteration tags run blocks of code repeatedly</td>
+</tr>
+<tr>
+<td><code>object</code></td>
+<td><code>storage</code></td>
+<td>``</td>
+<td>Singular tags that contains objects</td>
+</tr>
+<tr>
+<td><code>output</code></td>
+<td><code>meta</code></td>
+<td>``</td>
+<td>Block tags that generate additional code</td>
+</tr>
+<tr>
+<td><code>raw</code></td>
+<td><code>raw</code></td>
+<td>``</td>
+<td>Raw temporarily disables tag processing</td>
+</tr>
+<tr>
+<td><code>variable</code></td>
+<td><code>variable</code></td>
+<td>``</td>
+<td>Variable tags create new Liquid variables.</td>
+</tr>
+</tbody>
+</table>
+</p>
+</details>
+<details>
+<summary>
+  <strong>Properties</strong>
+</summary>
+<p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Kind</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The property name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>Short description which describes the tag property</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>Contents of the tag contains another language</td>
+</tr>
+<tr>
+<td><code>properties</code></td>
+<td><code>object[]</code></td>
+<td><code>null</code></td>
+<td>Attribute-like appendments to singular tags</td>
+</tr>
+</tbody>
+</table>
+</p>
+</details>
+<details>
+<summary>
+  <strong>Parameters</strong>
+</summary>
+<p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Kind</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The property name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>Short description which describes the parameter</td>
+</tr>
+<tr>
+<td><code>snippet</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The snippet value applied after pipe <code>\|</code></td>
+</tr>
+</tbody>
+</table>
+</p>
+</details>
+<details>
+<summary>
+  <strong>Attributes</strong>
+</summary>
+<p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Kind</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>The property name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>Short description which describes the attribute</td>
+</tr>
+</tbody>
+</table>
+</p>
+</details>
+<h1>Contributing</h1>
+<p>Specifications are proprietary closed additions to Liquify. Specifications have relations to <a href="#">Liquid Language Grammars</a> and the <a href="#">Liquid Language Server</a>.</p>
+<h3>Commands</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pnpm run specs</code></td>
+<td>Launches debugger and bundler for the language client</td>
+</tr>
+</tbody>
+</table>

@@ -7,6 +7,7 @@ import { TokenTags } from '../enums/parse'
 import { ParseError } from '../enums/errors'
 import Specs from './specs'
 import s from './stream'
+import specs from './specs'
 
 /**
  * Scanner
@@ -411,6 +412,7 @@ export default (function () {
 
         if (s.IfRegExp(/^[^\s:][a-zA-Z0-9$_]+\b/)) {
           Specs.cursor(s.Token())
+          console.log('IN FILTER', specs.cursor())
           state = ScanState.AfterFilterName
           return TokenType.Filter
         }

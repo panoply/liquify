@@ -1,5 +1,5 @@
 import { createFilter } from '@rollup/pluginutils'
-import * as cryptographer from '@liquify/cryptographer'
+import cryptographer from '@liquify/cryptographer'
 import { extname } from 'path'
 
 /**
@@ -11,7 +11,7 @@ export default function (options = {}) {
 
   const parse = {}
   const filter = createFilter(options.include, options.exclude)
-
+const crypto = cryptographer.
   for (const key in options.keychain) options.keychain[key].push(options.master)
 
   const merge = json => {
@@ -44,6 +44,7 @@ export default function (options = {}) {
 
         if (prop === 'index') continue
 
+        console.log(prop)
         config.input[crypto.encode(prop)] = config.input[prop]
 
         delete config.input[prop]
@@ -92,6 +93,7 @@ export default function (options = {}) {
         }
 
         ${modules(sync).join(';\n')}
+
         return ({ ${decoded.join(',\n')} })
 
       `

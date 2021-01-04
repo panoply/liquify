@@ -1,0 +1,151 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
+}
+
+main {
+  height: 100vh;
+}
+
+h1 {
+  font-weight: 300;
+  font-size: 3.5rem;
+  line-height: 4.2rem;
+}
+
+p {
+  font-weight: 400;
+  color: rgb(211, 211, 211);
+  font-size: 1.1rem;
+  font-family: "proxima nova";
+}
+
+.div {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 300px;
+  /// height: 100vh;
+
+  > div {
+    margin: 0 auto;
+  }
+}
+
+.drop {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  top: -30px;
+  margin: 0 auto;
+  background: #fff;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  -moz-animation-name: drip;
+  -webkit-animation-name: drip;
+  animation-name: drip;
+  -moz-animation-timing-function: cubic-bezier(1, 0, 0.91, 0.19);
+  -webkit-animation-timing-function: cubic-bezier(1, 0, 0.91, 0.19);
+  animation-timing-function: cubic-bezier(1, 0, 0.91, 0.19);
+  -moz-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+.drop:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 30px solid rgba(255, 255, 255, 1);
+  top: -22px;
+}
+
+.wave {
+  position: relative;
+  opacity: 0;
+  bottom: 0;
+  width: 2px;
+  height: 1px;
+  border: #fff 7px solid;
+  -moz-border-radius: 300px / 150px;
+  -webkit-border-radius: 300px / 150px;
+  border-radius: 300px / 150px;
+  -moz-animation-name: ripple;
+  -webkit-animation-name: ripple;
+  animation-name: ripple;
+  -moz-animation-delay: 2s;
+  -webkit-animation-delay: 2s;
+  animation-delay: 2s;
+  -moz-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+.wave:after {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  bottom: -5px;
+  left: -5px;
+  width: 2px;
+  height: 1px;
+  border: #fff 5px solid;
+  -moz-border-radius: 300px / 150px;
+  -webkit-border-radius: 300px / 150px;
+  border-radius: 300px / 150px;
+  -moz-animation-name: ripple-2;
+  -webkit-animation-name: ripple-2;
+  animation-name: ripple-2;
+  -moz-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+@keyframes ripple {
+  from {
+    opacity: 1;
+  }
+  to {
+    width: 600px;
+    height: 300px;
+    border-width: 1px;
+    bottom: -100px;
+    opacity: 0;
+  }
+}
+
+@keyframes ripple-2 {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    width: 200px;
+    height: 100px;
+    border-width: 1px;
+    bottom: 100px;
+    left: 200px;
+  }
+}
+
+@keyframes drip {
+  to {
+    top: 190px;
+  }
+}

@@ -1,0 +1,15 @@
+/* -------------------------------------------- */
+/*                 ASPECT RATIO                 */
+/* -------------------------------------------- */
+
+@mixin aspect-ratio($width, $height, $background) {
+  position: relative;
+
+  &::before {
+    display: block;
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+    background-color: $background;
+    content: "";
+  }
+}

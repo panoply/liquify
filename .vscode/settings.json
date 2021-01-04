@@ -104,9 +104,6 @@
     "html",
     "javascript"
   ],
-  "eslint.options.extension": [
-    ".js"
-  ],
   "prettier.useEditorConfig": true,
   "prettier.requireConfig": true,
   "prettier.disableLanguages": [
@@ -180,6 +177,11 @@
     "javascript"
   ],
   "cSpell.words": [
-    "pluginutils"
+    "iife",
+    "noderesolve",
+    "pluginutils",
+    "siema",
+    "stickybits",
+    "turbolinks"
   ]
 }

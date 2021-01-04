@@ -1,0 +1,57 @@
+/* -------------------------------------------- */
+/*                     SIZES                    */
+/* -------------------------------------------- */
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .h#{$infix}-100 {
+      height: 100%;
+    }
+
+    .w#{$infix}-100 {
+      width: 100%;
+    }
+
+    .w#{$infix}-95 {
+      width: 95%;
+    }
+
+    .w#{$infix}-90 {
+      width: 90%;
+    }
+
+    .w#{$infix}-80 {
+      width: 85%;
+    }
+
+    .w#{$infix}-70 {
+      width: 70%;
+    }
+
+    .w#{$infix}-60 {
+      width: 60%;
+    }
+
+    .w#{$infix}-50 {
+      width: 50%;
+    }
+
+    .w#{$infix}-40 {
+      width: 40%;
+    }
+
+    .w#{$infix}-30 {
+      width: 40%;
+    }
+
+    .w#{$infix}-20 {
+      width: 20%;
+    }
+
+    .w#{$infix}-10 {
+      width: 10%;
+    }
+  }
+}

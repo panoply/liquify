@@ -1,0 +1,85 @@
+/* -------------------------------------------- */
+/*                    BORDERS                   */
+/* -------------------------------------------- */
+
+.bd-all {
+  overflow: hidden;
+  border: 1px solid !important;
+  border-color: $gray-100 !important;
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .bd#{$infix}-y {
+      border-top: 1px solid $border-color;
+      border-bottom: 1px solid $border-color;
+    }
+
+    .bd#{$infix}-x {
+      border-right: 1px solid $border-color;
+      border-left: 1px solid $border-color;
+    }
+
+    .bd#{$infix}-none {
+      border: none !important;
+    }
+
+    .bd#{$infix}-left {
+      border-left: 1px solid $border-color;
+    }
+
+    .bd#{$infix}-right {
+      border-right: 1px solid $border-color;
+    }
+
+    .bd#{$infix}-top {
+      border-top: 1px solid $border-color;
+    }
+
+    .bd#{$infix}-bottom {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+}
+
+/* -------------------------------------------- */
+/*                 BORDER RADIUS                */
+/* -------------------------------------------- */
+
+.radius-sm {
+  border-radius: $border-radius-sm !important;
+}
+
+.radius-lg {
+  border-radius: $border-radius-lg !important;
+}
+
+.radius {
+  border-radius: $border-radius !important;
+}
+
+.radius-top {
+  border-top-left-radius: $border-radius !important;
+  border-top-right-radius: $border-radius !important;
+}
+
+.radius-right {
+  border-top-right-radius: $border-radius !important;
+  border-bottom-right-radius: $border-radius !important;
+}
+
+.radius-bottom {
+  border-bottom-right-radius: $border-radius !important;
+  border-bottom-left-radius: $border-radius !important;
+}
+
+.radius-left {
+  border-top-left-radius: $border-radius !important;
+  border-bottom-left-radius: $border-radius !important;
+}
+
+.radius-0 {
+  border-radius: 0 !important;
+}

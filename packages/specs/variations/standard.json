@@ -12,7 +12,7 @@
       "snippet": "append: ${0}",
       "parameters": [
         {
-          "accepts": "string",
+          "accepts": "String",
           "required": true
         }
       ]
@@ -23,7 +23,7 @@
       "snippet": "at_least: ${0}",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "Number",
           "required": true
         }
       ]
@@ -34,7 +34,7 @@
       "snippet": "at_most: ${0}",
       "parameters": [
         {
-          "accepts": "number",
+          "accepts": "Number",
           "required": true
         }
       ]
@@ -68,7 +68,7 @@
       "snippet": "date: '${0}'",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         }
       ]
@@ -90,7 +90,7 @@
       "snippet": "divided_by: '${0}'",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "Number",
           "required": true
         }
       ]
@@ -121,7 +121,7 @@
       "snippet": "join: '${0}'",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         }
       ]
@@ -140,7 +140,7 @@
       "snippet": "map: '${0}'",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         }
       ]
@@ -151,7 +151,7 @@
       "snippet": "minus: '${0}'",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "Number",
           "required": true
         }
       ]
@@ -162,7 +162,7 @@
       "snippet": "modulo: '${0}'",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "Number",
           "required": true
         }
       ]
@@ -177,7 +177,7 @@
       "snippet": "plus: '${0}'",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "Number",
           "required": true
         }
       ]
@@ -188,7 +188,7 @@
       "snippet": "prepend: '${0}'",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         }
       ]
@@ -199,7 +199,7 @@
       "snippet": "remove: '${0}'",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         }
       ]
@@ -216,11 +216,11 @@
       "snippet": "replace: '${1}', '${2}' ${0}",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         },
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         }
       ]
@@ -231,11 +231,11 @@
       "snippet": "replace_first: '${1}', '${2}' ${0}",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         },
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         }
       ]
@@ -313,7 +313,7 @@
       "snippet": "times: '${0}'",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "Number",
           "required": true
         }
       ]
@@ -324,11 +324,11 @@
       "snippet": "truncate: ${0}",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "Number",
           "required": true
         },
         {
-          "accepts": "$string"
+          "accepts": "String"
         }
       ]
     },
@@ -338,11 +338,11 @@
       "snippet": "truncatewords: ${0}",
       "parameters": [
         {
-          "accepts": "$number",
+          "accepts": "Number",
           "required": true
         },
         {
-          "accepts": "$string"
+          "accepts": "String"
         }
       ]
     },
@@ -367,11 +367,11 @@
       "ref": "https://shopify.github.io/liquid/filters/where/",
       "parameters": [
         {
-          "accepts": "$string",
+          "accepts": "String",
           "required": true
         },
         {
-          "accepts": "$string"
+          "accepts": "String"
         }
       ]
     }

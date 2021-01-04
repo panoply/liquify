@@ -18,8 +18,8 @@ export default {
       format: 'cjs',
       dir: 'package',
       sourcemap: process.env.prod ? false : 'inline',
-      exports: 'auto',
-      banner: banner(pkg, 'PROPRIETARY')
+      exports: 'auto'
+      // banner: banner(pkg, 'PROPRIETARY')
     }
   ],
   external: [ 'crypto' ],
@@ -55,7 +55,9 @@ export default {
       }
     }),
     resolve(),
-    commonjs(),
+    commonjs({
+      esmExternals: true
+    }),
     globs({
       globs: [
         'package.json',
@@ -78,8 +80,8 @@ export default {
       ecma: 6
       , warnings: 'verbose'
       , compress: { passes: 2 }
-    }),
-    obfuscator({
+    })
+    /* obfuscator({
       target: 'node',
       compact: true,
       exclude: [ '!/index.js' ],
@@ -100,7 +102,7 @@ export default {
       stringArrayEncoding: false,
       stringArrayThreshold: 0.75,
       unicodeEscapeSequence: false
-    })
+    }) */
 
   ])
 }

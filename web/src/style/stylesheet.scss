@@ -1,3 +1,31 @@
-body {
-  padding: 200px;
-}
+// BOOTSTRAP PRESETS
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+// CUSTOM PRESETS
+@import "base/variables";
+
+// BOOTSTRAP BASE
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/utilities/shadows";
+@import "bootstrap/scss/utilities/spacing";
+
+// CUSTOM BASE
+@import "base/aspect-ratio";
+@import "base/display";
+@import "base/flex";
+@import "base/text";
+@import "base/sizes";
+@import "base/headings";
+@import "base/backgrounds";
+@import "base/borders";
+@import "base/shadows";
+@import "base/semantics";
+@import "base/drawer";
+
+// COMPONENTS
+@import "components/navbar";
+@import "components/hero";
+@import "components/blocks";

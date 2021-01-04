@@ -1,0 +1,29 @@
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .text#{$infix}-left {
+      text-align: left !important;
+    }
+
+    .text#{$infix}-right {
+      text-align: right !important;
+    }
+
+    .text#{$infix}-center {
+      text-align: center !important;
+    }
+  }
+}
+
+.text-lowercase {
+  text-transform: lowercase !important;
+}
+
+.text-uppercase {
+  text-transform: uppercase !important;
+}
+
+.text-underline {
+  text-decoration: underline !important;
+}
