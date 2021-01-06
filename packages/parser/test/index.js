@@ -4,9 +4,10 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import time from 'pretty-hrtime'
 import * as Specs from '@liquify/liquid-language-specs'
-import html_tokens from './cases/html_tags/embedded'
-import liquid_delimeters from './cases/liquid_tags/delimeters'
 import chalk from 'chalk'
+import { config } from 'dotenv'
+
+config()
 
 const ctx = new chalk.Instance({
   level: 2
@@ -65,7 +66,7 @@ const parser = new LiquidParser({
 
 test.before('TOKEN STRING PARSING', async t => {
 
-  const s = await Specs.getSpecs('sissel siv')
+  const s = await Specs.getSpecs(process.env.MASTER_KEY)
 
   parser.spec(s)
 

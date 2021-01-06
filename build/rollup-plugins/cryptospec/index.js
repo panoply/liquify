@@ -11,8 +11,7 @@ export default function (options = {}) {
 
   const parse = {}
   const filter = createFilter(options.include, options.exclude)
-const crypto = cryptographer.
-  for (const key in options.keychain) options.keychain[key].push(options.master)
+  const crypto = cryptographer(options.master)
 
   const merge = json => {
 

@@ -1,45 +1,47 @@
 // @ts-nocheck
 
 import test from 'ava'
-import * as crypto from '../package/index.cjs'
-import time from 'pretty-hrtime'
+import cryptographer from '../package/index.cjs'
 
 const seed = require('./data/example.json')
 
 test.before(t => {
 
-  crypto.keychain('sissel siv', {
-    standard: [ 'standard' ],
-    jekyll: [ 'jekyll' ],
-    shopify: [ 'shopify' ],
-    eleventy: [ 'eleventy' ]
-  })
-
-  t.context.start_time = process.hrtime()
-  t.context.crypto = crypto.secret('foobar')
+  t.context.crypto = cryptographer('$ecret')
 
 })
 
-test.after(t => {
+test.serial('String value to encode and decode', t => {
 
-  t.log(time(process.hrtime(t.context.start_time), { verbose: true }))
-
-})
-
-test.serial('Cryptographer', t => {
-
-  const encode = t.context.crypto.encode(seed)
+  const encode = t.context.crypto.encode('some string')
   const decode = t.context.crypto.decode(encode)
 
-  t.log(decode.engine, t.context.crypto, crypto.identity())
-  t.pass()
+  t.is('some string', decode)
+  t.pass('String test passed')
 
 })
 
-test('Keychain is frozen, no password can be added', t => {
+test.serial('Incorrect secret', t => {
 
-  const error = t.throws(() => crypto.keychain([ 'will_fail', 'not_allowed' ]))
+  const crypto = cryptographer('invalid iv')
 
-  t.log(error)
+  // use the above instance to decode
+  const encode = crypto.encode('want to fight?')
+
+  // use context instance
+  const decode = t.context.crypto.decode(encode)
+
+  t.not('want to fight?', decode)
+  t.pass('Object test passes')
+
+})
+
+test.serial('Object value to encode and decode', t => {
+
+  const encode = t.context.crypto.encode({ foo: 'bar', bar: 'foo' })
+  const decode = t.context.crypto.decode(encode)
+
+  t.deepEqual({ foo: 'bar', bar: 'foo' }, decode)
+  t.pass('Object test passes')
 
 })

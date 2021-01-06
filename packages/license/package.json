@@ -1,5 +1,5 @@
 {
-  "name": "@liquify/licensing",
+  "name": "@liquify/license",
   "version": "0.0.0",
   "description": "Liquify Licensing",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
@@ -15,7 +15,7 @@
     "url": "https://github.com/panoply/vscode-liquid/issues"
   },
   "scripts": {
-    "watch": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "prebuild": "rollup -i index.js -o package/index.cjs.js -f cjs --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
@@ -43,7 +43,12 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
+    "@brixtol/cryptographer": "^0.1.2",
     "@liquify/cryptographer": "workspace:^0.1.0",
-    "netlicensing-client": "^1.2.24"
+    "faunadb": "^4.0.0",
+    "fs-extra": "^9.0.1",
+    "home-or-tmp": "^3.0.0",
+    "ini": "^2.0.0",
+    "node-machine-id": "^1.1.12"
   }
 }

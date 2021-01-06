@@ -2,6 +2,7 @@ import { DSH, LCB, LAN, BNG, FWS, RCB, PIP, COL, DOT, LOB, ROB } from '../lexica
 import { TokenType } from '../enums/types'
 import { ScanState } from '../enums/state'
 import * as Regex from '../lexical/regex'
+import { ForEach } from './utils'
 // import { TokenContext } from '../enums/context'
 import { TokenTags } from '../enums/parse'
 import { ParseError } from '../enums/errors'
@@ -33,6 +34,17 @@ export default (function () {
    * @type {number}
    */
   let start
+
+  /**
+   * Cache
+   *
+   * Can hold any value, is used as a cache
+   * and its value may represent anything within
+   * the stream.
+   *
+   * @type {any}
+   */
+  let cache
 
   /**
    * Error Number
@@ -70,7 +82,7 @@ export default (function () {
         Specs.type = TokenTags.object
       }
 
-      if (s.IfRegExp(Regex.DelimeterCapture)) {
+      if (s.IfRegExp(Regex.DelimiterCapture)) {
         start = s.Offset(-2)
         state = ScanState.TagOpen
         return TokenType.LiquidTagOpen
@@ -152,7 +164,7 @@ export default (function () {
 
     // Liquid tag closed, eg: }} or -%}
     if (state !== ScanState.ParseError) {
-      if (s.IsRegExp(Regex.LiquidTagClose)) {
+      if (state !== ScanState.AfterFilterValue && s.IsRegExp(Regex.LiquidTagClose)) {
 
         // Reset state
         state = ScanState.TagClose
@@ -333,7 +345,7 @@ export default (function () {
         // Gets Property, eg: "prop" in "object.prop"
         if (s.IfRegExp(Regex.LiquidObjectProperty)) {
 
-          // Rescan for properties on next iteration
+          // Re-scan for properties on next iteration
           state = ScanState.ObjectProperties
           return TokenType.ObjectProperties
 
@@ -382,7 +394,7 @@ export default (function () {
 
           s.Advance(1)
 
-          // Rescan for properties on next iteration
+          // Re-scan for properties on next iteration
           if (s.IfCodeChar(DOT, false)) {
             state = ScanState.ObjectDotNotation
             return TokenType.ObjectProperties
@@ -412,7 +424,6 @@ export default (function () {
 
         if (s.IfRegExp(/^[^\s:][a-zA-Z0-9$_]+\b/)) {
           Specs.cursor(s.Token())
-          console.log('IN FILTER', specs.cursor())
           state = ScanState.AfterFilterName
           return TokenType.Filter
         }
@@ -428,16 +439,18 @@ export default (function () {
 
         console.log(s.Token())
 
-        if (s.IfCodeChar(COL)) {
-          if (Specs.params) {
-            for (let i = 0; i < Specs.params.length; i++) {
-              console.log(Specs.params[i])
-            }
+        if (s.IfCodeChar(COL, false)) {
+          if (Specs.params && s.IfSequence(/\||-?[%}]\}/)) {
+
+            state = ScanState.AfterFilterValue
+            return TokenType.Filter
 
             // state = ScanState.AfterFilterValue
             // Filter value is string
-            return ScanLiquid()
           }
+
+          return ScanLiquid()
+
         }
 
         if (s.IsRegExp(Regex.StringQuotations)) {
@@ -451,6 +464,30 @@ export default (function () {
             return ScanLiquid()
           }
         }
+
+        return TokenType.EOS
+
+      }
+
+      case ScanState.AfterFilterValue: {
+
+        ForEach(s.Token().split(','), (token, index) => {
+
+          // Filter Parameter is a String, eg: 'string'
+          if (Regex.StringQuotations.test(token.trimLeft()) === true) {
+
+            // Token must start and end with matching quotation character, eg: ""
+            console.log(
+              'IN FILTER'
+              , token
+              , index
+              , Specs.params[index]
+              , s.Token().trim().split(',')
+            )
+
+          }
+
+        })
 
         return TokenType.EOS
 
@@ -481,7 +518,7 @@ export default (function () {
         }
 
         // Condition value is an object
-        if (/\./.test(s.token())) {
+        if (/\./.test(s.Token())) {
           return TokenType.Object
         }
 

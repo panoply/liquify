@@ -90,6 +90,12 @@ export default new class Specs {
 
   }
 
+  parameter() {
+
+
+
+  }
+
   /**
    * Reference
    *

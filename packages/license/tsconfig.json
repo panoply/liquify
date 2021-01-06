@@ -1,0 +1,37 @@
+{
+  "exclude": [
+    "node_modules",
+    "package"
+  ],
+  "typeAcquisition": {
+    "enable": true,
+    "include": [
+      "node"
+    ]
+  },
+  "compilerOptions": {
+    "types": [
+      "node"
+    ],
+    "target": "es2020",
+    "lib": [
+      "es2020"
+    ],
+    "module": "commonjs",
+    "checkJs": true,
+    "allowJs": true,
+    "allowUmdGlobalAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "preserveSymlinks": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noEmitOnError": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": ".",
+    "pretty": true
+  }
+}

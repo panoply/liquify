@@ -1,3 +1,4 @@
+import { is } from 'rambda'
 
 /**
  * Creates an empty object
@@ -16,7 +17,9 @@ export function ForEach (array, fn) {
   let i = 0
   const l = array.length
 
-  for (; i < l.length; i++) fn(l[i], i)
+  for (; i < l; i++) if (is(Number, fn(array[i], i))) break
+
+  return array
 
 }
 

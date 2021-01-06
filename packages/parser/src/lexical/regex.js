@@ -7,7 +7,7 @@ export const DelimiterCharacters = /[{<]/
 /**
 * `^\{[{%]`
 */
-export const DelimeterCapture = /^\{[{%]/
+export const DelimiterCapture = /^\{[{%]/
 
 /**
 * `^[^\s"'>]+`

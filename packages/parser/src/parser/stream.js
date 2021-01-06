@@ -502,15 +502,19 @@ export default (function Stream (string) {
      *
      * @memberof Stream
      * @param {RegExp} regex
+     * @param {boolean} tokenize
      * @returns {(boolean)}
      * @see https://git.io/JJnqn
      */
-    IfSequence (regex) {
+    IfSequence (regex, tokenize = true) {
 
-      const match = this.source.substring(index).search(regex)
+      const substring = this.source.substring(index)
+      const match = substring.search(regex)
 
       if (match < 0) return false
+      if (tokenize) token = substring.substring(0, match)
 
+      console.log(match, index)
       this.Advance(match)
 
       return true
@@ -616,7 +620,7 @@ export default (function Stream (string) {
      * The character code number
      *
      * @param {boolean} [tokenize=true]
-     * Defaults to `true` wherin matched character is
+     * Defaults to `true` wherein matched character is
      * applied to `token`
      *
      * @link https://git.io/JJnq3

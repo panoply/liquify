@@ -72,12 +72,6 @@
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.1"
     },
-    "./licensing": {
-      "path": "packages/licensing",
-      "name": "@liquify/licensing",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.0"
-    },
     "./server": {
       "path": "packages/server",
       "name": "@liquify/liquid-language-server",
@@ -88,6 +82,12 @@
       "path": "packages/specs",
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
+      "version": "0.0.0"
+    },
+    "./license": {
+      "path": "packages/license",
+      "name": "@liquify/license",
+      "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.0"
     }
   },
@@ -107,6 +107,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/pluginutils": "^4.1.0",
+    "@types/fs-extra": "^9.0.6",
     "babel-plugin-module-resolver": "^4.1.0",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",

@@ -6,6 +6,9 @@ import cryptospec from '@liquify/rollup-plugin-cryptospec'
 import obfuscator from '@liquify/rollup-plugin-obfuscator'
 import globs from '@liquify/rollup-plugin-globs'
 import pkg from './package.json'
+import { config } from 'dotenv'
+
+config()
 
 export default {
   input: {
@@ -18,25 +21,14 @@ export default {
       format: 'cjs',
       dir: 'package',
       sourcemap: process.env.prod ? false : 'inline',
-      exports: 'auto'
-      // banner: banner(pkg, 'PROPRIETARY')
+      exports: 'auto',
+      banner: banner(pkg, 'PROPRIETARY')
     }
   ],
   external: [ 'crypto' ],
   plugins: plugins([
     cryptospec({
-      master: 'sissel siv',
-      keychain: {
-        standard: [
-          'standard'
-        ],
-        jekyll: [
-          'jekyll'
-        ],
-        shopify: [
-          'clockwork-orange'
-        ]
-      },
+      master: process.env.MASTER_KEY,
       defaults: {
         filters: {
           type: 'filter'
@@ -62,7 +54,6 @@ export default {
       globs: [
         'package.json',
         'readme.md',
-        'changelog.md',
         'LICENSE',
         'index.d.ts'
       ],
@@ -80,8 +71,8 @@ export default {
       ecma: 6
       , warnings: 'verbose'
       , compress: { passes: 2 }
-    })
-    /* obfuscator({
+    }),
+    obfuscator({
       target: 'node',
       compact: true,
       exclude: [ '!/index.js' ],
@@ -98,11 +89,9 @@ export default {
       shuffleStringArray: true,
       splitStrings: false,
       sourceMap: true,
-      stringArray: true,
-      stringArrayEncoding: false,
       stringArrayThreshold: 0.75,
       unicodeEscapeSequence: false
-    }) */
+    })
 
   ])
 }
