@@ -1,14 +1,14 @@
-import { DSH, LCB, LAN, BNG, FWS, RCB, PIP, COL, DOT, LOB, ROB } from '../lexical/characters'
+
 import { TokenType } from '../enums/types'
-import { ScanState } from '../enums/state'
+import { ScanState, ScanCache } from '../enums/state'
 import * as Regex from '../lexical/regex'
+import * as c from '../lexical/characters'
 import { ForEach } from './utils'
 // import { TokenContext } from '../enums/context'
 import { TokenTags } from '../enums/parse'
 import { ParseError } from '../enums/errors'
 import Specs from './specs'
 import s from './stream'
-import specs from './specs'
 
 /**
  * Scanner
@@ -54,6 +54,13 @@ export default (function () {
   let error
 
   /**
+   * Error Number
+   *
+   * @type {number}
+   */
+  let param
+
+  /**
    * Scanner State
    *
    * @type {number}
@@ -68,23 +75,23 @@ export default (function () {
    *
    * @returns {number}
    */
-  const CharSeq = () => {
+  function CharSeq () {
 
     s.UntilSequence(Regex.DelimiterCharacters)
 
     // LIQUID OPEN TAG DELIMITERS ^{{ | ^{%
     //
     // ---------------------------------------------
-    if (s.IsCodeChar(LCB)) {
+    if (s.IfNextCodeChar(c.LCB)) {
 
-      // Set object type, eg: {{
-      if (s.IfNextCodeChar(LCB)) {
-        Specs.type = TokenTags.object
-      }
+      if (s.IfRegExp(Regex.OpenDelimiters)) {
 
-      if (s.IfRegExp(Regex.DelimiterCapture)) {
+        // Set object type, eg: {{
+        if (s.IfPrevCodeChar(c.LCB)) Specs.type = TokenTags.object
+
         start = s.Offset(-2)
         state = ScanState.TagOpen
+
         return TokenType.LiquidTagOpen
       }
 
@@ -93,18 +100,18 @@ export default (function () {
     // HTML OPEN TAG DELIMITERS < | </ | <!--
     //
     // ---------------------------------------------
-    if (s.IfNextCodeChar(LAN)) {
+    if (s.IfNextCodeChar(c.LAN)) {
 
       if (s.SkipWhitespace()) {
         return TokenType.ParseError
       }
 
-      if (s.IfCodeChar(FWS)) {
+      if (s.IfCodeChar(c.FWS)) {
         state = ScanState.AfterHTMLEndTagName
         return TokenType.HTMLEndTagOpen
       }
 
-      if (s.IfChars([ BNG, DSH, DSH ])) {
+      if (s.IfChars([ c.BNG, c.DSH, c.DSH ])) {
         state = ScanState.AfterOpeningHTMLComment
         return TokenType.HTMLStartCommentTag
       }
@@ -119,9 +126,7 @@ export default (function () {
 
     }
 
-    if (state !== ScanState.CharSeq) {
-      state = ScanState.CharSeq
-    }
+    if (state !== ScanState.CharSeq) state = ScanState.CharSeq
 
     s.Advance(1)
 
@@ -150,31 +155,16 @@ export default (function () {
   /**
    * Scan Liquid
    *
-   * Liquid language syntax tokenizer scanner.
+   * Liquid c.language syntax tokenizer scanner.
    * TokenType enums are returned
    *
    * @returns {number}
    */
-  const ScanLiquid = () => {
+  function ScanLiquid () {
 
     // Skip whitespace
     if (s.SkipWhitespace()) {
-      return TokenType.Whitespace
-    }
-
-    // Liquid tag closed, eg: }} or -%}
-    if (state !== ScanState.ParseError) {
-      if (state !== ScanState.AfterFilterValue && s.IsRegExp(Regex.LiquidTagClose)) {
-
-        // Reset state
-        state = ScanState.TagClose
-
-        // Detect a missing tag name, eg: {{ }} or `{% %}`
-        // Index position here would be before {{ or {% delimiters
-        if (s.GetCodeChar() === RCB) {
-          // error = ParseError.MissingTagName
-        }
-      }
+      return ScanLiquid()
     }
 
     // BEGIN SCAN
@@ -184,34 +174,25 @@ export default (function () {
       // LIQUID TAG OPEN
       //
       // {{^ or {%^
-      //
       // -------------------------------------------
       case ScanState.TagOpen: {
 
         // Advance over whitespace control dash, eg: {{-  or {%-
-        if (s.IfCodeChar(DSH)) {
-          return ScanLiquid()
-        }
+        if (s.IfCodeChar(c.DSH)) return TokenType.LiquidTrimDashLeft
 
         // Object tag references the predefined tag type in CharSeq()
         if (Specs.type === TokenTags.object) {
 
           // Object name
           if (s.IfRegExp(Regex.LiquidObjectName)) {
-
-            // If spec exists for the object name, cursor should have type object
-            state = Specs?.type === TokenTags.object
-              ? ScanState.ObjectProperties
-              : ScanState.ObjectUnknown
-
+            state = ScanState.ObjectName
             return TokenType.LiquidObjectTag
-
+          } else {
+            state = ScanState.ParseError
+            error = ParseError.InvalidObjectName
           }
 
-          state = ScanState.ParseError
-          error = ParseError.InvalidObjectName
-
-          return TokenType.ParseError
+          return ScanLiquid()
 
         }
 
@@ -224,7 +205,7 @@ export default (function () {
         if (s.IfRegExp(Regex.LiquidTagName)) {
 
           // Set Specification
-          Specs.cursor(s.Token())
+          Specs.cursor(s.token)
 
           // Within end tag
           if (state === ScanState.WithinEndTag) {
@@ -252,6 +233,11 @@ export default (function () {
       // -------------------------------------------
       case ScanState.ParseError: {
 
+        if (error === ParseError.InvalidObjectName) {
+          state = ScanState.TagClose
+          return TokenType.ParseError
+        }
+
         if (error === ParseError.MissingObjectName) {
           state = ScanState.TagClose
           return TokenType.ParseError
@@ -264,8 +250,6 @@ export default (function () {
 
         // Recursive
         if (s.ConsumeUnless(/-?[%}]\}/, /\{[{%]-?/)) {
-          console.log('Parse Error', s.Token())
-
           state = ScanState.TagClose
           return TokenType.ParseError
         }
@@ -306,54 +290,82 @@ export default (function () {
 
       }
 
+      // OBJECT NAME
+      //
+      // ---------------------------------------------
+      case ScanState.ObjectName: {
+
+        // Set Specification
+        Specs.cursor(s.token)
+
+        state = Specs?.type === TokenTags.object
+          ? ScanState.ObjectProperty
+          : ScanState.ObjectUnknown
+
+        return TokenType.Object
+
+      }
+
       // LIQUID OBJECT PROPERTIES
       //
       // ---------------------------------------------
-      case ScanState.ObjectProperties: {
+      case ScanState.ObjectProperty: {
 
-        if (s.IfCodeChar(PIP)) {
+        // Object property value, eg: "object.prop"
+        if (s.IfCodeChar(c.DOT)) {
+          state = ScanState.ObjectDotNotation
+          return ScanLiquid()
+        }
+
+        // Object property via [ bracket, eg: "object["
+        if (s.IfCodeChar(c.LOB)) {
+          state = ScanState.ObjectBracketNotation
+          return TokenType.ObjectBracketNotationOpen
+        }
+
+        if (s.IfCodeChar(c.ROB)) {
+          return TokenType.ObjectBracketNotationClose
+        }
+
+        // Tag has filter, single object value was expressed, eg {{ name | }}
+        if (s.IfCodeChar(c.PIP)) {
           state = ScanState.AfterFilterPipe
           return TokenType.Separator
         }
 
-        // Object property value, eg: "object.prop"
-        if (s.IfCodeChar(DOT)) {
-          state = ScanState.ObjectDotNotation
+        // Tag is closed, eg: }}
+        if (s.IsRegExp(Regex.LiquidObjectTagClose)) {
+          state = ScanState.TagClose
+          return ScanLiquid()
         }
 
-        // Object property via [ bracket, eg: "object["
-        if (s.IfCodeChar(LOB)) {
-          state = ScanState.ObjectBracketNotation
-        }
-
+        state = ScanState.ParseError
+        error = ParseError.InvalidCharacter
         return ScanLiquid()
 
       }
 
       // LIQUID OBJECT DOT NOTATION
       //
-      // "object.prop"
-      //
       // ---------------------------------------------
       case ScanState.ObjectDotNotation: {
 
-        // Skip whitespace
-        error = s.SkipWhitespace()
-          ? ParseError.MissingProperty // Whitespace after "." eg: "object."
-          : ParseError.InvalidCharacter // Invalid Character, eg: "object.."
-
         // Gets Property, eg: "prop" in "object.prop"
         if (s.IfRegExp(Regex.LiquidObjectProperty)) {
-
-          // Re-scan for properties on next iteration
-          state = ScanState.ObjectProperties
-          return TokenType.ObjectProperties
-
+          state = ScanState.ObjectProperty
+          return TokenType.ObjectProperty
         }
 
-        // Parse Error
+        // Get here, there was an error
         state = ScanState.ParseError
-        return TokenType.ParseError
+
+        // If next character is filter or closing delimiter
+        // Property is missing, else its an invalid character
+        error = s.IsRegExp(/^[|%}-]]/)
+          ? ParseError.MissingProperty
+          : ParseError.InvalidCharacter
+
+        return ScanLiquid()
 
       }
 
@@ -364,99 +376,104 @@ export default (function () {
       // ---------------------------------------------
       case ScanState.ObjectBracketNotation: {
 
-        // String literal property, eg: "object['prop']"
-        if (s.IsRegExp(Regex.StringQuotations)) {
+        // Bracket notation object property
+        if (cache === ScanCache.BracketNotationStart) {
 
-          // String Literal, eg: ['prop]
-          if (s.SkipQuotedString()) {
-
-            // Reject extraneous spacing, eg: "' prop '"
-            if (s.TokenContains(Regex.WhitespaceCharacters)) {
-              state = ScanState.ParseError
-              error = ParseError.RejectWhitespace
-              return TokenType.ParseError
-            }
-
-            // Re-scan and consume bracket whitespacing, eg: "['prop'   ]"
+          // Empty bracket notation, eg: {{ object[] }}
+          if (s.IfCodeChar(c.ROB, false)) {
+            error = ParseError.MissingProperty
+            state = ScanState.ParseError
             return ScanLiquid()
+          }
 
-          } else {
-
-            // Consume the first quotation character, eg: ' or "
-            s.Advance(1)
-            error = ParseError.MissingQuotation
-
+          // Property is a string, eg: {{ object["prop"] }}
+          if (s.IsRegExp(Regex.StringQuotations)) {
+            state = ScanState.ObjectPropertyString
+            cache = ScanCache.BracketNotationString
+            return ScanLiquid()
           }
         }
 
-        // Gets Property, eg: "prop" in "object.prop"
-        if (s.IfRegExp(Regex.LiquidObjectProperty)) {
-
-          s.Advance(1)
-
-          // Re-scan for properties on next iteration
-          if (s.IfCodeChar(DOT, false)) {
-            state = ScanState.ObjectDotNotation
-            return TokenType.ObjectProperties
-
-          }
-
-          return TokenType.ObjectProperties
-
+        // Property is a variable or object, eg: {{ object[prop] }}
+        if (s.IfRegExp(Regex.LiquidObjectName)) {
+          // Bracket notation contained a variable only, eg: {{ object[var]}}
+          state = ScanState.ObjectProperty
+          return TokenType.Object
         }
 
-        // Right Open Bracket, eg: "]"
-        if (s.IfCodeChar(ROB, false)) {
-          state = ScanState.ObjectProperties
-          return TokenType.ObjectProperties
-        }
+        console.log('here')
 
-        // Missing quotation, eg: ['prop]
-        state = ScanState.ObjectProperties
-        return TokenType.ObjectProperties
+        // We have an error
+        state = ScanState.ParseError
+        return ScanLiquid()
 
       }
 
-      // LIQUID FILTER PIPE SEPARATOR
+      // LIQUID FILTER OBJECT PROPERTY STRING
+      // {{ object["prop"] }}
+      // ---------------------------------------------
+      case ScanState.ObjectPropertyString: {
+
+        // Right Open Bracket, eg: "]"
+        if (s.IfCodeChar(c.ROB)) {
+          state = ScanState.ObjectProperty
+          console.log(cache === ScanCache.BracketNotationObject)
+          return TokenType.ObjectBracketNotationClose
+        }
+
+        // String literal property, eg: "object['prop']"
+        if (s.SkipQuotedString()) {
+
+          // Reject extraneous spacing, eg: "' prop '"
+          if (s.TokenContains(Regex.WhitespaceCharacters)) {
+            state = ScanState.ParseError
+            error = ParseError.RejectWhitespace
+            return ScanLiquid()
+          }
+
+          // skips whitespace, eg: {{ object["prop"   ]  }}
+          s.SkipWhitespace()
+          return TokenType.ObjectPropertyString
+
+        }
+
+        // Missing quotation character, eg: {{ object["prop ]}}
+        error = ParseError.MissingQuotation
+        state = ScanState.ParseError
+
+        return ScanLiquid()
+
+      }
+
+      // LIQUID FILTER c.PIPE SEPARATOR
       //
       // ---------------------------------------------
       case ScanState.AfterFilterPipe: {
 
-        if (s.IfRegExp(/^[^\s:][a-zA-Z0-9$_]+\b/)) {
-          Specs.cursor(s.Token())
+        if (s.IfRegExp(/^[^:][a-zA-Z0-9$_]+\b/)) {
           state = ScanState.AfterFilterName
           return TokenType.Filter
         }
 
-        return TokenType.EOS
+        error = ParseError.MissingFilter
+        state = ScanState.ParseError
+        return ScanLiquid()
 
       }
 
-      // LIQUID FILTER PIPE SEPARATOR
+      // LIQUID FILTER c.PIPE SEPARATOR
       //
       // ---------------------------------------------
       case ScanState.AfterFilterName: {
 
-        console.log(s.Token())
-
-        if (s.IfCodeChar(COL, false)) {
-          if (Specs.params && s.IfSequence(/\||-?[%}]\}/)) {
-
-            state = ScanState.AfterFilterValue
-            return TokenType.Filter
-
-            // state = ScanState.AfterFilterValue
-            // Filter value is string
-          }
-
-          return ScanLiquid()
-
+        if (s.IfCodeChar(c.COL)) {
+          return TokenType.Separator
         }
 
         if (s.IsRegExp(Regex.StringQuotations)) {
-
           if (s.SkipQuotedString()) {
             state = ScanState.AfterFilterValue
+            return TokenType.FilterParameter
           } else {
             // Missing a quote " or '
             state = ScanState.ParseError
@@ -465,31 +482,21 @@ export default (function () {
           }
         }
 
-        return TokenType.EOS
+        error = ParseError.MissingFilter
+        state = ScanState.ParseError
+        return ScanLiquid()
 
       }
 
       case ScanState.AfterFilterValue: {
 
-        ForEach(s.Token().split(','), (token, index) => {
+        if (s.IfCodeChar(c.COM)) {
+          state = ScanState.AfterFilterName
+          return TokenType.Separator
+        }
 
-          // Filter Parameter is a String, eg: 'string'
-          if (Regex.StringQuotations.test(token.trimLeft()) === true) {
-
-            // Token must start and end with matching quotation character, eg: ""
-            console.log(
-              'IN FILTER'
-              , token
-              , index
-              , Specs.params[index]
-              , s.Token().trim().split(',')
-            )
-
-          }
-
-        })
-
-        return TokenType.EOS
+        state = ScanState.ObjectProperty
+        return ScanLiquid()
 
       }
 
@@ -584,14 +591,13 @@ export default (function () {
       case ScanState.WithinEndTag:
       case ScanState.TagClose: {
 
-        if (s.IfNextCodeChar(DSH)) {
-          // index = s.Offset(-1)
-          return TokenType.LiquidWhitespaceDash
-        }
+        // console.log(s.token)
 
-        if (s.IfRegExp(/^-?[%}]\}/)) {
+        // Trim right whitespace dash
+        if (s.IfCodeChar(c.DSH)) return TokenType.LiquidTrimDashRight
 
-          state = ScanState.CharSeq
+        // Tag is closed, eg: }} or %}
+        if (s.IfRegExp(Regex.CloseDelimiters)) {
 
           if (Specs.type === TokenTags.object) {
 
@@ -602,7 +608,8 @@ export default (function () {
             }
 
             // Make sure we a dealing with an object tag
-            if (s.IfPrevCodeChar(RCB)) {
+            if (s.IfPrevCodeChar(c.RCB)) {
+              state = ScanState.CharSeq
               return TokenType.LiquidObjectTagClose
             }
 
@@ -615,7 +622,6 @@ export default (function () {
         }
 
         state = ScanState.ParseError
-        error = ParseError.MissingCloseDelimiter
         return TokenType.ParseError
 
       }
@@ -662,15 +668,11 @@ export default (function () {
    *
    * @returns {number}
    */
-  const scan = (offset = 0, options = {}) => {
+  function scan (offset = 0, options = {}) {
 
-    if (offset > 0) {
-      s.jump(offset)
-    }
+    if (offset > 0) s.jump(offset)
 
-    if (s.EOS) {
-      return TokenType.EOS
-    }
+    if (s.EOS) return TokenType.EOS
 
     // frontmatter must start at position 0
     if (offset === 0 && options.frontmatter) {
@@ -678,16 +680,13 @@ export default (function () {
         return TokenType.ParseError
       }
 
-      if (s.IfChars([ DSH, DSH, DSH ])) {
+      if (s.IfChars([ c.DSH, c.DSH, c.DSH ])) {
         state = ScanState.FrontmatterOpen
         return TokenType.FrontmatterStart
       }
     }
 
-    return (state === ScanState.CharSeq
-      ? CharSeq()
-      : ScanLiquid()
-    )
+    return state === ScanState.CharSeq ? CharSeq() : ScanLiquid()
 
   }
 
@@ -712,11 +711,11 @@ export default (function () {
     }
 
     /**
-     * Get Dash
+     * Get Position
      */
-    , get dash () {
+    , get end () {
 
-      return s.GetCodeChar(start + 2) === DSH
+      return s.Position()
 
     }
 
@@ -730,11 +729,20 @@ export default (function () {
     }
 
     /**
+     * Get Spaces
+     */
+    , get space () {
+
+      return s.space
+
+    }
+
+    /**
      * Get Token
      */
     , get token () {
 
-      return s.Token()
+      return s.token
 
     }
 
@@ -745,26 +753,6 @@ export default (function () {
 
       return s.GetText(this.start, this.offset)
 
-    }
-
-    /**
-     * Get Position
-     */
-    , get position () {
-
-      return s.location
-
-    }
-
-    /**
-     * Get Range
-     */
-    , get range () {
-
-      return {
-        start: s.location
-        , end: s.location
-      }
     }
 
     /**
@@ -791,6 +779,21 @@ export default (function () {
     , get error () {
 
       return error
+
+    }
+
+    /**
+     * Get Range
+     *
+     * @param {number} from
+     * Starting Position which must be before current stream position
+     *
+     * @param {number} [end]
+     * Ending position offset in current stream
+     */
+    , get range () {
+
+      return s.range
 
     }
 

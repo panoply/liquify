@@ -39,7 +39,7 @@ export default (
     },
     {
       title: 'HTML TAG NEWLINES\n',
-      description: 'Test HTML tags successfully parse newlines contained between delimeters.',
+      description: 'Test HTML tags successfully parse newlines contained between delimiters.',
       capture: {
         regex: /[\\][n]/g,
         colour: 'blueBright',

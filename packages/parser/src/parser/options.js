@@ -28,5 +28,5 @@ export const Engines = {
   Standard: 'standard',
   Shopify: 'shopify',
   Jekyll: 'jekyll',
-  '11ty': '11ty'
+  Eleventy: 'eleventy'
 }

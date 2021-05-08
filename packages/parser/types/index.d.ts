@@ -2,17 +2,21 @@ import { TokenType } from "../src/enums/types";
 import { TokenKind } from "../src/enums/kinds";
 import { TokenContext } from "../src/enums/context";
 import { Errors } from "../src/enums/errors";
-export { Options } from './options'
-import { Variation, NodeSpecification, Object as SpecObjects } from '@liquify/liquid-language-specs'
+export { Options } from "./options";
+import {
+  Variation,
+  NodeSpecification,
+  Object as SpecObjects,
+} from "@liquify/liquid-language-specs";
 
-export { Variation, NodeSpecification, SpecObjects }
+export { Variation, NodeSpecification, SpecObjects };
 
 /**
  * Tags are captured and applied as an array of strings.
  * There should never be more than 2 values that exist here.
  * When the parser encounters tag blocks, value will be 2.
  */
-export type Token = string[];
+export type Token = string;
 
 /**
  * Tags offsets reflect the positions of each captured token
@@ -21,13 +25,14 @@ export type Token = string[];
 export type Offsets = number[];
 
 /**
- * Tags offsets reflect the positions of each captured token
- * in the document. Offsets will either have a value of 2 or 4.
+ * Line and Character position
  */
-export type Range = {
-  start?: { line: number; character: number };
-  end?: { line: number; character: number };
-}
+export type Location = { line: number; character: number };
+
+/**
+ * Line and Character starting point and end point position
+ */
+export type Range = { start?: Location; end?: Location };
 
 /**
  * Object properties are the the index offset location for
@@ -87,7 +92,6 @@ export enum DiagnosticTag {
   Deprecated = 2,
 }
 
-
 /* -------------------------------------------- */
 /*                      AST                     */
 /* -------------------------------------------- */
@@ -106,13 +110,11 @@ export interface ASTNode {
   errors: any[];
   content: string;
   objects?: Objects;
-  context: (tokenContext?: TokenContext) => object[]
-  error: (parseError?: number) => IParseError[]
-  reset: () => void
-  hierarch: () => void
-
+  context: (tokenContext?: TokenContext) => object[];
+  error: (parseError?: number) => IParseError[];
+  reset: () => void;
+  hierarch: () => void;
 }
-
 
 export interface IParseError {
   /**
@@ -134,17 +136,16 @@ export interface IParseError {
   code?: DiagnosticTag[];
 }
 
-
 export interface IScanner {
-  readonly index: number
-  readonly position: number
-  readonly token: string
-  readonly spec: NodeSpecification
-  readonly line: number
-  readonly error: number
-  getToken: () => string
-  getText: () => string
-  getRange: () => string
+  readonly index: number;
+  readonly position: number;
+  readonly token: string;
+  readonly spec: NodeSpecification;
+  readonly line: number;
+  readonly error: number;
+  getToken: () => string;
+  getText: () => string;
+  getRange: () => string;
 }
 
 /**

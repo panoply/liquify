@@ -1,9 +1,20 @@
+/**
+ * Cache Context
+ */
+export const enum ScanCache {
+  Reset,
+  SkipClose,
+  BracketNotationStart,
+  BracketNotationObject,
+  BracketNotationString,
+  BracketNotationVariable,
+}
+
 /* -------------------------------------------- */
 /*           TOKEN CONTEXT PLACEMENTS           */
 /* -------------------------------------------- */
 
 export const enum ScanState {
-
   /**
    * `---^`
    */
@@ -29,7 +40,6 @@ export const enum ScanState {
    */
   TagStartClose,
 
-
   WithinEndTag,
 
   /**
@@ -38,7 +48,8 @@ export const enum ScanState {
   TagType,
 
   ObjectName,
-  ObjectProperties,
+  ObjectProperty,
+  ObjectPropertyString,
   ObjectDotNotation,
   ObjectBracketNotation,
   ObjectUnknown,
@@ -212,11 +223,9 @@ export const enum ScanState {
 
   StringQuotation,
 
-
-
-
-/**PARE ISSUES */
+  /**PARE ISSUES */
   ParseError,
   TagUnknown,
-  CharSeq
+  GotoEndOfTag,
+  CharSeq,
 }

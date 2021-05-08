@@ -2,7 +2,7 @@ import { TokenType } from '../enums/types'
 import { TokenContext } from '../enums/context'
 import { TokenKind } from '../enums/kinds'
 import { ParseError } from '../enums/errors'
-import * as TokenTags from '../lexical/tags'
+import { TokenTags } from '../enums/parse'
 import Node from './node'
 import scanner from './scanner'
 import spec from './specs'
@@ -10,10 +10,9 @@ import spec from './specs'
 /**
  * Parser
  *
- * Liquid/HTML parser function which constructs and tokenizes syntaxes.
+ * Liquid/HTML parser function which constructs and tokenized syntaxes.
  *
  *
- * @this {Parser.Options}
  * @param {object} document
  * @this {Parser.Options}
  */
@@ -50,18 +49,31 @@ export function parse (document) {
       case TokenType.Whitespace:
 
         if (this.context && this.whitespace) {
-          if (node?.context) {
-            node.context(TokenContext.Whitespace)
-          }
+          if (node?.context) node.context(TokenContext.Whitespace)
         }
 
         break
 
-      // PRESET - LIQUID WHITESPACE DASH
+      case TokenType.Newline:
+
+        if (this.context && this.whitespace) {
+          if (node?.context) node.context(TokenContext.Newline)
+        }
+
+        break
+
+      // PARSER - PARSE ERROR
       //
-      // Presets whitespace strip dash - to node
+      // Pushes parse errors onto node stack
       // -----------------------------------------------------------------
-      case TokenType.LiquidWhitespaceDash:
+      case TokenType.ParseWarning:
+
+        node.end = scanner.offset
+        // node.range.end = scanner.position
+        // node.offsets.push(node.end)
+        node.error(scanner.error)
+
+        // document.ast.push(node)
 
         break
 
@@ -75,11 +87,9 @@ export function parse (document) {
         if (!node) node = new Node()
 
         node.end = scanner.offset
-        node.range.end = scanner.position
+        // node.range.end = scanner.position
         // node.offsets.push(node.end)
         node.error(scanner.error)
-
-        console.log('parse error')
 
         // document.ast.push(node)
 
@@ -93,35 +103,37 @@ export function parse (document) {
       // ^{% tag
       // ^{% endtag
       // -----------------------------------------------------------------
+      case TokenType.LiquidObjectTagOpen:
       case TokenType.LiquidTagOpen:
       case TokenType.LiquidEndTagOpen:
-      case TokenType.LiquidObjectTagOpen:
 
+        // @ts-ignore
+        node = new Node()
+
+        break
+
+      // LIQUID WHITESPACE DASH LEFT
+      //
+      // {{-^
+      // -----------------------------------------------------------------
+      case TokenType.LiquidTrimDashLeft:
+        if (this.context) node.context(TokenContext.LeftTrim)
+        break
+
+      // LIQUID WHITESPACE DASH RIGHT
+      //
+      // -^}}
+      // -----------------------------------------------------------------
+      case TokenType.LiquidTrimDashRight:
+        if (this.context) node.context(TokenContext.RightTrim)
         break
 
       // LIQUID TAG NAME KEYWORD
       //
-      // Tag reference is created and added to the AST
-      //
       // name^ }}
       // -----------------------------------------------------------------
       case TokenType.LiquidObjectTag:
-
-        console.log('get text: ' + scanner.dash)
-        // @ts-ignore
-        node = new Node()
         node.name = scanner.token
-
-        if (this.context) {
-
-          if (scanner.dash) {
-            node.context(TokenContext.Dash)
-          }
-
-          node.context(TokenContext.Object)
-
-        }
-
         break
 
       // LIQUID TAG NAME KEYWORD
@@ -134,7 +146,7 @@ export function parse (document) {
       case TokenType.LiquidTag:
       case TokenType.LiquidSingularTag:
 
-        console.log('get text: ' + scanner.dash)
+        // console.log('get text: ' + scanner.dash)
         // @ts-ignore
         node = new Node()
 
@@ -192,15 +204,15 @@ export function parse (document) {
       //
       // %}^
       // }}^
-      // --------------------------------------`---------------------------
+      // -----------------------------------------------------------------
       case TokenType.LiquidTagClose:
       case TokenType.LiquidEndTagClose:
       case TokenType.LiquidObjectTagClose:
       case TokenType.LiquidSingularTagClose:
 
         node.end = scanner.offset
-        node.range.end = scanner.position
-        node.token.push(scanner.tag)
+        node.range.end = scanner.range.end
+        node.token = scanner.tag
         node.offsets.push(node.end)
 
         // Push node onto AST stack
@@ -224,12 +236,18 @@ export function parse (document) {
 
         break
 
+      case TokenType.StringSingleQuote:
+        if (this.context) node.context(TokenContext.Object)
+        break
+
+      case TokenType.StringDoubleQuote:
+        if (this.context) node.context(TokenContext.Object)
+        break
+
+      // LIQUID OBJECT
+      // -----------------------------------------------------------------
       case TokenType.Object:
-
-        if (this.context) {
-          node.context(TokenContext.Object)
-        }
-
+        if (this.context) node.context(TokenContext.Object)
         node.objects = scanner.token
           .split('.')
           .filter(Boolean)
@@ -242,10 +260,40 @@ export function parse (document) {
 
         break
 
-      case TokenType.ObjectProperties:
+      // LIQUID OBJECT PROPERTY OPEN BRACKET
+      // -----------------------------------------------------------------
+      case TokenType.ObjectBracketNotationOpen:
+        if (this.context) node.context(TokenContext.OpenBracket)
+        break
+      // LIQUID OBJECT PROPERTY OPEN BRACKET
+      // -----------------------------------------------------------------
+      case TokenType.ObjectBracketNotationClose:
+        if (this.context) node.context(TokenContext.CloseBracket)
+        break
+      // LIQUID OBJECT PROPERTY
+      // -----------------------------------------------------------------
+      case TokenType.ObjectProperty:
+        if (this.context) node.context(TokenContext.Property)
+        break
 
-        node.context(TokenContext.Property)
+      // LIQUID OBJECT PROPERTY STRING
+      // -----------------------------------------------------------------
+      case TokenType.ObjectPropertyString:
+        if (this.context) node.context(TokenContext.PropertyString)
+        break
 
+      // LIQUID OBJECT PROPERTY OBJECT
+      // -----------------------------------------------------------------
+      case TokenType.ObjectPropertyObject:
+        if (this.context) node.context(TokenContext.PropertyObject)
+        break
+
+      case TokenType.Filter:
+        if (this.context) node.context(TokenContext.Keyword)
+        break
+
+      case TokenType.FilterParameter:
+        if (this.context) node.context(TokenContext.Parameter)
         break
 
       // LIQUID CONTROL CONDITION

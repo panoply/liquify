@@ -1,6 +1,5 @@
 import stream from './parser/stream'
 import specs from './parser/specs'
-import increment from './parser/increment'
 import { parse } from './parser/parse'
 import options from './parser/options'
 
@@ -8,7 +7,10 @@ export class LiquidParser {
 
   constructor (configuration) {
 
-    this.config = { ...options, ...configuration }
+    this.config = {
+      ...options
+      , ...configuration
+    }
 
   }
 
@@ -28,7 +30,7 @@ export class LiquidParser {
 
   increment (param, contentChanges) {
 
-    return increment(param, contentChanges)
+    // return increment(param, contentChanges)
 
   }
 

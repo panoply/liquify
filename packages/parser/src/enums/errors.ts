@@ -1,4 +1,3 @@
-
 export const enum ErrorLevel {
   /**
    * Reports an error.
@@ -34,6 +33,13 @@ export const enum ParseError {
    */
   MissingObjectName,
   /**
+   * Object BracketNotation closer
+   *
+   * @example
+   * {{ object["foo" }}
+   */
+  MissingBracketNotation,
+  /**
    * Start Tag is missing
    *
    * @example
@@ -48,7 +54,7 @@ export const enum ParseError {
    * {% else %}
    */
   MissingEndTag,
-   /**
+  /**
    * Missing Open Delimeters
    *
    * @example
@@ -127,6 +133,13 @@ export const enum ParseError {
    */
   InvalidCharacter,
   /**
+   * Invalid String Quotation match
+   *
+   * @example
+   * {{ object["prop'] }}
+   */
+  InvalidQuotation,
+  /**
    * Invalid Syntactic
    *
    * Thrown (generally) when the parser encounters a
@@ -150,19 +163,22 @@ export const enum ParseError {
    * Reject String
    *
    * @example
-   * {% 'assign' = 'x' -%} // asssign should not be string
+   * {% 'assign' = 'x' -%} // assign should not be string
    * {%- increment '1' -%} // increment should not be string
    */
   RejectString,
   /**
    * Reject Number
+   *
+   * @example
+   * {{ 100 }} // number cannot be used as object name
    */
   RejectNumber,
   /**
    * Reject Boolean
    *
    * @example
-   * {% for x in false }}
+   * {% for x in false %}
    */
   RejectBoolean,
   /**
@@ -194,7 +210,14 @@ export const enum ParseError {
    * @example
    * {%- schema -%} // dash "-" is not allowed
    */
-  RejectWhitespaceControl
+  RejectWhitespaceControl,
+  /**
+   * Warn Extrenous Whitespace
+   *
+   * @example
+   * {{- foo.  prop -}}
+   * {{- foo ['prop'] }}
+   * {{- foo ['    prop'] }}
+   */
+  WarnWhitespace,
 }
-
-

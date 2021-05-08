@@ -1,14 +1,14 @@
 /**
  * `{` | `<` | `"` etc
  *
- * Sequence Characters, to delimeter starters
+ * Sequence Characters, to delimiter starters
  */
 export const SequenceCharacters = /[\r\n'"{-]/
 
 /**
  * `{% if condition %}` > `condition`
  *
- * Liquid Condition Indentifiers
+ * Liquid Condition Identifiers
  */
 export const IdentifierCondition = /^(?:[^"'\W\s]+|[.-]+)+/
 

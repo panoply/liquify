@@ -10,9 +10,14 @@
  */
 export const enum TokenContext {
   /**
-   * Whitespace Delimeter Dash: `-`
+   * Trim Whitespace Delimeter Dash LEft: `-`
    */
-  Dash = "Dash",
+  LeftTrim = "TrimLeft",
+
+  /**
+   * Trim Whitespace Delimeter Dash LEft: `-`
+   */
+  RightTrim = "TrimRight",
 
   /**
    * Whitespace: `\s`
@@ -32,10 +37,10 @@ export const enum TokenContext {
   /**
    * The tag name
    */
-  Identifier = "Indentifier",
+  Identifier = "Identifier",
 
   /**
-   * Control Operators `!=|==|<|>|<=|=>|and|or`
+   * Control Operators `!=|==|<|>|<=|=>|and|or|contains`
    */
   Operator = "Operator",
 
@@ -90,9 +95,29 @@ export const enum TokenContext {
   Object = "Object",
 
   /**
-   * An object value: `object.prop`
+   * An object property value: `object.prop`
    */
   Property = "Property",
+
+  /**
+   * An object or array property bracket value: `[`
+   */
+  OpenBracket = "OpenBracket",
+
+  /**
+   * An object or array property bracket value: `]`
+   */
+  CloseBracket = "CloseBracket",
+
+  /**
+   * An object string property value: `object[name.prop]`
+   */
+  PropertyObject = "PropertyObject",
+
+  /**
+   * An object string property value: `object["prop"]`
+   */
+  PropertyString = "PropertyString",
 
   /**
    * Array value (used in iteration)
@@ -103,6 +128,11 @@ export const enum TokenContext {
    * Range value (used in iteration): `(1..2)`
    */
   Range = "Range",
+
+  /**
+   * Control Condition
+   */
+  Parameter = "Parameter",
 
   /**
    * Empty Drop (used on objects)

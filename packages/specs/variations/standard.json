@@ -214,15 +214,11 @@
       "description": "Replaces every occurrence of the first argument in a string with the second argument",
       "ref": "https://shopify.github.io/liquid/filters/replace/",
       "snippet": "replace: '${1}', '${2}' ${0}",
-      "parameters": [
-        {
-          "accepts": "String",
-          "required": true
-        },
-        {
-          "accepts": "String",
-          "required": true
-        }
+      "match": [
+        "$colon",
+        "$variable",
+        "$comma",
+        "$variable"
       ]
     },
     "replace_first": {
@@ -500,7 +496,11 @@
           "name": "range",
           "snippet": "(${1}..${2})${0}",
           "context": [
-            "$parenthesis{$number|$variable}~$dot~$dot~{$number|$variable}~$parenthesis"
+            "$parenthesis",
+            "$number|$object|$variable|$string",
+            "$dot+$dot",
+            "$number|$object|$variable|$string",
+            "$parenthesis"
           ]
         },
         {
@@ -508,8 +508,9 @@
           "name": "limit",
           "snippet": "limit: ${1} ${0}",
           "context": [
-            "$keyword$colon",
-            "$number|$variable"
+            "$keyword",
+            "$colon",
+            "$number|$object|$variable"
           ]
         },
         {

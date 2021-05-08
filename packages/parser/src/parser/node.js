@@ -1,4 +1,5 @@
 import { TokenKind } from '../enums/kinds'
+import { TokenContext } from '../enums/context'
 import scanner from './scanner'
 import specs from './specs'
 import Errors from './errors'
@@ -71,7 +72,7 @@ export default class Node {
    *
    * @type {Parser.Range}
    */
-  range = { start: scanner.position }
+  range = { start: scanner.range.start }
 
   /**
    * Start Offset - Left most starting index
@@ -104,9 +105,9 @@ export default class Node {
   /**
    * String Literal tokens
    *
-   * @type{string[]}
+   * @type{string}
    */
-  token = []
+  token = ''
 
   /**
    * String Literal tokens
@@ -191,6 +192,7 @@ export default class Node {
 
   }
 
+
   /**
    * Get Errors
    *
@@ -208,13 +210,12 @@ export default class Node {
    */
   error (error = undefined) {
 
-    console.log('IN A ERROR', error)
-
-    if (!error) return Node.errors
+    if (!error) return
 
     const diagnostic = {
       ...Errors(error)
       , range: scanner.range
+      , token: scanner.token
       , node: Node.size
     }
 
@@ -247,8 +248,10 @@ export default class Node {
         ...this._context
         , {
           type,
-          value: scanner.token,
-          range: scanner.range
+          range: scanner.range,
+          value: (
+            TokenContext.Newline  === type || TokenContext.Whitespace  === type
+          ) ? scanner.space : scanner.token
         }
       ]
     }

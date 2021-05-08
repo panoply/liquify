@@ -56,8 +56,7 @@ export default {
   [
     noderesolve({ extensions: [ '.ts', '.js' ] }),
     terser({
-      ecma: 6
-      , warnings: 'verbose'
+      warnings: 'verbose'
       , compress: { passes: 2 }
     }),
     filesize({

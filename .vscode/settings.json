@@ -61,7 +61,7 @@
         }
       ]
     },
-    "\"?([\\|~-])[{}]?(?=\\$)": {
+    "\"?([\\|+-])[{}]?(?=\\$)": {
       "regexFlags": "g",
       "filterLanguageRegex": "json",
       "filterFileRegex": ".*\\.json",

@@ -4,37 +4,37 @@
 export const ARS = '*'.charCodeAt(0)
 
 /**
- * `<` – Left Angle Bracket - Used in HTML delimeters and Liquid operators
+ * `<` – Left Angle Bracket - Used in HTML delimiters and Liquid operators
  */
 export const LAN = '<'.charCodeAt(0)
 
 /**
- * `>` – Right Angle Bracket - Used in HTML delimeters and Liquid operators
+ * `>` – Right Angle Bracket - Used in HTML delimiters and Liquid operators
  */
 export const RAN = '>'.charCodeAt(0)
 
 /**
- * `{` – Left Curly Brace - Used in Liquid delimeters
+ * `{` – Left Curly Brace - Used in Liquid delimiters
  */
 export const LCB = '{'.charCodeAt(0)
 
 /**
- * `}` – Right Curly Brace - Used in Liquid delimeters
+ * `}` – Right Curly Brace - Used in Liquid delimiters
  */
 export const RCB = '}'.charCodeAt(0)
 
 /**
- * `!` – Bang chacter - Used in HTML comments and Liquid operators
+ * `!` – Bang chanter - Used in HTML comments and Liquid operators
  */
 export const BNG = '!'.charCodeAt(0)
 
 /**
- * `-` – Dash character - Used in Liquid delimeters (whitespace)
+ * `-` – Dash character - Used in Liquid delimiters (whitespace)
  */
 export const DSH = '-'.charCodeAt(0)
 
 /**
- * `%` – Percent character - Used in Liquid delimeters
+ * `%` – Percent character - Used in Liquid delimiters
  */
 export const PER = '%'.charCodeAt(0)
 

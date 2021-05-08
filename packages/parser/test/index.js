@@ -50,7 +50,7 @@ const fixture = ({ fixture }) => ({
 const parser = new LiquidParser({
   engine: 'shopify',
   frontmatter: false,
-  whitespace: false,
+  whitespace: true,
   range: true,
   offsets: true,
   process_unknown: true,
@@ -78,16 +78,17 @@ function AST (data) {
 
 }
 
-const doc = readFileSync(resolve('test/fixtures/text.txt'), 'utf8').toString()
+const doc = readFileSync(resolve('test/fixtures/objects.txt'), 'utf8').toString()
 
 test('FullDocument Parse', t => {
 
   // t.regex('fo%o', /^[^\s.[][a-zA-Z0-9$_-]+\b/)
+
   const start = process.hrtime()
   const node = AST({ fixture: doc })
   const end = process.hrtime(start)
 
-  t.log(node.ast[0]?.context(), node.ast, node.parseErrors)
+  console.log(node.ast, node.parseErrors)
   // t.log(node[0].context.filter(i => i.type !== 'Whitespace').map(i => i.value).join(' '))
   t.log(time(end, { verbose: true }))
   t.pass()

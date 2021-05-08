@@ -7,6 +7,11 @@ import { ParseError, ErrorLevel } from '../enums/errors'
  * @returns {Parser.IParseError}
  */
 export default (error = 0) => ({
+
+  /* -------------------------------------------- */
+  /* ERRORS                                       */
+  /* -------------------------------------------- */
+
   [ParseError.MissingTagName]: (
     {
       severity: ErrorLevel.Error,
@@ -18,6 +23,13 @@ export default (error = 0) => ({
     {
       severity: ErrorLevel.Error,
       message: 'Missing Object name',
+      range: {}
+    }
+  ),
+  [ParseError.MissingBracketNotation]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Missing Object Property Bracket Notation',
       range: {}
     }
   ),
@@ -59,7 +71,7 @@ export default (error = 0) => ({
   [ParseError.MissingQuotation]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Malformed string, missing quote',
+      message: 'Malformed string, missing quotation character',
       range: {}
     }
   ),
@@ -115,42 +127,42 @@ export default (error = 0) => ({
   [ParseError.RejectString]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'String value not accepted',
       range: {}
     }
   ),
   [ParseError.RejectNumber]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Number value not accepted',
       range: {}
     }
   ),
   [ParseError.RejectBoolean]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Boolean value not accepted',
       range: {}
     }
   ),
   [ParseError.RejectArray]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Array value not accepted',
       range: {}
     }
   ),
   [ParseError.RejectObject]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Object value not accepted',
       range: {}
     }
   ),
   [ParseError.RejectParameters]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Tag does not accept parameters',
       range: {}
     }
   ),
@@ -164,7 +176,19 @@ export default (error = 0) => ({
   [ParseError.RejectWhitespaceControl]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
+      message: 'Tag does not accept whitespace strips',
+      range: {}
+    }
+  ),
+
+  /* -------------------------------------------- */
+  /* WARNINGS                                     */
+  /* -------------------------------------------- */
+
+  [ParseError.WarnWhitespace]: (
+    {
+      severity: ErrorLevel.Warning,
+      message: 'Extraneous whitespace detected',
       range: {}
     }
   )

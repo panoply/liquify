@@ -1,14 +1,19 @@
 export const enum TokenType {
   /**
-   * Whitespace Characters `\s\t\r\f\n`
+   * Whitespace Characters `\s\t\f`
    */
   Whitespace,
+  /**
+   * Whitespace Characters `\r\n`
+   */
+  Newline,
 
   String,
 
   Separator,
 
   Filter,
+  FilterParameter,
 
   /**
    * Unknown Characters
@@ -34,15 +39,33 @@ export const enum TokenType {
   IterationParameter,
 
   IterationParameterValue,
-
+  /**
+   * Object
+   *
+   * **EXAMPLES**
+   *
+   * - `foo` in `{{ foo.bar }}`
+   * - `foo` in `{% if foo.bar %}`
+   */
   Object,
+  ObjectProperty,
+  ObjectPropertyString,
+  ObjectPropertyObject,
+  ObjectBracketNotationOpen,
+  ObjectBracketNotationClose,
 
-  ObjectProperties,
+  StringSingleQuote,
+  StringDoubleQuote,
 
   /**
-   * Unknown Characters
+   * Parsing Error
    */
   ParseError,
+
+  /**
+   * Parsing Warning
+   */
+  ParseWarning,
 
   /**
    * Unknown Characters
@@ -87,7 +110,12 @@ export const enum TokenType {
   /**
    * After Left side Whitespace Dash `-` _when_ `{%- tag %}`
    */
-  LiquidWhitespaceDash,
+  LiquidTrimDashLeft,
+
+  /**
+   * Before Right side Whitespace Dash `-` _when_ `{% tag -%}`
+   */
+  LiquidTrimDashRight,
 
   /**
    * Within Tag `{%- start -%}`
@@ -135,9 +163,14 @@ export const enum TokenType {
   LiquidObjectTagOpen,
 
   /**
-   * Within Tag `{{- object -}}`
+   * Within Tag `{{-^ object -}}`
    */
   LiquidObjectTag,
+
+  /**
+   * Before Name `{{ ^object }}`
+   */
+  LiquidObjectName,
 
   /**
    * After Delimeter `}}` _when_ `{{- tag -}}`

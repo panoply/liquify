@@ -1,5 +1,6 @@
 import { TokenTags } from '../enums/parse'
 import { Engines } from './options'
+import * as c from '../lexical/characters'
 
 export default new class Specs {
 
@@ -83,10 +84,30 @@ export default new class Specs {
    * @readonly
    * @memberof Specs
    */
-  get params () {
+  get hasParams () {
 
     // @ts-ignore
+    this.index = 0
     return this.#cursor?.parameters
+
+  }
+
+  /**
+   * Set Type
+   *
+   * @readonly
+   * @memberof Specs
+   * @returns {any}
+   */
+  get param () {
+
+    // @ts-ignore
+    return [
+      c.COL,
+      /^[$_a-zA-Z0-9"']/,
+      c.COM,
+      /^[$_a-zA-Z0-9"']/
+    ]
 
   }
 

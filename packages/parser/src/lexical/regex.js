@@ -7,7 +7,12 @@ export const DelimiterCharacters = /[{<]/
 /**
 * `^\{[{%]`
 */
-export const DelimiterCapture = /^\{[{%]/
+export const OpenDelimiters = /^\{[{%]/
+
+/**
+* `^[%}]\}`
+*/
+export const CloseDelimiters = /^[%}]\}/
 
 /**
 * `^[^\s"'>]+`
@@ -20,9 +25,14 @@ export const HTMLTagEnd = /^[^\s"'>]+/
 export const LiquidTagClose = /^-?[%}]\}/
 
 /**
-* `^[^0-9][$_a-zA-Z0-9-]+\b`
+* `^-?[}]{2}`
 */
-export const LiquidObjectName = /^[^0-9][$_a-zA-Z0-9-]+\b/
+export const LiquidObjectTagClose = /^-?\}\}/
+
+/**
+* `^[$_a-zA-Z0-9-"']*\b`
+*/
+export const LiquidObjectName = /^[$_a-zA-Z0-9-"']*\b/
 
 /**
 * `^[$a-zA-Z0-9_-]+\b`
@@ -53,3 +63,18 @@ export const LiquidControlOperators = /^[=!<>]{1,}|^[^\s]+\b/
 * `[\s\t\r\n]+`
 */
 export const WhitespaceCharacters = /[\s\t\r\n]+/
+
+/**
+* `[\n\r\f\c]`
+*/
+export const Newlines = /[\n\r\f]/
+
+/**
+* `[\s\t]`
+*/
+export const Whitespace = /[\s\t]/
+
+/**
+* `^[0-9]*$`
+*/
+export const Digits = /^[0-9]*$/

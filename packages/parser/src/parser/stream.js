@@ -1,6 +1,7 @@
 /* eslint one-var: ["error", { let: "never" } ] */
 
-import { WSP, TAB, NWL, LFD, CAR, BWS, DQO, SQO } from '../lexical/characters'
+import { WSP, TAB, NWL, LFD, CAR, BWS } from '../lexical/characters'
+import lineColumn from 'line-column'
 
 /**
  * Stream
@@ -15,7 +16,7 @@ import { WSP, TAB, NWL, LFD, CAR, BWS, DQO, SQO } from '../lexical/characters'
 export default (function Stream (string) {
 
   /**
-   * Index Offset
+   * Cursor Offset - used to consume strings
    *
    * @type {number}
    */
@@ -43,7 +44,14 @@ export default (function Stream (string) {
   let token
 
   /**
-   * Source Text Length - (cached for optimisation)
+   * Token Text
+   *
+   * @type {number}
+   */
+  let spaces
+
+  /**
+   * Source Text Length - (cached for optimization)
    *
    * @type {number}
    */
@@ -51,10 +59,14 @@ export default (function Stream (string) {
 
   return {
 
+    /* -------------------------------------------- */
+    /* INITIALIZER                                  */
+    /* -------------------------------------------- */
+
     create: string => Stream(string || ''),
 
     /* -------------------------------------------- */
-    /*               GETTERS / SETTERS              */
+    /* GETTERS / SETTERS                            */
     /* -------------------------------------------- */
 
     /**
@@ -72,28 +84,30 @@ export default (function Stream (string) {
     },
 
     /**
-     * Range
+     * Offset
      *
-     * Returns `start` and `end` range information
+     * Returns the current offset character position
      *
      * @memberof Stream
-     * @returns {object}
+     * @returns {number}
      */
-    get range () {
+    get cursor () {
 
-      const line = this.source.substring(0, index).split(/[\n\r\f]/).length - 1
-      const character = this.source.substring(index).search(/[\n\r\f]/)
+      return cursor
 
-      return {
-        start: {
-          line,
-          character: this.source.substring(character).length - 1
-        },
-        end: {
-          line: 0,
-          character: 0
-        }
-      }
+    },
+
+    /**
+     * Offset
+     *
+     * Returns the current offset character position
+     *
+     * @memberof Stream
+     * @returns {number}
+     */
+    get offset () {
+
+      return index
 
     },
 
@@ -103,16 +117,50 @@ export default (function Stream (string) {
      * Returns `start` and `end` range information
      *
      * @memberof Stream
-     * @returns {object}
+     * @returns {Parser.Range}
      */
-    get location () {
+    get range () {
 
-      const line = this.source.substring(0, index).split(/[\n\r\f]/).length - 1
-      const character = this.source.substring(index).search(/[\n\r\f]/)
       return {
-        line,
-        character: this.source.substring(character).length - 1
+        start: this.Position(cursor),
+        end: this.Position(index)
       }
+
+    },
+
+    /**
+     * Get Token
+     *
+     * @memberof Stream
+     * @returns {string}
+     */
+    get token () {
+
+      return token
+
+    },
+
+    /**
+     * Character Code
+     *
+     * @memberof Stream
+     * @returns {number}
+     */
+    get code () {
+
+      return this.source.charCodeAt(index)
+
+    },
+
+    /**
+     * Get Token
+     *
+     * @memberof Stream
+     * @returns {number}
+     */
+    get space () {
+
+      return spaces
 
     },
 
@@ -140,38 +188,9 @@ export default (function Stream (string) {
 
     },
 
-    Cursor (n = 0) {
-
-      cursor = n + index
-
-      return cursor
-
-    },
-
-    /**
-     * Range
-     *
-     * Returns `start` and `end` range information
-     *
-     * @param {number} start
-     * @param {number} end
-     * @memberof Stream
-     * @returns {object}
-     */
-    Range (start, end = 0) {
-
-      return {
-        start: {
-          line: 0,
-          character: start
-        },
-        end: {
-          line: 0,
-          character: end
-        }
-      }
-
-    },
+    /* -------------------------------------------- */
+    /* TOKENIZERS                                   */
+    /* -------------------------------------------- */
 
     /**
      * Get Token
@@ -182,14 +201,84 @@ export default (function Stream (string) {
      */
     Token (from = undefined) {
 
-      return from ? (token = this.source.substring(from)) : token
+      return from ? (token = this.source.substring(from, index)) : token
 
     },
 
     /**
-     * Matches a RegExp
+     * Tokenize
+     *
+     * Updates the token value by substring offsets
+     *
+     * @memberof Stream
+     * @param {number} [from] defaults to `cursor` offset
+     * @param {number} [to] defaults to `index` offset
+     * @returns {string}
+     */
+    Tokenize (from, to) {
+
+      token = this.source.substring(from || cursor, to || index)
+
+      return token
+
+    },
+
+    /**
+     * If Token Character
+     *
+     * Tests first character within token. Optionally will consume
+     * the character if returns `true`
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Incremented by a value of 1
+     * > - `token` Newly matched token
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {number} code
+     * @returns {boolean}
+     */
+    IfTokenChar (code) {
+
+      const exists = token.charCodeAt(0) === code
+
+      if (exists) {
+        token = token.substring(1)
+        cursor = cursor + 1
+        return true
+      }
+
+      return token.charCodeAt(0) === code
+
+    },
+
+    /**
+     * Test the current Token in stream
      *
      * WILL NOT MODIFY POSITION
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {RegExp} regex
+     * @returns {boolean}
+     */
+    IsToken (regex) {
+
+      return regex.test(token)
+
+    },
+
+    /**
+     * Matches a RegExp within the Token
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
      *
      * @memberof Stream
      * @param {RegExp} regex
@@ -202,121 +291,96 @@ export default (function Stream (string) {
 
       if (!match) return false
 
-      index += match.index + match[0].length - token.length
-      token = token.substring(0, match.index)
+      // index += match.index + match[0].length - token.length
+      // token = token.substring(0, match.index)
 
       return true
 
     },
 
     /* -------------------------------------------- */
-    /*                   FUNCTIONS                  */
+    /* POSITIONS                                    */
     /* -------------------------------------------- */
 
     /**
-     * Goto Offset Position
+     * Returns a cursor offset
      *
-     * WILL MODIFY POSITION
+     * This provides an addition marker point in the stream.
+     * It is used to track positions for tokens.
      *
-     * @memberof Stream
-     * @param {number} n
-     * @returns {number}
-     */
-    Jump (n) {
-
-      if (n > length) return this.GotoEnd()
-
-      return (index = n < 0 ? 0 : n)
-
-    },
-
-    /**
-     * Previous position
+     * WILL NOT MODIFY POSITION
      *
-     * WILL MODIFY POSITION
+     * ---
      *
-     * @memberof Stream
-     * @param {number} [n=1]
-     * @returns {number}
-     */
-    Prev (n = 1) {
-
-      return (index -= n)
-
-    },
-
-    /**
-     * Next Position
-     *
-     * WILL MODIFY POSITION
-     *
-     * @param {number} offset
-     * @returns {number}
-     */
-    Advance (offset) {
-
-      return (index += offset)
-
-    },
-
-    /**
-     * Goto End Position
-     *
-     * WILL MODIFY POSITION
+     * @param {number} [offset]
+     * Passing a value of `NaN` will reset cursor to `0` when
+     * no value is passed, cursor will align with `index`
      *
      * @memberof Stream
      * @returns {number}
      */
-    GotoEnd () {
+    Cursor (offset = 0) {
 
-      // reset stream position
-      index = length
-      cursor = index
+      cursor = isNaN(offset)
+        ? 0
+        : offset > 0
+          ? (offset + index)
+          : offset < 0
+            ? (index - Math.abs(offset))
+            : offset > index
+              ? offset
+              : index
 
-      return length
-
-    },
-
-    /**
-     * Previous Code Character
-     *
-     * WILL NOT MODIFY OFFSET POSITION
-     *
-     * @memberof Stream
-     * @param {number} char
-     * @returns {boolean}
-     */
-    IfPrevCodeChar (char) {
-
-      return this.source.charCodeAt(index - 1) === char
+      return cursor
 
     },
 
     /**
-     * Next Code Character
+     * Position
      *
-     * WILL NOT MODIFY OFFSET POSITION
+     * Returns `line` and `character` range information.
+     * Line and Column offset Positions are using a `0`
+     * zero-based offset.
      *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
+     *
+     * @param {number} [offset] defaults to index
      * @memberof Stream
-     * @param {number} code
-     * @returns {boolean}
+     * @returns {Parser.Location}
      */
-    IfNextCodeChar (code) {
+    Position (offset = index) {
 
-      return this.source.charCodeAt(index + 1) === code
+      const { line, col } = lineColumn(this.source).fromIndex(offset)
+
+      return {
+        line,
+        character: col
+      }
 
     },
 
     /**
-     * Current Code Character Truthy
+     * Range
      *
+     * Returns `start` and `end` range information
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
+     *
+     * @param {number} [start] defaults to cursor
+     * @param {number} [end] defaults to current index
      * @memberof Stream
-     * @param {number} code
-     * @returns {boolean}
+     * @returns {Parser.Range}
      */
-    IsCodeChar (code) {
+    Range (start = cursor, end = index) {
 
-      return code === this.GetCodeChar()
+      return {
+        start: this.Position(start),
+        end: this.Position(end)
+      }
 
     },
 
@@ -338,8 +402,162 @@ export default (function Stream (string) {
 
     },
 
+    /* -------------------------------------------- */
+    /* MODIFIERS                                    */
+    /* -------------------------------------------- */
+
+    /**
+     * Goto Offset Position
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `index` Moves to new offset
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {number} n
+     * @returns {number}
+     */
+    Jump (n) {
+
+      if (n > length) return this.GotoEnd()
+
+      return (index = n < 0 ? 0 : n)
+
+    },
+
+    /**
+     * Previous position
+     *
+      * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `index` Decrements value by `1`
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {number} [n=1]
+     * @returns {number}
+     */
+    Prev (n = 1) {
+
+      return (index -= n)
+
+    },
+
+    /**
+     * Next Position
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `index` Moves to new offset
+     * > - `token` Character is tokenized (optional)
+     *
+     * ---
+     *
+     * @param {number} offset
+     * @param {boolean} [tokenize=false]
+     * @returns {number}
+     */
+    Advance (offset, tokenize = false) {
+
+      index = index + offset
+
+      if (tokenize) token = this.source.substring(cursor, index)
+
+      return index
+
+    },
+
+    /**
+     * Goto End Position
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to end of stream
+     * > - `index` Moves to end of stream
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @returns {number}
+     */
+    GotoEnd () {
+
+      // reset stream position
+      index = length
+      cursor = index
+
+      return length
+
+    },
+
+    /**
+     * Previous Code Character
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {number} char
+     * @returns {boolean}
+     */
+    IfPrevCodeChar (char) {
+
+      return this.source.charCodeAt(index - 1) === char
+
+    },
+
+    /**
+     * Next Code Character
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {number} code
+     * @returns {boolean}
+     */
+    IfNextCodeChar (code) {
+
+      return this.source.charCodeAt(index + 1) === code
+
+    },
+
+    /**
+     * Current Code Character Truthy
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {number} code
+     * @returns {boolean}
+     */
+    IsCodeChar (code) {
+
+      return code === this.GetCodeChar()
+
+    },
+
     /**
      * Get Code Character
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
      *
      * @memberof Stream
      * @param {number} [advance]
@@ -347,12 +565,16 @@ export default (function Stream (string) {
      */
     GetCodeChar (advance = 0) {
 
-      return this.source.charCodeAt(advance > index ? index + advance : advance)
+      return this.source.charCodeAt(advance > index ? index + advance : index)
 
     },
 
     /**
      * Get Character
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
      *
      * @memberof Stream
      * @param {number} [advance]
@@ -360,12 +582,16 @@ export default (function Stream (string) {
      */
     GetChar (advance = 0) {
 
-      return this.source.charAt(advance > index ? index + advance : advance)
+      return this.source.charAt(advance > index ? advance : (index + advance))
 
     },
 
     /**
      * Get String
+     *
+     * WILL NOT MODIFY POSITION
+     *
+     * ---
      *
      * @memberof Stream
      * @param {number} start
@@ -382,9 +608,19 @@ export default (function Stream (string) {
 
     /**
      * Skip String
-     * Consumes a string value between 2 quotes
      *
-     * WILL MODIFIES POSITION
+     * Consumes a string value between 2 quotes. Moves the index to
+     * ending point of match (after last match quotation character).
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to start of match (before quote)
+     * > - `index` Moves to end of match (after quote)
+     * > - `token` Match is Tokenized (without quotes)
+     *
+     * ---
      *
      * @param {number} n
      * The position offset, default is current stream position
@@ -405,6 +641,7 @@ export default (function Stream (string) {
         index = this.Advance(1)
         return false
       }
+
       // consume escaped strings, eg: \" or \'
       if (this.GetCodeChar(offset - 1) === BWS) return this.SkipQuotedString(offset)
 
@@ -415,6 +652,7 @@ export default (function Stream (string) {
         }
       }
 
+      cursor = index
       index = offset + 1
       token = this.source.substring(n + 1, offset)
 
@@ -423,30 +661,21 @@ export default (function Stream (string) {
     },
 
     /**
-     * Skip skipWhitespace
+     * Consume Unless
      *
-     * WILL MODIFY POSITION
+     * Advances Stream until a Regular Expression match is found.
+     * If the consumed portion of the match between its starting point
+     * and the matched point matches the passed `unless` expression
+     * that match will return false and consumption cancelled.
      *
-     * @memberof Stream
-     * @returns {boolean}
-     * @see https://git.io/JJnq8
-     */
-    SkipWhitespace () {
-
-      return this.WhileChar(charCode => (
-        charCode === WSP ||
-        charCode === TAB ||
-        charCode === NWL ||
-        charCode === LFD ||
-        charCode === CAR
-      )) > 0
-
-    },
-
-    /**
-     * Advances Stream until a Regular Expression match is found
+     * ---
      *
-     * WILL MODIFY POSITION
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to match index (align with index)
+     * > - `index` Moves to match index (cursor is aligned)
+     *
+     * ---
      *
      * @memberof Stream
      * @param {RegExp} regex
@@ -461,25 +690,36 @@ export default (function Stream (string) {
       if (match < 0) return false
 
       if (!unless.test(this.source.substring(index, this.Offset(match)))) {
-        // console.log(this.source.substring(index), match)
-
-        this.Advance(match)
+        cursor = index + match
+        index = cursor
         return true
       }
 
       // this.advance(1)
+
       return false
 
     },
 
     /**
-     * Advances Stream until a Regular Expression match is found
+     * Until Sequence
      *
-     * WILL MODIFY POSITION
+     * Advances Stream until a Regular Expression match is found
+     * and returns the character code that has matched. index is moved
+     * to the position before the match.
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to match index (align with index)
+     * > - `index` Moves to match index (cursor is aligned)
+     *
+     * ---
      *
      * @memberof Stream
      * @param {RegExp} regex
-     * @returns {(NaN|number)}
+     * @returns {(NaN|number)} character code
      * @see https://git.io/JJnqn
      */
     UntilSequence (regex) {
@@ -491,18 +731,33 @@ export default (function Stream (string) {
         return NaN
       }
 
-      return this.source.charCodeAt(index += match)
+      cursor = index += match
+      index = cursor
+
+      return this.source.charCodeAt(index)
 
     },
 
     /**
-     * Advances Stream until a Regular Expression match is found
+     * If Sequence
      *
-     * WILL MODIFY POSITION
+     * Advances Stream until a Regular Expression match is found.
+     * The match is not consumed, index is moved to the position
+     * before the match.
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to match index (align with index)
+     * > - `index` Moves to match index (cursor is aligned)
+     * > - `token` Character is tokenized (optional)
+     *
+     * ---
      *
      * @memberof Stream
      * @param {RegExp} regex
-     * @param {boolean} tokenize
+     * @param {boolean} [tokenize=true]
      * @returns {(boolean)}
      * @see https://git.io/JJnqn
      */
@@ -514,8 +769,8 @@ export default (function Stream (string) {
       if (match < 0) return false
       if (tokenize) token = substring.substring(0, match)
 
-      console.log(match, index)
-      this.Advance(match)
+      cursor = index + match
+      index = cursor
 
       return true
 
@@ -524,11 +779,13 @@ export default (function Stream (string) {
     /**
      * While Character
      *
-     * WILL MODIFY POSITION
+     * **MODIFIER**
+     *
+     * ---
      *
      * @memberof Stream
      * @param {function} condition
-     * @returns {number}
+     * @returns {boolean}
      */
     WhileChar (condition) {
 
@@ -536,14 +793,90 @@ export default (function Stream (string) {
 
       while (index < length && condition(this.source.charCodeAt(index))) index++
 
-      return index - pos
+      if (pos < index) {
+        spaces = index - pos
+        return true
+      }
+
+      return false
 
     },
 
     /**
-     * Advances Stream when Regular Expression finds a match
+     * Skip skipWhitespace
      *
-     * WILL MODIFY POSITION
+     * **MODIFIER**
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @returns {boolean}
+     * @see https://git.io/JJnq8
+     */
+    SkipWhitespace () {
+
+      return this.WhileChar(charCode => (
+        charCode === WSP ||
+        charCode === TAB ||
+        charCode === NWL ||
+        charCode === LFD ||
+        charCode === CAR
+      ))
+
+    },
+
+    /**
+     * Skip Newlines
+     *
+     * **MODIFIER**
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @returns {boolean}
+     * @see https://git.io/JJnq8
+     */
+    SkipNewlines () {
+
+      return this.WhileChar(charCode => (
+        charCode === NWL ||
+        charCode === LFD ||
+        charCode === CAR
+      ))
+
+    },
+
+    /**
+     * If previous characters were whitespace
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {RegExp} regex
+     * @param {number} [reverse=1]
+     * The amount of steps to reverse from current index
+     * @returns {boolean}
+     * @see https://git.io/JJnq8
+     */
+    IsPrevRegExp (regex, reverse = 1) {
+
+      return regex.test(this.source.substring(index - reverse, index))
+
+    },
+
+    /**
+     * If RegExp Match
+     *
+     * Advances Stream when Regular Expression finds a match.
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to match start
+     * > - `index` Moves to match end
+     * > - `token`  Character is tokenized
+     * ---
      *
      * @memberof Stream
      * @param {RegExp} regex
@@ -556,7 +889,8 @@ export default (function Stream (string) {
 
       if (!match) return false
 
-      index += match.index + match[0].length
+      cursor = index + match.index
+      index = cursor + match[0].length
       token = match[0]
 
       return true
@@ -567,6 +901,8 @@ export default (function Stream (string) {
      * Matches a RegExp
      *
      * WILL NOT MODIFY POSITION
+     *
+     * ---
      *
      * @memberof Stream
      * @param {RegExp} regex
@@ -582,7 +918,15 @@ export default (function Stream (string) {
     /**
      * Advances Stream until a Regular Expression match is found
      *
-     * WILL MODIFY POSITION
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to match start
+     * > - `index` Moves to match end
+     * > - `token` Match is tokenized
+     *
+     * ---
      *
      * @memberof Stream
      * @param {RegExp} regex
@@ -599,30 +943,34 @@ export default (function Stream (string) {
         return ''
       }
 
-      index = index + (
-        consume
-          ? match.index + match[0].length + 1
-          : match.index
-      )
+      cursor = index + match.index
+      index = consume ? cursor + match[0].length : cursor
+      token = match[0]
 
       return match[0]
 
     },
 
     /**
-     * Advances Stream until a single matching Character Code is found
+     * If Code Character
      *
-     * WILL MODIFY POSITION BY 1
+     * Advances stream if passed Character Code is matching
+     * the current index. If matched, index  increments by a value
+     * of 1 and consume the character
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to index before match
+     * > - `index`  Increments by `1`
+     * > - `token`  Character is tokenized (optional)
+     *
+     * ---
      *
      * @memberof Stream
-     *
-     * @param {number} code
-     * The character code number
-     *
+     * @param {number} code The character code number
      * @param {boolean} [tokenize=true]
-     * Defaults to `true` wherein matched character is
-     * applied to `token`
-     *
      * @link https://git.io/JJnq3
      * @returns {boolean}
      */
@@ -630,6 +978,7 @@ export default (function Stream (string) {
 
       if (code === this.source.charCodeAt(index)) {
         if (tokenize) token = this.source.charAt(index)
+        this.Cursor()
         this.Advance(1)
         return true
       }
@@ -639,10 +988,24 @@ export default (function Stream (string) {
     },
 
     /**
-     * Each Code Character - Converts and match string sequence
+     * Each Code Character
+     *
+     * Converts and matches string sequence of character codes
+     * starting from current index offset, increments index
+     * by parameter list length.
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves index before match
+     * > - `index` Increments by value of array length
+     * > - `token` Characters are tokenized
+     *
+     * ---
      *
      * @memberof Stream
-     * @param {number[]} codes
+     * @param {number[]} List of character codes
      * @returns {boolean}
      * @see https://git.io/JJnqt
      */
@@ -650,7 +1013,9 @@ export default (function Stream (string) {
 
       if (codes.every((c, i) => c === this.GetCodeChar(index + i))) {
 
+        cursor = index
         index += codes.length
+        token = this.source.substring(cursor, index)
 
         return true
 
@@ -661,20 +1026,41 @@ export default (function Stream (string) {
     },
 
     /**
-     * Advances Stream until a single matching Character Code is found
+     * Until Character Code
      *
-     * WILL MODIFY POSITION
+     * Advances Stream until a single matching Character Code is found.
+     * The matching character code is not consumed, index is moved to
+     * the position before the match.
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `index` Moves to offset before match
+     * > - `token` Tokenize until character (optional)
+     * ---
      *
      * @memberof Stream
-     * @param {number} char
+     * @param {number} code
+     * @param {boolean} [tokenize=false]
      * @returns {boolean}
      * @see https://git.io/JJnqt
      */
-    UntilChar (char) {
+    UntilChar (code, tokenize = false) {
 
+      if (tokenize) cursor = index
+
+      console.log(cursor)
       while (index < this.source.length) {
-        if (this.source.charCodeAt(index) === char) return true
+
+        if (this.source.charCodeAt(index) === code) {
+          console.log(index)
+          if (tokenize) token = this.source.substring(cursor, index)
+          return true
+        }
+
         this.Advance(1)
+
       }
 
       return false
@@ -682,7 +1068,9 @@ export default (function Stream (string) {
     },
 
     /**
-     * Each Code Character - Converts and match string sequence
+     * Each Code Character
+     *
+     * Converts and matches string sequence
      *
      * @memberof Stream
      * @param {string|number[]} string
