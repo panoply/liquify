@@ -4,7 +4,9 @@
 export const enum ScanCache {
   Reset,
   SkipClose,
-  BracketNotationStart,
+  TrimRight,
+  Tokenize,
+  BracketNotation,
   BracketNotationObject,
   BracketNotationString,
   BracketNotationVariable,
@@ -59,6 +61,64 @@ export const enum ScanState {
   SkipTag,
 
   /* -------------------------------------------- */
+  /* LIQUID TAG TYPES                             */
+  /* -------------------------------------------- */
+
+  /**
+   * Tag is a Associate Type
+   */
+  IsAssociate,
+
+  /**
+   * Tag is a Control type
+   */
+
+  IsControl,
+
+  /**
+   * Tag is a Comment type
+   */
+  IsComment,
+
+  /**
+   * Tag is a Embedded Language type
+   */
+  IsEmbedded,
+
+  /**
+   * Tag is a Import type
+   */
+  IsImport,
+
+  /**
+   * Tag is a Iteration type
+   */
+  IsIteration,
+
+  IsKnownObject,
+  IsUnknownObject,
+
+  /**
+   * Tag has Filter
+   */
+  IsFilter,
+
+  /**
+   * Tag is a Variable type
+   */
+  IsVariable,
+
+  /**
+   * Tag is a Raw type
+   */
+  IsRaw,
+
+  /**
+   * Tag is a Raw type
+   */
+  IsUnknown,
+
+  /* -------------------------------------------- */
   /* FRONTMATTER                                  */
   /* -------------------------------------------- */
 
@@ -103,11 +163,11 @@ export const enum ScanState {
   TagOpenTrim,
 
   /**
-   * `%}^` or `}}^`
+   * `^%}` or `^}}`
    *
    * ---
    *
-   * Position is after left side liquid tag delimiter tag
+   * Position is before left side liquid tag delimiter tag
    */
   TagClose,
 
@@ -377,7 +437,7 @@ export const enum ScanState {
    *
    * Position is after double dot seperators of a range
    */
-  IterationRangeSeperators,
+  IterationRangeSeparators,
 
   /**
    * `{% for i in (1..10^`
@@ -489,7 +549,7 @@ export const enum ScanState {
    * Position is either after a parameter seperator when seperator
    * is whitespace or will be after the seperator when its comma value.
    */
-  ParameterSeperator,
+  ParameterSeparator,
 
   /**
    * `{% tag param:^` or `{% tag , param = ^`

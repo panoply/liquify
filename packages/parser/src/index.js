@@ -2,6 +2,7 @@ import stream from './parser/stream'
 import specs from './parser/specs'
 import { parse } from './parser/parse'
 import options from './parser/options'
+import Node from './parser/node'
 
 export class LiquidParser {
 
@@ -11,6 +12,12 @@ export class LiquidParser {
       ...options
       , ...configuration
     }
+
+  }
+
+  get errors () {
+
+    return Node.errors
 
   }
 

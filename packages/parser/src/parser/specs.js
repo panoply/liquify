@@ -19,6 +19,13 @@ export default new class Specs {
   #type = undefined
 
   /**
+   * Specification Type
+   *
+   * @type {array}
+   */
+  #variables = []
+
+  /**
    * Cursor (currently active tag in parse)
    *
    * @type {Parser.NodeSpecification}
@@ -84,6 +91,31 @@ export default new class Specs {
    * @readonly
    * @memberof Specs
    */
+  get hasSpec () {
+
+    // @ts-ignore
+    return this.#cursor !== undefined
+
+  }
+
+  /**
+   * Set Type
+   *
+   * @memberof Specs
+   */
+  hasProperty (property) {
+
+    // @ts-ignore
+    return this.#variables.indexOf(property) !== -1
+
+  }
+
+  /**
+   * Set Type
+   *
+   * @readonly
+   * @memberof Specs
+   */
   get hasParams () {
 
     // @ts-ignore
@@ -110,6 +142,13 @@ export default new class Specs {
     ]
 
   }
+
+  hasVariable(variable) {
+
+    return this.#variables.indexOf(variable) !== -1
+
+  }
+
 
   parameter() {
 

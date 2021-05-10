@@ -18,38 +18,25 @@ export default (
       },
       tests: (
         [
-          {
-            test: 'name',
-            assert: 'name'
-          },
-          {
-            test: 'name.prop',
-            assert: 'name'
-          },
-          {
-            test: '$name[\'prop\']',
-            assert: '$name'
-          },
-          {
-            test: '_name["prop"]',
-            assert: '_name'
-          },
-          {
-            test: 'name[object.prop]',
-            assert: 'name'
-          },
-          {
-            test: 'name-dash\n\n',
-            assert: 'name-dash'
-          },
-          {
-            test: 'name\nnewline',
-            assert: 'name'
-          },
-          {
-            test: '$_name',
-            assert: '$_name'
-          }
+          '{{ name }}'
+          ,
+          '{{ name.prop }}'
+          ,
+          '{{ $name[\'prop\'] }}'
+          ,
+          '{{ _name["prop"] }}'
+          ,
+          '{{ name[object.prop] }}'
+          ,
+          '{{ name[object.prop]["string_prop"] }}'
+          ,
+          '{{ name.prop[object.prop.foo]["string_prop"][bar.baz] }}'
+          ,
+          '{{ name-dash\n\n }}'
+          ,
+          '{{ name\nnewline }}'
+          ,
+          '{{ $_name }}'
         ]
       )
     }

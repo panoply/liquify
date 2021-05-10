@@ -1,8 +1,13 @@
-{{- product.object[collection.name]
-| replace: 'foo', 'bar'
+{{ name }}
+      {{ name.prop. }}
+      {{ $name['prop'] }}
+      {{ _name["prop"] }}
+      {{ name[object.prop] }}
+      {{ name[object.prop]["string_prop"] }}
+      {{ name.prop[object.prop.foo]["string_prop"][bar.baz] }}
+      {{ name-dash
 
-| append: 'foo' -}}
-
-{{-
-collection[product.name] | prepend: 'foo' | append: 'foo' -}}
-
+       }}
+      {{ name
+      newline }}
+      {{ $_name }}

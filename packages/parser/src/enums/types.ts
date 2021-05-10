@@ -51,6 +51,7 @@ export const enum TokenType {
   ObjectProperty,
   ObjectPropertyString,
   ObjectPropertyObject,
+  ObjectDotNotation,
   ObjectBracketNotationOpen,
   ObjectBracketNotationClose,
 

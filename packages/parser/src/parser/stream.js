@@ -45,7 +45,14 @@ export default (function Stream (string) {
   let token
 
   /**
-   * Token Text
+   * Token Clip
+   *
+   * @type {string}
+   */
+  let clip
+
+  /**
+   * Whitespace Counter
    *
    * @type {number}
    */
@@ -260,24 +267,45 @@ export default (function Stream (string) {
     /**
      * Test the current Token in stream
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
      * @memberof Stream
-     * @param {RegExp} regex
+     * @param {RegExp|number} test
      * @returns {boolean}
      */
-    IsToken (regex) {
+    TokenClip (test) {
 
-      return regex.test(token)
+      return typeof test === 'number'
+        ? token.charCodeAt(0) === test
+        : test.test(token)
+
+    },
+
+    /**
+     * Test the current Token in stream
+     *
+     * **DOES NOT MODIFY**
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {RegExp|number} test
+     * @returns {boolean}
+     */
+    IsToken (test) {
+
+      return typeof test === 'number'
+        ? token.charCodeAt(0) === test
+        : test.test(token)
 
     },
 
     /**
      * Matches a RegExp within the Token
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -309,7 +337,7 @@ export default (function Stream (string) {
      * This provides an addition marker point in the stream.
      * It is used to track positions for tokens.
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -343,7 +371,7 @@ export default (function Stream (string) {
      * Line and Column offset Positions are using a `0`
      * zero-based offset.
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -367,7 +395,7 @@ export default (function Stream (string) {
      *
      * Returns `start` and `end` range information
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -391,7 +419,7 @@ export default (function Stream (string) {
      * If a number is passed, return value
      * will be added to current index, but will not be adjusted.
      *
-     * WILL NOT MODIFY OFFSET POSITION
+     * **DOES NOT MODIFY**
      *
      * @memberof Stream
      * @param {number} [offset]
@@ -438,6 +466,7 @@ export default (function Stream (string) {
      * **MODIFIER**
      *
      * > - `index` Decrements value by `1`
+     * > - `cursor`Decrements value by `1`
      *
      * ---
      *
@@ -447,7 +476,10 @@ export default (function Stream (string) {
      */
     Prev (n = 1) {
 
-      return (index -= n)
+      cursor = cursor - n
+      index = index - n
+
+      return index
 
     },
 
@@ -505,7 +537,7 @@ export default (function Stream (string) {
     /**
      * Previous Code Character
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -522,7 +554,7 @@ export default (function Stream (string) {
     /**
      * Next Code Character
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -539,7 +571,7 @@ export default (function Stream (string) {
     /**
      * Current Code Character Truthy
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -556,7 +588,7 @@ export default (function Stream (string) {
     /**
      * Get Code Character
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -573,7 +605,7 @@ export default (function Stream (string) {
     /**
      * Get Character
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -590,7 +622,7 @@ export default (function Stream (string) {
     /**
      * Get String
      *
-     * WILL NOT MODIFY POSITION
+     * **DOES NOT MODIFY**
      *
      * ---
      *
@@ -655,7 +687,7 @@ export default (function Stream (string) {
 
       cursor = index
       index = offset + 1
-      token = this.source.substring(n + 1, offset)
+      token = this.source.substring(n, offset + 1)
 
       return true
 
@@ -673,26 +705,29 @@ export default (function Stream (string) {
      *
      * **MODIFIER**
      *
-     * > - `cursor` Moves to match index (align with index)
-     * > - `index` Moves to match index (cursor is aligned)
+     * > - `cursor` Moves to the length of last token match
+     * > - `index` Moves to new match index
+     * > - `token` Match is tokenized from current to new index
      *
      * ---
      *
      * @memberof Stream
      * @param {RegExp} regex
      * @param {RegExp} unless
+     * @param {boolean} tokenize
      * @returns {boolean}
      * @see https://git.io/JJnqn
      */
-    ConsumeUnless (regex, unless) {
+    ConsumeUnless (regex, unless, tokenize = true) {
 
-      const match = this.source.substring(index).search(regex)
+      const match = this.source.substring(index).match(regex)
 
-      if (match < 0) return false
+      if (match.index < 0) return false
 
-      if (!unless.test(this.source.substring(index, this.Offset(match)))) {
-        cursor = index + match
-        index = cursor
+      if (!unless.test(this.source.substring(index, this.Offset(match.index)))) {
+        index = index + match.index
+        cursor = cursor + token.length
+        token = this.source.substring(cursor, index)
         return true
       }
 
@@ -804,9 +839,11 @@ export default (function Stream (string) {
     },
 
     /**
-     * Skip skipWhitespace
+     * Skips all whitespace and newlines
      *
      * **MODIFIER**
+     *
+     * > - `index` Moves to match end
      *
      * ---
      *
@@ -815,6 +852,31 @@ export default (function Stream (string) {
      * @see https://git.io/JJnq8
      */
     SkipWhitespace () {
+
+      return this.WhileChar(charCode => (
+        charCode === WSP ||
+        charCode === TAB ||
+        charCode === NWL ||
+        charCode === LFD ||
+        charCode === CAR
+      ))
+
+    },
+
+    /**
+     * Skip skipWhitespace
+     *
+     * **MODIFIER**
+     *
+     * > - `index` Moves to match end
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @returns {boolean}
+     * @see https://git.io/JJnq8
+     */
+    Whitespace () {
 
       return this.WhileChar(charCode => (
         charCode === WSP ||
@@ -828,13 +890,15 @@ export default (function Stream (string) {
      *
      * **MODIFIER**
      *
+     * > - `index` Moves to match end
+     *
      * ---
      *
      * @memberof Stream
      * @returns {boolean}
      * @see https://git.io/JJnq8
      */
-    SkipNewlines () {
+    Newlines () {
 
       return this.WhileChar(charCode => (
         charCode === NWL ||
@@ -846,6 +910,8 @@ export default (function Stream (string) {
 
     /**
      * If previous characters were whitespace
+     *
+     * **DOES NOT MODIFY**
      *
      * ---
      *

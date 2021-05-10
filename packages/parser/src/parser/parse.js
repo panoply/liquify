@@ -224,7 +224,7 @@ export function parse (document) {
         // Assume tag has no ender
         // We will splice this out in "LiquidEndTag"
         if (token === TokenType.LiquidTagClose) {
-          node.error(ParseError.MissingEndTag)
+          // node.error(ParseError.MissingEndTag)
         } else if (token === TokenType.LiquidEndTagClose) {
           Node.hierarch.splice(Node.hierarch.length - 1, 1)
           Node.errors.splice(Node.hierarch.length - 1, 1)

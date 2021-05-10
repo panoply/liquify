@@ -1,4 +1,5 @@
 import test from 'ava'
+import test_objects from './cases/liquid_tags/objects'
 import { LiquidParser } from '../package/index.es'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
@@ -89,9 +90,8 @@ test('FullDocument Parse', t => {
   const end = process.hrtime(start)
 
   console.log(
-    node.ast[0],
-    ...Object.values(node.ast[0]._filters),
-    node.parseErrors
+    ...node.ast
+
   )
   // t.log(node[0].context.filter(i => i.type !== 'Whitespace').map(i => i.value).join(' '))
   t.log(time(end, { verbose: true }))
@@ -99,6 +99,19 @@ test('FullDocument Parse', t => {
 
 })
 
+test_objects.forEach(({ title, tests }) => {
+
+  const string = tests.join('\n')
+  test.skip(title, t => {
+
+    t.log(string)
+    const node = AST({ fixture: string })
+
+    console.log(node.ast[0])
+
+  })
+
+})
 /*
 function grammar (string, capture) {
 

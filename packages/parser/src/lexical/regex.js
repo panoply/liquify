@@ -30,9 +30,9 @@ export const LiquidTagClose = /^-?[%}]\}/
 export const LiquidObjectTagClose = /^-?\}\}/
 
 /**
-* `^[$_a-zA-Z0-9-"']*\b`
+* `^[$_a-zA-Z0-9"'-]+\b`
 */
-export const LiquidObjectName = /^[$_a-zA-Z0-9-"']*\b/
+export const LiquidObjectName = /^[$_a-zA-Z0-9"'-]+\b/
 
 /**
 * `^[$a-zA-Z0-9_-]+\b`
@@ -73,6 +73,11 @@ export const Newlines = /[\n\r\f]/
 * `[\s\t]`
 */
 export const Whitespace = /[\s\t]/
+
+/**
+ * `^["'][\s\t\r\n]+["']`
+ */
+export const EmptyString = /^["'][\s\t\r\n]+["']/
 
 /**
 * `^[0-9]*$`
