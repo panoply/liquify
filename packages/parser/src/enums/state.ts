@@ -10,222 +10,587 @@ export const enum ScanCache {
   BracketNotationVariable,
 }
 
-/* -------------------------------------------- */
-/*           TOKEN CONTEXT PLACEMENTS           */
-/* -------------------------------------------- */
-
+/**
+ * Scanner State Enumerables
+ *
+ * Enumerated Scan States used to distinguish the position
+ * at which we are within the document and pertaining token.
+ *
+ * Each enum is has a code example, the `^` character in
+ * the comment docs signifies the position within the token
+ * the stream would presumedly be located.
+ */
 export const enum ScanState {
+  //
+  /* -------------------------------------------- */
+  /* SCANNER SPECIFICS                            */
+  /* -------------------------------------------- */
+
   /**
-   * `---^`
+   * Character Sequence
+   *
+   * Character sequencing matcher, executing parse
+   * captures by seeking out start point delimeters.
    */
-  FrontmatterOpen = 1,
+  CharSeq = 1,
+
+  /**
+   * Parse Error
+   *
+   * Indicates a parsing error was encounted while
+   * scan was running.
+   */
+  ParseError,
+
+  /**
+   * Goto End of Tag
+   *
+   * Passes the scan to consumer which attempts to
+   * close the curren token in stream.
+   */
+  GotoTagEnd,
+
+  /**
+   * Skips Tag
+   *
+   * Skips the scanning a matched tag, generally used
+   * for `{% raw %}`or when ignore inline comment detected
+   */
+  SkipTag,
+
+  /* -------------------------------------------- */
+  /* FRONTMATTER                                  */
+  /* -------------------------------------------- */
+
+  /**
+   *  `---^`
+   *
+   * ---
+   *
+   * Position is after starting 3 dashed frontmatter delimiters
+   */
+  FrontmatterOpen,
 
   /**
    * `---^`
+   *
+   * ---
+   *
+   * Position is after ending 3 dashed frontmatter delimiter
    */
-  FrontmatterClose = 1,
+  FrontmatterClose,
+
+  /* -------------------------------------------- */
+  /* LIQUID TAG DELIMITERS                        */
+  /* -------------------------------------------- */
 
   /**
-   * `{%^`
+   * `{%^` or `{{^`
+   *
+   * ---
+   *
+   * Position is after left side liquid tag delimiter tag
    */
   TagOpen,
 
   /**
-   * `{%-^`
+   * `{%-^` or `{{-^`
+   *
+   * ---
+   *
+   * Position is after left side whitespace trim dash
    */
-  TagOpenDash,
+  TagOpenTrim,
 
   /**
-   * `%}^`
+   * `%}^` or `}}^`
+   *
+   * ---
+   *
+   * Position is after left side liquid tag delimiter tag
    */
-  TagStartClose,
-
-  WithinEndTag,
+  TagClose,
 
   /**
-   * `{{^`
+   * `-^%}` or `-^}}`
+   *
+   * ---
+   *
+   * Position is after right side whitespace trim dash
    */
-  TagType,
+  TagCloseTrim,
 
-  ObjectName,
-  ObjectProperty,
-  ObjectPropertyString,
-  ObjectDotNotation,
-  ObjectBracketNotation,
+  /* -------------------------------------------- */
+  /* LIQUID OBJECT                                */
+  /* -------------------------------------------- */
+
+  /**
+   * `{{ object^.`
+   *
+   * ---
+   *
+   * Position is before dot seperator of object
+   */
+  Object,
+
+  /**
+   * `{{ object^.`
+   *
+   * ---
+   *
+   * Position is before dot seperator of an unknown object
+   */
   ObjectUnknown,
 
   /**
-   * `{% tag^`
+   * `{{ object.^`
+   *
+   * ---
+   *
+   * Position is after a dot seperator within object
    */
-  TagName,
+  ObjectDotNotation,
 
   /**
-   * `{% tag %}^` or `{{ tag }}^`
+   * `{{ object[^`
+   *
+   * ---
+   *
+   * Position is after left side bracket of object
    */
-  TagClose,
-  TagCloseDash,
-
-  Whitespace,
-
-  /**
-   * `{{ object^` - Excludes `.` seperator
-   */
-  AfterObjectProperty,
+  ObjectBracketNotationStart,
 
   /**
-   * `{% if condition^`
+   * `{{ object["foo"]^`
+   *
+   * ---
+   *
+   * Position is after right side bracket of object
    */
-  AfterConditionValue,
+  ObjectBracketNotationEnd,
 
   /**
-   * `==!=|<|>|>=|<=|or|and|contains`
+   * `{{ object.property^`
+   *
+   * ---
+   *
+   * Position is after property value but before dot seperator
    */
-  AfterConditionOperator,
+  ObjectProperty,
 
   /**
-   * `{% for iteree^`
+   * `{{ object["property"^`
+   *
+   * ---
+   *
+   * Position is after last quotation within bracket notation
    */
-  AfterForLoopIteree,
+  ObjectPropertyString,
 
-  /**
-   * `{% for iteree in^`
-   */
-  AfterForLoopOperator,
-
-  /**
-   * `{% for i in (^`
-   */
-  AfterOpeningForLoopRange,
-
-  /**
-   * `{% for i in (1^`
-   */
-  AfterForLoopRangeStart,
-
-  /**
-   * `{% for i in (1..^`
-   */
-  AfterForLoopRangeSeperators,
-
-  /**
-   * `{% for i in (1..10^`
-   */
-  AfterForLoopRangeEnd,
-
-  /**
-   * `{% for i in (1..10)^`
-   */
-  AfterForLoopRange,
-
-  /**
-   * `\s` or `,`
-   */
-  AfterParameterSperator,
-
-  /**
-   * `{% for tag in tags limit^`
-   */
-  AfterParameterName,
-
-  /**
-   * `:|=`
-   */
-  AfterParameterAssignment,
-
-  /**
-   * `{% tag in tags limit: 100^`
-   */
-  AfterParameterValue,
+  /* -------------------------------------------- */
+  /* LIQUID FILTERS                               */
+  /* -------------------------------------------- */
 
   /**
    * `{{ tag |^`
+   *
+   * ---
+   *
+   * Position is after pipe seperator
    */
-  AfterFilterPipe,
+  Filter,
 
   /**
    * `{{ tag | filter^`
+   *
+   * ---
+   *
+   * Position is after filter name identifier
    */
-  AfterFilterName,
+  FilterIdentifier,
 
   /**
-   * `{{ tag | filter: value^ }}`
+   * `{{ tag | filter^`
+   *
+   * ---
+   *
+   * Position is after an unknown filter name identifier
    */
-  AfterFilterValue,
+  FilterIdentifierUnknown,
+
+  /**
+   * `{{ tag | filter:^`
+   *
+   * ---
+   *
+   * Position is after name identifier
+   */
+  FilterOperator,
+
+  /**
+   * `| filter: argument^, }}`
+   *
+   * ---
+   *
+   * Position before a seperator or parameter
+   */
+  FilterArgument,
+
+  /**
+   * `| filter: property^: }}`
+   *
+   * ---
+   *
+   * Position is after property parameter but before operator
+   */
+  FilterParameter,
+
+  /**
+   * `| filter: property:^ }}`
+   *
+   * ---
+   *
+   * Position is after nested property parameter operator
+   */
+  FilterParameterOperator,
+
+  /**
+   * `| filter: property: argument^ }}`
+   *
+   * ---
+   *
+   * Position is after property parameter argument
+   */
+  FilterParameterArgument,
+
+  /**
+   * `| filter: argument,^ }}`
+   *
+   * ---
+   *
+   * Position is after seperator character
+   */
+  FilterSeparator,
+
+  /* -------------------------------------------- */
+  /* LIQUID CONTROL TAG                           */
+  /* -------------------------------------------- */
+
+  /**
+   * `{% if^` or `{% unless^`
+   *
+   * ---
+   *
+   * Position is after the tag name identifier
+   */
+  Control,
+
+  /**
+   * `{% if condition^`
+   *
+   * ---
+   *
+   * Position is after the conditional argument
+   */
+  ControlCondition,
+
+  /**
+   * `condition ==^` or `condition and^`
+   *
+   * ---
+   *
+   * Position is after the conditional operator
+   */
+  ControlOperator,
+
+  /**
+   * `condition == comparison^`
+   *
+   * ---
+   *
+   * Position is after the comparison value (if any)
+   */
+  ControlComparison,
+
+  /* -------------------------------------------- */
+  /* LIQUID ITERATION TAG                         */
+  /* -------------------------------------------- */
+
+  /**
+   * `{% for^` or `{% cycle^`
+   *
+   * ---
+   *
+   * Position is after the tag name identifier
+   */
+  Iteration,
+
+  /**
+   * `{% for iteree^`
+   *
+   * ---
+   *
+   * Position is after the tag name iteree identifier
+   */
+  IterationIteree,
+
+  /**
+   * `{% for iteree in^`
+   *
+   * ---
+   *
+   * Position is after the iteration operator
+   */
+  IterationOperator,
+
+  /**
+   * `{% for iteree in array^`
+   *
+   * ---
+   *
+   * Position is after the iteration array reference
+   */
+  IterationArray,
+
+  /**
+   * `{% for i in (^`
+   *
+   * ---
+   *
+   * Position is after the left side parenthesis of a range
+   */
+  IterationRangeOpen,
+
+  /**
+   * `{% for i in (1^`
+   *
+   * ---
+   *
+   * Position is after left side starting range value
+   */
+  IterationRangeStart,
+
+  /**
+   * `{% for i in (1..^`
+   *
+   * ---
+   *
+   * Position is after double dot seperators of a range
+   */
+  IterationRangeSeperators,
+
+  /**
+   * `{% for i in (1..10^`
+   *
+   * ---
+   *
+   * Position is after right side ending range value
+   */
+  IterationRangeEnd,
+
+  /**
+   * `{% for i in (1..10)^`
+   *
+   * ---
+   *
+   * Position is after right side parenthesis of a range
+   */
+  IterationRangeClose,
+
+  /* -------------------------------------------- */
+  /* LIQUID VARIABLE TAGS                         */
+  /* -------------------------------------------- */
+
+  /**
+   * `{% assign^ %}`
+   *
+   * ---
+   *
+   * Position is variable keyword
+   */
+  Variable,
 
   /**
    * `{% assign var^ %}`
+   *
+   * ---
+   *
+   * Position is after variable name identifier
    */
-  AfterVariableName,
+  VariableIdentifier,
 
   /**
-   * `{% assign var = value^`
+   * `{% assign var =^ %}`
+   *
+   * ---
+   *
+   * Position is after variable operator
    */
-  AfterVariableAssignment,
+  VariableOperator,
 
   /**
-   * `{% include 'path/file.ext'^`
+   * `{% assign var = value^ %}`
+   *
+   * ---
+   *
+   * Position is after variable assignment value
    */
-  AfterIncludePath,
+  VariableAssignment,
+
+  /* -------------------------------------------- */
+  /* LIQUID IMPORT TAGS                           */
+  /* -------------------------------------------- */
+
+  /**
+   * `{% include^ %}`
+   *
+   * ---
+   *
+   * Position is import keyword
+   */
+  Import,
+
+  /**
+   * `{% include 'dir/file'^ %}`
+   *
+   * ---
+   *
+   * Position is after import path
+   */
+  ImportPath,
+
+  /**
+   * `{% rende 'dir/file' with^ %}`
+   *
+   * ---
+   *
+   * Position is after keyword parameter
+   */
+  ImportParameterKeyword,
+
+  /* -------------------------------------------- */
+  /* LIQUID TAG PARAMETER                         */
+  /* -------------------------------------------- */
+
+  /**
+   * `{% tag , param^:`
+   *
+   * ---
+   *
+   * Position is after an iteration parameter name value
+   */
+  Parameter,
+
+  /**
+   * `{% tag ,^` or `{% tag ^`
+   *
+   * ---
+   *
+   * Position is either after a parameter seperator when seperator
+   * is whitespace or will be after the seperator when its comma value.
+   */
+  ParameterSeperator,
+
+  /**
+   * `{% tag param:^` or `{% tag , param = ^`
+   *
+   * ---
+   *
+   * Position is after a parameter operator
+   */
+  ParameterOperator,
+
+  /**
+   * `param: argument^` or `, param = argument^`
+   *
+   * ---
+   *
+   * Position is after a parameter argument value
+   */
+  ParameterArgument,
+
+  /* -------------------------------------------- */
+  /* HTML TAGS                                    */
+  /* -------------------------------------------- */
 
   /**
    * `<^`
+   *
+   * ---
+   *
+   * Position is after a HTML start tag delimiter
    */
-  HTMLOpenStartTag,
-
-  /**
-   * `</^`
-   */
-  HTMLOpenEndTag,
-
-  /**
-   * `</tag^`
-   */
-  AfterHTMLEndTagName,
+  HTMLTagOpen,
 
   /**
    * `<tag^`
+   *
+   * ---
+   *
+   * Position is after a HTML open tag name identifier
    */
-  AfterHTMLStartTagName,
+  HTMLTagName,
 
   /**
    * `<tag attr^`
+   *
+   * ---
+   *
+   * Position is after a HTML attribute name
    */
-  HTMLAttribute,
+  HTMLAttributeName,
+
+  /**
+   * `<tag attr=^`
+   *
+   * ---
+   *
+   * Position is after a HTML attribute delimeter
+   */
+  HTMLAttributeOperator,
 
   /**
    * `<tag attr="value"^`
+   *
+   * ---
+   *
+   * Position is after a HTML attribute value
    */
   HTMLAttributeValue,
 
   /**
-   * `<!--`
+   * `<!--^`
+   *
+   * ---
+   *
+   * Position is after a HTML open comment delimiter
    */
-  AfterOpeningHTMLComment,
+  HTMLCommentOpen,
 
   /**
-   * `{%|{{|<|</|<!--`
+   * `-->^`
+   *
+   * ---
+   *
+   * Position is after a HTML comment delimiter
    */
-  TokenDelimeters,
+  HTMLCommentClose,
 
   /**
-   * `{%|{{|<|</|<!--`
+   * `</^`
+   *
+   * ---
+   *
+   * Position is after a HTML end tag delimiter
    */
-  TokenUnknown,
+  HTMLTagClose,
 
-  ControlCondition,
-  ControlOperator,
-  IterationIteree,
-  IterationParameterSeperator,
-  IterationOperator,
-  IterationArray,
-  IterationParameter,
-  IterationParameterValue,
-
-  StringQuotation,
-
-  /**PARE ISSUES */
-  ParseError,
-  TagUnknown,
-  GotoEndOfTag,
-  CharSeq,
+  /**
+   * `</tag^`
+   *
+   * ---
+   *
+   * Position is after a HTML end tag name identifier
+   */
+  HTMLTagCloseName,
 }

@@ -1,4 +1,7 @@
-{{- product.object[collection.name] | replace: 'foo', 'bar' | append: 'foo' -}}
+{{- product.object[collection.name]
+| replace: 'foo', 'bar'
+
+| append: 'foo' -}}
 
 {{-
 collection[product.name] | prepend: 'foo' | append: 'foo' -}}

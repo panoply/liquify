@@ -4,370 +4,374 @@
   "filters": {
     "abs": {
       "description": "Returns the absolute value of a number",
-      "ref": "https://shopify.github.io/liquid/filters/abs/"
+      "documentation": "https://shopify.github.io/liquid/filters/abs/"
     },
     "append": {
       "description": "Concatenates two strings and returns the concatenated value",
-      "ref": "https://shopify.github.io/liquid/filters/append/",
+      "documentation": "https://shopify.github.io/liquid/filters/append/",
       "snippet": "append: ${0}",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         }
       ]
     },
     "at_least": {
       "description": "Limits a number to a minimum value",
-      "ref": "https://shopify.github.io/liquid/filters/at_least/",
+      "documentation": "https://shopify.github.io/liquid/filters/at_least/",
       "snippet": "at_least: ${0}",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         }
       ]
     },
     "at_most": {
       "description": "Limits a number to a maximum value",
-      "ref": "https://shopify.github.io/liquid/filters/at_most/",
+      "documentation": "https://shopify.github.io/liquid/filters/at_most/",
       "snippet": "at_most: ${0}",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         }
       ]
     },
     "capitalize": {
       "description": "Makes the first character of a string capitalized",
-      "ref": "https://shopify.github.io/liquid/filters/capitalize/"
+      "documentation": "https://shopify.github.io/liquid/filters/capitalize/"
     },
     "ceil": {
       "description": "Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",
-      "ref": "https://shopify.github.io/liquid/filters/ceil/"
+      "documentation": "https://shopify.github.io/liquid/filters/ceil/"
     },
     "compact": {
       "description": "Removes any `nil` values from an array",
-      "ref": "https://shopify.github.io/liquid/filters/compact/"
+      "documentation": "https://shopify.github.io/liquid/filters/compact/"
     },
     "concat": {
       "description": "Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",
-      "ref": "https://shopify.github.io/liquid/filters/concat/",
+      "documentation": "https://shopify.github.io/liquid/filters/concat/",
       "snippet": "concat: ${0}",
-      "parameters": [
+      "arguments": [
         {
-          "type": "array",
+          "type": "$reference",
           "required": true
         }
       ]
     },
     "date": {
       "description": "Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby’s `Time.parse`",
-      "ref": "https://shopify.github.io/liquid/filters/date/",
+      "documentation": "https://shopify.github.io/liquid/filters/date/",
       "snippet": "date: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         }
       ]
     },
     "default": {
       "description": "Allows you to specify a fallback in case a value doesn’t exist. default will show its value if the left side is `nil`, `false`, or `empty`",
-      "ref": "https://shopify.github.io/liquid/filters/default/",
+      "documentation": "https://shopify.github.io/liquid/filters/default/",
       "snippet": "default: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "any",
+          "accepts": "$string|$reference",
           "required": true
         }
       ]
     },
     "divided_by": {
       "description": "Divides a number by another number",
-      "ref": "https://shopify.github.io/liquid/filters/divided_by/",
+      "documentation": "https://shopify.github.io/liquid/filters/divided_by/",
       "snippet": "divided_by: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         }
       ]
     },
     "downcase": {
       "description": "Makes each character in a string lowercase. It has no effect on strings which are already all lowercase",
-      "ref": "https://shopify.github.io/liquid/filters/downcase/"
+      "documentation": "https://shopify.github.io/liquid/filters/downcase/"
     },
     "escape": {
       "description": "Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn’t change strings that don’t have anything to escape",
-      "ref": "https://shopify.github.io/liquid/filters/escape/"
+      "documentation": "https://shopify.github.io/liquid/filters/escape/"
     },
     "escape_once": {
       "description": "Escapes a string without changing existing escaped entities. It doesn’t change strings that don’t have anything to escape",
-      "ref": "https://shopify.github.io/liquid/filters/escape_once/"
+      "documentation": "https://shopify.github.io/liquid/filters/escape_once/"
     },
     "first": {
       "description": "Returns the first item of an array.",
-      "ref": "https://shopify.github.io/liquid/filters/first/"
+      "documentation": "https://shopify.github.io/liquid/filters/first/"
     },
     "floor": {
       "description": "Rounds the input down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",
-      "ref": "https://shopify.github.io/liquid/filters/floor/"
+      "documentation": "https://shopify.github.io/liquid/filters/floor/"
     },
     "join": {
       "description": "Joins the elements of an array with the character passed as the parameter. The result is a single string.",
-      "ref": "https://shopify.github.io/liquid/filters/join/",
+      "documentation": "https://shopify.github.io/liquid/filters/join/",
       "snippet": "join: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         }
       ]
     },
     "last": {
       "description": "Gets the last element in an array",
-      "ref": "https://shopify.github.io/liquid/filters/last/"
+      "documentation": "https://shopify.github.io/liquid/filters/last/"
     },
     "lstrip": {
       "description": "Removes all whitespace (tabs, spaces, and newlines) from the left side of a string. It does not affect spaces between words",
-      "ref": "https://shopify.github.io/liquid/filters/lstrip/"
+      "documentation": "https://shopify.github.io/liquid/filters/lstrip/"
     },
     "map": {
       "description": "Accepts an array element’s attribute as a parameter and creates a string out of each array element’s value.",
-      "ref": "https://shopify.github.io/liquid/filters/map/",
+      "documentation": "https://shopify.github.io/liquid/filters/map/",
       "snippet": "map: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         }
       ]
     },
     "minus": {
       "description": "Subtracts a number from another number",
-      "ref": "https://shopify.github.io/liquid/filters/minus/",
+      "documentation": "https://shopify.github.io/liquid/filters/minus/",
       "snippet": "minus: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         }
       ]
     },
     "modulo": {
       "description": "Returns the remainder of a division operation",
-      "ref": "https://shopify.github.io/liquid/filters/modulo/",
+      "documentation": "https://shopify.github.io/liquid/filters/modulo/",
       "snippet": "modulo: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         }
       ]
     },
     "newline_to_br": {
       "description": "Replaces every newline in a string with an HTML line break (`<br />`)",
-      "ref": "https://shopify.github.io/liquid/filters/newline_to_br/"
+      "documentation": "https://shopify.github.io/liquid/filters/newline_to_br/"
     },
     "plus": {
       "description": "Adds a number to another number",
-      "ref": "https://shopify.github.io/liquid/filters/plus/",
+      "documentation": "https://shopify.github.io/liquid/filters/plus/",
       "snippet": "plus: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         }
       ]
     },
     "prepend": {
       "description": "Adds the specified string to the beginning of another string",
-      "ref": "https://shopify.github.io/liquid/filters/prepend/",
+      "documentation": "https://shopify.github.io/liquid/filters/prepend/",
       "snippet": "prepend: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         }
       ]
     },
     "remove": {
       "description": "Removes every occurrence of the specified substring from a string",
-      "ref": "https://shopify.github.io/liquid/filters/remove/",
+      "documentation": "https://shopify.github.io/liquid/filters/remove/",
       "snippet": "remove: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         }
       ]
     },
     "remove_first": {
       "description": "Removes only the first occurrence of the specified substring from a string",
-      "ref": "https://shopify.github.io/liquid/filters/remove_first/",
+      "documentation": "https://shopify.github.io/liquid/filters/remove_first/",
       "snippet": "remove_first: '${0}'",
-      "parameters": 1
+      "arguments": 1
     },
     "replace": {
       "description": "Replaces every occurrence of the first argument in a string with the second argument",
-      "ref": "https://shopify.github.io/liquid/filters/replace/",
+      "documentation": "https://shopify.github.io/liquid/filters/replace/",
       "snippet": "replace: '${1}', '${2}' ${0}",
-      "match": [
-        "$colon",
-        "$variable",
-        "$comma",
-        "$variable"
+      "arguments": [
+        {
+          "accepts": "$string|$reference",
+          "required": true
+        },
+        {
+          "accepts": "$string|$reference",
+          "required": true
+        }
       ]
     },
     "replace_first": {
       "description": "Replaces only the first occurrence of the first argument in a string with the second argument",
-      "ref": "https://shopify.github.io/liquid/filters/replace_first/",
+      "documentation": "https://shopify.github.io/liquid/filters/replace_first/",
       "snippet": "replace_first: '${1}', '${2}' ${0}",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         },
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         }
       ]
     },
     "reverse": {
       "description": "Reverses the order of the items in an array. `reverse` cannot reverse a string",
-      "ref": "https://shopify.github.io/liquid/filters/reverse/"
+      "documentation": "https://shopify.github.io/liquid/filters/reverse/"
     },
     "round": {
       "description": "Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places",
-      "ref": "https://shopify.github.io/liquid/filters/round/"
+      "documentation": "https://shopify.github.io/liquid/filters/round/"
     },
     "rstrip": {
       "description": "Removes all whitespace (tabs, spaces, and newlines) from the right side of a string. It does not affect spaces between words",
-      "ref": "https://shopify.github.io/liquid/filters/rstrip/"
+      "documentation": "https://shopify.github.io/liquid/filters/rstrip/"
     },
     "size": {
       "description": "Returns the number of characters in a string or the number of items in an array",
-      "ref": "https://shopify.github.io/liquid/filters/size/"
+      "documentation": "https://shopify.github.io/liquid/filters/size/"
     },
     "slice": {
       "description": "Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",
-      "ref": "https://shopify.github.io/liquid/filters/slice/",
+      "documentation": "https://shopify.github.io/liquid/filters/slice/",
       "snippet": "slice: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "$number|$variable",
+          "accepts": "$number|$reference",
           "required": true
         },
         {
-          "accepts": "$number|$variable"
+          "accepts": "$number|$reference"
         }
       ]
     },
     "sort": {
       "description": "Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting",
-      "ref": "https://shopify.github.io/liquid/filters/sort/",
+      "documentation": "https://shopify.github.io/liquid/filters/sort/",
       "snippet": "${1|sort,sort:|} ${2}",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "$number|$variable"
+          "accepts": "$number|$reference"
         }
       ]
     },
     "sort_natural": {
       "description": "Sorts items in an array in case-insensitive order",
-      "ref": "https://shopify.github.io/liquid/filters/sort_natural/"
+      "documentation": "https://shopify.github.io/liquid/filters/sort_natural/"
     },
     "split": {
       "description": "Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",
-      "ref": "https://shopify.github.io/liquid/filters/split/",
+      "documentation": "https://shopify.github.io/liquid/filters/split/",
       "snippet": "split: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "$number|$variable",
+          "accepts": "$number|$reference",
           "required": true
         }
       ]
     },
     "strip": {
       "description": "Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words",
-      "ref": "https://shopify.github.io/liquid/filters/strip/"
+      "documentation": "https://shopify.github.io/liquid/filters/strip/"
     },
     "strip_html": {
       "description": "Removes any HTML tags from a string",
-      "ref": "https://shopify.github.io/liquid/filters/strip_html/"
+      "documentation": "https://shopify.github.io/liquid/filters/strip_html/"
     },
     "strip_newlines": {
       "description": "Removes any newline characters (line breaks) from a string",
-      "ref": "https://shopify.github.io/liquid/filters/strip_newlines/"
+      "documentation": "https://shopify.github.io/liquid/filters/strip_newlines/"
     },
     "times": {
       "description": "Multiplies a number by another number",
-      "ref": "https://shopify.github.io/liquid/filters/times/",
+      "documentation": "https://shopify.github.io/liquid/filters/times/",
       "snippet": "times: '${0}'",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         }
       ]
     },
     "truncate": {
       "description": "Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (…) is appended to the string and is included in the character count",
-      "ref": "https://shopify.github.io/liquid/filters/truncate/",
+      "documentation": "https://shopify.github.io/liquid/filters/truncate/",
       "snippet": "truncate: ${0}",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         },
         {
-          "accepts": "String"
+          "accepts": "$string|$reference"
         }
       ]
     },
     "truncatewords": {
       "description": "Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (…) is appended to the string",
-      "ref": "https://shopify.github.io/liquid/filters/truncatewords/",
+      "documentation": "https://shopify.github.io/liquid/filters/truncatewords/",
       "snippet": "truncatewords: ${0}",
-      "parameters": [
+      "arguments": [
         {
-          "accepts": "Number",
+          "accepts": "$number|$reference",
           "required": true
         },
         {
-          "accepts": "String"
+          "accepts": "$string|$reference"
         }
       ]
     },
     "uniq": {
       "description": "Removes any duplicate elements in an array",
-      "ref": "https://shopify.github.io/liquid/filters/uniq/"
+      "documentation": "https://shopify.github.io/liquid/filters/uniq/"
     },
     "upcase": {
       "description": "Makes each character in a string uppercase. It has no effect on strings which are already all uppercase",
-      "ref": "https://shopify.github.io/liquid/filters/upcase/"
+      "documentation": "https://shopify.github.io/liquid/filters/upcase/"
     },
     "url_decode": {
       "description": "Decodes a string that has been encoded as a URL or by `url_encode`",
-      "ref": "https://shopify.github.io/liquid/filters/url_decode/"
+      "documentation": "https://shopify.github.io/liquid/filters/url_decode/"
     },
     "url_encode": {
       "description": "Converts any URL-unsafe characters in a string into percent-encoded characters",
-      "ref": "https://shopify.github.io/liquid/filters/url_encode/"
+      "documentation": "https://shopify.github.io/liquid/filters/url_encode/"
     },
     "where": {
       "description": "Creates an array including only the objects with a given property value, or any truthy value by default",
-      "ref": "https://shopify.github.io/liquid/filters/where/",
-      "parameters": [
+      "documentation": "https://shopify.github.io/liquid/filters/where/",
+      "arguments": [
         {
-          "accepts": "String",
+          "accepts": "$string|$reference",
           "required": true
         },
         {
-          "accepts": "String"
+          "accepts": "$string|$reference"
         }
       ]
     }
@@ -375,13 +379,13 @@
   "tags": {
     "assign": {
       "description": "Creates a new variable.",
-      "ref": "https://shopify.github.io/liquid/tags/variable/#assign",
+      "documentation": "https://shopify.github.io/liquid/tags/variable/#assign",
       "filters": true,
       "singular": true,
       "snippet": "assign ${1:var} = ${2:value}",
       "type": "variable",
       "context": [
-        "$variable",
+        "$reference",
         "$equals",
         "$assignment",
         "$filters"
@@ -389,7 +393,7 @@
     },
     "break": {
       "description": "Causes the loop to stop iterating when it encounters the break tag.",
-      "ref": "https://shopify.github.io/liquid/tags/iteration/#break",
+      "documentation": "https://shopify.github.io/liquid/tags/iteration/#break",
       "singular": true,
       "type": "iteration",
       "parents": [
@@ -401,7 +405,7 @@
     },
     "capture": {
       "description": "Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.",
-      "ref": "https://shopify.github.io/liquid/tags/variable/#capture",
+      "documentation": "https://shopify.github.io/liquid/tags/variable/#capture",
       "snippet": "capture ${1:var}",
       "type": "variable",
       "context": [
@@ -410,7 +414,7 @@
     },
     "case": {
       "description": "Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",
-      "ref": "https://shopify.github.io/liquid/tags/control-flow/#case",
+      "documentation": "https://shopify.github.io/liquid/tags/control-flow/#case",
       "type": "control",
       "context": [
         "$condition"
@@ -418,12 +422,12 @@
     },
     "comment": {
       "description": "Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.            sssss ",
-      "ref": "https://shopify.github.io/liquid/tags/comment/",
+      "documentation": "https://shopify.github.io/liquid/tags/comment/",
       "type": "comment"
     },
     "continue": {
       "description": "Causes the loop to skip the current iteration when it encounters the continue tag.",
-      "ref": "https://shopify.github.io/liquid/tags/iteration/#continue",
+      "documentation": "https://shopify.github.io/liquid/tags/iteration/#continue",
       "singular": true,
       "type": "iteration",
       "parents": [
@@ -432,7 +436,7 @@
     },
     "cycle": {
       "description": "Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",
-      "ref": "https://shopify.github.io/liquid/tags/iteration/#cycle",
+      "documentation": "https://shopify.github.io/liquid/tags/iteration/#cycle",
       "singular": true,
       "type": "iteration",
       "parents": [
@@ -445,16 +449,16 @@
     },
     "decrement": {
       "description": "Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",
-      "ref": "https://shopify.github.io/liquid/tags/variable/#decrement",
+      "documentation": "https://shopify.github.io/liquid/tags/variable/#decrement",
       "singular": true,
       "type": "variable",
       "context": [
-        "$number|$variable"
+        "$number|$reference"
       ]
     },
     "else": {
       "description": "Add condition within an if or unless block.",
-      "ref": "https://shopify.github.io/liquid/tags/control-flow/#unless",
+      "documentation": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
       "parents": [
@@ -467,7 +471,7 @@
     },
     "elsif": {
       "description": "Adds more conditions within an if or unless block.",
-      "ref": "https://shopify.github.io/liquid/tags/control-flow/#unless",
+      "documentation": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
       "parents": [
@@ -481,70 +485,58 @@
     },
     "for": {
       "description": "Repeatedly executes a block of code.",
-      "params": [
+      "documentation": "https://shopify.github.io/liquid/tags/iteration/#for",
+      "snippet": "for ${1:item} in ${2|collection,(${3}..${4})|} ${0}",
+      "type": "iteration",
+      "context": [
+        "$iteree",
+        "$operator",
+        "$reference|$range",
+        "$arguments?"
+      ],
+      "arguments": [
         {
           "description": "Begins the loop at the specified index",
           "name": "offset",
           "snippet": "offset: ${0}",
-          "context": [
-            "$keyword$colon",
-            "$number|$variable"
-          ]
-        },
-        {
-          "description": "Defines a range of numbers to loop through. The range can be defined by both literal and variable numbers",
-          "name": "range",
-          "snippet": "(${1}..${2})${0}",
-          "context": [
-            "$parenthesis",
-            "$number|$object|$variable|$string",
-            "$dot+$dot",
-            "$number|$object|$variable|$string",
-            "$parenthesis"
+          "arguments": [
+            {
+              "accepts": "$number|$reference",
+              "required": true
+            }
           ]
         },
         {
           "description": "Limits the loop to the specified number of iterations",
           "name": "limit",
           "snippet": "limit: ${1} ${0}",
-          "context": [
-            "$keyword",
-            "$colon",
-            "$number|$object|$variable"
+          "arguments": [
+            {
+              "accepts": "$number|$reference",
+              "required": true
+            }
           ]
         },
         {
           "description": "Reverses the order of the loop. Note that this flag’s spelling is different from the filter `reverse`",
-          "name": "reversed",
-          "context": [
-            "$keyword"
-          ]
+          "name": "reversed"
         }
-      ],
-      "ref": "https://shopify.github.io/liquid/tags/iteration/#for",
-      "snippet": "for ${1:item} in ${2|collection,(${3}..${4})|} ${0}",
-      "type": "iteration",
-      "context": [
-        "$iteree",
-        "$keyword",
-        "$array|$variable|$range",
-        "$parameters"
       ]
     },
     "if": {
       "description": "Executes a block of code only if a certain condition is met.",
-      "ref": "https://shopify.github.io/liquid/tags/control-flow/#if",
+      "documentation": "https://shopify.github.io/liquid/tags/control-flow/#if",
       "snippet": "if ${1} ${2|==,!=,or,and|} ${3} ",
       "type": "control",
       "context": [
-        "$condition",
+        "$number|$string|$reference",
         "$operator?",
-        "$condition"
+        "$number|$string|$reference"
       ]
     },
     "increment": {
       "description": "Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",
-      "ref": "https://shopify.github.io/liquid/tags/variable/#increment",
+      "documentation": "https://shopify.github.io/liquid/tags/variable/#increment",
       "singular": true,
       "type": "variable",
       "grammar": [
@@ -553,7 +545,7 @@
     },
     "raw": {
       "description": "Allows output of Liquid code on a page without being parsed.",
-      "ref": "https://shopify.github.io/liquid/tags/raw/",
+      "documentation": "https://shopify.github.io/liquid/tags/raw/",
       "type": "raw"
     },
     "tablerow": {
@@ -564,7 +556,7 @@
           "name": "range",
           "snippet": "(${1}..${2})${0}",
           "context": [
-            "$paren{$number|$variable}$dot$dot{$number|$variable}$paren"
+            "$paren{$number|$reference}$dot$dot{$number|$reference}$paren"
           ]
         },
         {
@@ -573,7 +565,7 @@
           "snippet": "cols: ${0}",
           "context": [
             "$keyword$colon",
-            "$number|$variable"
+            "$number|$reference"
           ]
         },
         {
@@ -582,7 +574,7 @@
           "snippet": "limit: ${0}",
           "context": [
             "$keyword$colon",
-            "$number|$variable"
+            "$number|$reference"
           ]
         },
         {
@@ -591,16 +583,16 @@
           "snippet": "offset: ${0}",
           "context": [
             "$keyword~$colon",
-            "$number|$variable"
+            "$number|$reference"
           ]
         }
       ],
-      "ref": "https://shopify.github.io/liquid/tags/iteration/#tablerow",
+      "documentation": "https://shopify.github.io/liquid/tags/iteration/#tablerow",
       "type": "iteration"
     },
     "unless": {
       "description": "The opposite of if – executes a block of code only if a certain condition is not met.",
-      "ref": "https://shopify.github.io/liquid/tags/control-flow/#unless",
+      "documentation": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "type": "control",
       "context": [
         "$condition",
@@ -610,7 +602,7 @@
     },
     "when": {
       "description": "Define the various conditions set by the \"{% case %}\" tag",
-      "ref": "https://shopify.github.io/liquid/tags/control-flow/#casewhen",
+      "documentation": "https://shopify.github.io/liquid/tags/control-flow/#casewhen",
       "singular": true,
       "type": "control",
       "parents": [

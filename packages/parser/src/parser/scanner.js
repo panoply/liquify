@@ -3,7 +3,6 @@ import { TokenType } from '../enums/types'
 import { ScanState, ScanCache } from '../enums/state'
 import * as Regex from '../lexical/regex'
 import * as c from '../lexical/characters'
-import { ForEach } from './utils'
 // import { TokenContext } from '../enums/context'
 import { TokenTags } from '../enums/parse'
 import { ParseError } from '../enums/errors'
@@ -107,17 +106,17 @@ export default (function () {
       }
 
       if (s.IfCodeChar(c.FWS)) {
-        state = ScanState.AfterHTMLEndTagName
+        state = ScanState.HTMLTagClose
         return TokenType.HTMLEndTagOpen
       }
 
       if (s.IfChars([ c.BNG, c.DSH, c.DSH ])) {
-        state = ScanState.AfterOpeningHTMLComment
+        state = ScanState.HTMLCommentOpen
         return TokenType.HTMLStartCommentTag
       }
 
       if (s.IfRegExp(Regex.HTMLTagEnd)) {
-        if (s.Token() === 'script') {
+        if (s.token === 'script') {
           return TokenType.HTMLStartTagOpen
         }
       }
@@ -137,7 +136,7 @@ export default (function () {
    *
    * @returns {void|number}
    */
-  const ScanFrontmatter = () => {
+  function ScanFrontmatter () {
 
     if (s.UntilChars('---', true)) {
       state = ScanState.CharSeq
@@ -153,6 +152,243 @@ export default (function () {
   }
 
   /**
+   * Liquid Object References
+   *
+   * Scanner function for filter object expressions
+   * contained within Liquid tags. Dissects the reference
+   * expression, ie: `object.prop` or `object['prop']`
+   *
+   * @returns {function|number}
+   */
+  function ScanObject () {
+
+    switch (state) {
+
+      // OBJECT NAME
+      // ---------------------------------------------
+      case ScanState.Object:
+
+        // Set Specification
+        Specs.cursor(s.token)
+
+        state = ScanState.ObjectProperty
+        return TokenType.Object
+
+      // LIQUID OBJECT DOT NOTATION
+      // ---------------------------------------------
+      case ScanState.ObjectDotNotation:
+
+        // Gets Property, eg: "prop" in "object.prop"
+        if (s.IfRegExp(Regex.LiquidObjectProperty)) {
+          state = ScanState.ObjectProperty
+          return TokenType.ObjectProperty
+        }
+
+        // Get here, there was an error
+        state = ScanState.ParseError
+
+        // If next character is filter or closing delimiter
+        // Property is missing, else its an invalid character
+        error = s.IsRegExp(/^[|%}-]]/)
+          ? ParseError.MissingProperty
+          : ParseError.InvalidCharacter
+
+        return ScanLiquid()
+
+      // LIQUID OBJECT PROPERTIES
+      // ---------------------------------------------
+      case ScanState.ObjectProperty:
+
+        break
+
+      // LIQUID OBJECT BRACKET NOTATION START
+      // ---------------------------------------------
+      case ScanState.ObjectBracketNotationStart:
+
+        break
+
+      // LIQUID OBJECT BRACKET NOTATION END
+      // ---------------------------------------------
+      case ScanState.ObjectBracketNotationEnd:
+
+        break
+
+      // LIQUID FILTER OBJECT PROPERTY STRING
+      // ---------------------------------------------
+      case ScanState.ObjectPropertyString:
+
+        return ScanLiquid()
+
+    }
+
+  }
+
+  /**
+   * Liquid Filters
+   *
+   * Scanner function for filter expressions
+   * contained within Liquid tags.
+   *
+   * @returns {function|number}
+   */
+  function ScanFilter () {
+
+    switch (state) {
+
+      // PIPE SEPARATOR
+      // ---------------------------------------------
+      case ScanState.Filter:
+
+        if (s.IfRegExp(/^[^:0-9-]+\b/)) {
+          state = ScanState.FilterIdentifier
+          return TokenType.Filter
+        }
+
+        error = ParseError.MissingFilter
+        state = ScanState.ParseError
+        return ScanLiquid()
+
+      // FILTER NAME
+      // ---------------------------------------------
+      case ScanState.FilterIdentifier:
+
+        if (s.IfCodeChar(c.COL)) {
+          return TokenType.Separator
+        }
+
+        if (s.IsRegExp(Regex.StringQuotations)) {
+          if (s.SkipQuotedString()) {
+            state = ScanState.FilterArgument
+            return TokenType.FilterParameter
+          } else {
+            // Missing a quote " or '
+            state = ScanState.ParseError
+            error = ParseError.MissingQuotation
+            return ScanLiquid()
+          }
+        }
+
+        error = ParseError.MissingFilter
+        state = ScanState.ParseError
+        return ScanLiquid()
+
+      // FILTER OPERATOR
+      // ---------------------------------------------
+      case ScanState.FilterOperator:
+
+        break
+
+      // FILTER ARGUMENT VALUE
+      // ---------------------------------------------
+      case ScanState.FilterArgument:
+
+        if (s.IfCodeChar(c.COM)) {
+          state = ScanState.FilterIdentifierUnknown
+          return TokenType.Separator
+        }
+
+        state = ScanState.ObjectProperty
+        return ScanLiquid()
+
+      // FILTER ARGUMENT SEPARATOR
+      // ---------------------------------------------
+      case ScanState.FilterSeparator:
+
+        if (s.IfCodeChar(c.COM)) {
+          state = ScanState.FilterArgument
+          return TokenType.Separator
+        }
+
+        state = ScanState.ObjectProperty
+        return ScanLiquid()
+
+      // FILTER ARGUMENT PARAMETER
+      // ---------------------------------------------
+      case ScanState.FilterParameter:
+
+        break
+
+      // FILTER ARGUMENT PARAMETER OPERATOR
+      // ---------------------------------------------
+      case ScanState.FilterParameterOperator:
+
+        break
+
+      // FILTER ARGUMENT PARAMETER OPERATOR
+      // ---------------------------------------------
+      case ScanState.FilterParameterArgument:
+
+        break
+
+    }
+
+  }
+
+  /**
+   * Scan Control Tag
+   *
+   * Scanner function for control conditional type tags
+   * like `if` or `unless` and dissects the expression
+   * contained within the tag.
+   *
+   * @returns {function|number}
+   */
+  function ScanControl () {
+
+    switch (state) {
+
+      // LIQUID CONTROL CONDITION
+      //
+      // ---------------------------------------------
+      case ScanState.ControlCondition: {
+
+        // Control condition is a string - This should ALWAYS run first
+        if (s.IsRegExp(/^['"]/)) {
+          if (s.SkipQuotedString()) {
+            state = ScanState.ControlOperator
+          } else {
+            // Missing a quote " or '
+            state = ScanState.ParseError
+            error = ParseError.MissingQuotation
+            return ScanLiquid()
+          }
+        }
+
+        // Control condition is not a string
+        if (s.IfRegExp(/^[=!<>]{1,}|^[^\s]+\b/)) {
+          if (state !== ScanState.ControlOperator) {
+            state = ScanState.ControlOperator
+          }
+        }
+
+        // Condition value is an object
+        if (/\./.test(s.Token())) {
+          return TokenType.Object
+        }
+
+        return TokenType.ControlCondition
+
+      }
+
+      // LIQUID CONTROL OPERATOR
+      //
+      // ---------------------------------------------
+      case ScanState.ControlOperator: {
+
+        if (s.IfRegExp(/^[=!<>]{1,}|^[^\s]+\b/)) {
+          state = ScanState.ControlCondition
+          return TokenType.ControlOperator
+        }
+
+        state = ScanState.TagClose
+        return ScanLiquid()
+
+      }
+
+    }
+  }
+
+  /**
    * Scan Liquid
    *
    * Liquid c.language syntax tokenizer scanner.
@@ -163,9 +399,8 @@ export default (function () {
   function ScanLiquid () {
 
     // Skip whitespace
-    if (s.SkipWhitespace()) {
-      return ScanLiquid()
-    }
+    if (s.SkipWhitespace()) return TokenType.Whitespace
+    if (s.SkipNewlines()) return TokenType.Newline
 
     // BEGIN SCAN
     //

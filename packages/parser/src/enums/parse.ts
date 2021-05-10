@@ -1,4 +1,3 @@
-
 /**
  * Token Context
  *
@@ -27,9 +26,9 @@ export const enum TokenTags {
    */
   "embedded",
   /**
-   * Include Type, eg: `{% include '' %}` | `{% render '' %}`
+   * Import Type, eg: `{% include '' %}` | `{% render '' %}`
    */
-  "include",
+  "import",
   /**
    * Iteration Type, eg: `{% for %} {% endfor %}` | `{% cycle %} {% endcycle %}`
    */
@@ -49,5 +48,5 @@ export const enum TokenTags {
   /**
    * Unkown Type, eg: `{% no_spec %}`
    */
-  "unknown"
+  "unknown",
 }

@@ -6,8 +6,9 @@ import lineColumn from 'line-column'
 /**
  * Stream
  *
- * Supplies methods to the parsing scanner. This is a modified variation
- * and was lifted from the `vscode-html-languageservice` module.
+ * Supplies methods to the parsing scanner. This is a heavily modified
+ * variation and was lifted from the `vscode-html-languageservice` module.
+ * The stream compiles tokens which you can grab via getters.
  *
  * @export
  * @see https://git.io/JJnqz
@@ -719,7 +720,7 @@ export default (function Stream (string) {
      *
      * @memberof Stream
      * @param {RegExp} regex
-     * @returns {(NaN|number)} character code
+     * @returns {NaN|number}
      * @see https://git.io/JJnqn
      */
     UntilSequence (regex) {
@@ -817,10 +818,7 @@ export default (function Stream (string) {
 
       return this.WhileChar(charCode => (
         charCode === WSP ||
-        charCode === TAB ||
-        charCode === NWL ||
-        charCode === LFD ||
-        charCode === CAR
+        charCode === TAB
       ))
 
     },
@@ -1005,13 +1003,13 @@ export default (function Stream (string) {
      * ---
      *
      * @memberof Stream
-     * @param {number[]} List of character codes
+     * @param {number[]} codes of character codes
      * @returns {boolean}
      * @see https://git.io/JJnqt
      */
     IfChars (codes) {
 
-      if (codes.every((c, i) => c === this.GetCodeChar(index + i))) {
+      if (codes.every((code, i) => code === this.GetCodeChar(index + i))) {
 
         cursor = index
         index += codes.length

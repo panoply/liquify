@@ -88,7 +88,11 @@ test('FullDocument Parse', t => {
   const node = AST({ fixture: doc })
   const end = process.hrtime(start)
 
-  console.log(node.ast, node.parseErrors)
+  console.log(
+    node.ast[0],
+    ...Object.values(node.ast[0]._filters),
+    node.parseErrors
+  )
   // t.log(node[0].context.filter(i => i.type !== 'Whitespace').map(i => i.value).join(' '))
   t.log(time(end, { verbose: true }))
   t.pass()

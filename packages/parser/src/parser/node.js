@@ -141,9 +141,17 @@ export default class Node {
   /**
    * Objects
    *
-   * @type{object[]}
+   * @type{object}
    */
-  _objects = []
+  _objects = {}
+
+  /**
+   * Objects
+   *
+   * @type{object}
+   */
+  _filters = {}
+
 
   /**
    * Range - Line/character position
@@ -188,10 +196,38 @@ export default class Node {
   set objects (object) {
 
     // eslint-disable-next-line
-    this._objects = [...this._objects, object]
+    Object.assign(this._objects, object)
 
   }
 
+
+  /**
+   * Get Objects
+   *
+   */
+  get filters () {
+
+    return this._filters
+  }
+
+  /**
+   * Set filters
+   */
+  filter (offset) {
+
+    // eslint-disable-next-line
+    this._filters = {
+      ...this._filters,
+      [offset]: {
+        name: scanner.token,
+        range: scanner.range,
+        context: [],
+        offset: [scanner.offset - scanner.token.length],
+        params: []
+      }
+    }
+
+  }
 
   /**
    * Get Errors
@@ -212,12 +248,14 @@ export default class Node {
 
     if (!error) return
 
-    const diagnostic = {
-      ...Errors(error)
-      , range: scanner.range
-      , token: scanner.token
-      , node: Node.size
-    }
+    const diagnostic = Object.assign(
+      Errors(error)
+      , {
+        range: scanner.range,
+        token: scanner.token,
+        node: Node.size
+      }
+    )
 
     Node.errors.push(diagnostic)
     this._errors.push(Node.errors.length - 1)
@@ -237,7 +275,7 @@ export default class Node {
    * Context
    *
    * @param {string} [type=undefined]
-   * @return {object[]}
+   * @return {number}
    * @memberof Node
    */
   context (type = undefined) {
@@ -256,7 +294,7 @@ export default class Node {
       ]
     }
 
-    return this._context
+    return this._context.length - 1
 
   }
 

@@ -28,6 +28,9 @@ export function parse (document) {
    */
   let node
 
+  let track
+  let context
+
   while (token !== TokenType.EOS) {
 
     switch (token) {
@@ -117,7 +120,7 @@ export function parse (document) {
       // {{-^
       // -----------------------------------------------------------------
       case TokenType.LiquidTrimDashLeft:
-        if (this.context) node.context(TokenContext.LeftTrim)
+        node.context(TokenContext.LeftTrim)
         break
 
       // LIQUID WHITESPACE DASH RIGHT
@@ -125,7 +128,7 @@ export function parse (document) {
       // -^}}
       // -----------------------------------------------------------------
       case TokenType.LiquidTrimDashRight:
-        if (this.context) node.context(TokenContext.RightTrim)
+        node.context(TokenContext.RightTrim)
         break
 
       // LIQUID TAG NAME KEYWORD
@@ -152,7 +155,7 @@ export function parse (document) {
 
         node.name = scanner.token
 
-        if (this.context) {
+        {
 
           if (scanner.dash) {
             node.context(TokenContext.Dash)
@@ -237,17 +240,17 @@ export function parse (document) {
         break
 
       case TokenType.StringSingleQuote:
-        if (this.context) node.context(TokenContext.Object)
+        node.context(TokenContext.Object)
         break
 
       case TokenType.StringDoubleQuote:
-        if (this.context) node.context(TokenContext.Object)
+        node.context(TokenContext.Object)
         break
 
       // LIQUID OBJECT
       // -----------------------------------------------------------------
       case TokenType.Object:
-        if (this.context) node.context(TokenContext.Object)
+        node.context(TokenContext.Object)
         node.objects = scanner.token
           .split('.')
           .filter(Boolean)
@@ -263,37 +266,49 @@ export function parse (document) {
       // LIQUID OBJECT PROPERTY OPEN BRACKET
       // -----------------------------------------------------------------
       case TokenType.ObjectBracketNotationOpen:
-        if (this.context) node.context(TokenContext.OpenBracket)
+        node.context(TokenContext.OpenBracket)
         break
       // LIQUID OBJECT PROPERTY OPEN BRACKET
       // -----------------------------------------------------------------
       case TokenType.ObjectBracketNotationClose:
-        if (this.context) node.context(TokenContext.CloseBracket)
+        node.context(TokenContext.CloseBracket)
         break
       // LIQUID OBJECT PROPERTY
       // -----------------------------------------------------------------
       case TokenType.ObjectProperty:
-        if (this.context) node.context(TokenContext.Property)
+        node.context(TokenContext.Property)
         break
 
       // LIQUID OBJECT PROPERTY STRING
       // -----------------------------------------------------------------
       case TokenType.ObjectPropertyString:
-        if (this.context) node.context(TokenContext.PropertyString)
+        node.context(TokenContext.PropertyString)
         break
 
       // LIQUID OBJECT PROPERTY OBJECT
       // -----------------------------------------------------------------
       case TokenType.ObjectPropertyObject:
-        if (this.context) node.context(TokenContext.PropertyObject)
+        node.context(TokenContext.PropertyObject)
         break
 
       case TokenType.Filter:
-        if (this.context) node.context(TokenContext.Keyword)
+        node.context(TokenContext.Keyword)
+        track = scanner.offset
+        node.filter(track)
         break
 
       case TokenType.FilterParameter:
-        if (this.context) node.context(TokenContext.Parameter)
+        node.context(TokenContext.Parameter)
+        node.filters[track].context.push()
+        node.filters[track].offset[1] = scanner.offset
+        node.filters[track].token = scanner.getText(
+          node.filters[track].offset[0],
+          node.filters[track].offset[node.filters[track].offset.length - 1]
+        )
+        node.filters[track].params.push({
+          range: scanner.range,
+          value: scanner.token
+        })
         break
 
       // LIQUID CONTROL CONDITION

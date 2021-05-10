@@ -12,12 +12,12 @@ export const enum TokenContext {
   /**
    * Trim Whitespace Delimeter Dash LEft: `-`
    */
-  LeftTrim = "trim",
+  LeftTrim = "left_trim",
 
   /**
    * Trim Whitespace Delimeter Dash LEft: `-`
    */
-  RightTrim = "trim",
+  RightTrim = "right_trim",
 
   /**
    * Whitespace: `\s`
@@ -37,7 +37,7 @@ export const enum TokenContext {
   /**
    * The tag name
    */
-  Identifier = "identifier",
+  Identifier = "tag_name",
 
   /**
    * Control Operators `!=|==|<|>|<=|=>|and|or|contains`
