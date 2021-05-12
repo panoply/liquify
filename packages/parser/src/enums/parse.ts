@@ -8,7 +8,7 @@
  * - Context starts from the opening delimeter, eg: `{{` or `{%`
  * - Context ends before the closing delimeter, eg: `}}` or `%}`
  */
-export const enum TokenTags {
+export enum TokenTags {
   /**
    * Associate Type, eg: `<tag> </tag>` | `{% tag %} {% endtag %}`
    */

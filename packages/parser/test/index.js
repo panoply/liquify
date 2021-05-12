@@ -90,8 +90,8 @@ test('FullDocument Parse', t => {
   const end = process.hrtime(start)
 
   console.log(
-    ...node.ast
-
+    ...node.ast,
+    node.ast[0].errors
   )
   // t.log(node[0].context.filter(i => i.type !== 'Whitespace').map(i => i.value).join(' '))
   t.log(time(end, { verbose: true }))

@@ -37,6 +37,14 @@ export const enum ScanState {
   CharSeq = 1,
 
   /**
+   * Liquid Tag
+   *
+   * Passes to Liquid Tag scanner, state is applied as
+   * a fallback when `scan()` function  does not return match
+   */
+  Liquid,
+
+  /**
    * Parse Error
    *
    * Indicates a parsing error was encounted while
@@ -67,56 +75,18 @@ export const enum ScanState {
   /**
    * Tag is a Associate Type
    */
-  IsAssociate,
+  TypeObject,
 
   /**
    * Tag is a Control type
    */
 
-  IsControl,
+  TypeTag,
 
   /**
    * Tag is a Comment type
    */
-  IsComment,
-
-  /**
-   * Tag is a Embedded Language type
-   */
-  IsEmbedded,
-
-  /**
-   * Tag is a Import type
-   */
-  IsImport,
-
-  /**
-   * Tag is a Iteration type
-   */
-  IsIteration,
-
-  IsKnownObject,
-  IsUnknownObject,
-
-  /**
-   * Tag has Filter
-   */
-  IsFilter,
-
-  /**
-   * Tag is a Variable type
-   */
-  IsVariable,
-
-  /**
-   * Tag is a Raw type
-   */
-  IsRaw,
-
-  /**
-   * Tag is a Raw type
-   */
-  IsUnknown,
+  TypeFilter,
 
   /* -------------------------------------------- */
   /* FRONTMATTER                                  */
@@ -143,6 +113,8 @@ export const enum ScanState {
   /* -------------------------------------------- */
   /* LIQUID TAG DELIMITERS                        */
   /* -------------------------------------------- */
+
+  Tag,
 
   /**
    * `{%^` or `{{^`
@@ -185,7 +157,7 @@ export const enum ScanState {
   /* -------------------------------------------- */
 
   /**
-   * `{{ object^.`
+   * `{{^ object }}`
    *
    * ---
    *
@@ -200,7 +172,7 @@ export const enum ScanState {
    *
    * Position is before dot seperator of an unknown object
    */
-  ObjectUnknown,
+  ObjectValue,
 
   /**
    * `{{ object.^`
@@ -218,7 +190,7 @@ export const enum ScanState {
    *
    * Position is after left side bracket of object
    */
-  ObjectBracketNotationStart,
+  ObjectBracketNotation,
 
   /**
    * `{{ object["foo"]^`

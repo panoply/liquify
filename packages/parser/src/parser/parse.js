@@ -106,9 +106,8 @@ export function parse (document) {
       // ^{% tag
       // ^{% endtag
       // -----------------------------------------------------------------
-      case TokenType.LiquidObjectTagOpen:
-      case TokenType.LiquidTagOpen:
-      case TokenType.LiquidEndTagOpen:
+      case TokenType.LiquidObjectTag:
+      case TokenType.LiquidTag:
 
         // @ts-ignore
         node = new Node()
@@ -121,6 +120,7 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.LiquidTrimDashLeft:
         node.context(TokenContext.LeftTrim)
+
         break
 
       // LIQUID WHITESPACE DASH RIGHT
@@ -133,20 +133,11 @@ export function parse (document) {
 
       // LIQUID TAG NAME KEYWORD
       //
-      // name^ }}
-      // -----------------------------------------------------------------
-      case TokenType.LiquidObjectTag:
-        node.name = scanner.token
-        break
-
-      // LIQUID TAG NAME KEYWORD
-      //
       // Tag reference is created and added to the AST
       //
       // name^ %}
       // name^ }}
       // -----------------------------------------------------------------
-      case TokenType.LiquidTag:
       case TokenType.LiquidSingularTag:
 
         // console.log('get text: ' + scanner.dash)
@@ -154,16 +145,6 @@ export function parse (document) {
         node = new Node()
 
         node.name = scanner.token
-
-        {
-
-          if (scanner.dash) {
-            node.context(TokenContext.Dash)
-          }
-
-          node.context(TokenContext.Keyword)
-
-        }
 
         // Push non-singular tags onto hierarch
         if (token === TokenType.LiquidTag) {
@@ -237,6 +218,10 @@ export function parse (document) {
         // Reset
         node = undefined
 
+        break
+
+      case TokenType.String:
+        node.context(TokenContext.String)
         break
 
       case TokenType.StringSingleQuote:

@@ -8,10 +8,7 @@ export class LiquidParser {
 
   constructor (configuration) {
 
-    this.config = {
-      ...options
-      , ...configuration
-    }
+    this.config = { ...options, ...configuration }
 
   }
 

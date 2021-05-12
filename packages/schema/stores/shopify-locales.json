@@ -1,1 +1,28 @@
-{}
+{
+  "$schema": "./specifications.json",
+  "engine": "liquid",
+  "updated": "03-05-2020",
+  "filters": {
+    "asset_img_url": {
+      "description": "Returns the asset URL of an image in the \"assets\" folder of a theme. asset_img_url accepts an image size parameter.\n\nYou can specify only a width or only a height and Shopify will calculate the other dimension based on the original image size, keeping the original image's aspect ratio.",
+      "snippet": "${1|asset_img_url|asset_img_url: ${2}}",
+      "link": "https://help.shopify.com/themes/liquid/filters/url-filters#asset_img_url",
+      "arguments": [
+        {
+          "type": "spread",
+          "required": true,
+          "accepts": [
+            "$string",
+            "$reference"
+          ],
+          "options": [
+            {
+              "name": "master",
+              "description": "The original image size"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

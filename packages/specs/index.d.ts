@@ -1,4 +1,3 @@
-
 export interface Attributes {
   name: string;
   description: string;
@@ -19,19 +18,16 @@ export interface Params {
   ];
 }
 
-export type TokenTypes = (
-    "associate" |
-    "control"   |
-    "comment"   |
-    "embedded"  |
-    "include"   |
-    "iteration" |
-    "object"    |
-    "variable"  |
-    "raw"
-)
-
-
+export type TokenTypes =
+  | "associate"
+  | "control"
+  | "comment"
+  | "embedded"
+  | "include"
+  | "iteration"
+  | "object"
+  | "variable"
+  | "raw";
 
 /* -------------------------------------------- */
 /*                    ENGINE                    */
@@ -58,7 +54,7 @@ interface Properties {
   readonly properties?: Properties[];
 }
 
-export interface Object {
+export type Object = {
   /**
    * Name of the Object
    */
@@ -74,7 +70,7 @@ export interface Object {
    */
   readonly description?: string;
   /**
-   * A URL reference to the documentation pretaining to this tag
+   * A URL reference to the documentation pertaining to this tag
    *
    * @default undefined
    */
@@ -116,7 +112,7 @@ export interface Object {
    * @default undefined
    */
   readonly properties?: Properties[];
-}
+};
 
 export declare type Objects = { [name: string]: Object };
 
@@ -202,7 +198,7 @@ interface ArgumentParameters {
     | ArgumentParameterAccepts[];
 }
 
-export interface Filter {
+export type Filter = {
   /**
    * The automatically applied tag type, which is "filter"
    *
@@ -240,7 +236,7 @@ export interface Filter {
    * @default undefined
    */
   readonly parameters?: ArgumentParameters[];
-}
+};
 
 export declare type Filters = { [name: string]: Filter };
 
@@ -289,7 +285,12 @@ interface Types {
   readonly description: string;
 }
 
-export interface Tag {
+export type Tag = {
+  /**
+   * The argument value this tag supports
+   */
+  readonly name: string;
+
   /**
    * The `attr` property value pertains to `HTML` kind tags, where
    * a mime/type attribute is required when capturing tag. Generally
@@ -383,7 +384,7 @@ export interface Tag {
    * @default undefined
    */
   readonly objects?: Object;
-}
+};
 
 export type Tags = { [name: string]: Tag };
 
@@ -391,7 +392,7 @@ export type Tags = { [name: string]: Tag };
 /*            DEFAULT SPECIFICATIONS            */
 /* -------------------------------------------- */
 
-export type NodeSpecification = (Object | Tag | Filter);
+export type NodeSpecification = Object | Tag | Filter;
 
 export type Records = "filters" | "objects" | "filters";
 

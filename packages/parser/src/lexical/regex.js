@@ -10,6 +10,11 @@ export const DelimiterCharacters = /[{<]/
 export const OpenDelimiters = /^\{[{%]/
 
 /**
+ * `^[a-zA-Z0-9$"'_]`
+ */
+export const LiquidFirstCharacter = /^[a-zA-Z0-9$"'_]/
+
+/**
 * `^[%}]\}`
 */
 export const CloseDelimiters = /^[%}]\}/
@@ -20,8 +25,8 @@ export const CloseDelimiters = /^[%}]\}/
 export const HTMLTagEnd = /^[^\s"'>]+/
 
 /**
-* `^-?[%}]\}`
-*/
+ * `^-?[%}]\}`
+ */
 export const LiquidTagClose = /^-?[%}]\}/
 
 /**
@@ -30,9 +35,9 @@ export const LiquidTagClose = /^-?[%}]\}/
 export const LiquidObjectTagClose = /^-?\}\}/
 
 /**
-* `^[$_a-zA-Z0-9"'-]+\b`
+* `^[$_a-zA-Z0-9-]*\b`
 */
-export const LiquidObjectName = /^[$_a-zA-Z0-9"'-]+\b/
+export const LiquidObjectName = /^[$_a-zA-Z0-9-]*\b/
 
 /**
 * `^[$a-zA-Z0-9_-]+\b`

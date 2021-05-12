@@ -69,9 +69,11 @@ export default function (options = {}) {
           ? `const ${k} = import('./${v}')`
           : `const ${k} = await import('./${v}')`
       )
-      const decoded = parse.input.map(([ k ]) => (k === 'standard'
-        ? `get ${k}(){ return decrypt(${k}, crypto.decode(${k})) }`
-        : `get ${k}(){ return decrypt(${k}, crypto.decode(${base})) }`
+
+      const decoded = parse.input.map(([ k ]) => (
+        k === 'standard'
+          ? `get ${k}(){ return decrypt(${k}, crypto.decode(${k})) }`
+          : `get ${k}(){ return decrypt(${k}, crypto.decode(${base})) }`
       ))
 
       const virtual = sync => /* js */`
@@ -100,6 +102,8 @@ export default function (options = {}) {
       return /* js */`
 
       import cryptographer from '@liquify/cryptographer'
+
+      export const  =
 
       export async function getSpecs (iv) {
 

@@ -2,241 +2,197 @@ import { TokenTags } from '../enums/parse'
 import { Engines } from './options'
 import * as c from '../lexical/characters'
 
-export default new class Specs {
+export default (function Specs () {
 
   /**
    * References
    *
-   * @type {Parser.Variation}
+   * @type {Specs.}
    */
-  #ref = undefined
+  let Ref
 
   /**
    * Specification Type
    *
    * @type {number}
    */
-  #type = undefined
-
-  /**
-   * Specification Type
-   *
-   * @type {array}
-   */
-  #variables = []
+  let Type
 
   /**
    * Cursor (currently active tag in parse)
    *
    * @type {Parser.NodeSpecification}
    */
-  #cursor = undefined
+  let Cursor
 
-  /**
-   * Get Type
-   *
-   * @readonly
-   * @memberof Specs
-   * @returns {number}
-   */
-  get type () {
+  return {
 
-    return this.#type
+    /**
+     * Get Type
+     *
+     * @readonly
+     * @memberof Specs
+     * @returns {number}
+     */
+    get type () {
 
-  }
+      return Type
 
-  /**
-   * Get Type
-   *
-   * @readonly
-   * @memberof Specs
-   * @returns {boolean}
-   */
-  get singular () {
+    },
 
-    // @ts-ignore
-    return this.#cursor?.singular
+    /**
+     * Get Type
+     *
+     * @readonly
+     * @memberof Specs
+     * @returns {boolean}
+     */
+    get singular () {
 
-  }
+      // @ts-ignore
+      return Cursor?.singular
 
-  /**
-   * Set Type
-   *
-   * @readonly
-   * @memberof Specs
-   */
-  set type (type) {
+    },
 
-    this.#type = type
+    /**
+     * Set Type
+     *
+     * @readonly
+     * @memberof Specs
+     */
+    set type (type) {
 
-  }
+      Type = type
 
-  /**
-   * Get Name
-   *
-   * @readonly
-   * @memberof Specs
-   * @returns {string|boolean}
-   */
-  get name () {
+    },
 
-    // @ts-ignore
-    return this.#cursor.name
+    /**
+     * Get Name
+     *
+     * @readonly
+     * @memberof Specs
+     * @returns {string|boolean}
+     */
+    get data () {
 
-  }
+      // @ts-ignore
+      return Cursor
 
-  /**
-   * Set Type
-   *
-   * @readonly
-   * @memberof Specs
-   */
-  get hasSpec () {
+    },
 
-    // @ts-ignore
-    return this.#cursor !== undefined
+    /**
+     * Get Name
+     *
+     * @readonly
+     * @memberof Specs
+     * @returns {string|boolean}
+     */
+    get name () {
 
-  }
+      // @ts-ignore
+      return Cursor?.name
 
-  /**
-   * Set Type
-   *
-   * @memberof Specs
-   */
-  hasProperty (property) {
+    },
 
-    // @ts-ignore
-    return this.#variables.indexOf(property) !== -1
+    /**
+     * Set Type
+     *
+     * @readonly
+     * @memberof Specs
+     */
+    get hasSpec () {
 
-  }
+      // @ts-ignore
+      return Cursor !== undefined
 
-  /**
-   * Set Type
-   *
-   * @readonly
-   * @memberof Specs
-   */
-  get hasParams () {
+    },
 
-    // @ts-ignore
-    this.index = 0
-    return this.#cursor?.parameters
+    parameter () {
 
-  }
+    },
 
-  /**
-   * Set Type
-   *
-   * @readonly
-   * @memberof Specs
-   * @returns {any}
-   */
-  get param () {
+    /**
+     * Reference
+     *
+     * @param {Parser.Variation} [reference=undefined]
+     * @memberof Specs
+     */
+    ref (reference = undefined) {
 
-    // @ts-ignore
-    return [
-      c.COL,
-      /^[$_a-zA-Z0-9"']/,
-      c.COM,
-      /^[$_a-zA-Z0-9"']/
-    ]
-
-  }
-
-  hasVariable(variable) {
-
-    return this.#variables.indexOf(variable) !== -1
-
-  }
-
-
-  parameter() {
-
-
-
-  }
-
-  /**
-   * Reference
-   *
-   * @param {Parser.Variation} [reference=undefined]
-   * @memberof Specs
-   */
-  ref (reference = undefined) {
-
-    if (reference) {
-      this.#ref = { ...reference }
-    }
-
-    return this.#ref
-
-  }
-
-  /**
-   * Cursor
-   *
-   * Cursor represents an in-stream specification.
-   * The cursor is changed each time a new tag with
-   * a reference specification is encountered it will
-   * be made available on private `this.#cursor` prop.
-   *
-   * @param {string} [name=undefined]
-   * Tag name value to match with a specification
-   *
-   * @return {Parser.NodeSpecification}
-   * @memberof Specs
-   */
-  cursor (name = undefined) {
-
-    if (!name) return this.#cursor
-
-    if (this.#ref?.tags?.[name]) {
-      this.#cursor = this.#ref?.tags?.[name]
-      this.#type = TokenTags[this.#cursor.type]
-      return this.#cursor
-    }
-
-    if (this.#ref?.engine !== Engines.Standard) {
-      if (this.#ref?.objects?.[name]) {
-        this.#cursor = this.#ref?.objects?.[name]
-        this.#type = TokenTags[this.#cursor.type]
-        return this.#cursor
+      if (reference) {
+        Ref = { ...reference }
       }
+
+      return Ref
+
+    },
+
+    /**
+     * Cursor
+     *
+     * Cursor represents an in-stream specification.
+     * The cursor is changed each time a new tag with
+     * a reference specification is encountered it will
+     * be made available on private `cursor` prop.
+     *
+     * @param {string} [name=undefined]
+     * Tag name value to match with a specification
+     *
+     * @return {Parser.NodeSpecification}
+     * @memberof Specs
+     */
+    cursor (name = undefined) {
+
+      if (!name) return Cursor
+
+      if (Ref?.tags?.[name]) {
+        Cursor = Ref?.tags?.[name]
+        Type = TokenTags[Cursor?.type]
+        return Cursor
+      }
+
+      if (Ref?.engine !== Engines.Standard) {
+        if (Ref?.objects?.[name]) {
+          Cursor = Ref?.objects?.[name]
+          Type = TokenTags[Cursor?.type]
+          return Cursor
+        }
+      }
+
+      if (Ref?.filters?.[name]) {
+        Cursor = Ref?.filters?.[name]
+        return Cursor
+      }
+
+      Cursor = undefined
+      Type = undefined
+
+      return Cursor
+
+    },
+
+    /**
+     * Reset Specifications
+     *
+     * Resets the specification stream. This is generally
+     * called upon each tokenization.
+     *
+     * @param {boolean} [hard=false]
+     * Removes the specification variation references
+     *
+     */
+    reset (hard = false) {
+
+      Cursor = undefined
+      Type = undefined
+
+      if (hard) {
+        const props = Object.getOwnPropertyNames(Ref)
+        const size = props.length
+        for (let i = 0; i < size; i++) delete Ref[props[i]]
+      }
+
     }
-
-    if (this.#ref?.filters?.[name]) {
-      this.#cursor = this.#ref?.filters?.[name]
-      return this.#cursor
-    }
-
-    this.#cursor = undefined
-    this.#type = undefined
-
-    return this.#cursor
-
   }
 
-  /**
-   * Reset Specifications
-   *
-   * Resets the specification stream. This is generally
-   * called upon each tokenization.
-   *
-   * @param {boolean} [hard=false]
-   * Removes the specification variation references
-   *
-   */
-  reset (hard = false) {
-
-    this.#cursor = undefined
-    this.#type = undefined
-
-    if (hard) {
-      const props = Object.getOwnPropertyNames(this.#ref)
-      const size = props.length
-      for (let i = 0; i < size; i++) delete this.#ref[props[i]]
-    }
-
-  }
-
-}()
+}())

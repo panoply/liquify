@@ -31,14 +31,11 @@ export const enum TokenType {
   ControlOperator,
 
   IterationIteree,
-
   IterationOperator,
-
   IterationArray,
-
   IterationParameter,
-
   IterationParameterValue,
+
   /**
    * Object
    *

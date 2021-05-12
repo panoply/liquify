@@ -45,13 +45,6 @@ export default (function Stream (string) {
   let token
 
   /**
-   * Token Clip
-   *
-   * @type {string}
-   */
-  let clip
-
-  /**
    * Whitespace Counter
    *
    * @type {number}
@@ -167,6 +160,18 @@ export default (function Stream (string) {
      * @returns {number}
      */
     get space () {
+
+      return spaces
+
+    },
+
+    /**
+     * Get Token
+     *
+     * @memberof Stream
+     * @returns {number}
+     */
+    get spaces () {
 
       return spaces
 
@@ -1110,21 +1115,11 @@ export default (function Stream (string) {
      * @returns {boolean}
      * @see https://git.io/JJnqt
      */
-    UntilChar (code, tokenize = false) {
+    UntilChar (code) {
 
-      if (tokenize) cursor = index
-
-      console.log(cursor)
       while (index < this.source.length) {
-
-        if (this.source.charCodeAt(index) === code) {
-          console.log(index)
-          if (tokenize) token = this.source.substring(cursor, index)
-          return true
-        }
-
+        if (this.source.charCodeAt(index) === code) return true
         this.Advance(1)
-
       }
 
       return false

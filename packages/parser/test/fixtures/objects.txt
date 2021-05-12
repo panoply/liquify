@@ -1,13 +1,3 @@
-{{ name }}
-      {{ name.prop. }}
-      {{ $name['prop'] }}
-      {{ _name["prop"] }}
-      {{ name[object.prop] }}
-      {{ name[object.prop]["string_prop"] }}
-      {{ name.prop[object.prop.foo]["string_prop"][bar.baz] }}
-      {{ name-dash
-
-       }}
-      {{ name
-      newline }}
-      {{ $_name }}
+{{-
+product.bar[objc.prop]["str"]
+-}}

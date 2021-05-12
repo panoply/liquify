@@ -10,14 +10,34 @@
  */
 export const enum TokenContext {
   /**
-   * Trim Whitespace Delimeter Dash LEft: `-`
+   * Trim Whitespace Delimeter Dash Left: `-`
    */
-  LeftTrim = "left_trim",
+  TrimLeft = "trim_left",
+
+  /**
+   * Trim Whitespace Delimeter Dash Right: `-`
+   */
+  TrimRight = "trim_right",
 
   /**
    * Trim Whitespace Delimeter Dash LEft: `-`
    */
-  RightTrim = "right_trim",
+  Object = "object",
+
+  /**
+   * Trim Whitespace Delimeter Dash LEft: `-`
+   */
+  Property = "object_property",
+
+  /**
+   * An object string property value: `object[name.prop]`
+   */
+  PropertyObject = "property_object",
+
+  /**
+   * An object string property value: `object["prop"]`
+   */
+  property_string = "property_string",
 
   /**
    * Whitespace: `\s`
@@ -90,16 +110,6 @@ export const enum TokenContext {
   Boolean = "boolean",
 
   /**
-   * An object value: `object.prop`
-   */
-  Object = "object",
-
-  /**
-   * An object property value: `object.prop`
-   */
-  Property = "property",
-
-  /**
    * An object or array property bracket value: `[`
    */
   OpenBracket = "start",
@@ -108,16 +118,6 @@ export const enum TokenContext {
    * An object or array property bracket value: `]`
    */
   CloseBracket = "end",
-
-  /**
-   * An object string property value: `object[name.prop]`
-   */
-  PropertyObject = "PropertyObject",
-
-  /**
-   * An object string property value: `object["prop"]`
-   */
-  PropertyString = "PropertyString",
 
   /**
    * Array value (used in iteration)
