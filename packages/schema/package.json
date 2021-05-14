@@ -1,19 +1,29 @@
 {
   "name": "@liquify/schema-stores",
-  "version": "0.0.1",
-  "description": "JSON Schema Store files for the Liquify IDE package/extension",
-  "main": "./package/index.js",
-  "scripts": {
-    "_watch": "liquify -i stores -o package -w",
-    "_buildss": "liquify -i stores -o package -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "created": "2021",
+  "version": "0.1.4",
+  "private": false,
+  "license": "SEE LICENSE IN LICENSE.txt",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
-  "private": true,
+  "description": "Liquid language variation specification references used by Liquify",
+  "engines": {
+    "pnpm": ">=4",
+    "node": ">=12"
+  },
   "repository": {
     "url": "https://github.com/panoply/liquify"
   },
+  "main": "package/index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "dev": "rollup -c -w --environment stores",
+    "stores": "rollup -c --environment stores",
+    "build": "pnpm stores && rollup -c --environment prod",
+    "packer": "cd versions; pnpm pack ../ && cd .."
+  },
   "devDependencies": {
+    "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
     "rollup-plugin-terser": "^7.0.2"
   }
 }

@@ -3,7 +3,7 @@ module.exports = {
     {
       files: ['*.jsonc', '.liquidrc', '*.json'],
       options: {
-        parser: 'json-stringify',
+        parser: 'json',
         arrowParens: 'avoid',
         bracketSpacing: true,
         htmlWhitespaceSensitivity: 'css',

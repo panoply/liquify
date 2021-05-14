@@ -28,7 +28,9 @@ export default {
         'changelog.md',
         '.vscodeignore',
         'ThirdPartyNotices.txt',
-        'syntaxes/**/*.json'
+        'syntaxes/**/*.json',
+        'themes/*.json'
+
       ],
       dest: 'package',
       transform: {
@@ -39,6 +41,9 @@ export default {
         'syntaxes/*.json': ({ content }) => ({
           content: jsonmin(content.toString()),
           dest: 'package/syntaxes'
+        }),
+        'themes/*.json': ({ content }) => ({
+          dest: 'package/themes'
         }),
         'syntaxes/injections/*.json': ({ content }) => ({
           content: jsonmin(content.toString()),

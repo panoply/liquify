@@ -1,5 +1,4 @@
 
-import findUp from 'find-up'
 import { resolve, basename } from 'path'
 import argv from '../argv.config.json'
 import defaults from './prompt/defaults'
@@ -12,7 +11,7 @@ const { log } = console
  * CLI Entry - Digests args from the command line and dispatches
  * to the appropriate task.
  *
- * @param {import('types').ArgvParamaters} args
+ * @param {import('types').ArgvParameters} args
  * @param {import('types').Options} state
  */
 export default async function (args, state = { argv: {}, path: {} }) {
@@ -20,25 +19,37 @@ export default async function (args, state = { argv: {}, path: {} }) {
   let flags = Object.entries(args).slice(1)
 
   args = config.normalizeFlagName(args)
+
   state.path = await config.setPath('project')
 
   const { path } = state
-  const pkgs = await config.getPkgs(path.root, '.packages.json').catch(console.error)
+  const pkgs = await config.getPkgs(path.root, 'package.json').catch(console.error)
   const condition = ((path.cwd !== path.root) && (path.base === basename(path.cwd)))
-  const { _: [ task, pkg = condition ? path.base : null ] } = args
+  const {
+    _: [
+      task,
+      pkg = condition ? path.base : null
+    ]
+  } = args
 
-  if (argv.tasks.choices.some(({ name }) => name === task)) state.argv.task = task
+  if (argv.tasks.choices.some(({ name }) => name === task)) {
+    state.argv.task = task
+  }
 
   argv.packages.choices = config.pkgCommands(argv.packages.choices, pkgs)
 
+  console.log(argv.packages.choices, task)
+
   if (argv.packages.choices.some(({ name }) => (name === pkg || name === task))) {
 
-    const pkgcmd = pkg ? pkgs[pkg] : pkgs[task]
-    const { name, repo, version } = pkgcmd
+    const command = pkg ? pkgs[pkg] : pkgs[task]
+    const { name, repo, version } = command
 
-    path.pkg = resolve(path.root, pkgcmd.path)
+    path.pkg = resolve(path.root, command.path)
     state.info = { name, repo, version }
     state.argv.pkg = pkg || task
+
+    console.log(path.pkg)
 
     const { scripts } = await config.getPkgs(path.pkg, 'package.json').catch(console.error)
     const script = await config.parsePkgScripts(state, scripts, args).catch(console.error)
@@ -55,14 +66,18 @@ export default async function (args, state = { argv: {}, path: {} }) {
 
   }
 
-  state.argv = { ...config.argvDefaults(argv), ...state.argv }
+  state.argv = {
+    ...config.argvDefaults(argv),
+    ...state.argv
+  }
 
   if (!path.pkg) return defaults(argv, state)
 
   try {
-    const cmds = await config.flagCommands(path.pkg, flags)
+
+    const cmd = await config.flagCommands(path.pkg, flags)
     path.filter = await config.pkgPath(path)
-    state.argv = { ...state.argv, ...cmds }
+    state.argv = { ...state.argv, ...cmd }
 
     await packages[state.argv.pkg](state)
 

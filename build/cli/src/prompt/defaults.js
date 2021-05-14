@@ -4,7 +4,6 @@ import boxen from 'boxen'
 import chalk from 'chalk'
 import clear from 'console-clear'
 import { getLists } from './choices'
-import execa from 'execa'
 
 const { log } = console
 const ascii = {

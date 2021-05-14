@@ -1,0 +1,110 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "injectionSelector": "L:source.json",
+  "scopeName": "source.liquid.specifications",
+  "patterns": [
+    {
+      "include": "#accepts"
+    },
+    {
+      "include": "#snippet"
+    },
+    {
+      "include": "#link"
+    }
+  ],
+  "repository": {
+    "accepts": {
+      "begin": "(?<=\"accepts\"\\:)\\s*\\[",
+      "end": "\\]",
+      "patterns": [
+        {
+          "name": "keyword.accepts.liquid-specs.array-item.json",
+          "match": "(?:[^:,\\s]{0,})(\")(\\w+)(\")(?=,|\\s*)",
+          "captures": {
+            "1": { "name": "string.quoted.double.json" },
+            "3": { "name": "string.quoted.double.json" }
+          }
+        }
+      ]
+    },
+
+    "link": {
+      "name": "string.json",
+      "begin": "(?<=\"link\"\\:)\\s*\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "string.other.link.json",
+          "match": "https\\:.*(?=\")"
+        }
+      ]
+    },
+    "snippet": {
+      "name": "string.other.liquid-specs.snippet.json",
+      "begin": "(?<=\"snippet\"\\:)\\s*\"",
+      "beginCaptures": {
+        "0": {
+          "name": "string.quoted.double.json"
+        },
+        "1": {
+          "name": "punctuation.separator.dictionary.key-value.json"
+        }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": {
+          "name": "string.quoted.double.json"
+        }
+      },
+      "patterns": [
+        {
+          "begin": "\\$(\\{)",
+          "beginCaptures": {
+            "0": { "name": "constant.character.liquid-specs.pound.json" },
+            "1": {
+              "name": "punctuation.definition.liquid-specs.snippet.begin.json"
+            }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.liquid-specs.snippet.end.json"
+            }
+          },
+          "patterns": [
+            {
+              "match": "\\$(\\{)(\\d+)(\\})",
+              "captures": {
+                "0": {
+                  "name": "constant.character.liquid-specs.pound.json"
+                },
+                "1": {
+                  "name": "punctuation.definition.liquid-specs.snippet.begin.json"
+                },
+                "2": {
+                  "name": "constant.numeric.liquid-specs.cursor.json"
+                },
+                "3": {
+                  "name": "punctuation.definition.liquid-specs.snippet.end.json"
+                }
+              }
+            },
+            {
+              "name": "constant.numeric.liquid-specs.cursor.json",
+              "match": "\\d+(?=\\||\\})"
+            },
+            {
+              "name": "constant.character.liquid-specs.comma.json",
+              "match": "\\,"
+            },
+            {
+              "name": "constant.character.liquid-specs.pipe.json",
+              "match": "\\|"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

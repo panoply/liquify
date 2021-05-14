@@ -9,7 +9,7 @@
     "pnpm": ">=5"
   },
   "scripts": {
-    "dev": "pnpm watch -r --stream  --filter ./packages/ --no-sort --workspace-concurrency Infinity",
+    "dev": "pnpm watch -r --stream  --filter packages/ --no-sort --workspace-concurrency Infinity",
     "dev:build": "pnpm watch -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
     "build:build": "pnpm build -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
     "semantic-release": "semantic-release",
@@ -30,61 +30,67 @@
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0-development"
     },
-    "./cryptographer": {
+    "cryptographer": {
       "path": "build/cryptographer",
       "name": "@liquify/cryptographer",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.1.0"
     },
-    "./cryptospec": {
+    "cryptospec": {
       "path": "build/rollup-plugins/cryptospec",
       "name": "@liquify/rollup-plugin-cryptospec",
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.1.0"
     },
-    "./globs": {
+    "globs": {
       "path": "build/rollup-plugins/globs",
       "name": "@liquify/rollup-plugin-globs",
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
-    "./obfuscator": {
+    "obfuscator": {
       "path": "build/rollup-plugins/obfuscator",
       "name": "@liquify/rollup-plugin-obfuscator",
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
-    "./utils": {
+    "utils": {
       "path": "build/rollup-plugins/utils",
       "name": "@liquify/rollup-plugin-utils",
       "repo": "github.com/panoply/liquify/master/scripts/rollup",
       "version": "0.0.0"
     },
-    "./atom": {
+    "atom": {
       "path": "packages/clients/atom",
       "name": "atom-liquid",
       "repo": "github.com/panoply/liquify",
       "version": "0.1.0"
     },
-    "./vscode": {
+    "vscode": {
       "path": "packages/clients/vscode",
       "name": "liquify-vscode",
       "repo": "github.com/panoply/vscode-liquid.git",
       "version": "0.0.1"
     },
-    "./server": {
+    "schema": {
+      "path": "packages/schema",
+      "name": "@liquify/schema-stores",
+      "repo": "github.com/panoply/liquify",
+      "version": "0.0.1"
+    },
+    "server": {
       "path": "packages/server",
       "name": "@liquify/liquid-language-server",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"
     },
-    "./specs": {
+    "specs": {
       "path": "packages/specs",
       "name": "@liquify/liquid-language-specs",
       "repo": "github.com/panoply/liquify",
       "version": "0.0.0"
     },
-    "./license": {
+    "license": {
       "path": "packages/license",
       "name": "@liquify/license",
       "repo": "github.com/panoply/vscode-liquid.git",

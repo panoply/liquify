@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import { basename } from 'path'
 
 const { log } = console
 
@@ -8,8 +9,8 @@ export const getLists = (command, { name, choices }) => ([
     name,
     pageSize: 15,
     choices: choices.map(({ name, message }) => ([
-      chalk`${name}`,
-      chalk`${' '.repeat(15 - name.length)}`,
+      chalk`${basename(name)}`,
+      chalk`${' '.repeat(20 - name.length)}`,
       chalk`{gray.italic ${message}}`
     ].join('')
     )),

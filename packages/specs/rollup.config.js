@@ -37,12 +37,15 @@ export default {
           type: 'object',
           filters: true,
           singular: true,
-          whitespace: true
+          globals: false,
+          deprecated: false,
+          trims: true
         },
         tags: {
           filters: false,
           singular: false,
-          whitespace: true
+          trims: true,
+          deprecated: false
         }
       }
     }),

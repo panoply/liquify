@@ -127,7 +127,9 @@
         },
         {
           "match": "(?=if|unless|elsif)\\s*[^%}]+\\s(in)\\s+",
-          "captures": { "3": { "name": "invalid.illegal.operator.liquid" } }
+          "captures": {
+            "3": { "name": "invalid.illegal.operator.liquid" }
+          }
         },
         {
           "name": "invalid.illegal.filter.liquid",
@@ -160,8 +162,16 @@
     },
     "strings": {
       "patterns": [
-        { "name": "string.quoted.single.liquid", "begin": "'", "end": "'" },
-        { "name": "string.quoted.double.liquid", "begin": "\"", "end": "\"" }
+        {
+          "name": "string.quoted.single.liquid",
+          "begin": "'",
+          "end": "'"
+        },
+        {
+          "name": "string.quoted.double.liquid",
+          "begin": "\"",
+          "end": "\""
+        }
       ]
     },
     "filters": {

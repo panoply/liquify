@@ -50,7 +50,20 @@ export const pkgPath = async ({ base, root, pkg, cwd }) => {
 export const getPkgs = async (path, file) => {
 
   const read = await readFile(resolve(path, file))
-  return JSON.parse(read.toString())
+
+  try {
+
+    const pkg = JSON.parse(read.toString())
+
+    if (pkg.packages) {
+      return pkg.packages
+    }
+
+    return pkg
+  } catch (e) {
+
+    throw new Error(e)
+  }
 
 }
 
@@ -80,23 +93,23 @@ export const flagCommands = async (cwd, args, command = {}) => {
   // console.log(cwd, args)
   for (const [ flag, value ] of await Object.entries(args)) {
 
-    const argvflag = flags.find(({ name }) => (name === flag))
+    const arg = flags.find(({ name }) => (name === flag))
 
-    if (typeof argvflag !== 'object') {
+    if (typeof arg !== 'object') {
       throw Error(`An unknown flag value of "${value}" was supplied, command failed`)
     }
 
-    if (argvflag.type === 'info') {
-      throw Error(`call to ${argvflag.name}`)
+    if (arg.type === 'info') {
+      throw Error(`call to ${arg.name}`)
     }
 
-    if (argvflag.type !== 'glob') {
-      command[argvflag.name] = value
+    if (arg.type !== 'glob') {
+      command[arg.name] = value
     } else {
       if (typeof value !== 'string') {
-        throw Error(`The flag value "-${flag}" (${argvflag.name}) must be a glob pattern`)
+        throw Error(`The flag value "-${flag}" (${arg.name}) must be a glob pattern`)
       } else {
-        command[argvflag.name] = resolve(cwd, value)
+        command[arg.name] = resolve(cwd, value)
       }
     }
 

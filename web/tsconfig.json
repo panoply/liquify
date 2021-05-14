@@ -1,0 +1,26 @@
+{
+  "exclude": ["node_modules", "public"],
+  "typeAcquisition": {
+    "enable": true,
+    "include": ["node", "dom"]
+  },
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["es2020"],
+    "module": "esnext",
+    "checkJs": true,
+    "allowJs": true,
+    "allowUmdGlobalAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "preserveSymlinks": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noEmitOnError": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "baseUrl": "."
+  }
+}

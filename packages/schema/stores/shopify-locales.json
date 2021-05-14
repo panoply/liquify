@@ -1,8 +1,49 @@
 {
-  "$schema": "./specifications.json",
-  "engine": "liquid",
+  "$schema": "./liquidspecs.json",
+  "engine": "jekyll",
   "updated": "03-05-2020",
   "filters": {
+    "limit": {
+      "description": "Exits the tablerow loop after a specific index.",
+      "snippet": "limit: ${1} ${0}",
+      "arguments": [
+        {
+          "type": "argument",
+          "required": true,
+          "accepts": ["number", "reference"]
+        }
+      ]
+    },
+    "offset": {
+      "description": "Starts the tablerow loop after a specific index.",
+      "snippet": "offset: ${1} ${0}",
+      "arguments": [
+        {
+          "type": "argument",
+          "required": true,
+          "accepts": ["number", "reference"]
+        }
+      ]
+    },
+    "currency_selector": {
+      "description": "Generates a drop-down list that customers can use to select an accepted currency on your storefront. This filter must be used on the form object within a currency form",
+      "link": "https://help.shopify.com/en/themes/liquid/filters/html-filters#currency_selector",
+      "snippet": "class: ${1}, id: ${2}",
+      "within": ["form"],
+      "arguments": [
+        {
+          "type": "parameter",
+          "name": "class",
+          "accepts": ["string", "reference"]
+        },
+        {
+          "type": "parameter",
+          "name": "id",
+          "description": "The id to be applied",
+          "accepts": ["string", "reference"]
+        }
+      ]
+    },
     "asset_img_url": {
       "description": "Returns the asset URL of an image in the \"assets\" folder of a theme. asset_img_url accepts an image size parameter.\n\nYou can specify only a width or only a height and Shopify will calculate the other dimension based on the original image size, keeping the original image's aspect ratio.",
       "snippet": "${1|asset_img_url|asset_img_url: ${2}}",
@@ -10,19 +51,432 @@
       "arguments": [
         {
           "type": "spread",
-          "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ],
-          "options": [
+          "name": "style",
+          "accepts": ["string", "reference"],
+          "arguments": [
             {
-              "name": "master",
-              "description": "The original image size"
+              "accepts": ["string", "reference"],
+              "options": [
+                {
+                  "name": "normal",
+                  "description": "Returns the normal variant of the same weight (if it exists)"
+                },
+                {
+                  "name": "italic",
+                  "description": "Returns the italic variant of the same weight (if it exists)"
+                },
+                {
+                  "name": "oblique",
+                  "description": "Has the same behavior as italic. None of the font families provided by Shopify have both italic and oblique styles."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "spread",
+          "name": "weight",
+          "accepts": ["string", "reference"],
+          "arguments": [
+            {
+              "accepts": ["string", "reference"],
+              "options": [
+                {
+                  "name": [
+                    "100",
+                    "200",
+                    "300",
+                    "400",
+                    "500",
+                    "600",
+                    "700",
+                    "800"
+                  ],
+                  "description": "Returns a variant of the same style with the given weight (if it exists)."
+                },
+                {
+                  "name": [
+                    "+100",
+                    "+200",
+                    "+300",
+                    "+400",
+                    "+500",
+                    "+600",
+                    "+700",
+                    "+800"
+                  ],
+                  "description": "Returns an incrementally bolder font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"+100\" returns the variant with a weight of 500 for the same style."
+                },
+                {
+                  "name": [
+                    "-100",
+                    "-200",
+                    "-300",
+                    "-400",
+                    "-500",
+                    "-600",
+                    "-700",
+                    "-800"
+                  ],
+                  "description": "Returns an incrementally lighter font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"-100\" returns the variant with a weight of 300 for the same style."
+                }
+              ]
             }
           ]
         }
       ]
+    }
+  },
+  "objects": {
+    "additional_checkout_buttons": {
+      "description": "Returns true if a merchant's store has any payment providers with offsite checkouts, such as PayPal Express Checkout. Use additional_checkout_buttons to check whether these gateways exist, and content_for_additional_checkout_buttons to show the additional buttons.",
+      "filters": false,
+      "trims": false,
+      "type": "boolean",
+      "link": "https://help.shopify.com/en/themes/liquid/objects#additional-checkout-buttons"
+    },
+    "address": {
+      "description": "The address object contains information entered by a customer in Shopify's checkout pages.",
+      "type": "object",
+      "properties": [
+        {
+          "description": "Returns the abbreviated value of the Province/State field of the address.",
+          "name": "province_code",
+          "type": "string"
+        },
+        {
+          "description": "Returns the combined values of the Address1 and Address2 fields of the address.",
+          "name": "street",
+          "type": "string"
+        },
+        {
+          "description": "Returns the relative URL of the address.",
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Address1 field of the address.",
+          "name": "address1",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Address2 field of the address.",
+          "name": "address2",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the City field of the address.",
+          "name": "city",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Company field of the address.",
+          "name": "company",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Country field of the address in ISO 3166-2 standard format.",
+          "name": "country_code",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Country field of the address.",
+          "name": "country",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the First Name field of the address.",
+          "name": "first_name",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Last Name field of the address.",
+          "name": "last_name",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Phone field of the address.",
+          "name": "phone",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Postal/Zip field of the address.",
+          "name": "zip",
+          "type": "string"
+        },
+        {
+          "description": "Returns the value of the Province/State field of the address.",
+          "name": "province",
+          "type": "string"
+        },
+        {
+          "description": "Returns the values of the First Name and Last Name fields of the address.",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "link": "https://help.shopify.com/en/themes/liquid/objects/address"
+    },
+    "all_country_option_tags": {
+      "description": "The all_country_option_tags object creates an <option> tag for each country. An attribute called data-provinces is set for each <option>, and contains a JSON-encoded array of the country's subregions. If a country doesn't have any subregions, then an empty array is set for its data-provinces attribute.",
+      "filters": false,
+      "link": "https://help.shopify.com/themes/liquid/objects#all_products",
+      "type": "array"
+    },
+    "all_products": {
+      "description": "Returns a list of all the products in your store. You can use all_products to access products by their handles.",
+      "link": "https://help.shopify.com/themes/liquid/objects#all_products",
+      "type": "array"
+    },
+    "article": {
+      "description": "Returns a list of all the blog articles in a store.",
+      "type": "object",
+      "properties": [
+        {
+          "description": "Returns all the tags for the article.",
+          "name": "tags",
+          "type": "array"
+        },
+        {
+          "description": "Returns an object with information about the article's author.",
+          "name": "user",
+          "type": "object",
+          "properties": [
+            {
+              "description": "Returns the bio of the author of the article.",
+              "name": "bio",
+              "type": "string"
+            },
+            {
+              "description": "Returns the email of the author of the article.",
+              "name": "email",
+              "type": "string"
+            },
+            {
+              "description": "Returns the first name of the author of the article.",
+              "name": "first_name",
+              "type": "string"
+            },
+            {
+              "description": "Returns the home page of the article author.",
+              "name": "homepage",
+              "type": "string"
+            },
+            {
+              "description": "Returns the image object of the author of the article.",
+              "name": "image",
+              "type": "object",
+              "properties": [
+                {
+                  "description": "Returns the article image's alt text.",
+                  "name": "alt",
+                  "type": "string"
+                },
+                {
+                  "description": "Returns the relative URL to the article image.",
+                  "name": "src",
+                  "type": "string"
+                }
+              ]
+            },
+            {
+              "description": "Returns the last name of the author of the article.",
+              "name": "last_name",
+              "type": "string"
+            },
+            {
+              "description": "Returns true if the author of the article is the account owner of the store. Returns false if the author is not the account owner.",
+              "name": "account_owner",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "description": "Returns article.excerpt of the article if it exists. Returns article.content if an excerpt does not exist for the article.",
+          "name": "excerpt_or_content",
+          "type": "string"
+        },
+        {
+          "description": "Returns the article's image object.",
+          "name": "image",
+          "properties": [
+            {
+              "description": "Returns the article image's alt text.",
+              "name": "alt",
+              "type": "string"
+            },
+            {
+              "description": "Returns the relative URL to the article image.",
+              "name": "src",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "description": "Returns the content of the article.",
+          "name": "content"
+        },
+        {
+          "description": "Returns the excerpt of the article.",
+          "name": "excerpt"
+        },
+        {
+          "description": "Returns the full name of the article's author.",
+          "name": "author"
+        },
+        {
+          "description": "Returns the handle of the article.",
+          "name": "handle"
+        },
+        {
+          "description": "Returns the id of the article.",
+          "name": "id"
+        },
+        {
+          "description": "Returns the number of published comments for the article.",
+          "name": "comments_count"
+        },
+        {
+          "description": "Returns the published comments of the article. Returns an empty array if comments are disabled.",
+          "name": "comments"
+        },
+        {
+          "description": "Returns the relative URL of the article.",
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "description": "Returns the relative URL where POST requests are sent to when creating new comments.",
+          "name": "comment_post_url",
+          "type": "string"
+        },
+        {
+          "description": "Returns the timestamp of when the article was created. Use the date filter to format the timestamp.",
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "description": "Returns the title of the article.",
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "description": "Returns true if comments are enabled. Returns false if comments are disabled.",
+          "name": "comments_enabled",
+          "type": "boolean"
+        },
+        {
+          "description": "Returns true if the blog that the article belongs to is set to moderate comments. Returns false if the blog is not moderated.",
+          "name": "moderated",
+          "type": "boolean"
+        }
+      ],
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects#articles"
+    }
+  },
+  "tags": {
+    "echo": {
+      "description": "Outputs an expression in the rendered HTML. This is identical to wrapping an expression in `{{` and `}}`, but works inside liquid tags. Filters are supported.",
+      "link": "https://help.shopify.com/en/themes/liquid/tags/theme-tags#echo",
+      "singular": true,
+      "type": "variable"
+    },
+    "form": {
+      "type": "output",
+      "description": "Creates an HTML <form> element along with the required <input> elements to submit the form to a particular endpoint.",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form",
+      "parameters": [
+        {
+          "name": "article",
+          "description": "The `article` object",
+          "accepts": ["string"]
+        },
+        {
+          "name": "address",
+          "description": "The `address` object is required when editing an existing address",
+          "accepts": ["string"]
+        },
+        {
+          "name": "customer.new_address",
+          "description": "The `customer.new_address` is required for creating a new address",
+          "accepts": ["string"]
+        },
+        {
+          "name": "product",
+          "description": "The `product` object is required when generating a form for adding a product variant to the cart",
+          "accepts": ["string"]
+        }
+      ],
+      "arguments": [
+        {
+          "name": "activate_customer_password",
+          "description": "Generates a form for activating a customer account on the activate_account.liquid template."
+        },
+        {
+          "description": "Generates a form for adding a product variant to the cart. Requires a \"product\" object as a parameter.",
+          "name": "product"
+        },
+        {
+          "description": "Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter.",
+          "name": "new_comment"
+        },
+        {
+          "description": "Generates a form for creating a new customer account on the register.liquid template.",
+          "name": "create_customer"
+        },
+        {
+          "description": "Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup.",
+          "name": "customer"
+        },
+        {
+          "description": "Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address.",
+          "name": "customer_address"
+        },
+        {
+          "description": "Generates a form for logging into Customer Accounts on the login.liquid template.",
+          "name": "customer_login"
+        },
+        {
+          "description": "Generates a form for recovering a lost password on the login.liquid template.",
+          "name": "recover_customer_password"
+        },
+        {
+          "description": "Generates a form for submitting an email through the Liquid contact form.",
+          "name": "contact"
+        },
+        {
+          "description": "Generates a form on the customers/reset_password.liquid template for a customer to reset their password.",
+          "name": "reset_customer_password"
+        },
+        {
+          "description": "Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.",
+          "name": "guest_logi n"
+        },
+        {
+          "description": "Generates a form on the password.liquid template for entering a password-protected storefront.",
+          "name": "storefront_password"
+        },
+        {
+          "description": "Generates a form that lets your customer change the currency in your storefront.",
+          "name": "currency"
+        }
+      ]
+    },
+    "include": {
+      "description": "The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",
+      "filters": false,
+      "trims": false,
+      "deprecated": true,
+      "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
+      "singular": true,
+      "type": "import"
+    },
+    "layout": {
+      "description": "Include \"{% layout 'alternate' %}\" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:",
+      "singular": true,
+      "filters": false,
+      "type": "import",
+      "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"
     }
   }
 }

@@ -10,15 +10,28 @@ import stripIndent from 'strip-indent'
  */
 export const jsonmin = content => {
 
-  const parsed = JSON.parse(jsonStrip(content))
-  const minified = jsonMinify(JSON.stringify(parsed))
+  if (content.length === 0) {
+    return console.log(
+      chalk`{italic  JSON file is empty, skipping}`
+    )
+  }
 
-  return minified
+  try {
+
+    const parsed = JSON.parse(jsonStrip(content))
+    const minified = jsonMinify(JSON.stringify(parsed))
+
+    return minified
+
+  } catch (e) {
+
+    throw new Error(e)
+  }
 
 }
 
 /**
- * Plugins - Concats development and production plugins
+ * Plugins - Concat development and production plugins
  * based on process env variable.
  *
  * @param {array} devPlugins

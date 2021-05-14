@@ -1,6 +1,6 @@
 {
   "engine": "shopify",
-  "updated": "06-06-2020",
+  "updated": "14-05-2021",
   "filters": {
     "asset_img_url": {
       "description": "Returns the asset URL of an image in the \"assets\" folder of a theme. asset_img_url accepts an image size parameter.\n\nYou can specify only a width or only a height and Shopify will calculate the other dimension based on the original image size, keeping the original image's aspect ratio.",
@@ -10,10 +10,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ],
+          "accepts": ["string", "reference"],
           "options": [
             {
               "name": "master",
@@ -25,12 +22,8 @@
           "type": "parameter",
           "name": "crop",
           "description": "You can specify a crop parameter to make sure that the resulting image's dimensions match the requested dimensions. If the entire image won't fit in your requested dimensions, the crop parameter specifies what part of the image to show",
-          "link": "https://shopify.dev/docs/themes/liquid/reference/filters/url-filters#size-parameters",
           "required": false,
-          "accepts": [
-            "$string",
-            "$reference"
-          ],
+          "accepts": ["string", "reference"],
           "options": [
             {
               "name": "top"
@@ -53,11 +46,7 @@
           "type": "parameter",
           "name": "scale",
           "description": "The scale parameter lets you specify the pixel density of the image",
-          "link": "https://shopify.dev/docs/themes/liquid/reference/filters/url-filters#size-parameters",
-          "accepts": [
-            "$number",
-            "$reference"
-          ],
+          "accepts": ["number", "reference"],
           "options": [
             {
               "name": "2"
@@ -71,11 +60,7 @@
           "type": "parameter",
           "name": "format",
           "description": "The format parameter lets you specify what file format to use for the displayed image.",
-          "link": "https://shopify.dev/docs/themes/liquid/reference/filters/url-filters#size-parameters",
-          "accepts": [
-            "$string",
-            "$reference"
-          ],
+          "accepts": ["string", "reference"],
           "options": [
             {
               "name": "jpg"
@@ -90,38 +75,26 @@
     },
     "asset_url": {
       "description": "Returns the URL of a file in the \"assets\" folder of a theme.",
-      "link": "https://help.shopify.com/themes/liquid/filters/url-filters#asset_url",
-      "arguments": false
+      "link": "https://help.shopify.com/themes/liquid/filters/url-filters#asset_url"
     },
     "currency_selector": {
       "description": "Generates a drop-down list that customers can use to select an accepted currency on your storefront. This filter must be used on the form object within a currency form",
       "link": "https://help.shopify.com/en/themes/liquid/filters/html-filters#currency_selector",
       "snippet": "class: ${1}, id: ${2}",
-      "within": [
-        "form"
-      ],
-      "parents": [
-        "form"
-      ],
+      "within": ["form"],
       "arguments": [
         {
           "type": "parameter",
           "name": "format",
           "required": false,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         },
         {
           "type": "parameter",
           "name": "id",
           "description": "The id to be applied",
           "required": false,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -146,10 +119,7 @@
           "type": "parameter",
           "name": "font_display",
           "description": "The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use",
-          "accepts": [
-            "$string",
-            "$reference"
-          ],
+          "accepts": ["string", "reference"],
           "options": [
             {
               "name": "auto",
@@ -181,89 +151,77 @@
       "link": "https://help.shopify.com/en/themes/liquid/filters/font-filters#font_face",
       "arguments": [
         {
+          "type": "spread",
           "name": "style",
-          "type": "argument",
-          "accepts": [
-            "$string",
-            "$reference"
-          ],
-          "options": [
+          "accepts": ["string", "reference"],
+          "arguments": [
             {
-              "name": "normal",
-              "description": "Returns the normal variant of the same weight (if it exists)."
-            },
-            {
-              "name": "italic",
-              "description": "Returns the italic variant of the same weight (if it exists).."
-            },
-            {
-              "name": "oblique",
-              "description": "Has the same behavior as italic. None of the font families provided by Shopify have both italic and oblique styles."
+              "accepts": ["string", "reference"],
+              "options": [
+                {
+                  "name": "normal",
+                  "description": "Returns the normal variant of the same weight (if it exists)"
+                },
+                {
+                  "name": "italic",
+                  "description": "Returns the italic variant of the same weight (if it exists)"
+                },
+                {
+                  "name": "oblique",
+                  "description": "Has the same behavior as italic. None of the font families provided by Shopify have both italic and oblique styles."
+                }
+              ]
             }
           ]
         },
         {
+          "type": "spread",
           "name": "weight",
-          "type": "argument",
-          "accepts": [
-            "$string",
-            "$reference"
-          ],
-          "options": [
+          "accepts": ["string", "reference"],
+          "arguments": [
             {
-              "name": "normal",
-              "description": "Has the same behavior as 400."
-            },
-            {
-              "name": "bold",
-              "description": "Has the same behavior as 700."
-            },
-            {
-              "name": "lighter",
-              "description": "Returns a lighter variant of the same style by applying the rules used by the CSS font-weight property and browser fallback weights (if it exists)."
-            },
-            {
-              "name": "bolder",
-              "description": "Returns a bolder variant of the same style by applying the rules used by the CSS font-weight property and browser fallback weights (if it exists)."
-            },
-            {
-              "name": [
-                "100",
-                "200",
-                "300",
-                "400",
-                "500",
-                "600",
-                "700",
-                "800"
-              ],
-              "description": "Returns a variant of the same style with the given weight (if it exists)."
-            },
-            {
-              "name": [
-                "+100",
-                "+200",
-                "+300",
-                "+400",
-                "+500",
-                "+600",
-                "+700",
-                "+800"
-              ],
-              "description": "Returns an incrementally bolder font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"+100\" returns the variant with a weight of 500 for the same style."
-            },
-            {
-              "name": [
-                "-100",
-                "-200",
-                "-300",
-                "-400",
-                "-500",
-                "-600",
-                "-700",
-                "-800"
-              ],
-              "description": "Returns an incrementally lighter font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"-100\" returns the variant with a weight of 300 for the same style."
+              "accepts": ["string", "reference"],
+              "options": [
+                {
+                  "name": [
+                    "100",
+                    "200",
+                    "300",
+                    "400",
+                    "500",
+                    "600",
+                    "700",
+                    "800"
+                  ],
+                  "description": "Returns a variant of the same style with the given weight (if it exists)."
+                },
+                {
+                  "name": [
+                    "+100",
+                    "+200",
+                    "+300",
+                    "+400",
+                    "+500",
+                    "+600",
+                    "+700",
+                    "+800"
+                  ],
+                  "description": "Returns an incrementally bolder font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"+100\" returns the variant with a weight of 500 for the same style."
+                },
+                {
+                  "name": [
+                    "-100",
+                    "-200",
+                    "-300",
+                    "-400",
+                    "-500",
+                    "-600",
+                    "-700",
+                    "-800"
+                  ],
+                  "description": "Returns an incrementally lighter font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"-100\" returns the variant with a weight of 300 for the same style."
+                }
+              ]
             }
           ]
         }
@@ -276,10 +234,7 @@
       "arguments": [
         {
           "type": "argument",
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -304,18 +259,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -327,10 +276,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -342,10 +288,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -357,10 +300,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -434,15 +374,18 @@
       "link": "https://help.shopify.com/themes/liquid/filters/url-filters#within"
     }
   },
+
   "objects": {
     "additional_checkout_buttons": {
-      "description": "The content_for_layout object is required in theme.liquid. It must be placed inside the HTML <body> tag. It dynamically loads content generated by other templates such as index.liquid or product.liquid.",
+      "description": "Returns true if a merchant's store has any payment providers with offsite checkouts, such as PayPal Express Checkout. Use additional_checkout_buttons to check whether these gateways exist, and content_for_additional_checkout_buttons to show the additional buttons.",
       "filters": false,
-      "link": "https://help.shopify.com/en/themes/liquid/objects#additional-checkout-buttons",
-      "trim": false
+      "trims": false,
+      "type": "boolean",
+      "link": "https://help.shopify.com/en/themes/liquid/objects#additional-checkout-buttons"
     },
     "address": {
       "description": "The address object contains information entered by a customer in Shopify's checkout pages.",
+      "type": "object",
       "properties": [
         {
           "description": "Returns the abbreviated value of the Province/State field of the address.",
@@ -679,6 +622,7 @@
     },
     "block": {
       "description": "A block represents the content and settings of a single block in an array of section blocks. The block object can be accessed in a section file by looping through section.blocks.",
+      "type": "object",
       "properties": [
         {
           "description": "Returns a string representing the block's attributes.",
@@ -701,6 +645,7 @@
     },
     "blog": {
       "description": "Blog object",
+      "type": "object",
       "properties": [
         {
           "description": "Returns all tags in a blog. Similar to all_tags, but only returns tags of articles that are in the filtered view.",
@@ -754,12 +699,14 @@
       "link": "https://help.shopify.com/themes/liquid/objects#blogs"
     },
     "canonical_url": {
+      "type": "object",
       "description": "Returns the canonical URL of the current page. A page's canonical URL is the page's default URL without any URL parameters. For products and variants, the canonical URL is the default product page with no collection or variant selected.",
       "filters": false,
       "link": "https://help.shopify.com/themes/liquid/objects#canonical_url"
     },
     "cart": {
       "description": "Cart object",
+      "type": "object",
       "properties": [
         {
           "description": "Cart attributes allow the capturing of more information on the cart page.",
@@ -814,6 +761,8 @@
     },
     "collection": {
       "filters": false,
+      "type": "object",
+      "description": "Returns a collection",
       "properties": [
         {
           "description": "Returns a list of all product tags in a collection. collection.all_tags will return the full list of tags even when the collection view is filtered. collection.all_tags will return at most 1,000 tags",
@@ -907,12 +856,15 @@
       "link": "https://help.shopify.com/themes/liquid/objects#collection"
     },
     "collections": {
+      "type": "array",
       "description": "Returns a list of all of the collections in a store",
       "filters": false,
       "link": "https://help.shopify.com/themes/liquid/objects#collections"
     },
     "comment": {
+      "type": "object",
       "filters": false,
+      "description": "Article Comment",
       "properties": [
         {
           "description": "Returns the URL of the article with `comment.id` appended to it. This is so the page will automatically scroll to the comment",
@@ -950,38 +902,39 @@
       "link": "https://help.shopify.com/themes/liquid/objects/comment"
     },
     "content_for_additional_checkout_buttons": {
+      "const": true,
+      "type": "variable",
       "description": "Returns checkout buttons for any active payment providers with offsite checkouts. The \"additional_checkout_buttons\" and \"content_for_additional_checkout_buttons\" are used in many Shopify themes.",
-      "filters": false,
-      "link": "https://help.shopify.com/en/themes/liquid/objects#content-for-additional-checkout-button",
-      "whitespace": false
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects#content_for_additional_checkout_buttons"
     },
     "content_for_header": {
+      "const": true,
+      "type": "variable",
       "description": "The content_for_header object is required in theme.liquid. It must be placed inside the HTML <head> tag. It dynamically loads all scripts required by Shopify into the document head. These scripts include Shopify analytics, Google Analytics, and scripts required for Shopify apps.",
-      "filters": false,
-      "link": "https://help.shopify.com/en/themes/liquid/objects#content-objects",
-      "whitespace": false
+      "link": "https://help.shopify.com/en/themes/liquid/objects#content-objects"
     },
     "content_for_index": {
+      "const": true,
+      "type": "variable",
       "description": "The content_for_index object contains the content of dynamic sections to be rendered on the home page. This object must be included in templates/index.liquid.",
-      "filters": false,
-      "link": "https://help.shopify.com/en/themes/liquid/objects#content-for-index",
-      "whitespace": false
+      "link": "https://help.shopify.com/en/themes/liquid/objects#content-for-index"
     },
     "content_for_layout": {
+      "const": true,
+      "type": "variable",
       "description": "The content_for_layout object is required in theme.liquid. It must be placed inside the HTML <body> tag. It dynamically loads content generated by other templates such as index.liquid or product.liquid.",
-      "filters": false,
-      "link": "https://help.shopify.com/en/themes/liquid/objects#content-for-layout",
-      "whitespace": false
+      "link": "https://help.shopify.com/en/themes/liquid/objects#content-for-layout"
     },
     "country_option_tags": {
+      "const": true,
+      "type": "variable",
       "description": "The country_option_tags object creates an <option> tag for each country that is included as a shipping zone on the Shipping page of the admin. An attribute called data-provinces is set for each <option>, and contains a JSON-encoded array of the country's subregions. If a country doesn't have any subregions, then an empty array is set for its data-provinces attribute",
-      "filters": false,
-      "link": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags",
-      "whitespace": false
+      "link": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags"
     },
     "currency": {
       "description": "The currency object",
       "filters": false,
+      "type": "object",
       "properties": [
         {
           "description": "Returns the ISO code of the currency (for example `USD` or `EUR`).",
@@ -997,21 +950,24 @@
         }
       ],
       "link": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags",
-      "whitespace": false
+      "trims": false
     },
     "current_page": {
+      "type": "number",
+      "scope": ["paginate"],
       "description": "current_page returns the number of the page you are on when browsing through paginated content. It can be used outside the paginate block",
       "filters": false,
       "link": "https://help.shopify.com/themes/liquid/objects#collections"
     },
     "current_tags": {
+      "type": "array",
       "description": "Product tags are used to filter a collection to only show products that contain a specific product tag. Similarly, article tags are used to filter a blog to only show products that contain a specific article tag. The current_tags variable is an array that contains all tags that are being used to filter a collection or blog.",
       "filters": false,
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/current-tags"
     },
     "customer": {
       "description": "The customer object contains information about a customer who has a customer account",
-      "filters": false,
+      "type": "object",
       "properties": [
         {
           "description": "Returns `true` if the customer accepts marketing, returns `false` if the customer does not",
@@ -1100,10 +1056,11 @@
         }
       ],
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/customer",
-      "whitespace": false
+      "trims": false
     },
     "customer_address": {
       "description": "The currency object",
+      "type": "object",
       "properties": [
         {
           "description": "Returns the abbreviated value of the Province/State field of the address",
@@ -1163,9 +1120,10 @@
         }
       ],
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/customer-address",
-      "whitespace": false
+      "trims": false
     },
     "discount_allocation": {
+      "type": "object",
       "description": "The `discount_allocation` object contains all of the information about how a particular discount affects a line item and how the price reduces. The object can be accessed on customer order and notification templates. **Shopify Plus** merchants can also access properties of the `discount_allocation` object in the `checkout.liquid` layout file.",
       "properties": [
         {
@@ -1178,9 +1136,10 @@
         }
       ],
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/discount-allocation",
-      "whitespace": false
+      "trims": false
     },
     "discount_application": {
+      "type": "object",
       "description": "The `discount_application` object captures the intent of a `discount applied` on an order. The object can be accessed on customer order and notification templates. **Shopify Plus** merchants can also access properties of the discount_allocation object in the checkout.liquid layout file.",
       "properties": [
         {
@@ -1213,9 +1172,10 @@
         }
       ],
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/discount-application",
-      "whitespace": false
+      "trims": false
     },
     "external_video": {
+      "type": "object",
       "description": "The external_video object can be accessed from the product object's media attribute. It contains information about a YouTube video associated with a product",
       "properties": [
         {
@@ -1250,6 +1210,7 @@
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/external-video"
     },
     "font": {
+      "type": "object",
       "description": "The font object is used to access the font_picker settings. It can be accessed via the global settings object",
       "properties": [
         {
@@ -1284,11 +1245,10 @@
       ]
     },
     "form": {
+      "type": "object",
       "description": "The form object is used within the form tag. It contains attributes of its parent form.",
       "filters": false,
-      "within": [
-        "form"
-      ],
+      "scope": ["form"],
       "properties": [
         {
           "name": "address1",
@@ -1365,6 +1325,8 @@
       ]
     },
     "forloop": {
+      "scope": ["for"],
+      "type": "object",
       "description": "The forloop object contains attributes of its parent for loop.",
       "filters": false,
       "properties": [
@@ -1405,12 +1367,10 @@
         }
       ],
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/for-loops",
-      "whitespace": false,
-      "within": [
-        "for"
-      ]
+      "trims": false
     },
     "fulfillment": {
+      "type": "object",
       "description": "The fulfillment object",
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/fulfillment",
       "properties": [
@@ -1439,9 +1399,11 @@
     "handle": {
       "description": "Returns the handle of the page that is being viewed",
       "link": "https://help.shopify.com/themes/liquid/objects#handle",
-      "type": "string"
+      "type": "string",
+      "global": true
     },
     "image": {
+      "type": "object",
       "description": "The image object returns information about an image.",
       "properties": [
         {
@@ -1492,6 +1454,7 @@
       "link": "https://help.shopify.com/themes/liquid/objects#image"
     },
     "images": {
+      "type": "object",
       "description": "Allows you to access any image in a store by its filename",
       "link": "https://help.shopify.com/themes/liquid/objects#images"
     },
@@ -1501,6 +1464,7 @@
       "type": "array"
     },
     "product": {
+      "type": "object",
       "description": "Product object",
       "properties": [
         {
@@ -1616,7 +1580,7 @@
     },
     "order": {
       "description": "You can access the order object in a theme's Liquid templates with \"customer.orders\"",
-      "singular": true,
+      "type": "object",
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/order",
       "properties": [
         {
@@ -1803,6 +1767,7 @@
     },
     "section": {
       "description": "The section object lets you access a section's properties and setting values.",
+      "type": "object",
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/section",
       "properties": [
         {
@@ -1834,24 +1799,32 @@
       "type": "output",
       "description": "Creates an HTML <form> element along with the required <input> elements to submit the form to a particular endpoint.",
       "link": "https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form",
-      "parameters": {
-        "article": {
-          "description": "The `article` object"
-        },
-        "address": {
-          "description": "The `address` object is required when editing an existing address"
-        },
-        "customer.new_address": {
-          "description": "The `customer.new_address` is required for creating a new address"
-        },
-        "product": {
-          "description": "The `product` object is required when generating a form for adding a product variant to the cart"
-        }
-      },
-      "types": [
+      "parameters": [
         {
-          "description": "Generates a form for activating a customer account on the activate_account.liquid template.",
-          "name": "activate_customer_password"
+          "name": "article",
+          "description": "The `article` object",
+          "accepts": ["string"]
+        },
+        {
+          "name": "address",
+          "description": "The `address` object is required when editing an existing address",
+          "accepts": ["string"]
+        },
+        {
+          "name": "customer.new_address",
+          "description": "The `customer.new_address` is required for creating a new address",
+          "accepts": ["string"]
+        },
+        {
+          "name": "product",
+          "description": "The `product` object is required when generating a form for adding a product variant to the cart",
+          "accepts": ["string"]
+        }
+      ],
+      "arguments": [
+        {
+          "name": "activate_customer_password",
+          "description": "Generates a form for activating a customer account on the activate_account.liquid template."
         },
         {
           "description": "Generates a form for adding a product variant to the cart. Requires a \"product\" object as a parameter.",
@@ -1906,18 +1879,15 @@
     "include": {
       "description": "The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",
       "filters": false,
-      "whitespace": false,
+      "trims": false,
       "deprecated": true,
-      "seperator": "pipe",
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
       "singular": true,
-      "parameters": true,
       "type": "import"
     },
     "layout": {
       "description": "Include \"{% layout 'alternate' %}\" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:",
       "singular": true,
-      "parameters": false,
       "filters": false,
       "type": "import",
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"
@@ -1927,21 +1897,13 @@
       "filters": false,
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
       "singular": false,
-      "type": "iteration",
-      "parameters": [
-        {
-          "name": "by",
-          "description": "The by parameter is followed by an integer between 1 and 50 that tells the paginate tag how many results it should output per page."
-        }
-      ]
+      "type": "iteration"
     },
     "section": {
       "description": "Renders a section from the sections folder of a theme.",
       "filters": false,
-      "language": "json",
       "link": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
       "singular": true,
-      "parameters": false,
       "type": "import"
     },
     "schema": {
@@ -1951,13 +1913,13 @@
       "link": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
       "singular": false,
       "type": "embedded",
-      "whitespace": false
+      "trims": false
     },
     "style": {
       "type": "embedded",
       "description": "The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",
       "filters": false,
-      "whitespace": false,
+      "trims": false,
       "language": "css",
       "link": "https://help.shopify.com/themes/liquid/tags/theme-tags#style"
     },
@@ -1965,11 +1927,11 @@
       "type": "embedded",
       "description": "The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",
       "filters": false,
-      "whitespace": false,
+      "trims": false,
       "deprecated": true,
       "language": "css",
       "link": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags",
-      "types": [
+      "arguments": [
         {
           "name": "scss",
           "description": "SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."
@@ -1981,7 +1943,7 @@
       "description": "The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",
       "filters": false,
       "deprecated": true,
-      "whitespace": false,
+      "trims": false,
       "language": "javascript",
       "link": "https://help.shopify.com/en/themes/development/sections#javascript-and-stylesheet-tags"
     }

@@ -1,6 +1,7 @@
 {
   "engine": "standard",
-  "updated": "06-06-2020",
+  "updated": "14-06-2021",
+  "$schema": "./liquidspecs.json",
   "filters": {
     "abs": {
       "description": "Returns the absolute value of a number",
@@ -14,10 +15,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -29,10 +27,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -44,10 +39,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -71,9 +63,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$reference"
-          ]
+          "accepts": ["reference"]
         }
       ]
     },
@@ -85,10 +75,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -100,21 +87,14 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         },
         {
           "type": "parameter",
           "name": "allow_false",
           "description": "To allow variables to return false instead of the default value, you can use the allow_false parameter.",
           "required": false,
-          "version": "5.0.0",
-          "accepts": [
-            "$boolean",
-            "$reference"
-          ]
+          "accepts": ["boolean", "reference"]
         }
       ]
     },
@@ -126,10 +106,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -161,10 +138,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -184,10 +158,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -199,10 +170,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -214,10 +182,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -233,10 +198,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -248,10 +210,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -263,10 +222,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -278,10 +234,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -293,18 +246,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         },
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -316,18 +263,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         },
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -355,18 +296,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -378,10 +313,7 @@
         {
           "type": "argument",
           "required": false,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -397,10 +329,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -424,10 +353,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         }
       ]
     },
@@ -439,18 +365,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -462,18 +382,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$number",
-            "$reference"
-          ]
+          "accepts": ["number", "reference"]
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     },
@@ -500,18 +414,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": [
-            "$string",
-            "$reference"
-          ]
+          "accepts": ["string", "reference"]
         }
       ]
     }
@@ -530,9 +438,7 @@
       "link": "https://shopify.github.io/liquid/tags/iteration/#break",
       "singular": true,
       "type": "iteration",
-      "parents": [
-        "for"
-      ]
+      "scope": ["for"]
     },
     "capture": {
       "description": "Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.",
@@ -555,18 +461,14 @@
       "link": "https://shopify.github.io/liquid/tags/iteration/#continue",
       "singular": true,
       "type": "iteration",
-      "parents": [
-        "for"
-      ]
+      "scope": ["for"]
     },
     "cycle": {
       "description": "Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",
       "link": "https://shopify.github.io/liquid/tags/iteration/#cycle",
       "singular": true,
       "type": "iteration",
-      "parents": [
-        "for"
-      ]
+      "scope": ["for"]
     },
     "decrement": {
       "description": "Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",
@@ -579,66 +481,40 @@
       "link": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "parents": [
-        "if",
-        "elsif",
-        "case",
-        "unless",
-        "when",
-        "for"
-      ]
+      "scope": ["if", "elsif", "case", "unless", "when", "for"]
     },
     "elsif": {
       "description": "Adds more conditions within an if or unless block.",
       "link": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "parents": [
-        "if"
-      ]
+      "scope": ["if"]
     },
     "for": {
       "description": "Repeatedly executes a block of code.",
       "link": "https://shopify.github.io/liquid/tags/iteration/#for",
       "snippet": "for ${1:item} in ${2|collection,(${3}..${4})|} ${0}",
       "type": "iteration",
-      "parameters": {
-        "offset": {
+      "parameters": [
+        {
+          "name": "offset",
           "description": "Begins the loop at the specified index",
-          "snippet": "offset: ${0}",
           "required": false,
-          "arguments": [
-            {
-              "type": "argument",
-              "required": true,
-              "accepts": [
-                "$number",
-                "$reference"
-              ]
-            }
-          ]
+          "accepts": ["number", "reference"]
         },
-        "limit": {
+        {
+          "name": "limit",
           "description": "Limits the loop to the specified number of iterations",
-          "snippet": "limit: ${1} ${0}",
           "required": false,
-          "arguments": [
-            {
-              "type": "argument",
-              "required": true,
-              "accepts": [
-                "$number",
-                "$reference"
-              ]
-            }
-          ]
+          "accepts": ["number", "reference"]
         },
-        "reversed": {
+        {
+          "name": "reversed",
           "description": "Reverses the order of the loop. Note that this flag’s spelling is different from the filter reverse",
-          "snippet": "reverse ${0}",
-          "required": false
+          "required": false,
+          "accepts": ["keyword"]
         }
-      }
+      ]
     },
     "if": {
       "description": "Executes a block of code only if a certain condition is met.",
@@ -662,90 +538,32 @@
       "filters": false,
       "singular": true,
       "link": "https://shopify.github.io/liquid/tags/template/#render",
-      "version": "5.0.0",
-      "type": "import",
-      "parameters": {
-        "for": {
-          "snippet": "for ${1} as ${2} ${0}",
-          "required": false,
-          "description": "A snippet can be rendered once for each value of an enumerable object by using the `for` and `as` parameters.\n\nWhen using the for parameter, the forloop object is accessible within the snippet.",
-          "arguments": [
-            {
-              "type": "argument",
-              "required": true,
-              "accepts": [
-                "$reference"
-              ]
-            }
-          ]
-        },
-        "with": {
-          "description": "A single object can be passed to a snippet by using the `with` and `as` parameters.",
-          "separator": "space",
-          "snippet": "with ${1} as ${2} ${0}",
-          "arguments": [
-            {
-              "type": "argument",
-              "required": true,
-              "accepts": [
-                "$reference"
-              ]
-            }
-          ]
-        }
-      }
+      "type": "import"
     },
     "tablerow": {
       "description": "Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",
       "link": "https://shopify.github.io/liquid/tags/iteration/#tablerow",
       "type": "iteration",
-      "parameters": {
-        "cols": {
+      "parameters": [
+        {
+          "name": "cols",
           "description": "Defines how many columns the tables should have.",
-          "snippet": "cols: ${1} ${0}",
           "required": false,
-          "arguments": [
-            {
-              "type": "argument",
-              "required": true,
-              "accepts": [
-                "$number",
-                "$reference"
-              ]
-            }
-          ]
+          "accepts": ["number", "reference"]
         },
-        "limit": {
+        {
+          "name": "limit",
           "description": "Exits the tablerow loop after a specific index.",
-          "snippet": "limit: ${1} ${0}",
           "required": false,
-          "arguments": [
-            {
-              "type": "argument",
-              "required": true,
-              "accepts": [
-                "$number",
-                "$reference"
-              ]
-            }
-          ]
+          "accepts": ["number", "reference"]
         },
-        "offset": {
+        {
+          "name": "offset",
           "description": "Starts the tablerow loop after a specific index.",
-          "snippet": "offset: ${1} ${0}",
           "required": false,
-          "arguments": [
-            {
-              "type": "argument",
-              "required": true,
-              "accepts": [
-                "$number",
-                "$reference"
-              ]
-            }
-          ]
+          "accepts": ["number", "reference"]
         }
-      }
+      ]
     },
     "unless": {
       "description": "The opposite of if – executes a block of code only if a certain condition is not met.",
@@ -757,9 +575,7 @@
       "link": "https://shopify.github.io/liquid/tags/control-flow/#casewhen",
       "singular": true,
       "type": "control",
-      "parents": [
-        "case"
-      ]
+      "scope": ["case"]
     }
   }
 }

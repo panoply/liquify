@@ -20,7 +20,7 @@ export default [
         banner: banner(pkg, 'MIT')
       }
     ],
-    external: Object.keys(pkg.dependencies),
+    external: [ ...Object.keys(pkg.dependencies), 'path' ],
     plugins: [
       commonjs(),
       terser({

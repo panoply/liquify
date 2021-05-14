@@ -3,6 +3,10 @@ packages:
   #
   # CRYPTOGRAPHER
   # ---------------------------------------
+  - "build/cli"
+  #
+  # CRYPTOGRAPHER
+  # ---------------------------------------
   - "build/cryptographer"
   #
   # ROLLUP PLUGINS
@@ -28,6 +32,9 @@ packages:
   #
   - "packages/server"
   - "!packages/server/package/*"
+  # LIQUID SPECIFICATIONS
+  # ---------------------------------------
+  - "packages/schema"
   #
   # LIQUID SPECIFICATIONS
   # ---------------------------------------
