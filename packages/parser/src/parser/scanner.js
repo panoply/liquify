@@ -277,12 +277,10 @@ export default (function () {
           // Reset cache if we get here
           cache = ScanCache.Reset
 
-          console.log()
-
           // We are missing a bracket notation at this point, eg: object[prop]foo]
-          error = ParseError.MissingBracketNotation
-          state = ScanState.ParseError
-          return ScanLiquid()
+          // error = ParseError.MissingBracketNotation
+          // state = ScanState.ParseError
+          // return ScanLiquid()
         }
 
         // If we get here, we are missing an open bracket notation
@@ -307,7 +305,7 @@ export default (function () {
           // Pass back to filter argument scanner
           // If last accepted argument, attempt tag close
           state = spec.argument.next()
-            ? ScanState.FilterArgument
+            ? ScanState.FilterSeparator
             : ScanState.TagClose
 
           return ScanLiquid()
@@ -573,6 +571,12 @@ export default (function () {
 
           }
 
+        }
+
+        // This is the last accepted filter argument
+        if (!spec.argument.next()) {
+          state = ScanState.TagClose
+          return TokenType.FilterArgument
         }
 
         // Missing a quote " or '

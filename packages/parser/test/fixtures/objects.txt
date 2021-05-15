@@ -1,2 +1,2 @@
 
-{{ product.name | replace: 'foo', product.handle[0] }}
+{{ product.name | replace: article.name, product.handle[0] }}
