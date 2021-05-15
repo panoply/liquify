@@ -1,6 +1,6 @@
 {
   "name": "@liquify/liquid-language-specs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "created": "2020",
   "private": false,
   "author": "Nikolas Savvidis <nicos@gmx.com>",
@@ -23,9 +23,7 @@
   },
   "ava": {
     "babel": true,
-    "files": [
-      "test/**/**"
-    ],
+    "files": ["test/**/**"],
     "concurrency": 5
   },
   "devDependencies": {

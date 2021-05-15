@@ -13,6 +13,9 @@ export const enum TokenType {
   Separator,
 
   Filter,
+  FilterOperator,
+  FilterArgument,
+  FilterIdentifier,
   FilterParameter,
 
   /**
@@ -48,6 +51,7 @@ export const enum TokenType {
   ObjectProperty,
   ObjectPropertyString,
   ObjectPropertyObject,
+  ObjectPropertyNumber,
   ObjectDotNotation,
   ObjectBracketNotationOpen,
   ObjectBracketNotationClose,

@@ -1,3 +1,2 @@
-{{-
-product.bar[objc.prop]["str"]
--}}
+
+{{ product.name | replace: 'foo', product.handle[0] }}

@@ -98,7 +98,7 @@ test('FullDocument Parse', t => {
   t.pass()
 
 })
-
+/*
 test_objects.forEach(({ title, tests }) => {
 
   const string = tests.join('\n')
@@ -111,7 +111,7 @@ test_objects.forEach(({ title, tests }) => {
 
   })
 
-})
+}) */
 /*
 function grammar (string, capture) {
 

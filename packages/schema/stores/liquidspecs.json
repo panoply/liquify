@@ -312,6 +312,10 @@
             "type": "string",
             "description": "Optional VSCode Snippet string for the filter"
           },
+          "deprecated": {
+            "type": "string",
+            "description": "Whether the filter is deprecated or not. Defaults to \"false\""
+          },
           "link": {
             "description": "URL reference to online documentation explaining this filter.",
             "pattern": "https\\:.*?"
@@ -399,6 +403,32 @@
         }
       ]
     },
+    "tag_argument_types": {
+      "type": "array",
+      "description": "A List of meta-syntax keywords in which represent value types a tag parameter will accept.",
+      "uniqueItems": true,
+      "additionalItems": false,
+      "items": {
+        "type": "string",
+        "oneOf": [
+          {
+            "enum": ["keyword"],
+            "type": "string",
+            "description": "Representative of a keyword value only. We must explicitly assert."
+          },
+          {
+            "enum": ["string"],
+            "type": "string",
+            "description": "Representative of a string wrapped in quotation characters, eg: 'foo' or \"foo\""
+          },
+          {
+            "enum": ["reference"],
+            "type": "string",
+            "description": "Passing reference means the argument can accept a Liquid variable or Liquid object value."
+          }
+        ]
+      }
+    },
     "tag_parameter_types": {
       "type": "array",
       "description": "A List of meta-syntax keywords in which represent value types a tag parameter will accept.",
@@ -463,7 +493,7 @@
             "pattern": "https\\:.*?",
             "type": "string"
           },
-          "trim": {
+          "trims": {
             "description": "Whether or not this object value can use whitespace dash trim delimiters. Some objects in a Variation like Shopify hold \"constanant\" variable state, if an object is defined as such it unlikely filters are allowed.",
             "type": "boolean"
           },
@@ -548,6 +578,28 @@
               "pattern": "\\b[a-zA-Z_-]+"
             }
           },
+          "arguments": {
+            "description": "Filter argument values.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "accepts"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the argument parameter. This will also be provided in completions."
+                },
+                "accepts": {
+                  "description": "The type of argument the tag accepts.",
+                  "$ref": "#/definitions/tag_argument_types"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the parameter argument. This will show as the description of this parameter in completions."
+                }
+              }
+            }
+          },
           "parameters": {
             "type": ["array"],
             "description": "List of parameter values the tag accepts. Tag parameters in Liquid variations are either seperated by a comma or space and (generally) found at the end of tag expressions, eg:\n\n>{% for i in items offset: 10 %}\n\nThe \"for\" tag parameters match \"offset: 10\" in the above example.",
@@ -570,23 +622,6 @@
                 },
                 "required": {
                   "$ref": "#/definitions/arg_required"
-                }
-              }
-            }
-          },
-          "arguments": {
-            "description": "Filter argument values.",
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Name of the argument parameter. This will also be provided in completions."
-                },
-                "description": {
-                  "type": "string",
-                  "description": "Description of the parameter argument. This will show as the description of this parameter in completions."
                 }
               }
             }

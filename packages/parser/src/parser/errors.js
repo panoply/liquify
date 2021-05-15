@@ -82,6 +82,20 @@ export default (error = 0) => ({
       range: {}
     }
   ),
+  [ParseError.MissingFilter]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Missing Filter, a filter must follow a pipe character',
+      range: {}
+    }
+  ),
+  [ParseError.MissingFilterArgument]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Missing Filter Argument, this filter requires an argument',
+      range: {}
+    }
+  ),
   [ParseError.MissingCondition]: (
     {
       severity: ErrorLevel.Error,
@@ -103,10 +117,31 @@ export default (error = 0) => ({
       range: {}
     }
   ),
+  [ParseError.InvalidProperty]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Invalid Property',
+      range: {}
+    }
+  ),
+  [ParseError.InvalidPropertyNotation]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Invalid Property Notation, expected "." or "[" character',
+      range: {}
+    }
+  ),
   [ParseError.InvalidCharacter]: (
     {
       severity: ErrorLevel.Error,
       message: 'Invalid character',
+      range: {}
+    }
+  ),
+  [ParseError.InvalidCharacters]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Invalid characters or word',
       range: {}
     }
   ),

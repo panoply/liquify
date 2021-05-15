@@ -1,131 +1,152 @@
-import { TokenTags } from '../enums/parse'
+import { TokenTags } from '../enums/tags'
 import { Engines } from './options'
-import * as c from '../lexical/characters'
 
 export default (function Specs () {
 
   /**
    * References
    *
-   * @type {Specs.}
+   * @type {Specs.Variation}
    */
   let Ref
 
   /**
+   * Token Name
+   *
+   * @type {string}
+   */
+  let Name
+
+  /**
    * Specification Type
    *
-   * @type {number}
+   * @type {Parser.TokenTags}
    */
   let Type
 
   /**
    * Cursor (currently active tag in parse)
    *
-   * @type {Parser.NodeSpecification}
+   * @template T
+   * @typedef {Parser.Cursor} Spec
    */
   let Cursor
+
+  /**
+   * Filters
+   */
+  let track = 0
+
+  /**
+   * Filters
+   *
+   * @type {boolean}
+   */
+  let inFilter = false
+
+  let filterName
+
+  /**
+   * Parameter
+   */
+  const Parameter = 0
 
   return {
 
     /**
-     * Get Type
+     * Get Token Tag Type
      *
      * @readonly
-     * @memberof Specs
-     * @returns {number}
+     * @returns {string}
      */
-    get type () {
-
-      return Type
-
-    },
+    get name () { return Name },
 
     /**
-     * Get Type
+     * Gets filter argument
      *
-     * @readonly
-     * @memberof Specs
-     * @returns {boolean}
+     * @returns {Specs.FilterArguments}
      */
-    get singular () {
-
-      // @ts-ignore
-      return Cursor?.singular
-
-    },
+    get filter () { return this.get.arguments[track] },
 
     /**
-     * Set Type
-     *
-     * @readonly
-     * @memberof Specs
+     * Argument Navigator - Moves to next item on array
      */
-    set type (type) {
+    get argument () {
 
-      Type = type
+      return {
+        get true  () { return inFilter },
+        next: () => {
 
-    },
+          return (track++) !== (this.get.arguments.length - 1)
 
-    /**
-     * Get Name
-     *
-     * @readonly
-     * @memberof Specs
-     * @returns {string|boolean}
-     */
-    get data () {
+        },
+        prev: () => track--,
+        accepts: accept => {
+          return this.filter.accepts.indexOf(accept) >= 0
+        },
+        reconnect: () => {
 
-      // @ts-ignore
-      return Cursor
+          /**
+         * Cursor - Filter Specification
+         *
+         * @template T
+         * @type {Spec<Specs.IFilter>}
+         */
+          Cursor = Ref.filters[filterName]
 
-    },
-
-    /**
-     * Get Name
-     *
-     * @readonly
-     * @memberof Specs
-     * @returns {string|boolean}
-     */
-    get name () {
-
-      // @ts-ignore
-      return Cursor?.name
-
-    },
-
-    /**
-     * Set Type
-     *
-     * @readonly
-     * @memberof Specs
-     */
-    get hasSpec () {
-
-      // @ts-ignore
-      return Cursor !== undefined
-
-    },
-
-    parameter () {
-
-    },
-
-    /**
-     * Reference
-     *
-     * @param {Parser.Variation} [reference=undefined]
-     * @memberof Specs
-     */
-    ref (reference = undefined) {
-
-      if (reference) {
-        Ref = { ...reference }
+        },
+        reset: () => {
+          track = 0
+        }
       }
 
-      return Ref
-
     },
+
+    /**
+     * Get Token Tag Type
+     *
+     * @readonly
+     * @returns {number}
+     */
+    get type () { return Type },
+
+    /**
+     * Get Current Specification in stream
+     *
+     * @readonly
+     * @return {Specs.IFilter & Specs.IObject & Specs.ITag}
+     */
+    get get () { return Cursor },
+
+    /**
+     * Check to see if the tag has a specification
+     *
+     * @readonly
+     * @returns {boolean}
+     */
+    get exists () { return Cursor !== undefined },
+
+    /**
+     * Set Specification Reference
+     *
+     * Sets the variation specification. Called upon
+     * initialization before parsing begins.
+     *
+     * @param {Parser.Variation} [reference=undefined]
+     * @returns {void}
+     */
+    ref: (reference = undefined) => { Ref = reference },
+
+    /**
+     * Preset Method
+     *
+     * Presets token tag type and prepares the cursor
+     * for fast reference of specification.
+     *
+     * @param {Parser.TokenTags} type
+     * @returns {void}
+     */
+    preset: type => { Type = type },
 
     /**
      * Cursor
@@ -136,32 +157,61 @@ export default (function Specs () {
      * be made available on private `cursor` prop.
      *
      * @param {string} [name=undefined]
-     * Tag name value to match with a specification
-     *
-     * @return {Parser.NodeSpecification}
-     * @memberof Specs
+     * @returns {Spec<T>|false}
      */
-    cursor (name = undefined) {
+    cursor: (name = undefined) => {
 
-      if (!name) return Cursor
+      if (!Ref || !name) return false
 
-      if (Ref?.tags?.[name]) {
-        Cursor = Ref?.tags?.[name]
-        Type = TokenTags[Cursor?.type]
+      Name = name
+
+      if (Ref.engine !== Engines.Standard && Ref?.objects?.[name]) {
+
+        /**
+         * Cursor - Object Specification
+         *
+         * @template T
+         * @type {Spec<Specs.IObject>}
+         */
+        Cursor = Ref.objects[name]
+        Type = TokenTags.object
+
         return Cursor
+
       }
 
-      if (Ref?.engine !== Engines.Standard) {
-        if (Ref?.objects?.[name]) {
-          Cursor = Ref?.objects?.[name]
-          Type = TokenTags[Cursor?.type]
-          return Cursor
-        }
+      if (Ref?.tags?.[name]) {
+
+        /**
+         * Cursor - Tag Specification
+         *
+         * @template T
+         * @type {Spec<Specs.ITag>}
+         */
+        Cursor = Ref.tags[name]
+        Type = TokenTags[Cursor?.type]
+
+        return Cursor
+
       }
 
       if (Ref?.filters?.[name]) {
-        Cursor = Ref?.filters?.[name]
+
+        /**
+         * Cursor - Filter Specification
+         *
+         * @template T
+         * @type {Spec<Specs.IFilter>}
+         */
+        Cursor = Ref.filters[name]
+
+        if (Cursor?.arguments) {
+          track = 0
+          inFilter = true
+          filterName = name
+        }
         return Cursor
+
       }
 
       Cursor = undefined
@@ -185,6 +235,8 @@ export default (function Specs () {
 
       Cursor = undefined
       Type = undefined
+      track = 0
+      inFilter = false
 
       if (hard) {
         const props = Object.getOwnPropertyNames(Ref)

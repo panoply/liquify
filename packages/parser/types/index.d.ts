@@ -1,15 +1,10 @@
 import { TokenType } from "../src/enums/types";
 import { TokenKind } from "../src/enums/kinds";
 import { TokenContext } from "../src/enums/context";
-import { Errors } from "../src/enums/errors";
+import { ParseError } from "../src/enums/errors";
+export { TokenTags } from "../src/enums/tags";
 export { Options } from "./options";
-import {
-  Variation,
-  NodeSpecification,
-  Object as SpecObjects,
-} from "@liquify/liquid-language-specs";
-
-export { Variation, NodeSpecification, SpecObjects };
+export * from "@liquify/liquid-language-specs";
 
 /**
  * Tags are captured and applied as an array of strings.
@@ -35,26 +30,9 @@ export type Location = { line: number; character: number };
 export type Range = { start?: Location; end?: Location };
 
 /**
- * Object properties are the the index offset location for
- * the starting point of properties.
+ * Line and Character position
  */
-export type Objects = { [offset: string]: string[] };
-
-/**
- * Tag filters are parsed and applied when a `|` pipe character
- * is detected within a tag. Not all tags accept filter values
- * and the parser will refer to a tags specification reference before
- * it begins parsing filters.
- */
-export type Filters = { [offset: string]: string[] };
-
-/**
- * Tag Parameters are applied to the AST Node only when detected
- * or else this property will be undefined. Tag parameters are
- * rather hard to detect in the Liquid Language as they can be applied
- * and attach value with or without seperators character (eg: `,` )
- */
-export type Parameters = { [offset: string]: string[] };
+export type Cursor = Specs.IObject | Specs.IFilter | Specs.ITag;
 
 /**
  * The Children property array contains the children contained
@@ -66,7 +44,7 @@ export interface Children {
   token: Token;
   offset: Offsets;
   range: Range;
-  objects?: Objects;
+  objects?: Specs.Objects;
 }
 
 /* -------------------------------------------- */
@@ -104,12 +82,11 @@ export interface ASTNode {
   kind: TokenKind;
   offsets: Offsets;
   range: Range;
-  filters?: Filters;
-  parameters?: Parameters;
+  filters?: Specs.Filters;
   children?: Children[];
   errors: any[];
   content: string;
-  objects?: Objects;
+  objects?: Specs.Objects;
   context: (tokenContext?: TokenContext) => object[];
   error: (parseError?: number) => IParseError[];
   reset: () => void;
@@ -125,7 +102,7 @@ export interface IParseError {
    * The diagnostic's severity. Can be omitted. If omitted it is up to the
    * client to interpret diagnostics as error, warning, info or hint.
    */
-  severity?: Errors;
+  severity?: ParseError;
   /**
    * The diagnostic's message. It usually appears in the user interface
    */
@@ -140,7 +117,7 @@ export interface IScanner {
   readonly index: number;
   readonly position: number;
   readonly token: string;
-  readonly spec: NodeSpecification;
+  readonly spec: Specs.Variation;
   readonly line: number;
   readonly error: number;
   getToken: () => string;

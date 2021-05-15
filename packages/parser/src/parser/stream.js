@@ -699,6 +699,51 @@ export default (function Stream (string) {
     },
 
     /**
+     * Consume Until
+     *
+     * Advances Stream until a Regular Expression match is found.
+     * Ending the index before the passed regex matches. An optional
+     * `unless` expression can be passed.
+     *
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `cursor` Moves to current index
+     * > - `index` Moves to position before matched index
+     * > - `token` Match is tokenized from current to new index
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {RegExp} regex
+     * @param {RegExp} [unless]
+     * @param {boolean} tokenize
+     * @returns {boolean}
+     * @see https://git.io/JJnqn
+     */
+    ConsumeUntil (regex, unless = undefined) {
+
+      const string = this.source.substring(index)
+      const match = string.search(regex)
+
+      if (match < 0) return false
+
+      if (unless instanceof RegExp) {
+        if (unless.test(string.substring(0, index + match))) {
+          return false
+        }
+      }
+
+      cursor = index
+      index = index + match
+      token = this.source.substring(cursor, index)
+
+      return true
+
+    },
+
+    /**
      * Consume Unless
      *
      * Advances Stream until a Regular Expression match is found.

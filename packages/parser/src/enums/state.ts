@@ -10,6 +10,7 @@ export const enum ScanCache {
   BracketNotationObject,
   BracketNotationString,
   BracketNotationVariable,
+  BracketNotationClose,
 }
 
 /**
@@ -260,20 +261,39 @@ export const enum ScanState {
   FilterOperator,
 
   /**
+   * `| filter: ^argument }}`
+   *
+   * ---
+   *
+   * Position before argument, specification is consulted and
+   * we will dispatch to filter type scanner.
+   */
+  FilterArgumentType,
+
+  /**
    * `| filter: argument^, }}`
    *
    * ---
    *
-   * Position before a seperator or parameter
+   * Position before a seperator when filter type is "argument"
    */
   FilterArgument,
+
+  /**
+   * `| filter: argument^, }}`
+   *
+   * ---
+   *
+   * Position before they key/property argument when filter type is "spread"
+   */
+  FilterSpread,
 
   /**
    * `| filter: property^: }}`
    *
    * ---
    *
-   * Position is after property parameter but before operator
+   * Position is after parameter argument but before the parameter operator
    */
   FilterParameter,
 

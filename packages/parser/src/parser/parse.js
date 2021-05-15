@@ -2,7 +2,7 @@ import { TokenType } from '../enums/types'
 import { TokenContext } from '../enums/context'
 import { TokenKind } from '../enums/kinds'
 import { ParseError } from '../enums/errors'
-import { TokenTags } from '../enums/parse'
+import { TokenTags } from '../enums/tags'
 import Node from './node'
 import scanner from './scanner'
 import spec from './specs'
@@ -29,7 +29,6 @@ export function parse (document) {
   let node
 
   let track
-  let context
 
   while (token !== TokenType.EOS) {
 
@@ -191,28 +190,28 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.LiquidTagClose:
       case TokenType.LiquidEndTagClose:
-      case TokenType.LiquidObjectTagClose:
-      case TokenType.LiquidSingularTagClose:
 
         node.end = scanner.offset
         node.range.end = scanner.range.end
         node.token = scanner.tag
         node.offsets.push(node.end)
 
+        // Catch closing delimiter error (if any)
+        if (scanner.isError(ParseError.MissingCloseDelimiter)) {
+          node.error(scanner.error)
+        }
+
         // Push node onto AST stack
         document.ast.push(node)
 
-        // Assume tag has no ender
-        // We will splice this out in "LiquidEndTag"
-        if (token === TokenType.LiquidTagClose) {
-          // node.error(ParseError.MissingEndTag)
-        } else if (token === TokenType.LiquidEndTagClose) {
+        // Handle hierarch if close tag is an end tag
+        if (token === TokenType.LiquidEndTagClose) {
           Node.hierarch.splice(Node.hierarch.length - 1, 1)
           Node.errors.splice(Node.hierarch.length - 1, 1)
         }
 
-        // Reset Preset & Spec
-        node.reset(document.ast.length - 1)
+        // Reset node & specs
+        node.reset()
         spec.reset()
 
         // Reset
@@ -270,6 +269,10 @@ export function parse (document) {
         node.context(TokenContext.PropertyString)
         break
 
+      case TokenType.ObjectPropertyNumber:
+        node.context(TokenContext.Number)
+        break
+
       // LIQUID OBJECT PROPERTY OBJECT
       // -----------------------------------------------------------------
       case TokenType.ObjectPropertyObject:
@@ -277,9 +280,19 @@ export function parse (document) {
         break
 
       case TokenType.Filter:
+        node.context(TokenContext.Separator)
+        break
+
+      case TokenType.FilterIdentifier:
         node.context(TokenContext.Keyword)
-        track = scanner.offset
-        node.filter(track)
+        break
+
+      case TokenType.FilterOperator:
+        node.context(TokenContext.Operator)
+        break
+
+      case TokenType.FilterArgument:
+        node.context(TokenContext.String)
         break
 
       case TokenType.FilterParameter:

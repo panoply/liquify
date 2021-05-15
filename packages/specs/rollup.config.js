@@ -37,7 +37,7 @@ export default {
           type: 'object',
           filters: true,
           singular: true,
-          globals: false,
+          global: false,
           deprecated: false,
           trims: true
         },

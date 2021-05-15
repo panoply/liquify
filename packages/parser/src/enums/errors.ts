@@ -91,6 +91,15 @@ export const enum ParseError {
    * {{ tag | }}
    */
   MissingFilter,
+
+  /**
+   * Missing Filter Arguments
+   *
+   * @example
+   * {{ tag | replace }} // Replace is missing arguments
+   */
+  MissingFilterArgument,
+
   /**
    * Missing condition
    *
@@ -123,6 +132,24 @@ export const enum ParseError {
    * {{ 100 }} // 100 is invalid
    */
   InvalidObjectName,
+
+  /**
+   * Invalid Property Notation
+   *
+   * @example
+   * {{- object.%.prop -}} // "%" is invalid
+   * {{- object.# -}} // "#" is invalid
+   */
+  InvalidProperty,
+
+  /**
+   * Invalid Property Notation
+   *
+   * @example
+   * {{- object[var]"foo" -}} // "foo" is invalid
+   * {{- object["prop"]foo -}} // foo is invalid
+   */
+  InvalidPropertyNotation,
   /**
    * Invalid Character
    *
@@ -132,6 +159,17 @@ export const enum ParseError {
    * {{- tag | x = 1 -}} // = is invalid
    */
   InvalidCharacter,
+
+  /**
+   * Invalid Character
+   *
+   * @example
+   * {% assign x foo = '' %} // foo is invalid
+   * {% -- if foo == x %} // -- is invalid
+   * {{- tag | x and 1 -}} // and is invalid
+   */
+  InvalidCharacters,
+
   /**
    * Invalid String Quotation match
    *

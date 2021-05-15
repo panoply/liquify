@@ -1799,28 +1799,6 @@
       "type": "output",
       "description": "Creates an HTML <form> element along with the required <input> elements to submit the form to a particular endpoint.",
       "link": "https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form",
-      "parameters": [
-        {
-          "name": "article",
-          "description": "The `article` object",
-          "accepts": ["string"]
-        },
-        {
-          "name": "address",
-          "description": "The `address` object is required when editing an existing address",
-          "accepts": ["string"]
-        },
-        {
-          "name": "customer.new_address",
-          "description": "The `customer.new_address` is required for creating a new address",
-          "accepts": ["string"]
-        },
-        {
-          "name": "product",
-          "description": "The `product` object is required when generating a form for adding a product variant to the cart",
-          "accepts": ["string"]
-        }
-      ],
       "arguments": [
         {
           "name": "activate_customer_password",
@@ -1873,6 +1851,28 @@
         {
           "description": "Generates a form that lets your customer change the currency in your storefront.",
           "name": "currency"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "article",
+          "description": "The `article` object",
+          "accepts": ["string"]
+        },
+        {
+          "name": "address",
+          "description": "The `address` object is required when editing an existing address",
+          "accepts": ["string"]
+        },
+        {
+          "name": "customer.new_address",
+          "description": "The `customer.new_address` is required for creating a new address",
+          "accepts": ["string"]
+        },
+        {
+          "name": "product",
+          "description": "The `product` object is required when generating a form for adding a product variant to the cart",
+          "accepts": ["string"]
         }
       ]
     },

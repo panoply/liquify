@@ -3,6 +3,15 @@
   "engine": "jekyll",
   "updated": "03-05-2020",
   "filters": {
+    "curtis": {
+      "description": "description",
+      "link": "https://ss,,s.c",
+      "arguments": [
+        {
+          "accepts": ["boolean"]
+        }
+      ]
+    },
     "limit": {
       "description": "Exits the tablerow loop after a specific index.",
       "snippet": "limit: ${1} ${0}",
