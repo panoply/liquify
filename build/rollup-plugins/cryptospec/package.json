@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@liquify/cryptographer": "workspace:^0.1.0",
-    "@rollup/pluginutils": "^4.1.0"
+    "@rollup/pluginutils": "^4.1.0",
+    "rambda": "^6.7.0"
   }
 }

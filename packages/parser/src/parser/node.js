@@ -15,6 +15,7 @@ import yamljs from 'yamljs'
  */
 export default class Node {
 
+
   /**
    * Presets
    *

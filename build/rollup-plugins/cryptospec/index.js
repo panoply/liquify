@@ -1,6 +1,7 @@
 import { createFilter } from '@rollup/pluginutils'
 import cryptographer from '@liquify/cryptographer'
 import { extname } from 'path'
+import { has } from 'rambda'
 
 /**
  * Replace - Runs a regular expression and replaces
@@ -13,11 +14,21 @@ export default function (options = {}) {
   const filter = createFilter(options.include, options.exclude)
   const crypto = cryptographer(options.master)
 
+  const addon = json => {
+
+  }
+
   const merge = json => {
 
     for (const key of Object.keys(json)) {
       if (options.defaults[key]) {
         for (const prop of Object.keys(json[key])) {
+
+          // sets arguments length on an $i field
+          if (key === 'filters' && has('arguments', json[key][prop])) {
+            json[key][prop].$i = { argsize: json[key][prop].arguments.length - 1 }
+          }
+
           json[key][prop] = { ...options.defaults[key], ...json[key][prop] }
         }
       }
@@ -43,7 +54,6 @@ export default function (options = {}) {
 
         if (prop === 'index') continue
 
-        console.log(prop)
         config.input[crypto.encode(prop)] = config.input[prop]
 
         delete config.input[prop]
@@ -103,7 +113,6 @@ export default function (options = {}) {
 
       import cryptographer from '@liquify/cryptographer'
 
-      export const  =
 
       export async function getSpecs (iv) {
 

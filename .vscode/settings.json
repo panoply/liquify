@@ -163,6 +163,7 @@
   ],
   "cSpell.enableFiletypes": ["javascript"],
   "cSpell.words": [
+    "argsize",
     "endfor",
     "freemium",
     "iife",

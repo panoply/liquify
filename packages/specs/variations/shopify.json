@@ -24,6 +24,7 @@
           "description": "You can specify a crop parameter to make sure that the resulting image's dimensions match the requested dimensions. If the entire image won't fit in your requested dimensions, the crop parameter specifies what part of the image to show",
           "required": false,
           "accepts": ["string", "reference"],
+          "validate": true,
           "options": [
             {
               "name": "top"
@@ -47,6 +48,7 @@
           "name": "scale",
           "description": "The scale parameter lets you specify the pixel density of the image",
           "accepts": ["number", "reference"],
+          "validate": true,
           "options": [
             {
               "name": "2"
@@ -61,6 +63,7 @@
           "name": "format",
           "description": "The format parameter lets you specify what file format to use for the displayed image.",
           "accepts": ["string", "reference"],
+          "validate": true,
           "options": [
             {
               "name": "jpg"
@@ -120,6 +123,7 @@
           "name": "font_display",
           "description": "The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use",
           "accepts": ["string", "reference"],
+          "validate": true,
           "options": [
             {
               "name": "auto",
@@ -154,23 +158,19 @@
           "type": "spread",
           "name": "style",
           "accepts": ["string", "reference"],
-          "arguments": [
+          "validate": true,
+          "options": [
             {
-              "accepts": ["string", "reference"],
-              "options": [
-                {
-                  "name": "normal",
-                  "description": "Returns the normal variant of the same weight (if it exists)"
-                },
-                {
-                  "name": "italic",
-                  "description": "Returns the italic variant of the same weight (if it exists)"
-                },
-                {
-                  "name": "oblique",
-                  "description": "Has the same behavior as italic. None of the font families provided by Shopify have both italic and oblique styles."
-                }
-              ]
+              "name": "normal",
+              "description": "Returns the normal variant of the same weight (if it exists)"
+            },
+            {
+              "name": "italic",
+              "description": "Returns the italic variant of the same weight (if it exists)"
+            },
+            {
+              "name": "oblique",
+              "description": "Has the same behavior as italic. None of the font families provided by Shopify have both italic and oblique styles."
             }
           ]
         },
@@ -178,50 +178,46 @@
           "type": "spread",
           "name": "weight",
           "accepts": ["string", "reference"],
-          "arguments": [
+          "validate": true,
+          "options": [
             {
-              "accepts": ["string", "reference"],
-              "options": [
-                {
-                  "name": [
-                    "100",
-                    "200",
-                    "300",
-                    "400",
-                    "500",
-                    "600",
-                    "700",
-                    "800"
-                  ],
-                  "description": "Returns a variant of the same style with the given weight (if it exists)."
-                },
-                {
-                  "name": [
-                    "+100",
-                    "+200",
-                    "+300",
-                    "+400",
-                    "+500",
-                    "+600",
-                    "+700",
-                    "+800"
-                  ],
-                  "description": "Returns an incrementally bolder font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"+100\" returns the variant with a weight of 500 for the same style."
-                },
-                {
-                  "name": [
-                    "-100",
-                    "-200",
-                    "-300",
-                    "-400",
-                    "-500",
-                    "-600",
-                    "-700",
-                    "-800"
-                  ],
-                  "description": "Returns an incrementally lighter font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"-100\" returns the variant with a weight of 300 for the same style."
-                }
-              ]
+              "name": [
+                "100",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+              ],
+              "description": "Returns a variant of the same style with the given weight (if it exists)."
+            },
+            {
+              "name": [
+                "+100",
+                "+200",
+                "+300",
+                "+400",
+                "+500",
+                "+600",
+                "+700",
+                "+800"
+              ],
+              "description": "Returns an incrementally bolder font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"+100\" returns the variant with a weight of 500 for the same style."
+            },
+            {
+              "name": [
+                "-100",
+                "-200",
+                "-300",
+                "-400",
+                "-500",
+                "-600",
+                "-700",
+                "-800"
+              ],
+              "description": "Returns an incrementally lighter font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"-100\" returns the variant with a weight of 300 for the same style."
             }
           ]
         }

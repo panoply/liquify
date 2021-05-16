@@ -33,6 +33,11 @@
         }
       }
     },
+    "arg_validate": {
+      "type": "boolean",
+      "description": "When set to \"true\" then the accepted values passed that are of type \"string\", \"number\" or \"boolean\" will be validated against the defined argument options. This defaults to \"false\" treating options as suggestions and thus can be omitted unless otherwise required.\n\nPlease note that \"reference\" types are not validated, the parser assumed any reference expressed in the filter arguments are correct.",
+      "default": true
+    },
     "arg_required": {
       "type": "boolean",
       "description": "Whether the argument value is optional or required. Some Liquid filters require an argument be passed, as an example the replace filter requires 2 arguments be passed."
@@ -65,7 +70,7 @@
       },
       "then": {
         "propertyNames": {
-          "pattern": "type|accepts|required|options|description"
+          "pattern": "type|accepts|required|options|description|validate"
         },
         "required": ["accepts"],
         "properties": {
@@ -78,6 +83,9 @@
           },
           "required": {
             "$ref": "#/definitions/arg_required"
+          },
+          "validate": {
+            "$ref": "#/definitions/arg_validate"
           },
           "options": {
             "description": "An optional list of default argument values.",
@@ -96,13 +104,16 @@
       },
       "then": {
         "propertyNames": {
-          "pattern": "type|accepts|required|options|name|description"
+          "pattern": "type|accepts|required|options|name|description|validate"
         },
         "required": ["name", "accepts"],
         "properties": {
           "name": {
             "type": "string",
             "description": "Name of the argument parameter. This will also be provided in completions."
+          },
+          "validate": {
+            "$ref": "#/definitions/arg_validate"
           },
           "description": {
             "type": "string",
@@ -132,7 +143,7 @@
         "type": "object",
         "required": ["name", "arguments"],
         "propertyNames": {
-          "pattern": "type|accepts|arguments|name|description"
+          "pattern": "type|accepts|arguments|name|description|validate"
         },
         "properties": {
           "name": {
@@ -145,6 +156,9 @@
           },
           "accepts": {
             "$ref": "#/definitions/filter_types"
+          },
+          "validate": {
+            "$ref": "#/definitions/arg_validate"
           },
           "arguments": {
             "type": "array",
@@ -403,6 +417,88 @@
         }
       ]
     },
+    "tag_context_types": {
+      "type": "string",
+      "description": "Describes the type of character sequence expected.",
+      "oneOf": [
+        {
+          "enum": ["keyword"],
+          "type": "string",
+          "description": "Representative of a keyword value. A keyword cannot contain only alphabetical letters in either uppercase or lowercase."
+        },
+        {
+          "enum": ["string"],
+          "type": "string",
+          "description": "Representative of a string wrapped in quotation characters, eg: 'foo' or \"foo\"."
+        },
+        {
+          "enum": ["number"],
+          "type": "string",
+          "description": "A number value"
+        },
+        {
+          "enum": ["operator"],
+          "type": "string",
+          "description": "Represenative of an operator value."
+        },
+        {
+          "enum": ["value"],
+          "type": "string",
+          "description": "A type \"value\" in tag contexts is followed by \"keyword\" it represents multiple types. For example, the Liquid \"render\" tag available in the standard variation can be expressed as:\n\n> {% render 'template' with value %}\n\nWhere the keyword of \"with\" is expects a value to follow."
+        }
+      ]
+    },
+    "tag_context": {
+      "type": "array",
+      "description": "An optional array list which describes the tag expression. Liquid tags can be extended and customized through plugins. This context array allows you to detail how a tag should be parsed, from left-to-right.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/definitions/tag_context_types"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether or not it is required."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "value"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "keyword": {
+                  "type": "object",
+                  "uniqueItems": true,
+                  "additionalItems": false,
+                  "additionalProperties": {
+                    "propertyNames": {
+                      "oneOf": [
+                        {
+                          "$ref": "#ctype"
+                        }
+                      ]
+                    },
+                    "properties": {
+                      "accepted": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
     "tag_argument_types": {
       "type": "array",
       "description": "A List of meta-syntax keywords in which represent value types a tag parameter will accept.",
@@ -577,6 +673,9 @@
               "type": "string",
               "pattern": "\\b[a-zA-Z_-]+"
             }
+          },
+          "context": {
+            "$ref": "#/definitions/tag_context"
           },
           "arguments": {
             "description": "Filter argument values.",

@@ -1,28 +1,36 @@
 import { TokenTags } from '../enums/tags'
+import { TokenType } from '../enums/types'
 import { Engines } from './options'
 
 export default (function Specs () {
 
   /**
-   * References
+   * Variation
    *
    * @type {Specs.Variation}
    */
-  let Ref
+  let variation
 
   /**
-   * Token Name
+   * Unknown Token
+   *
+   * @type {Map}
+   */
+  const unknown = new Map()
+
+  /**
+   * Filter Name
    *
    * @type {string}
    */
-  let Name
+  let filter
 
   /**
    * Specification Type
    *
    * @type {Parser.TokenTags}
    */
-  let Type
+  let type
 
   /**
    * Cursor (currently active tag in parse)
@@ -30,77 +38,166 @@ export default (function Specs () {
    * @template T
    * @typedef {Parser.Cursor} Spec
    */
-  let Cursor
-
-  /**
-   * Filters
-   */
-  let track = 0
-
-  /**
-   * Filters
-   *
-   * @type {boolean}
-   */
-  let inFilter = false
-
-  let filterName
-
-  /**
-   * Parameter
-   */
-  const Parameter = 0
+  let cursor
 
   return {
 
+    unknown: (name) => unknown.set(name, {}),
+
     /**
-     * Get Token Tag Type
+     * Argument Navigator
      *
-     * @readonly
-     * @returns {string}
+     * When parsing filter arguments this getter closure
+     * provides use methods to work the filter specification
+     * while scanning tokens and characters.
      */
-    get name () { return Name },
+    filter: (
 
-    /**
-     * Gets filter argument
-     *
-     * @returns {Specs.FilterArguments}
-     */
-    get filter () { return this.get.arguments[track] },
+      /**
+       * Filter State Argument
+       *
+       * @param {number} state
+       */
+      state => ({
 
-    /**
-     * Argument Navigator - Moves to next item on array
-     */
-    get argument () {
-
-      return {
-        get true  () { return inFilter },
-        next: () => {
-
-          return (track++) !== (this.get.arguments.length - 1)
-
-        },
-        prev: () => track--,
-        accepts: accept => {
-          return this.filter.accepts.indexOf(accept) >= 0
-        },
-        reconnect: () => {
-
-          /**
-         * Cursor - Filter Specification
+        /**
+         * Returns the filter arguments specification. It
+         * returns the current argument in the list.
          *
-         * @template T
-         * @type {Spec<Specs.IFilter>}
+         * @readonly
+         * @returns {Specs.FilterArguments}
          */
-          Cursor = Ref.filters[filterName]
+        get spec () { return cursor.arguments[state] },
+
+        /**
+         * Returns a boolean indicating whether the or not the filter
+         * has arguments.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get arguments () { return cursor?.arguments },
+
+        /**
+         * Returns a boolean indicating whether we are currently
+         * scanning a filter attribute/argument.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get within () { return state >= 0 },
+
+        get argindex () { return state },
+
+        get last () { return cursor.$i.argsize === state },
+
+        /**
+         * Moves to the next argument on a filter. Returns a
+         * boolean to indicate when we have reached the last
+         * argument in the filter spec.
+         *
+         * @return {boolean}
+         */
+        next () {
+
+          state++
 
         },
-        reset: () => {
-          track = 0
-        }
-      }
+        /**
+         * Checks if the argument accepts the type of value
+         * passed, ensuring the argument is valid.
+         *
+         * @param {Specs.FilterArgumentTypes} id
+         * @returns {boolean}
+         */
+        type: id => cursor.arguments[state].type === id,
 
-    },
+        /**
+         * Checks if the argument accepts the type of value
+         * passed, ensuring the argument is valid.
+         *
+         * @param {Specs.FilterAcceptsTypes} id
+         * @returns {boolean}
+         */
+        accept: id => cursor.arguments[state].accepts.indexOf(id) >= 0,
+
+        /**
+         * Validates argument values against provided options
+         * on the filter specification. Returns `true` if
+         * no validate option or options exist else it will
+         * return the boolean result from some.
+         *
+         * @param {boolean} accept
+         * @returns {boolean}
+         */
+        validate: (token) => (
+          cursor.arguments[state].validate && cursor.arguments[state]?.options
+        )
+          ? cursor.arguments[state].options.some((
+            { name }
+          ) => (
+            Array.isArray(name)
+              ? name.some($name => $name === token)
+              : token === name
+          ))
+          : true
+        ,
+
+        /**
+         * Filter Cursor
+         *
+         * Resets the specification cursor to last known
+         * filter reference. This function is used to reconnect
+         * to a specification, generally occurring when we are
+         * we move to different token scans (like object).
+         *
+         * **IMPORTANT**
+         *
+         * A couple of important notes on this:
+         *
+         * 1. When the state value is `NaN` (asserted in IIFE or
+         * after a `filter.reset()` call) its value will change
+         * to `0` to allow selection by index of arguments found
+         * within the filters specification.
+         *
+         * 2. When a `name` parameter is passed, the `filter` let
+         * variable will be re-assigned to the value passed as `name`,
+         * this parameter is optional and is only used when we first
+         * encounter a filter identifier via `spec.cursor()` method.
+         * If a name variable is passed, cursor is not re-assigned.
+         *
+         * @param {string} [name=undefined]
+         * @returns {Specs.IFilter}
+         */
+        cursor: (name = undefined) => {
+
+          if (isNaN(state)) state = 0
+
+          if (name) {
+            filter = name
+            cursor.argumentSize = cursor.arguments.length - 1
+            return cursor
+          }
+
+          cursor = variation.filters[filter]
+          return cursor
+
+        },
+
+        /**
+         * Resets the filter state object. This is called for
+         * every new filter identifier we encounter.
+         *
+         * @returns {void}
+         */
+        reset: () => {
+          state = NaN
+          filter = null
+        }
+
+      })
+
+    )(NaN),
 
     /**
      * Get Token Tag Type
@@ -108,7 +205,7 @@ export default (function Specs () {
      * @readonly
      * @returns {number}
      */
-    get type () { return Type },
+    get type () { return type },
 
     /**
      * Get Current Specification in stream
@@ -116,7 +213,7 @@ export default (function Specs () {
      * @readonly
      * @return {Specs.IFilter & Specs.IObject & Specs.ITag}
      */
-    get get () { return Cursor },
+    get get () { return cursor },
 
     /**
      * Check to see if the tag has a specification
@@ -124,7 +221,7 @@ export default (function Specs () {
      * @readonly
      * @returns {boolean}
      */
-    get exists () { return Cursor !== undefined },
+    get exists () { return cursor !== undefined },
 
     /**
      * Set Specification Reference
@@ -135,7 +232,7 @@ export default (function Specs () {
      * @param {Parser.Variation} [reference=undefined]
      * @returns {void}
      */
-    ref: (reference = undefined) => { Ref = reference },
+    ref: (reference = undefined) => { variation = reference },
 
     /**
      * Preset Method
@@ -146,7 +243,7 @@ export default (function Specs () {
      * @param {Parser.TokenTags} type
      * @returns {void}
      */
-    preset: type => { Type = type },
+    preset: code => { type = code },
 
     /**
      * Cursor
@@ -156,16 +253,14 @@ export default (function Specs () {
      * a reference specification is encountered it will
      * be made available on private `cursor` prop.
      *
-     * @param {string} [name=undefined]
-     * @returns {Spec<T>|false}
+     * @param {string} [tag=undefined]
+     * @returns {boolean}
      */
-    cursor: (name = undefined) => {
+    cursor (name = undefined) {
 
-      if (!Ref || !name) return false
+      if (!variation || !name) return false
 
-      Name = name
-
-      if (Ref.engine !== Engines.Standard && Ref?.objects?.[name]) {
+      if (variation.engine !== Engines.Standard && variation?.objects?.[name]) {
 
         /**
          * Cursor - Object Specification
@@ -173,14 +268,14 @@ export default (function Specs () {
          * @template T
          * @type {Spec<Specs.IObject>}
          */
-        Cursor = Ref.objects[name]
-        Type = TokenTags.object
+        cursor = variation.objects[name]
+        type = TokenTags.object
 
-        return Cursor
+        return true
 
       }
 
-      if (Ref?.tags?.[name]) {
+      if (variation?.tags?.[name]) {
 
         /**
          * Cursor - Tag Specification
@@ -188,36 +283,33 @@ export default (function Specs () {
          * @template T
          * @type {Spec<Specs.ITag>}
          */
-        Cursor = Ref.tags[name]
-        Type = TokenTags[Cursor?.type]
+        cursor = variation.tags[name]
+        type = TokenTags[cursor?.type]
 
-        return Cursor
+        return true
 
       }
 
-      if (Ref?.filters?.[name]) {
+      if (variation?.filters?.[name]) {
 
         /**
-         * Cursor - Filter Specification
+         * cursor - Filter Specification
          *
          * @template T
          * @type {Spec<Specs.IFilter>}
          */
-        Cursor = Ref.filters[name]
+        cursor = variation.filters[name]
 
-        if (Cursor?.arguments) {
-          track = 0
-          inFilter = true
-          filterName = name
-        }
-        return Cursor
+        if (cursor?.arguments) this.filter.cursor(name)
+
+        return true
 
       }
 
-      Cursor = undefined
-      Type = undefined
+      cursor = undefined
+      type = undefined
 
-      return Cursor
+      return false
 
     },
 
@@ -233,15 +325,15 @@ export default (function Specs () {
      */
     reset (hard = false) {
 
-      Cursor = undefined
-      Type = undefined
-      track = 0
-      inFilter = false
+      cursor = undefined
+      type = undefined
+
+      this.filter.reset()
 
       if (hard) {
-        const props = Object.getOwnPropertyNames(Ref)
+        const props = Object.getOwnPropertyNames(variation)
         const size = props.length
-        for (let i = 0; i < size; i++) delete Ref[props[i]]
+        for (let i = 0; i < size; i++) delete variation[props[i]]
       }
 
     }

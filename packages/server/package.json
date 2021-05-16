@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@liquify/cryptographer": "workspace:^0.1.0",
-    "@liquify/liquid-language-specs": "workspace:^0.0.0",
+    "@liquify/liquid-parser": "workspace:^0.0.0",
     "fs-extra": "^9.1.0",
     "netlicensing-client": "^1.2.24",
     "prettydiff": "^101.2.6",

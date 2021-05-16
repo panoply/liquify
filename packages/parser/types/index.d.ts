@@ -113,6 +113,32 @@ export interface IParseError {
   code?: DiagnosticTag[];
 }
 
+/**
+ * IFIlter Specification tracker
+ */
+export interface IFilter {
+  /**
+   * The name of the filter
+   */
+  name: string;
+  /**
+   * If we are within a filter, used when we are parsing
+   * a filter argument object.
+   */
+  within: boolean;
+  /**
+   * The Argument we are currently parsing, this is incremented
+   * via the filter.next() method getter.
+   */
+  argument: number;
+  /**
+   * The specification reference for the filter. This is applied
+   * when we encounter a filter in a token ad changes each
+   * time a new filter identifier is detected.
+   */
+  spec: Specs.IFilter;
+}
+
 export interface IScanner {
   readonly index: number;
   readonly position: number;

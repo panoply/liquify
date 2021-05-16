@@ -155,6 +155,13 @@ interface FilterArguments {
   readonly required?: boolean;
 
   /**
+   * Whether or not options should be validated
+   *
+   * @default false
+   */
+  readonly validate?: boolean;
+
+  /**
    * Argument is required for the filter
    *
    * @default false
@@ -228,6 +235,20 @@ export type IFilter = {
    * @default undefined
    */
   readonly arguments?: FilterArguments[];
+
+  /**
+   * Information field which holds some additional information
+   * about the filter spec. This is auto-generated within cryptospec.
+   *
+   * @default false
+   */
+  readonly $i?: {
+    /**
+     * The argument length size (minus 1), eg: `filter.arguments.length - 1`
+     * It's a helper function when scanning arguments.
+     */
+    argsize?: number;
+  };
 };
 
 export interface Filters {

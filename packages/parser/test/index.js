@@ -69,6 +69,7 @@ test.before('TOKEN STRING PARSING', async t => {
 
   const s = await Specs.getSpecs(process.env.MASTER_KEY)
 
+  t.context.doc = readFileSync(resolve('test/fixtures/objects.txt'), 'utf8').toString()
   parser.spec(s)
 
 })
@@ -79,19 +80,18 @@ function AST (data) {
 
 }
 
-const doc = readFileSync(resolve('test/fixtures/objects.txt'), 'utf8').toString()
-
 test('FullDocument Parse', t => {
 
   // t.regex('fo%o', /^[^\s.[][a-zA-Z0-9$_-]+\b/)
 
   const start = process.hrtime()
-  const node = AST({ fixture: doc })
+  const node = AST({ fixture: t.context.doc })
   const end = process.hrtime(start)
 
-  console.log(
-    ...node.ast,
-    node.ast[0].errors
+  t.log(
+    // node.ast
+    // node.ast[0].errors
+    node.ast.length
   )
   // t.log(node[0].context.filter(i => i.type !== 'Whitespace').map(i => i.value).join(' '))
   t.log(time(end, { verbose: true }))

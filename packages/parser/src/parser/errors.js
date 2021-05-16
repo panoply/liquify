@@ -29,7 +29,7 @@ export default (error = 0) => ({
   [ParseError.MissingBracketNotation]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing Object Property Bracket Notation',
+      message: 'Missing object property bracket notation',
       range: {}
     }
   ),
@@ -92,7 +92,7 @@ export default (error = 0) => ({
   [ParseError.MissingFilterArgument]: (
     {
       severity: ErrorLevel.Error,
-      message: 'Missing Filter Argument, this filter requires an argument',
+      message: 'Missing filter argument',
       range: {}
     }
   ),
@@ -142,6 +142,13 @@ export default (error = 0) => ({
     {
       severity: ErrorLevel.Error,
       message: 'Invalid characters or word',
+      range: {}
+    }
+  ),
+  [ParseError.InvalidFilter]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Invalid or unknown filter',
       range: {}
     }
   ),
@@ -201,6 +208,13 @@ export default (error = 0) => ({
       range: {}
     }
   ),
+  [ParseError.RejectFilterArguments]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Filter does not accept arguments',
+      range: {}
+    }
+  ),
   [ParseError.RejectWhitespace]: (
     {
       severity: ErrorLevel.Error,
@@ -215,7 +229,6 @@ export default (error = 0) => ({
       range: {}
     }
   ),
-
   /* -------------------------------------------- */
   /* WARNINGS                                     */
   /* -------------------------------------------- */

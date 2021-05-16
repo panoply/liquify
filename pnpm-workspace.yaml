@@ -3,7 +3,7 @@ packages:
   #
   # CRYPTOGRAPHER
   # ---------------------------------------
-  - "build/cli"
+  #- "build/cli"
   #
   # CRYPTOGRAPHER
   # ---------------------------------------
@@ -30,6 +30,7 @@ packages:
   # LANGUAGE SERVER
   # ---------------------------------------
   #
+  - "packages/parser"
   - "packages/server"
   - "!packages/server/package/*"
   # LIQUID SPECIFICATIONS

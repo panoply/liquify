@@ -4,7 +4,7 @@ import { DidChangeConfigurationNotification, TextDocumentSyncKind, createConnect
 import { Server } from './provide/server'
 import { Service } from './provide/service'
 import { Document } from './provide/document'
-import { Parser } from './parser/parse'
+import { LiquidParser } from '@liquify/liquid-parser'
 import { runAsync, runSync } from './utils/runners'
 import { mark, stop } from 'marky'
 
@@ -125,7 +125,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   mark('onDidOpenTextDocument')
 
-  const document = Document.create(textDocument)(Parser)
+  const document = Document.create(textDocument)(LiquidParser)
 
   if (!document) return null
 

@@ -21,8 +21,8 @@ export default {
       format: 'cjs',
       dir: 'package',
       sourcemap: process.env.prod ? false : 'inline',
-      exports: 'auto',
-      banner: banner(pkg, 'PROPRIETARY')
+      exports: 'auto'
+      // banner: banner(pkg, 'PROPRIETARY')
     }
   ],
   external: [ 'crypto' ],

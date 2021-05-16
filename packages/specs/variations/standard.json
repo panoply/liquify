@@ -537,7 +537,12 @@
       "filters": false,
       "singular": true,
       "link": "https://shopify.github.io/liquid/tags/template/#render",
-      "type": "import"
+      "type": "import",
+      "context": [
+        {
+          "accepts": ["string"]
+        }
+      ]
     },
     "tablerow": {
       "description": "Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",

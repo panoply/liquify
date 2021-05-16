@@ -3,14 +3,17 @@ export const enum ErrorLevel {
    * Reports an error.
    */
   Error = 1,
+
   /**
    * Reports a warning.
    */
   Warning = 2,
+
   /**
    * Reports an information.
    */
   Information = 3,
+
   /**
    * Reports a hint.
    */
@@ -25,6 +28,7 @@ export const enum ParseError {
    * {% %}
    */
   MissingTagName = 1,
+
   /**
    * Object name is missing
    *
@@ -32,6 +36,7 @@ export const enum ParseError {
    * {{ }}
    */
   MissingObjectName,
+
   /**
    * Object BracketNotation closer
    *
@@ -39,6 +44,7 @@ export const enum ParseError {
    * {{ object["foo" }}
    */
   MissingBracketNotation,
+
   /**
    * Start Tag is missing
    *
@@ -46,6 +52,7 @@ export const enum ParseError {
    * {% endtag %}
    */
   MissingStartTag,
+
   /**
    * End Tag is missing
    *
@@ -54,6 +61,7 @@ export const enum ParseError {
    * {% else %}
    */
   MissingEndTag,
+
   /**
    * Missing Open Delimeters
    *
@@ -62,6 +70,7 @@ export const enum ParseError {
    * object -}}
    */
   MissingOpenDelimiter,
+
   /**
    * Missing close delimeter
    *
@@ -70,6 +79,7 @@ export const enum ParseError {
    * {{ objects | filter: '' }
    */
   MissingCloseDelimiter,
+
   /**
    * Missing colon
    *
@@ -77,6 +87,7 @@ export const enum ParseError {
    * {{ object | filter '' }}
    */
   MissingColon,
+
   /**
    * Missing Property
    *
@@ -84,6 +95,7 @@ export const enum ParseError {
    * {{ object. }}
    */
   MissingProperty,
+
   /**
    * Missing Filter
    *
@@ -108,6 +120,7 @@ export const enum ParseError {
    * {%- unless -%} // missing condition
    */
   MissingCondition,
+
   /**
    * Missing Quotation
    *
@@ -115,6 +128,7 @@ export const enum ParseError {
    * {% if x == 'foo %}
    */
   MissingQuotation,
+
   /**
    * Invalid Tag Name
    *
@@ -124,6 +138,7 @@ export const enum ParseError {
    * {% /tag/ %} // / is invalid
    */
   InvalidTagName,
+
   /**
    * Invalid Object Name
    *
@@ -150,6 +165,7 @@ export const enum ParseError {
    * {{- object["prop"]foo -}} // foo is invalid
    */
   InvalidPropertyNotation,
+
   /**
    * Invalid Character
    *
@@ -177,6 +193,15 @@ export const enum ParseError {
    * {{ object["prop'] }}
    */
   InvalidQuotation,
+
+  /**
+   * Invalid Filter
+   *
+   * @example
+   * {{ tag | fooo }} // 'fooo' is invalid or unknown
+   */
+  InvalidFilter,
+
   /**
    * Invalid Syntactic
    *
@@ -189,6 +214,7 @@ export const enum ParseError {
    * {% endif %}
    */
   InvalidSyntactic,
+
   /**
    * Invalid Operator
    *
@@ -197,6 +223,7 @@ export const enum ParseError {
    * {%- if foo =! x -%} // =! is invalid
    */
   InvalidOperator,
+
   /**
    * Reject String
    *
@@ -205,6 +232,7 @@ export const enum ParseError {
    * {%- increment '1' -%} // increment should not be string
    */
   RejectString,
+
   /**
    * Reject Number
    *
@@ -212,6 +240,7 @@ export const enum ParseError {
    * {{ 100 }} // number cannot be used as object name
    */
   RejectNumber,
+
   /**
    * Reject Boolean
    *
@@ -219,22 +248,35 @@ export const enum ParseError {
    * {% for x in false %}
    */
   RejectBoolean,
+
   /**
    * Reject Array
    */
   RejectArray,
+
   /**
    * Reject Object
    */
   RejectObject,
+
   /**
    * Reject Parameters
    */
   RejectParameters,
+
   /**
    * Reject Filters
    */
   RejectFilters,
+
+  /**
+   * Reject Filter Arguments
+   *
+   * @example
+   * {{ tag | filter: argument }} // argument is not allowed
+   */
+  RejectFilterArguments,
+
   /**
    * Reject Whitespace
    *
@@ -242,6 +284,7 @@ export const enum ParseError {
    * {{ object['prop   '] }} // whitespace "\s\s\s" is not allowed
    */
   RejectWhitespace,
+
   /**
    * Reject Whitespace Control
    *
@@ -249,6 +292,7 @@ export const enum ParseError {
    * {%- schema -%} // dash "-" is not allowed
    */
   RejectWhitespaceControl,
+
   /**
    * Warn Extrenous Whitespace
    *

@@ -5,7 +5,10 @@ export const enum ScanCache {
   Reset,
   SkipClose,
   TrimRight,
+  GotoEnd,
   Tokenize,
+  StringOpen,
+  StringClose,
   BracketNotation,
   BracketNotationObject,
   BracketNotationString,
@@ -165,6 +168,16 @@ export const enum ScanState {
    * Position is before dot seperator of object
    */
   Object,
+
+  /**
+   * `^obj }}` or `| filter: ^obj.prop }}`
+   *
+   * ---
+   *
+   * Position is before an object name, we use to scan
+   * objects used in arguments or as values.
+   */
+  ObjectName,
 
   /**
    * `{{ object^.`

@@ -270,21 +270,30 @@ export default (function Stream (string) {
     },
 
     /**
-     * Test the current Token in stream
+     * Token Clip
      *
-     * **DOES NOT MODIFY**
+     * ---
+     *
+     * **MODIFIER**
+     *
+     * > - `token` Matches token from start to search position
      *
      * ---
      *
      * @memberof Stream
-     * @param {RegExp|number} test
+     * @param {number} [n=1]
      * @returns {boolean}
      */
-    TokenClip (test) {
+    Rewind (start, regex) {
 
-      return typeof test === 'number'
-        ? token.charCodeAt(0) === test
-        : test.test(token)
+      const string = this.source.substring(start, index)
+      const end = string.search(regex)
+
+      if (end < 0) return false
+
+      token = string.substring(0, end)
+
+      return true
 
     },
 
@@ -776,8 +785,12 @@ export default (function Stream (string) {
 
       if (!unless.test(this.source.substring(index, this.Offset(match.index)))) {
         index = index + match.index
-        cursor = cursor + token.length
-        token = this.source.substring(cursor, index)
+
+        if (tokenize) {
+          cursor = cursor + token.length
+          token = this.source.substring(cursor, index)
+        }
+
         return true
       }
 
