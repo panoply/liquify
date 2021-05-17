@@ -11,6 +11,10 @@ test('Liquid Standard', async t => {
 
   // t.log(spec)
 
+  t.like(spec, {
+    engine: 'standard'
+  }, 'Standard was decrypted successfully')
+
   t.pass()
 
 })
