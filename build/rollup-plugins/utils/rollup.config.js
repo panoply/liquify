@@ -1,6 +1,6 @@
 import { terser } from 'rollup-plugin-terser'
 import commonjs from '@rollup/plugin-commonjs'
-import { banner } from './package/index.es'
+import { banner } from './index'
 import pkg from './package.json'
 
 export default [
@@ -9,19 +9,24 @@ export default [
     output: [
       {
         format: 'cjs',
-        file: 'package/index.cjs.js',
+        file: pkg.main,
         sourcemap: process.env.prod ? false : 'inline',
-        banner: banner(pkg, 'MIT')
+        banner: banner(pkg, 'MIT'),
+        exports: 'named'
       },
       {
         format: 'es',
-        file: 'package/index.es.js',
+        file: pkg.module,
         sourcemap: process.env.prod ? false : 'inline',
         banner: banner(pkg, 'MIT')
       }
     ],
     external: [ ...Object.keys(pkg.dependencies), 'path' ],
     plugins: [
+      stripCode({
+        start_comment: 'START.TESTS_ONLY',
+        end_comment: 'END.TESTS_ONLY'
+      }),
       commonjs(),
       terser({
         ecma: 6

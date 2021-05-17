@@ -1,8 +1,8 @@
 import jsonStrip from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import { basename } from 'path'
-import { statSync } from 'fs-extra'
 import stripIndent from 'strip-indent'
+
 /**
  * Minify JSON and strip JSONC files
  *
@@ -57,12 +57,11 @@ export const banner = ({
   , version
   , author
   , owner
-  , created
 }, license = 'PROPRIETARY') => {
 
   owner = owner || author
 
-  const date = new Date(statSync(main).mtimeMs)
+  const date = new Date()
     .toISOString()
     .replace(/T/, ' ')
     .substr(0, 19)
@@ -88,7 +87,6 @@ export const banner = ({
       * Package:  ${name}
       * Version:  ${version}
       * Updated:  ${date}
-      * Created:  ${created}
       *
       */`
     )
@@ -107,7 +105,6 @@ export const banner = ({
       * Package:  ${name}
       * Version:  ${version}
       * Updated:  ${date}
-      * Created:  ${created}
       *
       * Please refer to the LICENSE.txt and/or ThirdPartyNotices.txt files included in bundle.
       *

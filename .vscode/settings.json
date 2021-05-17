@@ -172,6 +172,8 @@
     "pluginutils",
     "siema",
     "stickybits",
+    "striplit",
+    "stripliteral",
     "turbolinks"
   ]
 }

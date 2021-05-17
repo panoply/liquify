@@ -19,19 +19,14 @@
   "module": "./package/index.es.js",
   "types": "index.d.ts",
   "ava": {
-    "require": [
-      "esm",
-      "@babel/register"
-    ],
+    "require": ["esm"],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": [
-      "test/*.js"
-    ],
+    "files": ["test/*.js"],
     "concurrency": 5
   },
   "dependencies": {

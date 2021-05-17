@@ -1,7 +1,7 @@
 import { terser } from 'rollup-plugin-terser'
-import obfuscator from '@liquify/rollup-plugin-obfuscator'
-import pkg from './package.json'
 import { banner } from '@liquify/rollup-plugin-utils'
+import strip from 'rollup-plugin-strip-code'
+import pkg from './package.json'
 
 export default {
   input: 'index.js',
@@ -22,11 +22,13 @@ export default {
   ],
   external: [ '@liquify/cryptographer', 'path', 'crypto' ],
   plugins: [
-  /*  terser({
+    strip({
+      pattern: /\/\*{2}\s+_{2}[\s\S]*?\*\//g
+    }),
+    terser({
       ecma: 6
       , warnings: 'verbose'
       , compress: { passes: 2 }
     })
-*/
   ]
 }

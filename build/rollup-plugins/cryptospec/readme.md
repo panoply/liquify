@@ -6,18 +6,20 @@ A Rollup plugin used for development on the [Liquify IDE](#) extension/package c
 
 ## Why?
 
-Liquify operates on a freemium license model. Some parts of the codebase can be consumed via the public NPM registry which exposes closed source code and data. This module facilitates encryption so proprietary code and/or data becomes enigmatic so as to prevent reverse engineering the tool without capable context.
+Liquify operates on a freemium license model. Some parts of the codebase can be consumed via the public NPM registry which exposes closed source code and data. This module facilitates encryption so proprietary code and/or data becomes _enigmatic_ so as to prevent reverse engineering the tool without capable context.
 
 ## Install
 
 ```cli
-<pnpm|npm|yarn> i @liquify/rollup-plugin-crypto --save-dev
+<pnpm|npm|yarn> i @liquify/rollup-plugin-cryptospec --save-dev
 ```
 
 ## Usage
 
+Inputs reference the Liquid specifications which is written in JSON. The plugin will hijack the inputs and generate a virtual entry `index.js` file. Each specification will be encoded and any additional `defaults` merged will each variation specification.
+
 ```js
-import globs from "@liquify/rollup-plugin-crypto";
+import cryptospec from "@liquify/rollup-plugin-cryptospec";
 
 export default {
   input: {
@@ -30,31 +32,36 @@ export default {
     format: "cjs",
   },
   plugins: [
-    crypto({
-      iv: "secret",
-      algorithm: "aes-256-cbc",
+    cryptospec({
+      password: process.env.MASTER_KEY,
+      defaults: {
+        filters: {
+          type: "filter",
+        },
+        objects: {
+          type: "object",
+          filters: true,
+          singular: true,
+          global: false,
+          deprecated: false,
+          trims: true,
+        },
+        tags: {
+          filters: false,
+          singular: false,
+          trims: true,
+          deprecated: false,
+        },
+      },
     }),
   ],
 };
 ```
 
-## Ciphers
-
-- aes-256-cbc
-- aes-256-cbc-hmac-sha1
-- aes-256-cbc-hmac-sha256
-- aes-256-cfb
-- aes-256-cfb1
-- aes-256-cfb8
-- aes-256-ctr
-- aes-256-ofb
-- aes256
-- camellia256
-
 ## Contributing
 
-This package licensed under MIT but it exists as part of a monorepo that is mostly closed source. Contributions for outside developers are prohibited as the package only exists on the public NPM registry.
+This package licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) but and exists as part of a monorepo that is mostly closed source. Contributions from outside developers is prohibited as the package only exists on the public NPM registry for consumption internally.
 
 ## Author
 
-🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />

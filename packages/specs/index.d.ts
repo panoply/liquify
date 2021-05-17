@@ -462,8 +462,7 @@ export interface Variation {
 /* -------------------------------------------- */
 
 export default interface Initialize {
-  getSpecs(password: string): Promise<Variation[]>;
-  getSpecsSync(password: string): Variation[];
+  specs(password: string, engine: Engine): Promise<Variation>;
 }
 
 export as namespace Specs;

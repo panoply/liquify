@@ -1,10 +1,11 @@
 {
   "name": "@liquify/rollup-plugin-utils",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Rollup plugin utilities for working with the Liquify monorepo codebase",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",
   "main": "./package/index.cjs.js",
+  "module": "./package/index.es.js",
   "types": "index.d.ts",
   "private": false,
   "repository": {
@@ -15,7 +16,7 @@
     "url": "https://github.com/panoply/liquify/issues"
   },
   "scripts": {
-    "watch": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c--environment prod",
@@ -23,13 +24,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "release": {
-    "branches": [
-      "master",
-      "next"
-    ]
+    "branches": ["master", "next"]
+  },
+  "esm": {
+    "cjs": true
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
+    "esm": "^3.2.25",
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {

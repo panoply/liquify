@@ -4,7 +4,7 @@ interface Options {
   /**
    * The IV password used for decoding the encrypted JSON
    */
-  readonly master: string;
+  readonly password: string;
 
   /**
    * Default properties to merge into each specification

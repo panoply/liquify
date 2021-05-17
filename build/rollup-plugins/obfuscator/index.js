@@ -1,4 +1,3 @@
-import { createFilter } from '@rollup/pluginutils'
 import JavaScriptObfuscator from 'javascript-obfuscator'
 
 /**

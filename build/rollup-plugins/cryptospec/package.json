@@ -16,11 +16,14 @@
   },
   "scripts": {
     "watch": "rollup -c -w",
-    "build": "rollup -c --environment prod",
+    "build": "rollup -c --environment prod && node -r esm ./scripts/strip.js",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --verbose"
+  },
+  "esm": {
+    "cjs": true
   },
   "ava": {
     "babel": true,
@@ -37,9 +40,12 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
-    "@liquify/rollup-plugin-obfuscator": "workspace:^0.0.0",
-    "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
     "ava": "^3.15.0",
+    "chalk": "^4.1.1",
+    "esm": "^3.2.25",
+    "fs-extra": "^10.0.0",
+    "rollup-plugin-strip-code": "^0.2.7",
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {

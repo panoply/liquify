@@ -21,14 +21,14 @@ export default {
       format: 'cjs',
       dir: 'package',
       sourcemap: process.env.prod ? false : 'inline',
-      exports: 'auto'
-      // banner: banner(pkg, 'PROPRIETARY')
+      exports: 'named',
+      banner: banner(pkg, 'PROPRIETARY')
     }
   ],
   external: [ 'crypto' ],
   plugins: plugins([
     cryptospec({
-      master: process.env.MASTER_KEY,
+      password: process.env.MASTER_KEY,
       defaults: {
         filters: {
           type: 'filter'
