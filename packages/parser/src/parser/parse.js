@@ -294,6 +294,9 @@ export function parse (document) {
       case TokenType.FilterArgument:
         node.context(TokenContext.String)
         break
+      case TokenType.FilterArgumentNumber:
+        node.context(TokenContext.Number)
+        break
 
       case TokenType.FilterParameter:
         node.context(TokenContext.Parameter)

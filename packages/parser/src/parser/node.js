@@ -134,10 +134,10 @@ export default class Node {
   /**
    * Context Stream
    *
-   * @type {object[]}
+   * @type {Map}
    * @private
    */
-  _context = []
+  _context = new Map()
 
   /**
    * Objects
@@ -283,19 +283,18 @@ export default class Node {
 
     if (type) {
 
-      this._context = [
-        ...this._context
-        , {
+      this._context.set(scanner.offset,
+         {
           type,
           range: scanner.range,
           value: (
             TokenContext.Newline  === type || TokenContext.Whitespace  === type
           ) ? scanner.space : scanner.token
         }
-      ]
+      )
     }
 
-    return this._context.length - 1
+    return this._context.size - 1
 
   }
 

@@ -11,21 +11,16 @@ import pkg from './package.json'
 
 export default {
   input: 'src/index.js',
-  exclude: [
-    ''
+  external: [
+    '@liquify/liquid-language-specs'
   ],
   output: [
     {
-      format: 'cjs',
-      file: pkg.main,
-      sourcemap: process.env.prod ? false : 'inline',
-      preferConst: true
-    },
-    {
       format: 'module',
-      file: pkg.module,
+      dir: 'package',
       sourcemap: process.env.prod ? false : 'inline',
-      preferConst: true
+      preferConst: true,
+      chunkFileNames: '[name].js'
     }
   ],
   plugins: plugins([

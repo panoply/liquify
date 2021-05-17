@@ -15,6 +15,7 @@ export const enum TokenType {
   Filter,
   FilterOperator,
   FilterArgument,
+  FilterArgumentNumber,
   FilterIdentifier,
   FilterParameter,
 

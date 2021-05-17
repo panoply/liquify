@@ -1,18 +1,12 @@
 import test from 'ava'
-import test_objects from './cases/liquid_tags/objects'
-import { LiquidParser } from '../package/index.es'
+import { LiquidParser } from '../package/index'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import time from 'pretty-hrtime'
-import * as Specs from '@liquify/liquid-language-specs'
-import chalk from 'chalk'
 import { config } from 'dotenv'
 
 config()
 
-const ctx = new chalk.Instance({
-  level: 2
-})
 const fixture = ({ fixture }) => ({
   ast: [],
   parseErrors: [],
@@ -50,6 +44,7 @@ const fixture = ({ fixture }) => ({
 
 const parser = new LiquidParser({
   engine: 'shopify',
+  license: process.env.MASTER_KEY,
   frontmatter: false,
   whitespace: true,
   range: true,
@@ -67,10 +62,7 @@ const parser = new LiquidParser({
 
 test.before('TOKEN STRING PARSING', async t => {
 
-  const s = await Specs.getSpecs(process.env.MASTER_KEY)
-
   t.context.doc = readFileSync(resolve('test/fixtures/objects.txt'), 'utf8').toString()
-  parser.spec(s)
 
 })
 
@@ -89,9 +81,9 @@ test('FullDocument Parse', t => {
   const end = process.hrtime(start)
 
   t.log(
-    // node.ast
-    // node.ast[0].errors
     node.ast.length
+    // node.ast[0].errors
+
   )
   // t.log(node[0].context.filter(i => i.type !== 'Whitespace').map(i => i.value).join(' '))
   t.log(time(end, { verbose: true }))

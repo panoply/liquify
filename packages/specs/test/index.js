@@ -1,9 +1,7 @@
 import test from 'ava'
 import { config } from 'dotenv'
-
+import { specs } from '../package/index'
 config()
-
-const { specs } = require('../package/index')
 
 test('Liquid Standard', async t => {
 

@@ -1,6 +1,6 @@
 import { TokenTags } from '../enums/tags'
-import { TokenType } from '../enums/types'
 import { Engines } from './options'
+import { specs } from '@liquify/liquid-language-specs'
 
 export default (function Specs () {
 
@@ -10,13 +10,6 @@ export default (function Specs () {
    * @type {Specs.Variation}
    */
   let variation
-
-  /**
-   * Unknown Token
-   *
-   * @type {Map}
-   */
-  const unknown = new Map()
 
   /**
    * Filter Name
@@ -42,7 +35,30 @@ export default (function Specs () {
 
   return {
 
-    unknown: (name) => unknown.set(name, {}),
+    /**
+     * Set Specification Reference
+     *
+     * Sets the variation specification. Called upon
+     * initialization before parsing begins.
+     *
+     * @param {string} engine
+     * @param {string} license
+     */
+    ref: async (engine, license) => {
+
+      variation = await specs(license, engine)
+
+      return variation
+
+    },
+
+    /**
+     * Get Active Variation
+     *
+     * @readonly
+     * @returns {Specs.Variation}
+     */
+    get variation () { return variation },
 
     /**
      * Argument Navigator
@@ -87,7 +103,14 @@ export default (function Specs () {
          */
         get within () { return state >= 0 },
 
-        get argindex () { return state },
+        /**
+         * Returns a boolean indicating whether or not the argument
+         * at the current position is required.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get required () { return cursor.arguments[state]?.required },
 
         get last () { return cursor.$i.argsize === state },
 
@@ -222,17 +245,6 @@ export default (function Specs () {
      * @returns {boolean}
      */
     get exists () { return cursor !== undefined },
-
-    /**
-     * Set Specification Reference
-     *
-     * Sets the variation specification. Called upon
-     * initialization before parsing begins.
-     *
-     * @param {Parser.Variation} [reference=undefined]
-     * @returns {void}
-     */
-    ref: (reference = undefined) => { variation = reference },
 
     /**
      * Preset Method

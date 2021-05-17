@@ -324,8 +324,8 @@ export default (function () {
 
         // If we get here, property is invalid
         error = ParseError.InvalidProperty
-        state = ScanState.ParseError
-        return ScanLiquid()
+        state = ScanState.GotoTagEnd
+        return TokenType.ParseError
 
       case ScanState.ObjectBracketNotationEnd:
 
@@ -467,6 +467,12 @@ export default (function () {
           return ScanLiquid()
         }
 
+        // Filter contains no arguments
+        if (!spec.filter.arguments) {
+          state = ScanState.Filter
+          return ScanLiquid()
+        }
+
         // Lets consume the colon operator, eg: {{ tag | filter:^ }}
         if (s.IfCodeChar(c.COL)) {
           state = ScanState.FilterArgumentType
@@ -474,8 +480,8 @@ export default (function () {
         }
 
         error = ParseError.MissingFilterArgument
-        state = ScanState.ParseError
-        return ScanLiquid()
+        state = ScanState.GotoTagEnd
+        return TokenType.ParseError
 
       case ScanState.FilterArgumentType:
 
@@ -533,9 +539,18 @@ export default (function () {
           return ScanLiquid()
         }
 
+        // Filter argument accepts number type, eg: {{ tag | filter: 10 }}
+        if (spec.filter.accept('number')) {
+          if (s.IfRegExp(/^\d*/)) {
+
+            // We pass back to separator scan, look for more arguments
+            state = ScanState.FilterSeparator
+            return TokenType.FilterArgumentNumber
+          }
+        }
+
         // Check if filter argument accepts a reference
         if (spec.filter.accept('reference')) {
-
           if (s.IfRegExp(Regex.LiquidObjectName)) {
 
             // Match captured token with a cursor value
@@ -544,9 +559,7 @@ export default (function () {
             // Next call we will look for a property notation
             state = ScanState.Object
             return TokenType.Object
-
           }
-
         }
 
         // This is the last accepted filter argument
@@ -564,16 +577,31 @@ export default (function () {
 
         // If last argument was processed pass back to filter
         if (spec.filter.last) {
+
+          // Reset filter specification
+          spec.filter.reset()
+
           state = ScanState.Filter
           return ScanLiquid()
         }
 
         spec.filter.next()
 
+        // console.log(spec.get.arguments)
         // console.log('here', s.token, spec.filter.next())
         if (s.IfCodeChar(c.COM)) {
           state = ScanState.FilterArgument
           return TokenType.Separator
+        }
+
+        if (!spec.filter.required) {
+
+          state = ScanState.Filter
+
+          // Reset filter specification
+          spec.filter.reset()
+
+          return ScanLiquid()
         }
 
         // console.log('here', s.token)

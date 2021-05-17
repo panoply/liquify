@@ -10,6 +10,8 @@ export class LiquidParser {
 
     this.config = { ...options, ...configuration }
 
+    specs.ref(this.config.engine, this.config.license)
+
   }
 
   get errors () {
@@ -18,9 +20,9 @@ export class LiquidParser {
 
   }
 
-  spec (ref) {
+  get spec () {
 
-    specs.ref(ref[this.config.engine])
+    return specs.variation
 
   }
 
