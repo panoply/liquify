@@ -9,6 +9,9 @@ export const enum TokenType {
   Newline,
 
   String,
+  Boolean,
+  Integer,
+  Float,
 
   Separator,
 
@@ -24,14 +27,8 @@ export const enum TokenType {
    */
   Unknown,
 
-  /**
-   * Unknown Characters
-   */
+  Control,
   ControlCondition,
-
-  /**
-   * Unknown Characters
-   */
   ControlOperator,
 
   IterationIteree,

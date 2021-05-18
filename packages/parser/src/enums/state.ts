@@ -156,6 +156,15 @@ export const enum ScanState {
    */
   TagCloseTrim,
 
+  /**
+   * `end^name` we are at `name`
+   *
+   * ---
+   *
+   * End Tag
+   */
+  TagEndIdentifier,
+
   /* -------------------------------------------- */
   /* LIQUID OBJECT                                */
   /* -------------------------------------------- */

@@ -105,12 +105,28 @@ export const enum ParseError {
   MissingFilter,
 
   /**
+   * Missing Filter
+   *
+   * @example
+   * {{ tag | abs: 100. }} // missing number after decimal
+   */
+  MissingNumber,
+
+  /**
    * Missing Filter Arguments
    *
    * @example
    * {{ tag | replace }} // Replace is missing arguments
    */
   MissingFilterArgument,
+
+  /**
+   * Missing Filter Arguments
+   *
+   * @example
+   * {{ tag | replace: 'foo' 'bar' }} // Missing commas separator
+   */
+  MissingFilterSeparator,
 
   /**
    * Missing condition
@@ -240,6 +256,22 @@ export const enum ParseError {
    * {{ 100 }} // number cannot be used as object name
    */
   RejectNumber,
+
+  /**
+   * Reject Integer
+   *
+   * @example
+   * {{ tag | filter: -10 }} // `-10` is integer and cannot be used
+   */
+  RejectInteger,
+
+  /**
+   * Reject Integer
+   *
+   * @example
+   * {{ tag | filter: 10.10 }} // `10.10` is float and cannot be used
+   */
+  RejectFloat,
 
   /**
    * Reject Boolean

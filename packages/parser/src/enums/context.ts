@@ -82,7 +82,12 @@ export const enum TokenContext {
   /**
    * Number Value: `1, 2, 3`
    */
-  Number = "number",
+  Integer = "number",
+
+  /**
+   * Number Value: `1.12, -23.32, 3.22`
+   */
+  Float = "float",
 
   /**
    * Boolean Value: `true` or `false`
