@@ -23,111 +23,20 @@
   "repository": {
     "url": "https://github.com/panoply/liquify"
   },
-  "packages": {
-    "project": {
-      "path": ".",
-      "name": "liquify",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.0-development"
-    },
-    "cryptographer": {
-      "path": "build/cryptographer",
-      "name": "@liquify/cryptographer",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.1.0"
-    },
-    "cryptospec": {
-      "path": "build/rollup-plugins/cryptospec",
-      "name": "@liquify/rollup-plugin-cryptospec",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.1.0"
-    },
-    "globs": {
-      "path": "build/rollup-plugins/globs",
-      "name": "@liquify/rollup-plugin-globs",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "obfuscator": {
-      "path": "build/rollup-plugins/obfuscator",
-      "name": "@liquify/rollup-plugin-obfuscator",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "utils": {
-      "path": "build/rollup-plugins/utils",
-      "name": "@liquify/rollup-plugin-utils",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "atom": {
-      "path": "packages/clients/atom",
-      "name": "atom-liquid",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.1.0"
-    },
-    "vscode": {
-      "path": "packages/clients/vscode",
-      "name": "liquify-vscode",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.1"
-    },
-    "schema": {
-      "path": "packages/schema",
-      "name": "@liquify/schema-stores",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.1"
-    },
-    "server": {
-      "path": "packages/server",
-      "name": "@liquify/liquid-language-server",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.0"
-    },
-    "specs": {
-      "path": "packages/specs",
-      "name": "@liquify/liquid-language-specs",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.0"
-    },
-    "license": {
-      "path": "packages/license",
-      "name": "@liquify/license",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.0"
-    }
-  },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/eslint-parser": "^7.12.1",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
-    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
-    "@babel/plugin-proposal-private-methods": "^7.12.1",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/register": "^7.12.10",
-    "@babel/runtime": "^7.12.5",
-    "@rollup/plugin-babel": "^5.2.2",
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.0.1",
-    "@rollup/pluginutils": "^4.1.0",
-    "@types/fs-extra": "^9.0.6",
-    "babel-plugin-module-resolver": "^4.1.0",
-    "eslint": "^7.17.0",
-    "eslint-config-prettier": "^7.1.0",
+    "@babel/eslint-parser": "^7.14.3",
+    "@babel/eslint-plugin": "^7.13.16",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.3.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "husky": "^4.3.6",
-    "prettier": "^2.2.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "husky": "^6.0.0",
+    "prettier": "^2.3.0",
     "prettier-eslint": "^12.0.0",
-    "rollup": "^2.48.0",
-    "semantic-release": "^17.3.1"
+    "rollup": "^2.48.0"
   },
   "publishConfig": {
     "access": "restricted"

@@ -9,7 +9,7 @@
     "rollup": "rollup -c",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --color --verbose --watch",
-    "perf": "node --experimental-modules test/perf/parsing.mjs"
+    "perf": "node -r esm tests/perf/parsing.js"
   },
   "private": false,
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
@@ -29,7 +29,7 @@
       }
     },
     "files": [
-      "test/*.js"
+      "tests/index.js"
     ],
     "concurrency": 5
   },
@@ -44,17 +44,16 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
-    "@ava/babel-preset-stage-4": "^4.0.0",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-proposal-private-methods": "^7.13.0",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
     "@babel/register": "^7.13.16",
     "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
+    "@rollup/plugin-alias": "^3.1.2",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-replace": "^2.4.2",
+    "@types/benchmark": "^2.1.0",
     "ava": "^3.15.0",
     "babel-plugin-const-enum": "^1.0.1",
     "babel-preset-const-enum": "^1.0.0",
@@ -66,85 +65,5 @@
     "performance": "^1.4.0",
     "pretty-hrtime": "^1.0.3",
     "rollup-plugin-filesize": "^9.1.1"
-  },
-  "packages": {
-    "project": {
-      "path": ".",
-      "name": "liquify",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.0-development"
-    },
-    "./cryptographer": {
-      "path": "build/cryptographer",
-      "name": "@liquify/cryptographer",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.1.0"
-    },
-    "./cryptospec": {
-      "path": "build/rollup-plugins/cryptospec",
-      "name": "@liquify/rollup-plugin-cryptospec",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.1.0"
-    },
-    "./globs": {
-      "path": "build/rollup-plugins/globs",
-      "name": "@liquify/rollup-plugin-globs",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "./obfuscator": {
-      "path": "build/rollup-plugins/obfuscator",
-      "name": "@liquify/rollup-plugin-obfuscator",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "./utils": {
-      "path": "build/rollup-plugins/utils",
-      "name": "@liquify/rollup-plugin-utils",
-      "repo": "github.com/panoply/liquify/master/scripts/rollup",
-      "version": "0.0.0"
-    },
-    "./atom": {
-      "path": "packages/clients/atom",
-      "name": "atom-liquid",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.1.0"
-    },
-    "./vscode": {
-      "path": "packages/clients/vscode",
-      "name": "liquify-vscode",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.1"
-    },
-    "./license": {
-      "path": "packages/license",
-      "name": "@liquify/license",
-      "repo": "github.com/panoply/vscode-liquid.git",
-      "version": "0.0.0"
-    },
-    "./server": {
-      "path": "packages/server",
-      "name": "@liquify/liquid-language-server",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.0"
-    },
-    "./specs": {
-      "path": "packages/specs",
-      "name": "@liquify/liquid-language-specs",
-      "repo": "github.com/panoply/liquify",
-      "version": "0.0.0"
-    },
-    "./web": {
-      "path": "web",
-      "name": "@liquify/web",
-      "repo": "github.com/panoply/liquify.dev",
-      "version": "0.0.0"
-    },
-    "./parser": {
-      "path": "packages/parser",
-      "name": "@liquify/liquid-parser",
-      "repo": "github.com/panoply/liquid-parser",
-      "version": "0.0.0"
-    }
   }
 }

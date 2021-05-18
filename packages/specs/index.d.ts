@@ -121,7 +121,8 @@ export interface Objects {
 
 export type FilterAcceptsTypes =
   | "string"
-  | "number"
+  | "integer"
+  | "float"
   | "boolean"
   | "reference"
   | "path";
@@ -457,12 +458,15 @@ export interface Variation {
   readonly tags: Tags;
 }
 
+export interface Options {
+  variation: "standard" | "shopify" | "jekyll" | "eleventy";
+  license?: string;
+}
+
 /* -------------------------------------------- */
 /*                 SPECIFICATION                */
 /* -------------------------------------------- */
 
-export default interface Initialize {
-  specs(password: string, engine: Engine): Promise<Variation>;
-}
+export default function specs(options: Options): Variation;
 
 export as namespace Specs;

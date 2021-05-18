@@ -16,11 +16,15 @@
   "inputSourceMap": true,
   "retainLines": true,
   "plugins": [
-    ["@babel/plugin-proposal-private-methods", { "loose": true }],
     ["@babel/plugin-proposal-optional-chaining"],
-    ["@babel/plugin-proposal-class-properties", { "loose": true }],
-    ["@babel/plugin-syntax-dynamic-import"],
+    ["@babel/plugin-proposal-class-properties"],
+    ["@babel/plugin-syntax-class-properties"],
     ["@babel/plugin-transform-runtime"],
-    ["const-enum", { "transform": "constObject" }]
+    [
+      "const-enum",
+      {
+        "transform": "constObject"
+      }
+    ]
   ]
 }

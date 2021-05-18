@@ -3,45 +3,37 @@
 
 # Liquify
 
-An extension/package tool for the [Liquid Template Language](#). Liquify uses the [Language Sever Protocol](#) implementation to provide modern IDE tooling and features to developers working with Liquid and using text editors like [VSCode](#), [Sublime](#) and [Atom](#). The tool operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licenced packages.
+Language tooling for the [Liquid Template Language](#). Liquify brings modern IDE features to developers working with Liquid and its multiple variations. Contained in this repository is various packages and modules used by Liquify text editor extension/plugin available in [VSCode](https://code.visualstudio.com), [Sublime](#) and [Atom](#). Liquify operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licensed packages.
+
+### Why
+
+The Liquid template language has been around for a long time. Originally created by [Tobi Lütke](https://twitter.com/tobi) it's used by other open source projects like Jekyll and Eleventy and SaaS providers. Liquid is the backbone of Shopify storefront development and the team at Shopify have not provided a modern ecosystem around the language despite being a multi-billion dollar company. I was fed up with the this neglect so I created Liquify which has been a project I started developing in 2019.
+
+### Pricing / License
+
+Liquify is currently free to use as it exists in an alpha pre-release stage. A yearly licensing cost will be incurred for those who want all the features for the Shopify variation upon its official 1.0 release.
 
 ### Packages
 
-- [@liquify/cli](#)
 - [@liquify/liquid-language-server](#)
 - [@liquify/liquid-parser](#)
 - [@liquify/liquid-grammar](#)
 - [@liquify/liquid-linter](#)
-- [@liquify/liquid-schema-stores](#)
+- [@liquify/schema-stores](#)
 - [@liquify/liquid-language-specs](#)
 - [@liquify/cryptographer](#)
 - [@liquify/rollup-plugin-cryptospec](#)
 - [@liquify/rollup-plugin-globs](#)
-- [@liquify/rollup-plugin-logger](#)
 - [@liquify/rollup-plugin-obfuscator](#)
-- [@liquify/rollup-plugin-supplant](#)
 - [@liquify/rollup-plugin-utils](#)
-
-| Repository                          | Description                                          | License              |
-| ----------------------------------- | ---------------------------------------------------- | -------------------- |
-| [@liquify/cli](#)                   | CLI tool used for development on Liquify packages.   | [CC BY-NC-ND 4.0](#) |
-| [@liquify/rollup-plugins](#)        | Various Rollup plugins used by Liquify packages      | [MIT](#)             |
-| [@liquify/path-resolve](#)          | Path resolver which detects workspace path           | [MIT](#)             |
-| [@liquify/liquid-language-specs](#) | Liquid variation specification references.           | [PROPRIETARY](#)     |
-| [@liquify/schema-stores](#)         | Schema Stores used for configuration files and JSON. | [CC BY-NC-ND 4.0](#) |
-| [liquify.dev](#)                    | Liquify website for documentation and licensing.     | [CC BY-NC-ND 4.0](#) |
-| [liquid-language-server](#)         | Liquid Language server implementation using LSP      | [PROPRIETARY](#)     |
-| [liquify-atom ](#)                  | Atom Liquify package using Atom LSP Client           | [MIT](#)             |
-| [liquify-sublime](#)                | Sublime Liquify package using Sublime LSP            | [MIT](#)             |
-| [liquify-vscode](#)                 | VSCode Liquify extension using VSCode LSP Client     | [MIT](#)             |
 
 ###### IMPORTANT
 
-**Packages operating on a [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#) license consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types) so their producton bundles are mangled, minified and obfuscated upon prior to distribution. Objects and large data sources like [Liquid Specifications](#) use a [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) encryption algorithm.**
+**Packages operating on a [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#) license consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types) so their production bundles are mangled, minified and obfuscated upon prior to distribution. Objects and large data sources like [Liquid Specifications](#) use a [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) encryption algorithm.**
 
 # Setup
 
-The project is a combination monorepo/multirepo that uses [pnpm](#) for dependency and workspace management. Development is intended to be conducted using the [vscode](#) text editor. You can use the [liquify.code-workspace](#) or traditional workspace hierarchy. The development environments requires the following:
+The project is a combination monorepo/multirepo that uses [pnpm](https://pnpm.js.org/) for dependency and workspace management. Development is intended to be conducted using the [vscode](https://code.visualstudio.com/) text editor. You can use the [liquify.code-workspace](#) or traditional workspace hierarchy. The development environments requires the following:
 
 <details>
 <summary>
@@ -49,63 +41,36 @@ The project is a combination monorepo/multirepo that uses [pnpm](#) for dependen
 </summary>
 <p>
 
-- [Git](#)
-- [Node](#)
-- [Pnpm](#)
-- [VS Code](#)
+- [Git](https://git-scm.com/)
+- [Node v14^](https://nodejs.org/)
+- [Pnpm v5^](https://pnpm.js.org/)
+- [VS Code](https://code.visualstudio.com/)
 
 </p>
 </details>
 
 ### Installation
 
-- Ensure [pnpm](#) is installed globally `npm i pnpm -g`
+- Ensure [pnpm](https://pnpm.js.org/) is installed globally `npm i pnpm -g`
 - Clone this repository `git clone https://github.com/panoply/liquify.git`
-- Run `pnpm install`
+- Run `pnpm i`
 
-# CLI
+### Development
 
-Liquify provides an interactive CLI that allows you to run common tasks. The interactive CLI will provide shortcut execution for Git operations, deployments, publishments, bundling and more. You can initialize the interactive CLI by running `pnpm run cli` command and following the prompts.
-
-### Commands
+All packages build using the powerful [Rollup](https://rollupjs.org) bundler and all contain a `rollup.config.js` file. The entire monorepo and several of the modules may use Rollup for compiling or generating virtual components. Each package provides a standardized command execution. If you call these commands from workspace root execution will run globally on each package.
 
 ```cli
-bundle   <pkg>   --flags    Define a main file entry to use (optional)
-git      <pkg>   --flags    Various Git related operations
-peep     <pkg>   --flags    Peep into JSON and other files via the cli
-publish  <pkg>   --flags    Publish package to third party services, eg: npm registry
-package  <pkg>   --flags    Package compression of bundles like pnpm pack
-test     <pkg>   --flags    Execute and run a bunch of tests
--c, --config  <file>        Build configuration file defaults to "build.config.json"
--i, --input   <glob>        Input directory path glob pattern, eg: "--input dir/**/*.json"
--o, --output  <dir>         Output directory path, eg: "--output `path/to/output`"
--w, --watch                 Watch input files/directories and rebuild on changes
--d, --dev                   Development build and/or bundle
--p, --prod                  Production build and/or bundle
--v, --version               Show version number
--h, --help                  Show this help message
---preinstall                Run the pre-install NPM script of package
---postinstall               Run the post-install NPM script of package
---dry-run                   Dry run the command
-```
-
-### Interactive CLI
-
-```cli
-$ pnpx liquify
-```
-
-### PNPM Scripts
-
-```cli
-pnpm run dev
-pnpm run build
-pnpm run pack
-pnpm run peep
-pnpm run status
-pnpm run test
+pnpm dev               Watch input files/directories and rebuild on changes
+pnpm build  --flags    Build production/development bundles
+pnpm test   --flags    Execute and run a bunch of tests
+pnpm publish           Publish package to third party services, eg: npm registry
+pnpm package           Package compression of bundles like pnpm pack
+-w, --watch            Watch input files/directories and rebuild on changes
+-d, --dev              Development build and/or bundle
+-p, --prod             Production build and/or bundle
+--dry-run              Dry run the command
 ```
 
 <img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />
 
-🥛 <small>[Sissel SaaS](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
