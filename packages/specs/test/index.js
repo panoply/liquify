@@ -1,11 +1,14 @@
 import test from 'ava'
 import { config } from 'dotenv'
-import { specs } from '../package/index'
+import specs from '../package/index'
 config()
 
-test('Liquid Standard', async t => {
+test('Liquid Standard', t => {
 
-  const spec = await specs(process.env.MASTER_KEY, 'standard')
+  const spec = specs({
+    variation: 'standard',
+    license: process.env.MASTER_KEY
+  })
 
   // t.log(spec)
 
@@ -19,7 +22,10 @@ test('Liquid Standard', async t => {
 
 test.skip('Liquid Jekyll', async t => {
 
-  const spec = await specs(process.env.MASTER_KEY, 'jekyll')
+  const spec = specs({
+    variation: 'jekyll',
+    license: process.env.MASTER_KEY
+  })
 
   // t.log(spec)
 
@@ -48,9 +54,12 @@ test.skip('Liquid Jekyll', async t => {
 
 test('Liquid Shopify', async t => {
 
-  const spec = await specs(process.env.MASTER_KEY, 'shopify')
+  const spec = specs({
+    variation: 'shopify',
+    license: process.env.MASTER_KEY
+  })
 
-  // t.log(spec)
+  t.log(spec)
 
   t.like(spec, {
     engine: 'shopify',
