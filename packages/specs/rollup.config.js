@@ -10,6 +10,9 @@ import { config } from 'dotenv'
 
 config()
 
+/**
+ * @type {import('rollup').RollupOptions}
+ */
 export default {
   input: {
     standard: 'variations/standard.json',
@@ -78,6 +81,7 @@ export default {
     obfuscator({
       target: 'node',
       exclude: [ '!/index.js' ],
+      ignoreRequireImports: true,
       compact: true,
       controlFlowFlattening: false,
       deadCodeInjection: false,
