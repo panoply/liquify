@@ -1,7 +1,16 @@
 import { ParseError, ErrorLevel } from '../enums/errors'
 
 /**
- * Parse Errors
+ * Parsing Errors
+ *
+ * Returns Error Diagnostics when invalid
+ * sequences occur. Each error attaches the
+ * range (line/column) information so its
+ * easily adapted within a Language Server
+ *
+ * @todo
+ * _Provide translations i18n localizations to
+ * error messages for non-english developers._
  *
  * @param {number} error
  * @returns {Parser.IParseError}
@@ -96,6 +105,20 @@ export default (error = 0) => ({
       range: {}
     }
   ),
+  [ParseError.MissingFilterSeparator]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Missing filter separator character',
+      range: {}
+    }
+  ),
+  [ParseError.MissingNumber]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Missing number',
+      range: {}
+    }
+  ),
   [ParseError.MissingCondition]: (
     {
       severity: ErrorLevel.Error,
@@ -174,6 +197,13 @@ export default (error = 0) => ({
     }
   ),
   [ParseError.RejectNumber]: (
+    {
+      severity: ErrorLevel.Error,
+      message: 'Number value not accepted',
+      range: {}
+    }
+  ),
+  [ParseError.RejectInteger]: (
     {
       severity: ErrorLevel.Error,
       message: 'Number value not accepted',
