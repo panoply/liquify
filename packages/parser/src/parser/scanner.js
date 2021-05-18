@@ -1,36 +1,24 @@
 
-import { TokenType } from '../enums/types'
-import { ScanState, ScanCache } from '../enums/state'
-import { TokenTags } from '../enums/tags'
-import { ParseError } from '../enums/errors'
-import * as Regex from '../lexical/regex'
-import * as c from '../lexical/characters'
-import s from './stream'
-import spec from './specs'
+import { TokenType } from 'enums/types'
+import { ScanState, ScanCache } from 'enums/state'
+import { TokenTags } from 'enums/tags'
+import { ParseError } from 'enums/errors'
+import spec from 'parser/specs'
+import s from 'parser/stream'
+import * as r from 'lexical/regex'
+import * as c from 'lexical/characters'
 
 /**
  * Scanner
  *
  * Sequences Characters that are contained within Liquid,
- * HTML and YAML syntaxes. This module is loosely based on
- * the `vscode-html-languageservice` Scanner but resolves in
- * a vastly different manner.
+ * HTML and YAML syntaxes.
  *
  * @export
  * @returns {Parser.IScanner}
  * @this {Parser.Options}
  */
 export default (function () {
-
-  /**
-   * Pairs
-   *
-   * Holds a number value and used to count start
-   * and end characters, eg: []
-   *
-   * @type {number[]}
-   */
-  const pairs = []
 
   /**
    * Start Position
@@ -44,17 +32,6 @@ export default (function () {
   let start
 
   /**
-   * Cache
-   *
-   * Can hold any value, is used as a cache
-   * and its value may represent anything within
-   * the stream.
-   *
-   * @type {any}
-   */
-  let cache
-
-  /**
    * Error Number
    *
    * Parsing errors, holds value of the parse errors
@@ -63,6 +40,17 @@ export default (function () {
    * @type {number}
    */
   let error
+
+  /**
+   * Cache
+   *
+   * Can hold any value, is used as a cache
+   * and its value may represent anything within
+   * the stream.
+   *
+   * @type {number}
+   */
+  let cache = ScanCache.Reset
 
   /**
    * Scanner State
@@ -76,76 +64,14 @@ export default (function () {
   let state = ScanState.CharSeq
 
   /**
-   * HTML Tag Scanner
+   * Pairs
    *
-   * Scanner function for HTML Tags. Handles HTML
-   * parsing pertaining to the HTML language.
+   * Holds a number value and used to count start
+   * and end characters, eg: []
    *
-   * @returns {function|number}
+   * @type {number[]}
    */
-  function ScanHTML () {
-
-    switch (state) {
-
-      case ScanState.HTMLTagOpen:
-
-        break
-
-      case ScanState.HTMLTagName:
-
-        break
-
-      case ScanState.HTMLAttributeName:
-
-        break
-
-      case ScanState.HTMLAttributeOperator:
-
-        break
-
-      case ScanState.HTMLAttributeValue:
-
-        break
-
-      case ScanState.HTMLTagClose:
-
-        break
-
-      case ScanState.HTMLTagCloseName:
-
-        break
-
-      case ScanState.HTMLCommentOpen:
-
-        break
-
-      case ScanState.HTMLCommentClose:
-
-        break
-    }
-
-    return ScanHTML()
-  }
-
-  /**
-   * After Opening Frontmatter
-   *
-   * @returns {void|number}
-   */
-  function ScanFrontmatter () {
-
-    if (s.UntilChars('---', true)) {
-      state = ScanState.CharSeq
-      return TokenType.FrontmatterEnd
-    }
-
-    if (state !== ScanState.CharSeq) {
-      state = ScanState.CharSeq
-    }
-
-    return CharSeq()
-
-  }
+  const pairs = []
 
   /**
    * Scan Liquid
@@ -179,17 +105,17 @@ export default (function () {
       case ScanState.TagOpen:
 
         // Validate starting character of tag is valid
-        if (!s.IsRegExp(Regex.LiquidFirstCharacter)) {
+        if (!s.IsRegExp(r.LiquidFirstCharacter)) {
           error = ParseError.InvalidCharacter
           state = ScanState.ParseError
           return ScanLiquid()
         }
 
-        // Tag is an object, as per predefined type in CharSeq()
+        // Tag is a object, as per predefined type in CharSeq()
         if (spec.type === TokenTags.object) {
 
           // If value is string, eg: {{ 'name' }}
-          if (s.IsRegExp(Regex.StringQuotations)) {
+          if (s.IsRegExp(r.StringQuotations)) {
 
             // Next call we will look for a filter value, eg: {{ 'value' | }}
             state = ScanState.Filter
@@ -205,12 +131,10 @@ export default (function () {
           }
 
           // Variable or Object was detected, eg: {{ name }} or {{ object.prop }}
-          if (s.IfRegExp(Regex.LiquidObjectName)) {
+          if (s.IfRegExp(r.LiquidObjectName)) {
 
             // Match captured token with a cursor value
             spec.cursor(s.token)
-
-            // console.log(spec.data)
 
             // Next call we will look for a property notation
             state = ScanState.Object
@@ -226,7 +150,48 @@ export default (function () {
 
         }
 
+        // Tag is a "Tag", lets get its identifier
+        if (s.IfRegExp(/^[a-zA-Z_]+/)) {
+
+          if (cache === ScanState.TagEndIdentifier) {
+            state = ScanState.TagClose
+            return TokenType.LiquidEndTag
+          }
+
+          // Match captured token with a cursor value
+          spec.cursor(s.token)
+
+          if (spec.type === TokenTags.control) {
+            state = ScanState.ControlCondition
+            return TokenType.Control
+          }
+        }
+
         break
+
+      case ScanState.ControlCondition:
+
+        if (s.IfRegExp(/^[$a-zA-Z0-9_-]+\b/)) {
+          state = ScanState.Object
+          cache = ScanState.ControlOperator
+          return TokenType.ControlCondition
+        }
+
+        cache = ScanCache.Reset
+        state = ScanState.TagClose
+        return ScanLiquid()
+
+      case ScanState.ControlOperator:
+
+        cache = ScanCache.Reset
+
+        if (s.IfRegExp(/^(?:==|!=|>=|<=|<|>|\b(?:and|or)\b)/)) {
+          state = ScanState.ControlCondition
+          return TokenType.ControlOperator
+        }
+
+        state = ScanState.TagClose
+        return ScanLiquid()
 
       case ScanState.Object:
 
@@ -256,8 +221,6 @@ export default (function () {
 
           //  Have pair, remove previous LOB position
           pairs.pop()
-
-          cache = ScanCache.Reset
           state = ScanState.Object
           return TokenType.ObjectBracketNotationClose
         }
@@ -280,7 +243,7 @@ export default (function () {
           // Reconnect to filter specification
           spec.filter.cursor()
 
-          // Next characters should be separators, eg: {{ tag | foo: bar.baz^, }}
+          // Next characters should be separators, eg: | foo: bar.baz^, }}
           state = ScanState.FilterSeparator
           return ScanLiquid()
         }
@@ -291,13 +254,16 @@ export default (function () {
           return ScanLiquid()
         }
 
-        state = ScanState.TagClose
+        state = cache !== ScanCache.Reset
+          ? cache
+          : ScanState.TagClose
+
         return ScanLiquid()
 
       case ScanState.ObjectDotNotation:
 
         // Gets property value on object, eg: "prop" in "object.prop"
-        if (s.IfRegExp(Regex.LiquidObjectProperty)) {
+        if (s.IfRegExp(r.LiquidObjectProperty)) {
 
           // Pass back to object to look for any additional properties
           state = ScanState.Object
@@ -331,9 +297,6 @@ export default (function () {
 
         // We will attempt to close the right side bracket notation
         if (s.IfCodeChar(c.ROB)) {
-
-          // We assert that we have just closed a bracket
-          cache = ScanCache.BracketNotationClose
           state = ScanState.Object
           return TokenType.ObjectBracketNotationClose
         }
@@ -362,7 +325,7 @@ export default (function () {
         if (s.SkipQuotedString()) {
 
           // Detect an empty property string value, eg: "" or "   "
-          if (s.token.length === 2 || s.IsToken(Regex.EmptyString)) {
+          if (s.token.length === 2 || s.IsToken(r.EmptyString)) {
 
             // Advance 1 step to align cursor and tokenize
             s.Advance(1)
@@ -381,7 +344,7 @@ export default (function () {
         }
 
         // We have a missing quotation character, eg: "prop
-        if (s.IsPrevRegExp(Regex.StringQuotations)) {
+        if (s.IsPrevRegExp(r.StringQuotations)) {
 
           // Advance 1 step to align cursor and tokenize
           s.Advance(1)
@@ -402,10 +365,7 @@ export default (function () {
         }
 
         // Capture inner variable or object reference, eg: object[variable]
-        if (s.IfRegExp(Regex.LiquidObjectProperty)) {
-
-          // Assert we are in a bracket property
-          cache = ScanCache.BracketNotation
+        if (s.IfRegExp(r.LiquidObjectProperty)) {
 
           // Pass it back to object scan, check for any properties
           state = ScanState.Object
@@ -491,13 +451,13 @@ export default (function () {
         }
 
         if (spec.filter.type('parameter')) {
-          state = ScanState.FilterParameter
+          state = ScanState.GotoTagEnd
           return ScanLiquid()
 
         }
 
         if (spec.filter.type('spread')) {
-          state = ScanState.FilterSpread
+          state = ScanState.GotoTagEnd
           return ScanLiquid()
 
         }
@@ -527,31 +487,69 @@ export default (function () {
         }
 
         // We have a missing quotation character, eg: "argument
-        if (s.IsPrevRegExp(Regex.StringQuotations)) {
-
-          // Advance 1 step to align cursor and tokenize
-          s.Advance(1)
+        if (s.IsPrevRegExp(r.StringQuotations)) {
 
           error = ParseError.MissingQuotation
           state = ScanState.ParseError
 
-          // We will consume entire token for this error
+          // Consume entire token
           return ScanLiquid()
         }
 
-        // Filter argument accepts number type, eg: {{ tag | filter: 10 }}
-        if (spec.filter.accept('number')) {
-          if (s.IfRegExp(/^\d*/)) {
+        // Capture normal expression integer
+        if (s.IfRegExp(/^\d+/)) {
 
-            // We pass back to separator scan, look for more arguments
+          // Filter argument accepts number, eg: {{ tag | filter: 10 }}
+          if (spec.filter.accept('integer')) {
             state = ScanState.FilterSeparator
-            return TokenType.FilterArgumentNumber
+            return TokenType.Integer
           }
+
+          error = ParseError.RejectNumber
+          state = ScanState.GotoTagEnd
+          return TokenType.ParseError
         }
 
-        // Check if filter argument accepts a reference
-        if (spec.filter.accept('reference')) {
-          if (s.IfRegExp(Regex.LiquidObjectName)) {
+        // Capture float expression numbers
+        if (s.IfRegExp(/^-\d+|-?\d+\.[.\d]+/)) {
+
+          // Ensure we accept float numbers
+          if (spec.filter.accept('float')) {
+
+            // Ensure number is not missing decimal
+            if (s.IfCodeChar(c.DOT)) {
+              error = ParseError.MissingNumber
+              return TokenType.ParseError
+            }
+
+            state = ScanState.FilterSeparator
+            return TokenType.Float
+          }
+
+          error = ParseError.RejectInteger
+          state = ScanState.GotoTagEnd
+          return TokenType.ParseError
+        }
+
+        // Check for boolean argument values
+        if (s.IfRegExp(/^\b(?:true|false)\b/)) {
+
+          // Ensure the argument accepts a boolean value
+          if (spec.filter.accept('boolean')) {
+            state = ScanState.FilterSeparator
+            return TokenType.Boolean
+          }
+
+          error = ParseError.RejectBoolean
+          state = ScanState.GotoTagEnd
+          return TokenType.ParseError
+        }
+
+        // If we get here, we will have either a variable or reference
+        if (s.IfRegExp(r.LiquidObjectName)) {
+
+          // Filter argument accepts reference
+          if (spec.filter.accept('reference')) {
 
             // Match captured token with a cursor value
             spec.cursor(s.token)
@@ -560,12 +558,6 @@ export default (function () {
             state = ScanState.Object
             return TokenType.Object
           }
-        }
-
-        // This is the last accepted filter argument
-        if (!spec.filter.next) {
-          state = ScanState.TagClose
-          return TokenType.FilterArgument
         }
 
         // Missing a quote " or '
@@ -581,45 +573,49 @@ export default (function () {
           // Reset filter specification
           spec.filter.reset()
 
+          // Re-scan for additional filters
           state = ScanState.Filter
           return ScanLiquid()
         }
 
+        // Move to next argument in specification
         spec.filter.next()
 
-        // console.log(spec.get.arguments)
-        // console.log('here', s.token, spec.filter.next())
+        // We have a comma separator character, lets proceed
         if (s.IfCodeChar(c.COM)) {
           state = ScanState.FilterArgument
           return TokenType.Separator
         }
 
-        if (!spec.filter.required) {
+        // TODO THINK ABOUT THIS LOGIC
 
-          state = ScanState.Filter
+        if (!spec.filter.required) {
 
           // Reset filter specification
           spec.filter.reset()
+          state = ScanState.Filter
 
           return ScanLiquid()
         }
 
-        // console.log('here', s.token)
+        if (s.IsRegExp(/^['"a-zA-Z0-9]/)) {
+          error = ParseError.MissingFilterSeparator
+          state = ScanState.GotoTagEnd
+          return TokenType.ParseError
+        }
+
+        error = s.IfRegExp(/^[^\s\n\t\r]/)
+          ? ParseError.InvalidCharacter
+          : ParseError.MissingFilterArgument
 
         state = ScanState.ParseError
-        error = ParseError.MissingFilterArgument
         return ScanLiquid()
 
-      case ScanState.FilterParameter:
-        break
-        // FILTER ARGUMENT PARAMETER OPERATOR
-        // ---------------------------------------------
-      case ScanState.FilterParameterOperator:
-        break
-        // FILTER ARGUMENT PARAMETER OPERATOR
-        // ---------------------------------------------
-      case ScanState.FilterParameterArgument:
-        break
+        // TODO HANDLE THE ARGUMENT TYPES
+
+      case ScanState.FilterParameter: break
+      case ScanState.FilterParameterOperator: break
+      case ScanState.FilterParameterArgument: break
 
       case ScanState.GotoTagEnd: {
 
@@ -636,21 +632,14 @@ export default (function () {
 
       }
 
-      // PARSE ERROR
-      //
-      // -------------------------------------------
       case ScanState.ParseError: {
 
-        // Recursive
+        // Consume the token until ending delimiters
         if (s.ConsumeUnless(/-?[%}]\}/, /\{[{%]/)) {
-
-          // console.log(s.token, 'closed')
-
           state = ScanState.TagClose
           return cache === ScanCache.GotoEnd
             ? ScanLiquid()
             : TokenType.ParseError
-
         }
 
         // TODO: WE WILL NEED TO DISPOSE OF CURRENT TOKEN
@@ -686,8 +675,6 @@ export default (function () {
           // We will consume the invalid character or string
           if (s.ConsumeUntil(/[\n\s\t\r%}]\}/, /\{[{%]/)) {
 
-            // console.log(s.token)
-
             error = s.token.length === 1
               ? ParseError.InvalidCharacter
               : ParseError.InvalidCharacters
@@ -712,11 +699,16 @@ export default (function () {
 
         }
 
-        // We reset state and begin scanning for character sequences
-        state = ScanState.CharSeq
-
         // Tag is closed, eg: }} or %}
-        if (s.IfRegExp(Regex.LiquidTagClose)) {
+        if (s.IfRegExp(r.LiquidTagClose)) {
+
+          if (cache === ScanState.TagEndIdentifier) {
+            cache = ScanCache.Reset
+            state = ScanState.CharSeq
+            return TokenType.LiquidEndTagClose
+          }
+
+          state = ScanState.CharSeq
           return TokenType.LiquidTagClose
         }
 
@@ -726,6 +718,8 @@ export default (function () {
     }
 
     // Falls through, we will execute recursion
+    // s.GotoEnd()
+
     return ScanLiquid()
 
   }
@@ -740,30 +734,39 @@ export default (function () {
    */
   function CharSeq () {
 
-    s.UntilSequence(Regex.DelimiterCharacters)
+    s.UntilSequence(r.DelimiterCharacters)
 
     // Liquid left-side delimiter detected, eg: {
-    if (s.IfNextCodeChar(c.LCB)) {
+    if (s.IsCodeChar(c.LCB)) {
 
       // Validate we have a Liquid tag, eg: {{ or {%
-      if (s.IfRegExp(Regex.OpenDelimiters)) {
+      if (s.IfRegExp(r.OpenDelimiters)) {
 
         // Assert Start position and state
         start = s.cursor
-
-        // Delimiter infers a trim dash, eg: {{-  or {%-
-        state = s.IsCodeChar(c.DSH)
-          ? ScanState.TagOpenTrim
-          : ScanState.TagOpen
 
         // Liquid object type delimiter, eg: {{
         // Preset the specification type
         if (s.IfPrevCodeChar(c.LCB)) {
           spec.preset(TokenTags.object)
+          state = s.IsCodeChar(c.DSH)
+            ? ScanState.TagOpenTrim
+            : ScanState.TagOpen
           return TokenType.LiquidObjectTag
         }
 
-        // Liquid tag type delimiter, eg: {%
+        // Fast forward any whitespace/newlines
+        s.SkipWhitespace()
+
+        state = ScanState.TagOpen
+
+        // Determine if we are dealing with an end tag
+        if (s.IfRegExp(r.LiquidEndTagSkip)) {
+          cache = ScanState.TagEndIdentifier
+          return ScanLiquid()
+        }
+
+        // We are dealing with a start tag type
         return TokenType.LiquidTag
 
       }
@@ -781,7 +784,7 @@ export default (function () {
         return TokenType.HTMLStartCommentTag
       }
 
-      if (s.IfRegExp(Regex.HTMLTagEnd)) {
+      if (s.IfRegExp(r.HTMLTagEnd)) {
         if (s.token === 'script') {
           return TokenType.HTMLStartTagOpen
         }
@@ -793,6 +796,7 @@ export default (function () {
 
     if (state !== ScanState.CharSeq) state = ScanState.CharSeq
 
+    s.SkipWhitespace()
     s.Advance(1)
 
   }
@@ -832,83 +836,47 @@ export default (function () {
     /**
      * Get start
      */
-    , get start () {
-
-      return start
-
-    }
-
-    /**
-     * Get Position
-     */
-    , get end () {
-
-      return s.Position()
-
-    }
-
-    /**
-     * Get Position
-     */
-    , get offset () {
-
-      return s.Offset()
-
-    }
-
-    /**
-     * Get Spaces
-     */
-    , get space () {
-
-      return s.space
-
-    }
-
-    /**
-     * Get Token
-     */
-    , get token () {
-
-      return s.token
-
-    }
-
-    /**
-     * Get Tag
-     */
-    , get tag () {
-
-      return s.GetText(this.start, this.offset)
-
-    }
-
-    /**
-     * Get Spec
-     */
-    , get spec () {
-
-      return spec.get
-
-    }
-
-    /**
-     * Get Line
-     */
-    , get line () {
-
-      return s.location.line
-
-    }
+    , get start () { return start }
 
     /**
      * Get Error
      */
-    , get error () {
+    , get error () { return error }
 
-      return error
+    /**
+     * Get Position
+     */
+    , get end () { return s.Position() }
 
-    }
+    /**
+     * Get Position
+     */
+    , get offset () { return s.offset }
+
+    /**
+     * Get Spaces
+     */
+    , get space () { return s.spaces }
+
+    /**
+     * Get Token
+     */
+    , get token () { return s.token }
+
+    /**
+     * Get Tag
+     */
+    , get tag () { return s.GetText(this.start, this.offset) }
+
+    /**
+     * Get Spec
+     */
+    , get spec () { return spec.get }
+
+    /**
+     * Get Line
+     */
+    , get line () { return s.location.line }
 
     /**
      * Get Range
@@ -920,13 +888,6 @@ export default (function () {
      * Ending position offset in current stream
      */
     , get range () { return s.range }
-
-    /**
-     * Check Error
-     *
-     * @param {number} code
-     */
-    , isError: code => error === code
 
     /**
      * Get Text
