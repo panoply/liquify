@@ -1,7 +1,5 @@
-/* eslint one-var: ["error", { let: "never" } ] */
-
-import { WSP, TAB, NWL, LFD, CAR, BWS } from '../lexical/characters'
 import lineColumn from 'line-column'
+import { WSP, TAB, NWL, LFD, CAR, BWS } from 'lexical/characters'
 
 /**
  * Stream
@@ -14,7 +12,14 @@ import lineColumn from 'line-column'
  * @see https://git.io/JJnqz
  */
 
-export default (function Stream (string) {
+export default (function Stream (source) {
+
+  /**
+   * Lines Counter
+   *
+   * @type {object}
+   */
+  let range
 
   /**
    * Cursor Offset - used to consume strings
@@ -29,13 +34,6 @@ export default (function Stream (string) {
    * @type {number}
    */
   let index = 0
-
-  /**
-   * Source Text
-   *
-   * @type {string}
-   */
-  let source = string
 
   /**
    * Token Text
@@ -64,7 +62,15 @@ export default (function Stream (string) {
     /* INITIALIZER                                  */
     /* -------------------------------------------- */
 
-    create: string => Stream(string || ''),
+    create: string => {
+
+      source = string
+      range = lineColumn(string)
+      length = string.length
+
+      Stream(string || '')
+
+    },
 
     /* -------------------------------------------- */
     /* GETTERS / SETTERS                            */
@@ -78,11 +84,7 @@ export default (function Stream (string) {
      * @memberof Stream
      * @returns {boolean}
      */
-    get EOS () {
-
-      return length <= index
-
-    },
+    get EOS () { return length <= index },
 
     /**
      * Offset
@@ -92,11 +94,7 @@ export default (function Stream (string) {
      * @memberof Stream
      * @returns {number}
      */
-    get cursor () {
-
-      return cursor
-
-    },
+    get cursor () { return cursor },
 
     /**
      * Offset
@@ -106,11 +104,7 @@ export default (function Stream (string) {
      * @memberof Stream
      * @returns {number}
      */
-    get offset () {
-
-      return index
-
-    },
+    get offset () { return index },
 
     /**
      * Range
@@ -135,11 +129,7 @@ export default (function Stream (string) {
      * @memberof Stream
      * @returns {string}
      */
-    get token () {
-
-      return token
-
-    },
+    get token () { return token },
 
     /**
      * Character Code
@@ -147,35 +137,15 @@ export default (function Stream (string) {
      * @memberof Stream
      * @returns {number}
      */
-    get code () {
-
-      return this.source.charCodeAt(index)
-
-    },
+    get code () { return source.charCodeAt(index) },
 
     /**
-     * Get Token
+     * Get spacing count
      *
      * @memberof Stream
      * @returns {number}
      */
-    get space () {
-
-      return spaces
-
-    },
-
-    /**
-     * Get Token
-     *
-     * @memberof Stream
-     * @returns {number}
-     */
-    get spaces () {
-
-      return spaces
-
-    },
+    get spaces () { return spaces },
 
     /**
      * Source Getter
@@ -183,23 +153,7 @@ export default (function Stream (string) {
      * @memberof Stream
      * @returns {string}
      */
-    get source () {
-
-      return source
-
-    },
-
-    /**
-     * Source Setter
-     *
-     * @memberof Stream
-     */
-    set source (text) {
-
-      source = text
-      length = text.length
-
-    },
+    get source () { return source },
 
     /* -------------------------------------------- */
     /* TOKENIZERS                                   */
@@ -214,7 +168,7 @@ export default (function Stream (string) {
      */
     Token (from = undefined) {
 
-      return from ? (token = this.source.substring(from, index)) : token
+      return from ? (token = source.substring(from, index)) : token
 
     },
 
@@ -230,7 +184,7 @@ export default (function Stream (string) {
      */
     Tokenize (from, to) {
 
-      token = this.source.substring(from || cursor, to || index)
+      token = source.substring(from || cursor, to || index)
 
       return token
 
@@ -286,7 +240,7 @@ export default (function Stream (string) {
      */
     Rewind (start, regex) {
 
-      const string = this.source.substring(start, index)
+      const string = source.substring(start, index)
       const end = string.search(regex)
 
       if (end < 0) return false
@@ -364,15 +318,9 @@ export default (function Stream (string) {
      */
     Cursor (offset = 0) {
 
-      cursor = isNaN(offset)
-        ? 0
-        : offset > 0
-          ? (offset + index)
-          : offset < 0
-            ? (index - Math.abs(offset))
-            : offset > index
-              ? offset
-              : index
+      cursor = isNaN(offset) ? 0 : offset > 0
+        ? (offset + index) : offset < 0 ? (index - Math.abs(offset))
+          : offset > index ? offset : index
 
       return cursor
 
@@ -395,7 +343,7 @@ export default (function Stream (string) {
      */
     Position (offset = index) {
 
-      const { line, col } = lineColumn(this.source).fromIndex(offset)
+      const { line, col } = range.fromIndex(offset)
 
       return {
         line,
@@ -424,24 +372,6 @@ export default (function Stream (string) {
         start: this.Position(start),
         end: this.Position(end)
       }
-
-    },
-
-    /**
-     * Get Current Position
-     *
-     * If a number is passed, return value
-     * will be added to current index, but will not be adjusted.
-     *
-     * **DOES NOT MODIFY**
-     *
-     * @memberof Stream
-     * @param {number} [offset]
-     * @returns {number}
-     */
-    Offset (offset = undefined) {
-
-      return offset ? (index + offset) : index
 
     },
 
@@ -517,7 +447,7 @@ export default (function Stream (string) {
 
       index = index + offset
 
-      if (tokenize) token = this.source.substring(cursor, index)
+      if (tokenize) token = source.substring(cursor, index)
 
       return index
 
@@ -561,7 +491,7 @@ export default (function Stream (string) {
      */
     IfPrevCodeChar (char) {
 
-      return this.source.charCodeAt(index - 1) === char
+      return source.charCodeAt(index - 1) === char
 
     },
 
@@ -578,7 +508,7 @@ export default (function Stream (string) {
      */
     IfNextCodeChar (code) {
 
-      return this.source.charCodeAt(index + 1) === code
+      return source.charCodeAt(index + 1) === code
 
     },
 
@@ -612,7 +542,7 @@ export default (function Stream (string) {
      */
     GetCodeChar (advance = 0) {
 
-      return this.source.charCodeAt(advance > index ? index + advance : index)
+      return source.charCodeAt(advance > index ? index + advance : index)
 
     },
 
@@ -629,7 +559,7 @@ export default (function Stream (string) {
      */
     GetChar (advance = 0) {
 
-      return this.source.charAt(advance > index ? advance : (index + advance))
+      return source.charAt(advance > index ? advance : (index + advance))
 
     },
 
@@ -647,9 +577,9 @@ export default (function Stream (string) {
      */
     GetText (start, end = undefined) {
 
-      // token = this.source.substring(start, end || index)
+      // token = source.substring(start, end || index)
 
-      return this.source.substring(start, end || index)
+      return source.substring(start, end || index)
 
     },
 
@@ -680,9 +610,9 @@ export default (function Stream (string) {
      */
     SkipQuotedString (n = index, consume = undefined) {
 
-      if (!/^["']/.test(this.source.substring(n))) return false
+      if (!/^["']/.test(source.substring(n))) return false
 
-      const offset = this.source.indexOf(this.source.charAt(n), n + 1)
+      const offset = source.indexOf(source.charAt(n), n + 1)
 
       if (offset < 0) {
         index = this.Advance(1)
@@ -701,7 +631,7 @@ export default (function Stream (string) {
 
       cursor = index
       index = offset + 1
-      token = this.source.substring(n, offset + 1)
+      token = source.substring(n, offset + 1)
 
       return true
 
@@ -733,7 +663,7 @@ export default (function Stream (string) {
      */
     ConsumeUntil (regex, unless = undefined) {
 
-      const string = this.source.substring(index)
+      const string = source.substring(index)
       const match = string.search(regex)
 
       if (match < 0) return false
@@ -746,7 +676,7 @@ export default (function Stream (string) {
 
       cursor = index
       index = index + match
-      token = this.source.substring(cursor, index)
+      token = source.substring(cursor, index)
 
       return true
 
@@ -779,22 +709,20 @@ export default (function Stream (string) {
      */
     ConsumeUnless (regex, unless, tokenize = true) {
 
-      const match = this.source.substring(index).match(regex)
+      const match = source.substring(index).match(regex)
 
       if (match.index < 0) return false
 
-      if (!unless.test(this.source.substring(index, this.Offset(match.index)))) {
+      if (!unless.test(source.substring(index, index + match.index))) {
         index = index + match.index
 
         if (tokenize) {
           cursor = cursor + token.length
-          token = this.source.substring(cursor, index)
+          token = source.substring(cursor, index)
         }
 
         return true
       }
-
-      // this.advance(1)
 
       return false
 
@@ -823,7 +751,7 @@ export default (function Stream (string) {
      */
     UntilSequence (regex) {
 
-      const match = this.source.substring(index).search(regex)
+      const match = source.substring(index).search(regex)
 
       if (match < 0) {
         this.GotoEnd()
@@ -833,7 +761,7 @@ export default (function Stream (string) {
       cursor = index += match
       index = cursor
 
-      return this.source.charCodeAt(index)
+      return source.charCodeAt(index)
 
     },
 
@@ -862,7 +790,7 @@ export default (function Stream (string) {
      */
     IfSequence (regex, tokenize = true) {
 
-      const substring = this.source.substring(index)
+      const substring = source.substring(index)
       const match = substring.search(regex)
 
       if (match < 0) return false
@@ -890,7 +818,7 @@ export default (function Stream (string) {
 
       const pos = index
 
-      while (index < length && condition(this.source.charCodeAt(index))) index++
+      while (index < length && condition(source.charCodeAt(index))) index++
 
       if (pos < index) {
         spaces = index - pos
@@ -987,7 +915,7 @@ export default (function Stream (string) {
      */
     IsPrevRegExp (regex, reverse = 1) {
 
-      return regex.test(this.source.substring(index - reverse, index))
+      return regex.test(source.substring(index - reverse, index))
 
     },
 
@@ -1012,7 +940,7 @@ export default (function Stream (string) {
      */
     IfRegExp (regex) {
 
-      const match = this.source.substring(index).match(regex)
+      const match = source.substring(index).match(regex)
 
       if (!match) return false
 
@@ -1038,7 +966,7 @@ export default (function Stream (string) {
      */
     IsRegExp (regex) {
 
-      return regex.test(this.source.substring(index))
+      return regex.test(source.substring(index))
 
     },
 
@@ -1063,7 +991,7 @@ export default (function Stream (string) {
      */
     UntilRegExp (regex, consume = false) {
 
-      const match = this.source.substring(index).match(regex)
+      const match = source.substring(index).match(regex)
 
       if (!match) {
         this.GotoEnd()
@@ -1103,8 +1031,8 @@ export default (function Stream (string) {
      */
     IfCodeChar (code, tokenize = true) {
 
-      if (code === this.source.charCodeAt(index)) {
-        if (tokenize) token = this.source.charAt(index)
+      if (code === source.charCodeAt(index)) {
+        if (tokenize) token = source.charAt(index)
         this.Cursor()
         this.Advance(1)
         return true
@@ -1142,7 +1070,7 @@ export default (function Stream (string) {
 
         cursor = index
         index += codes.length
-        token = this.source.substring(cursor, index)
+        token = source.substring(cursor, index)
 
         return true
 
@@ -1175,8 +1103,8 @@ export default (function Stream (string) {
      */
     UntilChar (code) {
 
-      while (index < this.source.length) {
-        if (this.source.charCodeAt(index) === code) return true
+      while (index < source.length) {
+        if (source.charCodeAt(index) === code) return true
         this.Advance(1)
       }
 
@@ -1199,7 +1127,7 @@ export default (function Stream (string) {
         string = string.reduce((s, c) => (s += String.fromCharCode(c)), '')
       }
 
-      const offset = this.source.indexOf(string, index)
+      const offset = source.indexOf(string, index)
 
       if (offset >= 0) {
         this.Jump(consume ? offset + string.length : offset)
