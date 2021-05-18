@@ -35,13 +35,48 @@ export default function (options = {
       standardPath,
       extendableVariations
     }
-  ) => /* js */`
+  ) => {
 
+    /** __
+     *
+     * Decryption
+     *
+     * The returning value uses the decrypt function,
+     * passing the Liquid Standard (decoded) variation
+     * which we have decrypted and the variation string
+     * that we decrypt before merging with Standard.
+     *
+     * `base`
+     *  > Standard decoded variation
+     *
+     * `variation`
+     * > The passed in specification name
+     *
+     * @type {string[][]}
+     */
+    const variations = extendableVariations.map((
+      [
+        engine,
+        encodedPath
+      ]
+    ) => /* js */`
+
+      if (variation === '${engine}') return decrypt(base,  require('./${encodedPath}'));
+
+    `).join('\n\n')
+
+    /**
+     * Returns the Virtual `index.js` module
+     * which each specification will use.
+     */
+    return /* js */`
+
+    import merge from 'mergerino'
     import cryptographer from '@liquify/cryptographer'
 
-    export async function specs (licenseKey, variation) {
+    export default function ({ variation, license }) {
 
-      const crypto = cryptographer(licenseKey);
+      const crypto = cryptographer(license);
 
       /** __
        *
@@ -54,7 +89,7 @@ export default function (options = {
        * Liquid Standard Variation (decoded)
        *
        * @param {string} selectedVariation
-       * The Selected Variation (encoded)
+       * The Selected Variation Path passed in via extendable
        *
        * @returns {object}
        * Returns the decoded variation extending the standard
@@ -65,9 +100,9 @@ export default function (options = {
 
         return {
           ...variant,
-          tags: Object.assign(variant.tags, standardVariation.tags),
-          filters:  Object.assign(variant.filters, standardVariation.filters),
-        }
+          tags: mergerino(standardVariation.tags, variant.tags),
+          filters:  mergerino(standardVariation.filters, variant.filters),
+        };
 
       }
 
@@ -82,7 +117,7 @@ export default function (options = {
        *
        * @type {string}
        */
-      const ${standardNameEncoded} = await import('./${standardPath}');
+      const ${standardNameEncoded} = require('./${standardPath}');
 
       /** __
        *
@@ -104,9 +139,7 @@ export default function (options = {
        * This might be due to another error, we log invalid
        * license either way.
        */
-      if(typeof base !== 'object') {
-        return new Error("Invalid License key (IV) was supplied!")
-      }
+      if (typeof base !== 'object') return new Error("Invalid License key (IV)");
 
       /** __
        *
@@ -115,77 +148,20 @@ export default function (options = {
        * If the variation parameter supplied was "standard"
        * return the promise as standard was already decoded.
        */
-      if (crypto.encode(variation) === '${crypto.encode(standardName)}') return base
+      if (variation === '${standardName}') return base;
 
 
-      return (
-
-        /** __
-         *
-         * IIFE Caller
-         *
-         * @param {string} spec
-         * The variation name as an encoded string
-         */
-        spec => ({
-
-        /** __
-         *
-         * Return Variation
-         *
-         * Getter which returns the "variation" specification.
-         * The getters name is the encoded variation equivalent
-         * and the getter returns and asynchronous IIFE which
-         * fetches the module, decrypts its contents, merges with
-         * Liquid Standard and returns the decoded variation.
-         *
-         * @readonly
-         * @type {object}
-         */
-        ${extendableVariations.map(([ engine, encodedPath ]) => /* js */`
-
-          /** __
-           *
-           * Getter Name
-           *
-           * The getter name is the encoded name, same as the
-           * name used for each file.
-           */
-          get '${crypto.encode(engine)}'() {
-
-            /** __
-             *
-             * Returning Asynchronous IIFE
-             *
-             * Rollup will handle the "import" when compiling,
-             * which will be converted accordingly.
-             */
-            return (async () => {
-
-              const variant = await import('./${encodedPath}');
-
-              /** __
-               *
-               * Decryption
-               *
-               * The returning value uses the decrypt function,
-               * passing the Liquid Standard (decoded) variation
-               * which we decrypted above and the variation string
-               * that we decrypt before merging with Standard.
-               */
-              return decrypt(base, variant)
-
-            })()
-
-          }
-
-        `).join(',\n')}
-        }[spec]
-
-      ))(crypto.encode(variation))
-
+      /** __
+       *
+       * Append Other Variations from above "variations" map
+       * function join.
+       *
+       */
+      ${variations}
     }
+
     `
+  }
 
   /**
    * Defaults Merger
@@ -237,6 +213,14 @@ export default function (options = {
         config.input[crypto.encode(prop)] = config.input[prop]
         delete config.input[prop]
       }
+
+      /**
+       * Change Parse JSON names to encrypted equivalents
+       */
+      parse.input = parse.input.map(([ name, path ]) => [
+        name,
+        `${crypto.encode(name)}.js`
+      ])
 
       return config
 
