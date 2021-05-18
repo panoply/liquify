@@ -74,6 +74,93 @@ export default (function () {
   const pairs = []
 
   /**
+   * Character Sequencing
+   *
+   * Advances source to delimiter start characters.
+   * Sequence will capture HTML or Liquid characters.
+   *
+   * @returns {number}
+   */
+  function CharSeq () {
+
+    s.UntilSequence(r.DelimiterCharacters)
+
+    // Liquid left-side delimiter detected, eg: {
+    if (s.IsCodeChar(c.LCB)) {
+
+      // Validate we have a Liquid tag, eg: {{ or {%
+      if (s.IsRegExp(r.OpenDelimiters)) {
+
+        // Assert Start position and state
+        start = s.offset
+
+        s.Advance(1)
+
+        // Liquid object type delimiter, eg: {{
+        if (s.IfCodeChar(c.LCB)) {
+
+          // Preset the specification type
+          spec.type = TokenTags.object
+
+          // Check for trim dash and tokenize
+          // This logic may seem extraneous, its not.
+          if (s.IsCodeChar(c.DSH)) {
+            state = ScanState.TagOpenTrim
+            return TokenType.ObjectTag
+          }
+
+          state = ScanState.TagOpen
+          return TokenType.ObjectTag
+        }
+
+        // Liquid basic type tag delimiter, eg: {%
+        if (s.IfCodeChar(c.PER)) {
+
+          cache = ScanState.TagEndIdentifier
+          state = s.IsCodeChar(c.DSH)
+            ? ScanState.TagOpenTrim
+            : ScanState.TagOpen
+
+          return TokenType.LiquidTag
+
+        }
+
+        // We are dealing with a start tag type
+        return TokenType.LiquidTag
+
+      }
+    }
+
+    if (s.IfNextCodeChar(c.LAN)) {
+
+      if (s.IfCodeChar(c.FWS)) {
+        state = ScanState.HTMLTagClose
+        return TokenType.HTMLEndTagOpen
+      }
+
+      if (s.IfChars([ c.BNG, c.DSH, c.DSH ])) {
+        state = ScanState.HTMLCommentOpen
+        return TokenType.HTMLStartCommentTag
+      }
+
+      if (s.IfRegExp(r.HTMLTagEnd)) {
+        if (s.token === 'script') {
+          return TokenType.HTMLStartTagOpen
+        }
+      }
+
+      return CharSeq()
+
+    }
+
+    if (state !== ScanState.CharSeq) state = ScanState.CharSeq
+
+    s.SkipWhitespace()
+    s.Advance(1)
+
+  }
+
+  /**
    * Scan Liquid
    *
    * Liquid c.language syntax tokenizer scanner.
@@ -93,14 +180,20 @@ export default (function () {
 
       case ScanState.TagOpenTrim:
 
-        // Align the cursor position so we tokenize the dash
-        s.Cursor()
+        // Consume the trim left side dash
+        if (s.IfCodeChar(c.DSH)) {
 
-        // Advance index by 1 and tokenize dash
-        s.Advance(1, true)
+          if (cache === ScanState.TagEndIdentifier) {
 
-        state = ScanState.TagOpen
-        return TokenType.LiquidTrimDashLeft
+            console.log(s.token)
+
+          }
+
+          state = ScanState.TagOpen
+          return TokenType.LiquidTrimDashLeft
+        }
+
+        break
 
       case ScanState.TagOpen:
 
@@ -169,6 +262,8 @@ export default (function () {
 
         break
 
+      // CONTROL TAG
+      // -----------------------------------------------------------------
       case ScanState.ControlCondition:
 
         if (s.IfRegExp(/^[$a-zA-Z0-9_-]+\b/)) {
@@ -193,6 +288,8 @@ export default (function () {
         state = ScanState.TagClose
         return ScanLiquid()
 
+      // OBJECTS
+      // -----------------------------------------------------------------
       case ScanState.Object:
 
         // Object property dot, eg: object.
@@ -215,6 +312,7 @@ export default (function () {
         if (s.IfCodeChar(c.ROB)) {
 
           if (pairs.length === 0) {
+
             error = ParseError.InvalidCharacter
             return TokenType.ParseError
           }
@@ -284,6 +382,7 @@ export default (function () {
 
         // Check to see if an extra dot character, eg: {{ object.. }}
         if (s.IsCodeChar(c.DOT)) {
+
           error = ParseError.InvalidCharacter
           state = ScanState.ParseError
         }
@@ -377,6 +476,8 @@ export default (function () {
         state = ScanState.ParseError
         return ScanLiquid()
 
+      // TAG FILTERS
+      // -----------------------------------------------------------------
       case ScanState.Filter:
 
         // Tag has a pipe separator, we will look for a filter
@@ -424,6 +525,7 @@ export default (function () {
           // If spec exists and arguments do not exist, throw an error
           error = ParseError.RejectFilterArguments
           state = ScanState.Filter
+
           return ScanLiquid()
         }
 
@@ -439,7 +541,8 @@ export default (function () {
           return TokenType.FilterOperator
         }
 
-        error = ParseError.MissingFilterArgument
+        // We are missing a colon separator, eg: {{ tag | append^ }}
+        error = ParseError.MissingColon
         state = ScanState.GotoTagEnd
         return TokenType.ParseError
 
@@ -488,11 +591,8 @@ export default (function () {
 
         // We have a missing quotation character, eg: "argument
         if (s.IsPrevRegExp(r.StringQuotations)) {
-
           error = ParseError.MissingQuotation
           state = ScanState.ParseError
-
-          // Consume entire token
           return ScanLiquid()
         }
 
@@ -554,18 +654,46 @@ export default (function () {
             // Match captured token with a cursor value
             spec.cursor(s.token)
 
-            // Next call we will look for a property notation
-            state = ScanState.Object
-            return TokenType.Object
+            // Check to to see if we are dealing with an object
+            if (spec.typeof(TokenTags.object) || s.IfNextRegExp(/(?=[[.])/)) {
+
+              // Next call we will look for a property notation
+              state = ScanState.Object
+              return TokenType.Object
+
+            }
+
+            state = ScanState.FilterSeparator
+            return TokenType.Variable
+
           }
         }
 
-        // Missing a quote " or '
+        // Missing filter argument, eg: {{ tag | filter: ^ }}
         state = ScanState.ParseError
         error = ParseError.MissingFilterArgument
         return ScanLiquid()
 
       case ScanState.FilterSeparator:
+
+        // Validate filter arguments exists
+        if (!spec.filter.exists) {
+
+          // We have a comma separator character, lets proceed
+          if (s.IfCodeChar(c.COM)) {
+            state = ScanState.FilterArgument
+            return TokenType.Separator
+          }
+
+          // Capture the next character sequence and ensure its valid
+          // If the true, we have is invalid character, eg {{ t | foo: bar"^ }}
+          if (!s.IsRegExp(/^[|]|^-?[%}]\}/)) {
+            s.Advance(1, true)
+            error = ParseError.InvalidCharacter
+            state = ScanState.GotoTagEnd
+            return TokenType.ParseError
+          }
+        }
 
         // If last argument was processed pass back to filter
         if (spec.filter.last) {
@@ -608,8 +736,8 @@ export default (function () {
           ? ParseError.InvalidCharacter
           : ParseError.MissingFilterArgument
 
-        state = ScanState.ParseError
-        return ScanLiquid()
+        state = ScanState.GotoTagEnd
+        return TokenType.ParseError
 
         // TODO HANDLE THE ARGUMENT TYPES
 
@@ -617,7 +745,9 @@ export default (function () {
       case ScanState.FilterParameterOperator: break
       case ScanState.FilterParameterArgument: break
 
-      case ScanState.GotoTagEnd: {
+      // CLOSERS
+      // -----------------------------------------------------------------
+      case ScanState.GotoTagEnd:
 
         // Recursive
         if (s.ConsumeUnless(/-?[%}]\}/, /\{[{%]/, false)) {
@@ -629,8 +759,6 @@ export default (function () {
 
         state = ScanState.CharSeq
         return CharSeq()
-
-      }
 
       case ScanState.ParseError: {
 
@@ -649,9 +777,6 @@ export default (function () {
 
       }
 
-      // LIQUID TAG CLOSE
-      //
-      // ---------------------------------------------
       case ScanState.TagClose:
 
         // Validate right side trim dash character
@@ -717,87 +842,7 @@ export default (function () {
 
     }
 
-    // Falls through, we will execute recursion
-    // s.GotoEnd()
-
     return ScanLiquid()
-
-  }
-
-  /**
-   * Character Sequencing
-   *
-   * Advances source to delimiter start characters.
-   * Sequence will capture HTML or Liquid characters.
-   *
-   * @returns {number}
-   */
-  function CharSeq () {
-
-    s.UntilSequence(r.DelimiterCharacters)
-
-    // Liquid left-side delimiter detected, eg: {
-    if (s.IsCodeChar(c.LCB)) {
-
-      // Validate we have a Liquid tag, eg: {{ or {%
-      if (s.IfRegExp(r.OpenDelimiters)) {
-
-        // Assert Start position and state
-        start = s.cursor
-
-        // Liquid object type delimiter, eg: {{
-        // Preset the specification type
-        if (s.IfPrevCodeChar(c.LCB)) {
-          spec.preset(TokenTags.object)
-          state = s.IsCodeChar(c.DSH)
-            ? ScanState.TagOpenTrim
-            : ScanState.TagOpen
-          return TokenType.LiquidObjectTag
-        }
-
-        // Fast forward any whitespace/newlines
-        s.SkipWhitespace()
-
-        state = ScanState.TagOpen
-
-        // Determine if we are dealing with an end tag
-        if (s.IfRegExp(r.LiquidEndTagSkip)) {
-          cache = ScanState.TagEndIdentifier
-          return ScanLiquid()
-        }
-
-        // We are dealing with a start tag type
-        return TokenType.LiquidTag
-
-      }
-    }
-
-    if (s.IfNextCodeChar(c.LAN)) {
-
-      if (s.IfCodeChar(c.FWS)) {
-        state = ScanState.HTMLTagClose
-        return TokenType.HTMLEndTagOpen
-      }
-
-      if (s.IfChars([ c.BNG, c.DSH, c.DSH ])) {
-        state = ScanState.HTMLCommentOpen
-        return TokenType.HTMLStartCommentTag
-      }
-
-      if (s.IfRegExp(r.HTMLTagEnd)) {
-        if (s.token === 'script') {
-          return TokenType.HTMLStartTagOpen
-        }
-      }
-
-      return CharSeq()
-
-    }
-
-    if (state !== ScanState.CharSeq) state = ScanState.CharSeq
-
-    s.SkipWhitespace()
-    s.Advance(1)
 
   }
 

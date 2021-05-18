@@ -1,7 +1,7 @@
 import { TokenType } from 'enums/types'
 import { TokenContext } from 'enums/context'
 import { ParseError } from 'enums/errors'
-import { NodeAST } from 'parser/node'
+import AST from 'parser/node'
 import scanner from 'parser/scanner'
 import spec from 'parser/specs'
 
@@ -37,6 +37,12 @@ export function parse (document) {
         break
       case TokenType.Newline:
         if (this.context && this.newlines) node.context(TokenContext.Newline)
+        break
+
+        // BOOLEAN
+      // -----------------------------------------------------------------
+      case TokenType.Variable:
+        if (this.context) node.context(TokenContext.Variable)
         break
 
       // BOOLEAN
@@ -97,10 +103,10 @@ export function parse (document) {
 
       // OBJECT TAGS
       // -----------------------------------------------------------------
-      case TokenType.LiquidObjectTag:
+      case TokenType.ObjectTag:
 
         // @ts-ignore
-        node = new NodeAST()
+        node = new AST.INode()
 
         break
 
@@ -109,7 +115,7 @@ export function parse (document) {
       case TokenType.LiquidTag:
 
         // @ts-ignore
-        node = new NodeAST()
+        node = new AST.INode()
 
         break
 
@@ -118,7 +124,7 @@ export function parse (document) {
       case TokenType.LiquidSingularTag:
 
         // @ts-ignore
-        node = new NodeAST()
+        node = new AST.INode()
 
         break
 
@@ -127,7 +133,7 @@ export function parse (document) {
       case TokenType.LiquidEndTag:
 
         // Find hierarch - The parental node
-        node = document.ast[NodeAST.hierarch.pop()]
+        node = document.ast[AST.INode.hierarch.pop()]
 
         // Checks for a matching parent
         if (node?.name === scanner.token) {
@@ -138,7 +144,7 @@ export function parse (document) {
         // The endtag is invalid - missing parental hierarch
         // create a new node on the AST representing this invalid node
         // @ts-ignore
-        node = new NodeAST()
+        node = new AST.INode()
         node.name = scanner.token
 
         break
@@ -157,7 +163,7 @@ export function parse (document) {
         }
 
         if (token === TokenType.LiquidEndTagClose) {
-          NodeAST.errors.delete(node.start)
+          AST.INode.errors.delete(node.start)
           break
         }
 

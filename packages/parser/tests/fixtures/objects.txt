@@ -1,1 +1,2 @@
-{{ product.name | replace: 'foo', 'baar' }}
+{% if condition %}
+{{- product.name | replace: 'foo', 'baar' -}}

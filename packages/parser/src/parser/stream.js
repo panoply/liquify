@@ -481,17 +481,22 @@ export default (function Stream (source) {
     /**
      * Previous Code Character
      *
+     * Matches a code character backwards.
+     * Optionally pass a `step` number to move further
+     * back from current index. Default to `1`
+     *
      * **DOES NOT MODIFY**
      *
      * ---
      *
      * @memberof Stream
      * @param {number} char
+     * @param {number} [step=1]
      * @returns {boolean}
      */
-    IfPrevCodeChar (char) {
+    IfPrevCodeChar (char, step = 1) {
 
-      return source.charCodeAt(index - 1) === char
+      return source.charCodeAt(index - step) === char
 
     },
 
@@ -509,6 +514,23 @@ export default (function Stream (source) {
     IfNextCodeChar (code) {
 
       return source.charCodeAt(index + 1) === code
+
+    },
+
+    /**
+     * If Next Regex Expression
+     *
+     * **DOES NOT MODIFY**
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {number} code
+     * @returns {boolean}
+     */
+    IfNextRegExp (regex) {
+
+      return regex.test(source.substring(index))
 
     },
 

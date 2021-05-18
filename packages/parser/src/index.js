@@ -2,7 +2,7 @@ import stream from 'parser/stream'
 import specs from 'parser/specs'
 import { parse } from 'parser/parse'
 import options from 'parser/options'
-import { NodeAST } from 'parser/node'
+import AST from 'parser/node'
 
 export class LiquidParser {
 
@@ -14,9 +14,9 @@ export class LiquidParser {
 
   }
 
-  get context () { return NodeAST.context.entries() }
+  get context () { return AST.INode.context.entries() }
 
-  get errors () { return Array.from(NodeAST.errors.values()).flat(1) }
+  get errors () { return Array.from(AST.INode.errors.values()).flat(1) }
 
   get spec () { return specs.variation }
 

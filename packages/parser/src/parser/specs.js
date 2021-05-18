@@ -15,6 +15,14 @@ export default (function Specs () {
   /* -------------------------------------------- */
 
   /**
+   * Cursor (currently active tag in parse)
+   *
+   * @template T
+   * @typedef {Parser.Cursor} Spec
+   */
+  let cursor
+
+  /**
    * Variation
    *
    * @type {Specs.Variation}
@@ -34,14 +42,6 @@ export default (function Specs () {
    * @type {Parser.TokenTags}
    */
   let type
-
-  /**
-   * Cursor (currently active tag in parse)
-   *
-   * @template T
-   * @typedef {Parser.Cursor} Spec
-   */
-  let cursor
 
   /* -------------------------------------------- */
   /* METHODS                                      */
@@ -105,7 +105,19 @@ export default (function Specs () {
      * @param {Parser.TokenTags} type
      * @returns {void}
      */
-    preset: code => { type = code },
+    set type (code) { type = code },
+
+    /**
+     * Typeof
+     *
+     * Checks to see if the current token tag type is
+     * equal to the enum value passed in.
+     *
+     * @param {TokenTags} [tag]
+     * Removes the specification variation references
+     *
+     */
+    typeof: tag => tag === type,
 
     /**
      * Cursor
@@ -251,6 +263,15 @@ export default (function Specs () {
          * @returns {boolean}
          */
         get required () { return cursor.arguments[state]?.required },
+
+        /**
+         * Returns a boolean indicating filter cursor arguments
+         * exists on the spec. Used to validate after variable.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get exists () { return cursor?.$i },
 
         /**
          * Returns a boolean indicating if this is the last argument

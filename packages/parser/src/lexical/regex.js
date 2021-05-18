@@ -11,14 +11,14 @@ export const DelimiterCharacters = /[{<]/
  *
 * `^\{[{%]`
 */
-export const OpenDelimiters = /^\{[{%]-?/
+export const OpenDelimiters = /^\{[{%]/
 
 /**
  * Liquid First Character
  *
  * `^[a-zA-Z0-9$"'_]`
  */
-export const LiquidFirstCharacter = /^[$a-zA-Z0-9"'_]/
+export const LiquidFirstCharacter = /^[$a-zA-Z0-9"'_-]/
 
 /**
  * Liquid Close Delimiters

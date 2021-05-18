@@ -9,249 +9,259 @@ import yamljs from 'yamljs'
  * AST Node
  *
  * Creates token nodes on the AST
- *
- * @type {Parser.ASTNode}
- */
-export class NodeAST {
 
-  /* -------------------------------------------- */
-  /* STATIC                                       */
-  /* -------------------------------------------- */
+ */
+export default (function ASTNodes () {
 
   /**
    * AST Node Hierarch
    *
-   * Tracks each node and their placements
-   *
-   * @static
-   * @memberof Node
-   * @type {number[]}
-   */
-  static hierarch = []
-
-  /**
-   * Errors
-   *
-   * Tracks each node and their placements
-   *
-   * @static
-   * @memberof Node
-   * @type {Map<number, object>}
-   */
-  static errors = new Map()
-
-  /**
-   * Tag Contexts
-   *
-   * The context structure for each tag. Starting offsets
-   * are used as the `key` properties.
-   *
-   * @static
-   * @memberof Node
-   * @type {Map<number, object>}
-   */
-  static context = new Map()
-
-  /**
-   * Size
-   *
-   * AST Node size
-   *
-   * @static
-   * @memberof Node
-   * @type {number}
-   */
-  static size = 0
-
-  /* -------------------------------------------- */
-  /* CONSTRUCTORS                                 */
-  /* -------------------------------------------- */
-
-  /**
-   * Tag Name
-   *
-   * @type {string}
-   */
-  name = null
-
-  /**
-   * Tag Type
-   *
-   * The tag type reference
-   *
-   * @type {Parser.TagTypes}
-   */
-  type = undefined
-
-  /**
-   * Range
-   *
-   * Start and End range line/column positions
-   *
-   * @type {Parser.Range}
-   */
-  range = { start: scanner.range.start }
-
-  /**
-   * Offsets List
-   *
-   * Returns position offsets of tokens
+   * Tracks nodes which require start and end
+   * tags so we can correctly populate the AST.
    *
    * @type {number[]}
    */
-  offsets = [ scanner.start ]
+  const hierarch = []
 
   /**
-   * Tag Kind
+   * AST Node
    *
-   * @type{number}
+   * Creates token nodes on the AST
+   *
+   * @type {Parser.ASTNode}
    */
-  kind = TokenKind.Liquid
+  class INode {
 
-  /**
-   * String Literal tokens
-   *
-   * @type{string[]}
-   */
-  token = []
+    /* -------------------------------------------- */
+    /* STATIC                                       */
+    /* -------------------------------------------- */
 
-  /**
-   * Get Children
-   *
-   * Returns the tokens children decedent nodes
-   *
-   * @type {object[]}
-   */
-  children = []
+    /**
+     * Errors
+     *
+     * Tracks each node and their placements
+     *
+     * @static
+     * @memberof Node
+     * @type {Map<number, object>}
+     */
+    static errors = new Map()
 
-  /**
-   * Objects
-   *
-   * Returns the objects located on the token
-   *
-   * @type {Map}
-   */
-  objects = new Map()
+    /**
+     * Tag Contexts
+     *
+     * The context structure for each tag. Starting offsets
+     * are used as the `key` properties.
+     *
+     * @static
+     * @memberof Node
+     * @type {Map<number, object>}
+     */
+    static context = new Map()
 
-  /**
-   * Filters
-   *
-   * Returns the Filters (if any) located on the token
-   *
-   * @type{object}
-   */
-  filters = new Map()
+    /**
+     * Size
+     *
+     * AST Node size
+     *
+     * @static
+     * @memberof Node
+     * @type {number}
+     */
+    static size = 0
 
-  /**
-   * The Starting offset
-   *
-   * @readonly
-   * @memberof Node
-   */
-  get start () { return this.offsets[0] }
+    /* -------------------------------------------- */
+    /* CONSTRUCTORS                                 */
+    /* -------------------------------------------- */
 
-  /**
-   * The Ending offset
-   *
-   * @readonly
-   * @memberof Node
-   */
-  get end () { return this.offsets[this.offsets.length - 1] }
+    /**
+     * Tag Name
+     *
+     * @type {string}
+     */
+    name = null
 
-  /**
-   * The Token errors
-   *
-   * @readonly
-   * @type {object[]}
-   * @memberof Node
-   */
-  get errors () { return NodeAST.errors.get(this.start) }
+    /**
+     * Tag Type
+     *
+     * The tag type reference
+     *
+     * @type {Parser.TagTypes}
+     */
+    type = undefined
 
-  /**
-   * The Token errors
-   *
-   * @readonly
-   * @memberof Node
-   */
-  get contexts () { return NodeAST.context.get(this.start) }
+    /**
+     * Range
+     *
+     * Start and End range line/column positions
+     *
+     * @type {Parser.Range}
+     */
+    range = { start: scanner.range.start }
 
-  /**
-   * Get Contents
-   *
-   * @readonly
-   * @memberof Node
-   * @returns {string}
-   */
-  get content () {
+    /**
+     * Offsets List
+     *
+     * Returns position offsets of tokens
+     *
+     * @type {number[]}
+     */
+    offsets = [ scanner.start ]
 
-    if (this.kind === TokenKind.Yaml) {
-      return yamljs.parse(scanner.GetText(this.offsets[1], this.offsets[2]))
-    }
+    /**
+     * Tag Kind
+     *
+     * @type{number}
+     */
+    kind = TokenKind.Liquid
 
-    return scanner.GetText(this.start, this.end)
+    /**
+     * String Literal tokens
+     *
+     * @type{string[]}
+     */
+    token = []
 
-  }
+    /**
+     * Get Children
+     *
+     * Returns the tokens children decedent nodes
+     *
+     * @type {object[]}
+     */
+    children = []
 
-  /**
-   * The Token errors
-   *
-   * @param {number} index
-   */
-  offset (index) {
+    /**
+     * Objects
+     *
+     * Returns the objects located on the token
+     *
+     * @type {Map}
+     */
+    objects = new Map()
 
-    this.offsets.push(index)
+    /**
+     * Filters
+     *
+     * Returns the Filters (if any) located on the token
+     *
+     * @type{object}
+     */
+    filters = new Map()
 
-  }
+    /**
+     * The Starting offset
+     *
+     * @readonly
+     * @memberof Node
+     */
+    get start () { return this.offsets[0] }
 
-  /**
-   * The Token errors
-   *
-   * @param {Parser.TokenContext} type
-   */
-  context (type) {
+    /**
+     * The Ending offset
+     *
+     * @readonly
+     * @memberof Node
+     */
+    get end () { return this.offsets[this.offsets.length - 1] }
 
-    const context = {
-      type,
-      range: scanner.range,
-      value: TokenContext.Newline === type || TokenContext.Whitespace === type
-        ? scanner.space
-        : scanner.token
-    }
+    /**
+     * The Token errors
+     *
+     * @readonly
+     * @type {object[]}
+     * @memberof Node
+     */
+    get errors () { return INode.errors.get(this.start) }
 
-    NodeAST.context.has(this.start)
-      ? this.contexts.push(context)
-      : NodeAST.context.set(this.start, [ context ])
+    /**
+     * The Token errors
+     *
+     * @readonly
+     * @memberof Node
+     */
+    get contexts () { return INode.context.get(this.start) }
 
-  }
+    /**
+     * Get Contents
+     *
+     * @readonly
+     * @memberof Node
+     * @returns {string}
+     */
+    get content () {
 
-  /**
-   * Set Errors
-   *
-   * @param {number} error
-   * @memberof Node
-   */
-  error (error) {
-
-    if (error) {
-
-      const diagnostic = {
-        ...Errors(error),
-        range: scanner.range,
-        token: scanner.token,
-        node: NodeAST.context.size - 1
+      if (this.kind === TokenKind.Yaml) {
+        return yamljs.parse(scanner.GetText(this.offsets[1], this.offsets[2]))
       }
 
-      NodeAST.errors.has(this.start)
-        ? this.errors.push(diagnostic)
-        : NodeAST.errors.set(this.start, [ diagnostic ])
+      return scanner.GetText(this.start, this.end)
+
+    }
+
+    /**
+     * The Token errors
+     *
+     * @param {number} index
+     */
+    offset (index) {
+
+      this.offsets.push(index)
+
+    }
+
+    /**
+     * The Token errors
+     *
+     * @param {Parser.TokenContext} type
+     */
+    context (type) {
+
+      const context = {
+        type,
+        range: scanner.range,
+        value: TokenContext.Newline === type || TokenContext.Whitespace === type
+          ? scanner.space
+          : scanner.token
+      }
+
+      INode.context.has(this.start)
+        ? this.contexts.push(context)
+        : INode.context.set(this.start, [ context ])
+
+    }
+
+    /**
+     * Set Errors
+     *
+     * @param {number} error
+     * @memberof Node
+     */
+    error (error) {
+
+      if (error) {
+
+        const diagnostic = Errors(error, {
+          range: scanner.range,
+          node: INode.context.size - 1,
+          offset: scanner.offset,
+          token: scanner.token
+        })
+
+        INode.errors.has(this.start)
+          ? this.errors.push(diagnostic)
+          : INode.errors.set(this.start, [ diagnostic ])
+      }
+
+    }
+
+    hierarch (index) {
+
+      if (!specs.singular) hierarch.push(index)
+
     }
 
   }
 
-  hierarch (index) {
-
-    if (!specs.singular) NodeAST.hierarch.push(index)
-
-  }
-
-}
+  return { INode }
+}())

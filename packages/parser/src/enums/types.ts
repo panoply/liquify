@@ -1,11 +1,5 @@
 export const enum TokenType {
-  /**
-   * Whitespace Characters `\s\t\f`
-   */
   Whitespace,
-  /**
-   * Whitespace Characters `\r\n`
-   */
   Newline,
 
   String,
@@ -14,6 +8,7 @@ export const enum TokenType {
   Float,
 
   Separator,
+  Variable,
 
   Filter,
   FilterOperator,
@@ -22,14 +17,13 @@ export const enum TokenType {
   FilterIdentifier,
   FilterParameter,
 
-  /**
-   * Unknown Characters
-   */
   Unknown,
 
   Control,
   ControlCondition,
   ControlOperator,
+
+  /* ITERATION ---------------------------------- */
 
   IterationIteree,
   IterationOperator,
@@ -46,6 +40,7 @@ export const enum TokenType {
    * - `foo` in `{% if foo.bar %}`
    */
   Object,
+  ObjectTag,
   ObjectProperty,
   ObjectPropertyString,
   ObjectPropertyObject,
@@ -57,188 +52,60 @@ export const enum TokenType {
   StringSingleQuote,
   StringDoubleQuote,
 
-  /**
-   * Parsing Error
-   */
-  ParseError,
+  /* ERRORS AND WARNINGS ------------------------ */
 
-  /**
-   * Parsing Warning
-   */
+  ParseError,
   ParseWarning,
 
-  /**
-   * Unknown Characters
-   */
   Content,
 
-  /**
-   * Last Chacters in stream
-   */
   EOS,
 
-  /**
-   * After Delimeter `---`
-   */
-  FrontmatterStart,
+  /* FONTMATTER --------------------------------- */
 
-  /**
-   * After Delimeter `---`
-   */
+  FrontmatterStart,
   FrontmatterEnd,
 
-  /**
-   * Before Delimeter `#` _when_ `# comment`
-   */
+  /* YAML --------------------------------------- */
+
   YAMLCommentStart,
-
-  /**
-   * Within Tag `# comment`
-   */
   YAMLComment,
-
-  /**
-   * After Delimeter `\n` _when_ `# comment`
-   */
   YAMLCommentClose,
 
-  /**
-   * Before Delimeter `{%` _when_ `{%- start -%}`
-   */
+  /* LIQUID ------------------------------------- */
+
   LiquidTagOpen,
-
-  /**
-   * After Left side Whitespace Dash `-` _when_ `{%- tag %}`
-   */
   LiquidTrimDashLeft,
-
-  /**
-   * Before Right side Whitespace Dash `-` _when_ `{% tag -%}`
-   */
   LiquidTrimDashRight,
 
-  /**
-   * Within Tag `{%- start -%}`
-   */
   LiquidTag,
-
-  /**
-   * After Delimeter `%}` _when_ `{%- start -%}`
-   */
   LiquidTagClose,
 
-  /**
-   * Before Delimeter `{%` _when_ `{%- endstart -%}`
-   */
   LiquidEndTagOpen,
-
-  /**
-   * Within Tag `{%- endstart -%}`
-   */
   LiquidEndTag,
-
-  /**
-   * After Delimeter `%}` _when_ `{%- endstart -%}`
-   */
   LiquidEndTagClose,
-
-  /**
-   * Before Delimeter `{%` _when_ `{%- tag -%}`
-   */
   LiquidTagName,
 
-  /**
-   * Within Tag  `{%- tag -%}`
-   */
   LiquidSingularTag,
-
-  /**
-   * After Delimeter `%}` _when_ `{%- tag -%}`
-   */
   LiquidSingularTagClose,
 
-  /**
-   * Before Delimeter `{{` _when_ `{{- object -}}`
-   */
   LiquidObjectTagOpen,
-
-  /**
-   * Within Tag `{{-^ object -}}`
-   */
-  LiquidObjectTag,
-
-  /**
-   * Before Name `{{ ^object }}`
-   */
   LiquidObjectName,
-
-  /**
-   * After Delimeter `}}` _when_ `{{- tag -}}`
-   */
   LiquidObjectTagClose,
 
-  /**
-   * Before Delimeter `<` _when_ `<tag>`
-   */
+  /* HTML --------------------------------------- */
+
   HTMLStartTagOpen,
-
-  /**
-   * Within Tag `<tag>`
-   */
   HTMLTagName,
-
-  /**
-   * After Delimeter `>` _when_ `<tag>`
-   */
   HTMLStartTagClose,
-
-  /**
-   * After Delimeter `/>` _when_ `<tag />`
-   */
   HTMLStartTagSelfClose,
-
-  /**
-   * Before Delimeter `<` _when_ `</tag>`
-   */
   HTMLEndTagOpen,
-
-  /**
-   * Within Tag `</tag>`
-   */
   HTMLEndTag,
-
-  /**
-   * After Delimeter `>` _when_ `</tag>`
-   */
   HTMLEndTagClose,
-
-  /**
-   * Before Delimeter `<` _when_ `<!-- comment -->`
-   */
   HTMLStartCommentTag,
-
-  /**
-   * Within Tag `<!-- comment -->`
-   */
   HTMLComment,
-
-  /**
-   * After Delimeter `>` _when_ `<!-- comment -->`
-   */
   HTMLEndCommentTag,
-
-  /**
-   * Attribute `attr` _when_ `<tag attr="value">`
-   */
   HTMLAttributeName,
-
-  /**
-   * Attribute `attr` _when_ `<tag attr="value">`
-   */
   HTMLOperatorValue,
-
-  /**
-   * Value `"value"` _when_ `<tag attr="value">`
-   */
   HTMLAttributeValue,
 }

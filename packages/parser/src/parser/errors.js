@@ -13,9 +13,10 @@ import { ParseError, ErrorLevel } from '../enums/errors'
  * error messages for non-english developers._
  *
  * @param {number} error
+ * @param {{ range: object, node: number, offset: number, token: string }} details
  * @returns {Parser.IParseError}
  */
-export default (error = 0) => ({
+export default (error = 0, { range = {}, node = 0, offset = 0, token = '' }) => ({
 
   /* -------------------------------------------- */
   /* ERRORS                                       */
@@ -23,240 +24,342 @@ export default (error = 0) => ({
 
   [ParseError.MissingTagName]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing tag name',
-      range: {}
+      message: 'Missing tag name'
     }
   ),
   [ParseError.MissingObjectName]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing Object name',
-      range: {}
+      message: 'Missing Object name'
     }
   ),
   [ParseError.MissingBracketNotation]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing object property bracket notation',
-      range: {}
+      message: 'Missing object property bracket notation'
     }
   ),
   [ParseError.MissingStartTag]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing Start tag',
-      range: {}
+      message: 'Missing Start tag'
     }
   ),
   [ParseError.MissingEndTag]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing End tag name',
-      range: {}
+      message: 'Missing End tag name'
     }
   ),
   [ParseError.MissingOpenDelimiter]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing opening tag delimiter',
-      range: {}
+      message: 'Missing opening tag delimiter'
     }
   ),
   [ParseError.MissingCloseDelimiter]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing closing tag delimiter',
-      range: {}
+      message: 'Missing closing tag delimiter'
     }
   ),
   [ParseError.MissingColon]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing colon separator',
-      range: {}
+      message: 'Missing colon separator'
     }
   ),
   [ParseError.MissingQuotation]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Malformed string, missing quotation character',
-      range: {}
+      message: 'Malformed string, missing quotation character'
     }
   ),
   [ParseError.MissingProperty]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing object property',
-      range: {}
+      message: 'Missing object property'
     }
   ),
   [ParseError.MissingFilter]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing Filter, a filter must follow a pipe character',
-      range: {}
+      message: 'Missing Filter, a filter must follow a pipe character'
     }
   ),
   [ParseError.MissingFilterArgument]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing filter argument',
-      range: {}
+      message: 'Missing filter argument'
     }
   ),
   [ParseError.MissingFilterSeparator]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing filter separator character',
-      range: {}
+      message: 'Missing filter separator character'
     }
   ),
   [ParseError.MissingNumber]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing number',
-      range: {}
+      message: 'Missing number'
     }
   ),
   [ParseError.MissingCondition]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Missing conditional value',
-      range: {}
+      message: 'Missing conditional value'
     }
   ),
   [ParseError.InvalidTagName]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid tag name',
-      range: {}
+      message: 'Invalid tag name'
     }
   ),
   [ParseError.InvalidObjectName]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid object name was expressed',
-      range: {}
+      message: 'Invalid object name was expressed'
     }
   ),
   [ParseError.InvalidProperty]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid Property',
-      range: {}
+      message: 'Invalid Property'
     }
   ),
   [ParseError.InvalidPropertyNotation]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid Property Notation, expected "." or "[" character',
-      range: {}
+      message: 'Invalid Property Notation, expected "." or "[" character'
     }
   ),
   [ParseError.InvalidCharacter]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid character',
-      range: {}
+      message: 'Invalid character'
     }
   ),
   [ParseError.InvalidCharacters]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid characters or word',
-      range: {}
+      message: 'Invalid characters or word'
     }
   ),
   [ParseError.InvalidFilter]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid or unknown filter',
-      range: {}
+      message: 'Invalid or unknown filter'
     }
   ),
   [ParseError.InvalidSyntactic]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid syntactic tag placement',
-      range: {}
+      message: 'Invalid syntactic tag placement'
     }
   ),
   [ParseError.InvalidOperator]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Invalid operator sequence',
-      range: {}
+      message: 'Invalid operator sequence'
     }
   ),
   [ParseError.RejectString]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'String value not accepted',
-      range: {}
+      message: 'String value not accepted'
     }
   ),
   [ParseError.RejectNumber]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Number value not accepted',
-      range: {}
+      message: 'Number value not accepted'
     }
   ),
   [ParseError.RejectInteger]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Number value not accepted',
-      range: {}
+      message: 'Number value not accepted'
     }
   ),
   [ParseError.RejectBoolean]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Boolean value not accepted',
-      range: {}
+      message: 'Boolean value not accepted'
     }
   ),
   [ParseError.RejectArray]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Array value not accepted',
-      range: {}
+      message: 'Array value not accepted'
     }
   ),
   [ParseError.RejectObject]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Object value not accepted',
-      range: {}
+      message: 'Object value not accepted'
     }
   ),
   [ParseError.RejectParameters]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Tag does not accept parameters',
-      range: {}
+      message: 'Tag does not accept parameters'
     }
   ),
   [ParseError.RejectFilterArguments]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Filter does not accept arguments',
-      range: {}
+      message: 'Filter does not accept arguments'
     }
   ),
   [ParseError.RejectWhitespace]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Extraneous and/or unnecessary spacing characters',
-      range: {}
+      message: 'Extraneous and/or unnecessary spacing characters'
     }
   ),
   [ParseError.RejectWhitespaceControl]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Error,
-      message: 'Tag does not accept whitespace strips',
-      range: {}
+      message: 'Tag does not accept whitespace strips'
     }
   ),
   /* -------------------------------------------- */
@@ -265,9 +368,12 @@ export default (error = 0) => ({
 
   [ParseError.WarnWhitespace]: (
     {
+      range,
+      node,
+      offset,
+      token,
       severity: ErrorLevel.Warning,
-      message: 'Extraneous whitespace detected',
-      range: {}
+      message: 'Extraneous whitespace detected'
     }
   )
 }[error])
