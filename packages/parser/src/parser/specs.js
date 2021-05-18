@@ -1,8 +1,18 @@
 import { TokenTags } from '../enums/tags'
 import { Engines } from './options'
-import { specs } from '@liquify/liquid-language-specs'
+import specs from '@liquify/liquid-language-specs'
 
+/**
+ * Specs
+ *
+ * Controller for specifications, provides methods for
+ * interacting with Variation Specifications.
+ */
 export default (function Specs () {
+
+  /* -------------------------------------------- */
+  /* STATES                                       */
+  /* -------------------------------------------- */
 
   /**
    * Variation
@@ -33,6 +43,10 @@ export default (function Specs () {
    */
   let cursor
 
+  /* -------------------------------------------- */
+  /* METHODS                                      */
+  /* -------------------------------------------- */
+
   return {
 
     /**
@@ -41,14 +55,12 @@ export default (function Specs () {
      * Sets the variation specification. Called upon
      * initialization before parsing begins.
      *
-     * @param {string} engine
+     * @param {Specs.Engine} engine
      * @param {string} license
      */
-    ref: async (engine, license) => {
+    ref: (engine, license) => {
 
-      variation = await specs(license, engine)
-
-      return variation
+      variation = specs({ variation: engine, license })
 
     },
 
@@ -59,6 +71,134 @@ export default (function Specs () {
      * @returns {Specs.Variation}
      */
     get variation () { return variation },
+
+    /**
+     * Get Token Tag Type
+     *
+     * @readonly
+     * @returns {number}
+     */
+    get type () { return type },
+
+    /**
+     * Get Current Specification in stream
+     *
+     * @readonly
+     * @return {Specs.IFilter & Specs.IObject & Specs.ITag}
+     */
+    get get () { return cursor },
+
+    /**
+     * Check to see if the tag has a specification
+     *
+     * @readonly
+     * @returns {boolean}
+     */
+    get exists () { return cursor !== undefined },
+
+    /**
+     * Preset Method
+     *
+     * Presets token tag type and prepares the cursor
+     * for fast reference of specification.
+     *
+     * @param {Parser.TokenTags} type
+     * @returns {void}
+     */
+    preset: code => { type = code },
+
+    /**
+     * Cursor
+     *
+     * Cursor represents an in-stream specification.
+     * The cursor is changed each time a new tag with
+     * a reference specification is encountered it will
+     * be made available on private `cursor` prop.
+     *
+     * @param {string} [tag=undefined]
+     * @returns {boolean}
+     */
+    cursor (name = undefined) {
+
+      if (!variation || !name) return false
+
+      if (variation?.tags?.[name]) {
+
+        /**
+         * Cursor - Tag Specification
+         *
+         * @template T
+         * @type {Spec<Specs.ITag>}
+         */
+        cursor = variation.tags[name]
+        type = TokenTags[cursor?.type]
+
+        return true
+
+      }
+
+      if (variation?.filters?.[name]) {
+
+        /**
+         * cursor - Filter Specification
+         *
+         * @template T
+         * @type {Spec<Specs.IFilter>}
+         */
+        cursor = variation.filters[name]
+
+        if (cursor?.arguments) this.filter.cursor(name)
+
+        return true
+
+      }
+
+      if (variation.engine !== Engines.Standard && variation?.objects?.[name]) {
+
+        /**
+         * Cursor - Object Specification
+         *
+         * @template T
+         * @type {Spec<Specs.IObject>}
+         */
+        cursor = variation.objects[name]
+        type = TokenTags.object
+
+        return true
+
+      }
+
+      cursor = undefined
+      type = undefined
+
+      return false
+
+    },
+
+    /**
+     * Reset Specifications
+     *
+     * Resets the specification stream. This is generally
+     * called upon each tokenization.
+     *
+     * @param {boolean} [hard=false]
+     * Removes the specification variation references
+     *
+     */
+    reset (hard = false) {
+
+      cursor = undefined
+      type = undefined
+
+      this.filter.reset()
+
+      if (hard) {
+        const props = Object.getOwnPropertyNames(variation)
+        const size = props.length
+        for (let i = 0; i < size; i++) delete variation[props[i]]
+      }
+
+    },
 
     /**
      * Argument Navigator
@@ -112,6 +252,13 @@ export default (function Specs () {
          */
         get required () { return cursor.arguments[state]?.required },
 
+        /**
+         * Returns a boolean indicating if this is the last argument
+         * available to the filter, according to its specification.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
         get last () { return cursor.$i.argsize === state },
 
         /**
@@ -119,13 +266,10 @@ export default (function Specs () {
          * boolean to indicate when we have reached the last
          * argument in the filter spec.
          *
-         * @return {boolean}
+         * @return {void}
          */
-        next () {
+        next () { state++ },
 
-          state++
-
-        },
         /**
          * Checks if the argument accepts the type of value
          * passed, ensuring the argument is valid.
@@ -142,7 +286,11 @@ export default (function Specs () {
          * @param {Specs.FilterAcceptsTypes} id
          * @returns {boolean}
          */
-        accept: id => cursor.arguments[state].accepts.indexOf(id) >= 0,
+        accept: (id) => {
+
+          return new RegExp(`\\b(?:${cursor.arguments[state].accepts})\\b`).test(id)
+
+        },
 
         /**
          * Validates argument values against provided options
@@ -153,18 +301,21 @@ export default (function Specs () {
          * @param {boolean} accept
          * @returns {boolean}
          */
-        validate: (token) => (
-          cursor.arguments[state].validate && cursor.arguments[state]?.options
-        )
-          ? cursor.arguments[state].options.some((
-            { name }
-          ) => (
-            Array.isArray(name)
-              ? name.some($name => $name === token)
-              : token === name
-          ))
-          : true
-        ,
+        validate: (token) => {
+
+          return (
+            cursor.arguments[state].validate &&
+            cursor.arguments[state]?.options
+          ) ? cursor.arguments[state].options.some(
+              (
+                { name }
+              ) => (
+                Array.isArray(name)
+                  ? name.some($name => $name === token)
+                  : token === name
+              )
+            ) : true
+        },
 
         /**
          * Filter Cursor
@@ -220,135 +371,7 @@ export default (function Specs () {
 
       })
 
-    )(NaN),
+    )(NaN)
 
-    /**
-     * Get Token Tag Type
-     *
-     * @readonly
-     * @returns {number}
-     */
-    get type () { return type },
-
-    /**
-     * Get Current Specification in stream
-     *
-     * @readonly
-     * @return {Specs.IFilter & Specs.IObject & Specs.ITag}
-     */
-    get get () { return cursor },
-
-    /**
-     * Check to see if the tag has a specification
-     *
-     * @readonly
-     * @returns {boolean}
-     */
-    get exists () { return cursor !== undefined },
-
-    /**
-     * Preset Method
-     *
-     * Presets token tag type and prepares the cursor
-     * for fast reference of specification.
-     *
-     * @param {Parser.TokenTags} type
-     * @returns {void}
-     */
-    preset: code => { type = code },
-
-    /**
-     * Cursor
-     *
-     * Cursor represents an in-stream specification.
-     * The cursor is changed each time a new tag with
-     * a reference specification is encountered it will
-     * be made available on private `cursor` prop.
-     *
-     * @param {string} [tag=undefined]
-     * @returns {boolean}
-     */
-    cursor (name = undefined) {
-
-      if (!variation || !name) return false
-
-      if (variation.engine !== Engines.Standard && variation?.objects?.[name]) {
-
-        /**
-         * Cursor - Object Specification
-         *
-         * @template T
-         * @type {Spec<Specs.IObject>}
-         */
-        cursor = variation.objects[name]
-        type = TokenTags.object
-
-        return true
-
-      }
-
-      if (variation?.tags?.[name]) {
-
-        /**
-         * Cursor - Tag Specification
-         *
-         * @template T
-         * @type {Spec<Specs.ITag>}
-         */
-        cursor = variation.tags[name]
-        type = TokenTags[cursor?.type]
-
-        return true
-
-      }
-
-      if (variation?.filters?.[name]) {
-
-        /**
-         * cursor - Filter Specification
-         *
-         * @template T
-         * @type {Spec<Specs.IFilter>}
-         */
-        cursor = variation.filters[name]
-
-        if (cursor?.arguments) this.filter.cursor(name)
-
-        return true
-
-      }
-
-      cursor = undefined
-      type = undefined
-
-      return false
-
-    },
-
-    /**
-     * Reset Specifications
-     *
-     * Resets the specification stream. This is generally
-     * called upon each tokenization.
-     *
-     * @param {boolean} [hard=false]
-     * Removes the specification variation references
-     *
-     */
-    reset (hard = false) {
-
-      cursor = undefined
-      type = undefined
-
-      this.filter.reset()
-
-      if (hard) {
-        const props = Object.getOwnPropertyNames(variation)
-        const size = props.length
-        for (let i = 0; i < size; i++) delete variation[props[i]]
-      }
-
-    }
   }
-
 }())
