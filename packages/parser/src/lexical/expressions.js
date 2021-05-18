@@ -17,7 +17,7 @@ export const IdentifierCondition = /^(?:[^"'\W\s]+|[.-]+)+/
  *
  * Liquid Condition Operators
  */
-export const ConditionOperators = /==|!=|>=|<=|<|>/
+export const ConditionOperators = /==|!=|>=|<=|<|>|\b(?:and|or)\b/
 
 /**
  * `{% if condition and value %}` > `and`
