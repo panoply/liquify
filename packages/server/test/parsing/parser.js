@@ -130,7 +130,8 @@ liquid_tokens.forEach(({ title, capture, tests }) => {
 
   })
 
-}) */
+})
+
 test('FullDocument Parse', t => {
 
   const node = AST({
