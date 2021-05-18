@@ -1,11 +1,9 @@
-import { TokenType } from '../enums/types'
-import { TokenContext } from '../enums/context'
-import { TokenKind } from '../enums/kinds'
-import { ParseError } from '../enums/errors'
-import { TokenTags } from '../enums/tags'
-import Node from './node'
-import scanner from './scanner'
-import spec from './specs'
+import { TokenType } from 'enums/types'
+import { TokenContext } from 'enums/context'
+import { ParseError } from 'enums/errors'
+import { NodeAST } from 'parser/node'
+import scanner from 'parser/scanner'
+import spec from 'parser/specs'
 
 /**
  * Parser
@@ -28,315 +26,218 @@ export function parse (document) {
    */
   let node
 
-  let track
-
   while (token !== TokenType.EOS) {
 
     switch (token) {
 
-      // CONTEXT - SEPARATOR CHARACTER
-      //
-      // Pushes separator characters to stack
-      // -----------------------------------------------------------------
-      case TokenType.Separator:
-
-        node.context(TokenContext.Separator)
-
-        break
-
-      // CONTEXT - WHITESPACE
-      //
-      // Tracks whitespace spacing between tokens
+      // SPACING
       // -----------------------------------------------------------------
       case TokenType.Whitespace:
-
-        if (this.context && this.whitespace) {
-          if (node?.context) node.context(TokenContext.Whitespace)
-        }
-
+        if (this.context && this.whitespace) node.context(TokenContext.Whitespace)
         break
-
       case TokenType.Newline:
-
-        if (this.context && this.whitespace) {
-          if (node?.context) node.context(TokenContext.Newline)
-        }
-
+        if (this.context && this.newlines) node.context(TokenContext.Newline)
         break
 
-      // PARSER - PARSE ERROR
-      //
-      // Pushes parse errors onto node stack
+      // BOOLEAN
+      // -----------------------------------------------------------------
+      case TokenType.Boolean:
+        if (this.context) node.context(TokenContext.Boolean)
+        break
+
+      // NUMBERS
+      // -----------------------------------------------------------------
+      case TokenType.Integer:
+        if (this.context) node.context(TokenContext.Integer)
+        break
+      case TokenType.Float:
+        if (this.context) node.context(TokenContext.Float)
+        break
+
+      // STRINGS
+      // -----------------------------------------------------------------
+      case TokenType.String:
+        if (this.context) node.context(TokenContext.String)
+        break
+      case TokenType.StringSingleQuote:
+        if (this.context) node.context(TokenContext.Object)
+        break
+      case TokenType.StringDoubleQuote:
+        if (this.context) node.context(TokenContext.Object)
+        break
+
+      // TRIMS
+      // -----------------------------------------------------------------
+      case TokenType.LiquidTrimDashLeft:
+        if (this.context) node.context(TokenContext.LeftTrim)
+        break
+      case TokenType.LiquidTrimDashRight:
+        if (this.context) node.context(TokenContext.RightTrim)
+        break
+
+      case TokenType.Separator:
+        if (this.context) node.context(TokenContext.Separator)
+        break
+
+      // DIAGNOSTICS
       // -----------------------------------------------------------------
       case TokenType.ParseWarning:
 
-        node.end = scanner.offset
-        // node.range.end = scanner.position
-        // node.offsets.push(node.end)
+        node.offset(scanner.offset)
         node.error(scanner.error)
-
-        // document.ast.push(node)
 
         break
 
-      // PARSER - PARSE ERROR
-      //
-      // Pushes parse errors onto node stack
-      // -----------------------------------------------------------------
       case TokenType.ParseError:
 
-        // @ts-ignore - Create node if undefined
-        if (!node) node = new Node()
-
-        node.end = scanner.offset
-        // node.range.end = scanner.position
-        // node.offsets.push(node.end)
+        node.offset(scanner.offset)
         node.error(scanner.error)
-
-        // document.ast.push(node)
 
         break
 
-      // PRESET - LIQUID TAG OPEN
-      //
-      // Presets the starting offset position of tag scanned
-      //
-      // ^{{ object
-      // ^{% tag
-      // ^{% endtag
+      // OBJECT TAGS
       // -----------------------------------------------------------------
       case TokenType.LiquidObjectTag:
+
+        // @ts-ignore
+        node = new NodeAST()
+
+        break
+
+      // BASIC TAGS
+      // -----------------------------------------------------------------
       case TokenType.LiquidTag:
 
         // @ts-ignore
-        node = new Node()
+        node = new NodeAST()
 
         break
 
-      // LIQUID WHITESPACE DASH LEFT
-      //
-      // {{-^
-      // -----------------------------------------------------------------
-      case TokenType.LiquidTrimDashLeft:
-        node.context(TokenContext.LeftTrim)
-
-        break
-
-      // LIQUID WHITESPACE DASH RIGHT
-      //
-      // -^}}
-      // -----------------------------------------------------------------
-      case TokenType.LiquidTrimDashRight:
-        node.context(TokenContext.RightTrim)
-        break
-
-      // LIQUID TAG NAME KEYWORD
-      //
-      // Tag reference is created and added to the AST
-      //
-      // name^ %}
-      // name^ }}
+      // SINGULAR TAGS
       // -----------------------------------------------------------------
       case TokenType.LiquidSingularTag:
 
-        // console.log('get text: ' + scanner.dash)
         // @ts-ignore
-        node = new Node()
-
-        node.name = scanner.token
-
-        // Push non-singular tags onto hierarch
-        if (token === TokenType.LiquidTag) {
-          Node.hierarch.push(document.ast.length)
-        }
+        node = new NodeAST()
 
         break
 
-      // LIQUID END TAG
-      //
-      // Match returns text proceeding "end" in "end^tag", eg:
-      //
-      // ^name %}
+      // BASIC END TAG
       // -----------------------------------------------------------------
       case TokenType.LiquidEndTag:
 
         // Find hierarch - The parental node
-        node = document.ast[Node.hierarch[Node.hierarch.length - 1] - 1]
+        node = document.ast[NodeAST.hierarch.pop()]
 
         // Checks for a matching parent
         if (node?.name === scanner.token) {
-          node.offsets.push(scanner.offset)
+          node.offset(scanner.offset)
           break
         }
 
         // The endtag is invalid - missing parental hierarch
         // create a new node on the AST representing this invalid node
         // @ts-ignore
-        node = new Node()
-
-        // Populate node match
+        node = new NodeAST()
         node.name = scanner.token
-
-        console.log('error, unmatched tag pair')
 
         break
 
-      // LIQUID TAG CLOSE
-      //
-      // Closing delimiters of Liquid tags
-      //
-      // %}^
-      // }}^
+      // CLOSE TAGS
       // -----------------------------------------------------------------
       case TokenType.LiquidTagClose:
       case TokenType.LiquidEndTagClose:
 
-        node.end = scanner.offset
+        node.offset(scanner.offset)
+        node.token.push(scanner.tag)
         node.range.end = scanner.range.end
-        node.token = scanner.tag
-        node.offsets.push(node.end)
 
-        // Catch closing delimiter error (if any)
-        if (scanner.isError(ParseError.MissingCloseDelimiter)) {
+        if (scanner.error === ParseError.MissingCloseDelimiter) {
           node.error(scanner.error)
         }
 
-        // Push node onto AST stack
-        document.ast.push(node)
-
-        // Handle hierarch if close tag is an end tag
         if (token === TokenType.LiquidEndTagClose) {
-          Node.hierarch.splice(Node.hierarch.length - 1, 1)
-          Node.errors.splice(Node.hierarch.length - 1, 1)
+          NodeAST.errors.delete(node.start)
+          break
         }
 
-        // Reset node & specs
-        node.reset()
+        document.ast.push(node)
         spec.reset()
-
-        // Reset
         node = undefined
 
-        break
-
-      case TokenType.String:
-        node.context(TokenContext.String)
-        break
-
-      case TokenType.StringSingleQuote:
-        node.context(TokenContext.Object)
-        break
-
-      case TokenType.StringDoubleQuote:
-        node.context(TokenContext.Object)
         break
 
       // LIQUID OBJECT
       // -----------------------------------------------------------------
       case TokenType.Object:
-        node.context(TokenContext.Object)
-        node.objects = scanner.token
-          .split('.')
-          .filter(Boolean)
-          .reduce((objects, prop) => (
-            {
-              ...objects
-              , [scanner.offset + prop.length]: prop
-            }
-          ), {})
+
+        if (this.context) node.context(TokenContext.Object)
+
+        node.name = scanner.token
+        node.type = spec.type
+        node.objects.set(scanner.offset + scanner.token.length, scanner.token)
 
         break
 
-      // LIQUID OBJECT PROPERTY OPEN BRACKET
-      // -----------------------------------------------------------------
       case TokenType.ObjectBracketNotationOpen:
-        node.context(TokenContext.OpenBracket)
+        if (this.context) node.context(TokenContext.OpenBracket)
         break
-      // LIQUID OBJECT PROPERTY OPEN BRACKET
-      // -----------------------------------------------------------------
       case TokenType.ObjectBracketNotationClose:
-        node.context(TokenContext.CloseBracket)
+        if (this.context) node.context(TokenContext.CloseBracket)
         break
-      // LIQUID OBJECT PROPERTY
-      // -----------------------------------------------------------------
       case TokenType.ObjectProperty:
-        node.context(TokenContext.Property)
+        if (this.context) node.context(TokenContext.Property)
         break
-
-      // LIQUID OBJECT PROPERTY STRING
-      // -----------------------------------------------------------------
       case TokenType.ObjectPropertyString:
-        node.context(TokenContext.PropertyString)
+        if (this.context) node.context(TokenContext.PropertyString)
         break
-
       case TokenType.ObjectPropertyNumber:
-        node.context(TokenContext.Number)
+        if (this.context) node.context(TokenContext.Integer)
         break
-
-      // LIQUID OBJECT PROPERTY OBJECT
-      // -----------------------------------------------------------------
       case TokenType.ObjectPropertyObject:
-        node.context(TokenContext.PropertyObject)
+        if (this.context) node.context(TokenContext.PropertyObject)
         break
 
+      // FILTERS
+      // -----------------------------------------------------------------
       case TokenType.Filter:
-        node.context(TokenContext.Separator)
+        if (this.context) node.context(TokenContext.Separator)
         break
-
       case TokenType.FilterIdentifier:
-        node.context(TokenContext.Keyword)
+        if (this.context) node.context(TokenContext.Keyword)
+        node.filters.set(scanner.offset + scanner.token.length, scanner.token)
         break
-
       case TokenType.FilterOperator:
-        node.context(TokenContext.Operator)
+        if (this.context) node.context(TokenContext.Operator)
         break
-
       case TokenType.FilterArgument:
-        node.context(TokenContext.String)
+        if (this.context) node.context(TokenContext.String)
         break
       case TokenType.FilterArgumentNumber:
-        node.context(TokenContext.Number)
+        if (this.context) node.context(TokenContext.Integer)
         break
-
       case TokenType.FilterParameter:
-        node.context(TokenContext.Parameter)
-        node.filters[track].context.push()
-        node.filters[track].offset[1] = scanner.offset
-        node.filters[track].token = scanner.getText(
-          node.filters[track].offset[0],
-          node.filters[track].offset[node.filters[track].offset.length - 1]
-        )
-        node.filters[track].params.push({
-          range: scanner.range,
-          value: scanner.token
-        })
+        if (this.context) node.context(TokenContext.Parameter)
         break
 
       // LIQUID CONTROL CONDITION
       // -----------------------------------------------------------------
-      case TokenType.ControlCondition:
+      case TokenType.Control:
 
-        node.context(TokenContext.Identifier)
+        if (this.context) node.context(TokenContext.Identifier)
 
-        console.log('in here')
+        node.name = scanner.token
+        node.type = spec.type
+        node.hierarch(document.ast.length)
+        node.error(ParseError.MissingEndTag)
 
         break
 
-      // LIQUID CONTROL OPERATOR
-      // -----------------------------------------------------------------
+      case TokenType.ControlCondition:
+        if (this.context) node.context(TokenContext.Condition)
+        break
       case TokenType.ControlOperator:
-
-        node.context(TokenContext.Operator)
-
-        if (/[=!><]/.test(scanner.token) && scanner.token.length > 2) {
-          node.error(ParseError.InvalidOperator)
-          break
-        }
-
-        if (!/^(?:==|!=|>=|<=|<|>|\b(?:or|and)\b)$/.test(scanner.token)) {
-          node.error(ParseError.InvalidOperator)
-        }
-
+        if (this.context) node.context(TokenContext.Operator)
         break
 
       // LIQUID ITERATION ITEREE
@@ -345,83 +246,19 @@ export function parse (document) {
 
         node.context(TokenContext.Iteree)
 
-        if (!/^(?:[^\W\s]+|[.-]+)+/.test(scanner.token)) {
-          node.errors.push('Invalid characters detected in iteree')
-        }
-
         break
 
-      // LIQUID ITERATION OPERATOR
-      // -----------------------------------------------------------------
       case TokenType.IterationOperator:
-
         node.context(TokenContext.Operator)
-
-        if (!/\bin\b/.test(scanner.token)) {
-          node.errors.push('Invalid Logical Operator')
-        }
-
         break
-
-      // LIQUID ITERATION ARRAY
-      // -----------------------------------------------------------------
       case TokenType.IterationArray:
-
         node.context(TokenContext.Array)
-
         break
-
-      // LIQUID ITERATION PARAMETERS
-      // -----------------------------------------------------------------
       case TokenType.IterationParameter:
-
         node.context(TokenContext.Keyword)
-
         break
-
-      // LIQUID ITERATION PARAMETER VALUE
-      // -----------------------------------------------------------------
       case TokenType.IterationParameterValue:
-
-        if (/\d{1,}/.test(scanner.token)) {
-          node.context(TokenContext.Number)
-        } else {
-          node.context(TokenContext.Invalid)
-          node.errors.push('Invalid Parameter Value, must be number value')
-        }
-
-        break
-
-      // HTML START TAG OPEN
-      // -----------------------------------------------------------------
-      case TokenType.HTMLStartTagOpen:
-
-        node = document.ast[document.ast.push(new Node()) - 1]
-        node.start = scanner.offset
-        node.name = scanner.token
-
-        break
-
-      // YAML FRONTMATTER OPEN
-      // -----------------------------------------------------------------
-      case TokenType.FrontmatterStart:
-
-        node = document.ast[document.ast.push(new Node()) - 1]
-        node.type = TokenTags.embedded
-        node.kind = TokenKind.Yaml
-        node.token.push(scanner.getText(0, scanner.end + 1))
-        node.offsets.push(0, scanner.end + 1)
-
-        break
-
-      // YAML FRONTMATTER CLOSE
-      // -----------------------------------------------------------------
-      case TokenType.FrontmatterEnd:
-
-        node.name = 'frontmatter'
-        node.offsets.push(scanner.getIndex, scanner.end)
-        node.token.push(scanner.getText(scanner.getIndex))
-
+        node.context(TokenContext.Integer)
         break
 
     }
@@ -429,10 +266,6 @@ export function parse (document) {
     token = scanner.scan()
 
   }
-
-  document.parseErrors = [ ...document.parseErrors, ...Node.errors ]
-
-  // console.log(Node.hierarch)
 
   return document
 
