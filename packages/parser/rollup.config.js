@@ -1,34 +1,47 @@
 import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import { terser } from 'rollup-plugin-terser'
-import json from '@rollup/plugin-json'
+import { resolve } from 'path'
+import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
-import replace from '@rollup/plugin-replace'
 import filesize from 'rollup-plugin-filesize'
 import noderesolve from '@rollup/plugin-node-resolve'
 import globs from '@liquify/rollup-plugin-globs'
-import pkg from './package.json'
 
 export default {
   input: 'src/index.js',
-  external: [
+  output: {
+    format: 'module',
+    dir: 'package',
+    sourcemap: process.env.prod ? false : 'inline',
+    preferConst: true,
+    chunkFileNames: '[name].js'
+  },
+  external: process.env.prod ? [] : [
     '@liquify/liquid-language-specs'
   ],
-  output: [
-    {
-      format: 'module',
-      dir: 'package',
-      sourcemap: process.env.prod ? false : 'inline',
-      preferConst: true,
-      chunkFileNames: '[name].js'
-    }
-  ],
   plugins: plugins([
-    noderesolve({ extensions: [ '.ts', '.js' ] }),
+    alias({
+      entries: {
+        parser: resolve(__dirname, 'src/parser'),
+        enums: resolve(__dirname, './src/enums'),
+        scanner: resolve(__dirname, './src/scanner'),
+        lexical: resolve(__dirname, './src/lexical')
+      }
+    }),
+    noderesolve({
+      extensions: [
+        '.ts',
+        '.js'
+      ]
+    }),
     babel({
       babelHelpers: 'runtime',
       configFile: './.babelrc',
-      extensions: [ '.ts', '.js' ]
+      extensions: [
+        '.ts',
+        '.js'
+      ]
     }),
     commonjs({
       requireReturnsDefault: 'namespace'
@@ -49,10 +62,10 @@ export default {
     })
   ],
   [
-    noderesolve({ extensions: [ '.ts', '.js' ] }),
     terser({
-      warnings: 'verbose'
-      , compress: { passes: 2 }
+      compress: {
+        passes: 2
+      }
     }),
     filesize({
       showGzippedSize: false,
