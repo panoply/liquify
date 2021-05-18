@@ -5,6 +5,7 @@ import { ParseError } from "../src/enums/errors";
 export { TokenTags } from "../src/enums/tags";
 export { Options } from "./options";
 export * from "@liquify/liquid-language-specs";
+export { TokenContext } from "../src/enums/context";
 
 /**
  * Tags are captured and applied as an array of strings.
@@ -75,22 +76,23 @@ export enum DiagnosticTag {
 /* -------------------------------------------- */
 export interface ASTNode {
   name: string;
-  start: number;
-  end: number;
-  token: Token;
+  get start(): number;
+  get end(): number;
+  get contexts(): TokenContext
+  get errors(): IParseError[]
+  token: Token[];
   type: TokenType;
   kind: TokenKind;
   offsets: Offsets;
   range: Range;
-  filters?: Specs.Filters;
   children?: Children[];
-  errors: any[];
   content: string;
-  objects?: Specs.Objects;
-  context: (tokenContext?: TokenContext) => object[];
-  error: (parseError?: number) => IParseError[];
-  reset: () => void;
-  hierarch: () => void;
+  objects?: Map<number, string>
+  filters?: Map<number, string>
+  offset(offset: number): void
+  context(contextId: TokenContext): void
+  error(errorId: number): void
+  hierarch(nodeIndex: number):void;
 }
 
 export interface IParseError {
