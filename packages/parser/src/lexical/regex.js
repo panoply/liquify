@@ -1,43 +1,59 @@
 
 /**
+ * Delimiter Characters
+ *
  * `[{<]`
  */
 export const DelimiterCharacters = /[{<]/
 
 /**
+ * Liquid Open Delimiters
+ *
 * `^\{[{%]`
 */
-export const OpenDelimiters = /^\{[{%]/
+export const OpenDelimiters = /^\{[{%]-?/
 
 /**
+ * Liquid First Character
+ *
  * `^[a-zA-Z0-9$"'_]`
  */
-export const LiquidFirstCharacter = /^[a-zA-Z0-9$"'_]/
+export const LiquidFirstCharacter = /^[$a-zA-Z0-9"'_]/
 
 /**
+ * Liquid Close Delimiters
+ *
 * `^[%}]\}`
 */
 export const CloseDelimiters = /^[%}]\}/
 
 /**
+ * HTML Tag End
+ *
 * `^[^\s"'>]+`
 */
 export const HTMLTagEnd = /^[^\s"'>]+/
 
 /**
+ * Liquid Tag Close
+ *
  * `^-?[%}]\}`
  */
-export const LiquidTagClose = /^-?[%}]\}/
+export const LiquidTagClose = /^[%}]\}/
 
 /**
-* `^-?[}]{2}`
-*/
-export const LiquidObjectTagClose = /^-?\}\}/
+ * Liquid Object Tag Close
+ *
+ * `^-?\}{2}`
+ */
+export const LiquidObjectTagClose = /^-?\}{2}/
 
 /**
-* `^[$_a-zA-Z0-9-]*\b`
-*/
-export const LiquidObjectName = /^[$_a-zA-Z0-9-]*\b/
+ * Liquid Object Name
+ *
+ * `^[$_a-zA-Z0-9-]*`
+ */
+export const LiquidObjectName = /^[$_a-zA-Z0-9-]*/
 
 /**
 * `^[$a-zA-Z0-9_-]+\b`
@@ -50,41 +66,57 @@ export const LiquidObjectProperty = /^[$a-zA-Z0-9_-]+\b/
 export const LiquidTagName = /^[_a-zA-Z]+\b/
 
 /**
-* `^\bend`
-*/
+ * Liquid End Tag
+ *
+ * `^\bend`
+ */
 export const LiquidEndTagSkip = /^\bend/
 
 /**
-* `^['"]`
-*/
+ * String Quotations
+ *
+ * `^['"]`
+ */
 export const StringQuotations = /^['"]/
 
 /**
-* `^[=!<>]{1,}|^[^\s]+\b`
-*/
+ * Liquid Control Operators
+ *
+ * `^[=!<>]{1,}|^[^\s]+\b`
+ */
 export const LiquidControlOperators = /^[=!<>]{1,}|^[^\s]+\b/
 
 /**
-* `[\s\t\r\n]+`
-*/
+ * Whitespace and Newlines
+ *
+ * `[\s\t\r\n]+`
+ */
 export const WhitespaceCharacters = /[\s\t\r\n]+/
 
 /**
-* `[\n\r\f\c]`
-*/
+ * Newlines Only
+ *
+ * `[\n\r\f\c]`
+ */
 export const Newlines = /[\n\r\f]/
 
 /**
-* `[\s\t]`
-*/
+ * Whitespace Only
+ *
+ * `[\s\t]`
+ */
 export const Whitespace = /[\s\t]/
 
 /**
+ * Empty String
+ *
  * `^["'][\s\t\r\n]+["']`
  */
 export const EmptyString = /^["'][\s\t\r\n]+["']/
 
 /**
-* `^[0-9]*$`
-*/
+ * Digits / Numbers
+ *
+ * `^[0-9]*$`
+ */
 export const Digits = /^[0-9]*$/
