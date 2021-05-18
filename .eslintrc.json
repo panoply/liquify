@@ -2,26 +2,25 @@
   "env": {
     "browser": false,
     "es6": true,
-    "jest": false,
+    "jest": false, // FUCK FACEBOOK
     "node": true
   },
-  "extends": [
-    "standard"
-  ],
-  "plugins": [
-    "babel"
-  ],
+  "extends": ["standard"],
+  "plugins": ["@babel", "import"],
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 2020,
-    "sourceType": "module"
+    "sourceType": "module",
+    "requireConfigFile": false
   },
   "rules": {
     "no-undef": "off",
-    "template-curly-spacing": [
-      "error",
-      "never"
-    ],
+    "template-curly-spacing": ["error", "never"],
     "no-use-before-define": [
       "error",
       {
@@ -30,15 +29,14 @@
         "variables": true
       }
     ],
+    "multiline-ternary": 0,
     "indent": [
       "error",
       2,
       {
         "MemberExpression": 1,
         "SwitchCase": 1,
-        "ignoredNodes": [
-          "TemplateLiteral"
-        ]
+        "ignoredNodes": ["TemplateLiteral"]
       }
     ],
     "implicit-arrow-linebreak": "off",
@@ -55,26 +53,11 @@
         }
       }
     ],
-    "function-paren-newline": [
-      "error",
-      "consistent"
-    ],
-    "array-element-newline": [
-      "error",
-      "consistent"
-    ],
-    "array-bracket-newline": [
-      "error",
-      "consistent"
-    ],
-    "array-bracket-spacing": [
-      "error",
-      "always"
-    ],
-    "comma-dangle": [
-      "error",
-      "never"
-    ],
+    "function-paren-newline": ["error", "consistent"],
+    "array-element-newline": ["error", "consistent"],
+    "array-bracket-newline": ["error", "consistent"],
+    "array-bracket-spacing": ["error", "always"],
+    "comma-dangle": ["error", "never"],
     "comma-style": [
       "error",
       "last",
@@ -110,10 +93,7 @@
         "ignoreChainWithDepth": 4
       }
     ],
-    "object-curly-spacing": [
-      "error",
-      "always"
-    ],
+    "object-curly-spacing": ["error", "always"],
     "object-curly-newline": [
       "error",
       {
@@ -153,10 +133,7 @@
         "allowSingleLineBlocks": true
       }
     ],
-    "semi": [
-      "error",
-      "never"
-    ],
+    "semi": ["error", "never"],
     "padding-line-between-statements": [
       "error",
       {
