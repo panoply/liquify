@@ -1,0 +1,180 @@
+{%- assign item = section.settings -%}
+
+{%- if section.settings.flush -%}
+  {%- assign flush = 'no-gutters flush' -%}
+{%- else -%}
+  {%- assign flush = 'px-' | append: section.settings.gutter -%}
+{%- endif -%}
+
+{%- assign gutter_y = section.settings.gutter | prepend: 'py-' -%}
+
+<style>
+.class {
+  background-color: {{ section.settings.background }};
+}
+</style>
+
+
+{% style %}
+  .class {
+    width: ;
+  }
+{% endstyle %}
+
+<div
+  class="row justify-content-center {{ flush }} {{ gutter_y }}">
+  <div
+    class="col {{ section.settings.gutter | prepend: 'pr-' }}">
+    <div
+      class="content">
+      <div
+        class="{{- section.settings.type }} d-flex {{ section.settings.align }}"
+        style="background-color: rgba(0, 0, 0, {{ section.settings.overlay }});">
+        <a
+          href="#"></a>
+      </div>
+      <div
+        class="aspect-ratio">
+        <img
+          class="img-fluid image"
+          src="{{- section.settings.right_image | img_url: '' -}}">
+      </div>
+    </div>
+  </div>
+  <div
+    class="col {{ section.settings.gutter | prepend: 'pl-' }}">
+    <div
+      class="content">
+      <div
+        class="{{- section.settings.type }} d-flex {{ align }} justify-content-center"
+        style="background-color: rgba(0, 0, 0, {{ section.settings.overlay }});">
+        <a
+          href="#"></a>
+      </di•v>
+      <div
+        class="aspect-ratio">
+        <img
+          class="img-fluid image"
+          src="{{- section.settings.right_image | img_url: '' -}}">
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image Split",
+  "class": "image-split",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image Split",
+      "info": "Applies 2 images side by side"
+    },
+    {
+      "type": "checkbox",
+      "id": "flush",
+      "label": "Flush",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "gutter",
+      "label": "Gutter",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "default": "md",
+      "options": [
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "md",
+          "label": "Medium"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "type",
+      "label": "Type",
+      "default": "title-overlay",
+      "options": [
+        {
+          "value": "title-overlay",
+          "label": "Overlay"
+        },
+        {
+          "value": "title-button",
+          "label": "Button"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "overlay",
+      "label": "Overlay",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.2
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Align",
+      "default": "align-items-end",
+      "options": [
+        {
+          "value": "align-items-start",
+          "label": "Top"
+        },
+        {
+          "value": "align-items-center",
+          "label": "Middle"
+        },
+        {
+          "value": "align-items-end",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Left Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Right Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Split",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

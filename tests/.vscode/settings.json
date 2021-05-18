@@ -1,0 +1,24 @@
+{
+  //"liquid.versionUpdateNotification": true,
+  //"liquid.completion.enable": true,
+  "editor.autoClosingQuotes": "languageDefined",
+  "[html]": {
+    "editor.foldingStrategy": "indentation"
+  },
+  // "[liquid]": {
+  //"editor.defaultFormatter": "sissel.shopify-liquid"
+  // },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "html",
+      "autoFix": true
+    }
+  ],
+  "css.lint.unknownAtRules": "ignore",
+  "files.associations": {
+    ".stylelintrc": "json",
+    "project.json": "jsonc"
+  }
+}

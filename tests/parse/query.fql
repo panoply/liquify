@@ -1,0 +1,16 @@
+Map(
+  [1, 2]
+  , Lambda(
+    [
+      'item'
+    ]
+    , Let(
+      {
+        property: value
+      },
+      {
+        property: Var('property')
+      }
+    )
+  )
+)

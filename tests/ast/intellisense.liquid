@@ -1,0 +1,118 @@
+{%- if tag == 'Spring / Summer' -%}
+  {%- for tag in collections.spring-summer.all_tags limit: 5  -%}
+    {%- if tag contains garment reverse -%}
+      <ul>
+        <li>{{- tag }}</li>
+      </ul>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- break -%}
+
+{{- product.name | filter: [product.titl] | tr: -56 | tr: 56 + 8 | bool: true }}
+
+{{ article.image. }}
+
+{{ user. }}
+
+{{ product.price | append: "testing.d " | test: 9098.99 }}
+
+{%- schema %}
+{
+  "test": "name"
+}
+{% endschema %}
+
+{% assign test = {{- example -}} %}
+
+{% include this %}
+
+{{ block.item_type | slugify | prepend: 'modules/' | append: '.html' }}
+
+{% include {{ block.item_type }} %}
+
+
+hello worls  seasond
+
+
+{% schema %}
+{
+  "": ""
+}
+{% endschema %}
+
+{% schema %}
+
+{% endschema %}
+
+
+<!---------------------------------->
+
+tag_whitespace
+
+<!-- DOES NOT ACCEPT -->
+{%- schema -%}
+{}
+{% endschema %}
+
+<!---------------------------------->
+
+tag_placement
+
+<!-- MISSING START TAG -->
+{%- endif -%}
+
+<!-- MUST BE A CHILD OF .... -->
+{% when %}
+
+
+<!---------------------------------->
+
+tag_pair
+
+<!-- MISSING START TAG -->
+{%- endif -%}
+
+<!-- MISSING END TAG -->
+{%- if -%}
+
+
+<!---------------------------------->
+
+control_operator
+
+<!-- EXTRANEOS OPERATOR  -->
+{% if tag !== tags %}
+{% endif %}
+
+<!---------------------------------->
+
+filter_existence
+
+<!-- DOES NOT ACCEPT -->
+
+{% schema | %}
+
+{% endschema %}
+
+<!-- EMPTY FILTER -->
+{{ product | s | }}
+{{ product | -}}
+{{ product | -}}
+
+<!---------------------------------->
+
+object_property
+
+<!-- MISSING PROPERTY -->
+{{ product. }}
+
+<!-- UNKNOWN PROPERTY -->
+{{ product.price }}
+
+<!-- IS NOT OBJECT  -->
+{{ current_page.dd }}
+
+<!---------------------------------->
+

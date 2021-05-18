@@ -1,0 +1,22 @@
+<!-- EXTRANEOS OPERATORS  -->
+{% if tag !==== tags and foo ==== bar or foo =< bar %}{% endif %}
+{% if tag.prop !==== tags %}{% endif %}
+
+<!-- INVALID OPERATOR -->
+{% if tag !==== tags and foo ======> bar or foo =<==== bar %}{% endif %}
+{% unless tag >= tags %}{% endunless %}
+{% unless tag = tags %}{% endunless %}
+
+<!-- INDENTICAL COMPARISON -->
+{%- if tag == tag -%}{% endif  %}
+{% unless tag > tag %}{% endunless %}
+
+<!-- EMPTY CONDITION -->
+{%- if            -%}{% endif  %}
+{%- case          -%}{% endcase  %}
+
+<!-- INVALID CONDITION CHARACTER -->
+{% unless @ %}{% endunless %}
+{% if - ==== tags  %}{% endif %}
+{% case - ==== tags  %}{% endcase %}
+{% if tag  d %}{% endif %}
