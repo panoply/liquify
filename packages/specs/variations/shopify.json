@@ -10,7 +10,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"],
+          "accepts": "string|reference",
           "options": [
             {
               "name": "master",
@@ -23,7 +23,7 @@
           "name": "crop",
           "description": "You can specify a crop parameter to make sure that the resulting image's dimensions match the requested dimensions. If the entire image won't fit in your requested dimensions, the crop parameter specifies what part of the image to show",
           "required": false,
-          "accepts": ["string", "reference"],
+          "accepts": "string|reference",
           "validate": true,
           "options": [
             {
@@ -47,7 +47,7 @@
           "type": "parameter",
           "name": "scale",
           "description": "The scale parameter lets you specify the pixel density of the image",
-          "accepts": ["number", "reference"],
+          "accepts": "integer|reference",
           "validate": true,
           "options": [
             {
@@ -62,7 +62,7 @@
           "type": "parameter",
           "name": "format",
           "description": "The format parameter lets you specify what file format to use for the displayed image.",
-          "accepts": ["string", "reference"],
+          "accepts": "string|reference",
           "validate": true,
           "options": [
             {
@@ -84,20 +84,20 @@
       "description": "Generates a drop-down list that customers can use to select an accepted currency on your storefront. This filter must be used on the form object within a currency form",
       "link": "https://help.shopify.com/en/themes/liquid/filters/html-filters#currency_selector",
       "snippet": "class: ${1}, id: ${2}",
-      "within": ["form"],
+      "within": "form",
       "arguments": [
         {
           "type": "parameter",
           "name": "format",
           "required": false,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         },
         {
           "type": "parameter",
           "name": "id",
           "description": "The id to be applied",
           "required": false,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -122,7 +122,7 @@
           "type": "parameter",
           "name": "font_display",
           "description": "The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use",
-          "accepts": ["string", "reference"],
+          "accepts": "string|reference",
           "validate": true,
           "options": [
             {
@@ -157,7 +157,7 @@
         {
           "type": "spread",
           "name": "style",
-          "accepts": ["string", "reference"],
+          "accepts": "string|reference",
           "validate": true,
           "options": [
             {
@@ -177,46 +177,19 @@
         {
           "type": "spread",
           "name": "weight",
-          "accepts": ["string", "reference"],
+          "accepts": "string|reference",
           "validate": true,
           "options": [
             {
-              "name": [
-                "100",
-                "200",
-                "300",
-                "400",
-                "500",
-                "600",
-                "700",
-                "800"
-              ],
+              "name": "R:[1-8]0{2}",
               "description": "Returns a variant of the same style with the given weight (if it exists)."
             },
             {
-              "name": [
-                "+100",
-                "+200",
-                "+300",
-                "+400",
-                "+500",
-                "+600",
-                "+700",
-                "+800"
-              ],
+              "name": "R:\\+[1-8]0{2}",
               "description": "Returns an incrementally bolder font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"+100\" returns the variant with a weight of 500 for the same style."
             },
             {
-              "name": [
-                "-100",
-                "-200",
-                "-300",
-                "-400",
-                "-500",
-                "-600",
-                "-700",
-                "-800"
-              ],
+              "name": "R:-[1-8]0{2}",
               "description": "Returns an incrementally lighter font of the same style (if it exists). For example, if font has a weight of 400, then font | font_modify \"weight\", \"-100\" returns the variant with a weight of 300 for the same style."
             }
           ]
@@ -230,7 +203,7 @@
       "arguments": [
         {
           "type": "argument",
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -255,12 +228,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -272,7 +245,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -284,7 +257,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -296,7 +269,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -949,7 +922,7 @@
       "trims": false
     },
     "current_page": {
-      "type": "number",
+      "type": "integer",
       "scope": ["paginate"],
       "description": "current_page returns the number of the page you are on when browsing through paginated content. It can be used outside the paginate block",
       "filters": false,
@@ -1003,7 +976,7 @@
         {
           "description": "Returns the id of the customer",
           "name": "id",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns the last name of the customer",
@@ -1023,7 +996,7 @@
         {
           "description": "Returns the number of addresses associated with a customer",
           "name": "addresses_count",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns the phone number of the customer",
@@ -1038,7 +1011,7 @@
         {
           "description": "Returns the total number of orders a customer has placed",
           "name": "orders_count",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns true if the email associated with an order is also tied to a customer account. Returns `false` if it is not. Helpful in email templates",
@@ -1329,27 +1302,27 @@
         {
           "description": "Returns forloop.index in reverse order.",
           "name": "rindex",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns forloop.index0 in reverse order.",
           "name": "rindex0",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns the current index of the for loop, starting at 0.",
           "name": "index0",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns the current index of the for loop, starting at 1.",
           "name": "index",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns the number of iterations of the loop.",
           "name": "length",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns true if it's the first iteration of the for loop. Returns false if it is not the first iteration.",
@@ -1423,12 +1396,12 @@
         {
           "description": "Returns the id of the image's product.",
           "name": "product_id",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns the id of the image.",
           "name": "id",
-          "type": "number"
+          "type": "integer"
         },
         {
           "description": "Returns the position of the image, starting at 1. This is the same as outputting forloop.index.",
@@ -1687,7 +1660,7 @@
         {
           "name": "order_number",
           "description": "Returns the integer representation of the order name.",
-          "type": "number"
+          "type": "integer"
         },
         {
           "name": "order_status_url",
@@ -1774,7 +1747,7 @@
         {
           "name": "id",
           "description": "For static sections, returns the section's file name without \".liquid\". For dynamic sections, returns a dynamically generated ID.",
-          "type": "number"
+          "type": "integer"
         },
         {
           "name": "settings",
@@ -1853,22 +1826,22 @@
         {
           "name": "article",
           "description": "The `article` object",
-          "accepts": ["string"]
+          "accepts": "string"
         },
         {
           "name": "address",
           "description": "The `address` object is required when editing an existing address",
-          "accepts": ["string"]
+          "accepts": "string"
         },
         {
           "name": "customer.new_address",
           "description": "The `customer.new_address` is required for creating a new address",
-          "accepts": ["string"]
+          "accepts": "string"
         },
         {
           "name": "product",
           "description": "The `product` object is required when generating a form for adding a product variant to the cart",
-          "accepts": ["string"]
+          "accepts": "string"
         }
       ]
     },

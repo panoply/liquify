@@ -14,7 +14,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -26,7 +26,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -38,7 +38,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -62,7 +62,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["reference"]
+          "accepts": "reference"
         }
       ]
     },
@@ -74,7 +74,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -86,14 +86,14 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         },
         {
           "type": "parameter",
           "name": "allow_false",
           "description": "To allow variables to return false instead of the default value, you can use the allow_false parameter.",
           "required": false,
-          "accepts": ["boolean", "reference"]
+          "accepts": "boolean|reference"
         }
       ]
     },
@@ -105,7 +105,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -137,7 +137,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -157,7 +157,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -169,7 +169,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -181,7 +181,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -197,7 +197,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -209,7 +209,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -221,7 +221,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -233,7 +233,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -245,12 +245,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         },
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -262,12 +262,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         },
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -295,12 +295,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -312,7 +312,7 @@
         {
           "type": "argument",
           "required": false,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -328,7 +328,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -352,7 +352,7 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -364,12 +364,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -381,12 +381,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     },
@@ -413,12 +413,12 @@
         {
           "type": "argument",
           "required": true,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         },
         {
           "type": "argument",
           "required": false,
-          "accepts": ["string", "reference"]
+          "accepts": "string|reference"
         }
       ]
     }
@@ -437,7 +437,7 @@
       "link": "https://shopify.github.io/liquid/tags/iteration/#break",
       "singular": true,
       "type": "iteration",
-      "scope": ["for"]
+      "scope": "for"
     },
     "capture": {
       "description": "Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.",
@@ -460,14 +460,14 @@
       "link": "https://shopify.github.io/liquid/tags/iteration/#continue",
       "singular": true,
       "type": "iteration",
-      "scope": ["for"]
+      "scope": "for"
     },
     "cycle": {
       "description": "Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",
       "link": "https://shopify.github.io/liquid/tags/iteration/#cycle",
       "singular": true,
       "type": "iteration",
-      "scope": ["for"]
+      "scope": "for"
     },
     "decrement": {
       "description": "Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",
@@ -480,14 +480,14 @@
       "link": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "scope": ["if", "elsif", "case", "unless", "when", "for"]
+      "scope": "if|elsif|case|unless|when|for"
     },
     "elsif": {
       "description": "Adds more conditions within an if or unless block.",
       "link": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "scope": ["if"]
+      "scope": "if"
     },
     "for": {
       "description": "Repeatedly executes a block of code.",
@@ -499,19 +499,19 @@
           "name": "offset",
           "description": "Begins the loop at the specified index",
           "required": false,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         },
         {
           "name": "limit",
           "description": "Limits the loop to the specified number of iterations",
           "required": false,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         },
         {
           "name": "reversed",
           "description": "Reverses the order of the loop. Note that this flag’s spelling is different from the filter reverse",
           "required": false,
-          "accepts": ["keyword"]
+          "accepts": "keyword"
         }
       ]
     },
@@ -540,7 +540,7 @@
       "type": "import",
       "context": [
         {
-          "accepts": ["string"]
+          "accepts": "string"
         }
       ]
     },
@@ -553,19 +553,19 @@
           "name": "cols",
           "description": "Defines how many columns the tables should have.",
           "required": false,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         },
         {
           "name": "limit",
           "description": "Exits the tablerow loop after a specific index.",
           "required": false,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         },
         {
           "name": "offset",
           "description": "Starts the tablerow loop after a specific index.",
           "required": false,
-          "accepts": ["number", "reference"]
+          "accepts": "integer|reference"
         }
       ]
     },
@@ -579,7 +579,7 @@
       "link": "https://shopify.github.io/liquid/tags/control-flow/#casewhen",
       "singular": true,
       "type": "control",
-      "scope": ["case"]
+      "scope": "case"
     }
   }
 }
