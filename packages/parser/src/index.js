@@ -1,8 +1,8 @@
-import stream from './parser/stream'
-import specs from './parser/specs'
-import { parse } from './parser/parse'
-import options from './parser/options'
-import Node from './parser/node'
+import stream from 'parser/stream'
+import specs from 'parser/specs'
+import { parse } from 'parser/parse'
+import options from 'parser/options'
+import { NodeAST } from 'parser/node'
 
 export class LiquidParser {
 
@@ -14,21 +14,16 @@ export class LiquidParser {
 
   }
 
-  get errors () {
+  get context () { return NodeAST.context.entries() }
 
-    return Node.errors
+  get errors () { return Array.from(NodeAST.errors.values()).flat(1) }
 
-  }
-
-  get spec () {
-
-    return specs.variation
-
-  }
+  get spec () { return specs.variation }
 
   parse (document) {
 
-    stream.source = document.textDocument.getText()
+    const source = document.textDocument.getText()
+    stream.create(source)
 
     return parse.bind(this.config)(document)
 
