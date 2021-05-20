@@ -79,14 +79,17 @@ export const enum ScanState {
   /**
    * Tag is a Associate Type
    */
-  TypeObject,
+  TagObject,
 
   /**
    * Tag is a Control type
    */
 
-  TypeTag,
+  TagType,
 
+  TagBasic,
+
+  TagUnknown,
   /**
    * Tag is a Comment type
    */
@@ -118,10 +121,8 @@ export const enum ScanState {
   /* LIQUID TAG DELIMITERS                        */
   /* -------------------------------------------- */
 
-  Tag,
-
   /**
-   * `{%^` or `{{^`
+   * `{%^`
    *
    * ---
    *
@@ -130,13 +131,31 @@ export const enum ScanState {
   TagOpen,
 
   /**
-   * `{%-^` or `{{-^`
+   * `{{^`
+   *
+   * ---
+   *
+   * Position is after left side liquid tag delimiter tag
+   */
+  TagObjectOpen,
+
+  /**
+   * `{%-^`
    *
    * ---
    *
    * Position is after left side whitespace trim dash
    */
   TagOpenTrim,
+
+  /**
+   * `{{-^`
+   *
+   * ---
+   *
+   * Position is after left side whitespace trim dash
+   */
+  TagObjectOpenTrim,
 
   /**
    * `^%}` or `^}}`
