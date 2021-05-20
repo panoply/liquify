@@ -17562,6 +17562,1140 @@ INVALID DOT NOTATIONS
   product.€.bar["str"][object.]
 -}}
 
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
+
+{% if  parent == true %}
+
+VALID
+
+{{-
+  product.bar["str"][object].prop
+-}}
+
+MISSING OBJECT PROPERTY
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{{-
+product.name[foo][bar][faz[foo]]
+| replace: article, faz.bar
+| reverse
+| append: 'foo'
+| truncate: 2, 'foo' }}
+
+
+  {% unless  parent == true %}
+
+  {{- product.name
+  | replace: 'foo', 'bar'
+  | append: article.name
+  | plus: 10
+  -}}
+
+{{-
+  product.bar["str"][object].
+-}}
+
+{{-
+  product.bar["str"][object][]
+-}}
+
+{{-
+  product.bar["str"][object][""]
+-}}
+
+MISSING OBJECT BRACK NOTATIONS
+
+{{-
+  product.bar["str"][object
+-}}
+
+{{-
+  product.bar["str"[object]
+-}}
+
+{{-
+  product.bar"str"][object]
+-}}
+
+{{-
+  product.bar["str"]object]
+-}}
+
+INVALID DOT NOTATIONS
+
+{{-
+  product..bar["str"][object]
+-}}
+
+{{-
+  product.€.bar["str"][object.]
+-}}
+
+INVALID CHARACTER OR WORD
+
+{{-
+  product[#]
+-}}
+
+
+{%- endunless -%}
+
+
+{%- endif -%}
+
 INVALID CHARACTER OR WORD
 
 {{-
