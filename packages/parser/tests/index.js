@@ -9,7 +9,7 @@ config()
 
 const server = (textDocument) => ({
   ast: [],
-  parseErrors: [],
+  errors: [],
   textDocument: { getText: () => textDocument },
   __test: {
     associates: [
@@ -59,7 +59,7 @@ const parser = new LiquidParser({
   exclude: []
 })
 
-const document = readFileSync(resolve('tests/fixtures/objects.txt'), 'utf8').toString()
+const document = readFileSync(resolve('tests/fixtures/blank.txt'), 'utf8').toString()
 
 test('FullDocument Parse', t => {
 
@@ -68,8 +68,8 @@ test('FullDocument Parse', t => {
   const end = process.hrtime(start)
 
   console.log(
-    ...node.ast,
-    ...parser.context,
+    // ...node.ast,
+    parser.context,
     parser.errors
   )
 
