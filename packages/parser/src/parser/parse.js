@@ -1,7 +1,8 @@
 import { TokenType } from 'enums/types'
 import { TokenContext } from 'enums/context'
 import { ParseError } from 'enums/errors'
-import AST from 'parser/node'
+import context from 'parser/context'
+import ast from 'parser/node'
 import scanner from 'parser/scanner'
 import spec from 'parser/specs'
 
@@ -9,7 +10,6 @@ import spec from 'parser/specs'
  * Parser
  *
  * Liquid/HTML parser function which constructs and tokenized syntaxes.
- *
  *
  * @param {object} document
  * @this {Parser.Options}
@@ -32,57 +32,69 @@ export function parse (document) {
 
       // SPACING
       // -----------------------------------------------------------------
+      case TokenType.DelimiterOpen:
+        if (this.context) context.add(TokenContext.OpenTag)
+        break
+      case TokenType.DelimiterClose:
+        if (this.context) context.add(TokenContext.CloseTag)
+        break
+
+      // SPACING
+      // -----------------------------------------------------------------
       case TokenType.Whitespace:
-        if (this.context && this.whitespace) node.context(TokenContext.Whitespace)
+        if (this.context && this.whitespace) context.add(TokenContext.Whitespace)
         break
       case TokenType.Newline:
-        if (this.context && this.newlines) node.context(TokenContext.Newline)
+        if (this.context && this.newlines) context.add(TokenContext.Newline)
         break
 
         // BOOLEAN
       // -----------------------------------------------------------------
       case TokenType.Variable:
-        if (this.context) node.context(TokenContext.Variable)
+        if (this.context) context.add(TokenContext.Variable)
         break
 
       // BOOLEAN
       // -----------------------------------------------------------------
       case TokenType.Boolean:
-        if (this.context) node.context(TokenContext.Boolean)
+        if (this.context) context.add(TokenContext.Boolean)
         break
 
       // NUMBERS
       // -----------------------------------------------------------------
       case TokenType.Integer:
-        if (this.context) node.context(TokenContext.Integer)
+        if (this.context) context.add(TokenContext.Integer)
         break
       case TokenType.Float:
-        if (this.context) node.context(TokenContext.Float)
+        if (this.context) context.add(TokenContext.Float)
+        break
+      case TokenType.Number:
+        if (this.context) context.add(TokenContext.Number)
         break
 
       // STRINGS
       // -----------------------------------------------------------------
       case TokenType.String:
-        if (this.context) node.context(TokenContext.String)
+        if (this.context) context.add(TokenContext.String)
         break
       case TokenType.StringSingleQuote:
-        if (this.context) node.context(TokenContext.Object)
+        if (this.context) context.add(TokenContext.Object)
         break
       case TokenType.StringDoubleQuote:
-        if (this.context) node.context(TokenContext.Object)
+        if (this.context) context.add(TokenContext.Object)
         break
 
       // TRIMS
       // -----------------------------------------------------------------
       case TokenType.LiquidTrimDashLeft:
-        if (this.context) node.context(TokenContext.LeftTrim)
+        if (this.context) context.add(TokenContext.LeftTrim)
         break
       case TokenType.LiquidTrimDashRight:
-        if (this.context) node.context(TokenContext.RightTrim)
+        if (this.context) context.add(TokenContext.RightTrim)
         break
 
       case TokenType.Separator:
-        if (this.context) node.context(TokenContext.Separator)
+        if (this.context) context.add(TokenContext.Separator)
         break
 
       // DIAGNOSTICS
@@ -90,32 +102,32 @@ export function parse (document) {
       case TokenType.ParseWarning:
 
         node.offset(scanner.offset)
-        node.error(scanner.error)
+        ast.error.add(scanner.error)
 
         break
 
       case TokenType.ParseError:
 
         node.offset(scanner.offset)
-        node.error(scanner.error)
+        ast.error.add(scanner.error)
 
         break
 
-      // OBJECT TAGS
+      // LIQUID TAGS
       // -----------------------------------------------------------------
       case TokenType.ObjectTag:
 
         // @ts-ignore
-        node = new AST.INode()
+        node = new ast.INode()
+        node.context.push(context.size)
 
         break
 
-      // BASIC TAGS
-      // -----------------------------------------------------------------
       case TokenType.LiquidTag:
 
         // @ts-ignore
-        node = new AST.INode()
+        node = new ast.INode()
+        node.context.push(context.size)
 
         break
 
@@ -124,31 +136,48 @@ export function parse (document) {
       case TokenType.LiquidSingularTag:
 
         // @ts-ignore
-        node = new AST.INode()
+        node = new ast.INode()
 
         break
 
       // BASIC END TAG
       // -----------------------------------------------------------------
-      case TokenType.LiquidEndTag:
+      case TokenType.LiquidEndTag: {
 
         // Find hierarch - The parental node
-        node = document.ast[AST.INode.hierarch.pop()]
+        node = document.ast[ast.hierarch.pair]
 
-        // Checks for a matching parent
+        // Validate the parent matches the hierarch node
         if (node?.name === scanner.token) {
+
+          // CONTEXT
+          if (this.context) context.add(TokenContext.EndTag)
+
           node.offset(scanner.offset)
+          node.context.push(context.size)
+
+          // AST LOGIC
+          ast.node = node.node
+
           break
         }
 
         // The endtag is invalid - missing parental hierarch
         // create a new node on the AST representing this invalid node
+
         // @ts-ignore
-        node = new AST.INode()
-        node.name = scanner.token
+        node = new ast.INode()
+        node.offset(scanner.offset)
+        node.context.push(context.size)
+
+        // AST LOGIC
+        ast.error.add(ParseError.InvalidSyntactic)
+
+        // CONTEXT
+        if (this.context) context.add(TokenContext.EndTag)
 
         break
-
+      }
       // CLOSE TAGS
       // -----------------------------------------------------------------
       case TokenType.LiquidTagClose:
@@ -159,17 +188,21 @@ export function parse (document) {
         node.range.end = scanner.range.end
 
         if (scanner.error === ParseError.MissingCloseDelimiter) {
-          node.error(scanner.error)
+          ast.error.add(scanner.error)
         }
 
-        if (token === TokenType.LiquidEndTagClose) {
-          AST.INode.errors.delete(node.start)
-          break
+        // CONTEXT
+        context.add(TokenContext.CloseTag)
+
+        // ADD ONLY START BASIC TAGS TO AST
+        if (token !== TokenType.LiquidEndTagClose) {
+          document.ast.push(node)
+          ast.node = document.ast.length
         }
 
-        document.ast.push(node)
-        spec.reset()
+        // RESETS
         node = undefined
+        spec.reset()
 
         break
 
@@ -177,94 +210,110 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.Object:
 
-        if (this.context) node.context(TokenContext.Object)
+        if (this.context) context.add(TokenContext.Object)
+
+        node.objects = {
+          ...node.objects,
+          [scanner.offset + scanner.token.length]: scanner.token
+        }
+
+        break
+
+        // LIQUID OBJECT
+      // -----------------------------------------------------------------
+      case TokenType.LiquidTagName:
+
+        if (this.context) context.add(TokenContext.Identifier)
+        node.name = scanner.token
+
+        break
+
+        // LIQUID CONTROL CONDITION
+      // -----------------------------------------------------------------
+      case TokenType.Control:
 
         node.name = scanner.token
         node.type = spec.type
-        node.objects.set(scanner.offset + scanner.token.length, scanner.token)
 
+        ast.hierarch.get.push(node.name, node.node)
+
+        if (this.context) context.add(TokenContext.Identifier)
+
+        break
+
+      case TokenType.ControlCondition:
+        if (this.context) context.add(TokenContext.Condition)
+        break
+      case TokenType.ControlOperator:
+        if (this.context) context.add(TokenContext.Operator)
         break
 
       case TokenType.ObjectBracketNotationOpen:
-        if (this.context) node.context(TokenContext.OpenBracket)
+        if (this.context) context.add(TokenContext.OpenBracket)
         break
       case TokenType.ObjectBracketNotationClose:
-        if (this.context) node.context(TokenContext.CloseBracket)
+        if (this.context) context.add(TokenContext.CloseBracket)
         break
       case TokenType.ObjectProperty:
-        if (this.context) node.context(TokenContext.Property)
+        if (this.context) context.add(TokenContext.Property)
         break
       case TokenType.ObjectPropertyString:
-        if (this.context) node.context(TokenContext.PropertyString)
+        if (this.context) context.add(TokenContext.PropertyString)
         break
       case TokenType.ObjectPropertyNumber:
-        if (this.context) node.context(TokenContext.Integer)
+        if (this.context) context.add(TokenContext.Integer)
         break
       case TokenType.ObjectPropertyObject:
-        if (this.context) node.context(TokenContext.PropertyObject)
+        if (this.context) context.add(TokenContext.PropertyObject)
+        break
+      case TokenType.ObjectDotNotation:
+        if (this.context) context.add(TokenContext.Separator)
         break
 
       // FILTERS
       // -----------------------------------------------------------------
       case TokenType.Filter:
-        if (this.context) node.context(TokenContext.Separator)
+        if (this.context) context.add(TokenContext.Separator)
         break
       case TokenType.FilterIdentifier:
-        if (this.context) node.context(TokenContext.Keyword)
-        node.filters.set(scanner.offset + scanner.token.length, scanner.token)
+        if (this.context) context.add(TokenContext.Keyword)
+        node.filters = {
+          ...node.filters,
+          [scanner.offset + scanner.token.length]: scanner.token
+        }
         break
       case TokenType.FilterOperator:
-        if (this.context) node.context(TokenContext.Operator)
+        if (this.context) context.add(TokenContext.Operator)
         break
       case TokenType.FilterArgument:
-        if (this.context) node.context(TokenContext.String)
+        if (this.context) context.add(TokenContext.String)
         break
       case TokenType.FilterArgumentNumber:
-        if (this.context) node.context(TokenContext.Integer)
+        if (this.context) context.add(TokenContext.Integer)
         break
       case TokenType.FilterParameter:
-        if (this.context) node.context(TokenContext.Parameter)
-        break
-
-      // LIQUID CONTROL CONDITION
-      // -----------------------------------------------------------------
-      case TokenType.Control:
-
-        if (this.context) node.context(TokenContext.Identifier)
-
-        node.name = scanner.token
-        node.type = spec.type
-        node.hierarch(document.ast.length)
-        node.error(ParseError.MissingEndTag)
-
-        break
-
-      case TokenType.ControlCondition:
-        if (this.context) node.context(TokenContext.Condition)
-        break
-      case TokenType.ControlOperator:
-        if (this.context) node.context(TokenContext.Operator)
+        if (this.context) context.add(TokenContext.Parameter)
         break
 
       // LIQUID ITERATION ITEREE
       // -----------------------------------------------------------------
       case TokenType.IterationIteree:
 
-        node.context(TokenContext.Iteree)
+        context.add(TokenContext.Iteree)
 
         break
 
       case TokenType.IterationOperator:
-        node.context(TokenContext.Operator)
+        context.add(TokenContext.Operator)
         break
       case TokenType.IterationArray:
-        node.context(TokenContext.Array)
+        context.add(TokenContext.Array)
         break
       case TokenType.IterationParameter:
-        node.context(TokenContext.Keyword)
+        context.add(TokenContext.Keyword)
         break
       case TokenType.IterationParameterValue:
-        node.context(TokenContext.Integer)
+        context.add(TokenContext.Integer)
         break
 
     }
@@ -272,6 +321,20 @@ export function parse (document) {
     token = scanner.scan()
 
   }
+
+  /**
+   * Hierarch Errors
+   *
+   * We push any hierarch errors at the end of the
+   * document parsing sequence.
+   */
+  while (ast.hierarch.get.length > 0) {
+    ast.hierarch.get.shift()
+    const index = ast.hierarch.get.shift()
+    if (typeof index === 'number') ast.error.hierarch(document.ast[index])
+  }
+
+  // RETURN THIS SHIT
 
   return document
 
