@@ -9,7 +9,7 @@
     "pnpm": ">=5"
   },
   "scripts": {
-    "dev": "pnpm watch -r --stream  --filter packages/ --no-sort --workspace-concurrency Infinity",
+    "dev": "pnpm watch -r --stream  --filter ./packages/ --no-sort --workspace-concurrency Infinity",
     "dev:build": "pnpm watch -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
     "build:build": "pnpm build -r --filter ./build/ --stream --no-sort --workspace-concurrency Infinity",
     "semantic-release": "semantic-release",
