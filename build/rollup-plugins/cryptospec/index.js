@@ -71,8 +71,7 @@ export default function (options = {
      */
     return /* js */`
 
-    import merge from 'mergerino'
-    import cryptographer from '@liquify/cryptographer'
+    import cryptographer from '@liquify/cryptographer';
 
     export default function ({ variation, license }) {
 
@@ -100,8 +99,8 @@ export default function (options = {
 
         return {
           ...variant,
-          tags: mergerino(standardVariation.tags, variant.tags),
-          filters:  mergerino(standardVariation.filters, variant.filters),
+          tags: Object.assign(standardVariation.tags, variant.tags),
+          filters:  Object.assign(standardVariation.filters, variant.filters),
         };
 
       }
