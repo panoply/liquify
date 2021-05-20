@@ -102,6 +102,8 @@ connection.onInitialized(() => {
 
 })
 
+const parser = new LiquidParser()
+
 /* ---------------------------------------------------------------- */
 /* onDidChangeConfiguration                                         */
 /* ---------------------------------------------------------------- */
@@ -125,7 +127,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   mark('onDidOpenTextDocument')
 
-  const document = Document.create(textDocument)(LiquidParser)
+  const document = Document.create(textDocument)(parser)
 
   if (!document) return null
 
@@ -161,8 +163,8 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
   if (!document) return null
 
   // Parser.increment(document, contentChanges)
-  const parsed = Parser(document, Server.specification).scan()
-  console.log(parsed.ast)
+  const parsed = parser.parse(document)
+  console.log(parsed)
 
   // console.log(documents)
 
@@ -219,8 +221,6 @@ connection.onDocumentRangeFormatting((
   { textDocument: { uri } }
   , token
 ) => !Server.provider.format || runSync(() => {
-
-  return null
 
   const document = documents.get(uri)
 
