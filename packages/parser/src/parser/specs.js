@@ -1,5 +1,5 @@
-import { TokenTags } from '../enums/tags'
-import { Engines } from './options'
+import { TokenTags } from 'enums/tags'
+import { Engines } from 'parser/options'
 import specs from '@liquify/liquid-language-specs'
 
 /**
@@ -108,6 +108,18 @@ export default (function Specs () {
     set type (code) { type = code },
 
     /**
+     * Engine
+     *
+     * Checks current specification engine
+     *
+     * @param {string}
+     * Either a pipe separated list or string
+     *
+     * @returns {boolean}
+     */
+    engine: id => new RegExp(`\\b(?:${id})\\b`).test(variation.engine),
+
+    /**
      * Typeof
      *
      * Checks to see if the current token tag type is
@@ -118,6 +130,38 @@ export default (function Specs () {
      *
      */
     typeof: tag => tag === type,
+
+    /**
+     * Object Navigator
+     *
+     * When parsing object this function provides
+     * methods to interact with the specification.
+     */
+    object: (
+
+      /**
+       * Object State Name reference
+       *
+       * @param {string} state
+       */
+      state => ({
+
+        /**
+         * Exists
+         *
+         * Checks to see if token is a known object
+         * within the specification.
+         *
+         * @param {string} name
+         * Either a pipe separated list or string
+         *
+         * @returns {boolean}
+         */
+        exists: name => typeof variation?.objects?.[name] === 'object'
+
+      })
+
+    )(''),
 
     /**
      * Cursor
