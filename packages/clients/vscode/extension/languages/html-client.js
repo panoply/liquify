@@ -32,9 +32,9 @@ subscriptions) => {
    * HTML Features VSCode Extension
    */
   const { extensionPath } = extensions.getExtension('vscode.html-language-features')
-  const extension = path.join(extensionPath, 'server')
-  const module = path.join(extension, getPkgJson(extension))
+  const HTMLmodule = path.join(extensionPath, 'server', 'dist', 'node', 'htmlServerMain.js')
 
+  console.log(HTMLmodule)
   /**
    * HTML Server Options
    *
@@ -42,11 +42,11 @@ subscriptions) => {
    */
   const server = {
     run: {
-      module,
+      module: HTMLmodule,
       transport: 1
     },
     debug: {
-      module,
+      module: HTMLmodule,
       transport: 1
     }
   }
