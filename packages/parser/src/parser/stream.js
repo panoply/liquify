@@ -259,6 +259,29 @@ export default (function Stream (source) {
      * ---
      *
      * @memberof Stream
+     * @param {RegExp} regex
+     * @returns {boolean}
+     */
+    TokenCapture (regex) {
+
+      const match = source.substring(index).match(regex)
+
+      if (match === null) return false
+
+      token = match[0]
+
+      return true
+
+    },
+
+    /**
+     * Test the current Token in stream
+     *
+     * **DOES NOT MODIFY**
+     *
+     * ---
+     *
+     * @memberof Stream
      * @param {RegExp|number} test
      * @returns {boolean}
      */
@@ -685,22 +708,20 @@ export default (function Stream (source) {
      */
     ConsumeUntil (regex, unless = undefined) {
 
-      const string = source.substring(index)
-      const match = string.search(regex)
+      const match = source.substring(index).search(regex)
+
+      if (match === null) return false
 
       if (match < 0) return false
 
-      if (unless instanceof RegExp) {
-        if (unless.test(string.substring(0, index + match))) {
-          return false
-        }
+      if (!unless.test(source.substring(index, index + match))) {
+        index = index + match
+
+        cursor = cursor + token.length
+        token = source.substring(cursor, index)
+
+        return true
       }
-
-      cursor = index
-      index = index + match
-      token = source.substring(cursor, index)
-
-      return true
 
     },
 
