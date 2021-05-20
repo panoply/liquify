@@ -15,8 +15,7 @@
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
   "owner": "SISSEL SAAS",
   "license": "see LICENSE.txt",
-  "main": "./package/index.cjs.js",
-  "module": "./package/index.es.js",
+  "main": "./package/index.js",
   "types": "index.d.ts",
   "ava": {
     "require": [
@@ -36,6 +35,7 @@
   "dependencies": {
     "@liquify/liquid-language-specs": "workspace:^0.1.2",
     "line-column": "^1.0.2",
+    "mergerino": "^0.4.0",
     "rambda": "^6.7.0",
     "yamljs": "^0.3.0"
   },
