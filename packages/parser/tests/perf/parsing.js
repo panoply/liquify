@@ -15,7 +15,7 @@ const { log } = console
 const FILE = 'tests/fixtures/tests.txt'
 const TEXT = ({ fixture }) => ({
   ast: [],
-  parseErrors: [],
+  errors: [],
   textDocument: {
     getText: () => fixture
   }
@@ -28,10 +28,10 @@ const TEXT = ({ fixture }) => ({
 const parser = new LiquidParser({
   engine: 'shopify',
   license: process.env.MASTER_KEY,
-  context: false,
+  context: true,
   frontmatter: false,
-  whitespace: false,
-  newlines: false,
+  whitespace: true,
+  newlines: true,
   range: true,
   offsets: true,
   process_unknown: true,
