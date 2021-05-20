@@ -11,7 +11,7 @@ import globs from '@liquify/rollup-plugin-globs'
 export default {
   input: 'src/index.js',
   output: {
-    format: 'module',
+    format: 'cjs',
     dir: 'package',
     sourcemap: process.env.prod ? false : 'inline',
     preferConst: true,
