@@ -8,7 +8,7 @@
  * - Context starts from the opening delimeter, eg: `{{` or `{%`
  * - Context ends before the closing delimeter, eg: `}}` or `%}`
  */
-export const enum TokenContext {
+export const enum TokenStack {
   /**
    * Trim Whitespace Delimeter Dash Left: `-`
    */
@@ -27,27 +27,12 @@ export const enum TokenContext {
   /**
    * Trim Whitespace Delimeter Dash LEft: `-`
    */
-  Property = "object_property",
-
-  /**
-   * An object string property value: `object[name.prop]`
-   */
-  PropertyObject = "property_object",
-
-  /**
-   * An object string property value: `object["prop"]`
-   */
-  property_string = "property_string",
+  Property = "property",
 
   /**
    * Whitespace: `\s`
    */
   Whitespace = "whitespace",
-
-  /**
-   * Invalid: `\n`
-   */
-  Invalid = "invalid",
 
   /**
    * Newlines: `\n`
@@ -57,7 +42,7 @@ export const enum TokenContext {
   /**
    * The tag name
    */
-  Identifier = "tag_name",
+  Identifier = "identifier",
 
   /**
    * Control Operators `!=|==|<|>|<=|=>|and|or|contains`
