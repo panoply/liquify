@@ -1,7 +1,7 @@
 import { TokenKind } from 'enums/kinds'
-import { TokenContext } from 'enums/context'
+import { ParseError } from 'enums/errors'
 import scanner from 'parser/scanner'
-import specs from 'parser/specs'
+import context from 'parser/context'
 import Errors from 'parser/errors'
 import yamljs from 'yamljs'
 
@@ -19,9 +19,29 @@ export default (function ASTNodes () {
    * Tracks nodes which require start and end
    * tags so we can correctly populate the AST.
    *
-   * @type {number[]}
+   * @typedef {Array<string|number>} Hierarch
+   * @type {Hierarch}
    */
   const hierarch = []
+
+  /**
+   * Errors
+   *
+   * Tracks each node and their placements
+   *
+   * @static
+   * @type {object[]}
+   */
+  const errors = []
+
+  /**
+   * Node index
+   *
+   * Tracks each node and their placements
+   *
+   * @type {number}
+   */
+  let node = 0
 
   /**
    * AST Node
@@ -35,29 +55,6 @@ export default (function ASTNodes () {
     /* -------------------------------------------- */
     /* STATIC                                       */
     /* -------------------------------------------- */
-
-    /**
-     * Errors
-     *
-     * Tracks each node and their placements
-     *
-     * @static
-     * @memberof Node
-     * @type {Map<number, object>}
-     */
-    static errors = new Map()
-
-    /**
-     * Tag Contexts
-     *
-     * The context structure for each tag. Starting offsets
-     * are used as the `key` properties.
-     *
-     * @static
-     * @memberof Node
-     * @type {Map<number, object>}
-     */
-    static context = new Map()
 
     /**
      * Size
@@ -89,6 +86,16 @@ export default (function ASTNodes () {
      * @type {Parser.TagTypes}
      */
     type = undefined
+
+    /**
+     * Node Number
+     *
+     * The number position identifier that
+     * this node exist within the AST.
+     *
+     * @type {number}
+     */
+    node = node
 
     /**
      * Range
@@ -123,6 +130,13 @@ export default (function ASTNodes () {
     token = []
 
     /**
+     * String Literal tokens
+     *
+     * @type{number[]}
+     */
+    context = []
+
+    /**
      * Get Children
      *
      * Returns the tokens children decedent nodes
@@ -136,9 +150,9 @@ export default (function ASTNodes () {
      *
      * Returns the objects located on the token
      *
-     * @type {Map}
+     * @type {object}
      */
-    objects = new Map()
+    objects = {}
 
     /**
      * Filters
@@ -147,7 +161,7 @@ export default (function ASTNodes () {
      *
      * @type{object}
      */
-    filters = new Map()
+    filters = {}
 
     /**
      * The Starting offset
@@ -172,15 +186,7 @@ export default (function ASTNodes () {
      * @type {object[]}
      * @memberof Node
      */
-    get errors () { return INode.errors.get(this.start) }
-
-    /**
-     * The Token errors
-     *
-     * @readonly
-     * @memberof Node
-     */
-    get contexts () { return INode.context.get(this.start) }
+    get errors () { return errors } // NEED TO FIX !!!
 
     /**
      * Get Contents
@@ -199,6 +205,33 @@ export default (function ASTNodes () {
 
     }
 
+    getContext () {
+
+      return context.get(this.context)
+
+    }
+
+    /**
+     * Increment
+     *
+     * An incremental method used to increment offsets
+     * and range positions for the nodes contained in
+     * its instance.
+     *
+     * @param {number} [amount=1]
+     */
+    increment (amount = 1) {
+
+      this.offsets[0] = this.offsets[0] + amount
+      this.offsets[1] = this.offsets[1] + amount
+
+      if (this.offsets.length > 2) {
+        this.offsets[2] = this.offsets[2] + amount
+        this.offsets[3] = this.offsets[3] + amount
+      }
+
+    }
+
     /**
      * The Token errors
      *
@@ -210,58 +243,117 @@ export default (function ASTNodes () {
 
     }
 
-    /**
-     * The Token errors
-     *
-     * @param {Parser.TokenContext} type
-     */
-    context (type) {
+  }
 
-      const context = {
-        type,
-        range: scanner.range,
-        value: TokenContext.Newline === type || TokenContext.Whitespace === type
-          ? scanner.space
-          : scanner.token
+  let pair
+
+  return {
+
+    INode,
+
+    get node () { return node },
+    set node (index) {
+
+      node = index
+
+    },
+
+    get error () {
+
+      return {
+
+        get get () { return errors },
+
+        remove: (index) => {
+
+          errors.splice(pair, 1)
+
+        },
+
+        hierarch: (node) => {
+
+          const diagnostic = Errors(ParseError.MissingEndTag, {
+            range: node.range,
+            node: node.node,
+            offset: node.offset,
+            token: node.token[0]
+          })
+
+          errors.push(diagnostic)
+
+        },
+
+        /**
+         * Set Errors
+         *
+         * @param {number} error
+         * @memberof Node
+         */
+        add: (error, token) => {
+
+          if (error) {
+
+            const diagnostic = Errors(error, {
+              range: scanner.range,
+              node,
+              offset: scanner.offset,
+              token: token || scanner.token
+            })
+
+            errors.push(diagnostic)
+
+          }
+
+        }
+
       }
 
-      INode.context.has(this.start)
-        ? this.contexts.push(context)
-        : INode.context.set(this.start, [ context ])
-
-    }
+    },
 
     /**
-     * Set Errors
+     * Hierarchical tracking for tag pairs or
+     * syntactic types. We assert this as a
+     * getter, no need to expose it.
      *
-     * @param {number} error
-     * @memberof Node
+     * @readonly
      */
-    error (error) {
+    get hierarch () {
 
-      if (error) {
+      return (
 
-        const diagnostic = Errors(error, {
-          range: scanner.range,
-          node: INode.context.size - 1,
-          offset: scanner.offset,
-          token: scanner.token
+        () => ({
+
+          /**
+           * Returns the hierarchal state array
+           *
+           * @readonly
+           * @returns {Hierarch}
+           */
+          get get () { return hierarch },
+
+          /**
+           * Returns the hierarchal pair by choosing
+           * the closest token (bottom-up) which exists
+           * in the tree
+           *
+           * @readonly
+           * @returns {number}
+           */
+          get pair () {
+
+            const state = hierarch.lastIndexOf(scanner.token)
+            const node = hierarch[state + 1]
+            hierarch.splice(state, 2)
+
+            return typeof node === 'number' ? node : -1
+
+          }
+
         })
 
-        INode.errors.has(this.start)
-          ? this.errors.push(diagnostic)
-          : INode.errors.set(this.start, [ diagnostic ])
-      }
-
-    }
-
-    hierarch (index) {
-
-      if (!specs.singular) hierarch.push(index)
+      )()
 
     }
 
   }
-
-  return { INode }
 }())
