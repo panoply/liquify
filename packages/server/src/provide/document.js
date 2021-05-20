@@ -48,7 +48,14 @@ function LiquidDocuments (documents = new Map()) {
         )
       }).get(uri)
 
-    return parser => parser(document)
+    return parser => {
+
+      const parsed = parser.parse(document)
+
+      console.log(document.ast)
+
+      return parsed
+    }
 
   }
 
