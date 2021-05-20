@@ -6,6 +6,7 @@ export const enum TokenType {
   Boolean,
   Integer,
   Float,
+  Number,
 
   Separator,
   Variable,
@@ -22,6 +23,9 @@ export const enum TokenType {
   Control,
   ControlCondition,
   ControlOperator,
+
+  DelimiterOpen,
+  DelimiterClose,
 
   /* ITERATION ---------------------------------- */
 
