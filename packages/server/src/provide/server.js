@@ -200,8 +200,6 @@ class LiquidServer extends Config {
    */
   #setSpecification = async settings => {
 
-    this.specification = (await specs(this.license))[this.engine]()
-
     return this.#setFormattingRules(settings)
 
   }
@@ -293,6 +291,7 @@ class LiquidServer extends Config {
    */
   #setParseExpressions = settings => {
 
+    return
     this.lexical = Expressions({
       tags: {
         objects: Object.keys(this.specification.objects)
