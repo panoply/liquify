@@ -8,7 +8,17 @@
  * - Context starts from the opening delimeter, eg: `{{` or `{%`
  * - Context ends before the closing delimeter, eg: `}}` or `%}`
  */
-export const enum TokenContext {
+export enum TokenContext {
+  /**
+   * Trim Whitespace Delimeter Dash LEft: `-`
+   */
+  OpenTag = "open",
+
+  /**
+   * Trim Whitespace Delimeter Dash LEft: `-`
+   */
+  CloseTag = "close",
+
   /**
    * Trim Whitespace Delimeter Dash LEft: `-`
    */
@@ -82,7 +92,12 @@ export const enum TokenContext {
   /**
    * Number Value: `1, 2, 3`
    */
-  Integer = "number",
+  Number = "number",
+
+  /**
+   * Number Value: `1, 2, 3`
+   */
+  Integer = "integer",
 
   /**
    * Number Value: `1.12, -23.32, 3.22`
@@ -138,6 +153,11 @@ export const enum TokenContext {
    * Control Condition
    */
   Parameter = "parameter",
+
+  /**
+   * Empty Drop (used on objects)
+   */
+  EndTag = "end_tag",
 
   /**
    * Empty Drop (used on objects)
