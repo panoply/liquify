@@ -1,11 +1,23 @@
-import { TokenType } from "../src/enums/types";
-import { TokenKind } from "../src/enums/kinds";
-import { TokenContext } from "../src/enums/context";
-import { ParseError } from "../src/enums/errors";
-export { TokenTags } from "../src/enums/tags";
+import { TokenType } from "enums/types";
+export { TokenType } from "enums/types";
+
+import { TokenKind } from "enums/kinds";
+export { TokenKind } from "enums/kinds";
+
+import { TokenContext } from "enums/context";
+export { TokenContext } from "enums/context";
+
+import { TokenStack } from "enums/stack";
+export { TokenStack } from "enums/stack";
+
+import { TokenTags } from "enums/tags";
+export { TokenTags } from "enums/tags";
+
+import { ParseError } from "enums/errors";
+export { ParseError } from "enums/errors";
+
 export { Options } from "./options";
 export * from "@liquify/liquid-language-specs";
-export { TokenContext } from "../src/enums/context";
 
 /**
  * Tags are captured and applied as an array of strings.
@@ -48,6 +60,14 @@ export interface Children {
   objects?: Specs.Objects;
 }
 
+export interface Context {
+  type: TokenContext;
+  stack?: TokenStack;
+  value?: string | number;
+  node: number;
+  offset: number[];
+}
+
 /* -------------------------------------------- */
 /*                  DIAGNOSTIC                  */
 /* -------------------------------------------- */
@@ -78,10 +98,11 @@ export interface ASTNode {
   name: string;
   get start(): number;
   get end(): number;
-  get contexts(): TokenContext
   get errors(): IParseError[]
+  get context(): number[];
   token: Token[];
   type: TokenType;
+  node: number;
   kind: TokenKind;
   offsets: Offsets;
   range: Range;
@@ -90,9 +111,6 @@ export interface ASTNode {
   objects?: Map<number, string>
   filters?: Map<number, string>
   offset(offset: number): void
-  context(contextId: TokenContext): void
-  error(errorId: number): void
-  hierarch(nodeIndex: number):void;
 }
 
 export interface IParseError {
