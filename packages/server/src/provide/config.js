@@ -10,14 +10,6 @@
 export class Config {
 
   /**
-   * Specification References
-   *
-   * @type {Specification.Variation}
-   * @memberof Config
-   */
-  specification = null
-
-  /**
    * Strict Specification - This will validate syntax according
    * to the engine spec, if you're using Jekyll, this should be `false`
    * whereas the Shopify engine can use true.
@@ -231,7 +223,6 @@ export class Config {
   /**
    * PrettyDiff options the HTML/Liquid language
    *
-   * @type {FormattingRules}
    */
   formatting = {
 

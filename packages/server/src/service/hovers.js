@@ -1,4 +1,3 @@
-
 /* ---------------------------------------------------------------- */
 /* PRIVATE                                                          */
 /* ---------------------------------------------------------------- */
@@ -7,15 +6,15 @@
  * Returns the current line text
  *
  * @export
- * @param document { import("vscode-languageserver").TextDocument }
- * @param position { import("vscode-languageserver").Position }
+ * @param {LSP.TextDocument} document
+ * @param {LSP.Position} position
  * @returns {{ content: string, character: number }}
  */
 function getLine (document, position) {
 
   const start = { line: position.line, character: 0 }
   const character = document.textDocument.offsetAt(position) - document.textDocument.offsetAt(start)
-  const content = Document.textDocument.getText({
+  const content = document.textDocument.getText({
     start,
     end: {
       line: position.line + 1,
@@ -41,8 +40,8 @@ function getLine (document, position) {
  * would like to do this without parsing and reference using regex.
  *
  * @export
- * @param {import("vscode-languageserver").TextDocument} document
- * @param {import("vscode-languageserver").Position} position
+ * @param {LSP.TextDocument} document
+ * @param {LSP.Position} position
  * @returns {string}
  */
 export function getWordAtPosition (textDocument, position) {
