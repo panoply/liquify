@@ -4,7 +4,7 @@
       ".vscode": true,
       "export": true,
       "scripts": true,
-      "website": true,
+      "web": true,
       "packages": true
     }
   },
@@ -14,20 +14,24 @@
       "path": "."
     },
     {
-      "name": "Client",
-      "path": "packages/clients/vscode"
+      "name": "Parser",
+      "path": "packages/parser"
     },
     {
       "name": "Server",
       "path": "packages/server"
     },
     {
-      "name": "Schema",
-      "path": "packages/schema"
+      "name": "Client",
+      "path": "packages/clients/vscode"
     },
     {
       "name": "Specs",
       "path": "packages/specs"
+    },
+    {
+      "name": "Schema",
+      "path": "packages/schema"
     }
   ]
 }
