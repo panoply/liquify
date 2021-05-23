@@ -2,7 +2,13 @@
   "exclude": ["node_modules", "package"],
   "typeAcquisition": {
     "enable": true,
-    "include": ["vscode-languageserver", "node", "@liquify/liquid-parser"]
+    "include": [
+      "vscode-languageserver",
+      "languageserver-textdocument",
+      "node",
+      "@liquify/liquid-parser",
+      "@types/lodash"
+    ]
   },
   "compilerOptions": {
     "types": ["node"],
@@ -21,7 +27,13 @@
     "noEmitOnError": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "pretty": true,
     "baseUrl": ".",
-    "pretty": true
+    "paths": {
+      "*": ["src/*"],
+      "provide": ["src/provide/*"],
+      "service": ["src/service/*"],
+      "utils": ["src/utils/*"]
+    }
   }
 }
