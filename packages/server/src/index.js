@@ -1,11 +1,17 @@
 // @ts-nocheck
 
-import { DidChangeConfigurationNotification, TextDocumentSyncKind, createConnection, ProposedFeatures } from 'vscode-languageserver'
-import { Server } from './provide/server'
-import { Service } from './provide/service'
-import { Document } from './provide/document'
-import { Parser } from './provide/parser'
-import { runAsync, runSync } from './utils/runners'
+import {
+  DidChangeConfigurationNotification,
+  TextDocumentSyncKind,
+  createConnection,
+  ProposedFeatures
+} from 'vscode-languageserver'
+
+import { Server } from 'provide/server'
+import { Service } from 'provide/service'
+import { Document } from 'provide/document'
+import { Parser } from 'provide/parser'
+import { runAsync, runSync } from 'utils/runners'
 import { mark, stop } from 'marky'
 
 /* ---------------------------------------------------------------- */
@@ -127,23 +133,17 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   const document = Document.create(textDocument)
 
-  if (!document) return null
+  if (!document?.textDocument?.uri) return null
 
   console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
 
-  return
   if (Server.provider.validateOnOpen) {
-
-    Service.doValidation(document).then(({
-      uri
-      , diagnostics
-    }) => (
-      connection.sendDiagnostics({
-        uri,
-        diagnostics
-      })
-    ))
-
+    connection.sendDiagnostics(
+      {
+        uri: document.textDocument.uri,
+        diagnostics: Parser.errors
+      }
+    )
   }
 })
 
@@ -157,21 +157,18 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   const document = Document.update(textDocument, contentChanges)
 
-  if (!document) return null
+  if (!document?.textDocument?.uri) return null
 
   Parser.parse(document)
 
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
-  // Document creation is executed via the `onDidOpenTextDocument`
-  // the model will be passed to the Parser
-  // console.log(document.ast)
-  // await Parser.increment(document, changes)
-
-  return connection.sendDiagnostics({
-    uri: document.textDocument.uri,
-    diagnostics: Parser.errors
-  })
+  return connection.sendDiagnostics(
+    {
+      uri: document.textDocument.uri,
+      diagnostics: Parser.errors
+    }
+  )
 
   // console.log(document)
 
@@ -210,7 +207,7 @@ connection.onDocumentRangeFormatting((
 
   const document = documents.get(uri)
 
-  console.log('range formatting')
+  if (!document?.textDocument?.uri) return null
 
   return Service.doFormat(document)
 
@@ -226,11 +223,9 @@ connection.onHover(
     , textDocument: { uri }
   }, token) => !Server.provider.hover || runSync(() => {
 
-    return null
-
     const document = documents.get(uri)
 
-    if (!document?.uri) return null
+    if (!document?.textDocument?.uri) return null
 
     return Service.doHover(document, position)
 
