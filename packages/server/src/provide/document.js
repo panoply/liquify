@@ -1,7 +1,5 @@
 import _ from 'lodash'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { Server } from './server'
-import { Parser } from './parser'
 
 /**
  * Documents Manager
@@ -10,7 +8,7 @@ import { Parser } from './parser'
  * in the workspace. The module extends upon the vscode textdocument
  * manager and uses `Map()` storage to maintain each document.
  */
-function LiquidDocuments (documents = new Map()) {
+export function LiquidDocuments (documents = new Map()) {
 
   /**
    * Model Scope - Value held in this variable will change
@@ -42,7 +40,7 @@ function LiquidDocuments (documents = new Map()) {
         )
       }).get(uri)
 
-    return Parser.parse(document)
+    return document
 
   }
 
@@ -201,4 +199,7 @@ function LiquidDocuments (documents = new Map()) {
 
 }
 
+/**
+ * Document Manager
+ */
 export const Document = LiquidDocuments()
