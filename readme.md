@@ -3,11 +3,13 @@
 
 # Liquify
 
-Language tooling for the [Liquid Template Language](#). Liquify brings modern IDE features to developers working with Liquid and its multiple variations. Contained in this repository is various packages and modules used by Liquify text editor extension/plugin available in [VSCode](https://code.visualstudio.com), [Sublime](#) and [Atom](#). Liquify operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licensed packages.
+Language tooling for the [Liquid Template Language](#). Liquify brings modern IDE features to developers working with Liquid and its multiple variations. Contained in this repository is various packages and modules used by the Liquify text editor extension/plugin available in [VSCode](https://code.visualstudio.com), [Sublime](#) and [Atom](#).
+
+**Liquify operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licensed packages.**
 
 ### Why
 
-The Liquid template language has been around for a long time. Originally created by [Tobi Lütke](https://twitter.com/tobi) it's used by other open source projects like Jekyll and Eleventy and SaaS providers. Liquid is the backbone of Shopify storefront development and the team at Shopify have not provided a modern ecosystem around the language despite being a multi-billion dollar company. I was fed up with the this neglect so I created Liquify which has been a project I started developing in 2019.
+The Liquid template language has been around for a long time. Originally created by [Tobi Lütke](https://twitter.com/tobi) it is used by other open source projects like Jekyll, Eleventy and long list of SaaS services. Despite Shopify existing as a multi-billion dollar company who hire thousands of engineers they have failed to brings support for Liquid in a modern development ecosystem. Liquify was created to solve this issue and provide developers the tooling they to their fingertips.
 
 ### Pricing / License
 
@@ -44,7 +46,7 @@ The project is a combination monorepo/multirepo that uses [pnpm](https://pnpm.js
 - [Git](https://git-scm.com/)
 - [Node v14^](https://nodejs.org/)
 - [Pnpm v5^](https://pnpm.js.org/)
-- [VS Code](https://code.visualstudio.com/)
+- [VSCode](https://code.visualstudio.com/)
 
 </p>
 </details>
