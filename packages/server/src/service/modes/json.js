@@ -2,16 +2,13 @@
 
 import _ from 'lodash'
 import { getLanguageService, ClientCapabilities } from 'vscode-json-languageservice'
-import schema from './../../../shopify-sections.json'
+import schema from '../../../shopify-sections.json'
 
 /**
  * JSON Language Service
  *
  * @export
- * @typedef {import('vscode-json-languageservice').LanguageSettings} settings
- * @typedef {import('vscode-json-languageservice').LanguageServiceParams} params
- * @typedef {import('vscode-json-languageservice').Diagnostic} diagnostics
- * @typedef {import('../../../../release/vscode-liquify/server/node_modules/defs').ASTEmbeddedRegion} ASTEmbeddedRegion
+ * @typedef {import('vscode-json-languageservice')} JSON
  * @class JSONService
  */
 export class JSONService {
@@ -87,7 +84,7 @@ export class JSONService {
   /**
    * `doHover` - Provides hover capabilities within embedded JSON regions
    *
-   * @param {import('../../../../release/vscode-liquify/server/node_modules/defs').ASTEmbeddedRegion} embed
+   * @param {any} embed
    * @param {import('vscode-languageserver').Position} position
    * @memberof JSONService
    */
@@ -118,7 +115,7 @@ export class JSONService {
   /**
    * JSON completion feature
    *
-   * @param {import('../../../../release/vscode-liquify/server/node_modules/defs').ASTEmbeddedRegion} embed
+   * @param {any} embed
    * @param {import('vscode-languageserver').Position} position
    * @return {Promise}
    */
