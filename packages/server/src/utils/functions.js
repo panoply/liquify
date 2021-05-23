@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import fs from 'fs'
 
 /* -------------------------------------------- */
@@ -24,8 +22,8 @@ export const closestValue = (
   , value
 ) => {
 
-  let result,
-    last
+  let result
+  let last
 
   array.some((item) => {
     const delta = Math.abs(value - item)
