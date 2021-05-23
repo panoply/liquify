@@ -1,5 +1,5 @@
-import * as LSP from "vscode-languageserver";
-import _ from "lodash";
+export * from "vscode-languageserver";
+export { TextDocument, TextEdit } from "vscode-languageserver-textdocument";
+export { JSONDocument, ASTNode } from "vscode-json-languageservice";
+
 export as namespace LSP;
-export = LSP;
-declare const _: _.LoDashStatic;
