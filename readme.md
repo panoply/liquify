@@ -13,7 +13,7 @@ Language tooling for the [Liquid Template Language](#). Liquify brings modern ID
 
 ### Why
 
-The Liquid template language has been around for a long time. Originally created by [Tobi Lütke](https://twitter.com/tobi) it is used by other open source projects like Jekyll, Eleventy and long list of SaaS services. Despite Shopify existing as a multi-billion dollar company who hire thousands of engineers they have failed to brings support for Liquid in a modern development ecosystem. Liquify was created to solve this issue and provide developers the tooling they to their fingertips.
+The Liquid template language has been around for a long time. Originally created by [Tobi Lütke](https://twitter.com/tobi) it is used by other open source projects like Jekyll, Eleventy and long list of SaaS services. Despite Shopify existing as a multi-billion dollar company who hire thousands of engineers they have failed to bring support for Liquid in modern development ecosystems. Liquify was created to solve this issue, it aims to provide developers everything they require when working with the language in text editors. It's the _crème de la crème_.
 
 ### Pricing / License
 
