@@ -10,14 +10,6 @@
 export class Config {
 
   /**
-   * Engine Variation Specification
-   *
-   * @type {Specification.Engine}
-   * @memberof Config
-   */
-  engine = null
-
-  /**
    * Specification References
    *
    * @type {Specification.Variation}
@@ -458,111 +450,6 @@ export class Config {
       }
     }
 
-  }
-
-  /**
-  * Validation Rules - The default rule options which are executed
-  *
-  * @type {ValidationRules}
-  */
-  validations = {
-
-    tag: {
-
-      /**
-       * Validates start and end tag existence, For example,
-       * a tag like `{% capture %}` requires the `{% endcapture %}` tag.
-       */
-      pair: true,
-
-      /**
-       * Validates the placement position of tags. For example,
-       * the `{% when %}` tag must be nested within the `{% case %}` tag.
-       */
-      placement: true,
-
-      /**
-       * Validates if the tag accepts whitespace dash `-` attribute
-       * values, For example, `{%- tag -%}`.
-       */
-      whitespace: true,
-
-      /**
-       * Validates if a tag can span multiple lines or just a single line
-       * For example, `{%- \n tag \n -%}` is invalid when set to `true`.
-       */
-      newline: true
-
-    },
-
-    control: {
-      /**
-       * Validates condition values used on control flow type tags,
-       * verifies their validity and if they can be used or not.
-       */
-      condition: true,
-
-      /**
-       * Validates the conditional operator values, in control tags.
-       * For example,  `!=`, `and` will be validated
-       */
-      operator: true
-
-    },
-
-    iteration: {
-
-      /**
-       * Validates the iteration tag type operator value, For example,
-       * the `in` contained within `{% for tag in tags %}`
-       */
-      operator: true,
-
-      /**
-       * Validates iteration parameter values, For example, the `reverse`
-       * within `{% for tag in tags reversed %}` is validated
-       */
-      parameter: true,
-
-      /**
-       * Validates iteration iteree value, check to see if its an existing value,
-       * For example, `{% for tag in tag %}` would be invalid
-       */
-      iteree: true
-
-    },
-
-    object: {
-
-      /**
-       * Validates object tag names. For example, The `{{ sitez.prop }}` tag
-       * would be invalid as `sitez` is not a known object.
-       */
-      name: true,
-
-      /**
-       * Validates object property existence and value, For example, `{{ tag. }}`
-       * would fail and `{{ object.does_not_exist }}` would as well.
-       */
-      property: true
-
-    },
-
-    filter: {
-
-      /**
-       * Validates the existence of tag filters. For example, `{{ tag | }}` or
-       * `{% if tag | %}` would both be invalid.
-       */
-      existence: true,
-
-      /**
-       * Validates filter parameters. For example, `{{ tag | replace }}`
-       * would be invalid as `replace` requires parameters.
-       */
-      parameter: true
-
-    }
   }
 
 }

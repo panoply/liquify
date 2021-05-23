@@ -1,3 +1,41 @@
+
+    /**
+     * Increment
+     *
+     * An incremental method used to increment offsets
+     * and range positions for the nodes contained in
+     * its instance.
+     *
+     * @param {number} [amount=1]s
+     */
+    increment (amount = 1, decrement = false) {
+
+      this.offsets[0] = this.offsets[0] + amount
+      this.offsets[1] = this.offsets[1] + amount
+
+      let index = 0
+
+      while (context[this.context[0]].length > index) {
+        this.context[0][index] = this.context[0][index] + amount
+        index++
+      }
+
+      if (this.offsets.length > 2) {
+
+        this.offsets[2] = this.offsets[2] + amount
+        this.offsets[3] = this.offsets[3] + amount
+
+        index = 0
+
+        while (context[this.context[0]].length > index) {
+          this.context[1][index] = this.context[1][index] + amount
+          index++
+        }
+
+      }
+
+    }
+
 VALID
 
 {{-

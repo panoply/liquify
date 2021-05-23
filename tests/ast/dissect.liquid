@@ -4,7 +4,7 @@
     class="text-uppercase">
     {{- block.title -}}</h1>
   <h5>
-    {{- block.subtitle | something: test -}}</h5>
+    {{- block[].subtitle | something: test -}}</h5>
 </hgroup>
 
 <section
@@ -45,7 +45,7 @@
             {% when 'product' %}
               {% include components/product.html- %}}
             {% when 'brand_collection' %}
-              {% -includecomponents/brand.html- %}}
+              {%- includecomponents /brand.html - %}}
             {% when 'customer_review' %}
               {%-  include components/testimony.html -%}
           {% endcase %}

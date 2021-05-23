@@ -4,7 +4,7 @@ import { DidChangeConfigurationNotification, TextDocumentSyncKind, createConnect
 import { Server } from './provide/server'
 import { Service } from './provide/service'
 import { Document } from './provide/document'
-import { LiquidParser } from '@liquify/liquid-parser'
+import { Parser } from './provide/parser'
 import { runAsync, runSync } from './utils/runners'
 import { mark, stop } from 'marky'
 
@@ -102,8 +102,6 @@ connection.onInitialized(() => {
 
 })
 
-const parser = new LiquidParser()
-
 /* ---------------------------------------------------------------- */
 /* onDidChangeConfiguration                                         */
 /* ---------------------------------------------------------------- */
@@ -127,7 +125,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   mark('onDidOpenTextDocument')
 
-  const document = Document.create(textDocument)(parser)
+  const document = Document.create(textDocument)
 
   if (!document) return null
 
@@ -156,36 +154,24 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   mark('onDidChangeTextDocument')
-  console.log('onDidChangeTextDocument', textDocument.uri)
 
   const document = Document.update(textDocument, contentChanges)
 
   if (!document) return null
 
-  // Parser.increment(document, contentChanges)
-  const parsed = parser.parse(document)
-  console.log(parsed)
+  Parser.parse(document)
 
-  // console.log(documents)
-
-  // console.log(document)
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
   // Document creation is executed via the `onDidOpenTextDocument`
   // the model will be passed to the Parser
-  // console.log(documents)
+  // console.log(document.ast)
   // await Parser.increment(document, changes)
 
-  return
-  Service.doValidation(document).then(({
-    uri
-    , diagnostics
-  }) => (
-    connection.sendDiagnostics({
-      uri,
-      diagnostics
-    })
-  ))
+  return connection.sendDiagnostics({
+    uri: document.textDocument.uri,
+    diagnostics: Parser.errors
+  })
 
   // console.log(document)
 
@@ -224,9 +210,9 @@ connection.onDocumentRangeFormatting((
 
   const document = documents.get(uri)
 
-  if (!document?.uri) return null
+  console.log('range formatting')
 
-  return Service.doFormat(document, Server.format)
+  return Service.doFormat(document)
 
 }, null, `Error while computing formatting for ${uri}`, token))
 

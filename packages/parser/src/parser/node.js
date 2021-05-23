@@ -14,6 +14,16 @@ import yamljs from 'yamljs'
 export default (function ASTNodes () {
 
   /**
+   * Errors
+   *
+   * Tracks each node and their placements
+   *
+   * @static
+   * @type {Map<number, number>}
+   */
+  const offsets = new Map()
+
+  /**
    * AST Node Hierarch
    *
    * Tracks nodes which require start and end
@@ -95,7 +105,7 @@ export default (function ASTNodes () {
      *
      * @type {number}
      */
-    node = node
+    index = node
 
     /**
      * Range
@@ -201,34 +211,13 @@ export default (function ASTNodes () {
         return yamljs.parse(scanner.GetText(this.offsets[1], this.offsets[2]))
       }
 
-      return scanner.GetText(this.start, this.end)
+      return scanner.getText(this.offsets[1], this.offsets[2])
 
     }
 
     getContext () {
 
       return context.get(this.context)
-
-    }
-
-    /**
-     * Increment
-     *
-     * An incremental method used to increment offsets
-     * and range positions for the nodes contained in
-     * its instance.
-     *
-     * @param {number} [amount=1]
-     */
-    increment (amount = 1) {
-
-      this.offsets[0] = this.offsets[0] + amount
-      this.offsets[1] = this.offsets[1] + amount
-
-      if (this.offsets.length > 2) {
-        this.offsets[2] = this.offsets[2] + amount
-        this.offsets[3] = this.offsets[3] + amount
-      }
 
     }
 
@@ -250,6 +239,8 @@ export default (function ASTNodes () {
   return {
 
     INode,
+
+    offsets,
 
     get node () { return node },
     set node (index) {
@@ -342,10 +333,10 @@ export default (function ASTNodes () {
           get pair () {
 
             const state = hierarch.lastIndexOf(scanner.token)
-            const node = hierarch[state + 1]
+            const index = hierarch[state + 1]
             hierarch.splice(state, 2)
 
-            return typeof node === 'number' ? node : -1
+            return typeof index === 'number' ? index : -1
 
           }
 

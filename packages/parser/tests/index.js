@@ -59,6 +59,8 @@ const parser = new LiquidParser({
   exclude: []
 })
 
+parser.engine('shopify')
+
 const document = readFileSync(resolve('tests/fixtures/blank.txt'), 'utf8').toString()
 
 test('FullDocument Parse', t => {
@@ -68,8 +70,8 @@ test('FullDocument Parse', t => {
   const end = process.hrtime(start)
 
   console.log(
-    // ...node.ast,
-    parser.context,
+    ...node.ast,
+    // parser.context,
     parser.errors
   )
 

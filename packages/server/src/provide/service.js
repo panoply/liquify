@@ -105,28 +105,31 @@ class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doFormat (document, formattingRules) {
+  doFormat (document) {
 
     // const filename = path.basename(uri)
     // if (settings.ignore.files.includes(filename)) return
 
-    const { uri, version, languageId } = document
+    const { uri, version, languageId } = document.textDocument
     const embedded = Document.getEmbeds()
 
-    if (embedded.length < 0) return null
+    // if (embedded.length < 0) return null
 
-    const content = Document.getText()
+    const content = document.textDocument.getText()
     const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
-    const regions = embedded.map((embed) => Format.embeds(literal, embed))
+    // const regions = embedded.map((embed) => Format.embeds(literal, embed))
 
     // Replace formatting edits - MUST BE RETURNED AS ARRAY
     return [
       TextEdit.replace(
         {
           start: Position.create(0, 0),
-          end: Document.positionAt(content.length)
-        }
-        , Format.markup(TextDocument.applyEdits(literal, regions))
+          end: document.textDocument.positionAt(content.length)
+        },
+        Format.markup(literal.getText())
+        // TextDocument.applyEdits(literal, [ Format.markup(content) ])
+      //  Format.markup(content)
+        //, Format.markup(TextDocument.applyEdits(literal, regions))
       )
     ]
 

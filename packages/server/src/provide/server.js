@@ -5,8 +5,8 @@ import { readFileSync, readdirSync, existsSync } from 'fs-extra'
 import { basename, resolve, join, normalize } from 'path'
 import { Expressions } from '../parser/lexical'
 import { Config } from './config'
+import { Parser } from './parser'
 import stripJSONC from 'strip-json-comments'
-import specs from '@liquify/liquid-language-specs'
 
 /**
  * Liquid Language Server
@@ -182,10 +182,8 @@ class LiquidServer extends Config {
 
   #setLiquidEngine = (settings) => {
 
-    if (this.engine === settings.engine) return null
-
-    this.engine = settings.engine
-    this.engineLabel = `\n${_.upperFirst(this.engine)} Liquid`
+    Parser.engine(settings.engine)
+    this.engineLabel = `\n${_.upperFirst(Parser.spec.engine)} Liquid`
 
     return this.#setSpecification(settings)
 
@@ -278,7 +276,7 @@ class LiquidServer extends Config {
       }
     }
 
-    return this.#setParseExpressions(settings)
+    // return this.#setParseExpressions(settings)
 
   }
 

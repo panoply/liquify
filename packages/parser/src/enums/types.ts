@@ -56,6 +56,14 @@ export const enum TokenType {
   StringSingleQuote,
   StringDoubleQuote,
 
+  /* EMBEDDED LANGUAGES ------------------------- */
+
+  Embedded,
+  EmbeddedJSON,
+  EmbeddedJavaScript,
+  EmbeddedCSS,
+  EmbeddedSCSS,
+
   /* ERRORS AND WARNINGS ------------------------ */
 
   ParseError,

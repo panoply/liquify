@@ -2,6 +2,12 @@
   "name": "Liquid Shopify",
   "scopeName": "source.liquid.shopify",
   "injections": {
+    "L:meta - (meta.attribute.*.html)": {
+      "patterns": [
+        { "include": "source.liquid#tags" },
+        { "include": "source.liquid#output" }
+      ]
+    },
     "L:string - (string.quoted.*.html)": {
       "patterns": [
         { "include": "source.liquid#tags" },

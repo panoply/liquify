@@ -80,20 +80,19 @@ export const enum ScanState {
    * Tag is a Associate Type
    */
   TagObject,
-
-  /**
-   * Tag is a Control type
-   */
-
   TagType,
-
   TagBasic,
+  TagBasicName,
 
   TagUnknown,
-  /**
-   * Tag is a Comment type
-   */
+
   TypeFilter,
+
+  /* -------------------------------------------- */
+  /* NEW                                          */
+  /* -------------------------------------------- */
+
+  EmbeddedLanguage,
 
   /* -------------------------------------------- */
   /* FRONTMATTER                                  */

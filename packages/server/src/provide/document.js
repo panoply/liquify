@@ -1,5 +1,7 @@
 import _ from 'lodash'
 import { TextDocument } from 'vscode-languageserver-textdocument'
+import { Server } from './server'
+import { Parser } from './parser'
 
 /**
  * Documents Manager
@@ -23,23 +25,15 @@ function LiquidDocuments (documents = new Map()) {
    * function is executed per document open.
    *
    * @param {LSP.TextDocumentItem} textDocumentItem
-   * @returns {function | Document.Scope}
    */
   function create ({ uri, languageId, version, text }) {
 
     document = documents.has(uri)
       ? documents.get(uri)
       : documents.set(uri, {
-        engine: '',
         diagnostics: [],
         documentLinks: [],
         ast: [],
-        scopes: {
-          // Maps types to variable scopes
-          typeMaps: {},
-          variables: {},
-          objects: []
-        },
         textDocument: TextDocument.create(
           uri
           , languageId
@@ -48,14 +42,7 @@ function LiquidDocuments (documents = new Map()) {
         )
       }).get(uri)
 
-    return parser => {
-
-      const parsed = parser.parse(document)
-
-      console.log(document.ast)
-
-      return parsed
-    }
+    return Parser.parse(document)
 
   }
 

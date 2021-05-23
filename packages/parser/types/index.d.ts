@@ -17,6 +17,9 @@ import { ParseError } from "enums/errors";
 export { ParseError } from "enums/errors";
 
 export { Options } from "./options";
+export { ASTNode } from "./ast";
+export * from "./vscode";
+
 export * from "@liquify/liquid-language-specs";
 
 /**
@@ -89,28 +92,6 @@ export enum DiagnosticTag {
    * Clients are allowed to rendered diagnostics with this tag strike through.
    */
   Deprecated = 2,
-}
-
-/* -------------------------------------------- */
-/*                      AST                     */
-/* -------------------------------------------- */
-export interface ASTNode {
-  name: string;
-  get start(): number;
-  get end(): number;
-  get errors(): IParseError[]
-  get context(): number[];
-  token: Token[];
-  type: TokenType;
-  node: number;
-  kind: TokenKind;
-  offsets: Offsets;
-  range: Range;
-  children?: Children[];
-  content: string;
-  objects?: Map<number, string>
-  filters?: Map<number, string>
-  offset(offset: number): void
 }
 
 export interface IParseError {

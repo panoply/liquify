@@ -4,6 +4,7 @@ import prettydiff from 'prettydiff'
 import _ from 'lodash'
 import { TokenKind } from '../parser/lexical'
 import { Document } from '../provide/document'
+import { Server } from '../provide/server'
 
 /**
  * Formatting Functions
@@ -49,9 +50,9 @@ const defaultRules = _.cloneDeep(prettydiff.options)
  */
 function indentLevel (document, kind, offset) {
 
-  const { tabSize } = Server.formatRules.editorRules
-  const { line } = Document.positionAt(offset)
-  const pos = offset - Document.offsetAt({ line, character: 0 })
+  const { tabSize } = Server.formatting.editorRules
+  const { line } = document.positionAt(offset)
+  const pos = offset - document.offsetAt({ line, character: 0 })
   const lvl = kind === TokenKind.liquid
     ? pos / tabSize
     : pos / tabSize + tabSize / tabSize
@@ -73,7 +74,7 @@ function indentLevel (document, kind, offset) {
 function formatReplace (content) {
 
   return content
-    .replace(/=" {{/g, '="{{')
+    .replace(/=" (\{[{%]-?)/g, '="$1')
     .replace(/\s*data-prettydiff-ignore>/g, '>\n')
     .replace(/_pdp/g, '')
 
@@ -96,11 +97,11 @@ function formatHTMLEmbeds (document, newText, ASTnode) {
   return [
     {
       newText: 'data-prettydiff-ignore>',
-      range: Document.range(offset[1] - 1, offset[1])
+      range: Document.getRange(offset[1] - 1, offset[1])
     },
     {
       newText,
-      range: Document.range(offset[3] + 1, offset[2])
+      range: Document.getRange(offset[3] + 1, offset[2])
     }
   ]
 
@@ -128,13 +129,13 @@ function formatLiquidEmbeds (document, newText, ASTnode) {
   return [
     {
       newText: `${name}_pdp`,
-      range: Document.range(offset[0] + startName, offset[0] + startName + name.length)
+      range: Document.getRange(offset[0] + startName, offset[0] + startName + name.length)
     }, {
       newText: `end${name}_pdp`,
-      range: Document.range(offset[2] + closeName, offset[2] + closeName + name.length + 3)
+      range: Document.getRange(offset[2] + closeName, offset[2] + closeName + name.length + 3)
     }, {
       newText,
-      range: Document.range(offset[1], offset[2])
+      range: Document.getRange(offset[1], offset[2])
     }
   ]
 
@@ -157,7 +158,7 @@ export function embeds (document, ASTnode) {
 
   const source = embeddedDocument.getText()
   const indent_level = indentLevel(document, kind, offset[0])
-  const rules = Server.formatRules.languageRules[embeddedDocument.languageId]
+  const rules = Server.formatting.languageRules[embeddedDocument.languageId]
 
   // Set formatting rules
   // Apply `indent_level` when nested within elements
@@ -185,7 +186,7 @@ export function embeds (document, ASTnode) {
 
   return {
     newText,
-    range: Document.range(offset[1], offset[2])
+    range: Document.getRange(offset[1], offset[2])
   }
 
 }
@@ -199,11 +200,15 @@ export function embeds (document, ASTnode) {
  */
 export function markup (source) {
 
+  console.log(source)
+
   // This patch fixes newline HTML attributes
   Object.assign(
     prettydiff.options
-    , Server.formatRules.languageRules.html
-    , { source: source.replace(/="{[{%]{1}/g, '=" {{') }
+    , Server.formatting.languageRules.html
+    , {
+      source: source.replace(/="(\{[{%]-?)/g, '=" $1')
+    }
   )
 
   const output = prettydiff()
@@ -212,7 +217,7 @@ export function markup (source) {
   // Validations will handle missing pairs
   // We still echo Sparser log for additional context.
   if (prettydiff.sparser.parseerror.length > 0) {
-    connection.console.error(prettydiff.sparser.parseerror)
+    console.error(prettydiff.sparser.parseerror)
     return formatReplace(source)
   }
 

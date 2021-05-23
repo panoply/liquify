@@ -268,7 +268,8 @@ export type TagTypes =
   | "object"
   | "output"
   | "variable"
-  | "raw";
+  | "raw"
+  | "unknown";
 
 /* TAG PARAMETER TYPES ------------------------ */
 

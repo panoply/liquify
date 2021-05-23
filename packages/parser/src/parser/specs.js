@@ -187,7 +187,7 @@ export default (function Specs () {
          * @type {Spec<Specs.ITag>}
          */
         cursor = variation.tags[name]
-        type = TokenTags[cursor?.type]
+        type = TokenTags[cursor.type || 'unknown']
 
         return true
 

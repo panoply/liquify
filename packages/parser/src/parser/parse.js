@@ -14,7 +14,7 @@ import spec from 'parser/specs'
  * @param {object} document
  * @this {Parser.Options}
  */
-export function parse (document) {
+export function parse (document = { ast: [] }) {
 
   /**
    * @type {number}
@@ -117,17 +117,22 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.ObjectTag:
 
+        ast.node = document.ast.length
+
         // @ts-ignore
         node = new ast.INode()
-        node.context.push(context.size)
+        if (this.context) node.context.push(context.size)
 
         break
 
       case TokenType.LiquidTag:
 
+        ast.node = document.ast.length
+
         // @ts-ignore
         node = new ast.INode()
-        node.context.push(context.size)
+        node.type = spec.type
+        if (this.context) node.context.push(context.size)
 
         break
 
@@ -135,8 +140,11 @@ export function parse (document) {
       // -----------------------------------------------------------------
       case TokenType.LiquidSingularTag:
 
+        ast.node = document.ast.length
+
         // @ts-ignore
         node = new ast.INode()
+        node.type = spec.type
 
         break
 
@@ -147,17 +155,18 @@ export function parse (document) {
         // Find hierarch - The parental node
         node = document.ast[ast.hierarch.pair]
 
+        // console.log(ast.hierarch.get, node?.name, scanner.token)
         // Validate the parent matches the hierarch node
         if (node?.name === scanner.token) {
 
           // CONTEXT
           if (this.context) context.add(TokenContext.EndTag)
 
-          node.offset(scanner.offset)
-          node.context.push(context.size)
+          node.offset(scanner.start)
+          if (this.context) node.context.push(context.size)
 
           // AST LOGIC
-          ast.node = node.node
+          ast.node = node.index
 
           break
         }
@@ -168,7 +177,7 @@ export function parse (document) {
         // @ts-ignore
         node = new ast.INode()
         node.offset(scanner.offset)
-        node.context.push(context.size)
+        if (this.context) node.context.push(context.size)
 
         // AST LOGIC
         ast.error.add(ParseError.InvalidSyntactic)
@@ -192,12 +201,12 @@ export function parse (document) {
         }
 
         // CONTEXT
-        context.add(TokenContext.CloseTag)
+        if (this.context) context.add(TokenContext.CloseTag)
 
         // ADD ONLY START BASIC TAGS TO AST
         if (token !== TokenType.LiquidEndTagClose) {
+          node.index = document.ast.length
           document.ast.push(node)
-          ast.node = document.ast.length
         }
 
         // RESETS
@@ -224,18 +233,38 @@ export function parse (document) {
       case TokenType.LiquidTagName:
 
         if (this.context) context.add(TokenContext.Identifier)
+
         node.name = scanner.token
+
+        if (!scanner.spec?.singular) {
+          // ASSERT HIERARCH
+          ast.hierarch.get.push(node.name, node.index)
+        }
 
         break
 
         // LIQUID CONTROL CONDITION
+      // -----------------------------------------------------------------
+      case TokenType.Embedded:
+
+        if (this.context) context.add(TokenContext.Identifier)
+
+        node.name = scanner.token
+        node.type = spec.type
+
+        // ASSERT HIERARCH
+        ast.hierarch.get.push(node.name, node.index)
+
+        break
+
+      // LIQUID CONTROL CONDITION
       // -----------------------------------------------------------------
       case TokenType.Control:
 
         node.name = scanner.token
         node.type = spec.type
 
-        ast.hierarch.get.push(node.name, node.node)
+        ast.hierarch.get.push(node.name, node.index)
 
         if (this.context) context.add(TokenContext.Identifier)
 

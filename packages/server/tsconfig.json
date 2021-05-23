@@ -2,10 +2,10 @@
   "exclude": ["node_modules", "package"],
   "typeAcquisition": {
     "enable": true,
-    "include": ["vscode-languageserver", "lodash", "node"]
+    "include": ["vscode-languageserver", "node", "@liquify/liquid-parser"]
   },
   "compilerOptions": {
-    "types": ["node", "lodash"],
+    "types": ["node"],
     "target": "es2020",
     "lib": ["es2020"],
     "module": "commonjs",
@@ -22,9 +22,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "baseUrl": ".",
-    "pretty": true,
-    "paths": {
-      "specification": ["./types/specification.d.ts"]
-    }
+    "pretty": true
   }
 }

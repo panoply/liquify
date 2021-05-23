@@ -1,22 +1,45 @@
-<div class="{{ tag | link_to_remove_tag: 'example' }}"></div>
-<div class="{% if condition %}foo{% endif %}"></div>
+<div
+  class="{{ tag | link_to_remove_tag: 'example' }}"></div>
+
+<div
+  class="{% if condition %}foo{% endif %}"></div>
 
 
-<section data-test-attribute data-foo="bar" data-bar="foo" id="hello-world" data-foo-index="1" data-foo-id="bar">
+<section
+  data-test-attribute
+  data-foo="bar"
+  data-bar="foo"
+  id="hello-world"
+  data-foo-index="1"
+  data-foo-id="bar">
 
-  <div data-test-attribute data-foo="bar" data-bar="foo" id="hello-world" class="foo">
+  <div
+    data-test-attribute
+    data-foo="bar"
+    data-bar="foo"
+    id="hello-world"
+    class="foo">
     <div>
-      <button data-foo="bar" type="button">
-        {% include 'something' %}
-      </button>
+      <button
+        data-foo="bar"
+        type="button"></button>
     </div>
-    <div class="foo" data-foo-index="1" data-foo-id="bar">
+    <div
+      class="foo"
+      data-foo-index="1"
+      data-foo-id="bar">
       {% for block in foo.bar limit: 4 %}
-        <div class="d-block">
+
+        <div
+          class="d-block">
+
           {% unless block.settings.link and this or t <= y or y %}
             {{- block.settings.text -}}
           {% else %}
-            <a href="{{ block.settings.link }}" title="{{- block.settings.text - }}">
+
+            <a
+              href="{{ block.settings.link }}"
+              title="{{- block.settings.text -}}">
 
               {{- block.settings.text -}}
             </a>
@@ -25,35 +48,52 @@
       {% endfor %}
     </div>
     <div>
-      <button data-foo="bar" type="button">
-   {% include 'something' hhh: 'kiil', anr: 90, bool: true l: {{ ob.kk | jj: 'k' }} %}
+      <button
+        data-foo="bar"
+        type="button">
+        {% include 'something' hhh: 'kiil', anr: 90, bool: true l: {{ ob.kk | jj: 'k' }} %}
       </button>
     </div>
   </div>
 </section>
 
-<section class="collection-list" {{  block.test | filter: something }}>
+<section
+  class="collection-list"
+  {{ block.test | filter: something }}>
+
   {% if section.settings.title != blank %}
-    <h2 class="collection-list__title">{{ section.settings.title | escape }}</h2>
+    <h2
+      class="collection-list__title">{{ section.settings.title | escape }}</h2>
   {% endif %}
 
   {% for block in section.blocks %}
     {%- assign collection = collections[block.settings.collection] -%}
 
-    <a href="{{ collection.url | default: "#" }}" class="collection-list-item"
-    {{ block.shopify_attributes }}>
+    <a
+      href="{{ collection.url | default: '' }}"
+      class="collection-list-item"
+      {{ block.shopify_attributes }}>
       {% if collection.image != blank or collection.products.first != blank %}
-        {%- assign image_object = collection.image | default: collection.products.first.featured_image -%}
-        <div class="collection-list__image">
-          {% include 'responsive-image' with
-            image: image_object,
-            max_width: 480,
-            max_height: 480
-          %}
+        {%- assign image_object = collection.image
+  | default: collection.products.first.featured_image -%}
+        <div
+          class="collection-list__image">
+          {% render 'responsive-image' with
+  image: image_object,
+  max_width: 480,
+  max_height: 480
+  %}
         </div>
       {% elsif collection == empty %}
-        {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
-        {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg placeholder-svg--small' }}
+
+        {% capture current %}
+          {% cycle 1, 2, 3, 4, 5, 6 %}
+        {% endcapture %}
+
+        {{ 'collection-'
+  | append: current
+  | placeholder_svg_tag: 'placeholder-svg placeholder-svg--small' }}
+
       {% endif %}
 
       {%- assign default_label = 'homepage.onboarding.collection_title' | t -%}
@@ -63,113 +103,143 @@
 </section>
 
 
- {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}
+{{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}
 
- <nav role="navigation">
-    <ul>
-      {% for link in linklists[section.settings.menu].links %}
-        {% if link.links != blank %}
-          <li>
-            <a href="{{ link.url }}">
-              {{ link.title }}
-              {% include 'icon-arrow-down' %}
-            </a>
-            <ul>
-              {% for childlink in link.links %}
-                <li>
-                  <a href="{{ childlink.url }}">
-                    {{ childlink.title }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% else %}
-          <li>
-            <a href="{{ link.url }}">
-              {{ link.title }}
-            </a>
-          </li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </nav>
-
- {%- if section.settings.announcement_bar_enabled -%}
-    <div>
-      {%- if section.settings.announcement_bar_home_page_only == false or template.name == 'index' -%}
-        {%- if section.settings.announcement_bar_link != blank -%}
-          <a href="{{ section.settings.announcement_bar_link }}">
-            {{ section.settings.announcement_bar_text | escape }}
+<nav
+  role="navigation">
+  <ul>
+    {% for link in linklists[section.settings.menu].links %}
+      {% if link.links != blank %}
+        <li>
+          <a
+            href="{{ link.url }}">
+            {{ link.title }}
+            {% include 'icon-arrow-down' %}
           </a>
-        {%- else -%}
-          <p>{{ section.settings.announcement_bar_text | escape }}</p>
-        {%- endif -%}
+          <ul>
+            {% for childlink in link.links %}
+              <li>
+                <a
+                  href="{{ childlink.url }}">
+                  {{ childlink.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% else %}
+        <li>
+          <a
+            href="{{ link.url }}">
+            {{ link.title }}
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</nav>
+
+{%- if section.settings.announcement_bar_enabled -%}
+  <div>
+    {%- if section.settings.announcement_bar_home_page_only == false or template.name == 'index' -%}
+      {%- if section.settings.announcement_bar_link != blank -%}
+        <a
+          href="{{ section.settings.announcement_bar_link }}">
+          {{ section.settings.announcement_bar_text | escape }}
+        </a>
+      {%- else -%}
+        <p>{{ section.settings.announcement_bar_text | escape }}</p>
       {%- endif -%}
-    </div>
-  {%- endif -%}
+    {%- endif -%}
+  </div>
+{%- endif -%}
 
 
-  {% if section.blocks.size == 0 %}
-    {% include 'no-blocks' %}
-  {% endif %}
+{% if section.blocks.size == 0 %}
+  {% include 'no-blocks' %}
+{% endif %}
 
 {{ product_price | default: 2.99 }}
 
- {% if section.settings.show_share_buttons %}
-    {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
-  {% endif %}
+{% if section.settings.show_share_buttons %}
+  {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
+{% endif %}
 
- {% form 'product', product, data-product-form: '', data-product-handle: product.handle, data-enable-history-state: 'true' %}
-    {% unless product.has_only_default_variant %}
-      {% for option in product.options_with_values %}
-        <div class="js">
+{% form 'product', product, data-product-form: '', data-product-handle: product.handle, data-enable-history-state: 'true' %}
+  {% unless product.has_only_default_variant %}
+    {% for option in product.options_with_values %}
+      <div
+        class="js">
 
-          {% if forloop.index0 > 0 %}
+        {% if forloop.index0 > 0 %}
 
+          {% for value in option.values %}
+            <input
+              type="radio"
+              id="Option{{ option.position }}-{{ value }}"
+              name="options[{{ option.name }}]"
+              value="{{ value }}"
+              {% if option.selected_value == value %} checked
+              {% endif %}>
+            <label
+              for="Option{{ option.position }}-{{ value }}">{{ value }}</label>
+          {% endfor %}
+
+        {% else %}
+
+          <label
+            for="Option{{ option.position }}">
+            {{ option.name }}
+          </label>
+
+          <select
+            id="Option{{ option.position }}"
+            name="options[{{ option.name | escape }}]">
             {% for value in option.values %}
-              <input type="radio" id="Option{{ option.position }}-{{ value }}" name="options[{{ option.name }}]" value="{{ value }}"{% if option.selected_value == value %} checked{% endif %}>
-              <label for="Option{{ option.position }}-{{ value }}">{{ value }}</label>
+              <option
+                value="{{ value | escape }}"
+                {% if option.selected_value == value %} selected="selected"
+                {% endif %}>
+                {{ value }}
+              </option>
             {% endfor %}
+          </select>
 
-          {% else %}
-
-            <label for="Option{{ option.position }}">
-              {{ option.name }}
-            </label>
-
-            <select
-              id="Option{{ option.position }}"
-              name="options[{{ option.name | escape }}]">
-              {% for value in option.values %}
-                <option
-                  value="{{ value | escape }}"
-                  {% if option.selected_value == value %}selected="selected"{% endif %}>
-                    {{ value }}
-                </option>
-              {% endfor %}
-            </select>
-
-          {% endif  %}
-        </div>
-      {% endfor %}
-    {% endunless %}
+        {% endif  %}
+      </div>
+    {% endfor %}
+  {% endunless %}
 {% endform %}
 
-<div data-test-attribute data-foo="bar" data-bar="foo" id="hello-world">
-  <div class="foo" data-foo-index="1" data-foo-id="bar">
+<div
+  data-test-attribute
+  data-foo="bar"
+  data-bar="foo"
+  id="hello-world">
+  <div
+    class="foo"
+    data-foo-index="1"
+    data-foo-id="bar">
     <div>
-      <button data-foo="bar" type="button">
+      <button
+        data-foo="bar"
+        type="button">
         {% include 'something' %}
       </button>
     </div>
-    <div class="foo" data-foo-index="1" data-foo-id="bar">
+    <div
+      class="foo"
+      data-foo-index="1"
+      data-foo-id="bar">
       {% for block in foo.bar %}
-        <div class="d-block">
+        <div
+          class="d-block">
           {% unless block.settings.link %}
             {{- block.settings.text -}}
           {% else %}
-            <a href="{{ block.settings.link -}}" title="{{- block.settings.text -}}">
+            <a
+              href="{{ block.settings.link -}}"
+              title="{{- block.settings.text -}}">
               {{- block.settings.text -}}
             </a>
           {% endunless %}
@@ -177,7 +247,9 @@
       {% endfor %}
     </div>
     <div>
-      <button data-foo="bar" type="button">
+      <button
+        data-foo="bar"
+        type="button">
         {% include 'something' %}
       </button>
     </div>

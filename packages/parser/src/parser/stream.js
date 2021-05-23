@@ -64,11 +64,13 @@ export default (function Stream (source) {
 
     create: string => {
 
+      index = 0
+      cursor = 0
+      spaces = undefined
+      token = undefined
       source = string
-      range = lineColumn(string)
-      length = string.length
-
-      Stream(string || '')
+      range = lineColumn(source)
+      length = source.length
 
     },
 
@@ -349,6 +351,15 @@ export default (function Stream (source) {
 
     },
 
+    OffsetFromRange (position) {
+
+      index = range.toIndex(position)
+      cursor = 0
+
+      return index
+
+    },
+
     /**
      * Position
      *
@@ -369,8 +380,8 @@ export default (function Stream (source) {
       const { line, col } = range.fromIndex(offset)
 
       return {
-        line,
-        character: col
+        line: line - 1,
+        character: col - 1
       }
 
     },
@@ -401,6 +412,26 @@ export default (function Stream (source) {
     /* -------------------------------------------- */
     /* MODIFIERS                                    */
     /* -------------------------------------------- */
+
+    Partial (start, end) {
+
+      index = start
+      cursor = start
+      spaces = undefined
+      token = undefined
+      length = Math.abs(start - end)
+
+    },
+
+    PartialReset () {
+
+      index = 0
+      cursor = 0
+      spaces = undefined
+      token = undefined
+      length = source.length
+
+    },
 
     /**
      * Goto Offset Position

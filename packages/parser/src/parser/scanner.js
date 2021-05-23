@@ -280,17 +280,28 @@ export default (function () {
             return TokenType.LiquidTag
           }
 
+          // Singular type tags, eg {% assign %}
           if (spec.get.singular) {
             state = ScanState.TagUnknown
             return TokenType.LiquidSingularTag
           }
 
+          // Control type tags, eg: {% if %} or {% unless %}
           if (spec.type === TokenTags.control) {
             state = ScanState.ControlCondition
             return TokenType.Control
           }
 
+          // Embedded language type tags, eg: {% schema %}
+          // Used in Shopify Liquid Variation
+          // if (spec.type === TokenTags.embedded) {
+          //   state = ScanState.EmbeddedLanguage
+          //   return TokenType.Embedded
+          // }
+
+          state = ScanState.TagUnknown
           return TokenType.LiquidTag
+
         }
 
         // If we get here, invalid tag name
@@ -860,6 +871,10 @@ export default (function () {
       case ScanState.FilterParameterOperator: break
       case ScanState.FilterParameterArgument: break
 
+      case ScanState.EmbeddedLanguage:
+
+        break
+
       // CLOSERS
       // -----------------------------------------------------------------
       case ScanState.GotoTagEnd:
@@ -1019,7 +1034,7 @@ export default (function () {
     /**
      * Get Line
      */
-    , get line () { return s.location.line }
+    , get line () { return s.Position().line }
 
     /**
      * Get Range
@@ -1043,13 +1058,13 @@ export default (function () {
      * @param {number} from
      * Starting Position which must be before current stream position
      *
-     * @param {number} [end]
+     * @param {number} end
      * Ending position offset in current stream
      *
      */
-    , getText (from, end = 0) {
+    , getText (from, end) {
 
-      return end > from ? s.GetText(from, end || this.offset) : ''
+      return s.GetText(from, end)
 
     }
 

@@ -69,7 +69,7 @@ export default (error = 0, { range = {}, node = 0, offset = 0, token = '' }) => 
       offset,
       token,
       severity: ErrorLevel.Error,
-      message: 'Missing End tag name'
+      message: 'Missing end tag'
     }
   ),
   [ParseError.MissingOpenDelimiter]: (

@@ -49,7 +49,8 @@ export default (function Context (node) {
       ],
       value: TokenContext.Newline === type || TokenContext.Whitespace === type
         ? scanner.space
-        : scanner.token
+        : type === TokenContext.EndTag ? 'end' + scanner.token : scanner.token
+
     }
 
     if (type === TokenContext.OpenTag) node = context.push([ entry ]) - 1

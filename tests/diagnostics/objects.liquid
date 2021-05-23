@@ -32,7 +32,7 @@
 <!---------------------------------->
 
 <!-- INCORRECT -->
-{{ article.image.src }}
+{{ article.image.src........ }}
 {{ block.item_type | slugify }}
 
 <!-- MULTIPLE OBJECTS IN TAG -->
@@ -43,7 +43,9 @@
 
 <!-- WITHIN ITERATION -->
   {%- if tag == 'foo' -%}
-    {%- for tag in collection..foo.bar -%}{%- if tag contains garment -%}
+    {%- for tag in collection..foo.bar -%}
+      {%- if tag contains garment -%}
+    foo
   {%- endif -%}
 {%- endfor -%}
 {%- endif -%}

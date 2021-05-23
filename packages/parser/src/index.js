@@ -4,6 +4,7 @@ import { parse } from 'parser/parse'
 import options from 'parser/options'
 import context from 'parser/context'
 import ast from 'parser/node'
+import inRange from 'lodash/inRange'
 
 /**
  * Liquid Parser
@@ -15,12 +16,16 @@ export class LiquidParser {
 
   constructor (configuration) {
 
-    this.config = {
+    this.parser = {
       ...options,
       ...configuration
     }
 
-    specs.ref(this.config.engine, this.config.license)
+  }
+
+  engine (engine) {
+
+    specs.ref(engine, this.parser.license)
 
   }
 
@@ -57,17 +62,14 @@ export class LiquidParser {
    */
   parse (document) {
 
+    while (ast.error.get.length > 0) ast.error.get.pop()
+    while (document.ast.length > 0) document.ast.pop()
+
     const source = document.textDocument.getText()
 
     stream.create(source)
 
-    return parse.bind(this.config)(document)
-
-  }
-
-  increment (param, contentChanges) {
-
-    // return increment(param, contentChanges)
+    return parse.bind(this.parser)(document)
 
   }
 
