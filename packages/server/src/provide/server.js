@@ -1,5 +1,4 @@
 // @ts-check
-
 import _ from 'lodash'
 import { readFileSync, readdirSync, existsSync } from 'fs-extra'
 import { basename, resolve, join, normalize } from 'path'
@@ -25,7 +24,6 @@ class LiquidServer extends Config {
    * @memberof LiquidServer
    */
   capabilities ({
-    rootUri,
     initializationOptions: {
       service = null
       , license = 'sissel siv'
@@ -41,7 +39,6 @@ class LiquidServer extends Config {
     textDocument.completion.completionItem.snippetSupport = true
     textDocument.completion.dynamicRegistration = true
 
-    this.rootUri = rootUri
     this.rcfile = rcfile
     this.license = license
     this.service = { ...this.service, ...service }
@@ -277,34 +274,6 @@ class LiquidServer extends Config {
     }
 
     // return this.#setParseExpressions(settings)
-
-  }
-
-  /**
-   * Set Specification
-   *
-   * @private
-   * @param {object} settings
-   * @memberof LiquidServer
-   */
-  #setParseExpressions = settings => {
-
-    return
-    this.lexical = Expressions({
-      tags: {
-        objects: Object.keys(this.specification.objects)
-      },
-      html: {
-        comments: [ 'liquid-(format|linter)-(ignore|enable|disable)' ],
-        tokens: [ 'script', 'style' ],
-        tokens_with_attribute: [
-          [ 'script' ],
-          [ 'application/type="ld+json"' ]
-        ]
-      }
-    })
-
-    return this.#setPathIncludes(settings)
 
   }
 
