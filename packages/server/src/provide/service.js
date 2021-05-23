@@ -1,15 +1,13 @@
-// @ts-check
-
-import _ from 'lodash'
 import { TextEdit, Position } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { CSSService } from '../service/modes/css'
-import { SCSSService } from '../service/modes/scss'
-import { JSONService } from '../service/modes/json'
-import { Document } from '../provide/document'
-import * as Format from '../service/formats'
-import * as Completion from '../service/completions'
-import * as Hover from '../service/hovers'
+import { CSSService } from 'service/modes/css'
+import { SCSSService } from 'service/modes/scss'
+import { JSONService } from 'service/modes/json'
+import * as Format from 'service/format'
+import * as Completion from 'service/completions'
+import * as Hover from 'service/hovers'
+import { Document } from 'provide/document'
+import { Parser } from 'provide/parser'
 
 /**
  * Liquid Language Service
@@ -20,12 +18,12 @@ import * as Hover from '../service/hovers'
  *
  * @export
  * @class LiquidService
- * @typedef {import('vscode-languageserver-textdocument').TextDocument} textDocument
- * @typedef {import('vscode-languageserver').TextEdit} textEdit
- * @typedef {import('vscode-languageserver').Position} position
- * @typedef {import('vscode-languageserver').CompletionItem} CompletionItem
- * @typedef {import('vscode-languageserver').CompletionContext} CompletionContext
- * @typedef {import('vscode-languageserver').TextDocumentContentChangeEvent} ChangeEvent
+ * @typedef {LSP.TextDocument} textDocument
+ * @typedef {LSP.TextEdit} textEdit
+ * @typedef {LSP.Position} position
+ * @typedef {LSP.CompletionItem} CompletionItem
+ * @typedef {LSP.CompletionContext} CompletionContext
+ * @typedef {LSP.TextDocumentContentChangeEvent} ChangeEvent
  * @typedef {import('defs').DocumentModel} DocumentModel
  * @typedef {import('defs').FormattingRules} FormattingRules
  * @typedef {import('defs').ValidationPromises} ValidationPromises
@@ -53,7 +51,6 @@ class LiquidService {
    * Executed on Server intialization and will configure the
    * language service options to be used by its instance.
    *
-   * @param {import('../../../release/vscode-liquify/server/node_modules/defs').Services} support
    * @memberof LiquidService
    */
   configure (support) {
@@ -144,33 +141,39 @@ class LiquidService {
   async doHover (document, position) {
 
     const [ node ] = Document.getNode(position)
+
     if (node && this.modes?.[node.languageId]) {
       return this.modes[node.languageId].doHover(node, position)
     }
 
     const name = Hover.getWordAtPosition(document, position)
 
+    /**
+     * @type {Parser.Cursor}
+     */
     let spec
+    let object = false
 
-    if (Server.specification.tags?.[name]) {
-      spec = Server.specification.tags[name]
-    } else if (Server.specification.objects?.[name]) {
-      spec = Server.specification.objects[name]
+    if (Parser.spec.tags?.[name]) {
+      spec = Parser.spec.tags[name]
+    } else if (Parser.spec.objects?.[name]) {
+      spec = Parser.spec.objects[name]
+      object = true
+    } else if (Parser.spec.filters?.[name]) {
+      spec = Parser.spec.filters[name]
     } else {
       return null
     }
-
-    const { type, description, engine, reference } = spec
 
     return {
       kind: 'markdown',
       contents: [
         '```liquid',
-        type === 'object' ? `{{ ${name} }}` : `{% ${name} %}`,
+        object ? `{{ ${name} }}` : `{% ${name} %}`,
         '```',
-        description,
+        spec.description,
         '\n---',
-      `\n[${engine} Liquid](${reference})`
+      `\n[${Parser.spec.engine} Liquid](${spec.link})`
       ].join('\n')
     }
 
@@ -179,18 +182,22 @@ class LiquidService {
   /**
    * `doComplete`
    *
-   * @paramz {CompletionContext} contextsss
+   * @param {DocumentModel} document
+   * @param {LSP.Position} position
+   * @param {LSP.CompletionContext} context
    * @memberof LiquidService
    */
   async doComplete (document, position, { triggerKind }) {
 
-    const offset = Document.offsetAt(position)
+    const offset = document.textDocument.offsetAt(position)
     const [ node ] = Document.getNode(offset)
 
     let doComplete
 
     if (node?.embeddedDocument) {
+
       const { languageId } = node.embeddedDocument
+
       if (this.modes[languageId]) {
         doComplete = await this.modes[languageId].doComplete(node, position)
         doComplete.data = { languageId }
@@ -225,4 +232,7 @@ class LiquidService {
 
 }
 
+/**
+ * Liquid Service
+ */
 export const Service = new LiquidService()
