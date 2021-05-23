@@ -25,7 +25,6 @@ export const formatError = (
 
 /**
  * Cancel Value (Response Error)
- * @returns {string}
  */
 export const cancelValue = () => new ResponseError(
   ErrorCodes.RequestCancelled,
