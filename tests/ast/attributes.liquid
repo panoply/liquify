@@ -4,6 +4,8 @@
 <div
   class="{% if condition %}foo{% endif %}"></div>
 
+{{ value | replace: 'foo', 'bar' }}
+
 
 <section
   data-test-attribute
@@ -171,7 +173,7 @@
       <div
         class="js">
 
-        {% if forloop.index0 > 0 %}
+        {% if forloop.index > 0 %}
 
           {% for value in option.values %}
             <input
@@ -259,8 +261,7 @@
 
 {% schema %}
 {
-  "name": "hello",
-  "blocks": [
+"name": "hello", "blocks": [
     {
       "name": "hello",
       "limit": 1,
