@@ -37,6 +37,13 @@ export default (function Specs () {
   let filter
 
   /**
+   * Object Name
+   *
+   * @type {object}
+   */
+  let object
+
+  /**
    * Specification Type
    *
    * @type {Parser.TokenTags}
@@ -58,11 +65,7 @@ export default (function Specs () {
      * @param {Specs.Engine} engine
      * @param {string} license
      */
-    ref: (engine, license) => {
-
-      variation = specs({ variation: engine, license })
-
-    },
+    ref: (engine, license) => { variation = specs({ variation: engine, license }) },
 
     /**
      * Get Active Variation
@@ -147,6 +150,26 @@ export default (function Specs () {
       state => ({
 
         /**
+         * Object Type
+         *
+         * The return value of the object currently in stream
+         *
+         * @returns {Specs.ObjectTypes}
+         */
+        get type () { return object.type },
+
+        /**
+         * Has Property
+         *
+         * Checks to see if object token property passed
+         * in exists on the object
+         *
+         * @param {string} name
+         * @returns {boolean}
+         */
+        hasProp: name => typeof object?.properties?.[name] === 'object',
+
+        /**
          * Exists
          *
          * Checks to see if token is a known object
@@ -157,11 +180,47 @@ export default (function Specs () {
          *
          * @returns {boolean}
          */
-        exists: name => typeof variation?.objects?.[name] === 'object'
+        exists: name => typeof variation?.objects?.[name] === 'object',
+
+        /**
+         * Object Cursor
+         *
+         * Resets the specification cursor to last known
+         * filter reference. This function is used to reconnect
+         * to a specification, generally occurring when we are
+         * we move to different token scans (like object).
+         *
+         * @param {string} [name=undefined]
+         * @returns {Specs.IFilter}
+         */
+        cursor: (name = undefined) => {
+
+          if (!state) state = null
+
+          if (name) {
+            object = variation.objects[name]
+            return cursor
+          }
+
+          cursor = variation.objects[name]
+          return cursor
+
+        },
+
+        /**
+         * Resets the object spec state. This is called for
+         * every object identifier we encounter.
+         *
+         * @returns {void}
+         */
+        reset: () => {
+          state = null
+          object = null
+        }
 
       })
 
-    )(''),
+    )(null),
 
     /**
      * Cursor
@@ -220,6 +279,8 @@ export default (function Specs () {
         cursor = variation.objects[name]
         type = TokenTags.object
 
+        if (cursor?.type === 'object') this.object.cursor(name)
+
         return true
 
       }
@@ -255,6 +316,122 @@ export default (function Specs () {
       }
 
     },
+
+    /**
+     * Argument Navigator
+     *
+     * When parsing filter arguments this getter closure
+     * provides use methods to work the filter specification
+     * while scanning tokens and characters.
+     */
+    tag: (
+
+      /**
+       * Filter State Argument
+       *
+       * @param {number} state
+       */
+      state => ({
+
+        /**
+         * Returns the tag argument specification. It
+         * returns the current argument in the list.
+         *
+         * @readonly
+         * @returns {Specs.FilterArguments}
+         */
+        get spec () { return cursor.arguments[state] },
+
+        /**
+         * Returns a boolean indicating whether the or not the filter
+         * has arguments.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get arguments () { return cursor?.arguments },
+
+        /**
+         * Returns a boolean indicating whether we are currently
+         * scanning a filter attribute/argument.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get within () { return state >= 0 },
+
+        /**
+         * Returns a boolean indicating whether or not the argument
+         * at the current position is required.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get required () { return cursor.arguments[state]?.required },
+
+        /**
+         * Returns a boolean indicating filter cursor arguments
+         * exists on the spec. Used to validate after variable.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get exists () { return cursor?.$i },
+
+        /**
+         * Returns a boolean indicating if this is the last argument
+         * available to the filter, according to its specification.
+         *
+         * @readonly
+         * @returns {boolean}
+         */
+        get last () { return cursor.$i.argsize === state },
+
+        /**
+         * Moves to the next argument on a filter. Returns a
+         * boolean to indicate when we have reached the last
+         * argument in the filter spec.
+         *
+         * @return {void}
+         */
+        next () { state++ },
+
+        /**
+         * Checks if the argument accepts the type of value
+         * passed, ensuring the argument is valid.
+         *
+         * @param {Specs.FilterArgumentTypes} id
+         * @returns {boolean}
+         */
+        type: id => cursor.arguments[state].type === id,
+
+        /**
+         * Checks if the argument accepts the type of value
+         * passed, ensuring the argument is valid.
+         *
+         * @param {Specs.FilterAcceptsTypes} id
+         * @returns {boolean}
+         */
+        accept: (id) => {
+
+          return new RegExp(`\\b(?:${cursor.arguments[state].accepts})\\b`).test(id)
+
+        },
+
+        /**
+         * Resets the filter state object. This is called for
+         * every new filter identifier we encounter.
+         *
+         * @returns {void}
+         */
+        reset: () => {
+          state = NaN
+          filter = null
+        }
+
+      })
+
+    )(NaN),
 
     /**
      * Argument Navigator
@@ -351,11 +528,7 @@ export default (function Specs () {
          * @param {Specs.FilterAcceptsTypes} id
          * @returns {boolean}
          */
-        accept: (id) => {
-
-          return new RegExp(`\\b(?:${cursor.arguments[state].accepts})\\b`).test(id)
-
-        },
+        accept: (id) => new RegExp(`\\b(?:${cursor.arguments[state].accepts})\\b`).test(id),
 
         /**
          * Validates argument values against provided options
