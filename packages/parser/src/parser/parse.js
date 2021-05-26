@@ -101,14 +101,12 @@ export function parse (document = { ast: [] }) {
       // -----------------------------------------------------------------
       case TokenType.ParseWarning:
 
-        node.offset(scanner.offset)
         ast.error.add(scanner.error)
 
         break
 
       case TokenType.ParseError:
 
-        node.offset(scanner.offset)
         ast.error.add(scanner.error)
 
         break
@@ -116,28 +114,7 @@ export function parse (document = { ast: [] }) {
       // LIQUID TAGS
       // -----------------------------------------------------------------
       case TokenType.ObjectTag:
-
-        ast.node = document.ast.length
-
-        // @ts-ignore
-        node = new ast.INode()
-        if (this.context) node.context.push(context.size)
-
-        break
-
       case TokenType.LiquidTag:
-
-        ast.node = document.ast.length
-
-        // @ts-ignore
-        node = new ast.INode()
-        node.type = spec.type
-        if (this.context) node.context.push(context.size)
-
-        break
-
-      // SINGULAR TAGS
-      // -----------------------------------------------------------------
       case TokenType.LiquidSingularTag:
 
         ast.node = document.ast.length
@@ -145,6 +122,8 @@ export function parse (document = { ast: [] }) {
         // @ts-ignore
         node = new ast.INode()
         node.type = spec.type
+
+        if (this.context) node.context.push(context.size)
 
         break
 
@@ -223,7 +202,7 @@ export function parse (document = { ast: [] }) {
 
         node.objects = {
           ...node.objects,
-          [scanner.offset + scanner.token.length]: scanner.token
+          [scanner.offset + 1]: scanner.token
         }
 
         break
@@ -243,17 +222,19 @@ export function parse (document = { ast: [] }) {
 
         break
 
-        // LIQUID CONTROL CONDITION
+      // EMBEDDED TYPES
       // -----------------------------------------------------------------
       case TokenType.Embedded:
 
-        if (this.context) context.add(TokenContext.Identifier)
-
         node.name = scanner.token
         node.type = spec.type
+        node.language = spec.get.language
 
         // ASSERT HIERARCH
         ast.hierarch.get.push(node.name, node.index)
+        ast.embedded.get.push(node.index)
+
+        if (this.context) context.add(TokenContext.Identifier)
 
         break
 
