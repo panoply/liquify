@@ -1,5 +1,5 @@
-import _ from 'lodash'
-import { CompletionItemKind, InsertTextFormat } from 'vscode-languageserver'
+import isArray from 'lodash/isArray'
+import { CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver'
 import { Parser } from 'provide/parser'
 
 /**
@@ -24,24 +24,25 @@ import { Parser } from 'provide/parser'
  *
  * Sets the completion items that are passed to the completion resolver.
  * Extracts necessary values from the passed in specification record.
- *
- * @export
- * @param {import('defs').Specification} specification
  */
-export function setCompletionItems (specification) {
+export function setCompletionItems (
+  [
+    name,
+    {
+      description,
+      snippet = false
+    }
+  ]
+) {
 
-  const { name, snippet, description } = specification
-
-  return ({
+  return {
     label: name,
     kind: CompletionItemKind.Property,
     insertText: snippet,
     insertTextFormat: InsertTextFormat.Snippet,
     documentation: description,
-    data: {
-      snippet: snippet
-    }
-  })
+    data: { snippet }
+  }
 
 }
 
@@ -53,33 +54,38 @@ export function setCompletionItems (specification) {
  * offset index numbers and property value ear either string of array types.
  *
  * @export
- * @param {import('defs').AST} ASTnode
+ * @param {Parser.ASTNode} ASTNode
  * @param {number} offset
- * @returns {array|false}
  */
 
-export async function getObjectCompletion (ASTnode, offset) {
+export async function getObjectCompletion (ASTNode, offset) {
 
-  const record = ASTnode.objects[offset]
+  const record = ASTNode.objects[offset]
 
   if (!record) return false
 
-  const properties = Parser.spec.objects[record]
+  if (isArray(record) && record.length === 1) {
+    const { properties } = Parser.spec.objects[record[0]]
+    return Object.entries(properties)
+  }
 
-  return Object.entries(properties).map(([ name, { description } ]) => ({
-    name,
-    description
-  }))
+  if (typeof record === 'number') {
 
-  return (function walk (objects, props) {
+    const objects = ASTNode.objects[record]
 
-    const prop = props.find(({ name }) => name === objects[0])
+    return (function walk (prop, spec) {
 
-    return objects.length > 1
-      ? walk(objects.slice(1), prop.properties)
-      : prop?.properties || false
+      const object = spec?.[prop[0]]?.properties
 
-  }(record, properties))
+      return prop.length > 1
+        ? object && walk(prop.slice(1), object)
+        : object
+          ? Object.entries(object)
+          : false
+
+    }(objects.slice(1), Parser.spec.objects[objects[0]].properties))
+
+  }
 
 }
 
@@ -87,13 +93,15 @@ export async function getObjectCompletion (ASTnode, offset) {
  * Get Trigger Completion
  *
  * @export
- * @param {import("vscode-languageserver").TextDocument}textDocument
- * @param {import("vscode-languageserver").Position} position
+ * @param {Parser.ASTNode|undefined} ASTNode
+ * @param {Parser.Scope} document
+ * @param {LSP.Position} position
+ * @param {LSP.CompletionContext} context
  * @returns
  */
-export function getTriggerCompletion (textDocument, position) {
+export function getTriggerCompletion (ASTNode, document, position, context) {
 
-  const type = textDocument.getText({
+  const type = document.textDocument.getText({
     start: {
       line: position.line,
       character: position.character - 3
@@ -104,50 +112,28 @@ export function getTriggerCompletion (textDocument, position) {
     }
   })
 
-  console.log(type)
+  if (/\|\s*/.test(type)) {
 
-  if (/{%\s*%}/.test(type)) {
-
-    const props = Object.entries(Parser.spec.tags).map(([
-      prop,
+    return Object.entries(Parser.spec.filters).map((
+      [
+        label,
+        {
+          description,
+          snippet = '$0 '
+        }
+      ]
+    ) => (
       {
-        description,
-        snippet = false
+        label,
+        kind: CompletionItemKind.Keyword,
+        insertText: snippet,
+        insertTextFormat: InsertTextFormat.Snippet,
+        documentation: description,
+        data: {
+          snippet: '| $1' + snippet
+        }
       }
-    ]) => ({
-      name: prop,
-      description,
-      snippet
-    }))
-
-    return props
-
-  }
-
-  if (/{{-?\s*-?}}/.test(type)) {
-
-    const props = Object.entries(Parser.spec).map(([
-      prop,
-      { type, description }
-    ]) => type === 'object' && { name: prop, description }).filter(Boolean)
-
-    return props
-
-  } else if (/{%\s*%}/.test(type)) {
-
-    const props = Object.entries(Parser.spec.tags).map(([
-      prop,
-      {
-        description,
-        snippet = false
-      }
-    ]) => ({
-      name: prop,
-      description,
-      snippet
-    }))
-
-    return props
+    ))
 
   }
 

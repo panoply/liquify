@@ -424,6 +424,13 @@ export default (function (config) {
       format: true,
 
       /**
+       * Enable/Disable Liquid formatting on type
+       *
+       * @type {boolean}
+       */
+      formatOnType: true,
+
+      /**
        * Enable/Disable Liquid completions
        *
        * @type {boolean}

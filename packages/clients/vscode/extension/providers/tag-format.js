@@ -11,6 +11,7 @@ class Spacer {
     this.TAG_DOUBLE = 0
     this.TAG_UNESCAPED = 1
     this.TAG_COMMENT = 2
+    this.FILTER_SPACE = 3
   }
 
   char (doc, change) {
@@ -45,6 +46,8 @@ class Spacer {
       editor.insertSnippet(new SnippetString('{% ${1:${TM_SELECTED_TEXT/[{} %]//g}} %}$0'), ranges)
     } else if (tagType === this.TAG_COMMENT) {
       editor.insertSnippet(new SnippetString('{{- ${1:${TM_SELECTED_TEXT/(--)|[{} ]//g}} -}}$0'), ranges)
+    } else if (tagType === this.FILTER_SPACE) {
+      editor.insertSnippet(new SnippetString('| ${1:${TM_SELECTED_TEXT}}$0'), ranges)
     }
 
   }
@@ -53,12 +56,13 @@ class Spacer {
 
 export function addspacer (liquid) {
 
-  const triggers = [ '{}', '%', '-', '{' ]
+  const triggers = [ '{}', '%', '-', '{', '|' ]
 
   const expressions = [
     /({{)([^\s].*?)?(}})/,
     /({%)(.*?)?(})/,
-    /({{-[\s]?)(.*?)?(-}})/
+    /({{-[\s]?)(.*?)?(-}})/,
+    /\|\s*/
   ]
 
   const spacer = new Spacer()

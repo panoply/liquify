@@ -5,6 +5,7 @@ import {
   TextDocumentSyncKind,
   createConnection,
   ProposedFeatures
+  , TextEdit
 } from 'vscode-languageserver'
 
 import Server from 'provide/server'
@@ -13,6 +14,7 @@ import { Document } from 'provide/document'
 import { Parser } from 'provide/parser'
 import { runAsync, runSync } from 'utils/runners'
 import { mark, stop } from 'marky'
+import { repeat } from 'lodash'
 
 /* ---------------------------------------------------------------- */
 /* Providers                                                        */
@@ -46,6 +48,13 @@ connection.onInitialize(initializeParams => (
         includeText: false
       }
     },
+    documentOnTypeFormattingProvider: {
+      moreTriggerCharacter: [
+        ',',
+        '|',
+        ':'
+      ]
+    },
     documentRangeFormattingProvider: true,
     hoverProvider: true,
     documentLinkProvider: {
@@ -61,10 +70,10 @@ connection.onInitialize(initializeParams => (
         '"',
         '\'',
         ':',
-        '|',
         '.',
         '<',
-        '%'
+        '%',
+        '|'
       ]
     },
     implementationProvider: true,
@@ -139,12 +148,16 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
   console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
 
   if (Server.provider.validateOnOpen) {
-    connection.sendDiagnostics(
-      {
-        uri: document.textDocument.uri,
-        diagnostics: Parser.errors
-      }
-    )
+    return Service.doValidation(document).then(({
+      uri
+      , diagnostics
+    }) => {
+
+      return connection.sendDiagnostics({
+        uri,
+        diagnostics
+      })
+    })
   }
 })
 
@@ -164,15 +177,11 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
-  return Service.doValidation(document).then(({
-    uri
-    , diagnostics
-  }) => {
+  console.log(document.ast, Parser.errors)
 
-    return connection.sendDiagnostics({
-      uri,
-      diagnostics
-    })
+  return connection.sendDiagnostics({
+    uri: document.textDocument.uri,
+    diagnostics: Parser.errors
   })
 
   // console.log(document)
@@ -200,6 +209,28 @@ connection.onDidChangeWatchedFiles(change => {
   Server.configure('onDidChangeWatchedFiles', change)
 
 })
+
+/* -------------------------------------------- */
+/* onDocumentOnTypeFormatting                   */
+/* -------------------------------------------- */
+
+connection.onDocumentOnTypeFormatting((
+  {
+    textDocument: { uri }
+    , ch
+    , position
+    , options
+  }
+  , token
+) => !Server.provider.format || runSync(() => {
+
+  const document = documents.get(uri)
+
+  if (!document?.textDocument?.uri) return null
+
+  return Service.doFormatOnType(document, ch, position, options)
+
+}, null, `Error while computing on type formatting for ${uri}`, token))
 
 /* ---------------------------------------------------------------- */
 /* onDocumentRangeFormatting                                        */

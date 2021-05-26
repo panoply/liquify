@@ -4,7 +4,7 @@ import { parse } from 'parser/parse'
 import options from 'parser/options'
 import context from 'parser/context'
 import ast from 'parser/node'
-import inRange from 'lodash/inRange'
+import * as Codes from 'lexical/characters'
 
 /**
  * Liquid Parser
@@ -28,6 +28,8 @@ export class LiquidParser {
     specs.ref(engine, this.parser.license)
 
   }
+
+  get code () { return Codes }
 
   /**
    * Returns the context list
@@ -66,8 +68,8 @@ export class LiquidParser {
     ast.INode.uri = document.textDocument.uri
 
     while (ast.error.get.length > 0) ast.error.get.pop()
-    while (document.ast.length > 0) document.ast.pop()
     while (ast.embedded.get.length > 0) ast.embedded.get.pop()
+    while (document.ast.length > 0) document.ast.pop()
 
     const source = document.textDocument.getText()
 

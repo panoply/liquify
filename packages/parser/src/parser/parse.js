@@ -200,9 +200,12 @@ export function parse (document = { ast: [] }) {
 
         if (this.context) context.add(TokenContext.Object)
 
+        // SAVE OFFSET
+        spec.object.at(scanner.offset)
+
         node.objects = {
           ...node.objects,
-          [scanner.offset + 1]: scanner.token
+          [spec.object.offset]: [ scanner.token ]
         }
 
         break
@@ -265,10 +268,31 @@ export function parse (document = { ast: [] }) {
         if (this.context) context.add(TokenContext.CloseBracket)
         break
       case TokenType.ObjectProperty:
+
         if (this.context) context.add(TokenContext.Property)
+
+        // VALIDATE PROPERTY
+        if (scanner.isError(ParseError.UnknownProperty)) ast.error.add(scanner.error)
+
+        // PUSH NEXT PROPERTY
+        node.objects[spec.object.offset].push(scanner.token)
+        node.objects[scanner.offset + 1] = spec.object.offset
+
+        // SAVE OFFSET
+        spec.object.at(scanner.offset)
+
         break
       case TokenType.ObjectPropertyString:
-        if (this.context) context.add(TokenContext.PropertyString)
+
+        if (this.context) context.add(TokenContext.Property)
+
+        // PUSH NEXT PROPERTY
+        node.objects[spec.object.offset].push(scanner.token)
+        node.objects[scanner.offset + 1] = spec.object.offset
+
+        // SAVE OFFSET
+        spec.object.at(scanner.offset)
+
         break
       case TokenType.ObjectPropertyNumber:
         if (this.context) context.add(TokenContext.Integer)

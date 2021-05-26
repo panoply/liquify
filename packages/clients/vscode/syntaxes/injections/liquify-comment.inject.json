@@ -46,5 +46,5 @@
       }
     }
   ],
-  "injectionSelector": "L:comment.block.liquid"
+  "injectionSelector": "L:source.liquid.shopify -comment"
 }

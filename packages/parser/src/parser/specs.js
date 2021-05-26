@@ -145,9 +145,19 @@ export default (function Specs () {
       /**
        * Object State Name reference
        *
-       * @param {string} state
+       * @param {number} offset
        */
-      state => ({
+      offset => ({
+
+        /**
+         * Object position offset starter
+         *
+         * Used as the property reference identifier on
+         * the AST node
+         *
+         * @returns {number}
+         */
+        get offset () { return offset + 1 },
 
         /**
          * Object Type
@@ -156,54 +166,55 @@ export default (function Specs () {
          *
          * @returns {Specs.ObjectTypes}
          */
-        get type () { return object.type },
+        get type () { return object?.type },
 
         /**
-         * Has Property
+         * Object Type
          *
-         * Checks to see if object token property passed
-         * in exists on the object
+         * The return value of the object currently in stream
          *
-         * @param {string} name
+         * @param {Specs.ObjectTypes} id
          * @returns {boolean}
          */
-        hasProp: name => typeof object?.properties?.[name] === 'object',
+        typeof: id => object?.type === id,
 
         /**
          * Exists
          *
-         * Checks to see if token is a known object
-         * within the specification.
+         * Checks to see if property exists on this object
          *
          * @param {string} name
-         * Either a pipe separated list or string
+         * The property name to check
          *
          * @returns {boolean}
          */
-        exists: name => typeof variation?.objects?.[name] === 'object',
+        exists: name => typeof object?.properties?.[name] === 'object',
+
+        /**
+         * Position Setter
+         *
+         * Sets the offset index starting position of the root
+         * object name.
+         *
+         * @param {number} index
+         * @returns {void}
+         */
+        at: index => { if (isNaN(offset)) offset = index },
 
         /**
          * Object Cursor
          *
-         * Resets the specification cursor to last known
-         * filter reference. This function is used to reconnect
-         * to a specification, generally occurring when we are
-         * we move to different token scans (like object).
+         * Resets the object cursor to last known property
+         * reference.
          *
-         * @param {string} [name=undefined]
-         * @returns {Specs.IFilter}
+         * @returns {Specs.IObject}
          */
         cursor: (name = undefined) => {
 
-          if (!state) state = null
+          if (!object && !name) object = cursor
+          else object = object.properties[name]
 
-          if (name) {
-            object = variation.objects[name]
-            return cursor
-          }
-
-          cursor = variation.objects[name]
-          return cursor
+          return object
 
         },
 
@@ -214,13 +225,13 @@ export default (function Specs () {
          * @returns {void}
          */
         reset: () => {
-          state = null
+          offset = NaN
           object = null
         }
 
       })
 
-    )(null),
+    )(NaN),
 
     /**
      * Cursor
@@ -279,7 +290,7 @@ export default (function Specs () {
         cursor = variation.objects[name]
         type = TokenTags.object
 
-        if (cursor?.type === 'object') this.object.cursor(name)
+        this.object.cursor()
 
         return true
 

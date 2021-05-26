@@ -417,8 +417,13 @@ export default (function () {
       // -----------------------------------------------------------------
       case ScanState.Object:
 
+        if (error === ParseError.UnknownProperty) error = undefined
+
         // Object property dot, eg: object.
         if (s.IfCodeChar(c.DOT)) {
+
+          // If object is not of type object, then no properties should exist
+
           state = ScanState.ObjectDotNotation
           return TokenType.ObjectDotNotation
         }
@@ -460,6 +465,9 @@ export default (function () {
           return TokenType.ParseError
         }
 
+        // Reset the object spec walker
+        // spec.object.reset()
+
         // Check to see if we scanning filter arguments
         if (spec.filter.within) {
 
@@ -488,8 +496,17 @@ export default (function () {
         // Gets property value on object, eg: "prop" in "object.prop"
         if (s.IfRegExp(r.ObjectNameAlpha)) {
 
-          // TODO FIX THIS
-          // if (!spec.object.hasProp(s.token)) {}
+          if (spec.exists) {
+
+            // Reference an unknown property Error warning
+            /* if (!spec.object.exists(s.token)) {
+              error = ParseError.UnknownProperty
+              state = ScanState.Object
+              return TokenType.ParseError
+            } else {
+              spec.object.cursor(s.token)
+            } */
+          }
 
           state = ScanState.Object
           return TokenType.ObjectProperty
@@ -573,7 +590,7 @@ export default (function () {
 
           // Next character should be closing bracket notation, eg ]
           state = ScanState.ObjectBracketNotationEnd
-          return TokenType.ObjectProperty
+          return TokenType.ObjectPropertyString
 
         }
 
@@ -790,7 +807,7 @@ export default (function () {
             spec.cursor(s.token)
 
             // Check to to see if we are dealing with an object
-            if (spec.typeof(TokenTags.object) || s.IfNextRegExp(/(?=[[.])/)) {
+            if (spec.typeof(TokenTags.object) || s.IfNextRegExp(r.ObjectHasProperty)) {
 
               // Next call we will look for a property notation
               state = ScanState.Object
@@ -1055,6 +1072,28 @@ export default (function () {
      * Ending position offset in current stream
      */
     , get range () { return s.range }
+
+    /**
+     * Token Value
+     *
+     * Returns the value of a token (without quotations)
+     * @return {string}
+     */
+    , get tokenValue () {
+
+      return s.token.match(/[^'"]+/)[0]
+
+    }
+
+    /**
+     * Check Error
+     *
+     * Returns a boolean if current error matches
+     *
+     * @param {ParseError} e
+     * @return {boolean}
+     */
+    , isError: e => error === e
 
     /**
      * Get Text

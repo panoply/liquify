@@ -1,4 +1,4 @@
-import { TextEdit, Position } from 'vscode-languageserver'
+import { TextEdit, Position, CompletionTriggerKind } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { CSSService } from 'service/modes/css'
 import { SCSSService } from 'service/modes/scss'
@@ -65,6 +65,28 @@ export default (mode => ({
   },
 
   /**
+   * Format onType
+   *
+   * @param {Parser.Scope} document
+   * @param {string} character
+   * @param {LSP.Position} position
+   * @param {LSP.FormattingOptions} options
+   * @returns
+   * @memberof LiquidService
+   */
+  doFormatOnType (document, character, position, options) {
+
+    switch (character.charCodeAt(0)) {
+      case Parser.code.PIP:
+      case Parser.code.COM:
+      case Parser.code.COL: return [
+        TextEdit.insert(position, String.fromCharCode(Parser.code.WSP))
+      ]
+    }
+
+  },
+
+  /**
    * Formats
    *
    * @param {Parser.Scope} document
@@ -112,6 +134,7 @@ export default (mode => ({
         return mode[node.language].doHover(node, position)
       }
     }
+
     const name = Hover.getWordAtPosition(document.textDocument, position)
 
     /**
@@ -152,9 +175,9 @@ export default (mode => ({
    *
    * @param {Parser.Scope} document
    * @param {LSP.Position} position
-   * @param {LSP.CompletionContext} [context]
+   * @param {LSP.CompletionContext} context
    */
-  async doComplete (document, position, { triggerKind }) {
+  async doComplete (document, position, context) {
 
     const offset = document.textDocument.offsetAt(position)
     const [ node ] = Document.getNode(offset)
@@ -167,10 +190,17 @@ export default (mode => ({
       }
     }
 
-    const tagComplete = Completion.getTriggerCompletion(document.textDocument, position)
-    console.log(triggerKind)
+    if (context.triggerKind === CompletionTriggerKind.TriggerCharacter) {
+      if (context.triggerCharacter.charCodeAt(0) === Parser.code.DOT) {
+        const doComplete = await Completion.getObjectCompletion(node, offset)
+        return doComplete.map(Completion.setCompletionItems)
+      }
+    }
 
-    return tagComplete.map(Completion.setCompletionItems)
+    return false
+
+    // const tagComplete = Completion.getTriggerCompletion(node, document, position, context)
+    // return tagComplete
 
     // const doComplete = await Completion.getObjectCompletion(node, offset)
 

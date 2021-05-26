@@ -292,6 +292,11 @@ export const enum ParseError {
   RejectObject,
 
   /**
+   * Reject Property
+   */
+  RejectProperty,
+
+  /**
    * Reject Parameters
    */
   RejectParameters,
@@ -334,4 +339,12 @@ export const enum ParseError {
    * {{- foo ['    prop'] }}
    */
   WarnWhitespace,
+
+  /**
+   * Unknown Property
+   *
+   * @example
+   * {{- product.not_known_propery -}}
+   */
+  UnknownProperty,
 }

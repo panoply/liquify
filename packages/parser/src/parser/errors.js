@@ -322,6 +322,16 @@ export default (error = 0, { range = {}, node = 0, offset = 0, token = '' }) => 
       message: 'Object value not accepted'
     }
   ),
+  [ParseError.RejectProperty]: (
+    {
+      range,
+      node,
+      offset,
+      token,
+      severity: ErrorLevel.Error,
+      message: 'Property value is not of type object'
+    }
+  ),
   [ParseError.RejectParameters]: (
     {
       range,
@@ -374,6 +384,17 @@ export default (error = 0, { range = {}, node = 0, offset = 0, token = '' }) => 
       token,
       severity: ErrorLevel.Warning,
       message: 'Extraneous whitespace detected'
+    }
+  ),
+
+  [ParseError.UnknownProperty]: (
+    {
+      range,
+      node,
+      offset,
+      token,
+      severity: ErrorLevel.Warning,
+      message: 'Unknown property value expressed'
     }
   )
 }[error])

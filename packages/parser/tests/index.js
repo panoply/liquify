@@ -44,6 +44,7 @@ test('FullDocument Parse', t => {
 
   console.log(
     ...node.ast,
+    node.ast[0].objects,
     parser.context,
     parser.errors,
     parser.getEmbeds(server)
