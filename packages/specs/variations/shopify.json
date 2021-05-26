@@ -355,83 +355,68 @@
     "address": {
       "description": "The address object contains information entered by a customer in Shopify's checkout pages.",
       "type": "object",
-      "properties": [
-        {
+      "properties": {
+        "province_code": {
           "description": "Returns the abbreviated value of the Province/State field of the address.",
-          "name": "province_code",
           "type": "string"
         },
-        {
+        "street": {
           "description": "Returns the combined values of the Address1 and Address2 fields of the address.",
-          "name": "street",
           "type": "string"
         },
-        {
+        "url": {
           "description": "Returns the relative URL of the address.",
-          "name": "url",
           "type": "string"
         },
-        {
+        "address1": {
           "description": "Returns the value of the Address1 field of the address.",
-          "name": "address1",
           "type": "string"
         },
-        {
+        "address2": {
           "description": "Returns the value of the Address2 field of the address.",
-          "name": "address2",
           "type": "string"
         },
-        {
+        "city": {
           "description": "Returns the value of the City field of the address.",
-          "name": "city",
           "type": "string"
         },
-        {
+        "company": {
           "description": "Returns the value of the Company field of the address.",
-          "name": "company",
           "type": "string"
         },
-        {
+        "country_code": {
           "description": "Returns the value of the Country field of the address in ISO 3166-2 standard format.",
-          "name": "country_code",
           "type": "string"
         },
-        {
+        "country": {
           "description": "Returns the value of the Country field of the address.",
-          "name": "country",
           "type": "string"
         },
-        {
+        "first_name": {
           "description": "Returns the value of the First Name field of the address.",
-          "name": "first_name",
           "type": "string"
         },
-        {
+        "last_name": {
           "description": "Returns the value of the Last Name field of the address.",
-          "name": "last_name",
           "type": "string"
         },
-        {
+        "phone": {
           "description": "Returns the value of the Phone field of the address.",
-          "name": "phone",
           "type": "string"
         },
-        {
+        "zip": {
           "description": "Returns the value of the Postal/Zip field of the address.",
-          "name": "zip",
           "type": "string"
         },
-        {
+        "province": {
           "description": "Returns the value of the Province/State field of the address.",
-          "name": "province",
           "type": "string"
         },
-        {
+        "name": {
           "description": "Returns the values of the First Name and Last Name fields of the address.",
-          "name": "name",
           "type": "string"
         }
-      ],
+      },
       "link": "https://help.shopify.com/en/themes/liquid/objects/address"
     },
     "all_country_option_tags": {
@@ -448,223 +433,193 @@
     "article": {
       "description": "Returns a list of all the blog articles in a store.",
       "type": "object",
-      "properties": [
-        {
+      "properties": {
+        "tags": {
           "description": "Returns all the tags for the article.",
-          "name": "tags",
           "type": "array"
         },
-        {
+        "user": {
           "description": "Returns an object with information about the article's author.",
-          "name": "user",
-          "properties": [
-            {
+          "type": "object",
+          "properties": {
+            "bio": {
               "description": "Returns the bio of the author of the article.",
-              "name": "bio",
               "type": "string"
             },
-            {
+            "email": {
               "description": "Returns the email of the author of the article.",
-              "name": "email",
               "type": "string"
             },
-            {
+            "first_name": {
               "description": "Returns the first name of the author of the article.",
-              "name": "first_name",
               "type": "string"
             },
-            {
+            "homepage": {
               "description": "Returns the home page of the article author.",
-              "name": "homepage",
               "type": "string"
             },
-            {
+            "image": {
               "description": "Returns the image object of the author of the article.",
-              "name": "image",
               "type": "object",
-              "properties": [
-                {
+              "properties": {
+                "alt": {
                   "description": "Returns the article image's alt text.",
-                  "name": "alt",
                   "type": "string"
                 },
-                {
+                "src": {
                   "description": "Returns the relative URL to the article image.",
-                  "name": "src",
                   "type": "string"
                 }
-              ]
+              }
             },
-            {
+            "last_name": {
               "description": "Returns the last name of the author of the article.",
-              "name": "last_name",
               "type": "string"
             },
-            {
+            "account_owner": {
               "description": "Returns true if the author of the article is the account owner of the store. Returns false if the author is not the account owner.",
-              "name": "account_owner",
               "type": "string"
             }
-          ]
+          }
         },
-        {
+        "excerpt_or_content": {
           "description": "Returns article.excerpt of the article if it exists. Returns article.content if an excerpt does not exist for the article.",
-          "name": "excerpt_or_content",
           "type": "string"
         },
-        {
+        "image": {
           "description": "Returns the article's image object.",
           "name": "image",
-          "properties": [
-            {
+          "properties": {
+            "alt": {
               "description": "Returns the article image's alt text.",
-              "name": "alt",
               "type": "string"
             },
-            {
+            "src": {
               "description": "Returns the relative URL to the article image.",
-              "name": "src",
               "type": "string"
             }
-          ]
+          }
         },
-        {
-          "description": "Returns the content of the article.",
-          "name": "content"
+        "content": {
+          "description": "Returns the content of the article."
         },
-        {
-          "description": "Returns the excerpt of the article.",
-          "name": "excerpt"
+        "excerpt": {
+          "description": "Returns the excerpt of the article."
         },
-        {
-          "description": "Returns the full name of the article's author.",
-          "name": "author"
+        "author": {
+          "description": "Returns the full name of the article's author."
         },
-        {
-          "description": "Returns the handle of the article.",
-          "name": "handle"
+        "handle": {
+          "description": "Returns the handle of the article."
         },
-        {
-          "description": "Returns the id of the article.",
-          "name": "id"
+        "id": {
+          "description": "Returns the id of the article."
         },
-        {
-          "description": "Returns the number of published comments for the article.",
-          "name": "comments_count"
+        "comments_count": {
+          "description": "Returns the number of published comments for the article."
         },
-        {
-          "description": "Returns the published comments of the article. Returns an empty array if comments are disabled.",
-          "name": "comments"
+        "comments": {
+          "description": "Returns the published comments of the article. Returns an empty array if comments are disabled."
         },
-        {
+        "url": {
           "description": "Returns the relative URL of the article.",
-          "name": "url",
           "type": "string"
         },
-        {
+        "comment_post_url": {
           "description": "Returns the relative URL where POST requests are sent to when creating new comments.",
-          "name": "comment_post_url",
           "type": "string"
         },
-        {
+        "created_at": {
           "description": "Returns the timestamp of when the article was created. Use the date filter to format the timestamp.",
-          "name": "created_at",
           "type": "string"
         },
-        {
+        "title": {
           "description": "Returns the title of the article.",
-          "name": "title",
           "type": "string"
         },
-        {
+        "comments_enabled": {
           "description": "Returns true if comments are enabled. Returns false if comments are disabled.",
-          "name": "comments_enabled",
           "type": "boolean"
         },
-        {
+        "moderated": {
           "description": "Returns true if the blog that the article belongs to is set to moderate comments. Returns false if the blog is not moderated.",
-          "name": "moderated",
           "type": "boolean"
         }
-      ],
+      },
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects#articles"
     },
     "block": {
       "description": "A block represents the content and settings of a single block in an array of section blocks. The block object can be accessed in a section file by looping through section.blocks.",
       "type": "object",
-      "properties": [
-        {
-          "description": "Returns a string representing the block's attributes.",
-          "name": "shopify_attributes"
+      "properties": {
+        "shopify_attributes": {
+          "description": "Returns a string representing the block's attributes."
         },
-        {
-          "description": "Returns a unique ID dynamically generated by Shopify.",
-          "name": "id"
+        "id": {
+          "description": "Returns a unique ID dynamically generated by Shopify."
         },
-        {
-          "description": "Returns an object of the block settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
-          "name": "settings"
+        "settings": {
+          "description": "Returns an object of the block settings set in the theme editor. Retrieve setting values by referencing the setting's unique id."
         },
-        {
-          "description": "Returns the type defined in the block's schema. This is useful for displaying different markup based on the block.type.",
-          "name": "type"
+        "type": {
+          "description": "Returns the type defined in the block's schema. This is useful for displaying different markup based on the block.type."
         }
-      ],
+      },
       "link": "https://help.shopify.com/en/themes/liquid/objects/block"
     },
     "blog": {
       "description": "Blog object",
       "type": "object",
-      "properties": [
-        {
+      "properties": {
+        "tags": {
           "description": "Returns all tags in a blog. Similar to all_tags, but only returns tags of articles that are in the filtered view.",
-          "name": "tags"
+          "type": "array"
         },
-        {
+        "all_tags": {
           "description": "Returns all tags of all articles of a blog. This includes tags of articles that are not in the current pagination view.",
-          "name": "all_tags"
+          "type": "array"
         },
-        {
+        "articles": {
           "description": "Returns an array of all articles in a blog.",
-          "name": "articles"
+          "type": "array"
         },
-        {
+        "handle": {
           "description": "Returns the handle of the blog.",
-          "name": "handle"
+          "type": "string"
         },
-        {
+        "id": {
           "description": "Returns the id of the blog.",
-          "name": "id"
+          "type": "integer"
         },
-        {
+        "next_article": {
           "description": "Returns the next (older) article. Returns nil if there is no next article.",
-          "name": "next_article"
+          "type": "string"
         },
-        {
+        "previous_article": {
           "description": "Returns the previous (newer) article. Returns nil if there is no next article.",
-          "name": "previous_article"
+          "type": "string"
         },
-        {
+        "link": {
           "description": "Returns the relative URL of the blog.",
-          "name": "link"
+          "type": "string"
         },
-        {
+        "title": {
           "description": "Returns the title of the blog.",
-          "name": "title"
+          "type": "string"
         },
-        {
+        "articles_count": {
           "description": "Returns the total number of articles in a blog. This total does not include hidden articles.",
-          "name": "articles_count"
+          "type": "integer"
         },
-        {
+        "comments_enabled": {
           "description": "Returns true if comments are enabled, or false if they are disabled.",
-          "name": "comments_enabled"
+          "type": "boolean"
         },
-        {
+        "moderated": {
           "description": "Returns true if comments are moderated, or false if they are not moderated.",
-          "name": "moderated"
+          "type": "boolean"
         }
-      ],
+      },
       "link": "https://help.shopify.com/themes/liquid/objects#blogs"
     },
     "canonical_url": {
@@ -676,152 +631,150 @@
     "cart": {
       "description": "Cart object",
       "type": "object",
-      "properties": [
-        {
-          "description": "Cart attributes allow the capturing of more information on the cart page.",
-          "name": "attributes"
+      "properties": {
+        "attributes": {
+          "description": "Cart attributes allow the capturing of more information on the cart page."
         },
-        {
+        "items": {
           "description": "Returns all of the line items in the cart.",
           "name": "items"
         },
-        {
+        "cart_level_discount_applications": {
           "description": "Returns an array of any cart-specific discount applications for the cart.",
-          "name": "cart_level_discount_applications"
+          "type": "array"
         },
-        {
+        "discount_applications": {
           "description": "Returns an array of discount applications for the cart.",
-          "name": "discount_applications"
+          "type": "array"
         },
-        {
-          "description": "Returns the currency of the cart. If your store uses multi-currency, then the cart.currency is the same as the customer's local (presentment) currency. Otherwise, the cart currency is the same as your store currency.",
-          "name": "currency"
+        "currency": {
+          "description": "Returns the currency of the cart. If your store uses multi-currency, then the cart.currency is the same as the customer's local (presentment) currency. Otherwise, the cart currency is the same as your store currency."
         },
-        {
+        "item_count": {
           "description": "Returns the number of items inside the cart.",
-          "name": "item_count"
+          "type": "integer"
         },
-        {
+        "original_total_price": {
           "description": "Returns the subtotal of the cart before any discounts have been applied.",
-          "name": "original_total_price"
+          "type": "integer"
         },
-        {
+        "items_subtotal_price": {
           "description": "Returns the sum of the cart's line-item prices after any line-item discount. The subtotal doesn't include taxes (unless taxes are included in the prices), cart discounts, or shipping costs.",
-          "name": "items_subtotal_price"
+          "type": "integer"
         },
-        {
+        "total_discount": {
           "description": "Returns the total of all discounts (the amount saved) for the cart.",
-          "name": "total_discount"
+          "type": "integer"
         },
-        {
+        "total_price": {
           "description": "Returns the total price of all of the items in the cart after discounts have been applied.",
-          "name": "total_price"
+          "type": "integer"
         },
-        {
+        "total_weight": {
           "description": "Returns the total weight of all of the items in the cart.",
-          "name": "total_weight"
+          "type": "integer"
         },
-        {
+        "note": {
           "description": "cart.note allows the capturing of more information on the cart page.",
-          "name": "note"
+          "type": "string"
         }
-      ],
+      },
       "link": "https://help.shopify.com/themes/liquid/objects#canonical_url"
     },
     "collection": {
       "filters": false,
       "type": "object",
       "description": "Returns a collection",
-      "properties": [
-        {
+      "properties": {
+        "all_tags": {
           "description": "Returns a list of all product tags in a collection. collection.all_tags will return the full list of tags even when the collection view is filtered. collection.all_tags will return at most 1,000 tags",
-          "name": "all_tags"
+          "type": "array"
         },
-        {
+        "all_types": {
           "description": "Returns a list of all product types in a collection",
-          "name": "all_types"
+          "type": "array"
         },
-        {
+        "all_vendors": {
           "description": "Returns a list of all product vendors in a collection.",
-          "name": "all_vendors"
+          "type": "array"
         },
-        {
+        "products": {
           "description": "Returns all of the products in a collection. You can show a maximum of 50 products per page. Use the paginate tag to choose how many products are shown per page",
-          "name": "products"
+          "type": "array"
         },
-        {
+        "sort_options": {
           "description": "Returns an array of sorting options for the collection",
-          "name": "sort_options"
+          "type": "array"
         },
-        {
+        "id": {
           "description": "Returns the ID number of the collection.",
-          "name": "id"
+          "type": "integer"
         },
-        {
+        "link": {
           "description": "Returns the URL of the collection",
-          "name": "link"
+          "type": "string"
         },
-        {
+        "handle": {
           "description": "Returns the collection's handle",
-          "name": "handle"
+          "type": "string"
         },
-        {
+        "published_at": {
           "description": "Returns the date and time when the collection was published. You can set this information on the collection's page in your Shopify admin by the Set publish date calendar icon. You can use a date filter to format the date",
-          "name": "published_at"
+          "type": "string"
         },
-        {
+        "description": {
           "description": "Returns the description of the collection",
-          "name": "description"
+          "type": "string"
         },
-        {
+        "image": {
           "description": "Returns the image of the collection",
-          "name": "image"
+          "type": "string"
         },
-        {
+        "template_suffix": {
           "description": "Returns the name of the custom collection template assigned to the `collection`, without the collection. prefix or the `.liquid` extension. Returns `nil` if a custom template is not assigned to the collection.",
-          "name": "template_suffix"
+          "type": "string"
         },
-        {
+        "next_product": {
           "description": "Returns the next product in the collection. Returns `nil` if there is no next product",
-          "name": "next_product"
+          "type": "string"
         },
-        {
+        "products_count": {
           "description": "Returns the number of products in a collection that match the current view. For example, if you are viewing a collection filtered by tag, collection.`products_count` will return the number of products that match the chosen tag.",
-          "name": "products_count"
+          "type": "integer"
         },
-        {
+        "all_products_count": {
           "description": "Returns the number of products in a collection. collection.all_products_count will return the total number of products even when the collection view is filtered.",
-          "name": "all_products_count"
+          "type": "integer"
         },
-        {
+        "previous_product": {
           "description": "Returns the previous product in the collection. Returns `nil` if there is no previous product.",
-          "name": "previous_product"
+          "type": "string"
         },
-        {
+        "current_type": {
           "description": "Returns the product type on a `/collections/types?q=TYPE` collection page. For example, you may be on the automatic Shirts collection, which lists all products of type ‘shirts’ in the store: `myshop.shopify.com/collections/types?q=Shirts`",
-          "name": "current_type"
+          "type": "string"
         },
-        {
+        "sort_by": {
           "description": "Returns the sort order applied to the collection by the `sort_by` URL parameter. When there is no `sort_by` URL parameter, the value is null.",
-          "name": "sort_by"
+          "type": "string"
         },
-        {
+        "default_sort_by": {
           "description": "Returns the sort order of the collection, which is set in the collection pages of the Admin",
-          "name": "default_sort_by"
+          "type": "string"
         },
-        {
+        "tags": {
           "description": "Returns the tags of products in a collection that match the current view. For example, if you are viewing a collection filtered by tag, `collection.tags` will return the tags for the products that match the current filter",
-          "name": "tags"
+          "type": "array"
         },
-        {
+        "title": {
           "description": "Returns the title of the collection",
-          "name": "title"
+          "type": "string"
         },
-        {
+        "current_vendor": {
           "description": "Returns the vendor name on a `/collections/vendors?q=VENDOR` collection page. For example, you may be on the automatic Shopify collection, which lists all products with vendor ‘shopify’ in the store: `myshop.shopify.com/collections/vendors?q=Shopify`",
-          "name": "current_vendor"
+          "type": "string"
         }
-      ],
+      },
       "link": "https://help.shopify.com/themes/liquid/objects#collection"
     },
     "collections": {
@@ -834,40 +787,34 @@
       "type": "object",
       "filters": false,
       "description": "Article Comment",
-      "properties": [
-        {
-          "description": "Returns the URL of the article with `comment.id` appended to it. This is so the page will automatically scroll to the comment",
-          "name": "link"
+      "properties": {
+        "link": {
+          "description": "Returns the URL of the article with `comment.id` appended to it. This is so the page will automatically scroll to the comment"
         },
-        {
+        "author": {
           "description": "Returns the author of the comment",
-          "name": "author"
+          "type": "string"
         },
-        {
+        "content": {
           "description": "Returns the content of the comment",
-          "name": "content"
+          "type": "string"
         },
-        {
-          "description": "Returns the e-mail address of the comment's author",
-          "name": "email"
+        "email": {
+          "description": "Returns the e-mail address of the comment's author"
         },
-        {
-          "description": "Returns the id (unique identifier) of the comment",
-          "name": "id"
+        "id": {
+          "description": "Returns the id (unique identifier) of the comment"
         },
-        {
-          "description": "Returns the status of the comment",
-          "name": "status"
+        "status": {
+          "description": "Returns the status of the comment"
         },
-        {
-          "description": "Returns the timestamp of when the comment was submitted. Use the `date` filter to convert the timestamp into a more readable format",
-          "name": "created_at"
+        "created_at": {
+          "description": "Returns the timestamp of when the comment was submitted. Use the `date` filter to convert the timestamp into a more readable format"
         },
-        {
-          "description": "Returns the timestamp of when the comment's status was last changed. For example, the timestamp of when a comment was approved by the article's author. Use the `date` filter to convert the timestamp into a more readable format",
-          "name": "updated_at"
+        "updated_at": {
+          "description": "Returns the timestamp of when the comment's status was last changed. For example, the timestamp of when a comment was approved by the article's author. Use the `date` filter to convert the timestamp into a more readable format"
         }
-      ],
+      },
       "link": "https://help.shopify.com/themes/liquid/objects/comment"
     },
     "content_for_additional_checkout_buttons": {
@@ -904,20 +851,17 @@
       "description": "The currency object",
       "filters": false,
       "type": "object",
-      "properties": [
-        {
-          "description": "Returns the ISO code of the currency (for example `USD` or `EUR`).",
-          "name": "iso_code"
+      "properties": {
+        "iso_code": {
+          "description": "Returns the ISO code of the currency (for example `USD` or `EUR`)."
         },
-        {
-          "description": "Returns the currency's symbol (for example, `$` or `€`).",
-          "name": "symbol"
+        "symbol": {
+          "description": "Returns the currency's symbol (for example, `$` or `€`)."
         },
-        {
-          "description": "Returns the name of the currency (for example United States dollars or Euro).",
-          "name": "name"
+        "name": {
+          "description": "Returns the name of the currency (for example United States dollars or Euro)."
         }
-      ],
+      },
       "link": "https://help.shopify.com/en/themes/liquid/objects/country-option-tags",
       "trims": false
     },
@@ -937,404 +881,326 @@
     "customer": {
       "description": "The customer object contains information about a customer who has a customer account",
       "type": "object",
-      "properties": [
-        {
+      "properties": {
+        "accepts_marketing": {
           "description": "Returns `true` if the customer accepts marketing, returns `false` if the customer does not",
-          "name": "accepts_marketing",
           "type": "boolean"
         },
-        {
+        "addresses": {
           "description": "Returns an array of all addresses associated with a customer",
-          "name": "addresses",
           "type": "array"
         },
-        {
+        "orders": {
           "description": "Returns an array of all orders placed by the customer",
-          "name": "orders",
           "type": "array"
         },
-        {
+        "default_address": {
           "description": "Returns the default customer_address",
-          "name": "default_address",
           "type": "string"
         },
-        {
+        "email": {
           "description": "Returns the email address of the customer",
-          "name": "email",
           "type": "string"
         },
-        {
+        "first_name": {
           "description": "Returns the first name of the customer",
-          "name": "first_name",
           "type": "string"
         },
-        {
+        "name": {
           "description": "Returns the full name of the customer",
-          "name": "name",
           "type": "string"
         },
-        {
+        "id": {
           "description": "Returns the id of the customer",
-          "name": "id",
           "type": "integer"
         },
-        {
+        "last_name": {
           "description": "Returns the last name of the customer",
-          "name": "last_name",
           "type": "string"
         },
-        {
+        "last_order": {
           "description": "Returns the last order placed by the customer, not including test orders",
-          "name": "last_order",
           "type": "string"
         },
-        {
+        "tags": {
           "description": "Returns the list of tags associated with the customer",
-          "name": "tags",
           "type": "array"
         },
-        {
+        "addresses_count": {
           "description": "Returns the number of addresses associated with a customer",
-          "name": "addresses_count",
           "type": "integer"
         },
-        {
+        "phone": {
           "description": "Returns the phone number of the customer",
-          "name": "phone",
           "type": "string"
         },
-        {
+        "total_spent": {
           "description": "Returns the total amount spent on all orders",
-          "name": "total_spent",
           "type": "string"
         },
-        {
+        "orders_count": {
           "description": "Returns the total number of orders a customer has placed",
-          "name": "orders_count",
           "type": "integer"
         },
-        {
+        "has_account": {
           "description": "Returns true if the email associated with an order is also tied to a customer account. Returns `false` if it is not. Helpful in email templates",
-          "name": "has_account",
           "type": "boolean"
         },
-        {
+        "tax_exempt": {
           "description": "Returns whether or not the customer is exempt from taxes",
-          "name": "tax_exempt",
           "type": "boolean"
         }
-      ],
+      },
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/customer",
       "trims": false
     },
     "customer_address": {
       "description": "The currency object",
       "type": "object",
-      "properties": [
-        {
-          "description": "Returns the abbreviated value of the Province/State field of the address",
-          "name": "province_code"
+      "properties": {
+        "province_code": {
+          "description": "Returns the abbreviated value of the Province/State field of the address"
         },
-        {
-          "description": "Returns the combined values of the Address1 and Address2 fields of the address",
-          "name": "street"
+        "street": {
+          "description": "Returns the combined values of the Address1 and Address2 fields of the address"
         },
-        {
-          "description": "Returns the id of customer address",
-          "name": "id"
+        "id": {
+          "description": "Returns the id of customer address"
         },
-        {
-          "description": "Returns the value of the Address1 field of the address",
-          "name": "address1"
+        "address1": {
+          "description": "Returns the value of the Address1 field of the address"
         },
-        {
-          "description": "Returns the value of the Address2 field of the address",
-          "name": "address2"
+        "address2": {
+          "description": "Returns the value of the Address2 field of the address"
         },
-        {
-          "description": "Returns the value of the City field of the address",
-          "name": "city"
+        "city": {
+          "description": "Returns the value of the City field of the address"
         },
-        {
-          "description": "Returns the value of the Company field of the address",
-          "name": "company"
+        "company": {
+          "description": "Returns the value of the Company field of the address"
         },
-        {
-          "description": "Returns the value of the Country field of the address in ISO 3166-2 standard format",
-          "name": "country_code"
+        "country_code": {
+          "description": "Returns the value of the Country field of the address in ISO 3166-2 standard format"
         },
-        {
-          "description": "Returns the value of the Country field of the address",
-          "name": "country"
+        "country": {
+          "description": "Returns the value of the Country field of the address"
         },
-        {
-          "description": "Returns the value of the First Name field of the address",
-          "name": "first_name"
+        "first_name": {
+          "description": "Returns the value of the First Name field of the address"
         },
-        {
-          "description": "Returns the value of the Last Name field of the address",
-          "name": "last_name"
+        "last_name": {
+          "description": "Returns the value of the Last Name field of the address"
         },
-        {
-          "description": "Returns the value of the Phone field of the address",
-          "name": "phone"
+        "phone": {
+          "description": "Returns the value of the Phone field of the address"
         },
-        {
-          "description": "Returns the value of the Postal/Zip field of the address",
-          "name": "zip"
+        "zip": {
+          "description": "Returns the value of the Postal/Zip field of the address"
         },
-        {
-          "description": "Returns the value of the Province/State field of the address",
-          "name": "province"
+        "province": {
+          "description": "Returns the value of the Province/State field of the address"
         }
-      ],
+      },
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/customer-address",
       "trims": false
     },
     "discount_allocation": {
       "type": "object",
       "description": "The `discount_allocation` object contains all of the information about how a particular discount affects a line item and how the price reduces. The object can be accessed on customer order and notification templates. **Shopify Plus** merchants can also access properties of the `discount_allocation` object in the `checkout.liquid` layout file.",
-      "properties": [
-        {
-          "description": "The discount application that allocates the amount on the line item",
-          "name": "discount_application"
+      "properties": {
+        "discount_application": {
+          "description": "The discount application that allocates the amount on the line item"
         },
-        {
-          "description": "The discounted amount on a line item by a particular discount",
-          "name": "amount"
+        "amount": {
+          "description": "The discounted amount on a line item by a particular discount"
         }
-      ],
+      },
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/discount-allocation",
       "trims": false
     },
     "discount_application": {
       "type": "object",
       "description": "The `discount_application` object captures the intent of a `discount applied` on an order. The object can be accessed on customer order and notification templates. **Shopify Plus** merchants can also access properties of the discount_allocation object in the checkout.liquid layout file.",
-      "properties": [
-        {
-          "description": "Describes how a discount selects line items in the cart to be discounted",
-          "name": "target_selection"
+      "properties": {
+        "target_selection": {
+          "description": "Describes how a discount selects line items in the cart to be discounted"
         },
-        {
-          "description": "Describes the type of item that a discount applies to. target_type has the following possible values, line_item or shipping_line",
-          "name": "target_type"
+        "target_type": {
+          "description": "Describes the type of item that a discount applies to. target_type has the following possible values, line_item or shipping_line"
         },
-        {
-          "description": "The customer-facing name of the discount. For example, `Welcome10` or `CBBWQQAKYBYY`",
-          "name": "title"
+        "title": {
+          "description": "The customer-facing name of the discount. For example, `Welcome10` or `CBBWQQAKYBYY`"
         },
-        {
-          "description": "The total amount that the price of an order is reduced by the discount",
-          "name": "total_allocated_amount"
+        "total_allocated_amount": {
+          "description": "The total amount that the price of an order is reduced by the discount"
         },
-        {
-          "description": "The type of the discount. type has the following possible values:\n\n- automatic\n- manual\n-discount_code\n-script",
-          "name": "type"
+        "type": {
+          "description": "The type of the discount. type has the following possible values:\n\n- automatic\n- manual\n-discount_code\n-script"
         },
-        {
-          "description": "The value of the discount.",
-          "name": "value"
+        "value": {
+          "description": "The value of the discount."
         },
-        {
-          "description": "The value type of the discount. value_type has the following possible values:\n\n- fixed_amount\n- percentagel",
-          "name": "value_type"
+        "value_type": {
+          "description": "The value type of the discount. value_type has the following possible values:\n\n- fixed_amount\n- percentagel"
         }
-      ],
+      },
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/discount-application",
       "trims": false
     },
     "external_video": {
       "type": "object",
       "description": "The external_video object can be accessed from the product object's media attribute. It contains information about a YouTube video associated with a product",
-      "properties": [
-        {
-          "description": "Returns the ID of the YouTube video",
-          "name": "external_id"
+      "properties": {
+        "external_id": {
+          "description": "Returns the ID of the YouTube video"
         },
-        {
-          "description": "Returns the alt tag of the video set on the product details page of the Shopify admin",
-          "name": "alt"
+        "alt": {
+          "description": "Returns the alt tag of the video set on the product details page of the Shopify admin"
         },
-        {
-          "description": "Returns the aspect ratio of the YouTube video",
-          "name": "aspect_ratio"
+        "aspect_ratio": {
+          "description": "Returns the aspect ratio of the YouTube video"
         },
-        {
-          "description": "Returns the media_id of the external video.",
-          "name": "id"
+        "id": {
+          "description": "Returns the media_id of the external video."
         },
-        {
-          "description": "Returns the name of the video host (youtube).",
-          "name": "video_host"
+        "video_host": {
+          "description": "Returns the name of the video host (youtube)."
         },
-        {
-          "description": "Returns the position of the external_video in the product object's media array.",
-          "name": "position"
+        "position": {
+          "description": "Returns the position of the external_video in the product object's media array."
         },
-        {
-          "description": "Returns the type of the object (external_video). This can be used to filter the product object's media array.",
-          "name": "media_type"
+        "media_type": {
+          "description": "Returns the type of the object (external_video). This can be used to filter the product object's media array."
         }
-      ],
+      },
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/external-video"
     },
     "font": {
       "type": "object",
       "description": "The font object is used to access the font_picker settings. It can be accessed via the global settings object",
-      "properties": [
-        {
+      "properties": {
+        "variants": {
           "description": "Returns all of the variants within the font's family. Each of the variants is also a font object",
-          "name": "variants",
           "type": "array"
         },
-        {
+        "family": {
           "description": "Returns the font's name",
-          "name": "family",
           "type": "string"
         },
-        {
-          "description": "Returns the position of the baseline within the em box (measured from the bottom). You can learn more about baseline ratios in the Plumber SASS documentation",
-          "name": "baseline_ratio"
+        "baseline_ratio": {
+          "description": "Returns the position of the baseline within the em box (measured from the bottom). You can learn more about baseline ratios in the Plumber SASS documentation"
         },
-        {
+        "style": {
           "description": "Returns the selected font style",
-          "name": "style",
           "type": "string"
         },
-        {
+        "weight": {
           "description": "Returns the selected font weight",
-          "name": "weight",
           "type": "string"
         },
-        {
+        "fallback_families": {
           "description": "Returns the suggested fallback font families",
-          "name": "fallback_families",
           "type": "string"
         }
-      ]
+      }
     },
     "form": {
       "type": "object",
       "description": "The form object is used within the form tag. It contains attributes of its parent form.",
       "filters": false,
       "scope": ["form"],
-      "properties": [
-        {
-          "name": "address1",
+      "properties": {
+        "address1": {
           "description": "Returns the first address line associated with the address. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "address2",
+        "address2": {
           "description": "Returns the second address line associated with the address, if it exists. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "author",
+        "author": {
           "description": "Returns the name of the author of the blog article comment. Exclusive to form tags with the \"article\" parameter."
         },
-        {
-          "name": "body",
+        "body": {
           "description": "Returns the content of the blog article comment. Exclusive to form tags with the \"article\" parameter."
         },
-        {
-          "name": "city",
+        "city": {
           "description": "Returns the city associated with the address. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "company",
+        "company": {
           "description": "Returns the company name associated with the address, if it exists. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "country",
+        "country": {
           "description": "Returns the country associated with the address. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "email",
+        "email": {
           "description": "Returns the email of the blog article comment's author. Exclusive to form tags with the \"article\" parameter."
         },
-        {
-          "name": "errors",
+        "errors": {
           "description": "Returns an array of strings if the form was not submitted successfully. The strings returned depend on which fields of the form were left empty or contained errors. Possible values are:\n\n- author\n- body\n- email\n- form\n"
         },
-        {
-          "name": "first_name",
+        "first_name": {
           "description": "Returns the first name associated with the address. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "id",
+        "id": {
           "description": "Returns the id (unique identifier) of the form."
         },
-        {
-          "name": "last_name",
+        "last_name": {
           "description": "Returns the last name associated with the address. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "password_needed",
+        "password_needed": {
           "description": "Used only for form tags with the \"customer_login\" parameter. The form.password_needed attribute always returns true."
         },
-        {
-          "name": "phone",
+        "phone": {
           "description": "Returns the telephone number associated with the address, if it exists. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "posted_successfully?",
+        "posted_successfully?": {
           "description": "Returns true if the form was submitted successfully, or false if the form contained errors. All forms but the address form set that property. The address form is always submitted successfully."
         },
-        {
-          "name": "province",
+        "province": {
           "description": "Returns the province or state associated with the address. Exclusive to form tags with the \"address\" parameter."
         },
-        {
-          "name": "set_as_default_checkbox",
+        "set_as_default_checkbox": {
           "description": "Renders an HTML checkbox that can submit the current form as the customer's default address. Exclusive to form tags with the \"address\" parameter"
         },
-        {
-          "name": "zip",
+        "zip": {
           "description": "Returns the zip code or postal code associated with the address. Exclusive to form tags with the \"address\" parameter."
         }
-      ]
+      }
     },
     "forloop": {
       "scope": ["for"],
       "type": "object",
       "description": "The forloop object contains attributes of its parent for loop.",
       "filters": false,
-      "properties": [
-        {
+      "properties": {
+        "rindex": {
           "description": "Returns forloop.index in reverse order.",
-          "name": "rindex",
           "type": "integer"
         },
-        {
+        "rindex0": {
           "description": "Returns forloop.index0 in reverse order.",
-          "name": "rindex0",
           "type": "integer"
         },
-        {
+        "index0": {
           "description": "Returns the current index of the for loop, starting at 0.",
-          "name": "index0",
           "type": "integer"
         },
-        {
+        "index": {
           "description": "Returns the current index of the for loop, starting at 1.",
-          "name": "index",
           "type": "integer"
         },
-        {
+        "length": {
           "description": "Returns the number of iterations of the loop.",
-          "name": "length",
           "type": "integer"
         },
-        {
+        "first": {
           "description": "Returns true if it's the first iteration of the for loop. Returns false if it is not the first iteration.",
-          "name": "first",
           "type": "boolean"
         },
-        {
+        "last": {
           "description": "Returns true if it's the last iteration of the for loop. Returns false if it is not the last iteration.",
-          "name": "last",
           "type": "boolean"
         }
-      ],
+      },
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/for-loops",
       "trims": false
     },
@@ -1342,28 +1208,23 @@
       "type": "object",
       "description": "The fulfillment object",
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/fulfillment",
-      "properties": [
-        {
-          "name": "fulfillment_line_items",
+      "properties": {
+        "fulfillment_line_items": {
           "description": "Returns an array of all line items and their quantity included in the fulfillment. Any line items that have already been fulfilled, or are yet to be fulfilled, will not be included in the array."
         },
-        {
-          "name": "item_count",
+        "item_count": {
           "description": "Returns the total number of items included in the fulfillment."
         },
-        {
-          "name": "tracking_company",
+        "tracking_company": {
           "description": "Returns the name of the fulfillment service."
         },
-        {
-          "name": "tracking_number",
+        "tracking_number": {
           "description": "Returns a fulfillment's tracking number, if it exists."
         },
-        {
-          "name": "tracking_url",
+        "tracking_url": {
           "description": "Returns the URL for a tracking number."
         }
-      ]
+      }
     },
     "handle": {
       "description": "Returns the handle of the page that is being viewed",
@@ -1374,52 +1235,42 @@
     "image": {
       "type": "object",
       "description": "The image object returns information about an image.",
-      "properties": [
-        {
+      "properties": {
+        "variants": {
           "description": "Returns an array of attributes for the variant that the image is associated with.",
-          "name": "variants",
           "type": "array"
         },
-        {
+        "alt": {
           "description": "Returns the alt tag of the image, set in the Products page of the Admin.",
-          "name": "alt",
           "type": "string"
         },
-        {
-          "description": "Returns the aspect ratio (width / height) of the image.",
-          "name": "aspect_ratio"
+        "aspect_ratio": {
+          "description": "Returns the aspect ratio (width / height) of the image."
         },
-        {
-          "description": "Returns the height of the image in pixels.",
-          "name": "height"
+        "height": {
+          "description": "Returns the height of the image in pixels."
         },
-        {
+        "product_id": {
           "description": "Returns the id of the image's product.",
-          "name": "product_id",
           "type": "integer"
         },
-        {
+        "id": {
           "description": "Returns the id of the image.",
-          "name": "id",
           "type": "integer"
         },
-        {
-          "description": "Returns the position of the image, starting at 1. This is the same as outputting forloop.index.",
-          "name": "position"
+        "position": {
+          "description": "Returns the position of the image, starting at 1. This is the same as outputting forloop.index."
         },
-        {
-          "description": "Returns the relative path of the product image. This is the same as outputting \"{{ image }}\".",
-          "name": "src"
+        "src": {
+          "description": "Returns the relative path of the product image. This is the same as outputting \"{{ image }}\"."
         },
-        {
-          "description": "Returns the width of the image in pixels.",
-          "name": "width"
+        "width": {
+          "description": "Returns the width of the image in pixels."
         },
-        {
-          "description": "Returns true if the image has been associated with a variant. Returns false otherwise. This can be used in cases where you want to create a gallery of images that are not associated with variants.",
-          "name": "attached_to_variant"
+        "attached_to_variant": {
+          "description": "Returns true if the image has been associated with a variant. Returns false otherwise. This can be used in cases where you want to create a gallery of images that are not associated with variants."
         }
-      ],
+      },
       "link": "https://help.shopify.com/themes/liquid/objects#image"
     },
     "images": {
@@ -1435,326 +1286,260 @@
     "product": {
       "type": "object",
       "description": "Product object",
-      "properties": [
-        {
-          "description": "Returns an array of all of the collections that a product belongs to, except any collections that are not available on the sales channel being used.",
-          "name": "collections"
+      "properties": {
+        "collections": {
+          "description": "Returns an array of all of the collections that a product belongs to, except any collections that are not available on the sales channel being used."
         },
-        {
-          "description": "Returns an array of all of the product's tags. The tags are returned in alphabetical order.",
-          "name": "tags"
+        "tags": {
+          "description": "Returns an array of all of the product's tags. The tags are returned in alphabetical order."
         },
-        {
-          "description": "Returns an array of the product's images. Use the img_url filter to link to the product image on Shopify's content delivery network (CDN).",
-          "name": "images"
+        "images": {
+          "description": "Returns an array of the product's images. Use the img_url filter to link to the product image on Shopify's content delivery network (CDN)."
         },
-        {
-          "description": "Returns an array of the product's option names.",
-          "name": "options"
+        "options": {
+          "description": "Returns an array of the product's option names."
         },
-        {
-          "description": "Returns an array of the product's options.",
-          "name": "options_with_values"
+        "options_with_values": {
+          "description": "Returns an array of the product's options."
         },
-        {
-          "description": "Returns an array of the product's variants.",
-          "name": "variants"
+        "variants": {
+          "description": "Returns an array of the product's variants."
         },
-        {
-          "description": "Returns the description of the product. Alias for product.description.",
-          "name": "content"
+        "content": {
+          "description": "Returns the description of the product. Alias for product.description."
         },
-        {
-          "description": "Returns the description of the product.",
-          "name": "description"
+        "description": {
+          "description": "Returns the description of the product."
         },
-        {
-          "description": "Returns the handle of a product.",
-          "name": "handle"
+        "handle": {
+          "description": "Returns the handle of a product."
         },
-        {
-          "description": "Returns the highest compare at price.",
-          "name": "compare_at_price_max"
+        "compare_at_price_max": {
+          "description": "Returns the highest compare at price."
         },
-        {
-          "description": "Returns the highest price of the product.",
-          "name": "price_max"
+        "price_max": {
+          "description": "Returns the highest price of the product."
         },
-        {
-          "description": "Returns the id of the product.",
-          "name": "id"
+        "id": {
+          "description": "Returns the id of the product."
         },
-        {
-          "description": "Returns the lowest compare at price.",
-          "name": "compare_at_price_min"
+        "compare_at_price_min": {
+          "description": "Returns the lowest compare at price."
         },
-        {
-          "description": "Returns the lowest price of all the product's variants. This attribute is the same as product.price_min.",
-          "name": "price"
+        "price": {
+          "description": "Returns the lowest price of all the product's variants. This attribute is the same as product.price_min."
         },
-        {
-          "description": "Returns the lowest price of the product.",
-          "name": "price_min"
+        "price_min": {
+          "description": "Returns the lowest price of the product."
         },
-        {
-          "description": "Returns the name of the custom product template assigned to the product, without the product. prefix nor the .liquid extension. Returns nil if a custom template is not assigned to the product.",
-          "name": "template_suffix"
+        "template_suffix": {
+          "description": "Returns the name of the custom product template assigned to the product, without the product. prefix nor the .liquid extension. Returns nil if a custom template is not assigned to the product."
         },
-        {
-          "description": "Returns the relative URL of the product's featured image.",
-          "name": "featured_image"
+        "featured_image": {
+          "description": "Returns the relative URL of the product's featured image."
         },
-        {
-          "description": "Returns the relative URL of the product.",
-          "name": "type"
+        "type": {
+          "description": "Returns the relative URL of the product."
         },
-        {
-          "description": "Returns the title of the product.",
-          "name": "title"
+        "title": {
+          "description": "Returns the title of the product."
         },
-        {
-          "description": "Returns the variant object of the currently-selected variant if there is a valid ?variant= parameter in the URL. Returns nil if there is not.",
-          "name": "selected_variant"
+        "selected_variant": {
+          "description": "Returns the variant object of the currently-selected variant if there is a valid ?variant= parameter in the URL. Returns nil if there is not."
         },
-        {
-          "description": "Returns the variant object of the currently-selected variant if there is a valid ?variant= query parameter in the URL. If there is no selected variant, the first available variant is returned. In order for a variant to be available, its variant.inventory_quantity must be greater than zero or variant.inventory_policy must be set to continue. A variant with no inventory_management is considered available.",
-          "name": "selected_or_first_available_variant"
+        "selected_or_first_available_variant": {
+          "description": "Returns the variant object of the currently-selected variant if there is a valid ?variant= query parameter in the URL. If there is no selected variant, the first available variant is returned. In order for a variant to be available, its variant.inventory_quantity must be greater than zero or variant.inventory_policy must be set to continue. A variant with no inventory_management is considered available."
         },
-        {
-          "description": "Returns the variant object of the first product variant that is available for purchase. In order for a variant to be available, its variant.inventory_quantity must be greater than zero or variant.inventory_policy must be set to continue. A variant with no inventory_policy is considered available.",
-          "name": "first_available_variant"
+        "first_available_variant": {
+          "description": "Returns the variant object of the first product variant that is available for purchase. In order for a variant to be available, its variant.inventory_quantity must be greater than zero or variant.inventory_policy must be set to continue. A variant with no inventory_policy is considered available."
         },
-        {
-          "description": "Returns the vendor of the product.",
-          "name": "vendor"
+        "vendor": {
+          "description": "Returns the vendor of the product."
         },
-        {
-          "description": "Returns true if a product is available for purchase. Returns falseif all of the products variants' inventory_quantity values are zero or less, and their inventory_policy is not set to \"Allow users to purchase this item, even if it is no longer in stock.\"",
-          "name": "available"
+        "available": {
+          "description": "Returns true if a product is available for purchase. Returns falseif all of the products variants' inventory_quantity values are zero or less, and their inventory_policy is not set to \"Allow users to purchase this item, even if it is no longer in stock.\""
         },
-        {
-          "description": "Returns true if the compare_at_price_min is different from the compare_at_price_max. Returns false if they are the same.",
-          "name": "compare_at_price_varies"
+        "compare_at_price_varies": {
+          "description": "Returns true if the compare_at_price_min is different from the compare_at_price_max. Returns false if they are the same."
         },
-        {
-          "description": "Returns true if the product only has the default variant. This lets you determine whether to show a variant picker in your product forms.",
-          "name": "has_only_default_variant"
+        "has_only_default_variant": {
+          "description": "Returns true if the product only has the default variant. This lets you determine whether to show a variant picker in your product forms."
         },
-        {
-          "description": "Returns true if the product's variants have varying prices. Returns false if all of the product's variants have the same price.",
-          "name": "price_varies"
+        "price_varies": {
+          "description": "Returns true if the product's variants have varying prices. Returns false if all of the product's variants have the same price."
         }
-      ],
+      },
       "link": "https://help.shopify.com/themes/liquid/objects#product"
     },
     "order": {
       "description": "You can access the order object in a theme's Liquid templates with \"customer.orders\"",
       "type": "object",
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/order",
-      "properties": [
-        {
-          "name": "attributes",
+      "properties": {
+        "attributes": {
           "description": "Returns the custom cart attributes for the order, if there are any. You can add as many custom attributes to your cart as you like.\n\nWhen you're looping through attributes, use \"{{ attribute | first }}\" to get the name of the attribute, and \"{{ attribute | last }}\" to get its value.",
           "type": "array"
         },
-        {
-          "name": "billing_address",
+        "billing_address": {
           "description": "Returns the billing address of the order.",
           "type": "string"
         },
-        {
-          "name": "cancelled",
+        "cancelled": {
           "description": "Returns true if an order is canceled, or false if it is not.",
           "type": "string"
         },
-        {
-          "name": "cancelled_at",
+        "cancelled_at": {
           "description": "Returns the timestamp of when an order was canceled. Use the date filter to format the timestamp.",
           "type": "string"
         },
-        {
-          "name": "cancel_reason",
+        "cancel_reason": {
           "description": "Returns one of the following cancellation reasons, if an order was canceled:\n\n-items unavailable\n- fraudulent order\n- customer changed/cancelled order\n- other\n",
           "type": "string"
         },
-        {
-          "name": "cancel_reason_label",
+        "cancel_reason_label": {
           "description": "Returns the translated output of an order's order.cancel_reason.",
           "type": "string"
         },
-        {
-          "name": "cart_level_discount_applications",
+        "cart_level_discount_applications": {
           "description": "Returns an array of order-specific discount applications for an order.",
           "type": "array"
         },
-        {
-          "name": "created_at",
+        "created_at": {
           "description": "Returns the timestamp of when an order was created. Use the date filter to format the timestamp.",
           "type": "string"
         },
-        {
-          "name": "customer",
+        "customer": {
           "description": "Returns the customer associated with the order.",
           "type": "string"
         },
-        {
-          "name": "customer_url",
+        "customer_url": {
           "description": "Returns a unique URL that the customer can use to access the order.",
           "type": "string"
         },
-        {
-          "name": "discount_applications",
+        "discount_applications": {
           "description": "Returns an array of discount applications for an order.",
           "type": "string"
         },
-        {
-          "name": "email",
+        "email": {
           "description": "Returns the email address associated with an order, if it exists.",
           "type": "string"
         },
-        {
-          "name": "financial_status",
+        "financial_status": {
           "description": "Returns the financial status of an order. The possible values are:\n\n- pending\n- authorized\n- paid\n- partially_paid\n- refunded\n- partially_refunded\n- voided",
           "type": "string"
         },
-        {
-          "name": "financial_status_label",
+        "financial_status_label": {
           "description": "Returns the translated output of an order's \"financial_status\".",
           "type": "string"
         },
-        {
-          "name": "fulfillment_status",
+        "fulfillment_status": {
           "description": "Returns the fulfillment status of an order.",
           "type": "string"
         },
-        {
-          "name": "fulfillment_status_label",
+        "fulfillment_status_label": {
           "description": "Returns the translated output of an order's fulfillment_status.",
           "type": "string"
         },
-        {
-          "name": "line_items",
+        "line_items": {
           "description": "Returns an array of line items for the order.",
           "type": "array"
         },
-        {
-          "name": "line_items_subtotal_price",
+        "line_items_subtotal_price": {
           "description": "Returns the sum of the order's line-item prices after any line item discounts have been applied. The subtotal amount doesn't include cart discounts, taxes (unless taxes are included in the prices), or shipping costs.",
           "type": "string"
         },
-        {
-          "name": "location",
+        "location": {
           "description": "(POS only) Returns the physical location of the order. You can configure locations in the Locations settings of your Shopify admin.",
           "type": "string"
         },
-        {
-          "name": "name",
+        "name": {
           "description": "Returns the name of the order in the format set in the Standards and formats section of the General settings of your Shopify admin.",
           "type": "string"
         },
-        {
-          "name": "note",
+        "note": {
           "description": "Returns the note associated with a customer order.",
           "type": "string"
         },
-        {
-          "name": "order_number",
+        "order_number": {
           "description": "Returns the integer representation of the order name.",
           "type": "integer"
         },
-        {
-          "name": "order_status_url",
+        "order_status_url": {
           "description": "Returns the unique URL for the order status page of the order.",
           "type": "string"
         },
-        {
-          "name": "phone",
+        "phone": {
           "description": "Returns the phone number associated with an order, if it exists.",
           "type": "string"
         },
-        {
-          "name": "shipping_address",
+        "shipping_address": {
           "description": "Returns the shipping address of the order.",
           "type": "string"
         },
-        {
-          "name": "shipping_methods",
+        "shipping_methods": {
           "description": "Returns an array of shipping_method variables from the order.",
           "type": "string"
         },
-        {
-          "name": "shipping_price",
+        "shipping_price": {
           "description": "Returns the shipping price of an order.",
           "type": "string"
         },
-        {
-          "name": "subtotal_price",
+        "subtotal_price": {
           "description": "Returns the subtotal price of all the items in the order after both line-item and cart discounts have been applied. The subtotal doesn't include taxes (unless taxes are included in the prices) or shipping costs.",
           "type": "string"
         },
-        {
-          "name": "tags",
+        "tags": {
           "description": "Returns an array of all of the order's tags. The tags are returned in alphabetical order.",
-          "type": "string"
+          "type": "array"
         },
-        {
-          "name": "tax_lines",
+        "tax_lines": {
           "description": "Returns an array of tax_line variables for an order.",
           "type": "string"
         },
-        {
-          "name": "tax_price",
+        "tax_price": {
           "description": "Returns the order's tax price.",
           "type": "string"
         },
-        {
-          "name": "total_discounts",
+        "total_discounts": {
           "description": "Returns the total value of all discounts applied to the order.",
           "type": "string"
         },
-        {
-          "name": "total_net_amount",
+        "total_net_amount": {
           "description": "Returns the net amount of the order.\n\nThe \"order.total_net_amount\" is calculated after refunds are applied. The value is equivalent to \"order.total_price minus\" \"order.total_refunded_amount\".",
           "type": "string"
         },
-        {
-          "name": "total_price",
+        "total_price": {
           "description": "Returns the total price of an order.\n\nThe \"order.total_price amount\" is calculated before refunds are applied. To get the value of refunds, use the \"order.total_refunded_amount property.\"",
           "type": "string"
         },
-        {
-          "name": "total_refunded_amount",
+        "total_refunded_amount": {
           "description": "Returns the total refunded amount of an order.",
           "type": "string"
         },
-        {
-          "name": "transactions",
+        "transactions": {
           "description": "Returns an array of transactions from the order.",
           "type": "array"
         }
-      ]
+      }
     },
     "section": {
       "description": "The section object lets you access a section's properties and setting values.",
       "type": "object",
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/section",
-      "properties": [
-        {
+      "properties": {
+        "blocks": {
           "description": "Returns an array of the section's blocks.",
-          "name": "blocks",
           "type": "array"
         },
-        {
-          "name": "id",
+        "id": {
           "description": "For static sections, returns the section's file name without \".liquid\". For dynamic sections, returns a dynamically generated ID.",
           "type": "integer"
         },
-        {
-          "name": "settings",
+        "settings": {
           "description": "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
           "type": "object"
         }
-      ]
+      }
     }
   },
   "tags": {
@@ -1857,15 +1642,12 @@
     "layout": {
       "description": "Include \"{% layout 'alternate' %}\" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:",
       "singular": true,
-      "filters": false,
       "type": "import",
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"
     },
     "paginate": {
       "description": "Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",
-      "filters": false,
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
-      "singular": false,
       "type": "iteration"
     },
     "section": {
@@ -1880,7 +1662,6 @@
       "filters": false,
       "language": "json",
       "link": "https://help.shopify.com/en/themes/development/sections#using-section-schema-tags",
-      "singular": false,
       "type": "embedded",
       "trims": false
     },
