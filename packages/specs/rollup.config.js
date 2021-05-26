@@ -48,7 +48,8 @@ export default {
           filters: false,
           singular: false,
           trims: true,
-          deprecated: false
+          deprecated: false,
+          arguments: false
         }
       }
     }),
