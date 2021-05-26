@@ -7,38 +7,13 @@ import { config } from 'dotenv'
 
 config()
 
-const server = (textDocument) => ({
+const document = readFileSync(resolve('tests/fixtures/blank.txt'), 'utf8').toString()
+
+const server = {
   ast: [],
   errors: [],
-  textDocument: { getText: () => textDocument },
-  __test: {
-    associates: [
-      {
-        name: 'script',
-        kind: 'html',
-        language: 'javascript'
-      },
-      {
-        name: 'script',
-        kind: 'html',
-        language: 'json',
-        mimetype: 'application/json'
-      },
-      {
-        name: 'style',
-        kind: 'html',
-        language: 'css'
-      },
-      {
-        name: 'style',
-        kind: 'html',
-        language: 'scss',
-        mimetype: 'lang/scss'
-      }
-    ]
-  }
-
-})
+  textDocument: { getText: () => document }
+}
 
 const parser = new LiquidParser({
   engine: 'shopify',
@@ -61,18 +36,17 @@ const parser = new LiquidParser({
 
 parser.engine('shopify')
 
-const document = readFileSync(resolve('tests/fixtures/blank.txt'), 'utf8').toString()
-
 test('FullDocument Parse', t => {
 
   const start = process.hrtime()
-  const node = parser.parse(server(document))
+  const node = parser.parse(server)
   const end = process.hrtime(start)
 
   console.log(
     ...node.ast,
-    // parser.context,
-    parser.errors
+    parser.context,
+    parser.errors,
+    parser.getEmbeds(server)
   )
 
   t.log(time(end, { verbose: true }))
