@@ -1,8 +1,9 @@
 // @ts-check
 
-import _ from 'lodash'
+import merge from 'lodash/merge'
+import isEmpty from 'lodash/isEmpty'
 import { getLanguageService, ClientCapabilities } from 'vscode-json-languageservice'
-import schema from '../../../shopify-sections.json'
+import store from '@liquify/schema-stores'
 
 /**
  * JSON Language Service
@@ -36,7 +37,7 @@ export class JSONService {
         {
           uri: 'http://json-schema.org/draft-07/schema',
           fileMatch: [ '*.json' ],
-          schema
+          schema: store('shopify-sections')
         }
       ]
     })
@@ -56,54 +57,47 @@ export class JSONService {
   /**
    * Validate JSON
    *
-   * @param {ASTEmbeddedRegion} ASTEmbeddedRegion
-   * @returns {Promise<diagnostics[]|boolean>}
+   * @param {Parser.ASTNode} ASTNode
+   * @returns {Promise<diagnostics|false>}
    * @memberof JSONService
    */
-  async doValidation ({
-    embeddedDocument
-    , lineOffset
-  }) {
+  async doValidation (ASTNode) {
 
-    const JSONDocument = this.service.parseJSONDocument(embeddedDocument)
-    const diagnostics = (await this.service.doValidation(embeddedDocument, JSONDocument))
+    const JSONDocument = this.service.parseJSONDocument(ASTNode.document)
+    const diagnostics = await this.service.doValidation(ASTNode.document, JSONDocument)
 
-    if (_.isEmpty(diagnostics)) return false
-
-    diagnostics.forEach(({ range }) => (
-      _.merge(range, {
-        start: { line: range.start.line + lineOffset },
-        end: { line: range.end.line + lineOffset }
+    return isEmpty(diagnostics) ? false : diagnostics.map(
+      diagnostic => merge(diagnostic, {
+        range: {
+          start: {
+            line: diagnostic.range.start.line + ASTNode.range.start.line
+          },
+          end: {
+            line: diagnostic.range.end.line + ASTNode.range.start.line
+          }
+        }
       })
-    ))
-
-    return diagnostics
+    )
 
   }
 
   /**
-   * `doHover` - Provides hover capabilities within embedded JSON regions
+   * JSON hover capabilities
    *
-   * @param {any} embed
-   * @param {import('vscode-languageserver').Position} position
    * @memberof JSONService
+   * @param {Parser.ASTNode} ASTNode
+   * @param {LSP.Position} position
    */
-  async doHover ({
-    embeddedDocument
-    , lineOffset
-  }, {
-    line
-    , character
-  }) {
+  async doHover (ASTNode, { line, character }) {
 
-    console.log('DO HOVER', embeddedDocument, line)
+    const JSONDocument = this.service.parseJSONDocument(ASTNode.document)
+    const doHover = await this.service.doHover(
+      ASTNode.document
+      , { character, line: line - ASTNode.range.start.line }
+      , JSONDocument
+    )
 
-    // Correct line offsets
-    const position = { character, line: _.subtract(line, lineOffset) }
-    const JSONDocument = this.service.parseJSONDocument(embeddedDocument)
-    const doHover = await this.service.doHover(embeddedDocument, position, JSONDocument)
-
-    return _.merge(doHover, {
+    return merge(doHover, {
       range: {
         start: { line },
         end: { line }
@@ -115,39 +109,33 @@ export class JSONService {
   /**
    * JSON completion feature
    *
-   * @param {any} embed
-   * @param {import('vscode-languageserver').Position} position
-   * @return {Promise}
+   * @param {Parser.ASTNode} ASTNode
+   * @param {LSP.Position} position
+   * @return {Promise<LSP.CompletionList>}
    */
-  async doComplete ({
-    embeddedDocument
-    , lineOffset
-  }, {
-    line
-    , character
-  }) {
+  async doComplete (ASTNode, { character, line }) {
 
-    // Correct line offsets
-    const position = { character, line: _.subtract(line, lineOffset) }
-    const JSONDocument = this.service.parseJSONDocument(embeddedDocument)
+    const JSONDocument = this.service.parseJSONDocument(ASTNode.document)
     const doComplete = await this.service.doComplete(
-      embeddedDocument,
-      position,
-      JSONDocument
-    ).then(completion => {
+      ASTNode.document
+      , { character, line: line - ASTNode.range.start.line }
+      , JSONDocument
+    ).then(
+      completion => {
 
-      console.log(completion)
-      // Modify the completion item position
-      completion.items.forEach(({ textEdit: { range } }) => (
-        _.merge(range, {
-          start: { line },
-          end: { line }
-        })
-      ))
+        for (const { textEdit } of completion.items) {
+          merge(textEdit, {
+            range: {
+              start: { line },
+              end: { line }
+            }
+          })
+        }
 
-      return completion
+        return completion
 
-    })
+      }
+    )
 
     return doComplete
 
@@ -156,9 +144,8 @@ export class JSONService {
   /**
    * Generate a JSON text document
    *
-   * @param {object} document The text document to create
-   * @param {string} content The text document content
-  */
+   * @param {LSP.CompletionItem} completionItem
+   */
   doResolve (completionItem) {
 
     return this.service.doResolve(completionItem)
@@ -166,6 +153,3 @@ export class JSONService {
   }
 
 }
-
-// const test = new JSONService()
-// test.
