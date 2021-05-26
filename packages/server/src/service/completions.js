@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { CompletionItemKind, InsertTextFormat } from 'vscode-languageserver'
+import { Parser } from 'provide/parser'
 
 /**
  * Completion Functions
@@ -59,16 +60,16 @@ export function setCompletionItems (specification) {
 
 export async function getObjectCompletion (ASTnode, offset) {
 
-  if (!ASTnode?.objects) return false
-
-  const promise = await ASTnode.objects
-  const record = promise[offset]
+  const record = ASTnode.objects[offset]
 
   if (!record) return false
 
-  const { properties } = Server.specification.objects[record[0]]
+  const properties = Parser.spec.objects[record]
 
-  if (record.length === 1) return properties
+  return Object.entries(properties).map(([ name, { description } ]) => ({
+    name,
+    description
+  }))
 
   return (function walk (objects, props) {
 
@@ -78,7 +79,7 @@ export async function getObjectCompletion (ASTnode, offset) {
       ? walk(objects.slice(1), prop.properties)
       : prop?.properties || false
 
-  }(record.slice(1), properties))
+  }(record, properties))
 
 }
 
@@ -90,7 +91,7 @@ export async function getObjectCompletion (ASTnode, offset) {
  * @param {import("vscode-languageserver").Position} position
  * @returns
  */
-export function getTiggerCompletion (textDocument, position) {
+export function getTriggerCompletion (textDocument, position) {
 
   const type = textDocument.getText({
     start: {
@@ -103,9 +104,29 @@ export function getTiggerCompletion (textDocument, position) {
     }
   })
 
-  if (/{{\s*}}/.test(type)) {
+  console.log(type)
 
-    const props = Object.entries(Server.specification).map(([
+  if (/{%\s*%}/.test(type)) {
+
+    const props = Object.entries(Parser.spec.tags).map(([
+      prop,
+      {
+        description,
+        snippet = false
+      }
+    ]) => ({
+      name: prop,
+      description,
+      snippet
+    }))
+
+    return props
+
+  }
+
+  if (/{{-?\s*-?}}/.test(type)) {
+
+    const props = Object.entries(Parser.spec).map(([
       prop,
       { type, description }
     ]) => type === 'object' && { name: prop, description }).filter(Boolean)
@@ -114,14 +135,17 @@ export function getTiggerCompletion (textDocument, position) {
 
   } else if (/{%\s*%}/.test(type)) {
 
-    const props = Object.entries(Server.specification).map(([
+    const props = Object.entries(Parser.spec.tags).map(([
       prop,
-      { type, description, snippet = false }
-    ]) => (type !== 'object' && type !== 'filter') && {
+      {
+        description,
+        snippet = false
+      }
+    ]) => ({
       name: prop,
       description,
       snippet
-    }).filter(Boolean)
+    }))
 
     return props
 
