@@ -56,24 +56,24 @@ export class LiquidParser {
   /**
    * Executes a full document parse
    *
-   * @param {object} document
+   * @param {Parser.Scope} document
    * @return {Parser.ASTNode[]}
    * @memberof LiquidParser
    */
   parse (document) {
 
+    ast.INode.version = document.textDocument.version
+    ast.INode.uri = document.textDocument.uri
+
     while (ast.error.get.length > 0) ast.error.get.pop()
     while (document.ast.length > 0) document.ast.pop()
+    while (ast.embedded.get.length > 0) ast.embedded.get.pop()
 
     const source = document.textDocument.getText()
 
     stream.create(source)
 
     return parse.bind(this.parser)(document)
-
-  }
-
-  getNode () {
 
   }
 
@@ -85,7 +85,9 @@ export class LiquidParser {
 
   }
 
-  getEmbeds () {
+  getEmbeds (document) {
+
+    return ast.embedded.get.map(node => document.ast[node])
 
   }
 
