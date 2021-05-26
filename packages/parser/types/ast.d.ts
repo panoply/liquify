@@ -4,6 +4,7 @@ import { TokenContext } from "enums/context";
 import { TokenStack } from "enums/stack";
 import { TokenTags } from "enums/tags";
 import { ParseError } from "enums/errors";
+import { TextDocument } from 'vscode-languageserver-textdocument'
 import { IParseError, Token, Range, Offsets } from './index'
 
 /**
@@ -27,6 +28,15 @@ export interface Context {
   offset: number[];
 }
 
+export type Languages = (
+  "liquid" |
+  "html" |
+  "yaml" |
+  "javascript" |
+  "json" |
+  "css" |
+  "scss"
+)
 
 /* -------------------------------------------- */
 /*                      AST                     */
@@ -37,7 +47,9 @@ export interface ASTNode {
   get end(): number;
   get errors(): IParseError[]
   get context(): number[];
+  get document(): TextDocument;
   token: Token[];
+  language: string & Languages,
   type: TokenType;
   index: number;
   kind: TokenKind;
