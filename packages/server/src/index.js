@@ -7,8 +7,8 @@ import {
   ProposedFeatures
 } from 'vscode-languageserver'
 
-import { Server } from 'provide/server'
-import { Service } from 'provide/service'
+import Server from 'provide/server'
+import Service from 'provide/service'
 import { Document } from 'provide/document'
 import { Parser } from 'provide/parser'
 import { runAsync, runSync } from 'utils/runners'
@@ -63,7 +63,8 @@ connection.onInitialize(initializeParams => (
         ':',
         '|',
         '.',
-        '<'
+        '<',
+        '%'
       ]
     },
     implementationProvider: true,
@@ -94,11 +95,11 @@ connection.onInitialized(() => {
 
   connection.console.log('onInitialized')
 
-  if (Server.hasConfigurationCapability) {
+  if (Server.capability.hasConfigurationCapability) {
     connection.client.register(DidChangeConfigurationNotification.type, undefined)
   }
 
-  if (Server.hasWorkspaceFolderCapability) {
+  if (Server.capability.hasWorkspaceFolderCapability) {
     connection.workspace.onDidChangeWorkspaceFolders(event => {
       connection.console.log('Workspace folder change event received.')
     })
@@ -163,12 +164,16 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
-  return connection.sendDiagnostics(
-    {
-      uri: document.textDocument.uri,
-      diagnostics: Parser.errors
-    }
-  )
+  return Service.doValidation(document).then(({
+    uri
+    , diagnostics
+  }) => {
+
+    return connection.sendDiagnostics({
+      uri,
+      diagnostics
+    })
+  })
 
   // console.log(document)
 
@@ -312,11 +317,9 @@ connection.onCompletion((
   }, token
 ) => !Server.provider.completion || runAsync(async () => {
 
-  return null
-
   const document = documents.get(uri)
 
-  if (!document.uri) return null
+  if (!document?.textDocument?.uri) return null
 
   const onComplete = await Service.doComplete(document, position, context)
 
@@ -332,7 +335,6 @@ connection.onCompletionResolve((
   item
   , token
 ) => runSync(() => {
-  return null
 
   return Service.doCompleteResolve(item)
 
