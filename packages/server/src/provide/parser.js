@@ -3,4 +3,23 @@ import { LiquidParser } from '@liquify/liquid-parser'
 /**
  * Liquid Parser
  */
-export const Parser = new LiquidParser({ context: false })
+export const Parser = new LiquidParser(
+  {
+    engine: 'standard',
+    context: false,
+    frontmatter: false,
+    whitespace: true,
+    newlines: true,
+    range: true,
+    offsets: true,
+    process_unknown: true,
+    parse_html: false,
+    skip_strings: false,
+    html_comments: false,
+    multiline_comments: true,
+    inline_comments: true,
+    track_variables: true,
+    error_tolerance: 1,
+    exclude: []
+  }
+)
