@@ -1,8 +1,7 @@
 import prettydiff from 'prettydiff'
 import _ from 'lodash'
-import { TokenKind } from '../parser/lexical'
 import { Document } from '../provide/document'
-import { Server } from '../provide/server'
+import Server from '../provide/server'
 
 /**
  * Formatting Functions
@@ -42,17 +41,19 @@ const defaultRules = _.cloneDeep(prettydiff.options)
  * @param {number} offset
  * @returns {number}
  */
-function indentLevel (document, kind, offset) {
+function indentLevel (document, offset) {
 
   const { tabSize } = Server.formatting.editorRules
   const { line } = document.positionAt(offset)
   const pos = offset - document.offsetAt({ line, character: 0 })
 
-  const indent = kind === TokenKind.liquid
-    ? pos / tabSize
-    : pos / tabSize + tabSize / tabSize
+  // const indent = kind === TokenKind.liquid
+  // ? pos / tabSize
+  // : pos / tabSize + tabSize / tabSize
 
-  return indent
+  // return indent
+
+  return pos / tabSize
 
 }
 
@@ -106,34 +107,33 @@ function formatHTMLEmbeds (document, newText, ASTnode) {
  * into treating it as it would any Liquid tag block. The temporary name
  * is removed in the final format cycle.
  *
- * @param {LSP.TextDocument} document
- * @param {String} newText
- * @param {ASTEmbeddedRegion} ASTnode
+ * @param {Parser.ASTNode} ASTNode
+ * @param {string} newText
  * @returns {LSP.TextEdit[]}
  */
-function formatLiquidEmbeds (document, newText, ASTnode) {
-  const { token, name, offset } = ASTnode
-  const startName = token[0].indexOf(name)
-  const closeName = token[1].indexOf(`end${name}`)
+function formatLiquidEmbeds (ASTNode, newText) {
+
+  const startName = ASTNode.token[0].indexOf(ASTNode.name)
+  const closeName = ASTNode.token[1].indexOf(`end${ASTNode.name}`)
 
   return [
     {
-      newText: `${name}_pdp`,
+      newText: `${ASTNode.name}_pdp`,
       range: Document.getRange(
-        offset[0] + startName,
-        offset[0] + startName + name.length
+        ASTNode.offsets[0] + startName,
+        ASTNode.offsets[0] + startName + ASTNode.name.length
       )
     },
     {
-      newText: `end${name}_pdp`,
+      newText: `end${ASTNode.name}_pdp`,
       range: Document.getRange(
-        offset[2] + closeName,
-        offset[2] + closeName + name.length + 3
+        ASTNode.offsets[2] + closeName,
+        ASTNode.offsets[2] + closeName + ASTNode.name.length + 3
       )
     },
     {
       newText,
-      range: Document.getRange(offset[1], offset[2])
+      range: Document.getRange(ASTNode.offsets[1], ASTNode.offsets[2])
     }
   ]
 }
@@ -146,19 +146,19 @@ function formatLiquidEmbeds (document, newText, ASTnode) {
  * Embedded Regions - JavaScript, JSON, CSS and SCSS
  *
  * @param {LSP.TextDocument} document
- * @param {ASTEmbeddedRegion} ASTnode
- * @returns
+ * @returns {(ASTNode: Parser.ASTNode) => LSP.TextEdit[]}
  */
-export function embeds (document, ASTnode) {
-  const { kind = 2, embeddedDocument, offset } = ASTnode
+export const embeds = (document) => ASTNode => {
 
-  const source = embeddedDocument.getText()
-  const indent_level = indentLevel(document, kind, offset[0])
-  const rules = Server.formatting.languageRules[embeddedDocument.languageId]
+  const indent_level = indentLevel(document, ASTNode.offsets[0])
+  const rules = Server.formatting.languageRules[ASTNode.language]
 
   // Set formatting rules
   // Apply `indent_level` when nested within elements
-  Object.assign(prettydiff.options, rules, { source, indent_level })
+  Object.assign(prettydiff.options, rules, {
+    source: ASTNode.content,
+    indent_level
+  })
 
   // Execute formats
   const beautify = prettydiff()
@@ -167,12 +167,14 @@ export function embeds (document, ASTnode) {
   const newText = `\n${_.repeat(rules.indent_char, indent_level)}${beautify}`
 
   if (prettydiff.sparser.parseerror.length > 0) {
-    connection.console.error(prettydiff.sparser.parseerror)
-    return source
+    console.error(prettydiff.sparser.parseerror)
+    return ASTNode.content
   }
 
   // Reset PrettyDiff rules.
   Object.assign(prettydiff.options, defaultRules)
+
+  return formatLiquidEmbeds(ASTNode, newText)
 
   if (kind === TokenKind.html && !/\s*$/.test(source)) {
     return formatHTMLEmbeds(embeddedDocument, newText, ASTnode)
@@ -180,12 +182,12 @@ export function embeds (document, ASTnode) {
     embeddedDocument.languageId === 'scss' ||
     embeddedDocument.languageId === 'css'
   ) {
-    return formatLiquidEmbeds(document, newText, ASTnode)
+    return formatLiquidEmbeds(ASTNode, newText)
   }
 
   return {
     newText,
-    range: Document.getRange(offset[1], offset[2])
+    range: Document.getRange(ASTNode.offsets[1], ASTNode.offsets[2])
   }
 }
 
@@ -197,7 +199,6 @@ export function embeds (document, ASTnode) {
  * @returns {string} The beautified text document content
  */
 export function markup (source) {
-  console.log(source)
 
   // This patch fixes newline HTML attributes
   Object.assign(prettydiff.options, Server.formatting.languageRules.html, {
