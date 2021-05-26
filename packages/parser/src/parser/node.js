@@ -1,3 +1,4 @@
+import { TextDocument } from 'vscode-languageserver-textdocument'
 import { TokenKind } from 'enums/kinds'
 import { ParseError } from 'enums/errors'
 import scanner from 'parser/scanner'
@@ -19,9 +20,9 @@ export default (function ASTNodes () {
    * Tracks each node and their placements
    *
    * @static
-   * @type {Map<number, number>}
+   * @type {Array}
    */
-  const offsets = new Map()
+  const embedded = []
 
   /**
    * AST Node Hierarch
@@ -77,6 +78,25 @@ export default (function ASTNodes () {
      */
     static size = 0
 
+    /**
+     * Version Number
+     *
+     * @static
+     * @memberof Node
+     * @type {number}
+     */
+    static version = 1
+
+    /**
+     * URI Identifier
+     *
+     *
+     * @static
+     * @memberof Node
+     * @type {string}
+     */
+    static uri = ''
+
     /* -------------------------------------------- */
     /* CONSTRUCTORS                                 */
     /* -------------------------------------------- */
@@ -131,6 +151,13 @@ export default (function ASTNodes () {
      * @type{number}
      */
     kind = TokenKind.Liquid
+
+    /**
+     * Language ID
+     *
+     * @type {string}
+     */
+    language = 'liquid'
 
     /**
      * String Literal tokens
@@ -215,6 +242,24 @@ export default (function ASTNodes () {
 
     }
 
+    /**
+     * Text Document
+     *
+     * @readonly
+     * @memberof Node
+     * @returns {TextDocument}
+     */
+    get document () {
+
+      return TextDocument.create(
+        INode.uri.replace('.liquid', `.${this.language}`),
+        this.language,
+        INode.version,
+        this.content
+      )
+
+    }
+
     getContext () {
 
       return context.get(this.context)
@@ -240,14 +285,23 @@ export default (function ASTNodes () {
 
     INode,
 
-    offsets,
+    get embedded () {
 
-    get node () { return node },
-    set node (index) {
+      return {
 
-      node = index
+        /**
+         * Returns Embedded node locations
+         *
+         * @readonly
+         */
+        get get () { return embedded }
+
+      }
 
     },
+
+    get node () { return node },
+    set node (index) { node = index },
 
     get error () {
 
@@ -310,39 +364,35 @@ export default (function ASTNodes () {
      */
     get hierarch () {
 
-      return (
+      return {
 
-        () => ({
+        /**
+         * Returns the hierarchal state array
+         *
+         * @readonly
+         * @returns {Hierarch}
+         */
+        get get () { return hierarch },
 
-          /**
-           * Returns the hierarchal state array
-           *
-           * @readonly
-           * @returns {Hierarch}
-           */
-          get get () { return hierarch },
+        /**
+         * Returns the hierarchal pair by choosing
+         * the closest token (bottom-up) which exists
+         * in the tree
+         *
+         * @readonly
+         * @returns {number}
+         */
+        get pair () {
 
-          /**
-           * Returns the hierarchal pair by choosing
-           * the closest token (bottom-up) which exists
-           * in the tree
-           *
-           * @readonly
-           * @returns {number}
-           */
-          get pair () {
+          const state = hierarch.lastIndexOf(scanner.token)
+          const index = hierarch[state + 1]
+          hierarch.splice(state, 2)
 
-            const state = hierarch.lastIndexOf(scanner.token)
-            const index = hierarch[state + 1]
-            hierarch.splice(state, 2)
+          return typeof index === 'number' ? index : -1
 
-            return typeof index === 'number' ? index : -1
+        }
 
-          }
-
-        })
-
-      )()
+      }
 
     }
 
