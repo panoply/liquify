@@ -14,7 +14,7 @@ export function LiquidDocuments (documents = new Map()) {
    * Model Scope - Value held in this variable will change
    * and match the current active document
    *
-   * @type {Document.Scope}
+   * @type {Parser.Scope}
    */
   let document
 
@@ -29,9 +29,8 @@ export function LiquidDocuments (documents = new Map()) {
     document = documents.has(uri)
       ? documents.get(uri)
       : documents.set(uri, {
-        diagnostics: [],
-        documentLinks: [],
         ast: [],
+        documentLinks: [],
         textDocument: TextDocument.create(
           uri
           , languageId
@@ -76,20 +75,14 @@ export function LiquidDocuments (documents = new Map()) {
    */
   function getNode (offset = undefined, uri = undefined) {
 
-    if (typeof offset === 'undefined' && typeof uri === 'undefined') {
-      return document.ast
-    }
+    if (typeof offset === 'undefined' && typeof uri === 'undefined') return document.ast
 
-    const { ast } = (typeof uri === 'string' && documents.has(uri))
-      ? documents.get(uri)
-      : document
+    const { ast } = documents.has(uri) ? documents.get(uri) : document
 
-    if (typeof offset === 'object') {
-      offset = document.textDocument.offsetAt(offset)
-    }
+    if (typeof offset === 'object') offset = document.textDocument.offsetAt(offset)
 
     const index = document.ast.findIndex(({
-      offset: [
+      offsets: [
         TL = -1
         , TR = -1
         , BL = -1
