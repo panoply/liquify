@@ -1,12 +1,1 @@
-{% for block in foo.bar limit: 4 %}
-        <div class="d-block">
-          {% unless block.settings.link and this or t <= y or y %}
-            {{- block.settings.text -}}
-          {% else %}
-            <a href="{{ block.settings.link }}" title="{{- block.settings.text -}}">
-
-              {{- block.settings.text -}}
-            </a>
-          {% endunless %}
-        </div>
-      {% endfor %}
+{{ product.title }}
