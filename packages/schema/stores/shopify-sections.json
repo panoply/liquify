@@ -2,9 +2,6 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "shopify-section-schema",
   "version": 1.1,
-  "type": "object",
-  "title": "Shopify Section Schema (Liquid Langauge Server)",
-  "description": "Shopify schema store reference for the schema Liquid tag used in Shopify themes.",
   "definitions": {
     "content": {
       "type": "string",
@@ -141,7 +138,7 @@
             "description": "A value for the input's placeholder text. This is for text-based setting types only."
           },
           "default": {
-            "type": "string",
+            "type": ["number", "string", "boolean"],
             "title": "Default",
             "description": "A value to which the setting can default."
           }
@@ -162,13 +159,15 @@
                 "step": {
                   "type": "number",
                   "title": "Step",
-                  "minimum": 3,
+                  "minimum": 0.1,
+                  "default": 1,
                   "description": "The step refers to the step count for the slider values. For example, if you set the step to 5, then the range slider will count by fives. By default, the step is set to 1."
                 },
                 "min": {
                   "type": "number",
                   "title": "Min",
-                  "minimum": 3,
+                  "minimum": 0,
+                  "maximum": 100,
                   "description": "The minimum number of steps"
                 },
                 "max": {
@@ -264,6 +263,9 @@
       }
     }
   },
+  "type": "object",
+  "title": "Shopify Section Schema (Liquid Langauge Server)",
+  "description": "Shopify schema store reference for the schema Liquid tag used in Shopify themes.",
   "required": ["name"],
   "additionalProperties": false,
   "properties": {
@@ -283,7 +285,14 @@
       "type": "string",
       "oneOf": [
         {
-          "enum": ["article", "aside", "div", "footer", "header", "section"]
+          "enum": [
+            "article",
+            "aside",
+            "div",
+            "footer",
+            "header",
+            "section"
+          ]
         }
       ]
     },
