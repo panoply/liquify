@@ -37,6 +37,7 @@
     "line-column": "^1.0.2",
     "lodash": "^4.17.21",
     "mergerino": "^0.4.0",
+    "nanoid": "^3.1.23",
     "rambda": "^6.7.0",
     "yamljs": "^0.3.0"
   },
