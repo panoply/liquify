@@ -17,7 +17,8 @@ import { ParseError } from "enums/errors";
 export { ParseError } from "enums/errors";
 
 export { Options } from "./options";
-export { ASTNode } from "./ast";
+export { ASTNode, Languages } from "./ast";
+
 export * from "./vscode";
 
 export * from "@liquify/liquid-language-specs";
