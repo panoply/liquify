@@ -293,11 +293,10 @@ export default (function () {
           }
 
           // Embedded language type tags, eg: {% schema %}
-          // Used in Shopify Liquid Variation
-          // if (spec.type === TokenTags.embedded) {
-          //   state = ScanState.EmbeddedLanguage
-          //   return TokenType.Embedded
-          // }
+          if (spec.type === TokenTags.embedded) {
+            state = ScanState.EmbeddedLanguage
+            return TokenType.Embedded
+          }
 
           state = ScanState.TagUnknown
           return TokenType.LiquidTag
@@ -313,6 +312,12 @@ export default (function () {
 
         state = ScanState.GotoTagEnd
         return TokenType.LiquidTagName
+
+      case ScanState.EmbeddedLanguage:
+
+        state = ScanState.GotoTagEnd
+
+        return TokenType.EmbeddedJSON
 
       // CONTROL TAG
       // -----------------------------------------------------------------
@@ -482,6 +487,10 @@ export default (function () {
 
         // Gets property value on object, eg: "prop" in "object.prop"
         if (s.IfRegExp(r.ObjectNameAlpha)) {
+
+          // TODO FIX THIS
+          // if (!spec.object.hasProp(s.token)) {}
+
           state = ScanState.Object
           return TokenType.ObjectProperty
         }
