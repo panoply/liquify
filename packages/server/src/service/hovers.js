@@ -6,23 +6,21 @@
  * Returns the current line text
  *
  * @export
- * @param {LSP.TextDocument} document
+ * @param {LSP.TextDocument} textDocument
  * @param {LSP.Position} position
  * @returns {{ content: string, character: number }}
  */
-function getLine (document, position) {
+function getLine (textDocument, position) {
 
   const start = { line: position.line, character: 0 }
-  const character = document.textDocument.offsetAt(position) - document.textDocument.offsetAt(start)
-  const content = document.textDocument.getText({
+  const character = textDocument.offsetAt(position) - textDocument.offsetAt(start)
+  const content = textDocument.getText({
     start,
     end: {
       line: position.line + 1,
       character: 0
     }
   })
-
-  console.log(content)
 
   return { content, character }
 
@@ -40,13 +38,14 @@ function getLine (document, position) {
  * would like to do this without parsing and reference using regex.
  *
  * @export
- * @param {LSP.TextDocument} document
+ * @param {LSP.TextDocument} textDocument
  * @param {LSP.Position} position
  * @returns {string}
  */
 export function getWordAtPosition (textDocument, position) {
 
   const { content, character } = getLine(textDocument, position)
+
   const first = content.lastIndexOf(' ', character)
   const last = content.indexOf(' ', character)
 
