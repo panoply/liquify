@@ -16,10 +16,6 @@ export type ObjectTypes =
 
 interface ObjectProperties {
   /**
-   * Name of the property value available to the object
-   */
-  readonly name: string;
-  /**
    * Description of thes property value used by this object
    */
   readonly description?: string;
@@ -30,7 +26,9 @@ interface ObjectProperties {
   /**
    * Property value contains additional properties, eg: `{{ object.prop1.prop2 }}`
    */
-  readonly properties?: ObjectProperties[];
+  readonly properties?: {
+    [name: string]: ObjectProperties;
+  };
 }
 
 /* OBJECT SPECS ------------------------------- */
@@ -106,7 +104,9 @@ export type IObject = {
    * List of property values this tag object supports, recursively
    * supply properties for deep nested objects.
    */
-  readonly properties?: ObjectProperties[];
+  readonly properties?: {
+    [name: string]: ObjectProperties;
+  };
 };
 
 export interface Objects {
@@ -394,7 +394,14 @@ export type ITag = {
    *
    * @default true
    */
-  readonly language?: string;
+  readonly language?:
+    | "liquid"
+    | "html"
+    | "yaml"
+    | "javascript"
+    | "json"
+    | "css"
+    | "scss";
 
   /**
    * Does this tag accept whitespace dashes?
