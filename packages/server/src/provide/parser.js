@@ -1,7 +1,7 @@
 import { LiquidParser } from '@liquify/liquid-parser'
 
 /**
- * Liquid Parser
+ * Liquid Parsers
  */
 export const Parser = new LiquidParser(
   {

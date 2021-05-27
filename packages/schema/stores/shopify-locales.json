@@ -50,6 +50,7 @@
           "description": "The scale parameter lets you specify the pixel density of the image",
           "accepts": ["number", "reference"],
           "validate": true,
+
           "options": [
             {
               "name": "2"

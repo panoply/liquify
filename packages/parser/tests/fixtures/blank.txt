@@ -1,1 +1,1 @@
-{{ article.user.image.alt  }}
+{{ product.title }}
