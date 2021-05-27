@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Language Server for Liquid Templating Language",
   "scripts": {
-    "watch": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "rollup": "rollup -c",
     "pack": "cd versions; pnpm pack ../ && cd ..",
@@ -20,19 +20,14 @@
     "vscode-languageserver"
   ],
   "ava": {
-    "require": [
-      "esm",
-      "@babel/register"
-    ],
+    "require": ["esm", "@babel/register"],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": [
-      "test/parsing/parser.js"
-    ],
+    "files": ["test/parsing/parser.js"],
     "concurrency": 5
   },
   "dependencies": {

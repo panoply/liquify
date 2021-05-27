@@ -34,7 +34,7 @@
     "vscode": "^1.33.0"
   },
   "scripts": {
-    "watch": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd .."
   },
@@ -272,6 +272,6 @@
   },
   "devDependencies": {
     "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
-    "@liquify/rollup-plugin-utils": "workspace:^0.0.0"
+    "@liquify/rollup-plugin-utils": "workspace:^0.1.0"
   }
 }

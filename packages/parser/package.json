@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "description": "An incremental parser for the Liquid Templating Language",
   "scripts": {
-    "dev": "rollup -c -w && pnpm test",
-    "watch": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "rollup": "rollup -c",
     "pack": "cd versions; pnpm pack ../ && cd ..",
@@ -18,18 +17,14 @@
   "main": "./package/index.js",
   "types": "./types/export.d.ts",
   "ava": {
-    "require": [
-      "esm"
-    ],
+    "require": ["esm"],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": [
-      "tests/index.js"
-    ],
+    "files": ["tests/index.js"],
     "concurrency": 5
   },
   "dependencies": {

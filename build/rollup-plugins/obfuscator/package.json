@@ -15,34 +15,28 @@
     "url": "https://github.com/panoply/liquify/issues"
   },
   "scripts": {
-    "watch": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
-    "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --verbose"
   },
   "ava": {
     "babel": true,
-    "files": [
-      "test/**/**"
-    ],
+    "files": ["test/**/**"],
     "concurrency": 5
   },
   "release": {
-    "branches": [
-      "master",
-      "next"
-    ]
+    "branches": ["master", "next"]
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
-    "@liquify/rollup-plugin-utils": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
     "ava": "^3.15.0",
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
     "@rollup/pluginutils": "^4.1.0",
-    "javascript-obfuscator": "^2.10.1"
+    "javascript-obfuscator": "^2.13.0"
   }
 }

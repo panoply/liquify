@@ -15,7 +15,7 @@
     "url": "https://github.com/panoply/liquify/issues"
   },
   "scripts": {
-    "watch": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build": "rollup -c --environment prod && node -r esm ./scripts/strip.js",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c --environment prod",
@@ -27,16 +27,11 @@
   },
   "ava": {
     "babel": true,
-    "files": [
-      "test/**/**"
-    ],
+    "files": ["test/**/**"],
     "concurrency": 5
   },
   "release": {
-    "branches": [
-      "master",
-      "next"
-    ]
+    "branches": ["master", "next"]
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",

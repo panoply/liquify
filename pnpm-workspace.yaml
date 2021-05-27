@@ -1,49 +1,23 @@
 packages:
   - "."
-  #
-  #
-  # CRYPTOGRAPHER
-  # ---------------------------------------
+
   - "build/cryptographer"
-  #
-  # ROLLUP PLUGINS
-  # ---------------------------------------
+
   - "build/rollup-plugins/cryptospec"
   - "build/rollup-plugins/globs"
   - "build/rollup-plugins/obfuscator"
   - "build/rollup-plugins/utils"
-  #
-  # ATOM CLIENT
-  # ---------------------------------------
+
   - "packages/clients/atom"
   - "!packages/clients/atom/package/*"
-  #
-  # VSCODE CLIENT
-  # ---------------------------------------
-  #
+
   - "packages/clients/vscode"
   - "!packages/clients/vscode/package/*"
-  #
-  # LANGUAGE SERVER
-  # ---------------------------------------
-  #
+
   - "packages/parser"
+
   - "packages/server"
   - "!packages/server/package/*"
-  # LIQUID SPECIFICATIONS
-  # ---------------------------------------
+
   - "packages/schema"
-  #
-  # LIQUID SPECIFICATIONS
-  # ---------------------------------------
   - "packages/specs"
-  #
-  # LICENSING
-  # ---------------------------------------
-  #
-  - "packages/license"
-  #
-  # WEBSITE
-  # ---------------------------------------
-  #
-  - "web/*"

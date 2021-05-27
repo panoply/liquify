@@ -1280,11 +1280,15 @@
       "properties": {
         "discount_allocations": {
           "type": "array",
-          "description": "Returns a list of all discount allocations containing the discounted amount and the reference to the parent discount application. line_item.discount_allocations is available on line items in carts, checkouts, orders, and draft orders.",
-          "final_line_price": {
-            "type": "number",
-            "description": "Returns the combined price of all the items in the line item. This is equal to line_item.final_price times line_item.quantity."
-          }
+          "description": "Returns a list of all discount allocations containing the discounted amount and the reference to the parent discount application. line_item.discount_allocations is available on line items in carts, checkouts, orders, and draft orders."
+        },
+        "final_line_price": {
+          "type": "number",
+          "description": "Returns the combined price of all the items in the line item. This is equal to line_item.final_price times line_item.quantity."
+        },
+        "final_price": {
+          "type": "number",
+          "description": "Returns the price of the line item including all line level discount amounts."
         }
       }
     },
