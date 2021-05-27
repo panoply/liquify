@@ -2,6 +2,7 @@ import jsonStrip from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
 import { basename } from 'path'
 import stripIndent from 'strip-indent'
+import chalk from 'chalk'
 
 /**
  * Minify JSON and strip JSONC files

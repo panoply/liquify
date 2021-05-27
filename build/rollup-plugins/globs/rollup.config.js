@@ -8,7 +8,8 @@ export default {
     {
       format: 'cjs',
       file: pkg.main,
-      sourcemap: process.env.prod ? false : 'inline'
+      sourcemap: process.env.prod ? false : 'inline',
+      exports: 'default'
     },
     {
       format: 'module',

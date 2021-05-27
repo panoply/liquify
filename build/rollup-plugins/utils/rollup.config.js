@@ -23,10 +23,6 @@ export default [
     ],
     external: [ ...Object.keys(pkg.dependencies), 'path' ],
     plugins: [
-      stripCode({
-        start_comment: 'START.TESTS_ONLY',
-        end_comment: 'END.TESTS_ONLY'
-      }),
       commonjs(),
       terser({
         ecma: 6

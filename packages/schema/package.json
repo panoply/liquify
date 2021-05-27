@@ -17,6 +17,7 @@
   "types": "index.d.ts",
   "scripts": {
     "dev": "rollup -c -w --environment stores",
+    "stores": "rollup -c --environment stores",
     "build": "pnpm stores && rollup -c --environment prod",
     "packer": "cd versions; pnpm pack ../ && cd .."
   },
