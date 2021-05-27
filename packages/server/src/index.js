@@ -179,12 +179,9 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   console.log(document.ast, Parser.errors)
 
-  return connection.sendDiagnostics({
-    uri: document.textDocument.uri,
-    diagnostics: Parser.errors
-  })
-
-  // console.log(document)
+  return Service
+    .doValidation(document)
+    .then(diagnostics => connection.sendDiagnostics(diagnostics))
 
 })
 
