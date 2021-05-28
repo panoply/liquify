@@ -1,0 +1,37 @@
+INTEGER VALID
+
+{{- tag | abs: -10.10 }}
+
+{{- tag | abs: -200 }}
+
+{{- tag | abs: 10.2345 }}
+
+INTEGER ERRORS
+
+{{- tag | truncate: -10 }}
+
+INTEGER CANNOT HAVE THIRD DECIMAL POINT
+
+{{- tag | abs: -10.100.22 }}
+
+
+NUMBER VALID
+
+{{- tag | truncate: 10 }}
+
+{{- tag | truncate: 1 }}
+
+NUMBER INVALID
+
+{{- tag | truncate: 10.10 }}
+
+{{- tag | truncate: 0.1 }}
+
+
+FLOAT VALID
+
+{{- tag | abs: 1000.133 }}
+
+FLOAT INVALID
+
+{{- tag | truncate: 1000.133 }}

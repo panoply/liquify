@@ -25,7 +25,7 @@
     "baseUrl": ".",
     "pretty": true,
     "paths": {
-      "*": ["src/*", "tests/*"],
+      "*": ["src/*", "test/*"],
       "parser": ["./src/parser/*"],
       "lexical": ["./src/lexical/*"],
       "enums": ["./src/enums/*"]
