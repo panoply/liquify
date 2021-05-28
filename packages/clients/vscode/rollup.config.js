@@ -29,7 +29,8 @@ export default {
         'ThirdPartyNotices.txt',
         'snippets/*.json',
         'syntaxes/**/*.json',
-        'themes/*.json'
+        'themes/*.json',
+        'stores/*.json'
       ],
       dest: 'package',
       transform: {
@@ -41,11 +42,16 @@ export default {
           content: jsonmin(content.toString()),
           dest: 'package/syntaxes'
         }),
+        'stores/*.json': ({ content }) => ({
+          content: jsonmin(content.toString()),
+          dest: 'package/stores'
+        }),
         'snippets/*.json': ({ content }) => ({
           content: jsonmin(content.toString()),
           dest: 'package/snippets'
         }),
         'themes/*.json': ({ content }) => ({
+          content: jsonmin(content.toString()),
           dest: 'package/themes'
         }),
         'syntaxes/injections/*.json': ({ content }) => ({
@@ -61,8 +67,7 @@ export default {
   ],
   [
     terser({
-      ecma: 6
-      , warnings: 'verbose'
+      ecma: 2016
       , compress: { passes: 2 }
     })
   ])

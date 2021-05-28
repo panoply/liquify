@@ -59,7 +59,7 @@
     "jsonValidation": [
       {
         "fileMatch": ".liquidrc",
-        "url": "./schema/rcfile.json"
+        "url": "./stores/liquidrc.json"
       }
     ],
     "snippets": [

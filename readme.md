@@ -9,22 +9,20 @@ Language tooling for the [Liquid Template Language](#). Liquify brings modern ID
 
 ###### IMPORTANT
 
-**Liquify operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licensed packages. All developers who are not employed or have any connection to Shopify can browse the code. If you work for Shopify, please go away.**
+**Liquify operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licensed packages.**
 
 ### Why
 
-The Liquid template language has been around for a long time. Originally created by [Tobi Lütke](https://twitter.com/tobi) it is used by other open source projects like Jekyll, Eleventy and long list of SaaS services. Despite Shopify existing as a multi-billion dollar company who hire thousands of engineers they have failed to bring support for Liquid in modern development ecosystems. Liquify was created to solve this issue, it aims to provide developers everything they require when working with the language in text editors. It's the _crème de la crème_.
+The Liquid template language has been around for a long time. Originally created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is used by other open source projects like Jekyll, Eleventy and long list of SaaS services. Liquid is actively maintained by Shopify and yet despite being the foundation of their storefront development and backed by a multi-billion dollar company who employ thousands of engineers, Shopify has not only failed but neglected to bring support for Liquid into the modern development ecosystem. Liquify was created to solve this issue, it aims to be the _crème de la crème_ and provide developers everything they require when working with the language in text editors.
 
 ### Pricing / License
 
-Liquify is currently free to use as it exists in an alpha pre-release stage. A yearly licensing cost will be incurred for those who want all the features for the Shopify variation upon its official 1.0 release.
+Liquify is currently free to use as it exists in an alpha pre-release stage. A yearly licensing cost will be incurred for those who want all the features for the Shopify variation upon its official 1.0 release. If you think Shopify should front the costs, please let me know.
 
 ### Packages
 
 - [@liquify/liquid-language-server](#)
 - [@liquify/liquid-parser](#)
-- [@liquify/liquid-grammar](#)
-- [@liquify/liquid-linter](#)
 - [@liquify/schema-stores](#)
 - [@liquify/liquid-language-specs](#)
 - [@liquify/cryptographer](#)
@@ -60,6 +58,9 @@ The project is a combination monorepo/multirepo that uses [pnpm](https://pnpm.js
 - Ensure [pnpm](https://pnpm.js.org/) is installed globally `npm i pnpm -g`
 - Clone this repository `git clone https://github.com/panoply/liquify.git`
 - Run `pnpm i`
+- Run `pnpm build`
+
+The project will be complied and all packages will build. You can `cd` into any package or alternatively you can run `pnpm dev` from workspace root to execute a global watch.
 
 ### Development
 
