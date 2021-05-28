@@ -1784,6 +1784,146 @@
           "type": "object"
         }
       }
+    },
+    "variant": {
+      "type": "object",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/variant",
+      "properties": {
+        "available": {
+          "type": "boolean",
+          "description": "Returns true if the variant is available for purchase, or false if it not. For a variant to be available, its variant.inventory_quantity must be greater than zero or variant.inventory_policy must be set to continue. A variant with no variant.inventory_management is also considered available."
+        },
+        "barcode": {
+          "type": "string",
+          "description": "Returns the variant's barcode."
+        },
+        "compare_at_price": {
+          "type": "string",
+          "description": "Returns the variant's compare at price. Use a money filter to return the value in a monetary format."
+        },
+        "featured_media": {
+          "type": "string",
+          "description": "Returns the first media item attached to the variant."
+        },
+        "id": {
+          "description": "Returns the variant's unique ID.",
+          "type": "integer"
+        },
+        "image": {
+          "description": "Returns the image object associated with the variant.",
+          "type": "object",
+          "properties": {
+            "alt": {
+              "description": "Returns the image's alt text.",
+              "type": "string"
+            },
+            "src": {
+              "description": "Returns the relative URL to the image.",
+              "type": "string"
+            }
+          }
+        },
+        "incoming": {
+          "type": "boolean",
+          "description": "Returns true if the variant has incoming inventory."
+        },
+        "inventory_management": {
+          "type": "string",
+          "description": "Returns the variant's inventory tracking service."
+        },
+        "inventory_policy": {
+          "type": "string",
+          "description": "Returns the string continue if the \"Allow users to purchase this item, even if it is no longer in stock.\" checkbox is checked in the variant options in the Admin. Returns deny if it is unchecked."
+        },
+        "inventory_quantity": {
+          "type": "integer",
+          "description": "Returns the variant's inventory quantity."
+        },
+        "next_incoming_date": {
+          "type": "string",
+          "description": "Returns the date when the next incoming inventory will arrive."
+        },
+        "options": {
+          "type": "array",
+          "description": "Returns an array of the variant's product option values."
+        },
+        "option1": {
+          "type": "string",
+          "description": "Returns the value of the variant's first product option."
+        },
+        "option2": {
+          "type": "string",
+          "description": "Returns the value of the variant's second product option."
+        },
+        "option3": {
+          "type": "string",
+          "description": "Returns the value of the variant's third product option."
+        },
+        "price": {
+          "type": "string",
+          "description": "Returns the variant's price. Use a money filter to return the value in a monetary format."
+        },
+        "requires_shipping": {
+          "type": "boolean",
+          "description": "Returns true if the variant is set to require shipping."
+        },
+        "requires_selling_plan": {
+          "type": "boolean",
+          "description": "Returns true if the variant is set to require a selling_plan when added to the cart."
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "Returns true if the variant is currently selected. The selected variant is based on the URL parameter variant."
+        },
+        "selected_selling_plan_allocation": {
+          "type": "integer",
+          "description": "Returns a selling_plan_allocation object based on the URL parameter selling_plan.\n\nFor example, given the URL parameters \"?variant=12345&selling_plan=8765\", the selling plan allocation for the variant 12345 with a selling plan id of 8765 is returned.\n\nIf there is no selected selling plan allocation, then this property returns nil."
+        },
+        "selling_plan_allocations": {
+          "type": "array",
+          "description": "An array of selling_plan_allocation objects available for the variant."
+        },
+        "sku": {
+          "type": "string",
+          "description": "Returns the variant's SKU."
+        },
+        "store_availabilities": {
+          "type": "array",
+          "description": "Returns an array of store_availability objects if variant.selected is true."
+        },
+        "taxable": {
+          "type": "boolean",
+          "description": "Returns true if taxes are charged for the variant, or false if they are not."
+        },
+        "title": {
+          "type": "string",
+          "description": "Returns the concatenation of all the variant's product option values, joined by / characters."
+        },
+        "unit_price": {
+          "type": "string",
+          "description": "Unit prices are available only to stores located in Germany or France.Returns the unit price of the product variant.\n\nThe price reflects any discounts that are applied to the line item."
+        },
+        "unit_price_measurement": {
+          "type": "object",
+          "description": "Returns a unit_price_measurement object for the product variant."
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns a URL that is unique to only one product variant. The variant ID is used as the unique identifier."
+        },
+        "weight": {
+          "type": "integer",
+          "description": "Returns the variant's weight in grams. Use the weight_with_unit filter to convert it to your store's weight format or the weight unit configured on the variant."
+        },
+        "weight_unit": {
+          "type": "integer",
+          "description": "Returns the unit for the weight configured on the variant. Works well paired with the weight_in_unit attribute and the weight_with_unit filter."
+        },
+        "weight_in_unit": {
+          "type": "integer",
+          "description": "Returns the weight of the product converted to the unit configured on the variant. Works well paired with the weight_unit attribute and the weight_with_unit filter."
+        }
+      }
     }
   },
   "tags": {
