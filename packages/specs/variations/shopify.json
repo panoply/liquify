@@ -1463,6 +1463,33 @@
         }
       }
     },
+    "linklist": {
+      "description": "linklist objects appear as ‘menus’ in the Navigation page of the Shopify admin.",
+      "type": "object",
+      "link": "https://help.shopify.com/themes/liquid/objects/linklist",
+      "properties": {
+        "handle": {
+          "type": "string",
+          "description": "Returns the handle of the linklist.",
+          "link": "https://help.shopify.com/themes/liquid/objects/linklist#linklist-handle"
+        },
+        "levels": {
+          "type": "integer",
+          "description": "Returns the number of nested levels that a linklist contains.",
+          "link": "https://help.shopify.com/themes/liquid/objects/linklist#linklist-levels"
+        },
+        "links": {
+          "type": "array",
+          "description": "Returns an array of links in the linklist.",
+          "link": "https://help.shopify.com/themes/liquid/objects/linklist#linklist-links"
+        },
+        "title": {
+          "type": "string",
+          "description": "Returns the title of the linklist",
+          "link": "https://help.shopify.com/themes/liquid/objects/linklist#linklist-title"
+        }
+      }
+    },
     "images": {
       "type": "object",
       "description": "Allows you to access any image in a store by its filename",
