@@ -9,3 +9,4 @@ export/
 .eslintcache
 pnpm-lock.yaml
 pnpm-debug.log
+tests
