@@ -341,13 +341,13 @@
       "link": "https://help.shopify.com/themes/liquid/filters/url-filters#within"
     }
   },
-
   "objects": {
     "additional_checkout_buttons": {
       "description": "Returns true if a merchant's store has any payment providers with offsite checkouts, such as PayPal Express Checkout. Use additional_checkout_buttons to check whether these gateways exist, and content_for_additional_checkout_buttons to show the additional buttons.",
       "filters": false,
       "trims": false,
       "type": "boolean",
+      "scope": "other",
       "link": "https://help.shopify.com/en/themes/liquid/objects#additional-checkout-buttons"
     },
     "address": {
@@ -1403,6 +1403,63 @@
         "id": {
           "type": "number",
           "description": "Returns the line item's ID."
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "scope": "linklist",
+      "description": "The link object cannot be invoked on its own. It must be invoked inside a linklist.",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "description": "Returns true if the link is active, or false if the link is inactive",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#link-active"
+        },
+        "child_active": {
+          "type": "boolean",
+          "description": "Similar to `link.active`, but returns true if a child link of the parent link is active, or false if no child links of the parent link are active.",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#link-child_active"
+        },
+        "child_current": {
+          "type": "boolean",
+          "decription": "Returns `true` if a child link has a link object with link.current equal to `true`. Returns `false` if no child links have a link object with link.current equal to `true`.",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#link-child_current"
+        },
+        "current": {
+          "type": "boolean",
+          "decription": "Returns `true` if the page content associated with the `link` is considered a match to the current page. Returns `false` if the content isn't considered a match",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#link-current"
+        },
+        "levels": {
+          "type": "integer",
+          "description": "Returns the number of nested levels that a link contains.",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#link-levels"
+        },
+        "links": {
+          "type": "array",
+          "description": "Returns an array of the child links associated with the parent link.",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#link-levels"
+        },
+        "object": {
+          "type": "output",
+          "description": "Returns the variable associated to the link. The possible types are: product, collection, page, blog.",
+          "link": "https://shopify.dev/docs/themes/liquid/reference/objects/link#link-object"
+        },
+        "title": {
+          "type": "string",
+          "description": "Returns the title of the link",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#link-title"
+        },
+        "type": {
+          "type": "string",
+          "description": "Returns the type of the link. The possible values are:\n\n- collection_link\n- product_link\n- page_link\n- blog_link\n- relative_link\n- http_link",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#link-type"
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns the URL of the link.",
+          "link": "https://help.shopify.com/themes/liquid/objects/link#url"
         }
       }
     },
