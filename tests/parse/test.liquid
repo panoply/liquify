@@ -1,25 +1,11 @@
 FOO
 
-{{ variant. }}
+{{ variant.available. -}}
+
+
+
+{% if condition %}
+  foo
+{% endif %}
 
 {% for item in collection %}{% endfor %}
-
-{% schema %}
-{
-  "name": "hello",
-  "class": "",
-  "defaults": [],
-  "settings": [
-    {
-      "type": "blog"
-    }
-  ],
-  "blocks": [
-    {
-      "limit": 0,
-      "settings": [],
-      "max_blocks": ""
-    }
-  ]
-}
-{% endschema %}

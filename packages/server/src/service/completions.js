@@ -146,13 +146,16 @@ export function getTriggerCompletion (ASTNode, document, position, context) {
           description
         }
       ]
-    ) => (
-      {
-        label,
-        kind: CompletionItemKind.Keyword,
-        documentation: description
+    ) => ({
+      label,
+      kind: CompletionItemKind.Keyword,
+      documentation: description,
+      insertText: ' ' + label + '$1 }} $0',
+      insertTextFormat: InsertTextFormat.Snippet,
+      data: {
+        snippet: ' ' + label + '$1 }} $0'
       }
-    ))
+    }))
 
   }
 
@@ -162,15 +165,22 @@ export function getTriggerCompletion (ASTNode, document, position, context) {
       [
         label,
         {
-          description
+          description,
+          singular,
+          snippet = ' ' + label + ' $1 %}' + (
+            singular ? '$0' : ` $0 {% end${label} %}`
+          )
         }
       ]
-    ) => (
-      {
-        label,
-        kind: CompletionItemKind.Keyword,
-        documentation: description
+    ) => ({
+      label,
+      kind: CompletionItemKind.Keyword,
+      insertText: snippet,
+      insertTextFormat: InsertTextFormat.Snippet,
+      documentation: description,
+      data: {
+        snippet
       }
-    ))
+    }))
   }
 }

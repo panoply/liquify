@@ -2,3 +2,23 @@
 # food kkdkdk kdkdk
 
 /index  eo/:dkdkd 200
+
+{% schema %}
+{
+  "name": "hello",
+  "class": "",
+  "defaults": [],
+  "settings": [
+    {
+      "type": "blog"
+    }
+  ],
+  "blocks": [
+    {
+      "limit": 0,
+      "settings": [],
+      "max_blocks": ""
+    }
+  ]
+}
+{% endschema %}

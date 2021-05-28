@@ -15,9 +15,28 @@ import yamljs from 'yamljs'
 export default (function ASTNodes () {
 
   /**
-   * Errors
+   * Node index
    *
-   * Tracks each node and their placements
+   * @type {number}
+   */
+  let node = 0
+
+  /**
+   * AST Version
+   *
+   * @type {number}
+   */
+  let version
+
+  /**
+   * URI Identifier
+   *
+   * @type {string}
+   */
+  let uri
+
+  /**
+   * Errors
    *
    * @static
    * @type {Array}
@@ -46,15 +65,6 @@ export default (function ASTNodes () {
   const errors = []
 
   /**
-   * Node index
-   *
-   * Tracks each node and their placements
-   *
-   * @type {number}
-   */
-  let node = 0
-
-  /**
    * AST Node
    *
    * Creates token nodes on the AST
@@ -62,40 +72,6 @@ export default (function ASTNodes () {
    * @type {Parser.ASTNode}
    */
   class INode {
-
-    /* -------------------------------------------- */
-    /* STATIC                                       */
-    /* -------------------------------------------- */
-
-    /**
-     * Size
-     *
-     * AST Node size
-     *
-     * @static
-     * @memberof Node
-     * @type {number}
-     */
-    static size = 0
-
-    /**
-     * Version Number
-     *
-     * @static
-     * @memberof Node
-     * @type {number}
-     */
-    static version = 1
-
-    /**
-     * URI Identifier
-     *
-     *
-     * @static
-     * @memberof Node
-     * @type {string}
-     */
-    static uri = ''
 
     /* -------------------------------------------- */
     /* CONSTRUCTORS                                 */
@@ -260,9 +236,9 @@ export default (function ASTNodes () {
     get document () {
 
       return TextDocument.create(
-        INode.uri.replace('.liquid', `.${this.language}`),
+        uri.replace('.liquid', `.${this.language}`),
         this.language,
-        INode.version,
+        version,
         this.content
       )
 
@@ -293,23 +269,80 @@ export default (function ASTNodes () {
 
     INode,
 
-    get embedded () {
+    /* URI ---------------------------------------- */
 
-      return {
+    /**
+     * URI
+     *
+     * @readonly
+     * @returns {string}
+     */
+    get uri () { return uri },
 
-        /**
-         * Returns Embedded node locations
-         *
-         * @readonly
-         */
-        get get () { return embedded }
+    /**
+     * URI
+     *
+     * @readonly
+     * @param {string} id
+     */
+    set uri (id) { uri = id },
 
-      }
+    /* VERSION ------------------------------------ */
+
+    /**
+     * Version
+     *
+     * @readonly
+     * @returns {number}
+     */
+    get version () { return version },
+
+    /**
+     * Version
+     *
+     * @readonly
+     * @param {number} id
+     */
+    set version (number) { version = number },
+
+    /* NODE --------------------------------------- */
+
+    /**
+     * Node
+     *
+     * @readonly
+     * @returns {number}
+     */
+    get node () { return node },
+
+    /**
+     * Node
+     *
+     * @readonly
+     * @param {number} id
+     */
+    set node (index) { node = index },
+
+    /* EMBEDDED ----------------------------------- */
+
+    /**
+     * Embedded Documents
+     *
+     * @readonly
+     * @param {number} id
+     */
+    embedded: {
+
+      /**
+       * Returns Embedded node locations
+       *
+       * @readonly
+       */
+      get get () { return embedded }
 
     },
 
-    get node () { return node },
-    set node (index) { node = index },
+    /* ERRORS ------------------------------------- */
 
     get error () {
 
@@ -362,6 +395,8 @@ export default (function ASTNodes () {
       }
 
     },
+
+    /* HIERARCH ----------------------------------- */
 
     /**
      * Hierarchical tracking for tag pairs or

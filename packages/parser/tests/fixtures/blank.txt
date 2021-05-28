@@ -1,1 +1,3 @@
-{{ product.title }}
+{% if condition %}
+
+{% endif %}

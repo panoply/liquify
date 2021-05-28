@@ -24,8 +24,8 @@ export interface Context {
   type: TokenContext;
   stack?: TokenStack;
   value?: string | number;
-  node: number;
-  offset: number[];
+  start: number;
+  end: number;
 }
 
 export type Languages = (
@@ -57,7 +57,7 @@ export interface ASTNode {
   range: Range;
   children?: Children[];
   content: string;
-  singular: boolean;
+  singular: boolean
   objects?: Map<number, string>
   filters?: Map<number, string>
   offset(offset: number): void

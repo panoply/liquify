@@ -76,7 +76,7 @@ connection.onInitialize(initializeParams => (
         '<',
         '%',
         '|',
-        '}'
+        '{'
       ]
     },
     implementationProvider: true,
@@ -147,6 +147,8 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
   const document = Document.create(textDocument)
 
   if (!document?.textDocument?.uri) return null
+
+  Parser.parse(document)
 
   console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
 
@@ -257,13 +259,15 @@ connection.onHover(
   ({
     position
     , textDocument: { uri }
-  }, token) => !Server.provider.hover || runSync(() => {
+  }, token) => !Server.provider.hover || runAsync(async () => {
 
     const document = documents.get(uri)
 
     if (!document?.textDocument?.uri) return null
 
-    return Service.doHover(document, position)
+    const hover = await Service.doHover(document, position)
+
+    if (hover) return hover
 
   }, null, `Error while computing hover for ${uri}`, token)
 )

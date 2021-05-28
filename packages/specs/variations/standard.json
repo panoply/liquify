@@ -429,7 +429,6 @@
       "link": "https://shopify.github.io/liquid/tags/variable/#assign",
       "filters": true,
       "singular": true,
-      "snippet": "assign ${1:var} = ${2:value} $0",
       "type": "variable"
     },
     "break": {
@@ -442,7 +441,6 @@
     "capture": {
       "description": "Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.",
       "link": "https://shopify.github.io/liquid/tags/variable/#capture",
-      "snippet": "capture ${1:var}",
       "type": "variable"
     },
     "case": {
@@ -492,7 +490,6 @@
     "for": {
       "description": "Repeatedly executes a block of code.",
       "link": "https://shopify.github.io/liquid/tags/iteration/#for",
-      "snippet": "for ${1:item} in ${2|collection,(${3}..${4})|} $0",
       "type": "iteration",
       "parameters": [
         {
@@ -518,7 +515,6 @@
     "if": {
       "description": "Executes a block of code only if a certain condition is met.",
       "link": "https://shopify.github.io/liquid/tags/control-flow/#if",
-      "snippet": "if ${1} ${2|==,!=,or,and|} $3 $0",
       "type": "control"
     },
     "increment": {
@@ -534,7 +530,6 @@
     },
     "render": {
       "description": "Insert the rendered content of another template within the current template.\n\nThe code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.",
-      "snippet": "render '$1' $0",
       "filters": false,
       "singular": true,
       "link": "https://shopify.github.io/liquid/tags/template/#render",

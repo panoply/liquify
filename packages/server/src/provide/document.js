@@ -1,6 +1,6 @@
 import inRange from 'lodash/inRange'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-
+import { Parser } from 'provide/parser'
 /**
  * Documents Manager
  *
@@ -71,7 +71,7 @@ export function LiquidDocuments (documents = new Map()) {
    *
    * @param {number|object} [offset=undefined]
    * @param {string} [uri=undefined]
-   * @returns
+   * @returns {Parser.ASTNode}
    */
   function getNode (offset = undefined, uri = undefined) {
 

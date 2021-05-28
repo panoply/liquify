@@ -16,10 +16,8 @@ export class LiquidParser {
 
   constructor (configuration) {
 
-    this.parser = {
-      ...options,
-      ...configuration
-    }
+    this.documents = new Map()
+    this.parser = { ...options, ...configuration }
 
   }
 
@@ -64,8 +62,8 @@ export class LiquidParser {
    */
   parse (document) {
 
-    ast.INode.version = document.textDocument.version
-    ast.INode.uri = document.textDocument.uri
+    ast.version = document.textDocument.version
+    ast.uri = document.textDocument.uri
 
     while (ast.error.get.length > 0) ast.error.get.pop()
     while (ast.embedded.get.length > 0) ast.embedded.get.pop()
@@ -76,6 +74,10 @@ export class LiquidParser {
     stream.create(source)
 
     return parse.bind(this.parser)(document)
+
+  }
+
+  increment () {
 
   }
 

@@ -130,7 +130,6 @@ export default (mode => ({
 
     const ASTNode = Document.getNode(position)
 
-    console.log(ASTNode)
     if (ASTNode) {
 
       if (mode?.[ASTNode.language]) {

@@ -6,7 +6,7 @@ import { LiquidParser } from '@liquify/liquid-parser'
 export const Parser = new LiquidParser(
   {
     engine: 'standard',
-    context: false,
+    context: true,
     frontmatter: false,
     whitespace: true,
     newlines: true,

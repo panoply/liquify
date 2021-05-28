@@ -40,13 +40,10 @@ export default (function Context (node) {
 
     const entry = {
       type,
-      node: ast.node,
-      offset: [
-        scanner.offset,
-        TokenContext.Newline === type || TokenContext.Whitespace === type
-          ? scanner.offset + scanner.space
-          : scanner.offset + scanner.token.length
-      ],
+      start: scanner.offset,
+      end: TokenContext.Newline === type || TokenContext.Whitespace === type
+        ? scanner.offset + scanner.space
+        : scanner.offset + scanner.token.length,
       value: TokenContext.Newline === type || TokenContext.Whitespace === type
         ? scanner.space
         : type === TokenContext.EndTag ? 'end' + scanner.token : scanner.token
