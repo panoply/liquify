@@ -1289,6 +1289,122 @@
         "final_price": {
           "type": "number",
           "description": "Returns the price of the line item including all line level discount amounts."
+        },
+        "fulfillment": {
+          "type": "string",
+          "description": "Returns the fulfillment of the line item."
+        },
+        "fulfillment_service": {
+          "type": "string",
+          "description": "Returns the fulfillment service associated with the line item's variant. Line items that have no fulfillment service will return manual."
+        },
+        "gift_card": {
+          "type": "boolean",
+          "description": "Returns true if the line item's product is a gift card, or false if it is not."
+        },
+        "grams": {
+          "type": "number",
+          "description": "Returns the weight of the line item. Use the weight_with_unit filter to format the weight."
+        },
+        "image": {
+          "type": "string",
+          "description": "Returns the line item's image."
+        },
+        "key": {
+          "type": "number",
+          "description": "Returns the line item key, a unique identifier for the line item. The line item key is constructed from the line item's variant ID plus a hash of the line item's properties, even if the item has no additional properties."
+        },
+        "line_level_discount_allocations": {
+          "type": "array",
+          "description": "Returns a list of line-specific discount allocations containing the discounted amount and the reference to the parent discount application."
+        },
+        "line_level_total_discount": {
+          "type": "array",
+          "description": "Returns the total amount of all discounts applied to the line item specifically. This doesn't include discounts that are added to the cart."
+        },
+        "message": {
+          "type": "string",
+          "description": "Returns the discount message if a script has applied a discount to the line item."
+        },
+        "options_with_values": {
+          "type": "array",
+          "description": "Returns an array of selected values from the item's product options."
+        },
+        "original_line_price": {
+          "type": "number",
+          "description": "Returns the combined price of the quantity of items included in the line, before discounts were applied."
+        },
+        "original_price": {
+          "type": "number",
+          "description": "Returns the original price of the line item before discounts were applied."
+        },
+        "product": {
+          "type": "object",
+          "description": "Returns the product of the line item."
+        },
+        "product_id": {
+          "type": "number",
+          "description": "Returns the ID of the line item's product."
+        },
+        "properties": {
+          "type": "array",
+          "description": "line_item.properties returns an array of custom information for an item that has been added to the cart."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Returns the quantity of the line item."
+        },
+        "requires_shipping": {
+          "type": "boolean",
+          "description": "Returns true if the variant of the line item requires shipping, or false if it does not."
+        },
+        "selling_plan_allocation": {
+          "type": "object",
+          "description": "Returns a selling_plan_allocation object when the line item contains a selling plan."
+        },
+        "sku": {
+          "type": "number",
+          "description": "Returns the SKU (stock keeping unit) of the line item's variant."
+        },
+        "successfully_fulfilled_quantity": {
+          "type": "number",
+          "description": "Returns the successfully fulfilled quantity of the line item."
+        },
+        "taxable": {
+          "type": "boolean",
+          "description": "Returns true if taxes are charged on the line item's variant, or false if they are not."
+        },
+        "title": {
+          "type": "string",
+          "description": "Returns the title of the line item. line_item.title combines both the line item's product.title and the line item's variant.title, separated by a hyphen."
+        },
+        "unit_price": {
+          "type": "number",
+          "description": "Returns the unit price of the line item. The price reflects any discounts that are applied to the line item."
+        },
+        "unit_price_measurement": {
+          "type": "object",
+          "description": "Returns a unit_price_measurement object for the line item."
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns the relative URL of the line item's variant. The relative URL does not include your store's root URL (mystore.myshopify.com)."
+        },
+        "variant": {
+          "type": "object",
+          "description": "Returns the variant of the line item."
+        },
+        "variant_id": {
+          "type": "number",
+          "description": "Returns the ID of the line item's variant."
+        },
+        "vendor": {
+          "type": "object",
+          "description": "Returns the vendor of the line item's product."
+        },
+        "id": {
+          "type": "number",
+          "description": "Returns the line item's ID."
         }
       }
     },
