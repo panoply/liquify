@@ -13,7 +13,6 @@ export default {
   external: [
     'vscode',
     'vscode-languageclient',
-    'liquid-language-server',
     'path',
     'fs'
   ],
@@ -28,9 +27,9 @@ export default {
         'changelog.md',
         '.vscodeignore',
         'ThirdPartyNotices.txt',
+        'snippets/*.json',
         'syntaxes/**/*.json',
         'themes/*.json'
-
       ],
       dest: 'package',
       transform: {
@@ -41,6 +40,10 @@ export default {
         'syntaxes/*.json': ({ content }) => ({
           content: jsonmin(content.toString()),
           dest: 'package/syntaxes'
+        }),
+        'snippets/*.json': ({ content }) => ({
+          content: jsonmin(content.toString()),
+          dest: 'package/snippets'
         }),
         'themes/*.json': ({ content }) => ({
           dest: 'package/themes'

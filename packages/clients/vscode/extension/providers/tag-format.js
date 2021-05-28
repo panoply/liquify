@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 import {
   workspace,
   window,
@@ -54,7 +55,7 @@ class Spacer {
 
 }
 
-export function addspacer (liquid) {
+export function addSpacer (liquid) {
 
   const triggers = [ '{}', '%', '-', '{', '|' ]
 
@@ -86,21 +87,27 @@ export function addspacer (liquid) {
           offsets[change.range.start.line] = 0
         }
 
-        const start = change.range.start.translate(0,
-          offsets[change.range.start.line] - spacer.char(e.document, change))
+        const start = change.range.start.translate(
+          0,
+          offsets[change.range.start.line] - spacer.char(e.document, change)
+        )
         const lineEnd = e.document.lineAt(start.line).range.end
+
         for (let i = 0; i < expressions.length; i++) {
+
           // if we typed a - or a !, don't consider the "double" tag type
-          if ([ '-' ].indexOf(change.text) !== -1 &&
-                        i === spacer.TAG_DOUBLE) {
+          if ([ '-' ].indexOf(change.text) !== -1 && i === spacer.TAG_DOUBLE) {
             continue
           }
+
           const tag = expressions[i].exec(e.document.getText(new Range(start, lineEnd)))
+
           if (tag) {
             tagType = i
             ranges.push(new Range(start, start.translate(0, tag[0].length)))
             offsets[start.line] += tag[1].length
           }
+
         }
       }
     })

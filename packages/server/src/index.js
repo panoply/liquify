@@ -4,7 +4,8 @@ import {
   DidChangeConfigurationNotification,
   TextDocumentSyncKind,
   createConnection,
-  ProposedFeatures
+  ProposedFeatures,
+  CompletionItem
   , TextEdit
 } from 'vscode-languageserver'
 
@@ -49,6 +50,7 @@ connection.onInitialize(initializeParams => (
       }
     },
     documentOnTypeFormattingProvider: {
+      firstTriggerCharacter: '}',
       moreTriggerCharacter: [
         ',',
         '|',
@@ -73,7 +75,8 @@ connection.onInitialize(initializeParams => (
         '.',
         '<',
         '%',
-        '|'
+        '|',
+        '}'
       ]
     },
     implementationProvider: true,
@@ -177,7 +180,7 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
-  console.log(document.ast, Parser.errors)
+  // console.log(document.ast, Parser.errors)
 
   return Service
     .doValidation(document)
@@ -219,7 +222,7 @@ connection.onDocumentOnTypeFormatting((
     , options
   }
   , token
-) => !Server.provider.format || runSync(() => {
+) => !Server.provider.formatOnType || runSync(() => {
 
   const document = documents.get(uri)
 

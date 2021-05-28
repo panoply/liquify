@@ -201,6 +201,14 @@ export default (function ASTNodes () {
     filters = {}
 
     /**
+     * Whether the token is singular or not
+     *
+     * @readonly
+     * @memberof Node
+     */
+    singular = true
+
+    /**
      * The Starting offset
      *
      * @readonly

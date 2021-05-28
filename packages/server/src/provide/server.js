@@ -387,7 +387,7 @@ export default (function (config) {
       /**
        * Trace LSP
        */
-      server: 'off'
+      server: 'on'
 
     },
 

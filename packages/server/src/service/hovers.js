@@ -48,10 +48,11 @@ export function getWordAtPosition (textDocument, position) {
 
   const first = content.lastIndexOf(' ', character)
   const last = content.indexOf(' ', character)
-
-  return content.substring(
+  const [ word ] = content.substring(
     first !== -1 ? first : 0,
     last !== -1 ? last : content.length - 1
-  ).trim()
+  ).match(/[^\W]+/)
+
+  return word
 
 }

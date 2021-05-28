@@ -113,8 +113,35 @@ export function parse (document = { ast: [] }) {
 
       // LIQUID TAGS
       // -----------------------------------------------------------------
-      case TokenType.ObjectTag:
       case TokenType.LiquidTag:
+
+        ast.node = document.ast.length
+
+        // @ts-ignore
+        node = new ast.INode()
+        node.type = spec.type
+        node.singular = false
+
+        if (this.context) node.context.push(context.size)
+
+        break
+
+      // OUTPUT OBJECT TYPE TAGS
+      // -----------------------------------------------------------------
+      case TokenType.ObjectTag:
+
+        ast.node = document.ast.length
+
+        // @ts-ignore
+        node = new ast.INode()
+        node.type = spec.type
+
+        if (this.context) node.context.push(context.size)
+
+        break
+
+      // SINGULAR LIQUID TAGS
+      // -----------------------------------------------------------------
       case TokenType.LiquidSingularTag:
 
         ast.node = document.ast.length
@@ -191,6 +218,7 @@ export function parse (document = { ast: [] }) {
         // RESETS
         node = undefined
         spec.reset()
+        spec.object.reset()
 
         break
 

@@ -9,7 +9,7 @@
     "append": {
       "description": "Concatenates two strings and returns the concatenated value",
       "link": "https://shopify.github.io/liquid/filters/append/",
-      "snippet": "append: ${0}",
+      "snippet": "append: '$1' $0",
       "arguments": [
         {
           "type": "argument",
@@ -21,7 +21,7 @@
     "at_least": {
       "description": "Limits a number to a minimum value",
       "link": "https://shopify.github.io/liquid/filters/at_least/",
-      "snippet": "at_least: ${0}",
+      "snippet": "at_least: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -33,7 +33,7 @@
     "at_most": {
       "description": "Limits a number to a maximum value",
       "link": "https://shopify.github.io/liquid/filters/at_most/",
-      "snippet": "at_most: ${0}",
+      "snippet": "at_most: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -57,7 +57,7 @@
     "concat": {
       "description": "Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",
       "link": "https://shopify.github.io/liquid/filters/concat/",
-      "snippet": "concat: ${0}",
+      "snippet": "concat: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -69,7 +69,7 @@
     "date": {
       "description": "Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby’s `Time.parse`",
       "link": "https://shopify.github.io/liquid/filters/date/",
-      "snippet": "date: '${0}'",
+      "snippet": "date: '$1' $0",
       "arguments": [
         {
           "type": "argument",
@@ -81,7 +81,7 @@
     "default": {
       "description": "Allows you to specify a fallback in case a value doesn’t exist. default will show its value if the left side is `nil`, `false`, or `empty`",
       "link": "https://shopify.github.io/liquid/filters/default/",
-      "snippet": "default: ${1|'${2}',allow_false: ${3}|} ${0}",
+      "snippet": "default: '$1' $0",
       "arguments": [
         {
           "type": "argument",
@@ -100,7 +100,7 @@
     "divided_by": {
       "description": "Divides a number by another number",
       "link": "https://shopify.github.io/liquid/filters/divided_by/",
-      "snippet": "divided_by: '${0}'",
+      "snippet": "divided_by: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -132,7 +132,7 @@
     "join": {
       "description": "Joins the elements of an array with the character passed as the parameter. The result is a single string.",
       "link": "https://shopify.github.io/liquid/filters/join/",
-      "snippet": "join: '${0}'",
+      "snippet": "join: '$1' $0",
       "arguments": [
         {
           "type": "argument",
@@ -152,7 +152,7 @@
     "map": {
       "description": "Accepts an array element’s attribute as a parameter and creates a string out of each array element’s value.",
       "link": "https://shopify.github.io/liquid/filters/map/",
-      "snippet": "map: '${0}'",
+      "snippet": "map: '$1' $0",
       "arguments": [
         {
           "type": "argument",
@@ -164,7 +164,7 @@
     "minus": {
       "description": "Subtracts a number from another number",
       "link": "https://shopify.github.io/liquid/filters/minus/",
-      "snippet": "minus: '${0}'",
+      "snippet": "minus: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -176,7 +176,7 @@
     "modulo": {
       "description": "Returns the remainder of a division operation",
       "link": "https://shopify.github.io/liquid/filters/modulo/",
-      "snippet": "modulo: '${0}'",
+      "snippet": "modulo: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -192,7 +192,7 @@
     "plus": {
       "description": "Adds a number to another number",
       "link": "https://shopify.github.io/liquid/filters/plus/",
-      "snippet": "plus: '${0}'",
+      "snippet": "plus: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -204,7 +204,7 @@
     "prepend": {
       "description": "Adds the specified string to the beginning of another string",
       "link": "https://shopify.github.io/liquid/filters/prepend/",
-      "snippet": "prepend: '${0}'",
+      "snippet": "prepend: '$1' $0",
       "arguments": [
         {
           "type": "argument",
@@ -216,7 +216,7 @@
     "remove": {
       "description": "Removes every occurrence of the specified substring from a string",
       "link": "https://shopify.github.io/liquid/filters/remove/",
-      "snippet": "remove: '${0}'",
+      "snippet": "remove: '$1' $0",
       "arguments": [
         {
           "type": "argument",
@@ -228,7 +228,7 @@
     "remove_first": {
       "description": "Removes only the first occurrence of the specified substring from a string",
       "link": "https://shopify.github.io/liquid/filters/remove_first/",
-      "snippet": "remove_first: '${0}'",
+      "snippet": "remove_first: '$1' $0",
       "arguments": [
         {
           "type": "argument",
@@ -240,7 +240,7 @@
     "replace": {
       "description": "Replaces every occurrence of the first argument in a string with the second argument",
       "link": "https://shopify.github.io/liquid/filters/replace/",
-      "snippet": "replace: '${1}', '${2}' ${0}",
+      "snippet": "replace: '$1', '$2' $0",
       "arguments": [
         {
           "type": "argument",
@@ -257,7 +257,7 @@
     "replace_first": {
       "description": "Replaces only the first occurrence of the first argument in a string with the second argument",
       "link": "https://shopify.github.io/liquid/filters/replace_first/",
-      "snippet": "replace_first: '${1}', '${2}' ${0}",
+      "snippet": "replace_first: '$1', '$2' $0",
       "arguments": [
         {
           "type": "argument",
@@ -290,7 +290,7 @@
     "slice": {
       "description": "Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",
       "link": "https://shopify.github.io/liquid/filters/slice/",
-      "snippet": "slice: '${0}'",
+      "snippet": "slice: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -307,7 +307,6 @@
     "sort": {
       "description": "Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting",
       "link": "https://shopify.github.io/liquid/filters/sort/",
-      "snippet": "${1|sort,sort:|} ${2}",
       "arguments": [
         {
           "type": "argument",
@@ -323,7 +322,7 @@
     "split": {
       "description": "Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",
       "link": "https://shopify.github.io/liquid/filters/split/",
-      "snippet": "split: '${0}'",
+      "snippet": "split: $1",
       "arguments": [
         {
           "type": "argument",
@@ -347,7 +346,7 @@
     "times": {
       "description": "Multiplies a number by another number",
       "link": "https://shopify.github.io/liquid/filters/times/",
-      "snippet": "times: '${0}'",
+      "snippet": "times: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -359,7 +358,7 @@
     "truncate": {
       "description": "Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (…) is appended to the string and is included in the character count",
       "link": "https://shopify.github.io/liquid/filters/truncate/",
-      "snippet": "truncate: ${0}",
+      "snippet": "truncate: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -376,7 +375,7 @@
     "truncatewords": {
       "description": "Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (…) is appended to the string",
       "link": "https://shopify.github.io/liquid/filters/truncatewords/",
-      "snippet": "truncatewords: ${0}",
+      "snippet": "truncatewords: $1 $0",
       "arguments": [
         {
           "type": "argument",
@@ -409,6 +408,7 @@
     "where": {
       "description": "Creates an array including only the objects with a given property value, or any truthy value by default",
       "link": "https://shopify.github.io/liquid/filters/where/",
+      "snippet": "where: '$1'$0",
       "arguments": [
         {
           "type": "argument",
@@ -429,7 +429,7 @@
       "link": "https://shopify.github.io/liquid/tags/variable/#assign",
       "filters": true,
       "singular": true,
-      "snippet": "assign ${1:var} = ${2:value}",
+      "snippet": "assign ${1:var} = ${2:value} $0",
       "type": "variable"
     },
     "break": {
@@ -492,7 +492,7 @@
     "for": {
       "description": "Repeatedly executes a block of code.",
       "link": "https://shopify.github.io/liquid/tags/iteration/#for",
-      "snippet": "for ${1:item} in ${2|collection,(${3}..${4})|} ${0}",
+      "snippet": "for ${1:item} in ${2|collection,(${3}..${4})|} $0",
       "type": "iteration",
       "parameters": [
         {
@@ -518,7 +518,7 @@
     "if": {
       "description": "Executes a block of code only if a certain condition is met.",
       "link": "https://shopify.github.io/liquid/tags/control-flow/#if",
-      "snippet": "if ${1} ${2|==,!=,or,and|} ${3} ",
+      "snippet": "if ${1} ${2|==,!=,or,and|} $3 $0",
       "type": "control"
     },
     "increment": {
@@ -534,6 +534,7 @@
     },
     "render": {
       "description": "Insert the rendered content of another template within the current template.\n\nThe code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.",
+      "snippet": "render '$1' $0",
       "filters": false,
       "singular": true,
       "link": "https://shopify.github.io/liquid/tags/template/#render",

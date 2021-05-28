@@ -30,7 +30,7 @@ export function setCompletionItems (
     name,
     {
       description,
-      snippet = false
+      snippet = name
     }
   ]
 ) {
@@ -104,22 +104,22 @@ export function getTriggerCompletion (ASTNode, document, position, context) {
   const type = document.textDocument.getText({
     start: {
       line: position.line,
-      character: position.character - 3
+      character: position.character - 4
     },
     end: {
       line: position.line,
-      character: position.character + 3
+      character: position.character + 1
     }
   })
 
-  if (/\|\s*/.test(type)) {
+  if (/\|\s*/.test(type.slice(1))) {
 
     return Object.entries(Parser.spec.filters).map((
       [
         label,
         {
           description,
-          snippet = '$0 '
+          snippet = label + ' $0'
         }
       ]
     ) => (
@@ -130,11 +130,47 @@ export function getTriggerCompletion (ASTNode, document, position, context) {
         insertTextFormat: InsertTextFormat.Snippet,
         documentation: description,
         data: {
-          snippet: '| $1' + snippet
+          snippet
         }
       }
     ))
 
   }
 
+  if (/{{\s*/.test(type)) {
+
+    return Object.entries(Parser.spec.objects).map((
+      [
+        label,
+        {
+          description
+        }
+      ]
+    ) => (
+      {
+        label,
+        kind: CompletionItemKind.Keyword,
+        documentation: description
+      }
+    ))
+
+  }
+
+  if (/{%\s*/.test(type)) {
+
+    return Object.entries(Parser.spec.tags).map((
+      [
+        label,
+        {
+          description
+        }
+      ]
+    ) => (
+      {
+        label,
+        kind: CompletionItemKind.Keyword,
+        documentation: description
+      }
+    ))
+  }
 }

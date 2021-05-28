@@ -1,4 +1,4 @@
-import { TextEdit, Position, CompletionTriggerKind } from 'vscode-languageserver'
+import { TextEdit, Position, CompletionTriggerKind, CompletionItem } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { CSSService } from 'service/modes/css'
 import { SCSSService } from 'service/modes/scss'
@@ -82,6 +82,7 @@ export default (mode => ({
       case Parser.code.COL: return [
         TextEdit.insert(position, String.fromCharCode(Parser.code.WSP))
       ]
+
     }
 
   },
@@ -127,12 +128,15 @@ export default (mode => ({
    */
   async doHover (document, position) {
 
-    const [ node ] = Document.getNode(position)
+    const ASTNode = Document.getNode(position)
 
-    if (node) {
-      if (mode?.[node.language]) {
-        return mode[node.language].doHover(node, position)
+    console.log(ASTNode)
+    if (ASTNode) {
+
+      if (mode?.[ASTNode.language]) {
+        return mode[ASTNode.language].doHover(ASTNode, position)
       }
+
     }
 
     const name = Hover.getWordAtPosition(document.textDocument, position)
@@ -180,7 +184,7 @@ export default (mode => ({
   async doComplete (document, position, context) {
 
     const offset = document.textDocument.offsetAt(position)
-    const [ node ] = Document.getNode(offset)
+    const node = Document.getNode(offset)
 
     if (node) {
       if (mode?.[node.language]) {
@@ -191,11 +195,21 @@ export default (mode => ({
     }
 
     if (context.triggerKind === CompletionTriggerKind.TriggerCharacter) {
+
+      if (context.triggerCharacter.charCodeAt(0) === Parser.code.PIP) {
+        CompletionItem.create('')
+      }
+
       if (context.triggerCharacter.charCodeAt(0) === Parser.code.DOT) {
         const doComplete = await Completion.getObjectCompletion(node, offset)
+        console.log(doComplete)
         return doComplete.map(Completion.setCompletionItems)
       }
+
     }
+
+    const tagComplete = Completion.getTriggerCompletion(node, document, position, context)
+    return tagComplete
 
     return false
 

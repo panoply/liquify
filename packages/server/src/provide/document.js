@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import inRange from 'lodash/inRange'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 
 /**
@@ -89,10 +89,10 @@ export function LiquidDocuments (documents = new Map()) {
         , BR = -1
       ]
     }) => (
-      _.inRange(offset, TL, TR) || _.inRange(offset, BL, BR) || _.inRange(offset, TR, BL)
+      inRange(offset, TL, TR) || inRange(offset, BL, BR) || inRange(offset, TR, BL)
     ))
 
-    return [ ast[index], index ]
+    return ast[index]
 
   }
 

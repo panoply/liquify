@@ -1,8 +1,6 @@
-import {
-  workspace, commands, Uri, window
-} from 'vscode'
-import { TransportKind, LanguageClient } from 'vscode-languageclient'
-import { addspacer } from '../providers/tag-format'
+import { workspace, commands, Uri, window } from 'vscode'
+import { TransportKind, LanguageClient } from 'vscode-languageclient/node'
+import { addSpacer } from '../providers/tag-format'
 import HTMLClient from './html-client'
 import { join, resolve } from 'path'
 import { existsSync, readFileSync } from 'fs'
@@ -88,7 +86,7 @@ export default (context) => {
   /**
    * Liquid Server Options
    *
-   * @type { import("vscode-languageclient").ServerOptions }
+   * @type { import("vscode-languageclient/node").ServerOptions }
    */
   const server = {
     run: {
@@ -112,6 +110,7 @@ export default (context) => {
   const client = {
     diagnosticCollectionName: name,
     outputChannelName: name,
+
     documentSelector: [
       {
         scheme: 'file',
@@ -216,15 +215,12 @@ export default (context) => {
       }
 
     }
-
   }
 
   /**
    * Liquid Language Client
    */
   const liquid = new LanguageClient('liquid', name, server, client)
-
-  const state = {}
 
   /**
    * Liquid Language Register
@@ -244,7 +240,7 @@ export default (context) => {
    * Liquid Disposable
    */
   subscriptions.push(dispose)
-  subscriptions.push(addspacer(liquid))
+  // subscriptions.push(addSpacer(liquid))
 
   /**
    * HTML Language Client
