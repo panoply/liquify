@@ -1413,6 +1413,53 @@
       "description": "Allows you to access any image in a store by its filename",
       "link": "https://help.shopify.com/themes/liquid/objects#images"
     },
+    "link": {
+      "type": "object",
+      "description": "The link object cannot be invoked on its own. It must be invoked inside a linklist.",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/link",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "description": "Returns true if the link object is active, or false if the link object is inactive."
+        },
+        "child_active": {
+          "type": "boolean",
+          "description": "Similar to link.active, but returns true if a child link of the parent link is active, or false if no child links of the parent link are active."
+        },
+        "current": {
+          "type": "boolean",
+          "description": "Returns true if the page content associated with the link is considered a match to the current page. Returns false if the content isn't considered a match."
+        },
+        "child_current": {
+          "type": "boolean",
+          "description": "Returns true if a child link has a link object with link.current equal to true. Returns false if no child links have a link object with link.current equal to true."
+        },
+        "levels": {
+          "type": "number",
+          "description": "Returns the number of nested levels that a link contains."
+        },
+        "links": {
+          "type": "array",
+          "description": "Returns an array of the child links associated with the parent link."
+        },
+        "object": {
+          "type": "object", 
+          "description": "Returns the variable associated to the link."
+        },
+        "title": {
+          "type": "string",
+          "description": "Returns the title of the link."
+        },
+        "type": {
+          "type": "object",
+          "description": "Returns the type of the link."
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns the URL of the link."
+        }
+      }
+    },
     "linklists": {
       "description": "Returns a list of all the menus (link lists) in your store. You can use linklists to access your link lists with their handles.",
       "link": "https://help.shopify.com/themes/liquid/objects#linklists",
