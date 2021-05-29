@@ -172,7 +172,7 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   Parser.parse(document)
 
-  console.log(document.ast)
+  // console.log(document.ast)
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
   return Service

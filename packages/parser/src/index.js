@@ -195,7 +195,7 @@ export class LiquidParser {
       inRange(offset, AST[node].offsets[1], AST[node].offsets[2])
     ))
 
-    if (embed > 0) return AST[embed]
+    if (embed >= 0) return AST[ast.embedded[embed]]
 
     return false
 

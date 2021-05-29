@@ -7,7 +7,6 @@ import { JSONService } from 'service/modes/json'
 import * as Format from 'service/format'
 import * as Completion from 'service/completions'
 import * as Hover from 'service/hovers'
-import { Document } from 'provide/document'
 import { Parser } from 'provide/parser'
 import upperFirst from 'lodash/upperFirst'
 
@@ -205,8 +204,10 @@ export default (mode => ({
         console.log(ASTNode)
 
         if (ASTNode) {
+          console.log('heeerre', mode[ASTNode.language])
+
           if (mode?.[ASTNode.language]) {
-            const embeddedDocument = mode[ASTNode.language].doComplete(ASTNode, position)
+            const embeddedDocument = await mode[ASTNode.language].doComplete(ASTNode, position)
             embeddedDocument.data = { language: ASTNode.language }
             return embeddedDocument
           }

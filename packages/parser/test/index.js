@@ -32,30 +32,7 @@ const parser = new LiquidParser({
   track_variables: true,
   error_tolerance: 1,
   exclude: [],
-  associate_tags: [
-    {
-      language: 'javascript',
-      kind: 'html',
-      name: 'script'
-    },
-    {
-      language: 'json',
-      kind: 'html',
-      name: 'script',
-      attr: 'application\\/json'
-    },
-    {
-      language: 'json',
-      kind: 'html',
-      name: 'script',
-      attr: 'application\\/ld\\+json'
-    },
-    {
-      language: 'css',
-      kind: 'html',
-      name: 'style'
-    }
-  ]
+  associate_tags: []
 })
 
 parser.engine('shopify')
