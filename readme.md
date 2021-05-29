@@ -13,7 +13,7 @@ Language tooling for the [Liquid Template Language](#). Liquify brings modern ID
 
 ### Why
 
-The Liquid template language has been around for a long time. Originally created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is used by other open source projects like Jekyll, Eleventy and long list of SaaS services. Liquid is actively maintained by Shopify and yet despite being the foundation of their storefront development and backed by a multi-billion dollar company who employ thousands of engineers, Shopify has not only failed but neglected to bring support for Liquid into the modern development ecosystem. Liquify was created to solve this issue, it aims to be the _crème de la crème_ and provide developers everything they require when working with the language in text editors.
+The Liquid template language has been around for a long time. Originally created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is used by other open source projects like Jekyll, Eleventy and long list of SaaS services. Liquid is actively maintained by Shopify and yet despite being the foundation of their storefront development, Shopify has both failed and neglected to bring support for Liquid into the modern development ecosystem. Liquify was created to solve this issue, it aims to be the _crème de la crème_ and provide developers everything they require when working with the language in text editors.
 
 ### Pricing / License
 
@@ -78,6 +78,18 @@ pnpm package           Package compression of bundles like pnpm pack
 --dry-run              Dry run the command
 ```
 
-<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLHQXKGG6A6H7G2JQGK6YBWSS" />
+<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLDIDMNQ3NJPEQ73NTLAXPZLE" />
 
-🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+##### CONTRIBUTORS
+
+🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@kaossissel-1DA1F2?logo=twitter&logoColor=fff" />
+<br>
+🍔 <small>[Joseph Curtis](#)</small> <img align="right" src="https://img.shields.io/badge/-@jCurt-1DA1F2?logo=twitter&logoColor=fff" />
+
+##### ACKNOWLEDGEMENTS
+
+Special thanks to a couple of developers who frequent the [Shopify Developers](https://discord.com/channels/597504637167468564/597507881419407404) discord channel.
+
+- [Mansedan](#)
+- [Wolf Grey](#)
+- [Dave W](#)
