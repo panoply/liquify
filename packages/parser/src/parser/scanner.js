@@ -204,7 +204,7 @@ export default (function () {
 
         state = ScanState.ParseError
         error = ParseError.InvalidTagName
-        return ScanLiquid()
+        return TokenType.ParseError
 
       case ScanState.HTMLTagOpen:
 
@@ -229,7 +229,8 @@ export default (function () {
           return TokenType.HTMLAttributeName
         }
 
-        break
+        state = ScanState.CharSeq
+        return TokenType.ParseSkip
 
       case ScanState.HTMLAttributeOperator:
 

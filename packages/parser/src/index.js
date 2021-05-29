@@ -1,5 +1,6 @@
 import stream from 'parser/stream'
 import specs from 'parser/specs'
+import { TokenTags } from 'enums/tags'
 import { parse } from 'parser/parse'
 import options from 'parser/options'
 import context from 'parser/context'
@@ -43,6 +44,16 @@ export class LiquidParser {
 
     specs.ref(engine, this.config.license)
 
+  }
+
+  /**
+   * Returns Code Characters
+   *
+   * @memberof LiquidParser
+   */
+  get kind () {
+
+    return TokenTags
   }
 
   /**
@@ -143,6 +154,18 @@ export class LiquidParser {
   }
 
   getClosestNode () {
+
+  }
+
+  /**
+   * Get Associate tags
+   *
+   * @param {Parser.ASTNode[]} AST
+   * @memberof LiquidParser
+   */
+  getAssociates (AST) {
+
+    return AST.filter(({ type }) => type === TokenTags.associate)
 
   }
 

@@ -1,12 +1,18 @@
-<script type="application/json">
-{% if condition.values %}
-{{ foo | append: 'ba' }}
-{% endif %}
-</script>
+{% capture  %}{% endcapture %}
 
+{{ variant.available | capitalize }}
 
-<script>
-{% if condition.values %}
-{{ foo | append: 'ba' }}
-{% endif %}
-</script>
+<script
+  defer
+  src="{{ gm | append: '&callback=app.render' }}"></script>
+
+{% if sooomw %}{% endif %}
+
+{% for  %}
+
+  soo
+{% endfor %}
+
+{% for item in collection %}{% endfor %}
+
+{{ article.user.image.src  }}

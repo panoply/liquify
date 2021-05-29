@@ -118,28 +118,47 @@ export function parse (document = { ast: [] }) {
 
         break
 
+      case TokenType.ParseSkip:
+
+        if (node) {
+
+          if (!node.singular) {
+            ast.hierarch.get.pop()
+            ast.hierarch.get.pop()
+          }
+
+          node = undefined
+        }
+
+        break
+
       // HTML TAGS
       // -----------------------------------------------------------------
       case TokenType.HTMLStartTagOpen:
+        if (this.context) context.add(TokenContext.OpenTag)
+        break
+
+      case TokenType.HTMLTagName:
 
         ast.node = document.ast.length
 
         // @ts-ignore
         node = new ast.INode()
-        node.type = 1
+
+        node.type = TokenTags.associate
         node.kind = TokenKind.HTML
         node.singular = false
 
-        if (this.context) node.context.push(context.size)
-        if (this.context) context.add(TokenContext.OpenTag)
+        if (this.context) {
+          node.context.push(context.size)
+          context.add(TokenContext.Identifier)
+        }
 
-        break
-
-      case TokenType.HTMLTagName:
         node.name = scanner.token
         ast.hierarch.get.push(node.name, node.index)
-        if (this.context) context.add(TokenContext.Identifier)
+
         break
+
       case TokenType.HTMLAttributeName:
         if (this.context) context.add(TokenContext.Attribute)
         state = scanner.token
@@ -179,6 +198,8 @@ export function parse (document = { ast: [] }) {
       case TokenType.HTMLEndCommentTag:
       case TokenType.HTMLStartTagClose:
 
+        if (!node) break
+
         node.offset(scanner.offset)
         node.token.push(scanner.tag)
         node.range.end = scanner.range.end
@@ -190,8 +211,10 @@ export function parse (document = { ast: [] }) {
         if (token !== TokenType.HTMLEndTagClose) {
 
           node.language = spec.associates.match(node.name, Object.values(node.attributes))
-
           node.index = document.ast.length
+
+          ast.embedded.push(node.index)
+
           document.ast.push(node)
         }
 

@@ -1,4 +1,4 @@
-import { Context, IParseError, Variation, Nodes } from "./index";
+import { Context, IParseError, Variation, Nodes, TokenTags } from "./index";
 import { ASTNode } from "./ast";
 import { Scope, TextDocument } from "./vscode";
 import { Options } from "./options";
@@ -141,8 +141,10 @@ export class LiquidParser {
   get errors(): IParseError[];
   get spec(): Variation;
   get code(): Codes;
+  get kind(): TokenTags;
   parse(scope: Scope): Scope;
   getContext(offsets?: number[]): Context;
+  getAssociates(AST: ASTNode[]): ASTNode[];
   getEmbeds(AST: ASTNode[], languages?: string[]): ASTNode[];
   getEmbeddedNode(
     AST: ASTNode[],

@@ -68,6 +68,7 @@ export const enum TokenType {
 
   ParseError,
   ParseWarning,
+  ParseSkip,
 
   Content,
 

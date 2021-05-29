@@ -434,6 +434,12 @@ export default (function ASTNodes () {
 
           return typeof index === 'number' ? index : -1
 
+        },
+
+        pop () {
+
+          return this.pair
+
         }
 
       }

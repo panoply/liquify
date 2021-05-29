@@ -1,7 +1,8 @@
 import prettydiff from 'prettydiff'
 import _ from 'lodash'
-import { Document } from '../provide/document'
-import Server from '../provide/server'
+import { Document } from 'provide/document'
+import Server from 'provide/server'
+import { Parser } from 'provide/parser'
 
 /**
  * Formatting Functions
@@ -152,11 +153,11 @@ export const embeds = (document) => ASTNode => {
 
   const indent_level = indentLevel(document, ASTNode.offsets[0])
   const rules = Server.formatting.languageRules[ASTNode.language]
-
+  const source = ASTNode.content
   // Set formatting rules
   // Apply `indent_level` when nested within elements
   Object.assign(prettydiff.options, rules, {
-    source: ASTNode.content,
+    source,
     indent_level
   })
 
@@ -174,13 +175,11 @@ export const embeds = (document) => ASTNode => {
   // Reset PrettyDiff rules.
   Object.assign(prettydiff.options, defaultRules)
 
-  return formatLiquidEmbeds(ASTNode, newText)
-
-  if (kind === TokenKind.html && !/\s*$/.test(source)) {
-    return formatHTMLEmbeds(embeddedDocument, newText, ASTnode)
+  if (ASTNode.kind === Parser.kind.html && !/\s*$/.test(source)) {
+    return formatHTMLEmbeds(ASTNode.document, newText, ASTNode)
   } else if (
-    embeddedDocument.languageId === 'scss' ||
-    embeddedDocument.languageId === 'css'
+    ASTNode.language === 'scss' ||
+    ASTNode.language === 'css'
   ) {
     return formatLiquidEmbeds(ASTNode, newText)
   }

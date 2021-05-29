@@ -51,7 +51,7 @@ export interface ASTNode {
   get document(): TextDocument;
   token: Token[];
   language: string & Languages,
-  type: TokenType;
+  type: TokenTags;
   index: number;
   kind: TokenKind;
   offsets: Offsets;

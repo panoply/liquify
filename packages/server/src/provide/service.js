@@ -53,8 +53,10 @@ export default (mode => ({
     // const validations = (await Promise.all(diagnostics.map(promise)))
 
     for (const node of Parser.getEmbeds(ast)) {
-      const region = await mode[node.language].doValidation(node)
-      if (region) Parser.errors.push(...region)
+      if (mode?.[node.language]) {
+        const region = await mode[node.language].doValidation(node)
+        if (region) Parser.errors.push(...region)
+      }
     }
 
     return {
@@ -116,6 +118,7 @@ export default (mode => ({
     const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
     const regions = Parser.getEmbeds(ast).flatMap(Format.embeds(literal))
 
+    console.log(regions)
     /* REPLACE ------------------------------------ */
 
     const newText = Format.markup(TextDocument.applyEdits(literal, regions))
