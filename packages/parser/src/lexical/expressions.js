@@ -401,6 +401,15 @@ export const ControlJoins = /\b(?:and|or)\b/
 export const HTMLTagName = /^[a-zA-Z]+/
 
 /**
+ * `^[a-zA-Z0-9-]+`
+ *
+ * ---
+ *
+ * HTML Tag name identifier
+ */
+export const HTMLTagAttribute = /^[a-zA-Z0-9-]+/
+
+/**
  * `^[^\s"'>]+`
  *
  * ---

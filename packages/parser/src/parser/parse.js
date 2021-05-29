@@ -1,5 +1,7 @@
 import { TokenType } from 'enums/types'
+import { TokenTags } from 'enums/tags'
 import { TokenContext } from 'enums/context'
+import { TokenKind } from 'enums/kinds'
 import { ParseError } from 'enums/errors'
 import context from 'parser/context'
 import ast from 'parser/node'
@@ -111,6 +113,78 @@ export function parse (document = { ast: [] }) {
 
         break
 
+      // HTML TAGS
+      // -----------------------------------------------------------------
+      case TokenType.HTMLStartTagOpen:
+
+        ast.node = document.ast.length
+
+        // @ts-ignore
+        node = new ast.INode()
+        node.type = 1
+        node.kind = TokenKind.HTML
+        node.singular = false
+
+        if (this.context) node.context.push(context.size)
+        if (this.context) context.add(TokenContext.OpenTag)
+
+        break
+
+      case TokenType.HTMLTagName:
+        node.name = scanner.token
+        ast.hierarch.get.push(node.name, node.index)
+        if (this.context) context.add(TokenContext.Identifier)
+        break
+      case TokenType.HTMLAttributeName:
+        if (this.context) context.add(TokenContext.Attribute)
+        break
+      case TokenType.HTMLOperatorValue:
+        if (this.context) context.add(TokenContext.Operator)
+        break
+      case TokenType.HTMLAttributeValue:
+        if (this.context) context.add(TokenContext.String)
+        break
+      case TokenType.HTMLEndTag:
+
+        // Find hierarch - The parental node
+        node = document.ast[ast.hierarch.pair]
+
+        // Validate the parent matches the hierarch node
+        if (node?.name === scanner.token) {
+
+          // CONTEXT
+          if (this.context) context.add(TokenContext.EndTag)
+
+          node.offset(scanner.start)
+
+          if (this.context) node.context.push(context.size)
+
+          // AST LOGIC
+          ast.node = node.index
+
+          break
+        }
+
+        break
+
+      case TokenType.HTMLEndTagClose:
+      case TokenType.HTMLEndCommentTag:
+      case TokenType.HTMLStartTagClose:
+
+        node.offset(scanner.offset)
+        node.token.push(scanner.tag)
+        node.range.end = scanner.range.end
+
+        // CONTEXT
+        if (this.context) context.add(TokenContext.CloseTag)
+
+        // ADD ONLY START BASIC TAGS TO AST
+        if (token !== TokenType.HTMLEndTagClose) {
+          node.index = document.ast.length
+          document.ast.push(node)
+        }
+
+        break
       // LIQUID TAGS
       // -----------------------------------------------------------------
       case TokenType.LiquidTag:
@@ -263,7 +337,7 @@ export function parse (document = { ast: [] }) {
 
         // ASSERT HIERARCH
         ast.hierarch.get.push(node.name, node.index)
-        ast.embedded.get.push(node.index)
+        ast.embedded.push(node.index)
 
         if (this.context) context.add(TokenContext.Identifier)
 

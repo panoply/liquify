@@ -21,6 +21,13 @@ import * as c from 'lexical/characters'
 export default (function () {
 
   /**
+   * Scanner
+   *
+   * @type {number}
+   */
+  let scanner
+
+  /**
    * Start Position
    *
    * The starting position index of each tag,
@@ -89,7 +96,6 @@ export default (function () {
     // End of Stream
     if (s.EOS) return TokenType.EOS
 
-    // Dispatch the scanner
     return state === ScanState.CharSeq
       ? CharSeq()
       : ScanLiquid()
@@ -136,7 +142,12 @@ export default (function () {
       }
     }
 
-    if (s.IfNextCodeChar(c.LAN)) {
+    if (s.IsCodeChar(c.LAN)) {
+
+      // Assert Start position and state
+      start = s.offset
+
+      s.Advance(1, true)
 
       if (s.IfCodeChar(c.FWS)) {
         state = ScanState.HTMLTagClose
@@ -148,13 +159,10 @@ export default (function () {
         return TokenType.HTMLStartCommentTag
       }
 
-      if (s.IfRegExp(r.HTMLTagEnd)) {
-        if (s.token === 'script') {
-          return TokenType.HTMLStartTagOpen
-        }
+      if (s.IsRegExp(r.HTMLTagName)) {
+        state = ScanState.HTMLTagOpen
+        return TokenType.HTMLStartTagOpen
       }
-
-      return CharSeq()
 
     }
 
@@ -182,6 +190,74 @@ export default (function () {
     if (s.Newlines()) return TokenType.Newline
 
     switch (state) {
+
+      case ScanState.HTMLTagClose:
+
+        if (s.IfRegExp(r.HTMLTagName)) {
+          state = ScanState.HTMLTagCloseName
+          return TokenType.HTMLEndTag
+        }
+
+        state = ScanState.ParseError
+        error = ParseError.InvalidTagName
+        return ScanLiquid()
+
+      case ScanState.HTMLTagOpen:
+
+        if (s.IfRegExp(r.HTMLTagName)) {
+          if (s.IsToken(/\b(script|style)\b/)) {
+            state = ScanState.HTMLAttributeName
+            return TokenType.HTMLTagName
+          }
+        }
+
+        break
+
+      case ScanState.HTMLAttributeName:
+
+        if (s.IfCodeChar(c.RAN)) {
+          state = ScanState.CharSeq
+          return TokenType.HTMLStartTagClose
+        }
+
+        if (s.IfRegExp(r.HTMLTagAttribute)) {
+          state = ScanState.HTMLAttributeOperator
+          return TokenType.HTMLTagName
+        }
+
+        break
+
+      case ScanState.HTMLAttributeOperator:
+
+        if (s.IfCodeChar(c.EQS)) {
+          state = ScanState.HTMLAttributeValue
+          return TokenType.HTMLOperatorValue
+        }
+
+        state = ScanState.HTMLAttributeName
+        return ScanLiquid()
+
+      case ScanState.HTMLAttributeValue:
+
+        // Capture HTML string attribute value
+        if (s.SkipQuotedString()) {
+
+          // Next character should be closing bracket notation, eg ]
+          state = ScanState.HTMLAttributeName
+          return TokenType.HTMLAttributeValue
+        }
+
+        state = ScanState.HTMLAttributeName
+        return ScanLiquid()
+
+      case ScanState.HTMLTagCloseName:
+
+        if (s.IfCodeChar(c.RAN)) {
+          state = ScanState.CharSeq
+          return TokenType.HTMLEndTagClose
+        }
+
+        break
 
       case ScanState.TagObjectOpen:
 

@@ -9,6 +9,7 @@ export const enum ScanCache {
   Tokenize,
   StringOpen,
   StringClose,
+  HTMLToken,
   BracketNotation,
   BracketNotationObject,
   BracketNotationString,
@@ -47,6 +48,14 @@ export const enum ScanState {
    * a fallback when `scan()` function  does not return match
    */
   Liquid,
+
+  /**
+   * Liquid Tag
+   *
+   * Passes to Liquid Tag scanner, state is applied as
+   * a fallback when `scan()` function  does not return match
+   */
+  HTML,
 
   /**
    * Parse Error

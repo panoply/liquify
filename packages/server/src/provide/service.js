@@ -199,6 +199,8 @@ export default (mode => ({
 
         const ASTNode = Parser.getEmbeddedNode(document.ast, position)
 
+        console.log(ASTNode)
+
         if (ASTNode) {
           if (mode?.[ASTNode.language]) {
             const embeddedDocument = mode[ASTNode.language].doComplete(ASTNode, position)

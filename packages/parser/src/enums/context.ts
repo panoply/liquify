@@ -145,6 +145,11 @@ export enum TokenContext {
   Array = "array",
 
   /**
+   * Attribute HTML Name
+   */
+  Attribute = "attribute",
+
+  /**
    * Range value (used in iteration): `(1..2)`
    */
   Range = "range",
