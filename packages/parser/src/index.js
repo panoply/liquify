@@ -27,6 +27,10 @@ export class LiquidParser {
 
     this.config = { ...options, ...configuration }
     this.engine(this.config.engine)
+
+    if (this.config.associate_tags.length > 0) {
+      specs.associates.setup(this.config.associate_tags)
+    }
   }
 
   /**

@@ -24,6 +24,11 @@ export function parse (document = { ast: [] }) {
   let token = scanner.scan()
 
   /**
+   * @type {any}
+   */
+  let state
+
+  /**
    * @type {Parser.ASTNode}
    */
   let node
@@ -137,12 +142,15 @@ export function parse (document = { ast: [] }) {
         break
       case TokenType.HTMLAttributeName:
         if (this.context) context.add(TokenContext.Attribute)
+        state = scanner.token
+        node.attributes[state] = null
         break
       case TokenType.HTMLOperatorValue:
         if (this.context) context.add(TokenContext.Operator)
         break
       case TokenType.HTMLAttributeValue:
         if (this.context) context.add(TokenContext.String)
+        node.attributes[state] = scanner.token
         break
       case TokenType.HTMLEndTag:
 
@@ -180,6 +188,9 @@ export function parse (document = { ast: [] }) {
 
         // ADD ONLY START BASIC TAGS TO AST
         if (token !== TokenType.HTMLEndTagClose) {
+
+          node.language = spec.associates.match(node.name, Object.values(node.attributes))
+
           node.index = document.ast.length
           document.ast.push(node)
         }

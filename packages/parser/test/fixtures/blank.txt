@@ -1,6 +1,12 @@
 <script type="application/json">
-{% if condition %}
-
+{% if condition.values %}
+{{ foo | append: 'ba' }}
 {% endif %}
 </script>
 
+
+<script>
+{% if condition.values %}
+{{ foo | append: 'ba' }}
+{% endif %}
+</script>

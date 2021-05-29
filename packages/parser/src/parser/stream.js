@@ -254,9 +254,7 @@ export default (function Stream (source) {
     },
 
     /**
-     * Test the current Token in stream
-     *
-     * **DOES NOT MODIFY**
+     * Captures and modifies the token
      *
      * ---
      *
@@ -721,16 +719,17 @@ export default (function Stream (source) {
      *
      * ---
      *
+     * @param {number[]|true} [consume]
+     * Custom characters to be consumed within the string.
+     * Passing `true` will consume quotations
+     *
      * @param {number} n
      * The position offset, default is current stream position
-     *
-     * @param {number[]} [consume]
-     * Custom characters to be consumed within the string
      *
      * @memberof Stream
      * @returns {boolean}
      */
-    SkipQuotedString (n = index, consume = undefined) {
+    SkipQuotedString (consume = undefined, n = index) {
 
       if (!/^["']/.test(source.substring(n))) return false
 
@@ -745,7 +744,7 @@ export default (function Stream (source) {
       if (this.GetCodeChar(offset - 1) === BWS) return this.SkipQuotedString(offset)
 
       // custom consumed character codes
-      if (consume) {
+      if (typeof consume !== 'undefined' && typeof consume !== 'boolean') {
         if (consume.includes(this.GetCodeChar(offset))) {
           return this.SkipQuotedString(offset)
         }
@@ -753,7 +752,9 @@ export default (function Stream (source) {
 
       cursor = index
       index = offset + 1
-      token = source.substring(n, offset + 1)
+      token = consume === true
+        ? source.substring(n + 1, offset)
+        : source.substring(n, index)
 
       return true
 

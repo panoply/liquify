@@ -68,6 +68,98 @@ export default (function Specs () {
     ref: (engine, license) => { variation = specs({ variation: engine, license }) },
 
     /**
+     * Set Associated Tags
+     *
+     * Sets custom specs for associated tags
+     *
+     */
+    associates: (
+
+      /**
+       * Object State Name reference
+       *
+       * @param {number} offset
+       */
+      state => ({
+
+        /**
+         * Tag identifier Matches
+         *
+         * @returns {RegExp}
+         */
+        get regex () { return state.match },
+
+        /**
+         * Object Type
+         *
+         * The return value of the object currently in stream
+         *
+         */
+        get tags () { return state.tags },
+
+        /**
+         * Object Type
+         *
+         * The return value of the object currently in stream
+         *
+
+         */
+        match: (tagName, attributes) => {
+
+          const i1 = state.tags.findIndex(({
+            name,
+            attr
+          }) => (tagName === name && attr && attributes.some(a => new RegExp(attr).test(a))))
+
+          if (i1 >= 0) return state.tags[i1].language
+
+          const i2 = state.tags.findIndex(({ name, attr }) => (tagName === name && !attr))
+
+          if (i2 >= 0) return state.tags[i2].language
+
+          return false
+
+        },
+
+        /**
+         * Object Cursor
+         *
+         * Resets the object cursor to last known property
+         * reference.
+         */
+        setup: (tags) => {
+
+          if (Array.isArray(state.match)) {
+            while (state.match.length > 0) state.match.pop()
+          }
+
+          if (Array.isArray(state.tags)) {
+            while (state.tags.length > 0) state.tags.pop()
+          }
+
+          state.tags = tags
+
+          let index = 0
+          while (tags.length > index) {
+            if (state.match === null) state.match = []
+            if (!state.match.includes(tags[index].name)) state.match.push(tags[index].name)
+            index++
+          }
+
+          if (Array.isArray(state.match)) {
+            state.match = new RegExp(`\\b(?:${state.match.join('|')})\\b`)
+          }
+
+        }
+
+      })
+
+    )({
+      tags: null,
+      match: null
+    }),
+
+    /**
      * Get Active Variation
      *
      * @readonly

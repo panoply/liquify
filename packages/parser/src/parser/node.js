@@ -169,6 +169,15 @@ export default (function ASTNodes () {
     objects = {}
 
     /**
+     * Attributes
+     *
+     * Returns Attributes on HTML tags
+     *
+     * @type {object}
+     */
+    attributes = {}
+
+    /**
      * Filters
      *
      * Returns the Filters (if any) located on the token

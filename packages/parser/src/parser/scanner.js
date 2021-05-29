@@ -144,24 +144,28 @@ export default (function () {
 
     if (s.IsCodeChar(c.LAN)) {
 
-      // Assert Start position and state
-      start = s.offset
+      if (spec.associates.tags) {
 
-      s.Advance(1, true)
+        // Assert Start position and state
+        start = s.offset
 
-      if (s.IfCodeChar(c.FWS)) {
-        state = ScanState.HTMLTagClose
-        return TokenType.HTMLEndTagOpen
+        s.Advance(1, true)
+
+        if (s.IfCodeChar(c.FWS)) {
+          state = ScanState.HTMLTagClose
+          return TokenType.HTMLEndTagOpen
+        }
+
+        if (s.IsRegExp(r.HTMLTagName)) {
+          state = ScanState.HTMLTagOpen
+          return TokenType.HTMLStartTagOpen
+        }
+
       }
 
       if (s.IfChars([ c.BNG, c.DSH, c.DSH ])) {
         state = ScanState.HTMLCommentOpen
         return TokenType.HTMLStartCommentTag
-      }
-
-      if (s.IsRegExp(r.HTMLTagName)) {
-        state = ScanState.HTMLTagOpen
-        return TokenType.HTMLStartTagOpen
       }
 
     }
@@ -205,7 +209,7 @@ export default (function () {
       case ScanState.HTMLTagOpen:
 
         if (s.IfRegExp(r.HTMLTagName)) {
-          if (s.IsToken(/\b(script|style)\b/)) {
+          if (s.TokenContains(spec.associates.regex)) {
             state = ScanState.HTMLAttributeName
             return TokenType.HTMLTagName
           }
@@ -222,7 +226,7 @@ export default (function () {
 
         if (s.IfRegExp(r.HTMLTagAttribute)) {
           state = ScanState.HTMLAttributeOperator
-          return TokenType.HTMLTagName
+          return TokenType.HTMLAttributeName
         }
 
         break
@@ -240,9 +244,7 @@ export default (function () {
       case ScanState.HTMLAttributeValue:
 
         // Capture HTML string attribute value
-        if (s.SkipQuotedString()) {
-
-          // Next character should be closing bracket notation, eg ]
+        if (s.SkipQuotedString(true)) {
           state = ScanState.HTMLAttributeName
           return TokenType.HTMLAttributeValue
         }

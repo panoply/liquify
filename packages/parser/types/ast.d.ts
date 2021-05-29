@@ -59,7 +59,10 @@ export interface ASTNode {
   children?: Children[];
   content: string;
   singular: boolean
-  objects?: Map<number, string>
-  filters?: Map<number, string>
+  objects?: { [offset: number]: string[] | number }
+  filters?:  { [offset: number]: string }
+  attributes?: {
+    [attribute: string]: string
+  }
   offset(offset: number): void
 }
