@@ -1,5 +1,6 @@
 export interface Options {
   engine: "standard" | "shopify" | "jekyll" | "eleventy";
+  license: string;
   context: boolean | false;
   frontmatter: boolean | false;
   newlines: boolean | false;

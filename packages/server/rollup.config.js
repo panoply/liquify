@@ -5,12 +5,15 @@ import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import alias from '@rollup/plugin-alias'
 import { resolve } from 'path'
-// import replace from '@rollup/plugin-replace'
+import replace from '@rollup/plugin-replace'
 import filesize from 'rollup-plugin-filesize'
-import obfuscator from '@liquify/rollup-plugin-obfuscator'
+// import obfuscator from '@liquify/rollup-plugin-obfuscator'
 import noderesolve from '@rollup/plugin-node-resolve'
 import globs from '@liquify/rollup-plugin-globs'
 import pkg from './package.json'
+import { config } from 'dotenv'
+
+config()
 
 export default [
   {

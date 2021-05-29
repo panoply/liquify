@@ -2,11 +2,15 @@ import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import { terser } from 'rollup-plugin-terser'
 import { resolve } from 'path'
 import alias from '@rollup/plugin-alias'
+import replace from '@rollup/plugin-replace'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import filesize from 'rollup-plugin-filesize'
 import noderesolve from '@rollup/plugin-node-resolve'
 import globs from '@liquify/rollup-plugin-globs'
+import { config } from 'dotenv'
+
+config()
 
 export default {
   input: 'src/index.js',
@@ -21,6 +25,12 @@ export default {
     '@liquify/liquid-language-specs'
   ],
   plugins: plugins([
+    replace({
+      preventAssignment: true,
+      values: {
+        'process.env.MASTER_KEY': process.env.MASTER_KEY
+      }
+    }),
     alias({
       entries: {
         parser: resolve(__dirname, 'src/parser'),

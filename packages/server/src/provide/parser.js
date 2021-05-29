@@ -6,6 +6,7 @@ import { LiquidParser } from '@liquify/liquid-parser'
 export const Parser = new LiquidParser(
   {
     engine: 'standard',
+    license: process.env.MASTER_KEY,
     context: true,
     frontmatter: false,
     whitespace: true,
