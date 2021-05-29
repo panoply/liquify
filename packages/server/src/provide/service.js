@@ -211,8 +211,8 @@ export default (mode => ({
           if (node) break
           return Completion.getOutputCompletions(position)
         case Parser.code.DOT:
-          if (node) return Completion.getObjectCompletion(node, offset)
-          break
+          if (!node) break
+          return Completion.getObjectCompletion(node, offset)
         case Parser.code.PIP:
           if (node) return Completion.getFilterCompletions(position)
           break

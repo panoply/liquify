@@ -55,35 +55,6 @@ export function setCompletionItems (
  * offset index numbers and property value ear either string of array types.
  *
  * @export
- * @param {LSP.TextDocument} textDocument
- * @param {LSP.Position} position
- * @param {TextEdit[]} [TextEdits]
- */
-function delimiterInsert (textDocument, position, TextEdits = []) {
-
-  const character = textDocument.offsetAt(PosCharSubtract(1, position))
-
-  if (textDocument.getText().charCodeAt(character) === Parser.code.LCB) {
-    TextEdits.push(
-      TextEdit.insert(
-        PosCharSubtract(1, position)
-        , '{'
-      )
-    )
-  }
-
-  return TextEdits
-
-}
-
-/**
- * Get Object Completion
- *
- * Gets completion items for Liquid objects. The
- * AST applies an `objects` property to its record where its keys are the
- * offset index numbers and property value ear either string of array types.
- *
- * @export
  * @param {Parser.ASTNode} ASTNode
  * @param {number} offset
  */
@@ -95,7 +66,7 @@ export async function getObjectCompletion (ASTNode, offset) {
 
   if (isArray(record) && record.length === 1) {
     const { properties } = Parser.spec.objects[record[0]]
-    return Object.entries(properties)
+    return Object.entries(properties).map(setCompletionItems)
   }
 
   if (typeof record === 'number') {
@@ -109,7 +80,7 @@ export async function getObjectCompletion (ASTNode, offset) {
       return prop.length > 1
         ? object && walk(prop.slice(1), object)
         : object
-          ? Object.entries(object)
+          ? Object.entries(object).map(setCompletionItems)
           : false
 
     }(objects.slice(1), Parser.spec.objects[objects[0]].properties))
@@ -167,7 +138,6 @@ export function getTagCompletions (position) {
  * Generate Output (Object) Completions
  *
  * @export
- * @param {LSP.TextDocument} textDocument
  * @param {LSP.Position} position
  * @returns {LSP.CompletionItem[]}
  */

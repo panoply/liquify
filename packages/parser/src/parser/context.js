@@ -1,6 +1,5 @@
 import { TokenContext } from 'enums/context'
 import scanner from 'parser/scanner'
-import ast from 'parser/node'
 
 /**
  * Context Generator

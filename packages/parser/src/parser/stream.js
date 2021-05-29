@@ -403,8 +403,8 @@ export default (function Stream (source) {
       const { line, col } = range.fromIndex(offset)
 
       return {
-        line: line - 1,
-        character: col - 1
+        line: line,
+        character: col
       }
 
     },
