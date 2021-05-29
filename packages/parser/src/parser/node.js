@@ -5,6 +5,7 @@ import scanner from 'parser/scanner'
 import context from 'parser/context'
 import Errors from 'parser/errors'
 import yamljs from 'yamljs'
+import { nanoid } from 'nanoid'
 
 /**
  * AST Node
@@ -285,7 +286,7 @@ export default (function ASTNodes () {
      * @readonly
      * @param {string} id
      */
-    set uri (id) { uri = id },
+    set uri (id) { uri = id || nanoid(10) },
 
     /* VERSION ------------------------------------ */
 
@@ -331,16 +332,7 @@ export default (function ASTNodes () {
      * @readonly
      * @param {number} id
      */
-    embedded: {
-
-      /**
-       * Returns Embedded node locations
-       *
-       * @readonly
-       */
-      get get () { return embedded }
-
-    },
+    embedded,
 
     /* ERRORS ------------------------------------- */
 

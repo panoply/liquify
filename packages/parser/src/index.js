@@ -4,7 +4,10 @@ import { parse } from 'parser/parse'
 import options from 'parser/options'
 import context from 'parser/context'
 import ast from 'parser/node'
+import inRange from 'lodash/inRange'
 import * as Codes from 'lexical/characters'
+
+/* EXPOSED EXPORTS ---------------------------- */
 
 /**
  * Liquid Parser
@@ -14,28 +17,50 @@ import * as Codes from 'lexical/characters'
  */
 export class LiquidParser {
 
-  constructor (configuration) {
-
-    this.documents = new Map()
-    this.parser = { ...options, ...configuration }
-
-  }
-
-  engine (engine) {
-
-    specs.ref(engine, this.parser.license)
-
-  }
-
-  get code () { return Codes }
-
   /**
-   * Returns the context list
+   * Creates an instance of LiquidParser.
    *
-   * @readonly
+   * @param {Config.Options} configuration
    * @memberof LiquidParser
    */
-  get context () { return context.list }
+  constructor (configuration) {
+
+    this.config = { ...options, ...configuration }
+    this.engine(this.config.engine)
+  }
+
+  /**
+   * Specification Engine
+   *
+   * @param {Specs.Engine} engine
+   * @memberof LiquidParser
+   */
+  engine (engine) {
+
+    specs.ref(engine, this.config.license)
+
+  }
+
+  /**
+   * Returns Code Characters
+   *
+   * @memberof LiquidParser
+   */
+  get code () {
+
+    return Codes
+  }
+
+  /**
+   * Returns Specification
+   *
+   * @memberof LiquidParser
+   * @return {Specs.Variation}
+   */
+  get spec () {
+
+    return specs.variation
+  }
 
   /**
    * Returns the errors list
@@ -46,15 +71,186 @@ export class LiquidParser {
   get errors () { return ast.error.get }
 
   /**
-   * Returns the Specification variation
+   * Executes a full document parse
    *
-   * @readonly
+   * @param {Parser.Scope} document
+   * @return {Parser.ASTNode[]}
    * @memberof LiquidParser
    */
-  get spec () { return specs.variation }
+  parse (document) {
+
+    stream.create(document.textDocument.getText())
+
+    ast.uri = document.textDocument.uri
+    ast.version = document.textDocument.version
+
+    while (ast.error.get.length > 0) ast.error.get.pop()
+    while (ast.embedded.length > 0) ast.embedded.pop()
+    while (document.ast.length > 0) document.ast.pop()
+
+    return parse.bind(this.config)(document)
+
+  }
+
+  increment (text, changes) {
+
+  }
 
   /**
-   * Test Code Character at position
+   * Returns the context list
+   *
+   * @param {number[]} [offsets]
+   * @memberof LiquidParser
+   */
+  getContext (offsets = undefined) {
+
+    return offsets ? context.get(offsets) : context.list
+
+  }
+
+  /**
+   * Get Embedded documents
+   *
+   * @param {Parser.ASTNode[]} AST
+   * @param {Parser.TextDocument.Position|number} position
+   * @memberof LiquidParser
+   */
+  getNode (AST, position) {
+
+    const offset = typeof position === 'object'
+      ? stream.OffsetFromPosition(position)
+      : position
+
+    const index = AST.findIndex(({
+      offsets: [
+        TL = -1
+        , TR = -1
+        , BL = -1
+        , BR = -1
+      ]
+    }) => (
+      inRange(offset, TL, TR) ||
+      inRange(offset, BL, BR) ||
+      inRange(offset, TR, BL)
+    ))
+
+    return AST[index]
+
+  }
+
+  getClosestNode () {
+
+  }
+
+  getVariables () {
+
+  }
+
+  getChildren () {
+
+  }
+
+  getLinked () {
+
+  }
+
+  /**
+   * Get Embedded documents
+   *
+   * @param {Parser.ASTNode[]} AST
+   * @param {Parser.TextDocument.Position} position
+   * @memberof LiquidParser
+   */
+  getEmbeddedNode (AST, position) {
+
+    const offset = stream.OffsetFromPosition(position)
+    const embed = ast.embedded.findIndex(node => (
+      inRange(offset, AST[node].offsets[1], AST[node].offsets[2])
+    ))
+
+    if (embed > 0) return AST[embed]
+
+    return false
+
+  }
+
+  /**
+   * Get Embedded documents
+   *
+   * @param {Parser.ASTNode[]} AST
+   * @param {string[]} [languages]
+   * @memberof LiquidParser
+   */
+  getEmbeds (AST, languages) {
+
+    const embeds = ast.embedded.map(node => AST[node])
+
+    if (languages) {
+      return embeds.filter(node => languages.includes(node.language))
+    }
+
+    return embeds
+
+  }
+
+  getErrors () {
+
+  }
+
+  /**
+   * Test Code Character at TextDocument position
+   *
+   * @memberof LiquidParser
+   */
+  withinScope (position, code) {
+
+    const offset = stream.OffsetFromPosition(position)
+
+    return stream.CodeCharAt(code, offset)
+
+  }
+
+  /**
+   * Get Embedded documents
+   *
+   * @param {Parser.ASTNode[]} AST
+   * @param {Parser.TextDocument.Position} position
+   * @memberof LiquidParser
+   */
+  withinToken (AST, position) {
+
+    const offset = stream.OffsetFromPosition(position)
+
+    return AST.some(({
+      singular,
+      offsets: [
+        TL = -1
+        , TR = -1
+        , BL = -1
+        , BR = -1
+      ]
+    }) => {
+      if (singular) return inRange(offset, TL, TR)
+      else return inRange(offset, TL, TR) || inRange(offset, BL, BR)
+    })
+
+  }
+
+  /**
+   * Test Code Character at TextDocument position
+   *
+   * @memberof LiquidParser
+   */
+  withinNode (position, code) {
+
+    const offset = stream.OffsetFromPosition(position)
+
+    return stream.CodeCharAt(code, offset)
+
+  }
+
+  /**
+   * Test Code Character at TextDocument position
    *
    * @memberof LiquidParser
    */
@@ -67,47 +263,11 @@ export class LiquidParser {
   }
 
   /**
-   * Executes a full document parse
+   * Test Code Character at TextDocument position
    *
-   * @param {Parser.Scope} document
-   * @return {Parser.ASTNode[]}
    * @memberof LiquidParser
    */
-  parse (document) {
-
-    ast.version = document.textDocument.version
-    ast.uri = document.textDocument.uri
-
-    while (ast.error.get.length > 0) ast.error.get.pop()
-    while (ast.embedded.get.length > 0) ast.embedded.get.pop()
-    while (document.ast.length > 0) document.ast.pop()
-
-    const source = document.textDocument.getText()
-    stream.create(source)
-
-    return parse.bind(this.parser)(document)
-
-  }
-
-  increment () {
-
-  }
-
-  getChildren () {
-
-  }
-
-  getLinked () {
-
-  }
-
-  getEmbeds (document) {
-
-    return ast.embedded.get.map(node => document.ast[node])
-
-  }
-
-  getErrors () {
+  isRegExp (position, code) {
 
   }
 

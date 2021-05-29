@@ -152,16 +152,9 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
   console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
 
   if (Server.provider.validateOnOpen) {
-    return Service.doValidation(document).then(({
-      uri
-      , diagnostics
-    }) => {
-
-      return connection.sendDiagnostics({
-        uri,
-        diagnostics
-      })
-    })
+    return Service
+      .doValidation(document)
+      .then(diagnostics => connection.sendDiagnostics(diagnostics))
   }
 })
 

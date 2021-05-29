@@ -55,11 +55,13 @@ export function setCompletionItems (
  * offset index numbers and property value ear either string of array types.
  *
  * @export
- * @param {Parser.ASTNode} ASTNode
- * @param {number} offset
+ * @param {Parser.Scope} document
+ * @param {LSP.Position} position
  */
-export async function getObjectCompletion (ASTNode, offset) {
+export async function getObjectCompletion ({ ast, textDocument }, position) {
 
+  const offset = textDocument.offsetAt(position)
+  const ASTNode = Parser.getNode(ast, offset)
   const record = ASTNode.objects[offset]
 
   if (!record) return false

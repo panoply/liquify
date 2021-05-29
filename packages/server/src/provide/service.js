@@ -47,18 +47,18 @@ export default (mode => ({
    * @param {Parser.Scope} textDocument
    * @memberof LiquidService
    */
-  async doValidation (document) {
+  async doValidation ({ ast, textDocument }) {
 
     // const promise = Diagnostic.resolve(textDocument)
     // const validations = (await Promise.all(diagnostics.map(promise)))
 
-    for (const node of Parser.getEmbeds(document)) {
+    for (const node of Parser.getEmbeds(ast)) {
       const region = await mode[node.language].doValidation(node)
       if (region) Parser.errors.push(...region)
     }
 
     return {
-      uri: document.textDocument.uri
+      uri: textDocument.uri
       , diagnostics: Parser.errors
     }
 
@@ -103,25 +103,25 @@ export default (mode => ({
    * @returns
    * @memberof LiquidService
    */
-  doFormat (document) {
+  doFormat ({ ast, textDocument }) {
 
     // const filename = basename(document.textDocument.uri)
     // if (settings.ignore.files.includes(filename)) return
 
-    const { uri, version, languageId } = document.textDocument
+    const { uri, version, languageId } = textDocument
 
     /* FORMATS ------------------------------------ */
 
-    const content = document.textDocument.getText()
+    const content = textDocument.getText()
     const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
-    const regions = Parser.getEmbeds(document).flatMap(Format.embeds(literal))
+    const regions = Parser.getEmbeds(ast).flatMap(Format.embeds(literal))
 
     /* REPLACE ------------------------------------ */
 
     const newText = Format.markup(TextDocument.applyEdits(literal, regions))
     const range = {
       start: Position.create(0, 0),
-      end: document.textDocument.positionAt(content.length)
+      end: textDocument.positionAt(content.length)
     }
 
     return [ TextEdit.replace(range, newText) ]
@@ -135,19 +135,17 @@ export default (mode => ({
    * @param {LSP.Position} position
    * @memberof LiquidService
    */
-  async doHover (document, position) {
+  async doHover ({ ast, textDocument }, position) {
 
-    const ASTNode = Document.getNode(position)
+    const ASTNode = Parser.getNode(ast, position)
 
     if (ASTNode) {
-
       if (mode?.[ASTNode.language]) {
         return mode[ASTNode.language].doHover(ASTNode, position)
       }
-
     }
 
-    const name = Hover.getWordAtPosition(document.textDocument, position)
+    const name = Hover.getWordAtPosition(textDocument, position)
 
     /**
      * @type {Parser.Cursor}
@@ -189,23 +187,31 @@ export default (mode => ({
    * @param {LSP.Position} position
    * @param {LSP.CompletionContext} context
    */
-  async doComplete (document, position, { triggerCharacter, triggerKind }) {
-
-    const offset = document.textDocument.offsetAt(position)
-    const node = Document.getNode(offset)
-    const within = Document.withinToken(offset)
-
-    if (node) {
-      if (mode?.[node.language]) {
-        const embeddedDocument = mode[node.language].doComplete(node, position)
-        embeddedDocument.data = { language: node.language }
-        return embeddedDocument
-      }
-    }
-
-    console.log('IN PER', offset, within, triggerCharacter, triggerCharacter.charCodeAt(0) === Parser.code.PER)
+  async doComplete (document, position, {
+    triggerCharacter,
+    triggerKind
+  }) {
 
     if (triggerKind === CompletionTriggerKind.TriggerCharacter) {
+
+      // Embedded Documents
+      if (Parser.spec.engine === 'shopify') {
+
+        const ASTNode = Parser.getEmbeddedNode(document.ast, position)
+
+        if (ASTNode) {
+          if (mode?.[ASTNode.language]) {
+            const embeddedDocument = mode[ASTNode.language].doComplete(ASTNode, position)
+            embeddedDocument.data = { language: ASTNode.language }
+            return embeddedDocument
+          }
+        }
+      }
+
+      // Determine whether we are within a token
+      // This prevents completions executing within tags that should otherwise not
+      const within = Parser.withinToken(document.ast, position)
+
       switch (triggerCharacter.charCodeAt(0)) {
         case Parser.code.PER:
           if (within) break
@@ -215,10 +221,9 @@ export default (mode => ({
           return Completion.getOutputCompletions(position)
         case Parser.code.DOT:
           if (!within) break
-          return Completion.getObjectCompletion(node, offset)
+          return Completion.getObjectCompletion(document, position)
         case Parser.code.PIP:
-          if (within) return Completion.getFilterCompletions(position)
-          break
+          return Completion.getFilterCompletions(position)
         case Parser.code.COL:
           break
         case Parser.code.DQO:
@@ -227,6 +232,7 @@ export default (mode => ({
       }
 
     }
+
   },
 
   /**

@@ -3,7 +3,7 @@ import { ASTNode } from "./ast";
 import { Scope, TextDocument } from "./vscode";
 import { Options } from "./options";
 
-interface Codes {
+export interface Codes {
   /**
    * `*` – Whitespace - Used to space characters
    */
@@ -138,13 +138,21 @@ interface Codes {
 export class LiquidParser {
   constructor(options: Options);
   engine(engine: Specs.Engine): void;
-  get context(): Context;
   get errors(): IParseError[];
   get spec(): Variation;
-  get embedded(): ASTNode[];
   get code(): Codes;
   parse(scope: Scope): Scope;
-  getEmbeds(document: Scope): ASTNode[];
+  getContext(offsets?: number[]): Context;
+  getEmbeds(AST: ASTNode[], languages?: string[]): ASTNode[];
+  getEmbeddedNode(
+    AST: ASTNode[],
+    position: TextDocument.Position | number
+  ): ASTNode | false;
+  getNode(AST: ASTNode[], position: TextDocument.Position | number): ASTNode;
+  withinToken(AST: ASTNode[], position: TextDocument.Position): boolean;
+  withinScope(AST: ASTNode[], position: TextDocument.Position): boolean;
+  withinNode(AST: ASTNode[], position: TextDocument.Position): boolean;
   isCodeChar(position: TextDocument.Position, code: number): boolean;
+  isRegExp(regex: RegExp, position: TextDocument.Position): boolean;
   // increment (param, contentChanges) {}
 }

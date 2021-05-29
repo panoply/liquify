@@ -1,5 +1,5 @@
-export type Options = {
-  engine: "standard" | "shopify" | "jekyll" | "11ty";
+export interface Options {
+  engine: "standard" | "shopify" | "jekyll" | "eleventy";
   context: boolean | false;
   frontmatter: boolean | false;
   newlines: boolean | false;
@@ -15,4 +15,10 @@ export type Options = {
   track_variables: boolean | true;
   error_tolerance: 1 | 2 | 3 | 4;
   exclude: string[];
-};
+}
+
+/* -------------------------------------------- */
+/*                    EXPORT                    */
+/* -------------------------------------------- */
+
+export as namespace Config;

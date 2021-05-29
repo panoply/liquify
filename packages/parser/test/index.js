@@ -46,7 +46,7 @@ test('FullDocument Parse', t => {
     ...node.ast,
     parser.context,
     parser.errors,
-    parser.getEmbeds(server)
+    parser.getEmbeds(server.ast)
   )
 
   t.log(time(end, { verbose: true }))
