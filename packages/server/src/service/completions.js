@@ -154,6 +154,7 @@ export function getOutputCompletions (position) {
       )
     )
   }
+
   return Object.entries(Parser.spec.objects).map((
     [
       label,

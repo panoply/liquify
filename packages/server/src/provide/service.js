@@ -193,28 +193,31 @@ export default (mode => ({
 
     const offset = document.textDocument.offsetAt(position)
     const node = Document.getNode(offset)
+    const within = Document.withinToken(offset)
 
     if (node) {
       if (mode?.[node.language]) {
-        const embeddedDocument = await mode[node.language].doComplete(node, position)
+        const embeddedDocument = mode[node.language].doComplete(node, position)
         embeddedDocument.data = { language: node.language }
         return embeddedDocument
       }
     }
 
+    console.log('IN PER', offset, within, triggerCharacter, triggerCharacter.charCodeAt(0) === Parser.code.PER)
+
     if (triggerKind === CompletionTriggerKind.TriggerCharacter) {
       switch (triggerCharacter.charCodeAt(0)) {
         case Parser.code.PER:
-          if (node) break
+          if (within) break
           return Completion.getTagCompletions(position)
         case Parser.code.LCB:
-          if (node) break
+          if (within) break
           return Completion.getOutputCompletions(position)
         case Parser.code.DOT:
-          if (!node) break
+          if (!within) break
           return Completion.getObjectCompletion(node, offset)
         case Parser.code.PIP:
-          if (node) return Completion.getFilterCompletions(position)
+          if (within) return Completion.getFilterCompletions(position)
           break
         case Parser.code.COL:
           break

@@ -181,8 +181,6 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
-  // console.log(document.ast, Parser.errors)
-
   return Service
     .doValidation(document)
     .then(diagnostics => connection.sendDiagnostics(diagnostics))
@@ -355,9 +353,7 @@ connection.onCompletion((
 
   if (!document?.textDocument?.uri) return null
 
-  const onComplete = await Service.doComplete(document, position, context)
-
-  return onComplete
+  return Service.doComplete(document, position, context)
 
 }, null, `Error while computing completion for ${uri}`, token))
 

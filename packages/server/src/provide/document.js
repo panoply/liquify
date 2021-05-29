@@ -71,6 +71,35 @@ export function LiquidDocuments (documents = new Map()) {
    *
    * @param {number|object} [offset=undefined]
    * @param {string} [uri=undefined]
+   * @returns {boolean}
+   */
+  function withinToken (offset = undefined, uri = undefined) {
+
+    if (typeof offset === 'undefined' && typeof uri === 'undefined') return false
+
+    if (typeof offset === 'object') offset = document.textDocument.offsetAt(offset)
+
+    return document.ast.some(({
+      singular,
+      offsets: [
+        TL = -1
+        , TR = -1
+        , BL = -1
+        , BR = -1
+      ]
+    }) => {
+      if (singular) return inRange(offset, TL, TR)
+      else return inRange(offset, TL, TR) || inRange(offset, BL, BR)
+    })
+
+  }
+
+  /**
+   * Get a node in the AST tree that matches a supplied
+   * offset index position.
+   *
+   * @param {number|object} [offset=undefined]
+   * @param {string} [uri=undefined]
    * @returns {Parser.ASTNode}
    */
   function getNode (offset = undefined, uri = undefined) {
@@ -187,6 +216,7 @@ export function LiquidDocuments (documents = new Map()) {
     , getText
     , getTextDocument
     , getDiagnostics
+    , withinToken
     , documents
   }
 
