@@ -1662,6 +1662,33 @@
       },
       "link": "https://help.shopify.com/themes/liquid/objects#product"
     },
+    "location": {
+      "type": "object",
+      "description": "This object allows you access store location information using Liquid.",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/location",
+      "properties": {
+        "address": {
+          "type": "string", 
+          "description": "Returns the address object corresponding to this location."
+        },
+        "id": {
+          "type": "string",
+          "description": "Returns the ID of the location."
+        },
+        "latitude": {
+          "type": "string",
+          "description": "Returns the latitude associated to the location. It will return null if the address is not verified."
+        },
+        "longitude": {
+          "type": "string",
+          "description": "Returns the longitude associated with the location. It will return null if the address is not verified."
+        },
+        "name": {
+          "type": "string",
+          "description": "Returns the name of location."
+        }
+      }
+    },
     "order": {
       "description": "You can access the order object in a theme's Liquid templates with \"customer.orders\"",
       "type": "object",
