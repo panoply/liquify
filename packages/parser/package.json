@@ -17,14 +17,18 @@
   "main": "./package/index.js",
   "types": "./types/export.d.ts",
   "ava": {
-    "require": ["esm"],
+    "require": [
+      "esm"
+    ],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": ["test/index.js"],
+    "files": [
+      "test/index.js"
+    ],
     "concurrency": 5
   },
   "dependencies": {
@@ -51,6 +55,7 @@
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-replace": "^2.4.2",
     "@types/benchmark": "^2.1.0",
+    "@types/line-column": "^1.0.0",
     "ava": "^3.15.0",
     "babel-plugin-const-enum": "^1.0.1",
     "babel-preset-const-enum": "^1.0.0",

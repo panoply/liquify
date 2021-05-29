@@ -1,6 +1,6 @@
 import { Context, IParseError, Variation, Nodes } from "./index";
 import { ASTNode } from "./ast";
-import { Scope } from "./vscode";
+import { Scope, TextDocument } from "./vscode";
 import { Options } from "./options";
 
 interface Codes {
@@ -145,5 +145,6 @@ export class LiquidParser {
   get code(): Codes;
   parse(scope: Scope): Scope;
   getEmbeds(document: Scope): ASTNode[];
+  isCodeChar(position: TextDocument.Position, code: number): boolean;
   // increment (param, contentChanges) {}
 }

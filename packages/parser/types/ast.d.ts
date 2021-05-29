@@ -7,6 +7,7 @@ import { ParseError } from "enums/errors";
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { IParseError, Token, Range, Offsets } from './index'
 
+
 /**
  * The Children property array contains the children contained
  * within a tag. It's important to not that values here are only

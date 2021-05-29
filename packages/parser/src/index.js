@@ -54,6 +54,19 @@ export class LiquidParser {
   get spec () { return specs.variation }
 
   /**
+   * Test Code Character at position
+   *
+   * @memberof LiquidParser
+   */
+  isCodeChar (position, code) {
+
+    const offset = stream.OffsetFromPosition(position)
+
+    return stream.CodeCharAt(code, offset)
+
+  }
+
+  /**
    * Executes a full document parse
    *
    * @param {Parser.Scope} document
@@ -62,16 +75,15 @@ export class LiquidParser {
    */
   parse (document) {
 
+    const source = document.textDocument.getText()
+    stream.create(source)
+
     ast.version = document.textDocument.version
     ast.uri = document.textDocument.uri
 
     while (ast.error.get.length > 0) ast.error.get.pop()
     while (ast.embedded.get.length > 0) ast.embedded.get.pop()
     while (document.ast.length > 0) document.ast.pop()
-
-    const source = document.textDocument.getText()
-
-    stream.create(source)
 
     return parse.bind(this.parser)(document)
 

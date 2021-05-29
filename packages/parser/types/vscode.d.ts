@@ -1,6 +1,7 @@
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { Diagnostic } from "vscode-languageserver";
 import { ASTNode } from "./ast";
+export * as TextDocument from "vscode-languageserver-textdocument";
 
 export interface Scope {
   /**

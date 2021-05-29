@@ -1,6 +1,7 @@
 import isArray from 'lodash/isArray'
 import { CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver'
 import { Parser } from 'provide/parser'
+import { PosCharSubtract } from 'utils/positions'
 
 /**
  * Completion Functions
@@ -54,10 +55,38 @@ export function setCompletionItems (
  * offset index numbers and property value ear either string of array types.
  *
  * @export
+ * @param {LSP.TextDocument} textDocument
+ * @param {LSP.Position} position
+ * @param {TextEdit[]} [TextEdits]
+ */
+function delimiterInsert (textDocument, position, TextEdits = []) {
+
+  const character = textDocument.offsetAt(PosCharSubtract(1, position))
+
+  if (textDocument.getText().charCodeAt(character) === Parser.code.LCB) {
+    TextEdits.push(
+      TextEdit.insert(
+        PosCharSubtract(1, position)
+        , '{'
+      )
+    )
+  }
+
+  return TextEdits
+
+}
+
+/**
+ * Get Object Completion
+ *
+ * Gets completion items for Liquid objects. The
+ * AST applies an `objects` property to its record where its keys are the
+ * offset index numbers and property value ear either string of array types.
+ *
+ * @export
  * @param {Parser.ASTNode} ASTNode
  * @param {number} offset
  */
-
 export async function getObjectCompletion (ASTNode, offset) {
 
   const record = ASTNode.objects[offset]
@@ -86,6 +115,119 @@ export async function getObjectCompletion (ASTNode, offset) {
     }(objects.slice(1), Parser.spec.objects[objects[0]].properties))
 
   }
+
+}
+
+/**
+ * Generate Tag Type Completions
+ *
+ * @export
+ * @param {LSP.Position} position
+ * @returns {LSP.CompletionItem[]}
+ */
+export function getTagCompletions (position) {
+
+  const additionalTextEdits = []
+  const prevCharacter = PosCharSubtract(2, position)
+
+  if (!Parser.isCodeChar(prevCharacter, Parser.code.LCB)) {
+    additionalTextEdits.push(
+      TextEdit.insert(
+        PosCharSubtract(1, position)
+        , '{'
+      )
+    )
+  }
+
+  return Object.entries(Parser.spec.tags).map((
+    [
+      label,
+      {
+        description,
+        singular,
+        snippet = ` ${label} $1 %} ${singular
+          ? '$0'
+          : `$0 {% end${label} %}`}`
+      }
+    ]
+  ) => (
+    {
+      label,
+      additionalTextEdits,
+      kind: CompletionItemKind.Keyword,
+      insertText: snippet,
+      insertTextFormat: InsertTextFormat.Snippet,
+      documentation: description,
+      data: { snippet }
+    }
+  ))
+}
+
+/**
+ * Generate Output (Object) Completions
+ *
+ * @export
+ * @param {LSP.TextDocument} textDocument
+ * @param {LSP.Position} position
+ * @returns {LSP.CompletionItem[]}
+ */
+export function getOutputCompletions (position) {
+
+  const additionalTextEdits = []
+  const prevCharacter = PosCharSubtract(2, position)
+
+  if (!Parser.isCodeChar(prevCharacter, Parser.code.LCB)) {
+    additionalTextEdits.push(
+      TextEdit.insert(
+        PosCharSubtract(1, position)
+        , '{'
+      )
+    )
+  }
+  return Object.entries(Parser.spec.objects).map((
+    [
+      label,
+      {
+        description
+      }
+    ]
+  ) => (
+    {
+      label,
+      kind: CompletionItemKind.Keyword,
+      insertText: ` ${label}$1 }} $0`,
+      insertTextFormat: InsertTextFormat.Snippet,
+      documentation: description,
+      additionalTextEdits
+    }
+  ))
+}
+
+/**
+ * Generate Output (Object) Completions
+ *
+ * @export
+ * @param {LSP.Position} position
+ * @returns {LSP.CompletionItem[]}
+ */
+export function getFilterCompletions (position) {
+
+  return Object.entries(Parser.spec.filters).map((
+    [
+      label,
+      {
+        description,
+        snippet = ` ${label} $0`
+      }
+    ]
+  ) => ({
+    label,
+    kind: CompletionItemKind.Keyword,
+    insertText: snippet,
+    insertTextFormat: InsertTextFormat.Snippet,
+    documentation: description,
+    data: { snippet }
+  }))
 
 }
 

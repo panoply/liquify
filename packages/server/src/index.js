@@ -53,7 +53,6 @@ connection.onInitialize(initializeParams => (
       firstTriggerCharacter: '}',
       moreTriggerCharacter: [
         ',',
-        '|',
         ':'
       ]
     },

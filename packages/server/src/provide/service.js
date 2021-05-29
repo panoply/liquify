@@ -82,6 +82,15 @@ export default (mode => ({
       case Parser.code.COL: return [
         TextEdit.insert(position, String.fromCharCode(Parser.code.WSP))
       ]
+      case Parser.code.PER: return [
+        TextEdit.replace({
+          start: {
+            character: position.character - 1,
+            line: position.line
+          },
+          end: position
+        }, '{%')
+      ]
 
     }
 
@@ -180,7 +189,7 @@ export default (mode => ({
    * @param {LSP.Position} position
    * @param {LSP.CompletionContext} context
    */
-  async doComplete (document, position, context) {
+  async doComplete (document, position, { triggerCharacter, triggerKind }) {
 
     const offset = document.textDocument.offsetAt(position)
     const node = Document.getNode(offset)
@@ -193,32 +202,28 @@ export default (mode => ({
       }
     }
 
-    if (context.triggerKind === CompletionTriggerKind.TriggerCharacter) {
-
-      if (context.triggerCharacter.charCodeAt(0) === Parser.code.PIP) {
-        CompletionItem.create('')
-      }
-
-      if (context.triggerCharacter.charCodeAt(0) === Parser.code.DOT) {
-        const doComplete = await Completion.getObjectCompletion(node, offset)
-        console.log(doComplete)
-        return doComplete.map(Completion.setCompletionItems)
+    if (triggerKind === CompletionTriggerKind.TriggerCharacter) {
+      switch (triggerCharacter.charCodeAt(0)) {
+        case Parser.code.PER:
+          if (node) break
+          return Completion.getTagCompletions(position)
+        case Parser.code.LCB:
+          if (node) break
+          return Completion.getOutputCompletions(position)
+        case Parser.code.DOT:
+          if (node) return Completion.getObjectCompletion(node, offset)
+          break
+        case Parser.code.PIP:
+          if (node) return Completion.getFilterCompletions(position)
+          break
+        case Parser.code.COL:
+          break
+        case Parser.code.DQO:
+        case Parser.code.SQO:
+          break
       }
 
     }
-
-    const tagComplete = Completion.getTriggerCompletion(node, document, position, context)
-    return tagComplete
-
-    return false
-
-    // const tagComplete = Completion.getTriggerCompletion(node, document, position, context)
-    // return tagComplete
-
-    // const doComplete = await Completion.getObjectCompletion(node, offset)
-
-    // return !doComplete || doComplete.map(Completion.setCompletionItems)
-
   },
 
   /**

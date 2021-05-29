@@ -17,7 +17,7 @@ export default (function Stream (source) {
   /**
    * Lines Counter
    *
-   * @type {object}
+   * @type {Parser.LineColumn}
    */
   let range
 
@@ -69,7 +69,7 @@ export default (function Stream (source) {
       spaces = undefined
       token = undefined
       source = string
-      range = lineColumn(source)
+      range = lineColumn(source, { origin: 0 })
       length = source.length
 
     },
@@ -361,6 +361,29 @@ export default (function Stream (source) {
     },
 
     /**
+     * Offset From Position
+     *
+     * Accepts a TextDocument position and returns
+     * an offset via LineColumn.
+     *
+     * **DOES NOT MODIFY**
+     *
+     * ---
+     *
+     * @param {Parser.Location} position defaults to index
+     * @memberof Stream
+     * @returns {number}
+     */
+    OffsetFromPosition (position) {
+
+      return range.toIndex({
+        column: position.character,
+        line: position.line
+      })
+
+    },
+
+    /**
      * Position
      *
      * Returns `line` and `character` range information.
@@ -406,6 +429,29 @@ export default (function Stream (source) {
         start: this.Position(start),
         end: this.Position(end)
       }
+
+    },
+
+    /* -------------------------------------------- */
+    /* SOURCE QUERIES                               */
+    /* -------------------------------------------- */
+
+    /**
+     * Validates character code matches a condition
+     * at specific offset position
+     *
+     * **DOES NOT MODIFY**
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {number} code
+     * @param {number} offset
+     * @returns {boolean}
+     */
+    CodeCharAt (code, offset) {
+
+      return source.charCodeAt(offset) === code
 
     },
 
