@@ -144,30 +144,6 @@ export default (function () {
 
     if (s.IsCodeChar(c.LAN)) {
 
-      if (spec.associates.tags) {
-
-        // Assert Start position and state
-        start = s.offset
-
-        s.Advance(1, true)
-
-        if (s.IfCodeChar(c.FWS)) {
-          state = ScanState.HTMLTagClose
-          return TokenType.HTMLEndTagOpen
-        }
-
-        if (s.IsRegExp(r.HTMLTagName)) {
-          state = ScanState.HTMLTagOpen
-          return TokenType.HTMLStartTagOpen
-        }
-
-      }
-
-      if (s.IfChars([ c.BNG, c.DSH, c.DSH ])) {
-        state = ScanState.HTMLCommentOpen
-        return TokenType.HTMLStartCommentTag
-      }
-
     }
 
     if (state !== ScanState.CharSeq) state = ScanState.CharSeq

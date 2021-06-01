@@ -16,7 +16,15 @@ import { ParseError, ErrorLevel } from '../enums/errors'
  * @param {{ range: object, node: number, offset: number, token: string }} details
  * @returns {Parser.IParseError}
  */
-export default (error = 0, { range = {}, node = 0, offset = 0, token = '' }) => ({
+export default (
+  error = 0
+  , {
+    range = {},
+    node = 0,
+    offset = 0,
+    token = ''
+  }
+) => ({
 
   /* -------------------------------------------- */
   /* ERRORS                                       */

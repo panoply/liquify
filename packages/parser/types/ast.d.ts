@@ -4,9 +4,9 @@ import { TokenContext } from "enums/context";
 import { TokenStack } from "enums/stack";
 import { TokenTags } from "enums/tags";
 import { ParseError } from "enums/errors";
-import { TextDocument } from 'vscode-languageserver-textdocument'
+import { TextDocumentItem, TextDocumentContentChangeEvent } from "vscode-languageserver";
+import { TextDocument, Position } from 'vscode-languageserver-textdocument'
 import { IParseError, Token, Range, Offsets } from './index'
-
 
 /**
  * The Children property array contains the children contained
@@ -39,6 +39,39 @@ export type Languages = (
   "scss"
 )
 
+
+export class IAST {
+  textDocument: TextDocument
+  nodes: Parser.ASTNode[]
+  embeds: number[]
+  errors:IParseError[]
+  cursor: [number, number]
+  node: ASTNode
+  get isEmbed(): boolean;
+  update(change: TextDocumentContentChangeEvent): number;
+  rangeFromOffsets(start: number, end: number): Range
+  getNodeAt(position: Position | number): boolean
+  getEmbedAt (position: Position | number):boolean
+  getEmbeds(languages?: string[]): Parser.ASTNode[] | false
+  getNodes(indexes: number[]): Parser.ASTNode[]
+  getNodeContext(node?: Parser.ASTNode): {
+    get context(): Context[]
+  }
+  getAssociates(): Parser.ASTNode[]
+  getVariables(): void
+  getScope (): void
+  withinNode (position: Position | number): boolean
+  withinBody(position: Position | number): boolean
+  withinScope (position: Position | number): boolean
+  withinToken (position: Position | number): boolean
+  withinEmbed (position: Position | number): boolean
+}
+
+export interface IDocument {
+  create: (textDocumentItem: TextDocumentItem) => IAST
+  update: (textDocumentChange: TextDocumentContentChangeEvent) => IAST
+}
+
 /* -------------------------------------------- */
 /*                      AST                     */
 /* -------------------------------------------- */
@@ -46,12 +79,12 @@ export interface ASTNode {
   name: string;
   get start(): number;
   get end(): number;
-  get errors(): IParseError[]
   get context(): number[];
   get document(): TextDocument;
   token: Token[];
   language: string & Languages,
   type: TokenTags;
+  errors: number
   index: number;
   kind: TokenKind;
   offsets: Offsets;
@@ -64,5 +97,4 @@ export interface ASTNode {
   attributes?: {
     [attribute: string]: string
   }
-  offset(offset: number): void
 }

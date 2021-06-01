@@ -28,7 +28,7 @@ export default {
     replace({
       preventAssignment: true,
       values: {
-        'process.env.MASTER_KEY': process.env.MASTER_KEY
+        'process.env.MASTER_KEY': `${process.env.MASTER_KEY}`
       }
     }),
     alias({

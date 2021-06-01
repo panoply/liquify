@@ -1,5 +1,5 @@
 import test from 'ava'
-import { LiquidParser } from '../package/index'
+import { LiquidParser, Document } from '../package/index'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import time from 'pretty-hrtime'
@@ -10,12 +10,14 @@ config()
 const document = readFileSync(resolve('test/fixtures/blank.txt'), 'utf8').toString()
 
 const server = {
-  ast: [],
-  errors: [],
-  textDocument: { getText: () => document }
+  languageId: 'liquid',
+  version: 1,
+  text: document,
+  uri: 'full_parse',
+  getText: () => document
 }
 
-const parser = new LiquidParser({
+const parser = LiquidParser({
   engine: 'shopify',
   license: process.env.MASTER_KEY,
   frontmatter: false,
@@ -40,14 +42,12 @@ parser.engine('shopify')
 test('FullDocument Parse', t => {
 
   const start = process.hrtime()
-  const node = parser.parse(server)
+  const node = Document.create(server)
   const end = process.hrtime(start)
 
-  console.log(
-    ...node.ast,
-    parser.context,
-    parser.errors,
-    parser.getEmbeds(server.ast)
+  t.log(
+    node.iAST.nodes
+
   )
 
   t.log(time(end, { verbose: true }))

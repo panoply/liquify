@@ -12,20 +12,23 @@ const { log } = console
 /* SETUP                                        */
 /* -------------------------------------------- */
 
-const FILE = 'tests/fixtures/tests.txt'
-const TEXT = ({ fixture }) => ({
-  ast: [],
-  errors: [],
-  textDocument: {
-    getText: () => fixture
-  }
-})
+const FILE = 'test/fixtures/tests.txt'
+
+const reads = readFileSync(resolve(FILE), 'utf8').toString()
+
+const server = {
+  languageId: 'liquid',
+  version: 1,
+  text: reads,
+  uri: 'full_parse',
+  getText: () => reads
+}
 
 /* -------------------------------------------- */
 /* PARSER                                       */
 /* -------------------------------------------- */
 
-const parser = new LiquidParser({
+const parser = LiquidParser({
   engine: 'shopify',
   license: process.env.MASTER_KEY,
   context: true,
@@ -53,9 +56,7 @@ const start = process.hrtime()
 
 /* START -------------------------------------- */
 
-const document = parser.parse(
-  TEXT({ fixture: readFileSync(resolve(FILE), 'utf8') })
-)
+const document = parser.start(server)
 
 /* END ---------------------------------------- */
 
@@ -65,20 +66,20 @@ const end = process.hrtime(start)
 /* LOGGING                                      */
 /* -------------------------------------------- */
 
-console.log(document.ast)
+// console.log(document.ast)
 
 log(
   chalk`{magentaBright NO CONTEXT PARSING}: {dim ${FILE}} \n\n`,
 
   chalk`{bold AST}\n\n`,
 
-  chalk`{green ${document.ast.length}} nodes parsed`,
+  chalk`{green ${parser.ast().nodes.length}} nodes parsed`,
 
   chalk.dim('\n\n----------------------------------------\n\n'),
 
   chalk`{bold Errors}\n\n`,
 
-  chalk`{green ${parser.errors.length}} errors captured`,
+  chalk`{green ${parser.ast().errors.length}} errors captured`,
 
   chalk.dim('\n\n----------------------------------------\n\n'),
 

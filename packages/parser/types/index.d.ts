@@ -15,10 +15,12 @@ export { TokenTags } from "enums/tags";
 
 import { ParseError } from "enums/errors";
 export { ParseError } from "enums/errors";
+import { Scope, TextDocument } from "./vscode";
 
 export { Options } from "./options";
-export { ASTNode, Languages } from "./ast";
+export { ASTNode, Languages, IAST, IDocument } from "./ast";
 
+export { LiquidParser } from "./export";
 export * from "./vscode";
 
 export * from "@liquify/liquid-language-specs";

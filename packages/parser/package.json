@@ -8,7 +8,7 @@
     "rollup": "rollup -c",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --color --verbose --watch",
-    "perf": "node -r esm tests/perf/parsing.js"
+    "perf": "node -r esm test/perf/parsing.js"
   },
   "private": false,
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
@@ -17,18 +17,14 @@
   "main": "./package/index.js",
   "types": "./types/export.d.ts",
   "ava": {
-    "require": [
-      "esm"
-    ],
+    "require": ["esm"],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": [
-      "test/index.js"
-    ],
+    "files": ["test/index.js"],
     "concurrency": 5
   },
   "dependencies": {

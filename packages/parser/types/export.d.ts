@@ -1,9 +1,11 @@
-import { Context, IParseError, Variation, Nodes, TokenTags } from "./index";
+import { Context, IParseError, Variation  } from "./index";
 import { ASTNode } from "./ast";
 import { Scope, TextDocument } from "./vscode";
 import { Options } from "./options";
+export { TokenKind } from '../src/enums/kinds'
+export { TokenTags } from '../src/enums/tags'
 
-export interface Codes {
+interface CharCodes  {
   /**
    * `*` – Whitespace - Used to space characters
    */
@@ -135,26 +137,35 @@ export interface Codes {
   ROP?: number;
 }
 
-export class LiquidParser {
-  constructor(options: Options);
-  engine(engine: Specs.Engine): void;
+
+export const CodeChars: CharCodes
+
+
+// for consumers of Leaflet using modules
+export function LiquidParser (options: Options): {
+  engine: (engine: Specs.Engine) => void;
   get errors(): IParseError[];
   get spec(): Variation;
-  get code(): Codes;
-  get kind(): TokenTags;
-  parse(scope: Scope): Scope;
-  getContext(offsets?: number[]): Context;
-  getAssociates(AST: ASTNode[]): ASTNode[];
-  getEmbeds(AST: ASTNode[], languages?: string[]): ASTNode[];
+  get node(): ASTNode;
+  get context(): Context;
+  get isEmbeddedNode(): boolean;
+  parse: (scope: Scope) => Scope;
+  getAssociates: (AST: ASTNode[]) => ASTNode[];
+  getEmbeds: (AST: ASTNode[], languages?: string[]) => ASTNode[] | false;
   getEmbeddedNode(
     AST: ASTNode[],
     position: TextDocument.Position | number
-  ): ASTNode | false;
-  getNode(AST: ASTNode[], position: TextDocument.Position | number): ASTNode;
-  withinToken(AST: ASTNode[], position: TextDocument.Position): boolean;
+  ): ASTNode;
+  getNode: (
+    AST: ASTNode[],
+    position: TextDocument.Position | number
+  ) => ASTNode;
+  withinEmbed: (offset: number) => boolean;
+  withinToken: (offset: number) => boolean;
+  withinNode: (offset: number) => boolean;
   withinScope(AST: ASTNode[], position: TextDocument.Position): boolean;
-  withinNode(AST: ASTNode[], position: TextDocument.Position): boolean;
-  isCodeChar(position: TextDocument.Position, code: number): boolean;
+  isCodeChar(code: number, position: TextDocument.Position): boolean;
   isRegExp(regex: RegExp, position: TextDocument.Position): boolean;
-  // increment (param, contentChanges) {}
 }
+
+

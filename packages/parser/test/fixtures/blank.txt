@@ -1,59 +1,53 @@
 <div
   class="inner pt-3"
   data-controller="header"
-  data-header-sticky-alpha-value="{{- section.settings.sticky_opacity }}"
-  data-header-sticky-rgb-value="{{- section.settings.sticky_bg | color_to_rgb }}"
-  data-header-sticky-value="{{- section.settings.sticky }}"
+  data-header-sticky-alpha-value=" {{- section.settings.sticky_opacity }}"
+  data-header-sticky-rgb-value=" {{- section.settings.sticky_bg | color_to_rgb }}"
+  data-header-sticky-value=" {{- section.settings.sticky }}"
   data-sticky-container>
-  <div
-    class="row jc-between">
+  <div class="row jc-between">
     <!-- Search -->
-    <div
-      class="col d-none d-md-flex pl-1 pl-md-3">
-      <ul
-        class="list-pipe">
+    <div class="col d-none d-md-flex pl-1 pl-md-3">
+      <ul class="list-pipe">
+
+
         <li>
           <a
             aria-expanded="false"
-            aria-label="{{- 'header.search.aria_label' | t }}"
+            aria-label=" {{- 'header.search.aria_label' | t }}"
             class="stic-search"
             href="/search"
-            title="{{- 'header.search.title' | t }}">
+            title=" {{- 'header.search.title' | t }}">
             {%- case section.settings.search_style -%}
               {%- when 'text_only' -%}
                 {{- 'header.search.label' | t -}}
               {%- when 'icon_only' -%}
-                <icon
-                  name="search"/>
+                <icon name="search" />
               {%- when 'text_and_icon' -%}
-                <icon
-                  name="search"
-                  class="mr-2"/>
+                <icon name="search" class="mr-2" />
                 {{- 'header.search.label' | t -}}
             {%- endcase -%}
           </a>
         </li>
 
         <!-- Locale Currency -->
-        <li
-          id="locale"
-          class="locale">
+        <li id="locale" class="locale">
 
           <div
             class="d-flex ai-center jc-start"
             data-controller="locale"
             data-locale-loading-value="true"
             data-locale-show-value="false"
-            data-locale-i18n-value="{{- 'i18n.json' | asset_url -}}"
-            data-locale-cart-currency-value="{{- cart.currency.iso_code -}}"
-            data-locale-shop-currency-value="{{- shop.currency -}}"
-            data-locale-placeholder-value="{{- 'general.locale.enter_country' | t }}"
-            data-locale-spinner-value="{{- 'spinner.svg' | asset_url }}">
+            data-locale-i18n-value=" {{- 'i18n.json' | asset_url -}}"
+            data-locale-cart-currency-value=" {{- cart.currency.iso_code -}}"
+            data-locale-shop-currency-value=" {{- shop.currency -}}"
+            data-locale-placeholder-value=" {{- 'general.locale.enter_country' | t }}"
+            data-locale-spinner-value=" {{- 'spinner.svg' | asset_url }}">
 
             <img
               class="locale-flag"
               data-locale-target="flag"
-              src="{{- 'spinner.svg' | asset_url }}">
+              src=" {{- 'spinner.svg' | asset_url }}">
 
             <button
               class="btn-reset"
@@ -72,26 +66,23 @@
       </ul>
     </div>
 
-    <div
-      class="col col-md-auto col-md d-md-none">
+    <div class="col col-md-auto col-md d-md-none">
       <button
         class="btn-reset"
         aria-expanded="false"
-        aria-label="{{- 'layout.drawers.open_menu' | t }}"
+        aria-label=" {{- 'layout.drawers.open_menu' | t }}"
         data-drawer="mobile-menu"
         type="button">
-        <icon
-          name="menu"/>
+        <icon name="menu" />
       </button>
     </div>
 
     <!-- Mobile & Desktop Logo -->
-    <div
-      class="col col-md-auto">
+    <div class="col col-md-auto">
       <a
         class="as-center"
-        href="{{- shop.url }}"
-        title="{{- 'homepage.title' | t }}">
+        href=" {{- shop.url }}"
+        title=" {{- 'homepage.title' | t }}">
         {%- render 'icon.logo-text',
           class: 'm-auto d-block d-md-none',
           width: section.settings.logo_mobile_size -%}
@@ -102,39 +93,30 @@
     </div>
 
     <!-- LOCALE -->
-    <div
-      class="col text-right pr-md-3">
+    <div class="col text-right pr-md-3">
       <a
         aria-expanded="false"
-        aria-label="{{- 'header.cart.aria_label' | t -}}"
+        aria-label=" {{- 'header.cart.aria_label' | t -}}"
         class="sticky-cart as-md-center"
         data-drawer="ajax-cart"
         href="/cart"
-        title="{{- 'header.cart.title' }}"
+        title=" {{- 'header.cart.title' }}"
         data-pjax-disable="true">
         {%- case section.settings.cart_style -%}
           {%- when 'text_only' -%}
-            <span
-              class="d-none d-md-inline">
+            <span class="d-none d-md-inline">
               {{ 'header.cart.label' | t -}}
             </span>
-            <icon
-              name="cart"
-              class="d-inline d-md-none"/>
+            <icon name="cart" class="d-inline d-md-none" />
           {%- when 'icon_only' -%}
-            <icon
-              name="cart"
-              class="d-inline d-md-none"/>
+            <icon name="cart" class="d-inline d-md-none" />
           {%- when 'text_and_icon' -%}
-            <span
-              class="d-none d-md-inline pr-1">
+            <span class="d-none d-md-inline pr-1">
               {{- 'header.cart.label' | t -}}
             </span>
-            <icon
-            name="cart"/>
+            <icon name="cart" />
         {%- endcase -%}
-        <span
-          class="cart-count pl-1">
+        <span class="cart-count pl-1">
           {{- cart.item_count -}}
         </span>
       </a>
@@ -142,22 +124,15 @@
   </div>
 
   <!-- Desktop Navigation-->
-  <div
-    id="navbar"
-    class="row jc-around d-none d-md-flex">
-    <nav
-      class="col-auto jc-center py-4">
-      <ul
-        class="navbar"
-        data-navbar>
+  <div id="navbar" class="row jc-around d-none d-md-flex">
+    <nav class="col-auto jc-center py-4">
+      <ul class="navbar" data-navbar>
         {%- for link in linklists[section.settings.main_menu].links -%}
           {%- if link.links != blank -%}
-            <li
-              {% if link.active -%} class="active"
-              {%- endif -%}>
+            <li {% if link.active -%} class="active" {%- endif -%}>
               <a
-                href="{{- link.url -}}"
-                title="{{- link.title }}"
+                href=" {{- link.url -}}"
+                title=" {{- link.title }}"
                 data-pjax-prefetch="hover"
                 data-pjax-threshold="100">
                 {{- link.title -}}
@@ -166,16 +141,11 @@
                 {%- for childlink in link.links -%}
                   <li>
                     {%- if childlink.title contains 'Archive' -%}
-                      <a
-                        class="text-red"
-                        href="{{- childlink.url -}}"
-                        data-pjax-prefetch="hover">
+                      <a class="text-red" href=" {{- childlink.url -}}" data-pjax-prefetch="hover">
                         {{- childlink.title -}}
                       </a>
                     {%- else -%}
-                      <a
-                        href="{{- childlink.url -}}"
-                        data-pjax-prefetch="hover">
+                      <a href="{{- childlink.url -}}" data-pjax-prefetch="hover">
                         {{- childlink.title -}}
                       </a>
                     {%- endif -%}
@@ -185,9 +155,7 @@
             </li>
           {%- else -%}
             <li>
-              <a
-                href="{{ link.url }}"
-                data-pjax-prefetch="hover">
+              <a href="{{ link.url }}" data-pjax-prefetch="hover">
                 {{ link.title }}
               </a>
             </li>

@@ -22,6 +22,13 @@ export default (function Stream (source) {
   let range
 
   /**
+   * Remove
+   *
+   * @type {Parser.LineColumn}
+   */
+  let removal
+
+  /**
    * Cursor Offset - used to consume strings
    *
    * @type {number}
@@ -349,15 +356,6 @@ export default (function Stream (source) {
 
     },
 
-    OffsetFromRange (position) {
-
-      index = range.toIndex(position)
-      cursor = 0
-
-      return index
-
-    },
-
     /**
      * Offset From Position
      *
@@ -496,7 +494,10 @@ export default (function Stream (source) {
 
       if (n > length) return this.GotoEnd()
 
-      return (index = n < 0 ? 0 : n)
+      index = n < 0 ? 0 : n
+      cursor = index
+
+      return index
 
     },
 
