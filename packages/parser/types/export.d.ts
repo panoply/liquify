@@ -1,5 +1,5 @@
 import { Context, IParseError, Variation  } from "./index";
-import { ASTNode } from "./ast";
+import { IDocument } from "./ast";
 import { Scope, TextDocument } from "./vscode";
 import { Options } from "./options";
 export { TokenKind } from '../src/enums/kinds'
@@ -142,28 +142,10 @@ export const CodeChars: CharCodes
 
 
 // for consumers of Leaflet using modules
-export function LiquidParser (options: Options): {
-  engine: (engine: Specs.Engine) => void;
-  get errors(): IParseError[];
-  get spec(): Variation;
-  get node(): ASTNode;
-  get context(): Context;
-  get isEmbeddedNode(): boolean;
-  parse: (scope: Scope) => Scope;
-  getAssociates: (AST: ASTNode[]) => ASTNode[];
-  getEmbeds: (AST: ASTNode[], languages?: string[]) => ASTNode[] | false;
-  getEmbeddedNode(
-    AST: ASTNode[],
-    position: TextDocument.Position | number
-  ): ASTNode;
-  getNode: (
-    AST: ASTNode[],
-    position: TextDocument.Position | number
-  ) => ASTNode;
-  withinEmbed: (offset: number) => boolean;
-  withinToken: (offset: number) => boolean;
-  withinNode: (offset: number) => boolean;
-  withinScope(AST: ASTNode[], position: TextDocument.Position): boolean;
+export function LiquidParser(options: Options): {
+  Document: IDocument
+  Engine: (engine: Specs.Engine) => void;
+  get Spec(): Variation;
   isCodeChar(code: number, position: TextDocument.Position): boolean;
   isRegExp(regex: RegExp, position: TextDocument.Position): boolean;
 }

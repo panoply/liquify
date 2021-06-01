@@ -3,10 +3,9 @@ import { TokenKind } from "enums/kinds";
 import { TokenContext } from "enums/context";
 import { TokenStack } from "enums/stack";
 import { TokenTags } from "enums/tags";
-import { ParseError } from "enums/errors";
 import { TextDocumentItem, TextDocumentContentChangeEvent } from "vscode-languageserver";
-import { TextDocument, Position } from 'vscode-languageserver-textdocument'
-import { IParseError, Token, Range, Offsets } from './index'
+import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument'
+import { IParseError, Token,  Offsets } from './index'
 
 /**
  * The Children property array contains the children contained

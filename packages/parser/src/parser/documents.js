@@ -1,8 +1,7 @@
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { IAST } from 'parser/ast'
-import stream from 'parser/stream'
-import { EventEmitter } from 'events'
 import { parse } from 'parser/parse'
+import stream from 'parser/stream'
 
 /**
  * Documents Manager
@@ -11,9 +10,7 @@ import { parse } from 'parser/parse'
  * in the workspace. The module extends upon the vscode textdocument
  * manager and uses `Map()` storage to maintain each document.
  */
-export default (function Manager () {
-
-  const event = new EventEmitter()
+export default (function () {
 
   /**
    * Documents
@@ -31,10 +28,18 @@ export default (function Manager () {
 
   return {
 
+    /**
+     * Returns the documents Map
+     *
+     */
     get documents () { return documents },
 
-    get event () { return event },
-
+    /**
+     * Returns a document by its URI from the Map.
+     * `document` letting is reassigned
+     *
+     * @param {Parser.TextDocumentItem} textDocumentItem
+     */
     get: (uri) => {
       if (document.textDocument.uri === uri) return document
       else document = documents.get(uri)
@@ -57,16 +62,13 @@ export default (function Manager () {
 
       stream.create(text)
 
-      event.emit('update', document)
-
       return parse(document)
 
     },
 
     /**
      * Update the text document model, this is executed each time the document
-     * content changes and is called via the `onDidChangeTextDocument` event. Majority
-     * of this logic was lifted from the 'vscode-textdocument' module.
+     * content changes and is called via the `onDidChangeTextDocument` event.
      *
      * @param {Parser.TextDocument.TextDocument} textDocument
      * @param {Parser.TextDocument.TextDocumentContentChangeEvent[]} contentChanges
@@ -79,16 +81,19 @@ export default (function Manager () {
         else return null
       }
 
+      // We will pass the document text to the stream
+      // for re-scanning and re-parse
       stream.create(
         TextDocument
           .update(document.textDocument, contentChanges, version)
           .getText()
       )
 
+      console.log(contentChanges)
+
+      // Pass the document and prepared existing node for parsing
       // @ts-ignore
       document.update(contentChanges)
-
-      event.emit('update', document)
 
       return parse(document, true)
 

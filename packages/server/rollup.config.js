@@ -40,9 +40,16 @@ export default [
     ],
     plugins: plugins(
       [
+        replace({
+          preventAssignment: true,
+          values: {
+            'process.env.MASTER_KEY': `"${process.env.MASTER_KEY}"`
+          }
+        }),
         alias(
           {
             entries: {
+              enums: resolve(__dirname, 'src/enums'),
               provide: resolve(__dirname, 'src/provide'),
               service: resolve(__dirname, 'src/service'),
               modes: resolve(__dirname, 'src/service/modes'),
@@ -56,13 +63,25 @@ export default [
             compact: !!process.env.prod
           }
         ),
-        babel(
-          {
-            babelHelpers: 'runtime',
-            configFile: './.babelrc'
-          }
-        ),
-        commonjs(),
+        noderesolve({
+          preferBuiltins: true,
+          jail: resolve(__dirname, 'src'),
+          extensions: [
+            '.ts',
+            '.js'
+          ]
+        }),
+        babel({
+          babelHelpers: 'runtime',
+          configFile: './.babelrc',
+          extensions: [
+            '.ts',
+            '.js'
+          ]
+        }),
+        commonjs({
+          requireReturnsDefault: 'namespace'
+        }),
         globs(
           {
             globs: [
@@ -85,7 +104,11 @@ export default [
       ],
       [
         noderesolve({
-          preferBuiltins: true
+          preferBuiltins: true,
+          extensions: [
+            '.ts',
+            '.js'
+          ]
         }),
         terser(
           {

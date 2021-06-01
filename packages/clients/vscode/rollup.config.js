@@ -2,6 +2,7 @@ import { babel } from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import globs from '@liquify/rollup-plugin-globs'
+import replace from '@rollup/plugin-replace'
 
 export default {
   input: 'extension/index.js',
@@ -66,6 +67,12 @@ export default {
     })
   ],
   [
+    replace({
+      preventAssignment: true,
+      values: {
+        'process.env.SERVER_PATH': './../'
+      }
+    }),
     terser({
       ecma: 2016
       , compress: { passes: 2 }

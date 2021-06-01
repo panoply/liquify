@@ -21,7 +21,11 @@
     "validations",
     "linting"
   ],
-  "categories": ["Formatters", "Programming Languages", "Other"],
+  "categories": [
+    "Formatters",
+    "Programming Languages",
+    "Other"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/panoply/vscode-liquid.git"
@@ -46,9 +50,13 @@
     "workspaceContains:**/.liquidrc",
     "workspaceContains:**/.liquidrc.json"
   ],
-  "extensionDependencies": ["vscode.html-language-features"],
+  "extensionDependencies": [
+    "vscode.html-language-features"
+  ],
   "contributes": {
-    "css.customData": ["./liquid-css.json"],
+    "css.customData": [
+      "./liquid-css.json"
+    ],
     "themes": [
       {
         "label": "Potion Theme",
@@ -58,7 +66,10 @@
     ],
     "jsonValidation": [
       {
-        "fileMatch": ".liquidrc",
+        "fileMatch": [
+          ".liquidrc",
+          ".liquidrc.json"
+        ],
         "url": "./stores/liquidrc.json"
       }
     ],
@@ -114,41 +125,66 @@
       {
         "id": "liquid",
         "configuration": "./language-configuration.json",
-        "aliases": ["Liquid"],
-        "extensions": [".liquid"]
+        "aliases": [
+          "Liquid"
+        ],
+        "extensions": [
+          ".liquid"
+        ]
       },
       {
         "id": "liquid-shopify",
         "configuration": "./language-configuration.json",
-        "aliases": ["Liquid Shopify"],
-        "extensions": [".liquid"]
+        "aliases": [
+          "Liquid Shopify"
+        ],
+        "extensions": [
+          ".liquid"
+        ]
       },
       {
         "id": "liquid-jekyll",
         "configuration": "./language-configuration.json",
         "firstLine": "---",
-        "aliases": ["Liquid Jekyll"],
-        "extensions": [".liquid", ".jekyll"]
+        "aliases": [
+          "Liquid Jekyll"
+        ],
+        "extensions": [
+          ".liquid",
+          ".jekyll"
+        ]
       },
       {
         "id": "javascript",
-        "extensions": [".js.liquid"]
+        "extensions": [
+          ".js.liquid"
+        ]
       },
       {
         "id": "css",
-        "extensions": [".css.liquid"]
+        "extensions": [
+          ".css.liquid"
+        ]
       },
       {
         "id": "scss",
-        "extensions": [".scss.liquid", ".sass.liquid"]
+        "extensions": [
+          ".scss.liquid",
+          ".sass.liquid"
+        ]
       },
       {
         "id": "json",
-        "extensions": [".json.liquid"]
+        "extensions": [
+          ".json.liquid"
+        ]
       },
       {
         "id": "jsonc",
-        "filenames": [".liquidrc", ".liquidrc.json"]
+        "filenames": [
+          ".liquidrc",
+          ".liquidrc.json"
+        ]
       }
     ],
     "grammars": [
@@ -170,7 +206,9 @@
       {
         "scopeName": "source.liquid.frontmatter",
         "path": "./syntaxes/injections/frontmatter.json",
-        "injectTo": ["source.liquid.jekyll"],
+        "injectTo": [
+          "source.liquid.jekyll"
+        ],
         "embeddedLanguages": {
           "meta.embedded.block.frontmatter.liquid": "yaml"
         }
@@ -178,7 +216,9 @@
       {
         "scopeName": "markdown.liquid.codeblock",
         "path": "./syntaxes/injections/liquid-markdown.codeblock.json",
-        "injectTo": ["text.html.markdown"],
+        "injectTo": [
+          "text.html.markdown"
+        ],
         "embeddedLanguages": {
           "meta.embedded.block.liquid": "liquid"
         }
@@ -186,12 +226,16 @@
       {
         "scopeName": "source.liquid.specifications",
         "path": "./syntaxes/injections/specifications.inject.json",
-        "injectTo": ["source.json"]
+        "injectTo": [
+          "source.json"
+        ]
       },
       {
         "scopeName": "source.liquid.embedded",
         "path": "./syntaxes/injections/embedded.inject.json",
-        "injectTo": ["source.liquid.shopify"],
+        "injectTo": [
+          "source.liquid.shopify"
+        ],
         "embeddedLanguages": {
           "meta.embedded.block.javascript.liquid": "javascript",
           "meta.embedded.block.schema.liquid": "json",
@@ -208,7 +252,11 @@
         "liquid.trace.server": {
           "scope": "window",
           "type": "string",
-          "enum": ["off", "messages", "verbose"],
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
           "default": "off",
           "description": "Traces the communication between VS Code and the language server."
         },
@@ -242,12 +290,12 @@
           "default": true,
           "description": "Whether to vaidate documents upon opening. When set to false, validations will run only when a document is touched (changed)"
         },
-        "liquid.validate.enable": {
+        "liquid.validate": {
           "type": "boolean",
           "default": true,
           "description": "Whether to enable/disable the Liquid code validation feature."
         },
-        "liquid.format.enable": {
+        "liquid.format": {
           "type": "boolean",
           "default": true,
           "description": "Whether to enable/disable Liquid formatting."
@@ -279,6 +327,7 @@
   "devDependencies": {
     "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
+    "@rollup/plugin-replace": "^2.4.2",
     "@types/vscode": "^1.56.0"
   }
 }

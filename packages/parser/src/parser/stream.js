@@ -22,13 +22,6 @@ export default (function Stream (source) {
   let range
 
   /**
-   * Remove
-   *
-   * @type {Parser.LineColumn}
-   */
-  let removal
-
-  /**
    * Cursor Offset - used to consume strings
    *
    * @type {number}
@@ -455,26 +448,6 @@ export default (function Stream (source) {
     /* MODIFIERS                                    */
     /* -------------------------------------------- */
 
-    Partial (start, end) {
-
-      index = start
-      cursor = start
-      spaces = undefined
-      token = undefined
-      length = Math.abs(start - end)
-
-    },
-
-    PartialReset () {
-
-      index = 0
-      cursor = 0
-      spaces = undefined
-      token = undefined
-      length = source.length
-
-    },
-
     /**
      * Goto Offset Position
      *
@@ -483,7 +456,7 @@ export default (function Stream (source) {
      * **MODIFIER**
      *
      * > - `index` Moves to new offset
-     *
+     * > - `cursor` Aligns with Index
      * ---
      *
      * @memberof Stream
@@ -742,7 +715,7 @@ export default (function Stream (source) {
       }
 
       // consume escaped strings, eg: \" or \'
-      if (this.GetCodeChar(offset - 1) === BWS) return this.SkipQuotedString(offset)
+      if (this.GetCodeChar(offset - 1) === BWS) return this.SkipQuotedString([ offset ])
 
       // custom consumed character codes
       if (typeof consume !== 'undefined' && typeof consume !== 'boolean') {

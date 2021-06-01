@@ -1,20 +1,26 @@
 {
   "version": "0.2.0",
   "configurations": [
+    /* -------------------------------------------- */
+    /* MAIN                                         */
+    /* -------------------------------------------- */
+
     {
       "type": "extensionHost",
       "request": "launch",
       "name": "Client",
       "runtimeExecutable": "${execPath}",
-      "stopOnEntry": false,
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceRoot}/packages/clients/vscode/package/extension.js"
+        "${workspaceFolder}/packages/clients/vscode/package/extension.js"
       ],
+      "env": {
+        "SERVER_PATH": "${workspaceRoot}"
+      },
       "args": [
         "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceRoot}/packages/clients/vscode/package",
-        "${workspaceRoot}/tests"
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/clients/vscode/package",
+        "${workspaceRoot}/tests/documents"
       ]
     },
     {

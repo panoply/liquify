@@ -1,7 +1,7 @@
 import inRange from 'lodash/inRange'
-import config from 'parser/options'
-import context from 'parser/context'
-import stream from 'parser/stream'
+import Config from 'parser/options'
+import Context from 'parser/context'
+import Stream from 'parser/stream'
 import { TokenTags } from 'enums/tags'
 import { TokenKind } from 'enums/kinds'
 import { TextDocument } from 'vscode-languageserver-textdocument'
@@ -79,7 +79,7 @@ export class IAST {
     ) && (
       this.node.kind === TokenKind.Liquid
     ) && (
-      config.engine === 'shopify'
+      Config.engine === 'shopify'
     )
 
   }
@@ -114,13 +114,24 @@ export class IAST {
    */
   update (edits) {
 
+    if (edits.length > 1) {
+
+      this.embeds.splice(0)
+      this.errors.splice(0)
+      this.nodes.splice(0)
+      this.cursor.splice(0)
+
+      return null
+
+    }
+
     const start = this.textDocument.offsetAt(edits[0].range.start)
     const index = this.nodes.findIndex(node => start < node.end)
     const node = this.nodes[index]
 
     inRange(start, node.start, node.end)
-      ? stream.Jump(node.offsets[0])
-      : stream.Jump(start)
+      ? Stream.Jump(node.offsets[0])
+      : Stream.Jump(start)
 
     if (this.embeds.length > 0) {
       this.embeds.splice(this.embeds.findIndex(n => n > index))
@@ -183,7 +194,7 @@ export class IAST {
 
     return {
 
-      get context () { return context.get(node.context)[index] }
+      get context () { return Context.get(node.context)[index] }
 
     }
   }
@@ -264,10 +275,7 @@ export class IAST {
    * @returns {Parser.ASTNode[]|false}
    * @memberof IAST
    */
-  getAssociates () {
-
-    return []
-  }
+  getAssociates () { return [] }
 
   /**
    * Returns all variables located on the document

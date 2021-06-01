@@ -1,6 +1,5 @@
 import { TokenContext } from 'enums/context'
 import scanner from 'parser/scanner'
-import iDocument from 'parser/documents'
 
 /**
  * Context Generator
@@ -14,17 +13,14 @@ export default (function Context (node) {
 
   const refs = new Map()
 
-  let context
+  let context = []
 
-  /**
-   * Maintains document instance for each page update
-   */
-  iDocument.event.on('update', ({ uri }) => {
+  function Update (uri) {
 
     if (!refs.has(uri)) context = refs.set(uri, []).get(uri)
     else context = refs.get(uri)
 
-  })
+  }
 
   /**
    * Returns the contexts of a specific node on the AST
@@ -76,6 +72,8 @@ export default (function Context (node) {
   }
 
   return {
+
+    Update,
 
     get,
     add,

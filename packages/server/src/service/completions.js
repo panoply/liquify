@@ -1,7 +1,9 @@
 import isArray from 'lodash/isArray'
 import { CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver'
-import { Parser } from 'provide/parser'
+import { Spec } from 'provide/parser'
 import { PosCharSubtract } from 'utils/positions'
+import { CompletionState } from 'enums/completions'
+import { CodeChars } from '@liquify/liquid-parser'
 
 /**
  * Completion Functions
@@ -10,15 +12,107 @@ import { PosCharSubtract } from 'utils/positions'
  * characters. Completions will extract words and/or symbols from the
  * passed in location of the document and from here reference records from
  * the variation specification.
- *
- * @typedef {import("vscode-languageserver").TextDocument} TextDocument
- * @typedef {import('defs').ASTEmbeddedRegion} ASTEmbeddedRegion
- * @typedef {import('vscode-languageserver').TextEdit} TextEdit
  */
+export function inToken (position, trigger) {
 
-/* ---------------------------------------------------------------- */
-/* PUBLIC                                                           */
-/* ---------------------------------------------------------------- */
+  let state
+  let document
+
+  if (state !== CompletionState.Reset) {
+
+    // If completion character is whitespace we will
+    // check for the previous trigger character
+    if (trigger === CodeChars.WSP) {
+
+      // We will persist the completions open when next character
+      // When previous trigger matches these characters
+      // We reset state if any matches occurred
+      switch (state) {
+        case CompletionState.TagDelimiter:
+
+          state = CompletionState.Reset
+          return getTagCompletions(position)
+
+        case CompletionState.OutputDelimiter:
+
+          state = CompletionState.Reset
+          return getOutputCompletions(position)
+
+        case CompletionState.FilterPipe:
+
+          state = CompletionState.Reset
+          return getFilterCompletions(position)
+      }
+
+    }
+  }
+
+  // Determine whether we are within a token
+  // This prevents completions executing within tags that should otherwise not
+  const ASTNode = Parser.getNode(document.ast, position)
+
+  if (!ASTNode) {
+    switch (trigger) {
+      case CodeChars.PER:
+        state = CompletionState.TagDelimiter
+        return getTagCompletions(position)
+      case CodeChars.LCB:
+        state = CompletionState.OutputDelimiter
+        return getOutputCompletions(position)
+    }
+  }
+
+  switch (trigger) {
+    case CodeChars.PIP:
+
+      state = CompletionState.FilterPipe
+      return getFilterCompletions(position)
+
+    case CodeChars.DOT:
+      state = CompletionState.FilterPipe
+      return getObjectCompletion(document, position)
+
+    case CodeChars.DQO:
+    case CodeChars.SQO:
+      break
+
+  }
+
+}
+
+export async function inEmbedded (mode, position) {
+
+  const ASTNode = Parser.node
+
+  if (mode?.[ASTNode.language]) {
+
+    const embed = await mode[ASTNode.language].doComplete(ASTNode, position)
+    embed.data = { language: ASTNode.language }
+
+    return embed
+
+  }
+
+  return null
+
+}
+
+export async function findCompleteItems (mode, position) {
+
+  const ASTNode = Parser.node
+
+  if (mode?.[ASTNode.language]) {
+
+    const embed = await mode[ASTNode.language].doComplete(ASTNode, position)
+    embed.data = { language: ASTNode.language }
+
+    return embed
+
+  }
+
+  return null
+
+}
 
 /**
  * Set Completion Items
@@ -103,7 +197,7 @@ export function getTagCompletions (position) {
   const additionalTextEdits = []
   const prevCharacter = PosCharSubtract(2, position)
 
-  if (!Parser.isCodeChar(prevCharacter, Parser.code.LCB)) {
+  if (!Parser.isCodeChar(CodeChars.LCB, prevCharacter)) {
     additionalTextEdits.push(
       TextEdit.insert(
         PosCharSubtract(1, position)
@@ -148,7 +242,7 @@ export function getOutputCompletions (position) {
   const additionalTextEdits = []
   const prevCharacter = PosCharSubtract(2, position)
 
-  if (!Parser.isCodeChar(prevCharacter, Parser.code.LCB)) {
+  if (!Parser.isCodeChar(CodeChars.LCB, prevCharacter)) {
     additionalTextEdits.push(
       TextEdit.insert(
         PosCharSubtract(1, position)
@@ -214,7 +308,7 @@ export function getFilterCompletions (position) {
  * @param {LSP.CompletionContext} context
  * @returns
  */
-export function getTriggerCompletion (ASTNode, document, position, context) {
+export function getPreviousCharacter (ASTNode, document, position, context) {
 
   const type = document.textDocument.getText({
     start: {

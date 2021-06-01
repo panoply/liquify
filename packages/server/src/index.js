@@ -5,17 +5,16 @@ import {
   TextDocumentSyncKind,
   createConnection,
   ProposedFeatures,
-  CompletionItem
-  , TextEdit
+  CodeActionKind,
+  Command
+
 } from 'vscode-languageserver'
 
 import Server from 'provide/server'
 import Service from 'provide/service'
-import { Document } from 'provide/document'
-import { Parser } from 'provide/parser'
+import { Document } from 'provide/parser'
 import { runAsync, runSync } from 'utils/runners'
 import { mark, stop } from 'marky'
-import { repeat } from 'lodash'
 
 /* ---------------------------------------------------------------- */
 /* Providers                                                        */
@@ -25,11 +24,6 @@ import { repeat } from 'lodash'
  * Server Connection
  */
 const connection = createConnection(ProposedFeatures.all)
-
-/**
- * Liquid Documents
- */
-const { documents } = Document
 
 /* ---------------------------------------------------------------- */
 /* onInitialize                                                     */
@@ -52,8 +46,7 @@ connection.onInitialize(initializeParams => (
     documentOnTypeFormattingProvider: {
       firstTriggerCharacter: '}',
       moreTriggerCharacter: [
-        ',',
-        ':'
+
       ]
     },
     documentRangeFormattingProvider: true,
@@ -75,7 +68,8 @@ connection.onInitialize(initializeParams => (
         '<',
         '%',
         '|',
-        '{'
+        '{',
+        ' '
       ]
     },
     implementationProvider: true,
@@ -139,45 +133,39 @@ connection.onDidChangeConfiguration(change => {
 /* ---------------------------------------------------------------- */
 connection.onDidOpenTextDocument(({ textDocument }) => {
 
-  connection.console.log('onDidOpenTextDocument')
+  // connection.console.log('onDidOpenTextDocument')
 
   mark('onDidOpenTextDocument')
 
   const document = Document.create(textDocument)
 
-  if (!document?.textDocument?.uri) return null
-
-  Parser.parse(document)
-
   console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
 
+  if (!document) return null
+
   if (Server.provider.validateOnOpen) {
-    return Service
-      .doValidation(document)
-      .then(diagnostics => connection.sendDiagnostics(diagnostics))
+    return Service.doValidation(document).then(connection.sendDiagnostics)
   }
+
 })
 
 /* ---------------------------------------------------------------- */
 /* onDidChangeTextDocument                                          */
 /* ---------------------------------------------------------------- */
 
-connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
+connection.onDidChangeTextDocument(({ textDocument, contentChanges }) => {
 
   mark('onDidChangeTextDocument')
 
   const document = Document.update(textDocument, contentChanges)
 
-  if (!document?.textDocument?.uri) return null
-
-  Parser.parse(document)
-
-  // console.log(document.ast)
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
-  return Service
-    .doValidation(document)
-    .then(diagnostics => connection.sendDiagnostics(diagnostics))
+  if (!document) return null
+
+  console.log('executed', document.nodes.length)
+
+  return Service.doValidation(document).then(connection.sendDiagnostics)
 
 })
 
@@ -187,7 +175,7 @@ connection.onDidChangeTextDocument(({ contentChanges, textDocument }) => {
 
 connection.onDidCloseTextDocument(({ textDocument: { uri } }) => (
 
-  documents.delete(uri)
+  Document.documents.delete(uri)
 
 ))
 
@@ -199,7 +187,7 @@ connection.onDidChangeWatchedFiles(change => {
 
   connection.console.log('onDidChangeWatchedFiles')
 
-  Server.configure('onDidChangeWatchedFiles', change)
+  return Server.configure('onDidChangeWatchedFiles', change)
 
 })
 
@@ -217,9 +205,9 @@ connection.onDocumentOnTypeFormatting((
   , token
 ) => !Server.provider.formatOnType || runSync(() => {
 
-  const document = documents.get(uri)
+  const document = Document.get(uri)
 
-  if (!document?.textDocument?.uri) return null
+  if (!document) return null
 
   return Service.doFormatOnType(document, ch, position, options)
 
@@ -234,9 +222,9 @@ connection.onDocumentRangeFormatting((
   , token
 ) => !Server.provider.format || runSync(() => {
 
-  const document = documents.get(uri)
+  const document = Document.get(uri)
 
-  if (!document?.textDocument?.uri) return null
+  if (!document) return null
 
   return Service.doFormat(document)
 
@@ -252,13 +240,11 @@ connection.onHover(
     , textDocument: { uri }
   }, token) => !Server.provider.hover || runAsync(async () => {
 
-    const document = documents.get(uri)
+    const document = Document.get(uri)
 
-    if (!document?.textDocument?.uri) return null
+    if (!document) return null
 
-    const hover = await Service.doHover(document, position)
-
-    if (hover) return hover
+    return Service.doHover(document, position)
 
   }, null, `Error while computing hover for ${uri}`, token)
 )
@@ -308,11 +294,11 @@ connection.onDocumentLinks((
 
   return null
 
-  const document = documents.get(uri)
+  const document = Document.get(uri)
 
   if (!document.uri) return null
 
-  return Parser.scanner.getLinks()
+  return Document.scanner.getLinks()
 
 }, null, `Error while computing completion for ${uri}`, token))
 
@@ -343,11 +329,32 @@ connection.onCompletion((
   }, token
 ) => !Server.provider.completion || runAsync(async () => {
 
-  const document = documents.get(uri)
+  return null
+  const document = Document.get(uri)
 
-  if (!document?.textDocument?.uri) return null
+  if (!document) return null
 
   return Service.doComplete(document, position, context)
+
+}, null, `Error while computing completion for ${uri}`, token))
+
+/* ---------------------------------------------------------------- */
+/* onSignatureHelp                                                  */
+/* ---------------------------------------------------------------- */
+
+connection.onCodeAction((
+  {
+    textDocument: { uri }
+    , context
+    , range
+  }, token
+) => runAsync(async () => {
+
+  const document = Document.get(uri)
+
+  if (!document) return null
+
+  return console.log('in code action', context, document.textDocument.getText(range))
 
 }, null, `Error while computing completion for ${uri}`, token))
 
@@ -373,7 +380,7 @@ connection.onExecuteCommand((
   , token
 ) => runSync(() => {
 
-  return null
+  console.log(item)
 
   return item.arguments[0]
 

@@ -7,15 +7,15 @@
       "oneOf": [
         {
           "enum": ["standard"],
-          "description": "This option will query select all HTML tags by according to the defined \"tag\" name"
+          "description": "Liquid Standard"
         },
         {
           "enum": ["jekyll"],
-          "description": "This option will query select all HTML tags by according to the defined \"tag\" name"
+          "description": "Liquid Jekyll"
         },
         {
           "enum": ["shopify"],
-          "description": "This option will query select all HTML tags by according to the defined \"tag\" name"
+          "description": "Liquid Shopify"
         }
       ]
     },
@@ -173,6 +173,59 @@
         }
       }
     },
+    "liquid": {
+      "properties": {
+        "dash_trim": {
+          "type": "string",
+          "default": "off",
+          "title": "Sort Attributes",
+          "oneOf": [
+            {
+              "enum": ["never"],
+              "description": "Whitespace dashes will never be applied to tags"
+            },
+            {
+              "enum": ["always"],
+              "description": "Whitespace dashes will always be applied to tags. Please note that any tags contained within strings are skipped."
+            },
+            {
+              "enum": ["off"],
+              "description": "Whitespace dashes will be ignored and left up to the developer to apply or not."
+            }
+          ]
+        },
+        "force_line": {
+          "type": "boolean",
+          "default": false,
+          "title": "Force Newline",
+          "description": "Forces newline padding between start and end tag blocks"
+        },
+        "quote_convert": {
+          "default": "none",
+          "title": "Convert Quotes",
+          "description": "If the quotes of strings should be converted to single quotes or double quotes",
+          "oneOf": [
+            {
+              "enum": ["double"],
+              "description": "Converts single quotes to double quotes"
+            },
+            {
+              "enum": ["none"],
+              "description": "Ignores this option"
+            },
+            {
+              "enum": ["single"],
+              "description": "Converts double quotes to single quotes"
+            }
+          ]
+        },
+        "force_filter": {
+          "type": "boolean",
+          "title": "Force Filter",
+          "description": "If tag filters should be indented each onto their own line if the exceed wrap limit. Please note tags using filters that are contained within strings are skipped"
+        }
+      }
+    },
     "markup": {
       "properties": {
         "attribute_sort": {
@@ -225,6 +278,11 @@
           "default": true,
           "title": "Preserve Markup Text White Space",
           "description": "If text in the provided document code should be preserved exactly as provided. This option eliminates beautification and wrapping of text content"
+        },
+        "wrap": {
+          "type": "number",
+          "title": "Wrap Limit",
+          "description": "Character width limit before applying word wrap. A 0 value disables this option. Defaults to the word wrap limit set workspace or user settings."
         },
         "space_close": {
           "type": "boolean",
@@ -707,7 +765,7 @@
   "properties": {
     "engine": {
       "title": "Liquid Engine",
-      "description": "The Liquid variation this project is using. Default to \"Standard\" and defines the type of completion references and hover descriptions intellisense uses.",
+      "description": "The Liquid variation this project is using. Defaults to \"Standard\" and defines the type of completion references and hover descriptions intellisense uses.",
       "$ref": "#/definitions/engine"
     },
     "validate": {
@@ -759,10 +817,16 @@
           "description": "List of files/directories to be ignored from formatting",
           "$ref": "#/definitions/ignore"
         },
+        "liquid": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Liquid beautification formatting options and rules",
+          "$ref": "#/definitions/liquid"
+        },
         "html": {
           "type": "object",
           "additionalProperties": false,
-          "description": "The HTML/Liquid beautification formatting options and rules",
+          "description": "HTML beautification formatting options and rules",
           "$ref": "#/definitions/markup"
         },
         "javascript": {

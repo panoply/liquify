@@ -1,8 +1,7 @@
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { TokenKind } from 'enums/kinds'
 import { TokenTags } from 'enums/tags'
-import iDocument from 'parser/documents'
-import scanner from 'parser/scanner'
+import Scanner from 'parser/scanner'
 import Errors from 'parser/errors'
 import yamljs from 'yamljs'
 
@@ -12,7 +11,7 @@ import yamljs from 'yamljs'
  * Creates token nodes on the AST
  *
  */
-export default (function ASTNodes () {
+export default (function ASTnode () {
 
   /**
    * Node index
@@ -20,6 +19,8 @@ export default (function ASTNodes () {
    * @type {Parser.IAST}
    */
   let document
+
+  function Update (iAST) { document = iAST }
 
   /**
    * Node index
@@ -37,26 +38,17 @@ export default (function ASTNodes () {
   const hierarch = []
 
   /**
-   * Maintains document instance for each page update
-   */
-  iDocument.event.on('update', iAST => {
-
-    document = iAST
-
-  })
-
-  /**
    *
    * @param {Parser.ParseError} error
    * @param {string} [token]
    */
-  function Error (error, token = undefined) {
+  function IError (error, token = undefined) {
 
     const diagnostic = Errors(error, {
       node,
-      range: scanner.range,
-      offset: scanner.offset,
-      token: token || scanner.token
+      range: Scanner.range,
+      offset: Scanner.offset,
+      token: token || Scanner.token
     })
 
     document.errors.push(diagnostic)
@@ -109,7 +101,7 @@ export default (function ASTNodes () {
      *
      * @type {Parser.Range}
      */
-    range = { start: scanner.range.start }
+    range = { start: Scanner.range.start }
 
     /**
      * Offsets List
@@ -118,7 +110,7 @@ export default (function ASTNodes () {
      *
      * @type {number[]}
      */
-    offsets = [ scanner.start ]
+    offsets = [ Scanner.start ]
 
     /**
      * Tag Kind
@@ -225,10 +217,10 @@ export default (function ASTNodes () {
     get content () {
 
       if (this.kind === TokenKind.Yaml) {
-        return yamljs.parse(scanner.GetText(this.offsets[1], this.offsets[2]))
+        return yamljs.parse(Scanner.GetText(this.offsets[1], this.offsets[2]))
       }
 
-      return scanner.getText(this.offsets[1], this.offsets[2])
+      return Scanner.getText(this.offsets[1], this.offsets[2])
 
     }
 
@@ -257,9 +249,9 @@ export default (function ASTNodes () {
   return {
     get node () { return node },
     set node (index) { node = index },
-
+    Update,
     Node,
-    Error,
+    IError,
     Pairs: {
 
       /**
@@ -280,15 +272,31 @@ export default (function ASTNodes () {
        */
       get match () {
 
-        const state = hierarch.lastIndexOf(scanner.token)
+        const state = hierarch.lastIndexOf(Scanner.token)
         const index = hierarch[state + 1]
 
         hierarch.splice(state, 2)
 
         return typeof index === 'number' ? index : -1
 
-      }
+      },
 
+      /**
+       * Hierarch Errors
+       *
+       * We push any hierarch errors at the end of the
+       * document parsing sequence.
+       */
+      hierarch (e) {
+
+        while (this.list.length > 0) {
+          this.list.shift()
+          const index = this.list.shift()
+          if (typeof index === 'number') {
+            IError(e, document.nodes[index].token[0])
+          }
+        }
+      }
     }
 
   }

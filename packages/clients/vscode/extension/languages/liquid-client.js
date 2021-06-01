@@ -90,11 +90,11 @@ export default (context) => {
    */
   const server = {
     run: {
-      module: './../packages/server/package/server.js',
+      module: join(process.env.SERVER_PATH, 'packages/server/package/server.js'),
       transport: TransportKind.ipc
     },
     debug: {
-      module: './../packages/server/package/server.js',
+      module: join(process.env.SERVER_PATH, 'packages/server/package/server.js'),
       transport: TransportKind.ipc,
       options: {
         execArgv: [ '--nolazy', '--inspect=6080' ]
@@ -110,7 +110,6 @@ export default (context) => {
   const client = {
     diagnosticCollectionName: name,
     outputChannelName: name,
-
     documentSelector: [
       {
         scheme: 'file',

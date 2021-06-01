@@ -1,8 +1,7 @@
 import prettydiff from 'prettydiff'
 import _ from 'lodash'
-import { Document } from 'provide/document'
+import { TokenKind } from '@liquify/liquid-parser'
 import Server from 'provide/server'
-import { Parser } from 'provide/parser'
 
 /**
  * Formatting Functions
@@ -37,16 +36,15 @@ const defaultRules = _.cloneDeep(prettydiff.options)
  * nodes contained within HTML elements which must adhere to an
  * indentation level
  *
- * @param {LSP.TextDocument} document
- * @param {number} kind
+ * @param {LSP.TextDocument} literal
  * @param {number} offset
  * @returns {number}
  */
-function indentLevel (document, offset) {
+function indentLevel (literal, offset) {
 
   const { tabSize } = Server.formatting.editorRules
-  const { line } = document.positionAt(offset)
-  const pos = offset - document.offsetAt({ line, character: 0 })
+  const { line } = literal.positionAt(offset)
+  const pos = offset - literal.offsetAt({ line, character: 0 })
 
   // const indent = kind === TokenKind.liquid
   // ? pos / tabSize
@@ -71,7 +69,7 @@ function formatReplace (content) {
   return content
     .replace(/=" (\{[{%]-?)/g, '="$1')
     .replace(/\s*data-prettydiff-ignore>/g, '>\n')
-    .replace(/_pdp/g, '')
+    .replace(/__pdp/g, '')
 }
 
 /**
@@ -79,23 +77,27 @@ function formatReplace (content) {
  * embedded tags like `<style>` or `<script>` to prevent PrettyDiff
  * formatting its contents.
  *
- * @param {LSP.TextDocument} document
+ * @param {Parser.IAST} document
  * @param {String} newText
- * @param {ASTEmbeddedRegion} ASTnode
+ * @param {Parser.ASTNode} ASTnode
  * @returns {LSP.TextEdit[]}
  */
 function formatHTMLEmbeds (document, newText, ASTnode) {
 
-  const { offset } = ASTnode
-
   return [
     {
       newText: 'data-prettydiff-ignore>',
-      range: Document.getRange(offset[1] - 1, offset[1])
+      range: document.rangeFromOffsets(
+        ASTnode.offsets[1] - 1,
+        ASTnode.offsets[1]
+      )
     },
     {
       newText,
-      range: Document.getRange(offset[3] + 1, offset[2])
+      range: document.rangeFromOffsets(
+        ASTnode.offsets[3] + 1,
+        ASTnode.offsets[2]
+      )
     }
   ]
 }
@@ -108,33 +110,34 @@ function formatHTMLEmbeds (document, newText, ASTnode) {
  * into treating it as it would any Liquid tag block. The temporary name
  * is removed in the final format cycle.
  *
+ * @param {Parser.IAST} document
  * @param {Parser.ASTNode} ASTNode
  * @param {string} newText
  * @returns {LSP.TextEdit[]}
  */
-function formatLiquidEmbeds (ASTNode, newText) {
+function formatLiquidEmbeds (document, ASTNode, newText) {
 
   const startName = ASTNode.token[0].indexOf(ASTNode.name)
   const closeName = ASTNode.token[1].indexOf(`end${ASTNode.name}`)
 
   return [
     {
-      newText: `${ASTNode.name}_pdp`,
-      range: Document.getRange(
+      newText: `${ASTNode.name}__pdp`,
+      range: document.rangeFromOffsets(
         ASTNode.offsets[0] + startName,
         ASTNode.offsets[0] + startName + ASTNode.name.length
       )
     },
     {
-      newText: `end${ASTNode.name}_pdp`,
-      range: Document.getRange(
+      newText: `end${ASTNode.name}__pdp`,
+      range: document.rangeFromOffsets(
         ASTNode.offsets[2] + closeName,
         ASTNode.offsets[2] + closeName + ASTNode.name.length + 3
       )
     },
     {
       newText,
-      range: Document.getRange(ASTNode.offsets[1], ASTNode.offsets[2])
+      range: document.rangeFromOffsets(ASTNode.offsets[1], ASTNode.offsets[2])
     }
   ]
 }
@@ -146,14 +149,16 @@ function formatLiquidEmbeds (ASTNode, newText) {
 /**
  * Embedded Regions - JavaScript, JSON, CSS and SCSS
  *
- * @param {LSP.TextDocument} document
+ * @param {Parser.IAST} document
+ * @param {LSP.TextDocument} literal
  * @returns {(ASTNode: Parser.ASTNode) => LSP.TextEdit[]}
  */
-export const embeds = (document) => ASTNode => {
+export const embeds = (document, literal) => ASTNode => {
 
-  const indent_level = indentLevel(document, ASTNode.offsets[0])
+  const indent_level = indentLevel(literal, ASTNode.offsets[0])
   const rules = Server.formatting.languageRules[ASTNode.language]
   const source = ASTNode.content
+
   // Set formatting rules
   // Apply `indent_level` when nested within elements
   Object.assign(prettydiff.options, rules, {
@@ -168,26 +173,35 @@ export const embeds = (document) => ASTNode => {
   const newText = `\n${_.repeat(rules.indent_char, indent_level)}${beautify}`
 
   if (prettydiff.sparser.parseerror.length > 0) {
+
     console.error(prettydiff.sparser.parseerror)
-    return ASTNode.content
+
+    return [
+      {
+        newText: ASTNode.content,
+        range: document.rangeFromOffsets(ASTNode.offsets[1], ASTNode.offsets[2])
+      }
+    ]
   }
 
   // Reset PrettyDiff rules.
   Object.assign(prettydiff.options, defaultRules)
 
-  if (ASTNode.kind === Parser.kind.html && !/\s*$/.test(source)) {
-    return formatHTMLEmbeds(ASTNode.document, newText, ASTNode)
+  if (ASTNode.kind === TokenKind.HTML && !/\s*$/.test(source)) {
+    return formatHTMLEmbeds(document, newText, ASTNode)
   } else if (
     ASTNode.language === 'scss' ||
     ASTNode.language === 'css'
   ) {
-    return formatLiquidEmbeds(ASTNode, newText)
+    return formatLiquidEmbeds(document, ASTNode, newText)
   }
 
-  return {
-    newText,
-    range: Document.getRange(ASTNode.offsets[1], ASTNode.offsets[2])
-  }
+  return [
+    {
+      newText,
+      range: document.rangeFromOffsets(ASTNode.offsets[1], ASTNode.offsets[2])
+    }
+  ]
 }
 
 /**
@@ -206,6 +220,8 @@ export function markup (source) {
 
   const output = prettydiff()
 
+  //  console.log(source)
+
   // Check Sparser for errors
   // Validations will handle missing pairs
   // We still echo Sparser log for additional context.
@@ -217,4 +233,5 @@ export function markup (source) {
   Object.assign(prettydiff.options, defaultRules)
 
   return formatReplace(output)
+
 }

@@ -1,17 +1,13 @@
-import stream from 'parser/stream'
-import specs from 'parser/specs'
-import { parse } from 'parser/parse'
-import config from 'parser/options'
-import { OffsetsFromRange } from 'parser/utils'
-import iDocument from 'parser/documents'
+import Stream from 'parser/stream'
+import Specs from 'parser/specs'
+import Config from 'parser/options'
+import Document from 'parser/documents'
 
 /* EXPOSED EXPORTS ---------------------------- */
 
 export { TokenTags } from 'enums/tags'
 export { TokenKind } from 'enums/kinds'
 export * as CharCodes from 'lexical/characters'
-
-export const Document = iDocument
 
 /**
  * Liquid Parser
@@ -21,14 +17,18 @@ export const Document = iDocument
  */
 export function LiquidParser (options) {
 
-  Object.assign(config, options)
+  Object.assign(Config, options)
 
   // @ts-ignore
-  specs.ref(config.engine, config.license)
+  Specs.ref(Config.engine, Config.license)
 
-  if (config.associate_tags.length > 0) specs.associates.setup(config.associate_tags)
+  if (Config.associate_tags.length > 0) {
+    Specs.associates.setup(Config.associate_tags)
+  }
 
   return {
+
+    Document,
 
     /**
      * Specification Engine
@@ -36,7 +36,7 @@ export function LiquidParser (options) {
      * @param {Specs.Engine} engine
      * @memberof LiquidParser
      */
-    engine: (engine) => specs.ref(engine, config.license),
+    Engine: (engine) => Specs.ref(engine, Config.license),
 
     /**
      * Returns Specification
@@ -44,7 +44,7 @@ export function LiquidParser (options) {
      * @memberof LiquidParser
      * @return {Specs.Variation}
      */
-    get spec () { return specs.variation },
+    get Spec () { return Specs.variation },
 
     /**
      * Test Code Character at TextDocument position
@@ -53,9 +53,9 @@ export function LiquidParser (options) {
      */
     isCodeChar (code, position) {
 
-      const offset = stream.OffsetFromPosition(position)
+      const offset = Stream.OffsetFromPosition(position)
 
-      return stream.CodeCharAt(code, offset)
+      return Stream.CodeCharAt(code, offset)
 
     },
 

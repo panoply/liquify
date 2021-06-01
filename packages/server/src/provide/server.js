@@ -3,7 +3,7 @@ import pick from 'lodash/pick'
 import upperFirst from 'lodash/upperFirst'
 import { readFileSync, readdirSync, existsSync } from 'fs-extra'
 import { basename, resolve, join, normalize } from 'path'
-import { Parser } from './parser'
+import { Spec, Engine } from 'provide/parser'
 import stripJSONC from 'strip-json-comments'
 
 /**
@@ -115,8 +115,8 @@ export default (function (config) {
    */
   const setLiquidEngine = (settings) => {
 
-    Parser.engine(settings.engine)
-    config.engineLabel = `\n${upperFirst(Parser.spec.engine)} Liquid`
+    Engine(settings.engine)
+    config.engineLabel = `\n${upperFirst(Spec.engine)} Liquid`
 
     return setSpecification(settings)
 

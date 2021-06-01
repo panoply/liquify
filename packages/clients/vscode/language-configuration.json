@@ -2,10 +2,6 @@
   "comments": {
     "blockComment": ["{% comment %}", "{% endcomment %}"]
   },
-  "brackets": [
-    ["{%", "%}"],
-    ["{{", "}}"]
-  ],
   "autoClosingPairs": [
     {
       "open": "[",
@@ -14,6 +10,14 @@
     {
       "open": "(",
       "close": ")"
+    },
+    {
+      "open": "{{",
+      "close": "}}"
+    },
+    {
+      "open": "{%",
+      "close": "%}"
     },
     {
       "open": "---",
@@ -33,7 +37,7 @@
   ],
   "surroundingPairs": [
     ["-", "-"],
-    ["{{", "}}"],
+    ["<", ">"],
     ["[", "]"],
     ["(", ")"],
     ["\"", "\""],

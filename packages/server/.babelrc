@@ -5,20 +5,27 @@
       {
         "modules": false,
         "targets": {
-          "node": true
+          "node": 12
         }
       }
-    ]
+    ],
+    ["@babel/preset-typescript"],
+    ["const-enum"]
   ],
   "sourceMaps": true,
   "inputSourceMap": true,
   "retainLines": true,
   "plugins": [
-    "babel-plugin-lodash",
-    "@babel/plugin-proposal-optional-chaining",
-    "@babel/plugin-proposal-private-methods",
-    "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-syntax-dynamic-import",
-    "@babel/plugin-transform-runtime"
+    ["babel-plugin-lodash"],
+    ["@babel/plugin-proposal-optional-chaining"],
+    ["@babel/plugin-proposal-class-properties"],
+    ["@babel/plugin-syntax-class-properties"],
+    ["@babel/plugin-transform-runtime"],
+    [
+      "const-enum",
+      {
+        "transform": "constObject"
+      }
+    ]
   ]
 }
