@@ -1,4 +1,4 @@
-import { TokenTags } from 'enums/tags'
+import { NodeType } from 'lexical/types'
 import { Engines } from 'parser/options'
 import specs from '@liquify/liquid-language-specs'
 
@@ -46,7 +46,7 @@ export default (function Specs () {
   /**
    * Specification Type
    *
-   * @type {Parser.TokenTags}
+   * @type {Parser.NodeType}
    */
   let type
 
@@ -98,11 +98,7 @@ export default (function Specs () {
         get tags () { return state.tags },
 
         /**
-         * Object Type
-         *
-         * The return value of the object currently in stream
-         *
-
+         * Match Tags
          */
         match: (tagName, attributes) => {
 
@@ -197,7 +193,7 @@ export default (function Specs () {
      * Presets token tag type and prepares the cursor
      * for fast reference of specification.
      *
-     * @param {Parser.TokenTags} type
+     * @param {Parser.NodeType} type
      * @returns {void}
      */
     set type (code) { type = code },
@@ -220,7 +216,7 @@ export default (function Specs () {
      * Checks to see if the current token tag type is
      * equal to the enum value passed in.
      *
-     * @param {TokenTags} [tag]
+     * @param {NodeType} [tag]
      * Removes the specification variation references
      *
      */
@@ -349,7 +345,7 @@ export default (function Specs () {
          * @type {Spec<Specs.ITag>}
          */
         cursor = variation.tags[name]
-        type = TokenTags[cursor.type || 'unknown']
+        type = NodeType[cursor.type || 'unknown']
 
         return true
 
@@ -380,7 +376,7 @@ export default (function Specs () {
          * @type {Spec<Specs.IObject>}
          */
         cursor = variation.objects[name]
-        type = TokenTags.object
+        type = NodeType.object
 
         this.object.cursor()
 

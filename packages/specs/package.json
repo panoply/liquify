@@ -3,7 +3,8 @@
   "version": "0.1.2",
   "created": "2020",
   "private": false,
-  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "author": "Νίκος Σαβίδης <nicos@gmx.com>",
+  "contributors": ["Νίκος Σαβίδης", "Joseph Curtis"],
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
   "main": "package/index.js",
@@ -19,7 +20,8 @@
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava --verbose"
+    "test": "ava --verbose",
+    "test:log": "ava --verbose -- logs"
   },
   "ava": {
     "require": ["esm", "@babel/register"],
@@ -37,10 +39,13 @@
     "ava": "^3.15.0",
     "dotenv": "^9.0.2",
     "esm": "^3.2.25",
+    "object-sizeof": "^1.6.1",
+    "pretty-bytes": "^5.6.0",
+    "rambda": "^6.7.0",
+    "rollup-plugin-filesize": "^9.1.1",
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "@liquify/cryptographer": "workspace:^0.1.0",
-    "mergerino": "^0.4.0"
+    "@liquify/cryptographer": "workspace:^0.1.0"
   }
 }

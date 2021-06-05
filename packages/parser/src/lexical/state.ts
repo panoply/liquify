@@ -88,7 +88,7 @@ export const enum ScanState {
   /**
    * Tag is a Associate Type
    */
-  TagObject,
+  TagOutput,
   TagType,
   TagBasic,
   TagBasicName,
@@ -145,7 +145,7 @@ export const enum ScanState {
    *
    * Position is after left side liquid tag delimiter tag
    */
-  TagObjectOpen,
+  TagOutputOpen,
 
   /**
    * `{%-^`
@@ -163,7 +163,7 @@ export const enum ScanState {
    *
    * Position is after left side whitespace trim dash
    */
-  TagObjectOpenTrim,
+  TagOutputOpenTrim,
 
   /**
    * `^%}` or `^}}`

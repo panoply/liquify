@@ -1,25 +1,27 @@
-import { TokenType } from 'enums/types'
-import { TokenTags } from 'enums/tags'
-import { TokenContext } from 'enums/context'
-import { TokenKind } from 'enums/kinds'
-import { ParseError } from 'enums/errors'
+import { TokenType } from 'lexical/tokens'
+import { TokenContext } from 'lexical/context'
+import { NodeType } from 'lexical/types'
+import { NodeLanguage } from 'lexical/language'
+import { NodeKind } from 'lexical/kind'
+import { ParseError } from 'lexical/errors'
 import Context from 'parser/context'
 import ASTNode from 'parser/node'
 import Scanner from 'parser/scanner'
 import Spec from 'parser/specs'
 import Config from 'parser/options'
+import Errors from 'parser/errors'
+import { event } from 'parser/state'
 
 /**
  * Parser
  *
  * Liquid/HTML parser function which constructs and tokenized syntaxes.
  *
- * @param {Parser.IAST} document
+ * @param {Parser.AST} document
  */
 export function parse (document, cursor = false) {
 
-  ASTNode.Update(document)
-  Context.Update(document.textDocument.uri)
+  const INode = ASTNode(document)
 
   /**
    * @type {number}
@@ -32,22 +34,38 @@ export function parse (document, cursor = false) {
   let state
 
   /**
+   * @type {any}
+   */
+  let index
+
+  /**
    * @type {Parser.ASTNode}
    */
   let node
 
+  /**
+   * Resets the current parsing state
+   * references we are using
+   *
+   * @returns {void}
+   */
+  const reset = (context = NaN) => {
+
+    // RESET LETTINGS
+    state = undefined
+    node = undefined
+
+    // RESET SPECS
+    Spec.reset()
+    Spec.object.reset()
+
+    if (!isNaN(context)) Context.remove(context)
+
+  }
+
   while (token !== TokenType.EOS) {
 
     switch (token) {
-
-      // SPACING
-      // -----------------------------------------------------------------
-      case TokenType.DelimiterOpen:
-        if (Config.context) Context.add(TokenContext.OpenTag)
-        break
-      case TokenType.DelimiterClose:
-        if (Config.context) Context.add(TokenContext.CloseTag)
-        break
 
       // SPACING
       // -----------------------------------------------------------------
@@ -58,7 +76,7 @@ export function parse (document, cursor = false) {
         if (Config.context && Config.newlines) Context.add(TokenContext.Newline)
         break
 
-        // BOOLEAN
+      // VARIABLE
       // -----------------------------------------------------------------
       case TokenType.Variable:
         if (Config.context) Context.add(TokenContext.Variable)
@@ -94,40 +112,29 @@ export function parse (document, cursor = false) {
         if (Config.context) Context.add(TokenContext.Object)
         break
 
-      // TRIMS
+      // PARSE ERROR
       // -----------------------------------------------------------------
-      case TokenType.LiquidTrimDashLeft:
-        if (Config.context) Context.add(TokenContext.LeftTrim)
-        break
-      case TokenType.LiquidTrimDashRight:
-        if (Config.context) Context.add(TokenContext.RightTrim)
-        break
-
-      case TokenType.Separator:
-        if (Config.context) Context.add(TokenContext.Separator)
-        break
-
-      // DIAGNOSTICS
-      // -----------------------------------------------------------------
-      case TokenType.ParseWarning:
-
-        ASTNode.IError(Scanner.error)
-
-        break
-
       case TokenType.ParseError:
 
-        ASTNode.IError(Scanner.error)
+        document.errors.push(Errors(Scanner.error, Scanner.range))
 
         break
 
+      // PARSE CANCEL
+      // -----------------------------------------------------------------
+      case TokenType.ParseCancel:
+
+        break
+
+      // PARSE SKIP
+      // -----------------------------------------------------------------
       case TokenType.ParseSkip:
 
         if (node) {
 
           if (!node.singular) {
-            ASTNode.Pairs.list.pop()
-            ASTNode.Pairs.list.pop()
+            Scanner.syntactic.list.pop()
+            Scanner.syntactic.list.pop()
           }
 
           node = undefined
@@ -135,144 +142,63 @@ export function parse (document, cursor = false) {
 
         break
 
-      // HTML TAGS
+      // DELIMITER OPEN
       // -----------------------------------------------------------------
-      case TokenType.HTMLStartTagOpen:
+      case TokenType.DelimiterOpen:
         if (Config.context) Context.add(TokenContext.OpenTag)
         break
 
-      case TokenType.HTMLTagName:
-
-        ASTNode.node = document.nodes.length
-
-        // @ts-ignore
-        node = new ASTNode.Node()
-
-        node.type = TokenTags.associate
-        node.kind = TokenKind.HTML
-        node.singular = false
-
-        if (Config.context) {
-          node.context.push(Context.size)
-          Context.add(TokenContext.Identifier)
-        }
-
-        node.name = Scanner.token
-        ASTNode.Pairs.list.push(node.name, node.index)
-
-        break
-
-      case TokenType.HTMLAttributeName:
-        if (Config.context) Context.add(TokenContext.Attribute)
-        state = Scanner.token
-        node.attributes[state] = null
-        break
-      case TokenType.HTMLOperatorValue:
-        if (Config.context) Context.add(TokenContext.Operator)
-        break
-      case TokenType.HTMLAttributeValue:
-        if (Config.context) Context.add(TokenContext.String)
-        node.attributes[state] = Scanner.token
-        break
-      case TokenType.HTMLEndTag:
-
-        // Find hierarch - The parental node
-        node = document.nodes[ASTNode.Pairs.match]
-
-        // Validate the parent matches the hierarch node
-        if (node?.name === Scanner.token) {
-
-          // CONTEXT
-          if (Config.context) Context.add(TokenContext.EndTag)
-
-          node.offsets.push(Scanner.start)
-
-          if (Config.context) node.context.push(Context.size)
-
-          // AST LOGIC
-          ASTNode.node = node.index
-
-          break
-        }
-
-        break
-
-      case TokenType.HTMLEndTagClose:
-      case TokenType.HTMLEndCommentTag:
-      case TokenType.HTMLStartTagClose:
-
-        if (!node) break
-
-        node.offsets.push(Scanner.offset)
-        node.token.push(Scanner.tag)
-        node.range.end = Scanner.range.end
-
-        // CONTEXT
-        if (Config.context) Context.add(TokenContext.CloseTag)
-
-        // ADD ONLY START BASIC TAGS TO AST
-        if (token !== TokenType.HTMLEndTagClose) {
-
-          node.language = Spec.associates.match(node.name, Object.values(node.attributes))
-          node.index = document.nodes.length
-
-          document.embeds.push(node.index)
-          document.nodes.push(node)
-        }
-
-        break
-
-      // LIQUID TAGS
+      // DELIMITER TRIMS
       // -----------------------------------------------------------------
-      case TokenType.LiquidTag:
-
-        ASTNode.node = document.nodes.length
-
-        // @ts-ignore
-        node = new ASTNode.Node()
-        node.type = Spec.type
-        node.singular = false
-
-        if (Config.context) node.context.push(Context.size)
-
+      case TokenType.TrimDashLeft:
+        if (Config.context) Context.add(TokenContext.LeftTrim)
+        break
+      case TokenType.TrimDashRight:
+        if (Config.context) Context.add(TokenContext.RightTrim)
         break
 
-      // OUTPUT OBJECT TYPE TAGS
+      case TokenType.Separator:
+        if (Config.context) Context.add(TokenContext.Separator)
+        break
+
+      // OUTPUT TAG NAME
       // -----------------------------------------------------------------
       case TokenType.ObjectTag:
+      case TokenType.SingularTag:
 
-        ASTNode.node = document.nodes.length
+        index = document.nodes.length
 
         // @ts-ignore
-        node = new ASTNode.Node()
+        node = new INode()
         node.type = Spec.type
 
         if (Config.context) node.context.push(Context.size)
 
         break
 
-      // SINGULAR LIQUID TAGS
+      // START TAG NAME
       // -----------------------------------------------------------------
-      case TokenType.LiquidSingularTag:
+      case TokenType.StartTag:
 
-        ASTNode.node = document.nodes.length
+        index = document.nodes.length
 
         // @ts-ignore
-        node = new ASTNode.Node()
+        node = new INode()
         node.type = Spec.type
+        node.singular = false
 
         if (Config.context) node.context.push(Context.size)
 
         break
 
-      // BASIC END TAG
+      // END TAG
       // -----------------------------------------------------------------
-      case TokenType.LiquidEndTag: {
+      case TokenType.EndTag: {
 
         // Find hierarch - The parental node
-        node = document.nodes[ASTNode.Pairs.match]
+        node = document.nodes[Scanner.syntactic.match]
 
-        // console.log(ASTNode.Pairs.list, node?.name, Scanner.token)
+        // console.log(Scanner.syntactic.list, node?.name, Scanner.token)
         // Validate the parent matches the hierarch node
         if (node?.name === Scanner.token) {
 
@@ -281,9 +207,9 @@ export function parse (document, cursor = false) {
 
           // document.cursor IN NODE
           if (cursor) {
-            if (node.type === TokenTags.embedded) {
+            if (node.type === NodeType.embedded) {
               if (node.end > document.cursor[0] && Scanner.start < document.cursor[1]) {
-                ASTNode.node = node.index
+                index = node.index
                 document.node = node
                 cursor = false
               }
@@ -295,7 +221,7 @@ export function parse (document, cursor = false) {
           if (Config.context) node.context.push(Context.size)
 
           // AST LOGIC
-          ASTNode.node = node.index
+          index = node.index
 
           break
         }
@@ -303,20 +229,60 @@ export function parse (document, cursor = false) {
         // The endtag is invalid - missing parental hierarch
         // create a new node on the AST representing this invalid node
 
-        // @ts-ignore
-        node = new ASTNode.Node()
-        node.offsets.push(Scanner.offset)
-        if (Config.context) node.context.push(Context.size)
+        node = new INode()
+        node.name = Scanner.token
+
+        index = node.index
 
         // AST LOGIC
-        ASTNode.IError(ParseError.InvalidSyntactic)
+        state = ParseError.InvalidSyntactic
 
         // CONTEXT
-        if (Config.context) Context.add(TokenContext.EndTag)
+        if (Config.context) {
+          Context.add(TokenContext.EndTag)
+          node.context.push(Context.size)
+        }
 
         break
+
       }
-      // CLOSE TAGS
+
+      // DELIMITER CLOSE
+      // -----------------------------------------------------------------
+      case TokenType.DelimiterClose:
+
+        node.offsets.push(Scanner.offset)
+        node.token.push(Scanner.tag)
+        node.range.end = Scanner.range.end
+
+        if (Config.context) Context.add(TokenContext.CloseTag)
+
+        // ADD ONLY START BASIC TAGS TO AST
+        if (token !== TokenType.LiquidEndTagClose) {
+
+          document.nodes.push(node)
+
+          if (cursor) {
+            if (document.cursor[0] > node.start && document.cursor[1] < node.end) {
+              document.node = node
+              index = node.index
+              cursor = false
+            }
+          }
+        }
+
+        if (state === ParseError.InvalidSyntactic) {
+          node.index = document.nodes.length
+          document.errors.push(
+            Errors(ParseError.InvalidSyntactic, node.range)
+          )
+        }
+
+        reset()
+
+        break
+
+      // TAG CLOSERS
       // -----------------------------------------------------------------
       case TokenType.LiquidTagClose:
       case TokenType.LiquidEndTagClose:
@@ -325,37 +291,43 @@ export function parse (document, cursor = false) {
         node.token.push(Scanner.tag)
         node.range.end = Scanner.range.end
 
-        if (Scanner.error === ParseError.MissingCloseDelimiter) {
-          ASTNode.IError(Scanner.error)
-        }
-
         // CONTEXT
         if (Config.context) Context.add(TokenContext.CloseTag)
 
         // ADD ONLY START BASIC TAGS TO AST
         if (token !== TokenType.LiquidEndTagClose) {
 
-          node.index = document.nodes.length
           document.nodes.push(node)
+
+          if (node.type === NodeType.embedded) {
+            console.log('in embedded parse')
+          }
 
           if (cursor) {
             if (document.cursor[0] > node.start && document.cursor[1] < node.end) {
               document.node = node
-              ASTNode.node = node.index
+              index = node.index
               cursor = false
             }
           }
+        }
 
+        if (state === ParseError.InvalidSyntactic) {
+          node.index = document.nodes.length
+          document.errors.push(
+            Errors(ParseError.InvalidSyntactic, node.range)
+          )
         }
 
         // RESETS
+        state = undefined
         node = undefined
         Spec.reset()
         Spec.object.reset()
 
         break
 
-      // LIQUID OBJECT
+      // OBJECT NAME
       // -----------------------------------------------------------------
       case TokenType.Object:
 
@@ -371,57 +343,6 @@ export function parse (document, cursor = false) {
 
         break
 
-        // LIQUID OBJECT
-      // -----------------------------------------------------------------
-      case TokenType.LiquidTagName:
-
-        if (Config.context) Context.add(TokenContext.Identifier)
-
-        node.name = Scanner.token
-
-        if (!Scanner.spec?.singular) {
-          // ASSERT HIERARCH
-          ASTNode.Pairs.list.push(node.name, node.index)
-        }
-
-        break
-
-      // EMBEDDED TYPES
-      // -----------------------------------------------------------------
-      case TokenType.Embedded:
-
-        node.name = Scanner.token
-        node.type = Spec.type
-        node.language = Spec.get.language
-
-        // ASSERT HIERARCH
-        ASTNode.Pairs.list.push(node.name, node.index)
-        document.embeds.push(node.index)
-
-        if (Config.context) Context.add(TokenContext.Identifier)
-
-        break
-
-      // LIQUID CONTROL CONDITION
-      // -----------------------------------------------------------------
-      case TokenType.Control:
-
-        node.name = Scanner.token
-        node.type = Spec.type
-
-        ASTNode.Pairs.list.push(node.name, node.index)
-
-        if (Config.context) Context.add(TokenContext.Identifier)
-
-        break
-
-      case TokenType.ControlCondition:
-        if (Config.context) Context.add(TokenContext.Condition)
-        break
-      case TokenType.ControlOperator:
-        if (Config.context) Context.add(TokenContext.Operator)
-        break
-
       case TokenType.ObjectBracketNotationOpen:
         if (Config.context) Context.add(TokenContext.OpenBracket)
         break
@@ -433,7 +354,15 @@ export function parse (document, cursor = false) {
         if (Config.context) Context.add(TokenContext.Property)
 
         // VALIDATE PROPERTY
-        if (Scanner.isError(ParseError.UnknownProperty)) ASTNode.IError(Scanner.error)
+        if (Scanner.error === ParseError.UnknownProperty) {
+
+          document.errors.push(
+            Errors(
+              Scanner.error,
+              Scanner.range
+            )
+          )
+        }
 
         // PUSH NEXT PROPERTY
         node.objects[Spec.object.offset].push(Scanner.token)
@@ -465,6 +394,57 @@ export function parse (document, cursor = false) {
         if (Config.context) Context.add(TokenContext.Separator)
         break
 
+      // BASIC TAG NAME
+      // -----------------------------------------------------------------
+      case TokenType.LiquidTagName:
+
+        if (Config.context) Context.add(TokenContext.Identifier)
+
+        node.name = Scanner.token
+
+        if (!Scanner.spec?.singular) {
+          // ASSERT HIERARCH
+          Scanner.syntactic.list.push(node.name, index)
+        }
+
+        break
+
+      // EMBEDDED LANGUAGE TAG
+      // -----------------------------------------------------------------
+      case TokenType.Embedded:
+
+        node.name = Scanner.token
+        node.type = Spec.type
+        node.language = NodeLanguage[Spec.get.language]
+
+        // ASSERT HIERARCH
+        Scanner.syntactic.list.push(node.name, index)
+        document.embeds.push(index)
+
+        if (Config.context) Context.add(TokenContext.Identifier)
+
+        break
+
+      // CONTROL TAG
+      // -----------------------------------------------------------------
+      case TokenType.Control:
+
+        node.name = Scanner.token
+        node.type = Spec.type
+
+        Scanner.syntactic.list.push(node.name, index)
+
+        if (Config.context) Context.add(TokenContext.Identifier)
+
+        break
+
+      case TokenType.ControlCondition:
+        if (Config.context) Context.add(TokenContext.Condition)
+        break
+      case TokenType.ControlOperator:
+        if (Config.context) Context.add(TokenContext.Operator)
+        break
+
       // FILTERS
       // -----------------------------------------------------------------
       case TokenType.Filter:
@@ -490,7 +470,7 @@ export function parse (document, cursor = false) {
         if (Config.context) Context.add(TokenContext.Parameter)
         break
 
-      // LIQUID ITERATION ITEREE
+      // ITERATION TAG
       // -----------------------------------------------------------------
       case TokenType.IterationIteree:
 
@@ -511,13 +491,103 @@ export function parse (document, cursor = false) {
         Context.add(TokenContext.Integer)
         break
 
+      // HTML START TAG OPEN
+      // -----------------------------------------------------------------
+      case TokenType.HTMLStartTagOpen:
+        if (Config.context) Context.add(TokenContext.OpenTag)
+        break
+
+      case TokenType.HTMLTagName:
+
+        index = document.nodes.length
+
+        // @ts-ignore
+        node = new INode()
+
+        node.kind = NodeKind.HTML
+        node.singular = false
+
+        if (Config.context) {
+          node.context.push(Context.size)
+          Context.add(TokenContext.Identifier)
+        }
+
+        node.name = Scanner.token
+        Scanner.syntactic.list.push(node.name, node.index)
+
+        break
+
+      // HTML ATTRIBUTE
+      // -----------------------------------------------------------------
+      case TokenType.HTMLAttributeName:
+        if (Config.context) Context.add(TokenContext.Attribute)
+        state = Scanner.token
+        node.attributes[state] = null
+        break
+      case TokenType.HTMLOperatorValue:
+        if (Config.context) Context.add(TokenContext.Operator)
+        break
+      case TokenType.HTMLAttributeValue:
+        if (Config.context) Context.add(TokenContext.String)
+        node.attributes[state] = Scanner.token
+        break
+      case TokenType.HTMLEndTag:
+
+        // Find hierarch - The parental node
+        node = document.nodes[Scanner.syntactic.match]
+
+        // Validate the parent matches the hierarch node
+        if (node?.name === Scanner.token) {
+
+          // CONTEXT
+          if (Config.context) Context.add(TokenContext.EndTag)
+
+          node.offsets.push(Scanner.start)
+
+          if (Config.context) node.context.push(Context.size)
+
+          // AST LOGIC
+          index = node.index
+
+          break
+        }
+
+        break
+
+      // HTML START TAG OPEN
+      // -----------------------------------------------------------------
+      case TokenType.HTMLEndTagClose:
+      case TokenType.HTMLEndCommentTag:
+      case TokenType.HTMLStartTagClose:
+
+        if (!node) break
+
+        node.offsets.push(Scanner.offset)
+        node.token.push(Scanner.tag)
+        node.range.end = Scanner.range.end
+
+        // CONTEXT
+        if (Config.context) Context.add(TokenContext.CloseTag)
+
+        // ADD ONLY START BASIC TAGS TO AST
+        if (token !== TokenType.HTMLEndTagClose) {
+
+          node.language = Spec.associates.match(node.name, Object.values(node.attributes))
+          node.index = document.nodes.length
+
+          document.embeds.push(node.index)
+          document.nodes.push(node)
+        }
+
+        break
+
     }
 
     token = Scanner.scan()
 
   }
 
-  ASTNode.Pairs.hierarch(ParseError.MissingEndTag)
+  Scanner.syntactic.hierarch(document)
 
   return document
 

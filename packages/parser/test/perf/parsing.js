@@ -28,7 +28,7 @@ const server = {
 /* PARSER                                       */
 /* -------------------------------------------- */
 
-const parser = LiquidParser({
+const { Parser } = LiquidParser({
   engine: 'shopify',
   license: process.env.MASTER_KEY,
   context: true,
@@ -56,7 +56,7 @@ const start = process.hrtime()
 
 /* START -------------------------------------- */
 
-const document = parser.start(server)
+const parse = Parser.scan(server)
 
 /* END ---------------------------------------- */
 
@@ -71,15 +71,17 @@ const end = process.hrtime(start)
 log(
   chalk`{magentaBright NO CONTEXT PARSING}: {dim ${FILE}} \n\n`,
 
+  chalk.dim('\n\n----------------------------------------\n\n'),
+
   chalk`{bold AST}\n\n`,
 
-  chalk`{green ${parser.ast().nodes.length}} nodes parsed`,
+  chalk`{green ${parse.nodes.length}} nodes parsed`,
 
   chalk.dim('\n\n----------------------------------------\n\n'),
 
   chalk`{bold Errors}\n\n`,
 
-  chalk`{green ${parser.ast().errors.length}} errors captured`,
+  chalk`{green ${parse.errors.length}} errors captured`,
 
   chalk.dim('\n\n----------------------------------------\n\n'),
 

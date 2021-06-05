@@ -4,15 +4,12 @@ import {
   DidChangeConfigurationNotification,
   TextDocumentSyncKind,
   createConnection,
-  ProposedFeatures,
-  CodeActionKind,
-  Command
-
+  ProposedFeatures
 } from 'vscode-languageserver'
 
+import { Parser, Documents } from 'provide/parser'
 import Server from 'provide/server'
 import Service from 'provide/service'
-import { Document } from 'provide/parser'
 import { runAsync, runSync } from 'utils/runners'
 import { mark, stop } from 'marky'
 
@@ -137,7 +134,11 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   mark('onDidOpenTextDocument')
 
-  const document = Document.create(textDocument)
+  const document = Parser.scan(textDocument)
+
+  // console.log(document)
+
+  // console.log(document)
 
   console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
 
@@ -157,13 +158,13 @@ connection.onDidChangeTextDocument(({ textDocument, contentChanges }) => {
 
   mark('onDidChangeTextDocument')
 
-  const document = Document.update(textDocument, contentChanges)
+  const document = Parser.update(textDocument, contentChanges)
+
+  console.log('executed', document.node)
 
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
   if (!document) return null
-
-  console.log('executed', document.nodes.length)
 
   return Service.doValidation(document).then(connection.sendDiagnostics)
 
@@ -175,7 +176,7 @@ connection.onDidChangeTextDocument(({ textDocument, contentChanges }) => {
 
 connection.onDidCloseTextDocument(({ textDocument: { uri } }) => (
 
-  Document.documents.delete(uri)
+  Documents.delete(uri)
 
 ))
 
@@ -205,7 +206,7 @@ connection.onDocumentOnTypeFormatting((
   , token
 ) => !Server.provider.formatOnType || runSync(() => {
 
-  const document = Document.get(uri)
+  const document = Parser.document(uri)
 
   if (!document) return null
 
@@ -222,7 +223,7 @@ connection.onDocumentRangeFormatting((
   , token
 ) => !Server.provider.format || runSync(() => {
 
-  const document = Document.get(uri)
+  const document = Parser.document(uri)
 
   if (!document) return null
 
@@ -240,7 +241,7 @@ connection.onHover(
     , textDocument: { uri }
   }, token) => !Server.provider.hover || runAsync(async () => {
 
-    const document = Document.get(uri)
+    const document = Parser.document(uri)
 
     if (!document) return null
 
@@ -259,7 +260,7 @@ connection.onHover(
     textDocument: { uri }
   }, token) => runSync(() => {
 
-    const document = documents.get(uri)
+    const document = Parser.document(uri)
 
     if (!document.uri) return null
 
@@ -294,12 +295,6 @@ connection.onDocumentLinks((
 
   return null
 
-  const document = Document.get(uri)
-
-  if (!document.uri) return null
-
-  return Document.scanner.getLinks()
-
 }, null, `Error while computing completion for ${uri}`, token))
 
 /* ---------------------------------------------------------------- */
@@ -313,7 +308,7 @@ connection.onDocumentLinkResolve((
 
   return null
 
-  return item
+  // return item
 
 }, item, 'Error while resolving completion proposal', token))
 
@@ -330,31 +325,11 @@ connection.onCompletion((
 ) => !Server.provider.completion || runAsync(async () => {
 
   return null
-  const document = Document.get(uri)
+  if (!Documents.has(uri)) return null
 
-  if (!document) return null
+  const document = Parser.document(uri)
 
   return Service.doComplete(document, position, context)
-
-}, null, `Error while computing completion for ${uri}`, token))
-
-/* ---------------------------------------------------------------- */
-/* onSignatureHelp                                                  */
-/* ---------------------------------------------------------------- */
-
-connection.onCodeAction((
-  {
-    textDocument: { uri }
-    , context
-    , range
-  }, token
-) => runAsync(async () => {
-
-  const document = Document.get(uri)
-
-  if (!document) return null
-
-  return console.log('in code action', context, document.textDocument.getText(range))
 
 }, null, `Error while computing completion for ${uri}`, token))
 
@@ -366,6 +341,8 @@ connection.onCompletionResolve((
   item
   , token
 ) => runSync(() => {
+
+  return null
 
   return Service.doCompleteResolve(item)
 
@@ -379,8 +356,6 @@ connection.onExecuteCommand((
   item
   , token
 ) => runSync(() => {
-
-  console.log(item)
 
   return item.arguments[0]
 

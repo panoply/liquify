@@ -3,12 +3,12 @@ import { TextDocument } from 'vscode-languageserver-textdocument'
 import { CSSService } from 'service/modes/css'
 import { SCSSService } from 'service/modes/scss'
 import { JSONService } from 'service/modes/json'
-import { Spec } from 'provide/parser'
-import * as Format from 'service/format'
+import { Spec, Parser } from 'provide/parser'
+import Format from 'service/format'
 import * as Completion from 'service/completions'
 import * as Hover from 'service/hovers'
 import upperFirst from 'lodash/upperFirst'
-import { CodeChars } from '@liquify/liquid-parser'
+import { Characters } from '@liquify/liquid-parser'
 
 /**
  * Liquid Language Service
@@ -31,49 +31,94 @@ export default (mode => {
      */
     configure (support) {
 
+      // JSON Language Service
+      if (support.json) mode.json = new JSONService()
+
       // CSS Language Service
       if (support.css) mode.css = new CSSService()
 
       // SCSS Language Service
       if (support.scss) mode.scss = new SCSSService()
 
-      // JSON Language Service
-      if (support.json) mode.json = new JSONService()
-
     },
 
     /**
      * `doValidation`
      *
-     * @param {Parser.IAST} document
+     * @param {Parser.AST} document
+     * @param {LSP.Connection} connection
+     * @returns {Promise<LSP.PublishDiagnosticsParams>}
      * @memberof LiquidService
      */
     async doValidation (document) {
 
-      // const promise = Diagnostic.resolve(textDocument)
-      // const validations = (await Promise.all(diagnostics.map(promise)))
-
       const embeds = document.getEmbeds([ 'json' ])
 
       if (embeds) {
-
         for (const node of embeds) {
-          const region = await mode[node.language].doValidation(node)
-          if (region) document.errors.push(...region)
+          if (!mode?.[node.language]) continue
+          const diagnostics = await mode[node.language].doValidation(node)
+          if (diagnostics) document.errors.push(...diagnostics)
         }
       }
 
       return {
         uri: document.textDocument.uri,
+        version: document.textDocument.version,
         diagnostics: document.errors
       }
 
     },
 
     /**
+     * Formats
+     *
+     * @param {Parser.AST} document
+     * @returns
+     * @memberof LiquidService
+     */
+    doFormat (document) {
+
+      // const filename = basename(document.textDocument.uri)
+      // if (settings.ignore.files.includes(filename)) return
+
+      /* FORMATS ------------------------------------ */
+
+      const content = document.getText()
+
+      const literal = TextDocument.create(
+        document.textDocument.uri + '.tmp',
+        document.textDocument.languageId,
+        document.textDocument.version,
+        content
+      )
+      const regions = document.getEmbeds().flatMap(
+        Format.embeds(
+          document,
+          literal
+        )
+      )
+
+      /* REPLACE ------------------------------------ */
+
+      return [
+        TextEdit.replace(
+          document.toRange(0, content.length),
+          Format.markup(
+            TextDocument.applyEdits(
+              literal,
+              regions
+            )
+          )
+        )
+      ]
+
+    },
+
+    /**
      * Format onType
      *
-     * @param {Parser.Scope} document
+     * @param {Parser.AST} document
      * @param {string} character
      * @param {LSP.Position} position
      * @param {LSP.FormattingOptions} options
@@ -83,12 +128,12 @@ export default (mode => {
     doFormatOnType (document, character, position, options) {
 
       switch (character.charCodeAt(0)) {
-        case CodeChars.PIP:
-        case CodeChars.COM:
-        case CodeChars.COL: return [
-          TextEdit.insert(position, String.fromCharCode(CodeChars.WSP))
+        case Characters.PIP:
+        case Characters.COM:
+        case Characters.COL: return [
+          TextEdit.insert(position, String.fromCharCode(Characters.WSP))
         ]
-        case CodeChars.PER: return [
+        case Characters.PER: return [
           TextEdit.replace({
             start: position,
             end: position
@@ -100,55 +145,20 @@ export default (mode => {
     },
 
     /**
-     * Formats
-     *
-     * @param {Parser.IAST} document
-     * @returns
-     * @memberof LiquidService
-     */
-    doFormat (document) {
-
-      // const filename = basename(document.textDocument.uri)
-      // if (settings.ignore.files.includes(filename)) return
-
-      const { uri, version, languageId } = document.textDocument
-
-      /* FORMATS ------------------------------------ */
-
-      const content = document.textDocument.getText()
-      const literal = TextDocument.create(`${uri}.tmp`, languageId, version, content)
-      const regions = (document.getEmbeds() || []).flatMap(Format.embeds(document, literal))
-
-      /* REPLACE ------------------------------------ */
-
-      return [
-        TextEdit.replace(
-          {
-            start: Position.create(0, 0),
-            end: document.textDocument.positionAt(content.length)
-          },
-          Format.markup(TextDocument.applyEdits(literal, regions))
-        )
-      ]
-
-    },
-
-    /**
      * `doHover`
      *
-     * @param {Parser.IAST} document
+     * @param {Parser.AST} document
      * @param {LSP.Position} position
      * @memberof LiquidService
      */
     async doHover (document, position) {
 
-      if (document.getNodeAt(position)) {
-        if (mode?.[document.node.language]) {
-          return mode[document.node.language].doHover(document.node, position)
-        }
-      }
+      const node = document.getNodeAt(position, false)
 
-      const name = Hover.getWordAtPosition(document.textDocument, position)
+      if (!node) return null
+      if (mode?.[node.language]) return mode[node.language].doHover(node, position)
+
+      const name = Hover.getWordAtPosition(document, position)
 
       /**
        * @type {Parser.Cursor}
@@ -156,14 +166,14 @@ export default (mode => {
       let spec
       let preview
 
-      if (Spec.tags?.[name]) {
-        spec = Spec.tags[name]
+      if (Spec.variant.tags?.[name]) {
+        spec = Spec.variant.tags[name]
         preview = `{% ${name} %}`
-      } else if (Spec.objects?.[name]) {
-        spec = Spec.objects[name]
+      } else if (Spec.variant.objects?.[name]) {
+        spec = Spec.variant.objects[name]
         preview = `{{ ${name} }}`
-      } else if (Spec.filters?.[name]) {
-        spec = Spec.filters[name]
+      } else if (Spec.variant.filters?.[name]) {
+        spec = Spec.variant.filters[name]
         preview = `| ${name}`
       } else {
         return null
@@ -177,7 +187,7 @@ export default (mode => {
           '```',
           spec.description,
           '\n---',
-          `\n[${upperFirst(Spec.engine)} Liquid](${spec.link})`
+          `\n[${upperFirst(Spec.variant.engine)} Liquid](${spec.link})`
         ].join('\n')
       }
 
@@ -186,7 +196,7 @@ export default (mode => {
     /**
      * `doComplete`
      *
-     * @param {Parser.IAST} document
+     * @param {Parser.AST} document
      * @param {LSP.Position} position
      * @param {LSP.CompletionContext} context
      */
@@ -198,11 +208,39 @@ export default (mode => {
       const offset = document.textDocument.offsetAt(position)
       const trigger = triggerCharacter.charCodeAt(0)
 
+      if (!document.withinToken(offset)) {
+
+        if (Parser.isCodeChar(Characters.PER, offset)) {
+          return Completion.getTags(
+            document,
+            position,
+            offset,
+            trigger
+          )
+        }
+
+        if (trigger === Characters.WSP) {
+          if (Parser.isPrevCodeChar(Characters.PER, offset)) {
+            return Completion.getTags(
+              document,
+              position,
+              offset,
+              trigger
+            )
+          }
+        }
+
+      }
+
       // We are within a token
-      if (document.withinToken(offset)) return Completion.inToken(offset, trigger)
+      if (document.withinToken(offset)) {
+        return Completion.inToken(document, offset, trigger)
+      }
 
       // Embedded Documents
-      if (document.withinEmbed(offset)) return Completion.inEmbedded(mode, position)
+      if (document.withinEmbed(offset)) {
+        return Completion.inEmbedded(document, mode, position)
+      }
 
       // Lets check if we are within a Node existing on the AST
       const ASTNode = document.getEmbedAt(offset) || document.getNodeAt(offset)
@@ -210,12 +248,12 @@ export default (mode => {
       // We have context of this node on the AST
       if (ASTNode) {
         return document.isEmbed
-          ? Completion.inEmbedded(mode, position)
-          : Completion.inToken(offset, trigger)
+          ? Completion.inEmbedded(document, mode, position)
+          : Completion.inToken(document, offset, trigger)
       }
 
       // At this point, the completion is either a whitespace or delimiter
-      return Completion.findCompleteItems(offset, trigger)
+      return Completion.findCompleteItems(document, offset, trigger)
 
     },
 

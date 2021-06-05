@@ -1,4 +1,4 @@
-import { ParseError, ErrorLevel } from '../enums/errors'
+import { ParseError, ErrorLevel } from 'lexical/errors'
 
 /**
  * Parsing Errors
@@ -16,15 +16,7 @@ import { ParseError, ErrorLevel } from '../enums/errors'
  * @param {{ range: object, node: number, offset: number, token: string }} details
  * @returns {Parser.IParseError}
  */
-export default (
-  error = 0
-  , {
-    range = {},
-    node = 0,
-    offset = 0,
-    token = ''
-  }
-) => ({
+export default (error = 0, range = {}) => ({
 
   /* -------------------------------------------- */
   /* ERRORS                                       */
@@ -33,9 +25,6 @@ export default (
   [ParseError.MissingTagName]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing tag name'
     }
@@ -43,9 +32,6 @@ export default (
   [ParseError.MissingObjectName]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing Object name'
     }
@@ -53,9 +39,6 @@ export default (
   [ParseError.MissingBracketNotation]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing object property bracket notation'
     }
@@ -63,9 +46,6 @@ export default (
   [ParseError.MissingStartTag]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing Start tag'
     }
@@ -73,9 +53,6 @@ export default (
   [ParseError.MissingEndTag]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing end tag'
     }
@@ -83,9 +60,6 @@ export default (
   [ParseError.MissingOpenDelimiter]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing opening tag delimiter'
     }
@@ -93,9 +67,6 @@ export default (
   [ParseError.MissingCloseDelimiter]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing closing tag delimiter'
     }
@@ -103,9 +74,6 @@ export default (
   [ParseError.MissingColon]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing colon separator'
     }
@@ -113,9 +81,6 @@ export default (
   [ParseError.MissingQuotation]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Malformed string, missing quotation character'
     }
@@ -123,9 +88,6 @@ export default (
   [ParseError.MissingProperty]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing object property'
     }
@@ -133,9 +95,6 @@ export default (
   [ParseError.MissingFilter]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing Filter, a filter must follow a pipe character'
     }
@@ -143,9 +102,6 @@ export default (
   [ParseError.MissingFilterArgument]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing filter argument'
     }
@@ -153,9 +109,6 @@ export default (
   [ParseError.MissingFilterSeparator]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing filter separator character'
     }
@@ -163,9 +116,6 @@ export default (
   [ParseError.MissingNumber]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing number'
     }
@@ -173,9 +123,6 @@ export default (
   [ParseError.MissingCondition]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Missing conditional value'
     }
@@ -183,9 +130,6 @@ export default (
   [ParseError.InvalidTagName]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid tag name'
     }
@@ -193,9 +137,6 @@ export default (
   [ParseError.InvalidObjectName]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid object name was expressed'
     }
@@ -203,9 +144,6 @@ export default (
   [ParseError.InvalidProperty]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid Property'
     }
@@ -213,9 +151,6 @@ export default (
   [ParseError.InvalidPropertyNotation]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid Property Notation, expected "." or "[" character'
     }
@@ -223,9 +158,6 @@ export default (
   [ParseError.InvalidCharacter]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid character'
     }
@@ -233,9 +165,6 @@ export default (
   [ParseError.InvalidCharacters]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid characters or word'
     }
@@ -243,9 +172,6 @@ export default (
   [ParseError.InvalidFilter]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid or unknown filter'
     }
@@ -253,9 +179,6 @@ export default (
   [ParseError.InvalidSyntactic]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid syntactic tag placement'
     }
@@ -263,9 +186,6 @@ export default (
   [ParseError.InvalidOperator]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Invalid operator sequence'
     }
@@ -273,9 +193,6 @@ export default (
   [ParseError.RejectString]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'String value not accepted'
     }
@@ -283,9 +200,6 @@ export default (
   [ParseError.RejectNumber]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Number value not accepted'
     }
@@ -293,9 +207,6 @@ export default (
   [ParseError.RejectInteger]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Number value not accepted'
     }
@@ -303,9 +214,6 @@ export default (
   [ParseError.RejectBoolean]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Boolean value not accepted'
     }
@@ -313,9 +221,6 @@ export default (
   [ParseError.RejectArray]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Array value not accepted'
     }
@@ -323,9 +228,6 @@ export default (
   [ParseError.RejectObject]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Object value not accepted'
     }
@@ -333,9 +235,6 @@ export default (
   [ParseError.RejectProperty]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Property value is not of type object'
     }
@@ -343,9 +242,6 @@ export default (
   [ParseError.RejectParameters]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Tag does not accept parameters'
     }
@@ -353,9 +249,6 @@ export default (
   [ParseError.RejectFilterArguments]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Filter does not accept arguments'
     }
@@ -363,9 +256,6 @@ export default (
   [ParseError.RejectWhitespace]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Extraneous and/or unnecessary spacing characters'
     }
@@ -373,9 +263,6 @@ export default (
   [ParseError.RejectWhitespaceControl]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Error,
       message: 'Tag does not accept whitespace strips'
     }
@@ -387,9 +274,6 @@ export default (
   [ParseError.WarnWhitespace]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Warning,
       message: 'Extraneous whitespace detected'
     }
@@ -398,9 +282,6 @@ export default (
   [ParseError.UnknownProperty]: (
     {
       range,
-      node,
-      offset,
-      token,
       severity: ErrorLevel.Warning,
       message: 'Unknown property value expressed'
     }

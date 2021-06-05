@@ -1,4 +1,4 @@
-import { TokenContext } from 'enums/context'
+import { TokenContext } from 'lexical/context'
 import scanner from 'parser/scanner'
 
 /**
@@ -65,11 +65,7 @@ export default (function Context (node) {
    * @param {number} start
    * @param {number} [deleteCount=1]
    */
-  function remove (start, deleteCount = 1) {
-
-    context.splice(start, deleteCount)
-
-  }
+  const remove = (start, deleteCount = 1) => context.splice(start, deleteCount)
 
   return {
 

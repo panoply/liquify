@@ -1,5 +1,5 @@
-import lineColumn from 'line-column'
 import { WSP, TAB, NWL, LFD, CAR, BWS } from 'lexical/characters'
+import Document from 'parser/document'
 
 /**
  * Stream
@@ -7,19 +7,8 @@ import { WSP, TAB, NWL, LFD, CAR, BWS } from 'lexical/characters'
  * Supplies methods to the parsing scanner. This is a heavily modified
  * variation and was lifted from the `vscode-html-languageservice` module.
  * The stream compiles tokens which you can grab via getters.
- *
- * @export
- * @see https://git.io/JJnqz
  */
-
 export default (function Stream (source) {
-
-  /**
-   * Lines Counter
-   *
-   * @type {Parser.LineColumn}
-   */
-  let range
 
   /**
    * Cursor Offset - used to consume strings
@@ -58,18 +47,80 @@ export default (function Stream (source) {
 
   return {
 
+    global: () => ({
+
+      /**
+       * Validates previous character code matches a
+       * at specific offset location.
+       *
+       * @param {number} code
+       * @param {number} offset
+       * @returns {boolean}
+       */
+      isCodeChar (code, offset) {
+
+        return source.isCodeChar(code, offset)
+      },
+
+      /**
+       * Validates previous character code matches a
+       * at specific offset location.
+       *
+       * @param {number} code
+       * @param {number} offset
+       * @returns {boolean}
+       */
+      isPrevCodeChar (code, offset) {
+
+        return this.isCodeChar(code, offset - 2)
+
+      },
+
+      /**
+       * Validates next code matches a condition
+       * at specific offset location.
+       *
+       * @param {number} code
+       * @param {number} offset
+       * @returns {boolean}
+       */
+      isNextCodeChar (code, offset) {
+
+        return this.isCodeChar(code, offset + 1)
+
+      },
+
+      /**
+       * Executes an expression test at specific
+       * offset location.
+       *
+       * @param {RegExp} regex
+       * @param {[number, number]} offsets
+       * @returns {boolean}
+       */
+      isRegExp (regex, [ start, end ]) {
+
+        return regex.test(source.substring(start, end))
+
+      }
+
+    }),
+
     /* -------------------------------------------- */
     /* INITIALIZER                                  */
     /* -------------------------------------------- */
 
-    create: string => {
+    /**
+     *
+     * @param {Parser.TextDocument} [document]
+     */
+    create () {
 
       index = 0
       cursor = 0
       spaces = undefined
       token = undefined
-      source = string
-      range = lineColumn(source, { origin: 0 })
+      source = Document.textDocument.getText()
       length = source.length
 
     },
@@ -87,6 +138,16 @@ export default (function Stream (source) {
      * @returns {boolean}
      */
     get EOS () { return length <= index },
+
+    /**
+     * Source Size
+     *
+     * Returns the the number of characters
+     *
+     * @memberof Stream
+     * @returns {number}
+     */
+    get size () { return length },
 
     /**
      * Offset
@@ -107,23 +168,6 @@ export default (function Stream (source) {
      * @returns {number}
      */
     get offset () { return index },
-
-    /**
-     * Range
-     *
-     * Returns `start` and `end` range information
-     *
-     * @memberof Stream
-     * @returns {Parser.Range}
-     */
-    get range () {
-
-      return {
-        start: this.Position(cursor),
-        end: this.Position(index)
-      }
-
-    },
 
     /**
      * Get Token
@@ -156,6 +200,61 @@ export default (function Stream (source) {
      * @returns {string}
      */
     get source () { return source },
+
+    /* -------------------------------------------- */
+    /* SOURCE QUERIES                               */
+    /* -------------------------------------------- */
+
+    /**
+     * This property provides public methods on the
+     * Parser instance. It is used within the Language
+     * Server to query the document when within capabilities.
+     */
+    query () {
+
+      return {
+
+        isPrevCodeChar (code, offset) {
+
+          return this.isCodeChar(code, offset - 2)
+
+        },
+
+        isNextCodeChar (code, offset) {
+
+          return this.isCodeChar(code, offset + 1)
+
+        },
+        /**
+         * Validates character code matches a condition
+         * at specific offset location.
+         *
+         * @param {number} code
+         * @param {number} offset
+         * @returns {boolean}
+         */
+        isCodeChar (code, offset) {
+
+          return source.charCodeAt(offset) === code
+
+        },
+        /**
+         * Executes an expression test at specific
+         * offset location.
+         *
+         * @param {RegExp} regex
+         * @param {[number, number]} offsets
+         * @returns {boolean}
+         */
+        isRegExp (regex, [ start, end ]) {
+
+          return regex.test(source.substring(start, end))
+
+        }
+
+      }
+
+    },
 
     /* -------------------------------------------- */
     /* TOKENIZERS                                   */
@@ -328,7 +427,10 @@ export default (function Stream (source) {
      * This provides an addition marker point in the stream.
      * It is used to track positions for tokens.
      *
-     * **DOES NOT MODIFY**
+     * **MODIFIER**
+     *
+     * > - `cursor` Adjusts cursor offset
+     *
      *
      * ---
      *
@@ -339,11 +441,9 @@ export default (function Stream (source) {
      * @memberof Stream
      * @returns {number}
      */
-    Cursor (offset = 0) {
+    Cursor (offset = index) {
 
-      cursor = isNaN(offset) ? 0 : offset > 0
-        ? (offset + index) : offset < 0 ? (index - Math.abs(offset))
-          : offset > index ? offset : index
+      cursor = isNaN(offset) ? 0 : offset >= 0 ? offset : index
 
       return cursor
 
@@ -359,16 +459,13 @@ export default (function Stream (source) {
      *
      * ---
      *
-     * @param {Parser.Location} position defaults to index
+     * @param {Parser.Position} position defaults to index
      * @memberof Stream
      * @returns {number}
      */
     OffsetFromPosition (position) {
 
-      return range.toIndex({
-        column: position.character,
-        line: position.line
-      })
+      return Document.textDocument.offsetAt(position)
 
     },
 
@@ -385,16 +482,11 @@ export default (function Stream (source) {
      *
      * @param {number} [offset] defaults to index
      * @memberof Stream
-     * @returns {Parser.Location}
+     * @returns {Parser.Position}
      */
     Position (offset = index) {
 
-      const { line, col } = range.fromIndex(offset)
-
-      return {
-        line: line,
-        character: col
-      }
+      return Document.textDocument.positionAt(offset)
 
     },
 
@@ -415,32 +507,9 @@ export default (function Stream (source) {
     Range (start = cursor, end = index) {
 
       return {
-        start: this.Position(start),
-        end: this.Position(end)
+        start: Document.textDocument.positionAt(start),
+        end: Document.textDocument.positionAt(end)
       }
-
-    },
-
-    /* -------------------------------------------- */
-    /* SOURCE QUERIES                               */
-    /* -------------------------------------------- */
-
-    /**
-     * Validates character code matches a condition
-     * at specific offset position
-     *
-     * **DOES NOT MODIFY**
-     *
-     * ---
-     *
-     * @memberof Stream
-     * @param {number} code
-     * @param {number} offset
-     * @returns {boolean}
-     */
-    CodeCharAt (code, offset) {
-
-      return source.charCodeAt(offset) === code
 
     },
 
@@ -477,7 +546,7 @@ export default (function Stream (source) {
     /**
      * Previous position
      *
-      * ---
+     * ---
      *
      * **MODIFIER**
      *
@@ -658,6 +727,23 @@ export default (function Stream (source) {
     },
 
     /**
+     * Get Character at Offset
+     *
+     * **DOES NOT MODIFY**
+     *
+     * ---
+     *
+     * @memberof Stream
+     * @param {offset} [advance]
+     * @returns {string}
+     */
+    GetCharAt (offset) {
+
+      return source.charAt(offset)
+
+    },
+
+    /**
      * Get String
      *
      * **DOES NOT MODIFY**
@@ -715,7 +801,7 @@ export default (function Stream (source) {
       }
 
       // consume escaped strings, eg: \" or \'
-      if (this.GetCodeChar(offset - 1) === BWS) return this.SkipQuotedString([ offset ])
+      if (this.GetCodeChar(offset - 1) === BWS) return this.SkipQuotedString(offset)
 
       // custom consumed character codes
       if (typeof consume !== 'undefined' && typeof consume !== 'boolean') {
@@ -1236,4 +1322,4 @@ export default (function Stream (source) {
 
   }
 
-}(''))
+}(null))

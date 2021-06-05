@@ -1,31 +1,27 @@
 /**
  * Token Context
  *
- * Describes the inner context of Liquid tokens. Context is defined
- * within delimeter values. Tags (in general) will almost always start
- * with either `Dash` or `Indentifier`
- *
- * - Context starts from the opening delimeter, eg: `{{` or `{%`
- * - Context ends before the closing delimeter, eg: `}}` or `%}`
+ * Describes the inner context of Liquid tokens. It breaks down the
+ * stack of each node as we walk over its inner characters.
  */
-export enum TokenContext {
+export const enum TokenContext {
   /**
-   * Trim Whitespace Delimeter Dash LEft: `-`
+   * Opening Delimiter: `{{` `{%` `<` `</` `---`
    */
   OpenTag = "open",
 
   /**
-   * Trim Whitespace Delimeter Dash LEft: `-`
+   * Closing Delimiter: `}}` `%}` `>` ` />` `---`
    */
   CloseTag = "close",
 
   /**
-   * Trim Whitespace Delimeter Dash LEft: `-`
+   * Left Whitespace Trim Dash: `-`
    */
   LeftTrim = "trim",
 
   /**
-   * Trim Whitespace Delimeter Dash LEft: `-`
+   * Right Whitespace Trim Dash: `-`
    */
   RightTrim = "trim",
 

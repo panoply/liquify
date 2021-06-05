@@ -96,12 +96,38 @@ export default function (options = {
       function decrypt(standardVariation, selectedVariation) {
 
         const variant = crypto.decode(selectedVariation);
-
-        return {
+        const { engine, updated, tags, filters, objects } = {
           ...variant,
           tags: Object.assign(standardVariation.tags, variant.tags),
           filters:  Object.assign(standardVariation.filters, variant.filters),
         };
+
+        return {
+          engine,
+          updated,
+          get objects() {
+            return objects
+          },
+          get tags() {
+            return tags
+          },
+          get filters () {
+            return filters
+          },
+          get entries() {
+            return {
+              get objects () {
+                return Object.entries(objects)
+              },
+              get tags () {
+                return Object.entries(tags)
+              },
+              get filters () {
+                return Object.entries(filters)
+              }
+            }
+          }
+        }
 
       }
 
@@ -147,7 +173,28 @@ export default function (options = {
        * If the variation parameter supplied was "standard"
        * return the promise as standard was already decoded.
        */
-      if (variation === '${standardName}') return base;
+      if (variation === '${standardName}') {
+        return {
+          engine: base.engine,
+          updated: base.updated,
+          get tags() {
+            return base.tags
+          },
+          get filters() {
+            return base.filters
+          },
+          get entries() {
+            return {
+              get tags () {
+                return Object.entries(base.tags)
+              },
+              get filters () {
+                return Object.entries(base.filters)
+              }
+            }
+          }
+        }
+      };
 
 
       /** __

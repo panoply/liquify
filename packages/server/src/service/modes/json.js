@@ -1,18 +1,19 @@
-// @ts-check
 
 import merge from 'lodash/merge'
 import isEmpty from 'lodash/isEmpty'
-import { getLanguageService, ClientCapabilities } from 'vscode-json-languageservice'
+import { getLanguageService, ClientCapabilities, DiagnosticSeverity } from 'vscode-json-languageservice'
 import store from '@liquify/schema-stores'
 
 /**
  * JSON Language Service
- *
- * @export
- * @typedef {import('vscode-json-languageservice')} JSON
- * @class JSONService
  */
 export class JSONService {
+
+  service = getLanguageService(
+    {
+      clientCapabilities: ClientCapabilities.LATEST
+    }
+  )
 
   /**
    * Creates an instance of JSONService.
@@ -21,63 +22,51 @@ export class JSONService {
    */
   constructor () {
 
-    /**
-     * Get Language Service
-     *
-     * @memberof JSONService
-     * @private
-     */
-    this.service = getLanguageService({
-      clientCapabilities: ClientCapabilities.LATEST
-    })
-
-    this.service.configure({
-      validate: true,
-      schemas: [
-        {
-          uri: 'http://json-schema.org/draft-07/schema',
-          fileMatch: [ '*.json' ],
-          schema: store('shopify-sections')
-        }
-      ]
-    })
-
-  }
-
-  /**
-   * Configure
-   *
-   * @returns
-   * @memberof JSONService
-   */
-  configure () {
+    this.service.configure(
+      {
+        validate: true,
+        schemas: [
+          {
+            uri: 'http://json-schema.org/draft-07/schema',
+            fileMatch: [ '*.json' ],
+            schema: store('shopify-sections')
+          }
+        ]
+      }
+    )
 
   }
 
   /**
    * Validate JSON
    *
-   * @param {Parser.ASTNode} ASTNode
-   * @returns {Promise<diagnostics|false>}
+   * @param {Parser.ASTNode}node
+   * @returns {Promise<diagnostics|null>}
    * @memberof JSONService
    */
-  async doValidation (ASTNode) {
+  async doValidation (node) {
 
-    const JSONDocument = this.service.parseJSONDocument(ASTNode.document)
-    const diagnostics = await this.service.doValidation(ASTNode.document, JSONDocument)
+    if (!node.document) return null
 
-    return isEmpty(diagnostics) ? false : diagnostics.map(
-      diagnostic => merge(diagnostic, {
+    const JSONDocument = this.service.parseJSONDocument(node.document)
+    const diagnostics = await this.service.doValidation(node.document, JSONDocument)
+
+    if (isEmpty(diagnostics)) return null
+
+    return diagnostics.map(diagnostic => (
+      merge(diagnostic, {
         range: {
-          start: {
-            line: diagnostic.range.start.line + ASTNode.range.start.line
-          },
-          end: {
-            line: diagnostic.range.end.line + ASTNode.range.start.line
+          start: { line: diagnostic.range.start.line + node.range.start.line },
+          end: { line: diagnostic.range.end.line + node.range.start.line }
+        },
+        data: {
+          index: node.index,
+          capabilities: {
+            doFormat: diagnostic.severity !== DiagnosticSeverity.Error
           }
         }
       })
-    )
+    ))
 
   }
 
@@ -85,18 +74,21 @@ export class JSONService {
    * JSON hover capabilities
    *
    * @memberof JSONService
-   * @param {Parser.ASTNode} ASTNode
+   * @param {Parser.ASTNode} node
    * @param {LSP.Position} position
    */
-  async doHover (ASTNode, { line, character }) {
+  async doHover (node, { line, character }) {
 
-    const JSONDocument = this.service.parseJSONDocument(ASTNode.document)
+    if (!node.document) return null
+
+    const JSONDocument = this.service.parseJSONDocument(node.document)
     const doHover = await this.service.doHover(
-      ASTNode.document
-      , { character, line: line - ASTNode.range.start.line }
+      node.document
+      , { character, line: line - node.range.start.line }
       , JSONDocument
     )
 
+    console.log(doHover)
     return merge(doHover, {
       range: {
         start: { line },
@@ -109,33 +101,29 @@ export class JSONService {
   /**
    * JSON completion feature
    *
-   * @param {Parser.ASTNode} ASTNode
+   * @param {Parser.ASTNode} node
    * @param {LSP.Position} position
-   * @return {Promise<LSP.CompletionList>}
+   * @return {Promise<LSP.CompletionList|null>}
    */
-  async doComplete (ASTNode, { character, line }) {
+  async doComplete (node, { character, line }) {
 
-    const JSONDocument = this.service.parseJSONDocument(ASTNode.document)
+    if (!node.document) return null
+
+    const JSONDocument = this.service.parseJSONDocument(node.document)
     const doComplete = await this.service.doComplete(
-      ASTNode.document
-      , { character, line: line - ASTNode.range.start.line }
+      node.document
+      , { character, line: line - node.range.start.line }
       , JSONDocument
-    ).then(
-      completion => {
-
-        for (const { textEdit } of completion.items) {
-          merge(textEdit, {
-            range: {
-              start: { line },
-              end: { line }
-            }
-          })
-        }
-
-        return completion
-
-      }
     )
+
+    for (const { textEdit } of doComplete.items) {
+      merge(textEdit, {
+        range: {
+          start: { line },
+          end: { line }
+        }
+      })
+    }
 
     return doComplete
 

@@ -35,6 +35,17 @@ export const enum TokenType {
   IterationParameter,
   IterationParameterValue,
 
+  /* LIQUID TAG TYPES --------------------------- */
+
+  StartTag,
+  EndTag,
+
+  SingularTag,
+  OutputTag,
+
+  TrimDashLeft,
+  TrimDashRight,
+
   /**
    * Object
    *
@@ -66,9 +77,11 @@ export const enum TokenType {
 
   /* ERRORS AND WARNINGS ------------------------ */
 
+  ParseCancel,
   ParseError,
   ParseWarning,
   ParseSkip,
+  ParseTolerate,
 
   Content,
 
@@ -88,8 +101,6 @@ export const enum TokenType {
   /* LIQUID ------------------------------------- */
 
   LiquidTagOpen,
-  LiquidTrimDashLeft,
-  LiquidTrimDashRight,
 
   LiquidTag,
   LiquidTagClose,

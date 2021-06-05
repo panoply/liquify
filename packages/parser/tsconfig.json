@@ -11,6 +11,7 @@
     "module": "commonjs",
     "checkJs": true,
     "allowJs": true,
+    "declaration": false,
     "allowUmdGlobalAccess": true,
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
@@ -28,7 +29,7 @@
       "*": ["src/*", "test/*"],
       "parser": ["./src/parser/*"],
       "lexical": ["./src/lexical/*"],
-      "enums": ["./src/enums/*"]
+      "enums": ["src/lexical/*"]
     }
   }
 }

@@ -3,11 +3,7 @@ import { LiquidParser } from '@liquify/liquid-parser'
 /**
  * Liquid Parsers
  */
-export const {
-  Document,
-  Engine,
-  Spec
-} = LiquidParser(
+export const { Spec, Parser, Documents } = LiquidParser(
   {
     engine: 'standard',
     license: process.env.MASTER_KEY,

@@ -15,20 +15,26 @@
   "owner": "SISSEL SAAS",
   "license": "see LICENSE.txt",
   "main": "./package/index.js",
-  "types": "./types/export.d.ts",
+  "types": "./index.d.ts",
   "ava": {
-    "require": ["esm"],
+    "require": [
+      "esm"
+    ],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": ["test/index.js"],
+    "files": [
+      "test/index.js"
+    ],
     "concurrency": 5
   },
   "dependencies": {
     "@liquify/liquid-language-specs": "workspace:^0.1.2",
+    "@mvasilkov/outdent": "^1.0.5",
+    "ansi-colors": "^4.1.1",
     "line-column": "^1.0.2",
     "lodash": "^4.17.21",
     "mergerino": "^0.4.0",
@@ -60,6 +66,7 @@
     "chuhai": "^1.2.0",
     "dotenv": "^9.0.2",
     "esm": "^3.2.25",
+    "lines-and-columns": "^1.1.6",
     "performance": "^1.4.0",
     "pretty-hrtime": "^1.0.3",
     "rollup-plugin-filesize": "^9.1.1",

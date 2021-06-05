@@ -1,4 +1,6 @@
 {
+  "bookmarks.label.suggestion": "suggestWhenSelectedOrLineWhenNoSelected",
+  "bookmarks.useWorkaroundForFormatters": true,
   "editor.renderWhitespace": "none",
   "files.exclude": {
     "**/.git": true,

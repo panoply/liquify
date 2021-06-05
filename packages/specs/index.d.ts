@@ -458,12 +458,23 @@ export interface Nodes {
 
 /* COMPLETE VARIATION ------------------------- */
 
+type Entries<T> = {
+  [K in keyof T]: [keyof PickByValue<T, T[K]>, T[K]];
+}[keyof T][];
+
+export interface VariationEntries {
+  readonly filters: Entries<Filters>;
+  readonly objects?: Entries<Objects>;
+  readonly tags: Entries<Tags>;
+}
+
 export interface Variation {
   readonly engine: string;
   readonly updated: string;
   readonly filters: Filters;
   readonly objects?: Objects;
   readonly tags: Tags;
+  readonly entries: VariationEntries;
 }
 
 export interface Options {

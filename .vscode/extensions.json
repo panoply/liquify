@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "alefragnani.bookmarks",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "togusa09.tmlanguage",

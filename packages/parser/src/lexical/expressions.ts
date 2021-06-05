@@ -1,4 +1,3 @@
-
 /* -------------------------------------------- */
 /* DELIMITER EXPRESSION                         */
 /* -------------------------------------------- */
@@ -10,7 +9,7 @@
  *
  * Considered the starting points for tags
  */
-export const Delimiters = /[{<]/
+export const Delimiters = /[{<]/;
 
 /**
  * `^\{[{%]`
@@ -20,7 +19,7 @@ export const Delimiters = /[{<]/
  * Open Delimiters for Liquid basic tags
  *
  */
-export const DelimitersOpen = /^\{[{%]/
+export const DelimitersOpen = /^\{[{%]/;
 
 /**
  * `^{%`
@@ -30,7 +29,7 @@ export const DelimitersOpen = /^\{[{%]/
  * Open Delimiters for Liquid basic tags
  *
  */
-export const DelimitersTagOpen = /^{%/
+export const DelimitersTagOpen = /^{%/;
 
 /**
  * `^{{`
@@ -40,7 +39,7 @@ export const DelimitersTagOpen = /^{%/
  * Open Delimiters for Liquid object tags.
  *
  */
-export const DelimitersObjectOpen = /^{{/
+export const DelimitersObjectOpen = /^{{/;
 
 /**
  * `^%}`
@@ -50,7 +49,7 @@ export const DelimitersObjectOpen = /^{{/
  * Open Delimiters for Liquid basic tags
  *
  */
-export const DelimitersTagClose = /^%}/
+export const DelimitersTagClose = /^%}/;
 
 /**
  * `^}}`
@@ -60,7 +59,7 @@ export const DelimitersTagClose = /^%}/
  * Open Delimiters for Liquid object tags.
  *
  */
-export const DelimitersObjectClose = /^}}/
+export const DelimitersObjectClose = /^}}/;
 
 /**
  * `^[%}]\}`
@@ -69,7 +68,7 @@ export const DelimitersObjectClose = /^}}/
  *
  * Close delimiters for Liquid basic and object tags
  */
-export const DelimitersClose = /^[%}]\}/
+export const DelimitersClose = /^[%}]\}/;
 
 /* -------------------------------------------- */
 /* BASIC TAG EXPRESSIONS                        */
@@ -84,7 +83,7 @@ export const DelimitersClose = /^[%}]\}/
  * expressions can be used. This is Standard and Shopify
  * variation specific.
  */
-export const TagFirstChar = /^[a-zA-Z]/
+export const TagFirstChar = /^[a-zA-Z]/;
 
 /**
  * `^[a-zA-Z]+`
@@ -95,7 +94,7 @@ export const TagFirstChar = /^[a-zA-Z]/
  * expressions can be used. This is Standard and Shopify
  * variation specific.
  */
-export const TagName = /^[a-zA-Z]+/
+export const TagName = /^[a-zA-Z]+/;
 
 /**
  * `^[a-zA-Z0-9$_]`
@@ -105,7 +104,7 @@ export const TagName = /^[a-zA-Z]+/
  * Basic tag first character validators wild matcher. Alphanumeric
  * captures, used in Jekyll and 11ty variations.
  */
-export const TagFirstCharWild = /^[a-zA-Z0-9$_]/
+export const TagFirstCharWild = /^[a-zA-Z0-9$_]/;
 
 /**
  * `^[a-zA-Z]+`
@@ -116,7 +115,7 @@ export const TagFirstCharWild = /^[a-zA-Z0-9$_]/
  * expressions can be used. This is Standard and Shopify
  * variation specific.
  */
-export const TagNameWild = /^[a-zA-Z0-9$_]+/
+export const TagNameWild = /^[a-zA-Z0-9$_]+/;
 
 /**
  * `^\bend`
@@ -125,7 +124,7 @@ export const TagNameWild = /^[a-zA-Z0-9$_]+/
  *
  * Captures the "end" word boundary in an end tag.
  */
-export const TagEndKeyword = /^\bend/
+export const TagEndKeyword = /^\bend/;
 
 /**
  * `^-?[\s\t\r\n\f]*?\bend[a-zA-Z]`
@@ -135,7 +134,7 @@ export const TagEndKeyword = /^\bend/
  * Peeks the expression to detect whether we are dealing with
  * an end tag or not. Must be called at character sequencing level.
  */
-export const TagIsEnd = /^-?[\s\t\r\n\f]*?\bend/
+export const TagIsEnd = /^-?[\s\t\r\n\f]*?\bend/;
 
 /**
  * `^[\s\t\r\n\f]*?[-%}]`
@@ -145,7 +144,7 @@ export const TagIsEnd = /^-?[\s\t\r\n\f]*?\bend/
  * Captures a clear closing delimiter path, ensuring no
  * invalid characters located between
  */
-export const TagCloseClear = /^[\s\t\r\n\f]*?[-%}]/
+export const TagCloseClear = /^[\s\t\r\n\f]*?[-%}]/;
 
 /* -------------------------------------------- */
 /* OBJECT TAG EXPRESSIONS                       */
@@ -159,7 +158,7 @@ export const TagCloseClear = /^[\s\t\r\n\f]*?[-%}]/
  * Object tag first character validators. Object tags
  * can only start with these characters.
  */
-export const ObjectFirstCharacter = /^["'a-zA-Z0-9\-$_]/
+export const ObjectFirstCharacter = /^["'a-zA-Z0-9\-$_]/;
 
 /**
  * `^[a-zA-Z0-9\-$_]+`
@@ -168,7 +167,7 @@ export const ObjectFirstCharacter = /^["'a-zA-Z0-9\-$_]/
  *
  * Alphabetical Object tag name
  */
-export const ObjectNameAlpha = /^[a-zA-Z0-9$_]+/
+export const ObjectNameAlpha = /^[a-zA-Z0-9$_]+/;
 
 /**
  * `^[\s\t\r\n\f]*?[[.]`
@@ -178,7 +177,7 @@ export const ObjectNameAlpha = /^[a-zA-Z0-9$_]+/
  * Detects whether the next character is a dot or opening bracket.
  * If detected indicates a property value.
  */
-export const ObjectHasProperty = /^[\s\t\r\n\f]*?[[.]/
+export const ObjectHasProperty = /^[\s\t\r\n\f]*?[[.]/;
 
 /**
  * `^[a-zA-Z0-9$\-_]+`
@@ -187,7 +186,7 @@ export const ObjectHasProperty = /^[\s\t\r\n\f]*?[[.]/
  *
  * Property Value expression
  */
-export const PropertyValue = /^[a-zA-Z0-9$\-_]+/
+export const PropertyValue = /^[a-zA-Z0-9$\-_]+/;
 
 /**
  * `[[\]]`
@@ -197,7 +196,7 @@ export const PropertyValue = /^[a-zA-Z0-9$\-_]+/
  * Captures bracket characters. Seeks only "[" or "]" no asserted
  * starting point or greedy consumers, its just the characters.
  */
-export const PropertyBrackets = /[[\]]/
+export const PropertyBrackets = /[[\]]/;
 
 /* -------------------------------------------- */
 /* STRING EXPRESSIONS                           */
@@ -210,7 +209,7 @@ export const PropertyBrackets = /[[\]]/
  *
  * Single captures of string quotation characters
  */
-export const StringQuotations = /^['"]/
+export const StringQuotations = /^['"]/;
 
 /**
  * `^["']\s*?["']`
@@ -219,7 +218,7 @@ export const StringQuotations = /^['"]/
  *
  * Empty String or a string containing just whitespace
  */
-export const StringEmpty = /^["']\s*?["']/
+export const StringEmpty = /^["']\s*?["']/;
 
 /* -------------------------------------------- */
 /* SPACING EXPRESSIONS                          */
@@ -232,7 +231,7 @@ export const StringEmpty = /^["']\s*?["']/
  *
  * Greedy Capture of both whitespace and newline characters.
  */
-export const Spacing = /^[\s\t\r\n\f]+/
+export const Spacing = /^[\s\t\r\n\f]+/;
 
 /**
  * `^[\n\r\f]`
@@ -241,7 +240,7 @@ export const Spacing = /^[\s\t\r\n\f]+/
  *
  * Captures Newline characters only
  */
-export const Newlines = /^[\n\r\f]/
+export const Newlines = /^[\n\r\f]/;
 
 /**
  * `^[\s\t]`
@@ -250,7 +249,7 @@ export const Newlines = /^[\n\r\f]/
  *
  * Captures Whitespace characters
  */
-export const Whitespace = /^[\s\t]/
+export const Whitespace = /^[\s\t]/;
 
 /* -------------------------------------------- */
 /* NUMBER EXPRESSIONS                           */
@@ -263,7 +262,7 @@ export const Whitespace = /^[\s\t]/
  *
  * Greedy combined capture of integer and float
  */
-export const Number = /^-?[\d.]+/
+export const Number = /^-?[\d.]+/;
 
 /**
  * `^\d+/`
@@ -272,7 +271,7 @@ export const Number = /^-?[\d.]+/
  *
  * Greedy digital only capture
  */
-export const NumberDigit = /^\d+/
+export const NumberDigit = /^\d+/;
 
 /**
  * `^-?\d+/`
@@ -281,7 +280,7 @@ export const NumberDigit = /^\d+/
  *
  * Greedy integer number capture
  */
-export const NumberInteger = /^-?\d+/
+export const NumberInteger = /^-?\d+/;
 
 /**
  * `^-?\d+/`
@@ -290,7 +289,7 @@ export const NumberInteger = /^-?\d+/
  *
  * Greedy float number capture
  */
-export const NumberFloat = /^-?\d[\d.]+/
+export const NumberFloat = /^-?\d[\d.]+/;
 
 /* -------------------------------------------- */
 /* FILTER EXPRESSIONS                           */
@@ -304,7 +303,7 @@ export const NumberFloat = /^-?\d[\d.]+/
  * Filter identifier name capture. Cannot start with
  * underscore but can contain one.
  */
-export const FilterIdentifier = /^[^_][a-zA-Z_]+/
+export const FilterIdentifier = /^[^_][a-zA-Z_]+/;
 
 /**
  * `^(?:\||-?[%}])`
@@ -313,7 +312,7 @@ export const FilterIdentifier = /^[^_][a-zA-Z_]+/
  *
  * Captures a pipe filter character or closing delimiters
  */
-export const FilterPipeOrClose = /^(?:\||-?[%}])/
+export const FilterPipeOrClose = /^(?:\||-?[%}])/;
 
 /* -------------------------------------------- */
 /* BOOLEAN EXPRESSION                           */
@@ -326,7 +325,7 @@ export const FilterPipeOrClose = /^(?:\||-?[%}])/
  *
  * Captures word bounded "true", "false" or "nil" boolean
  */
-export const Booleans = /^\b(?:true|false|nil)\b/
+export const Booleans = /^\b(?:true|false|nil)\b/;
 
 /**
  * `^\btrue\b`
@@ -335,7 +334,7 @@ export const Booleans = /^\b(?:true|false|nil)\b/
  *
  * Captures word bounded "true"  boolean
  */
-export const BooleanTrue = /^\btrue\b/
+export const BooleanTrue = /^\btrue\b/;
 
 /**
  * `^\b(?:false|nil)\b`
@@ -344,7 +343,7 @@ export const BooleanTrue = /^\btrue\b/
  *
  * Captures word bounded "false" or "nil" boolean
  */
-export const BooleanFalse = /^\b(?:false|nil)\b/
+export const BooleanFalse = /^\b(?:false|nil)\b/;
 
 /* -------------------------------------------- */
 /* CONTROL TAG EXPRESSIONS                      */
@@ -357,7 +356,7 @@ export const BooleanFalse = /^\b(?:false|nil)\b/
  *
  * Valid control condition or comparison values
  */
-export const ControlCondition = /^[a-zA-Z0-9\-$_]+/
+export const ControlCondition = /^[a-zA-Z0-9\-$_]+/;
 
 /**
  * `^(?:==|!=|[>=]{2}|[<>])`
@@ -366,7 +365,7 @@ export const ControlCondition = /^[a-zA-Z0-9\-$_]+/
  *
  * Captures Standard Liquid control operators.
  */
-export const ControlOperators = /^(?:==|!=|>=|<=|<|>|\b(?:and|or)\b)/
+export const ControlOperators = /^(?:==|!=|>=|<=|<|>|\b(?:and|or)\b)/;
 
 /**
  * `^(?:==|!=|[>=]{2}|[<>]|\b(?:contains)\b)`
@@ -375,7 +374,7 @@ export const ControlOperators = /^(?:==|!=|>=|<=|<|>|\b(?:and|or)\b)/
  *
  * Captures Shopify Liquid variation control operators.
  */
-export const ControlOperatorsShopify = /^\b(?:contains)\b/
+export const ControlOperatorsShopify = /^\b(?:contains)\b/;
 
 /**
  * `\b(?:and|or)\b`
@@ -385,7 +384,7 @@ export const ControlOperatorsShopify = /^\b(?:contains)\b/
  * Captures Join operator keyword values used to combine
  * conditional control
  */
-export const ControlJoins = /\b(?:and|or)\b/
+export const ControlJoins = /\b(?:and|or)\b/;
 
 /* -------------------------------------------- */
 /* HTML TAG EXPRESSIONS                         */
@@ -398,7 +397,7 @@ export const ControlJoins = /\b(?:and|or)\b/
  *
  * HTML Tag name identifier
  */
-export const HTMLTagName = /^[a-zA-Z]+/
+export const HTMLTagName = /^[a-zA-Z]+/;
 
 /**
  * `^[a-zA-Z0-9-]+`
@@ -407,7 +406,7 @@ export const HTMLTagName = /^[a-zA-Z]+/
  *
  * HTML Tag name identifier
  */
-export const HTMLTagAttribute = /^[a-zA-Z0-9-]+/
+export const HTMLTagAttribute = /^[a-zA-Z0-9-]+/;
 
 /**
  * `^[^\s"'>]+`
@@ -416,4 +415,4 @@ export const HTMLTagAttribute = /^[a-zA-Z0-9-]+/
  *
  * HTML End Tag name identifier
  */
-export const HTMLTagEnd = /^[^\s"'>]+/
+export const HTMLTagEnd = /^[^\s"'>]+/;

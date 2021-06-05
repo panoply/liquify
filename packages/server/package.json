@@ -42,6 +42,7 @@
     "@liquify/schema-stores": "workspace:^0.1.4",
     "fs-extra": "^10.0.0",
     "lodash": "^4.17.21",
+    "mergerino": "^0.4.0",
     "netlicensing-client": "^1.2.24",
     "prettydiff": "^101.2.6",
     "strip-json-comments": "^3.1.1",

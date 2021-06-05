@@ -38,19 +38,20 @@ function getLine (textDocument, position) {
  * would like to do this without parsing and reference using regex.
  *
  * @export
- * @param {LSP.TextDocument} textDocument
+ * @param {Parser.AST} document
  * @param {LSP.Position} position
  * @returns {string}
  */
-export function getWordAtPosition (textDocument, position) {
+export function getWordAtPosition (document, position) {
 
-  const { content, character } = getLine(textDocument, position)
-
-  const first = content.lastIndexOf(' ', character)
-  const last = content.indexOf(' ', character)
-  const word = content.substring(
+  const lineRange = document.toLineRange(position)
+  const getText = document.getText(lineRange)
+  const character = document.offsetAt(position) - document.offsetAt(lineRange.start)
+  const first = getText.lastIndexOf(' ', character)
+  const last = getText.indexOf(' ', character)
+  const word = getText.substring(
     first !== -1 ? first : 0,
-    last !== -1 ? last : content.length - 1
+    last !== -1 ? last : getText.length - 1
   ).match(/[^\W]+/)
 
   if (word !== null) return word[0]

@@ -180,5 +180,9 @@
     "striplit",
     "stripliteral",
     "turbolinks"
+  ],
+  "cSpell.ignoreWords": [
+    "mvasilkov",
+    "outdent"
   ]
 }

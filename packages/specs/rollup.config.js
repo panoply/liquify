@@ -1,5 +1,6 @@
 import { banner, plugins, jsonmin } from '@liquify/rollup-plugin-utils'
 import { terser } from 'rollup-plugin-terser'
+import filesize from 'rollup-plugin-filesize'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import cryptospec from '@liquify/rollup-plugin-cryptospec'
@@ -9,6 +10,30 @@ import pkg from './package.json'
 import { config } from 'dotenv'
 
 config()
+
+/**
+ * Export Defaults for testing purposes
+ */
+export const defaults = {
+  filters: {
+    type: 'filter'
+  },
+  objects: {
+    type: 'object',
+    filters: true,
+    singular: true,
+    global: false,
+    deprecated: false,
+    trims: true
+  },
+  tags: {
+    filters: false,
+    singular: false,
+    trims: true,
+    deprecated: false,
+    arguments: false
+  }
+}
 
 /**
  * @type {import('rollup').RollupOptions}
@@ -32,26 +57,7 @@ export default {
   plugins: plugins([
     cryptospec({
       password: process.env.MASTER_KEY,
-      defaults: {
-        filters: {
-          type: 'filter'
-        },
-        objects: {
-          type: 'object',
-          filters: true,
-          singular: true,
-          global: false,
-          deprecated: false,
-          trims: true
-        },
-        tags: {
-          filters: false,
-          singular: false,
-          trims: true,
-          deprecated: false,
-          arguments: false
-        }
-      }
+      defaults
     }),
     resolve(),
     commonjs({
@@ -108,6 +114,5 @@ export default {
       stringArrayThreshold: 0.75,
       unicodeEscapeSequence: false
     })
-
   ])
 }

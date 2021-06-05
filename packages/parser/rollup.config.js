@@ -24,6 +24,7 @@ export default {
   external: process.env.prod ? [] : [
     '@liquify/liquid-language-specs'
   ],
+
   plugins: plugins([
     replace({
       preventAssignment: true,
