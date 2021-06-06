@@ -1552,7 +1552,7 @@
           "description": "Returns an array of the child links associated with the parent link."
         },
         "object": {
-          "type": "object", 
+          "type": "object",
           "description": "Returns the variable associated to the link."
         },
         "title": {
@@ -1668,7 +1668,7 @@
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/location",
       "properties": {
         "address": {
-          "type": "string", 
+          "type": "string",
           "description": "Returns the address object corresponding to this location."
         },
         "id": {
@@ -1856,6 +1856,25 @@
         "settings": {
           "description": "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
           "type": "object"
+        }
+      }
+    },
+    "model_source": {
+      "type": "object",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/model-source",
+      "description": "The model_source object contains information about the source files for a model associated with a product.",
+      "properties": {
+        "mime_type": {
+          "type": "string",
+          "description": "Returns the MIME type of the model source file."
+        },
+        "format": {
+          "type": "string",
+          "description": "Returns the format of the model source file."
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns the URL of the model source file."
         }
       }
     },
