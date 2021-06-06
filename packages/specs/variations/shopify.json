@@ -1552,7 +1552,7 @@
           "description": "Returns an array of the child links associated with the parent link."
         },
         "object": {
-          "type": "object", 
+          "type": "object",
           "description": "Returns the variable associated to the link."
         },
         "title": {
@@ -1668,7 +1668,7 @@
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/location",
       "properties": {
         "address": {
-          "type": "string", 
+          "type": "string",
           "description": "Returns the address object corresponding to this location."
         },
         "id": {
@@ -2102,6 +2102,45 @@
       "singular": true,
       "type": "import",
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"
+    },
+    "page": {
+      "type": "object",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/page",
+      "description": "The page object has the following attributes",
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Returns the author of a page."
+        },
+        "content": {
+          "type": "string",
+          "description": "Returns the content of a page."
+        },
+        "handle": {
+          "type": "string",
+          "description": "Returns the handle of the page."
+        },
+        "id": {
+          "type": "string",
+          "description": "Returns the id of the page."
+        },
+        "published_at": {
+          "type": "timestamp",
+          "description": "Returns the timestamp of when the page was created. Use the date filter to format the timestamp."
+        },
+        "template_suffix": {
+          "type": "string",
+          "description": "Returns the name of the custom page template assigned to the page, without the page."
+        },
+        "title": {
+          "type": "string",
+          "description": "Returns the title of a page."
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns the relative URL of the page."
+        }
+      }
     },
     "paginate": {
       "description": "Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",
