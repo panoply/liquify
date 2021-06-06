@@ -205,12 +205,30 @@ export default (mode => {
           )
         }
 
+        // User has input { character, load output/object completions
+        if (trigger === Characters.LCB) {
+          return Completion.getOutputs(
+            position,
+            offset,
+            trigger
+          )
+        }
+
         // User has input whitespace, lets check previous character
         if (trigger === Characters.WSP) {
 
           // We will persist tag completions is previous character is %
           if (Parser.isPrevCodeChar(Characters.PER, offset)) {
             return Completion.getTags(
+              position,
+              offset,
+              trigger
+            )
+          }
+
+          // We will persist tag completions is previous character is %
+          if (Parser.isPrevCodeChar(Characters.LCB, offset)) {
+            return Completion.getOutputs(
               position,
               offset,
               trigger

@@ -44,6 +44,45 @@ export function getTags (position, offset, trigger) {
 }
 
 /**
+ * Get Object Completion
+ *
+ * Gets completion items for Liquid objects. The
+ * AST applies an `objects` property to its record where its keys are the
+ * offset index numbers and property value ear either string of array types.
+ *
+ */
+export function getOutputs (position, offset, trigger) {
+
+  const additionalTextEdits = []
+
+  if (!Parser.isPrevCodeChar(Characters.LCB, offset)) {
+    additionalTextEdits.push(
+      TextEdit.insert(
+        PosCharSubtract(trigger === Characters.WSP ? 2 : 1, position),
+        String.fromCharCode(Characters.LCB)
+      )
+    )
+  }
+  return Spec.entries.objects.map((
+    [
+      label,
+      {
+        description
+      }
+    ]
+  ) => (
+    {
+      label,
+      kind: CompletionItemKind.Keyword,
+      insertText: ` ${label}$1 }} $0`,
+      insertTextFormat: InsertTextFormat.Snippet,
+      documentation: description,
+      additionalTextEdits
+    }
+  ))
+}
+
+/**
  * Completion Functions
  *
  * Auto completions features are applied according to a series of trigger
@@ -173,50 +212,6 @@ export function setCompletionItems (
     insertTextFormat: InsertTextFormat.Snippet,
     documentation: description,
     data: { snippet }
-  }
-
-}
-
-/**
- * Get Object Completion
- *
- * Gets completion items for Liquid objects. The
- * AST applies an `objects` property to its record where its keys are the
- * offset index numbers and property value ear either string of array types.
- *
- * @export
- * @param {Parser.Scope} document
- * @param {LSP.Position} position
- */
-export async function getObjectCompletion ({ ast, textDocument }, position) {
-
-  const offset = textDocument.offsetAt(position)
-  const ASTNode = Parser.getNode(ast, offset)
-  const record = ASTNode.objects[offset]
-
-  if (!record) return false
-
-  if (isArray(record) && record.length === 1) {
-    const { properties } = Parser.spec.objects[record[0]]
-    return Object.entries(properties).map(setCompletionItems)
-  }
-
-  if (typeof record === 'number') {
-
-    const objects = ASTNode.objects[record]
-
-    return (function walk (prop, spec) {
-
-      const object = spec?.[prop[0]]?.properties
-
-      return prop.length > 1
-        ? object && walk(prop.slice(1), object)
-        : object
-          ? Object.entries(object).map(setCompletionItems)
-          : false
-
-    }(objects.slice(1), Parser.spec.objects[objects[0]].properties))
-
   }
 
 }
