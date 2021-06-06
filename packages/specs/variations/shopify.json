@@ -1552,7 +1552,7 @@
           "description": "Returns an array of the child links associated with the parent link."
         },
         "object": {
-          "type": "object", 
+          "type": "object",
           "description": "Returns the variable associated to the link."
         },
         "title": {
@@ -1668,7 +1668,7 @@
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/location",
       "properties": {
         "address": {
-          "type": "string", 
+          "type": "string",
           "description": "Returns the address object corresponding to this location."
         },
         "id": {
@@ -2102,6 +2102,11 @@
       "singular": true,
       "type": "import",
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"
+    },
+    "page_description": {
+      "type": "object",
+      "description": "Returns the description of a page set in its respective section in the admin.",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/page-description"
     },
     "paginate": {
       "description": "Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",
