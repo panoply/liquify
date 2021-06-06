@@ -21,33 +21,75 @@ Facilitating modern IDE capabilities when working with the Liquid Template Langu
 **Please note:** there are very little use cases where you would require this parser in the real world. The Liquify IDE plugin that consumes this package should suffice and facilitate most (if not all) your requirements when developing with Liquid.
 
 ```js
-import { Parser } from "@liquify/liquid-parser";
-
-const parser = new Parser("standard", {
-  engine: "standard",
-  license: "abcdefghijklmnopqrstuvwxyz",
-  context: true,
-  frontmatter: false,
-  whitespace: true,
-  newlines: false,
-  range: true,
-  offsets: true,
-  process_unknown: true,
-  parse_html: false,
-  skip_strings: false,
-  html_comments: false,
-  multiline_comments: true,
-  inline_comments: true,
-  track_variables: true,
-  error_tolerance: 1,
-  exclude: [],
-});
-
-// Full Document Parse
-const { ast } = await parser.parse(String);
-
-// Incremental Document Parse
-const { ast } = await parse.increment(String, { changes });
+/**
+ * Creates an instance of Liquid parser and returns
+ * methods to work within a Language Server.
+ */
+export function LiquidParser(options: Options): {
+  /**
+   * Returns the `Documents` Map.
+   */
+  get Documents(): Documents;
+  /**
+   * Specification Handling, exposes methods we will
+   * use in the Language Server when dealing with the spec.
+   */
+  Spec: {
+    /**
+     * Defines a Liquid variation specification engine.
+     * The parameter value will swap the specification.
+     */
+    engine(engine: Specs.Engine): void;
+    /**
+     * Returns the current variation being used, this will
+     * align with the specified engine.
+     */
+    get variant(): Variation;
+    /**
+     * Returns each grouped spec as an `entries` array type.
+     */
+    get entries(): VariationEntries
+  };
+  /**
+   * The Parser instance exposes methods we will use in
+   * the language
+   */
+  Parser: {
+    /**
+     * Executes a full document scan
+     */
+    scan: typeof DocumentScan;
+    /**
+     * Returns a TextDocument Instance by its URI
+     */
+    document: typeof DocumentGet;
+    /**
+     * Updates a document, execute partial scans and
+     * manages an existing text document literal.
+     */
+    update: typeof DocumentUpdate;
+    /**
+     * Executes an regular expression test at a range offset
+     * location. You can use the AST method to get a range offset.
+     */
+    isRegExp(regex: RegExp, offset: [number, number]): boolean;
+    /**
+     * Validates character code matches a condition
+     * at specific offset location.
+     */
+    isCodeChar(code: number, offset: number): boolean;
+    /**
+     * Validates character code matches a condition
+     * at the previous offset location, (moves 2 steps back)
+     */
+    isPrevCodeChar(code: number, offset: number): boolean;
+    /**
+     * Validates character code matches a condition
+     * at the next offset location, (moves 1 step forward)
+     */
+    isNextCodeChar(code: number, offset: number): boolean;
+  };
+};
 ```
 
 ### AST
