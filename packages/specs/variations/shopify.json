@@ -1552,7 +1552,7 @@
           "description": "Returns an array of the child links associated with the parent link."
         },
         "object": {
-          "type": "object", 
+          "type": "object",
           "description": "Returns the variable associated to the link."
         },
         "title": {
@@ -1668,7 +1668,7 @@
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/location",
       "properties": {
         "address": {
-          "type": "string", 
+          "type": "string",
           "description": "Returns the address object corresponding to this location."
         },
         "id": {
@@ -1856,6 +1856,37 @@
         "settings": {
           "description": "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
           "type": "object"
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/model",
+      "description": "The model object contains information about a 3D model uploaded from the product details page in the Shopify admin.",
+      "properties": {
+        "alt": {
+          "type": "string",
+          "description": "Returns the alt tag of the model set on the product details page of the Shopify admin."
+        },
+        "id": {
+          "type": "string",
+          "description": "Returns the media_id of the model."
+        },
+        "media_type": {
+          "type": "object",
+          "description": "Returns the type of the object (model)."
+        },
+        "position": {
+          "type": "number",
+          "description": "Returns the position of the model in the product object's media array"
+        },
+        "preview_image": {
+          "type": "string",
+          "description": "Returns a preview image for the model."
+        },
+        "sources": {
+          "type": "array",
+          "description": "Returns an array of model source objects."
         }
       }
     },
