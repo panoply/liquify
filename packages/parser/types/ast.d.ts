@@ -92,13 +92,25 @@ export class AST {
    * The cursor offset index, which is generated from
    * a start and end range position each incremental parse.
    */
-  cursor: [number, number];
+  cursor: number;
 
   /**
    * List of indexes where embedded nodes
    * exist on the tree
    */
   embeds: number[];
+
+  /**
+   * List of indexes where comment nodes
+   * exist on the tree
+   */
+  comments: number[];
+
+  /**
+   * List of indexes where embedded nodes
+   * exist on the tree
+   */
+  variables: {};
 
   /**
    * The abstract syntax tree.
@@ -129,6 +141,13 @@ export class AST {
   update(change: TextDocumentContentChangeEvent): void;
 
   /**
+   * Generates a document literal of current textDocument,
+   *
+   * @default 'tmp'
+   */
+  literal(extension?: string): TextDocument;
+
+  /**
    * Converts a location offset to position via
    * textDocument instance method: `positionAt()`
    */
@@ -141,8 +160,10 @@ export class AST {
 
   /**
    * Converts a offset/s to range location.
+   * If Niether `start`or `end` params are passed,
+   * the full document range is returned.
    */
-  toRange(start: number, end: number): Range;
+  toRange(start?: number, end?: number): Range;
 
   /**
    * Converts range to offset location. The returning value is of
@@ -190,7 +211,12 @@ export class AST {
   /**
    * Returns all the embed type nodes found on AST.
    */
-  getEmbeds(languages?: string[]): ASTNode[] | [];
+  getEmbeds(languages?: string[]): ASTNode[] | false;
+
+  /**
+   * Returns all the comment type nodes found on the AST
+   */
+  getComments(languages?: string[]): ASTNode[] | [];
 
   /**
    * Accepts a list of indexes which point to nodes on the
@@ -239,7 +265,7 @@ export class AST {
    * preface the `node` value assigned by either the previous
    * document change or method event.
    */
-  withinNode(location: Position | number): boolean;
+  withinNode(location: Position | number, node?: ASTNode): boolean;
 
   /**
    * Checks the passed in position of offset is within
@@ -247,12 +273,12 @@ export class AST {
    * end token. It will preface the `node` value assigned
    * by either the previous document change or method event.
    */
-  withinBody(location: Position | number): boolean;
+  withinBody(location: Position | number, node?: ASTNode): boolean;
 
   /**
    * **NOT YET AVAILABLE**
    */
-  withinScope(location: Position | number): boolean;
+  withinScope(location: Position | number, node?: ASTNode): boolean;
 
   /**
    * Checks the passed in position of offset is within
@@ -260,14 +286,14 @@ export class AST {
    * the `node` value assigned by either the previous
    * document change or method event.
    */
-  withinToken(location: Position | number): boolean;
+  withinToken(location: Position | number, node?: ASTNode): boolean;
 
   /**
    * Checks the passed in position of offset is within
    * an end token tag. It will preface the `node` value
    * assigned by either the previous document change or method event.
    */
-  withinEndToken(location: Position | number): boolean;
+  withinEndToken(location: Position | number, node?: ASTNode): boolean;
 
   /**
    * Checks the passed in position of offset is within
@@ -276,7 +302,7 @@ export class AST {
    * value assigned by either the previous document change or
    * method event.
    */
-  withinEmbed(location: Position | number): boolean;
+  withinEmbed(location: Position | number, node?: ASTNode): boolean;
 }
 
 /* -------------------------------------------- */
@@ -341,7 +367,7 @@ export class ASTNode {
    * Returns a Text Document instance for embedded language
    * type nodes, else returns boolean false.
    */
-  get document(): TextDocument | false;
+  document(): TextDocument | false;
   /**
    * Returns the inner contents of the node when it is an
    * syntactic pair type, else returns a boolean false value.
@@ -367,6 +393,17 @@ export class ASTNode {
    * node was consumed.
    */
   error: number;
+  /**
+   * The root node index position on the AST. It informs of
+   * the parent index. If this is equal with `index` the node
+   * is not a child of nested within a pair.
+   */
+  root: number;
+  /**
+   * The parent node index position on the AST. The parent index
+   * is the tag which is encapsulating the node.
+   */
+  parent: number;
   /**
    * The index position of the node located on the AST.
    */

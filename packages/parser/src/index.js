@@ -4,6 +4,7 @@ import { global } from 'parser/global'
 
 /* EXPOSED EXPORTS ---------------------------- */
 
+export { TextDocument } from 'vscode-languageserver-textdocument'
 export { NodeLanguage } from 'lexical/language'
 export { NodeType } from 'lexical/types'
 export { NodeKind } from 'lexical/kind'
@@ -32,8 +33,6 @@ export function LiquidParser (options) {
     get variant () { return Specs.variation },
     get entries () { return Specs.variation.entries }
   }
-
-  console.log(global)
 
   return global
 

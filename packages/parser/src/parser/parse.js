@@ -10,7 +10,6 @@ import Scanner from 'parser/scanner'
 import Spec from 'parser/specs'
 import Config from 'parser/options'
 import Errors from 'parser/errors'
-import { event } from 'parser/state'
 
 /**
  * Parser
@@ -43,6 +42,8 @@ export function parse (document, cursor = false) {
    */
   let node
 
+  let root
+
   /**
    * Resets the current parsing state
    * references we are using
@@ -74,12 +75,6 @@ export function parse (document, cursor = false) {
         break
       case TokenType.Newline:
         if (Config.context && Config.newlines) Context.add(TokenContext.Newline)
-        break
-
-      // VARIABLE
-      // -----------------------------------------------------------------
-      case TokenType.Variable:
-        if (Config.context) Context.add(TokenContext.Variable)
         break
 
       // BOOLEAN
@@ -165,27 +160,19 @@ export function parse (document, cursor = false) {
       // -----------------------------------------------------------------
       case TokenType.ObjectTag:
       case TokenType.SingularTag:
-
-        index = document.nodes.length
-
-        // @ts-ignore
-        node = new INode()
-        node.type = Spec.type
-
-        if (Config.context) node.context.push(Context.size)
-
-        break
-
-      // START TAG NAME
-      // -----------------------------------------------------------------
       case TokenType.StartTag:
 
         index = document.nodes.length
 
-        // @ts-ignore
         node = new INode()
         node.type = Spec.type
-        node.singular = false
+        node.root = typeof root === 'number' ? root : index
+        node.parent = Scanner.syntactic.parent || index
+
+        if (token === TokenType.StartTag) {
+          node.singular = false
+          if (typeof root === 'undefined') root = index
+        }
 
         if (Config.context) node.context.push(Context.size)
 
@@ -199,20 +186,19 @@ export function parse (document, cursor = false) {
         node = document.nodes[Scanner.syntactic.match]
 
         // console.log(Scanner.syntactic.list, node?.name, Scanner.token)
+
         // Validate the parent matches the hierarch node
         if (node?.name === Scanner.token) {
 
-          // CONTEXT
+          if (Scanner.syntactic.list.length === 0) root = undefined
+
           if (Config.context) Context.add(TokenContext.EndTag)
 
-          // document.cursor IN NODE
-          if (cursor) {
-            if (node.type === NodeType.embedded) {
-              if (node.end > document.cursor[0] && Scanner.start < document.cursor[1]) {
-                index = node.index
-                document.node = node
-                cursor = false
-              }
+          if (cursor && node.type === NodeType.embedded) {
+            if (node.end > document.cursor && Scanner.start < document.cursor) {
+              document.node = node
+              index = node.index
+              cursor = false
             }
           }
 
@@ -222,7 +208,7 @@ export function parse (document, cursor = false) {
 
           // AST LOGIC
           index = node.index
-
+          state = TokenType.EndTag
           break
         }
 
@@ -231,8 +217,6 @@ export function parse (document, cursor = false) {
 
         node = new INode()
         node.name = Scanner.token
-
-        index = node.index
 
         // AST LOGIC
         state = ParseError.InvalidSyntactic
@@ -250,6 +234,7 @@ export function parse (document, cursor = false) {
       // DELIMITER CLOSE
       // -----------------------------------------------------------------
       case TokenType.DelimiterClose:
+      case TokenType.DelimiterEnder:
 
         node.offsets.push(Scanner.offset)
         node.token.push(Scanner.tag)
@@ -257,13 +242,13 @@ export function parse (document, cursor = false) {
 
         if (Config.context) Context.add(TokenContext.CloseTag)
 
-        // ADD ONLY START BASIC TAGS TO AST
-        if (token !== TokenType.LiquidEndTagClose) {
+        // ONLY START OR SINGULAR TYPE TAGS ARE PUSHED ONTO AST
+        if (token === TokenType.DelimiterClose) {
 
           document.nodes.push(node)
 
           if (cursor) {
-            if (document.cursor[0] > node.start && document.cursor[1] < node.end) {
+            if (document.cursor > node.start && document.cursor < node.end) {
               document.node = node
               index = node.index
               cursor = false
@@ -274,7 +259,10 @@ export function parse (document, cursor = false) {
         if (state === ParseError.InvalidSyntactic) {
           node.index = document.nodes.length
           document.errors.push(
-            Errors(ParseError.InvalidSyntactic, node.range)
+            Errors(
+              ParseError.InvalidSyntactic,
+              node.range
+            )
           )
         }
 
@@ -282,49 +270,44 @@ export function parse (document, cursor = false) {
 
         break
 
-      // TAG CLOSERS
+      // VARIABLE
       // -----------------------------------------------------------------
-      case TokenType.LiquidTagClose:
-      case TokenType.LiquidEndTagClose:
+      case TokenType.Variable:
 
-        node.offsets.push(Scanner.offset)
-        node.token.push(Scanner.tag)
-        node.range.end = Scanner.range.end
+        if (Config.context) Context.add(TokenContext.Variable)
 
-        // CONTEXT
-        if (Config.context) Context.add(TokenContext.CloseTag)
+        break
 
-        // ADD ONLY START BASIC TAGS TO AST
-        if (token !== TokenType.LiquidEndTagClose) {
+      case TokenType.VariableIdentifier:
 
-          document.nodes.push(node)
+        if (Config.context) Context.add(TokenContext.Identifier)
 
-          if (node.type === NodeType.embedded) {
-            console.log('in embedded parse')
-          }
+        node.name = Scanner.token
+        node.type = Spec.type
 
-          if (cursor) {
-            if (document.cursor[0] > node.start && document.cursor[1] < node.end) {
-              document.node = node
-              index = node.index
-              cursor = false
-            }
-          }
+        if (!Scanner.spec?.singular) {
+          Scanner.syntactic.list.push(node.name, index)
         }
 
-        if (state === ParseError.InvalidSyntactic) {
-          node.index = document.nodes.length
-          document.errors.push(
-            Errors(ParseError.InvalidSyntactic, node.range)
-          )
+        break
+
+      case TokenType.VariableKeyword:
+
+        if (Config.context) Context.add(TokenContext.Keyword)
+
+        document.variables[node.index] = { label: Scanner.token }
+
+        if (document.nodes[node.index - 1]?.type === NodeType.comment) {
+          document.variables[node.index].description = document.nodes[node.index - 1].content
         }
 
-        // RESETS
-        state = undefined
-        node = undefined
-        Spec.reset()
-        Spec.object.reset()
+        break
 
+      case TokenType.VariableOperator:
+        if (Config.context) Context.add(TokenContext.Operator)
+        break
+      case TokenType.VariableValue:
+        if (Config.context) Context.add(TokenContext.Assignment)
         break
 
       // OBJECT NAME
@@ -420,6 +403,22 @@ export function parse (document, cursor = false) {
         // ASSERT HIERARCH
         Scanner.syntactic.list.push(node.name, index)
         document.embeds.push(index)
+
+        if (Config.context) Context.add(TokenContext.Identifier)
+
+        break
+
+        // COMMENT TAG
+      // -----------------------------------------------------------------
+      case TokenType.Comment:
+
+        node.name = Scanner.token
+        node.type = Spec.type
+
+        // ASSERT HIERARCH
+        Scanner.syntactic.list.push(node.name, index)
+
+        document.comments.push(index)
 
         if (Config.context) Context.add(TokenContext.Identifier)
 

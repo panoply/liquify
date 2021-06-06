@@ -4,7 +4,12 @@ import cloneDeep from 'lodash/cloneDeep'
 import repeat from 'lodash/repeat'
 import { NodeKind, NodeLanguage } from '@liquify/liquid-parser'
 import Server from 'provide/server'
-import mergerino from 'mergerino'
+
+/**
+ * Default PrettyDiff Rules - Used to reset prettyDiff format rules
+ */
+const defaultRules = cloneDeep(prettydiff.options)
+
 /**
  * Formatting Functions
  *
@@ -20,14 +25,13 @@ import mergerino from 'mergerino'
  *
  * Sparser
  * @see https://sparser.io/docs-html/tech-documentation.xhtml
+ *
+ * @param {Parser.AST} document
+ * @param {Parser.TextDocument} literal
  */
+export function Format (document, literal) {
 
-export default (function Format () {
-
-  /**
-   * Default PrettyDiff Rules - Used to reset prettyDiff format rules
-   */
-  const defaultRules = cloneDeep(prettydiff.options)
+  const { languageRules } = Server.formatting
 
   /**
    * Indentation Levels
@@ -36,11 +40,10 @@ export default (function Format () {
    * nodes contained within HTML elements which must adhere to an
    * indentation level
    *
-   * @param {LSP.TextDocument} literal
    * @param {number} offset
    * @returns {number}
    */
-  const indentation = (literal, offset) => {
+  const indentation = offset => {
 
     const align = offset - literal.offsetAt(
       {
@@ -60,20 +63,42 @@ export default (function Format () {
   }
 
   /**
+   * Format Pre-Placements
+   *
+   * Applies some pre-placement adjustments to document contents
+   * before we pass to PrettyDiff so as to prevent formatting issues
+   * from occurring.
+   *
+   * @param {string} editText
+   * @returns {string}
+   */
+  const preplacement = (editText) => (
+
+    editText
+
+      // Reset HTML Liquid string attributes
+      .replace(/="(\{[{%]-?)/g, '=" $1')
+
+      // Enforce comments to use trims
+      .replace(/({%-?)\s*(\b(?:end)?comment\s*)(-?%})/g, '{%- $2 -%}')
+
+  )
+
+  /**
    * Format Replacements
    *
    * Removes patched document content manipulations which help
    * prevent errors from occurring at the Sparser parsing level.
    *
-   * @param {string} content
+   * @param {string} newText
    * @returns {string}
    */
-  const replacements = (content) => (
+  const replacements = (newText) => (
 
-    content
+    newText
 
       // Patches Liquid Quotation alignments
-      .replace(/=" (\{[{%]-?)/g, '="$1')
+      .replace(/="\s*(\{[{%]-?)/g, '="$1')
 
       // Ignores Embedded HTML language regions
       .replace(/\s*data-prettydiff-ignore>/g, '>\n')
@@ -88,27 +113,41 @@ export default (function Format () {
    * embedded tags like `<style>` or `<script>` to prevent PrettyDiff
    * formatting its contents.
    *
-   * @param {Parser.AST} document
+   * @param {LSP.TextEdit[]} textEdit
    * @param {String} newText
-   * @param {Parser.ASTNode} ASTnode
+   * @param {Parser.ASTNode} node
    * @returns {LSP.TextEdit[]}
    */
-  const HTMLEmbeds = (document, newText, ASTnode) => [
-    {
-      newText: 'data-prettydiff-ignore>',
-      range: document.toRange(
-        ASTnode.offsets[1] - 1,
-        ASTnode.offsets[1]
-      )
-    },
-    {
-      newText,
-      range: document.toRange(
-        ASTnode.offsets[3] + 1,
-        ASTnode.offsets[2]
-      )
-    }
-  ]
+  const HTMLEmbeds = (textEdit, newText, node) => {
+
+    textEdit.push(
+      {
+        newText: 'data-prettydiff-ignore>',
+        range: {
+          start: literal.positionAt(
+            node.offsets[1] - 1
+          ),
+          end: literal.positionAt(
+            node.offsets[1]
+          )
+        }
+      },
+      {
+        newText,
+        range: {
+          start: literal.positionAt(
+            node.offsets[3] + 1
+          ),
+          end: literal.positionAt(
+            node.offsets[2]
+          )
+        }
+      }
+    )
+
+    return textEdit
+
+  }
 
   /**
    * Format Liquid Embedded Tags
@@ -118,163 +157,163 @@ export default (function Format () {
    * into treating it as it would any Liquid tag block. The temporary name
    * is removed in the final format cycle.
    *
-   * @param {Parser.AST} document
-   * @param {Parser.ASTNode} ASTNode
+   * @param {LSP.TextEdit[]} textEdit
    * @param {string} newText
+   * @param {Parser.ASTNode} node
    * @returns {LSP.TextEdit[]}
    */
-  const LiquidEmbeds = (document, ASTNode, newText) => {
+  const LiquidEmbeds = (textEdit, newText, node) => {
 
-    const startName = ASTNode.token[0].indexOf(ASTNode.name)
-    const closeName = ASTNode.token[1].indexOf(`end${ASTNode.name}`)
+    const startName = node.token[0].indexOf(node.name)
+    const closeName = node.token[1].indexOf(`end${node.name}`)
 
-    return [
+    textEdit.push(
       {
-        newText: `${ASTNode.name}__pdp`,
-        range: document.toRange(
-          ASTNode.offsets[0] + startName,
-          ASTNode.offsets[0] + startName + ASTNode.name.length
-        )
+        newText: `${node.name}__pdp`,
+        range: {
+          start: literal.positionAt(
+            node.offsets[0] + startName
+          ),
+          end: literal.positionAt(
+            node.offsets[0] + startName + node.name.length
+          )
+        }
       },
       {
-        newText: `end${ASTNode.name}__pdp`,
-        range: document.toRange(
-          ASTNode.offsets[2] + closeName,
-          ASTNode.offsets[2] + closeName + ASTNode.name.length + 3
-        )
+        newText: `end${node.name}__pdp`,
+        range: {
+          start: literal.positionAt(
+            node.offsets[2] + closeName
+          ),
+          end: literal.positionAt(
+            node.offsets[2] + closeName + node.name.length + 3
+          )
+        }
       },
       {
         newText,
-        range: document.toRange(ASTNode.offsets[1], ASTNode.offsets[2])
+        range: {
+          start: literal.positionAt(
+            node.offsets[1]
+          ),
+          end: literal.positionAt(
+            node.offsets[2]
+          )
+        }
       }
-    ]
+    )
+
+    return textEdit
+
   }
 
   /**
    * Embedded Regions - JavaScript, JSON, CSS and SCSS
    *
-   * @param {Parser.AST} document
-   * @param {LSP.TextDocument} literal
-   * @returns {(ASTNode: Parser.ASTNode) => LSP.TextEdit[]}
+   * @param {Parser.ASTNode[]} nodes
+   * @returns {LSP.TextEdit[]}
    */
-  const embeds = (document, literal) => node => {
+  const embeds = nodes => nodes.reduce((textEdit, node) => {
 
     // If embedded region have parse issues, we will exclude
     // from formatting and prevent any defect formats.
-    if (!node.content || document.errors.slice(document.lastNode.error).some(({
-      data: {
-        // @ts-ignore
-        index,
-        // @ts-ignore
-        capabilities: { doFormat }
-      }
-    }) => (index === node.index && !doFormat))) {
-      return [
-        {
-          newText: node.content,
-          range: document.toRange(
-            node.offsets[1],
-            node.offsets[2]
-          )
-        }
-      ]
-    }
+    if (!node.content || document.errors.slice(document.lastNode.error).some(
+      ({ data }) => data?.index === node.index && !data?.capabilities?.doFormat
+    )) return textEdit
 
-    const indent_level = indentation(literal, node.offsets[0])
-    const rules = Server.formatting.languageRules[node.language]
-    const source = node.content
+    const indent_level = indentation(node.offsets[0])
+    const rules = languageRules[node.language]
 
     // Set formatting rules
     // Apply `indent_level` when nested within elements
-    Object.assign(prettydiff.options, rules, { source, indent_level })
+    Object.assign(prettydiff.options, defaultRules, rules, {
+      source: node.content,
+      indent_level
+    })
 
     // Execute formats
     const formats = prettydiff()
 
-    //    console.log(rules, source, prettydiff.sparser)
-
     if (prettydiff.sparser.parseerror.length > 0) {
       console.error(prettydiff.sparser.parseerror)
-      return [
-        {
-          newText: node.content,
-          range: document.toRange(
-            node.offsets[1],
-            node.offsets[2]
-          )
-        }
-      ]
+      return textEdit
     }
-
-    Object.assign(prettydiff.options, defaultRules) // Reset PrettyDiff rules
 
     // Apply indentation to tag block
     const newText = '\n' + repeat(rules.indent_char, indent_level) + formats
 
-    if (node.kind === NodeKind.HTML && !/\s*$/.test(source)) {
-      return HTMLEmbeds(
-        document,
-        newText,
-        node
-      )
+    if (node.kind === NodeKind.HTML && !/\s*$/.test(node.content)) {
+      return HTMLEmbeds(textEdit, newText, node)
     }
 
     if (node.language === NodeLanguage.scss || node.language === NodeLanguage.css) {
-      return LiquidEmbeds(
-        document,
-        node,
-        newText
-      )
+      return LiquidEmbeds(textEdit, newText, node)
     }
 
-    return [
+    textEdit.push(
       {
         newText,
-        range: document.toRange(
-          node.offsets[1],
-          node.offsets[2]
-        )
+        range: {
+          start: literal.positionAt(node.offsets[1]),
+          end: literal.positionAt(node.offsets[2])
+        }
       }
-    ]
+    )
+
+    return textEdit
+
+  }, [])
+
+  /**
+   * Liquid Formatting
+   *
+   */
+  const liquid = () => {
+
+    // TODO
+
   }
 
   /**
    * HTML Markup formatting
    *
-   * @param {string} source
+   * @param {string} [source]
    * @returns {string}
    */
-  const markup = source => {
+  const markup = (source = literal.getText()) => {
 
     // This patch fixes newline HTML attributes
-    Object.assign(
-      prettydiff.options,
-      defaultRules,
-      Server.formatting.languageRules.html,
-      {
-        source: source.replace(/="(\{[{%]-?)/g, '=" $1')
+    Object.assign(prettydiff.options, defaultRules, languageRules.html, {
+      source: preplacement(source)
+    })
+
+    try {
+
+      const formats = prettydiff()
+
+      // Check Sparser for errors
+      // Validations will handle missing pairs
+      // We still echo Sparser log for additional context.
+      if (prettydiff.sparser.parseerror.length > 0) {
+
+        console.error(prettydiff.sparser.parseerror)
+        return replacements(source)
       }
-    )
 
-    const output = prettydiff()
+      return replacements(formats)
 
-    // Check Sparser for errors
-    // Validations will handle missing pairs
-    // We still echo Sparser log for additional context.
-    if (prettydiff.sparser.parseerror.length > 0) {
-      console.error(prettydiff.sparser.parseerror)
+    } catch (e) {
+
       return replacements(source)
+
     }
-
-    Object.assign(prettydiff.options, defaultRules)
-
-    return replacements(output)
 
   }
 
   return {
     markup,
-    embeds
+    embeds,
+    liquid
   }
 
-}())
+}

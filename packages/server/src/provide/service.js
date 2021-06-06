@@ -1,14 +1,14 @@
-import { TextEdit, CompletionTriggerKind, Position } from 'vscode-languageserver'
+import { TextEdit, CompletionTriggerKind } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { CSSService } from 'service/modes/css'
 import { SCSSService } from 'service/modes/scss'
 import { JSONService } from 'service/modes/json'
 import { Spec, Parser } from 'provide/parser'
-import Format from 'service/format'
+import { Format } from 'service/format'
 import * as Completion from 'service/completions'
 import * as Hover from 'service/hovers'
 import upperFirst from 'lodash/upperFirst'
-import { Characters } from '@liquify/liquid-parser'
+import { Characters, NodeType } from '@liquify/liquid-parser'
 
 /**
  * Liquid Language Service
@@ -52,7 +52,7 @@ export default (mode => {
      */
     async doValidation (document) {
 
-      const embeds = document.getEmbeds([ 'json' ])
+      const embeds = document.getEmbeds()
 
       if (embeds) {
         for (const node of embeds) {
@@ -79,39 +79,32 @@ export default (mode => {
      */
     doFormat (document) {
 
+      // Do not format empty documents
+
       // const filename = basename(document.textDocument.uri)
       // if (settings.ignore.files.includes(filename)) return
 
       /* FORMATS ------------------------------------ */
 
-      const content = document.getText()
+      const literal = document.literal()
+      const format = Format(document, literal)
+      const embeds = document.getEmbeds()
 
-      const literal = TextDocument.create(
-        document.textDocument.uri + '.tmp',
-        document.textDocument.languageId,
-        document.textDocument.version,
-        content
-      )
-      const regions = document.getEmbeds().flatMap(
-        Format.embeds(
-          document,
-          literal
-        )
-      )
+      if (embeds) {
 
-      /* REPLACE ------------------------------------ */
+        const regions = format.embeds(embeds)
 
-      return [
-        TextEdit.replace(
-          document.toRange(0, content.length),
-          Format.markup(
-            TextDocument.applyEdits(
-              literal,
-              regions
+        if (regions.length > 0) {
+          return [
+            TextEdit.replace(
+              document.toRange(),
+              format.markup(TextDocument.applyEdits(literal, regions))
             )
-          )
-        )
-      ]
+          ]
+        }
+      }
+
+      return [ TextEdit.replace(document.toRange(), format.markup()) ]
 
     },
 
@@ -153,41 +146,32 @@ export default (mode => {
      */
     async doHover (document, position) {
 
-      const node = document.getNodeAt(position, false)
+      const offset = document.offsetAt(position)
+      const node = document.getNodeAt(offset, false)
 
       if (!node) return null
-      if (mode?.[node.language]) return mode[node.language].doHover(node, position)
 
-      const name = Hover.getWordAtPosition(document, position)
-
-      /**
-       * @type {Parser.Cursor}
-       */
-      let spec
-      let preview
-
-      if (Spec.variant.tags?.[name]) {
-        spec = Spec.variant.tags[name]
-        preview = `{% ${name} %}`
-      } else if (Spec.variant.objects?.[name]) {
-        spec = Spec.variant.objects[name]
-        preview = `{{ ${name} }}`
-      } else if (Spec.variant.filters?.[name]) {
-        spec = Spec.variant.filters[name]
-        preview = `| ${name}`
-      } else {
-        return null
+      if (document.withinEmbed(offset, node) && document.withinBody(offset, node)) {
+        if (mode?.[node.language]) return mode[node.language].doHover(node, position)
       }
+
+      const name = Hover.getWordAtPosition(document, position, node)
+
+      const spec = (
+        Spec.variant.tags?.[name]
+      ) || (
+        Spec.variant.filters?.[name]
+      ) || (
+        Spec.variant.objects?.[name]
+      )
+
+      if (!spec) return null
 
       return {
         kind: 'markdown',
         contents: [
-          '```liquid',
-          preview,
-          '```',
           spec.description,
-          '\n---',
-          `\n[${upperFirst(Spec.variant.engine)} Liquid](${spec.link})`
+          `\n[${upperFirst(Spec.variant.engine)} Reference](${spec.link})`
         ].join('\n')
       }
 
@@ -205,32 +189,37 @@ export default (mode => {
       // Prevent Completions when double
       if (triggerKind !== CompletionTriggerKind.TriggerCharacter) return null
 
-      const offset = document.textDocument.offsetAt(position)
       const trigger = triggerCharacter.charCodeAt(0)
+      const offset = document.offsetAt(position)
+      const node = document.getNodeAt(offset, false)
 
-      if (!document.withinToken(offset)) {
+      // We are not within a Liquid token, lets load available completions
+      if (!node) {
 
-        if (Parser.isCodeChar(Characters.PER, offset)) {
+        // User has input % character, load tag completions
+        if (trigger === Characters.PER) {
           return Completion.getTags(
-            document,
             position,
             offset,
             trigger
           )
         }
 
+        // User has input whitespace, lets check previous character
         if (trigger === Characters.WSP) {
+
+          // We will persist tag completions is previous character is %
           if (Parser.isPrevCodeChar(Characters.PER, offset)) {
             return Completion.getTags(
-              document,
               position,
               offset,
               trigger
             )
           }
         }
-
       }
+
+      return null
 
       // We are within a token
       if (document.withinToken(offset)) {

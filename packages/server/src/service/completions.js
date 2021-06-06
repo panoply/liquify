@@ -5,41 +5,42 @@ import { PosCharSubtract } from 'utils/positions'
 import { CompletionState } from 'enums/completions'
 import { Characters } from '@liquify/liquid-parser'
 
-const cache = new Map()
-
-export function getTags (document, position, offset, trigger) {
+export function getTags (position, offset, trigger) {
 
   const additionalTextEdits = []
 
-  if (!Parser.isPrevCodeChar(Characters.LCB, offset - 1)) {
+  if (!Parser.isPrevCodeChar(Characters.LCB, offset)) {
     additionalTextEdits.push(
       TextEdit.insert(
-        PosCharSubtract(1, position),
+        PosCharSubtract(trigger === Characters.WSP ? 2 : 1, position),
         String.fromCharCode(Characters.LCB)
       )
     )
   }
 
-  return Object.entries(Spec.variant().tags).map((
-    [
+  return Spec.entries.tags.map(
+    ([
       label,
       {
         description,
         singular,
-        snippet = ` ${label} $1 %} ${singular ? '$0' : `$0 {% end${label} %}`}`
+        snippet = '$1'
       }
-    ]
-  ) => (
-    {
-      label,
-      additionalTextEdits,
-      kind: CompletionItemKind.Keyword,
-      insertText: snippet,
-      insertTextFormat: InsertTextFormat.Snippet,
-      documentation: description,
-      data: { snippet }
+    ]) => {
+
+      snippet = ` ${label} ${snippet} %} ${singular ? '$0' : `$0 {% end${label} %}`}`
+
+      return ({
+        label,
+        additionalTextEdits,
+        kind: CompletionItemKind.Keyword,
+        insertText: snippet,
+        insertTextFormat: InsertTextFormat.Snippet,
+        documentation: description,
+        data: { snippet }
+      })
     }
-  ))
+  )
 }
 
 /**

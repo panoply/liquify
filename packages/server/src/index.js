@@ -136,7 +136,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   const document = Parser.scan(textDocument)
 
-  // console.log(document)
+  console.log(document)
 
   // console.log(document)
 
@@ -160,7 +160,7 @@ connection.onDidChangeTextDocument(({ textDocument, contentChanges }) => {
 
   const document = Parser.update(textDocument, contentChanges)
 
-  console.log('executed', document.node)
+  // console.log('executed', document)
 
   console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
 
@@ -229,7 +229,7 @@ connection.onDocumentRangeFormatting((
 
   return Service.doFormat(document)
 
-}, null, `Error while computing formatting for ${uri}`, token))
+}, null, `Error while computing range formatting for ${uri}`, token))
 
 /* ---------------------------------------------------------------- */
 /* onHover                                                          */
@@ -324,10 +324,9 @@ connection.onCompletion((
   }, token
 ) => !Server.provider.completion || runAsync(async () => {
 
-  return null
-  if (!Documents.has(uri)) return null
-
   const document = Parser.document(uri)
+
+  if (!document) return null
 
   return Service.doComplete(document, position, context)
 
@@ -341,8 +340,6 @@ connection.onCompletionResolve((
   item
   , token
 ) => runSync(() => {
-
-  return null
 
   return Service.doCompleteResolve(item)
 

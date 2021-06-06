@@ -46,10 +46,12 @@ export class JSONService {
    */
   async doValidation (node) {
 
-    if (!node.document) return null
+    const document = node.document()
 
-    const JSONDocument = this.service.parseJSONDocument(node.document)
-    const diagnostics = await this.service.doValidation(node.document, JSONDocument)
+    if (!document) return null
+
+    const JSONDocument = this.service.parseJSONDocument(document)
+    const diagnostics = await this.service.doValidation(document, JSONDocument)
 
     if (isEmpty(diagnostics)) return null
 
@@ -79,16 +81,17 @@ export class JSONService {
    */
   async doHover (node, { line, character }) {
 
-    if (!node.document) return null
+    const document = node.document()
 
-    const JSONDocument = this.service.parseJSONDocument(node.document)
+    if (!document) return null
+
+    const JSONDocument = this.service.parseJSONDocument(document)
     const doHover = await this.service.doHover(
-      node.document
+      document
       , { character, line: line - node.range.start.line }
       , JSONDocument
     )
 
-    console.log(doHover)
     return merge(doHover, {
       range: {
         start: { line },
@@ -107,11 +110,13 @@ export class JSONService {
    */
   async doComplete (node, { character, line }) {
 
-    if (!node.document) return null
+    const document = node.document()
 
-    const JSONDocument = this.service.parseJSONDocument(node.document)
+    if (!document) return null
+
+    const JSONDocument = this.service.parseJSONDocument(document)
     const doComplete = await this.service.doComplete(
-      node.document
+      document
       , { character, line: line - node.range.start.line }
       , JSONDocument
     )

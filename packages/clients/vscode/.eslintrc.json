@@ -8,9 +8,7 @@
   "extends": ["standard"],
   "plugins": ["@babel", "import"],
   "settings": {
-    "import/resolver": {
-      "babel-module": {}
-    }
+    "import/resolver": {}
   },
   "parser": "@babel/eslint-parser",
   "parserOptions": {

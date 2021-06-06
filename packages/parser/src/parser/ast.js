@@ -3,21 +3,13 @@ import { NodeKind } from 'lexical/kind'
 import Config from 'parser/options'
 import Stream from 'parser/stream'
 import inRange from 'lodash/inRange'
-import { global } from 'parser/global'
-
+import { TextDocument } from 'vscode-languageserver-textdocument'
 /**
  * @type {Parser.AST}
  */
-export class IAST {
+export default class IAST {
 
-  /**
-   * @private
-   * @type {Parser.TextDocument}
-   */
-  #textDocument
-
-  /** @type {[number, number]}  */
-  cursor = [ 0, 0 ]
+  textDocument
 
   /** @type {Parser.ASTNode}  */
   node = null
@@ -28,17 +20,31 @@ export class IAST {
   /** @type {number[]}  */
   embeds = []
 
+  variables = {}
+
+  /** @type {number[]}  */
+  comments = []
+
   /** @type {Parser.IParseError[]}  */
   errors = []
+
+  cursor = 0
 
   constructor (textDocument) {
     this.textDocument = textDocument
     Stream.create()
   }
 
-  get textDocument () { return this.#textDocument }
+  literal (extension = 'tmp') {
 
-  set textDocument (textDocument) { this.#textDocument = textDocument }
+    return TextDocument.create(
+      this.textDocument.uri + '.' + extension,
+      this.textDocument.languageId,
+      this.textDocument.version,
+      this.textDocument.getText()
+    )
+
+  }
 
   positionAt (offset) {
 
@@ -51,7 +57,7 @@ export class IAST {
     return this.textDocument.offsetAt(location)
   }
 
-  toRange (start, end) {
+  toRange (start = 0, end = this.textDocument.getText().length) {
 
     return {
       start: this.textDocument.positionAt(start),
@@ -106,12 +112,10 @@ export class IAST {
 
   clear () {
 
-    this.embeds.splice(0)
-    this.errors.splice(0)
-    this.nodes.splice(0)
-    this.cursor.splice(0)
-
-    Stream.create()
+    this.embeds = []
+    this.errors = []
+    this.nodes = []
+    this.comments = []
 
   }
 
@@ -122,31 +126,34 @@ export class IAST {
    *
    */
   update (edits) {
-    return this.clear()
-    if (edits.length > 1) return this.clear()
 
-    const start = this.textDocument.offsetAt(edits[0].range.start)
-    const index = this.nodes.findIndex(node => start < node.end)
-    const node = this.nodes[index]
+    Stream.create()
 
-    if (typeof node === 'undefined') return this.clear()
+    this.cursor = this.offsetAt(edits[edits.length - 1].range.start)
 
-    inRange(start, node.start, node.end)
-      ? Stream.Jump(node.start)
-      : Stream.Jump(start)
+    if (edits.length > 1 || this.nodes.length === 0) return this.clear()
 
-    if (this.embeds.length > 0) {
-      this.embeds.splice(this.embeds.findIndex(n => n > index))
-    }
+    let i = 0
 
-    this.errors.splice(0)
-    this.nodes.splice(index)
-    this.cursor.splice(
-      0,
-      2,
-      start,
-      this.textDocument.offsetAt(edits[0].range.end)
-    )
+    while (this.nodes.length > i) if (this.nodes[i].end > this.cursor) break; else i++
+
+    if (i === 0) return this.clear()
+
+    i = i - 1
+
+    const node = this.nodes[this.nodes[i].root]
+
+    // console.log(node)
+
+    if (!node) return this.clear()
+
+    Stream.Jump(node.start)
+
+    if (this.errors.length > 0) this.errors.splice(node.error)
+    if (this.embeds.length > 0) this.embeds.splice(this.embeds.findIndex(n => n >= i))
+    if (this.comments.length > 0) this.comments.splice(this.comments.findIndex(n => n >= i))
+
+    this.nodes.splice(i)
 
   }
 
@@ -160,7 +167,7 @@ export class IAST {
         : Stream.GetCharAt(this.offsetAt(location))
     }
 
-    return this.textDocument.getText(this.toRange(location))
+    return this.textDocument.getText(this.toRange(location[0], location[1]))
 
   }
 
@@ -172,10 +179,13 @@ export class IAST {
 
     const offset = typeof position === 'number'
       ? position
-      : this.textDocument.offsetAt(position)
+      : this.offsetAt(position)
+
+    let from = 0
 
     if (this.node) {
-      if ((
+      if (offset > this.node.end) from = this.node.index
+      else if ((
         this.node.type === NodeType.embedded && inRange(
           offset
           , this.node.offsets[1]
@@ -191,9 +201,10 @@ export class IAST {
         , this.node.offsets[3]
 
       )) return this.node
+
     }
 
-    const index = this.nodes.findIndex(
+    const node = this.nodes.slice(from).find(
       ({ offsets, type }) => inRange(
         offset
         , offsets[0]
@@ -211,14 +222,14 @@ export class IAST {
       )
     )
 
-    if (index < 0) return false
+    if (!node) return false
 
     if (updateNode) {
-      this.node = this.nodes[index]
+      this.node = node
       return this.node
     }
 
-    return this.nodes[index]
+    return node
 
   }
 
@@ -226,7 +237,7 @@ export class IAST {
 
     const offset = typeof position === 'number'
       ? position
-      : this.textDocument.offsetAt(position)
+      : this.offsetAt(position)
 
     if (inRange(offset, this.node.offsets[0], this.node.offsets[1])) return this.nodes
 
@@ -264,7 +275,7 @@ export class IAST {
 
     const offset = typeof position === 'number'
       ? position
-      : this.textDocument.offsetAt(position)
+      : this.offsetAt(position)
 
     const index = this.embeds.findIndex(i => inRange(
       offset
@@ -283,15 +294,33 @@ export class IAST {
 
   }
 
+  getScope (node = this.node) {
+
+  }
+
+  getParentNode () {
+
+    return this.node.parent ? this.nodes[this.node.parent] : null
+
+  }
+
   getNodes (points) {
 
     return points.map(n => this.nodes[n])
 
   }
 
+  getComments () {
+
+    if (this.comments.length === 0) return false
+
+    return this.comments.map(n => this.nodes[n])
+
+  }
+
   getEmbeds (languages = undefined) {
 
-    if (this.embeds.length === 0) return []
+    if (this.embeds.length === 0) return false
 
     const embeds = this.embeds.map(n => this.nodes[n])
 
@@ -304,8 +333,6 @@ export class IAST {
   getAssociates () { return [] }
 
   getVariables () { return null }
-
-  getScope () { return null }
 
   /* -------------------------------------------- */
   /* WITHIN CHECKS                                */
@@ -325,50 +352,50 @@ export class IAST {
 
   withinScope () { return true }
 
-  withinEndToken (position) {
+  withinEndToken (position, node = this.node) {
 
-    if (!this.node || this.node.singular) return false
+    if (!node || node.singular) return false
 
-    return this.within(position, this.node.offsets[2], this.node.offsets[3])
-
-  }
-
-  withinNode (position) {
-
-    if (!this.node) return false
-
-    return this.within(position, this.node.start, this.node.end)
+    return this.within(position, node.offsets[2], node.offsets[3])
 
   }
 
-  withinBody (position) {
+  withinNode (position, node = this.node) {
 
-    if (!this.node || this.node.singular) return false
+    if (!node) return false
 
-    return this.within(position, this.node.offsets[1], this.node.offsets[2])
-
-  }
-
-  withinToken (position) {
-
-    if (!this.node) return false
-
-    return this.within(position, this.node.offsets[0], this.node.offsets[1])
+    return this.within(position, node.start, node.end)
 
   }
 
-  withinEmbed (position) {
+  withinBody (position, node = this.node) {
 
-    if (!this.node || this.node.singular) return false
+    if (!node || node.singular) return false
+
+    return this.within(position, node.offsets[1], node.offsets[2])
+
+  }
+
+  withinToken (position, node = this.node) {
+
+    if (!node) return false
+
+    return this.within(position, node.offsets[0], node.offsets[1])
+
+  }
+
+  withinEmbed (position, node = this.node) {
+
+    if (!node || node.singular) return false
 
     return (
-      this.node.type === NodeType.embedded
+      node.type === NodeType.embedded
     ) && (
-      this.node.kind === NodeKind.Liquid
+      node.kind === NodeKind.Liquid
     ) && (
       Config.engine === 'shopify'
     ) && (
-      this.withinNode(position)
+      this.within(position, node.start, node.end)
     )
 
   }

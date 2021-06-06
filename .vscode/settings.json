@@ -164,6 +164,7 @@
   "cSpell.enableFiletypes": ["javascript"],
   "cSpell.words": [
     "argsize",
+    "bendcomment",
     "endfor",
     "filesize",
     "freemium",

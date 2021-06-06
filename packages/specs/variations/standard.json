@@ -426,6 +426,7 @@
   "tags": {
     "assign": {
       "description": "Creates a new variable.",
+      "snippet": "$1 = $2",
       "link": "https://shopify.github.io/liquid/tags/variable/#assign",
       "filters": true,
       "singular": true,
@@ -491,6 +492,7 @@
       "description": "Repeatedly executes a block of code.",
       "link": "https://shopify.github.io/liquid/tags/iteration/#for",
       "type": "iteration",
+      "snippet": "$1 in $2",
       "parameters": [
         {
           "name": "offset",
@@ -530,6 +532,7 @@
     },
     "render": {
       "description": "Insert the rendered content of another template within the current template.\n\nThe code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.",
+      "snippet": "'$1'",
       "filters": false,
       "singular": true,
       "link": "https://shopify.github.io/liquid/tags/template/#render",

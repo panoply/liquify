@@ -1,5 +1,5 @@
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { IAST } from 'parser/ast'
+import IAST from 'parser/ast'
 import { parse } from 'parser/parse'
 import { handleError } from './utils'
 
@@ -35,7 +35,13 @@ export default (function () {
        */
       scan: ({ uri, languageId, version, text }) => {
 
-        textDocument = TextDocument.create(uri, languageId, version, text)
+        textDocument = TextDocument.create(
+          uri,
+          languageId,
+          version,
+          text
+        )
+
         iASTDocument = documents.set(uri, new IAST(textDocument)).get(uri)
 
         return parse(iASTDocument)
@@ -46,7 +52,7 @@ export default (function () {
        */
       document: (uri) => {
 
-        if (textDocument?.uri !== uri) {
+        if (iASTDocument.textDocument?.uri !== uri) {
           if (documents.has(uri)) iASTDocument = documents.get(uri)
           else {
             throw handleError(`"${uri}"
@@ -64,7 +70,7 @@ export default (function () {
        */
       update: ({ uri, version }, changes) => {
 
-        if (textDocument.uri !== uri) {
+        if (iASTDocument?.textDocument.uri !== uri) {
           if (documents.has(uri)) iASTDocument = documents.get(uri)
           else {
             throw handleError(`"${uri}"
@@ -79,6 +85,8 @@ export default (function () {
           changes,
           version
         )
+
+        // console.log(iASTDocument.textDocument.uri, iASTDocument.textDocument.version)
 
         iASTDocument.update(changes)
 

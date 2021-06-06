@@ -80,18 +80,22 @@ export const enum ScanState {
    * for `{% raw %}`or when ignore inline comment detected
    */
   SkipTag,
+  SkipTagContents,
 
   /* -------------------------------------------- */
   /* LIQUID TAG TYPES                             */
   /* -------------------------------------------- */
 
-  /**
-   * Tag is a Associate Type
-   */
-  TagOutput,
-  TagType,
-  TagBasic,
+  AfterOutputTagOpen,
+  BeforeOutputTagName,
+  BeforeStartTagName,
+  BeforeEndTagName,
+  AfterTagOpen,
+
+  EndTagClose,
+
   TagBasicName,
+  TagType,
 
   TagUnknown,
 

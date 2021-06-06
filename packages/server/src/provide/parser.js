@@ -7,7 +7,7 @@ export const { Spec, Parser, Documents } = LiquidParser(
   {
     engine: 'standard',
     license: process.env.MASTER_KEY,
-    context: true,
+    context: false,
     frontmatter: false,
     whitespace: true,
     newlines: true,

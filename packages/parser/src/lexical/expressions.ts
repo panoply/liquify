@@ -39,7 +39,7 @@ export const DelimitersTagOpen = /^{%/;
  * Open Delimiters for Liquid object tags.
  *
  */
-export const DelimitersObjectOpen = /^{{/;
+export const DelimitersOutputOpen = /^{{/;
 
 /**
  * `^%}`
@@ -107,7 +107,16 @@ export const TagName = /^[a-zA-Z]+/;
 export const TagFirstCharWild = /^[a-zA-Z0-9$_]/;
 
 /**
- * `^[a-zA-Z]+`
+ * `^[a-zA-Z0-9_]+`
+ *
+ * ---
+ *
+
+ */
+export const TagKeyword = /^[a-zA-Z0-9_]+/;
+
+/**
+ * `^[a-zA-Z0-9$_]+`
  *
  * ---
  *
@@ -145,6 +154,28 @@ export const TagIsEnd = /^-?[\s\t\r\n\f]*?\bend/;
  * invalid characters located between
  */
 export const TagCloseClear = /^[\s\t\r\n\f]*?[-%}]/;
+
+/* -------------------------------------------- */
+/* INNER CONTENT SKIPS                          */
+/* -------------------------------------------- */
+
+/**
+ * `/{%-?\s*\bendcomment/;`
+ *
+ * ---
+ *
+ * Looks for the comment end tag.
+ */
+export const CommentTagEnd = /{%-?\s*\bendcomment/;
+
+/**
+ * `/{%-?\s*\bendraw/;`
+ *
+ * ---
+ *
+ * Looks for the raw end tag.
+ */
+export const RawTagEnd = /{%-?\s*\bendraw/;
 
 /* -------------------------------------------- */
 /* OBJECT TAG EXPRESSIONS                       */

@@ -5,5 +5,6 @@ export {
   NodeLanguage,
   Characters,
   Engine,
+  TextDocument,
   Variation,
 } from "./types/export";

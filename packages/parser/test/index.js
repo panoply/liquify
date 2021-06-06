@@ -42,10 +42,10 @@ Spec.engine('shopify')
 test('FullDocument Parse', t => {
 
   const start = process.hrtime()
-  const { nodes } = Parser.scan(server)
+  const ast = Parser.scan(server)
   const end = process.hrtime(start)
 
-  // t.log(  nodes)
+  t.log(ast.variables)
 
   t.log(time(end, { verbose: true }))
   t.pass()

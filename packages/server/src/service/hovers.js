@@ -1,34 +1,3 @@
-/* ---------------------------------------------------------------- */
-/* PRIVATE                                                          */
-/* ---------------------------------------------------------------- */
-
-/**
- * Returns the current line text
- *
- * @export
- * @param {LSP.TextDocument} textDocument
- * @param {LSP.Position} position
- * @returns {{ content: string, character: number }}
- */
-function getLine (textDocument, position) {
-
-  const start = { line: position.line, character: 0 }
-  const character = textDocument.offsetAt(position) - textDocument.offsetAt(start)
-  const content = textDocument.getText({
-    start,
-    end: {
-      line: position.line + 1,
-      character: 0
-    }
-  })
-
-  return { content, character }
-
-}
-
-/* ---------------------------------------------------------------- */
-/* PUBLIC                                                           */
-/* ---------------------------------------------------------------- */
 
 /**
  * Returns the word in range
@@ -40,9 +9,12 @@ function getLine (textDocument, position) {
  * @export
  * @param {Parser.AST} document
  * @param {LSP.Position} position
+ * @param {Parser.ASTNode} node
  * @returns {string}
  */
-export function getWordAtPosition (document, position) {
+export function getWordAtPosition (document, position, node) {
+
+  if (document.withinEndToken(position, node)) return node.name
 
   const lineRange = document.toLineRange(position)
   const getText = document.getText(lineRange)
@@ -54,8 +26,8 @@ export function getWordAtPosition (document, position) {
     last !== -1 ? last : getText.length - 1
   ).match(/[^\W]+/)
 
-  if (word !== null) return word[0]
+  if (word === null) return null
 
-  return null
+  return word[0]
 
 }

@@ -4,7 +4,6 @@ import { NodeType } from 'lexical/types'
 import { NodeLanguage } from 'lexical/language'
 import Scanner from 'parser/scanner'
 import yamljs from 'yamljs'
-import Document from 'parser/document'
 
 /**
  * AST Node
@@ -16,6 +15,8 @@ import Document from 'parser/document'
 export default document => class INode {
 
   name = null
+  root = null
+  parent = null
   index = document.nodes.length
   type = NodeType.unknown
   singular = true
@@ -47,13 +48,19 @@ export default document => class INode {
       return yamljs.parse(Scanner.GetText(this.offsets[1], this.offsets[2]))
     }
 
-    return Scanner.getText(this.offsets[1], this.offsets[2])
+    return document.getText(
+      document.toRange(
+        this.offsets[1],
+        this.offsets[2]
+      )
+    )
 
   }
 
-  get document () {
+  document () {
 
     if (this.language === 'liquid') return null
+    if (this.content.length === 0) return null
 
     return TextDocument.create(
       document.textDocument.uri.replace('.liquid', `.${this.language}`),

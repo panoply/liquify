@@ -30,11 +30,11 @@
     "pretty": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*"],
-      "enums": ["src/enums/*"],
-      "provide": ["src/provide/*"],
-      "service": ["src/service/*"],
-      "utils": ["src/utils/*"]
+      "*": ["./src/*"],
+      "enums": ["./src/enums/*"],
+      "provide": ["./src/provide/*"],
+      "service": ["./src/service/*"],
+      "utils": ["./src/utils/*"]
     }
   }
 }

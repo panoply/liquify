@@ -10,6 +10,10 @@ export const enum TokenType {
 
   Separator,
   Variable,
+  VariableIdentifier,
+  VariableKeyword,
+  VariableOperator,
+  VariableValue,
 
   Filter,
   FilterOperator,
@@ -26,6 +30,7 @@ export const enum TokenType {
 
   DelimiterOpen,
   DelimiterClose,
+  DelimiterEnder,
 
   /* ITERATION ---------------------------------- */
 
@@ -74,6 +79,8 @@ export const enum TokenType {
   EmbeddedJavaScript,
   EmbeddedCSS,
   EmbeddedSCSS,
+
+  Comment,
 
   /* ERRORS AND WARNINGS ------------------------ */
 

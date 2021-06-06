@@ -1,4 +1,3 @@
-
 import { NodeType } from 'lexical/types'
 import { TokenType } from 'lexical/tokens'
 import { ScanState, ScanCache } from 'lexical/state'
@@ -94,6 +93,14 @@ export default (function () {
       return {
 
         /**
+         * Returns the current parent
+         *
+         * @readonly
+         * @returns {number}
+         */
+        get parent () { return hierarch[hierarch.length - 1] },
+
+        /**
          * Returns the hierarchal state array
          *
          * @readonly
@@ -126,7 +133,7 @@ export default (function () {
          * We push any hierarch errors at the end of the
          * document parsing sequence.
          *
-         * @param {Parser.IAST} document
+         * @param {Parser.AST} document
          */
         hierarch (document) {
 
@@ -180,6 +187,12 @@ export default (function () {
    */
   function CharSeq () {
 
+    if (cache === TokenType.Comment) {
+      if (s.ConsumeUntil(r.CommentTagEnd)) {
+        cache = ScanCache.Reset
+      }
+    }
+
     s.UntilSequence(r.Delimiters)
 
     // Liquid left-side delimiter detected, eg: {
@@ -192,18 +205,19 @@ export default (function () {
         start = s.offset
 
         // Liquid object type delimiter, eg: {{
-        if (s.IfRegExp(r.DelimitersObjectOpen)) {
+        if (s.IfRegExp(r.DelimitersOutputOpen)) {
 
-          // Preset the specification type
+          // Preset the specification type incase we are dealing with
+          // a known object value
           spec.type = NodeType.object
 
-          state = ScanState.TagOutputOpen
+          state = ScanState.AfterOutputTagOpen
           return TokenType.DelimiterOpen
         }
 
         // Liquid basic type tag delimiter, eg: {%
         if (s.IfRegExp(r.DelimitersTagOpen)) {
-          state = ScanState.TagOpen
+          state = ScanState.AfterTagOpen
           return TokenType.DelimiterOpen
         }
 
@@ -330,30 +344,33 @@ export default (function () {
 
       // OUTPUT TAG OPEN
       // -----------------------------------------------------------------
-      case ScanState.TagOutputOpen:
+      case ScanState.AfterOutputTagOpen:
 
         // Consume the trim left side dash
         if (s.IfCodeChar(c.DSH)) return TokenType.TrimDashLeft
 
-        state = ScanState.TagOutput
+        state = ScanState.BeforeOutputTagName
         return TokenType.ObjectTag
 
       // BASIC TAG OPEN
       // -----------------------------------------------------------------
-      case ScanState.TagOpen:
+      case ScanState.AfterTagOpen:
 
         // Consume the trim left side dash
         if (s.IfCodeChar(c.DSH)) return TokenType.TrimDashLeft
 
         // Lets peek ahead to see if we are dealing with an end tag
-        if (s.IfRegExp(r.TagEndKeyword)) cache = ScanState.TagEndIdentifier
+        if (s.IfRegExp(r.TagEndKeyword)) {
+          state = ScanState.BeforeEndTagName
+          return Scanner()
+        }
 
-        state = ScanState.TagBasic
+        state = ScanState.BeforeStartTagName
         return TokenType.StartTag
 
       // OUTPUT TAG
       // -----------------------------------------------------------------
-      case ScanState.TagOutput:
+      case ScanState.BeforeOutputTagName:
 
         // Validate starting character of tag is valid
         if (!s.IsRegExp(r.ObjectFirstCharacter)) {
@@ -400,9 +417,23 @@ export default (function () {
         state = ScanState.ParseError
         return Scanner()
 
+      case ScanState.BeforeEndTagName:
+
+        // Tag is a "Tag", lets get its identifier
+        if (s.IfRegExp(r.TagName)) {
+          s.Cursor(start)
+          state = ScanState.EndTagClose
+          return TokenType.EndTag
+        }
+
+        // If we get here, invalid tag name
+        error = ParseError.InvalidTagName
+        state = ScanState.ParseError
+        return Scanner()
+
       // BASIC TAG
       // -----------------------------------------------------------------
-      case ScanState.TagBasic:
+      case ScanState.BeforeStartTagName:
 
         // We are parsing standard or shopify variations
 
@@ -416,23 +447,27 @@ export default (function () {
         // Tag is a "Tag", lets get its identifier
         if (s.IfRegExp(r.TagName)) {
 
-          if (cache === ScanState.TagEndIdentifier) {
-            s.Cursor(start)
-            state = ScanState.TagClose
-            return TokenType.EndTag
-          }
           // Match captured token with a cursor value
           spec.cursor(s.token)
 
+          // When no spec exists for the tag
           if (!spec.exists) {
             state = ScanState.TagUnknown
             return TokenType.LiquidTag
           }
 
-          // Singular type tags, eg {% assign %}
-          if (spec.get.singular) {
-            state = ScanState.TagUnknown
-            return TokenType.SingularTag
+          // Comment type tags, eg: {% comment %}
+          if (spec.type === NodeType.comment) {
+            state = ScanState.GotoTagEnd
+            cache = TokenType.Comment
+            return cache
+          }
+
+          // Control type tags, eg: {% if %} or {% unless %}
+          if (spec.type === NodeType.variable) {
+
+            state = ScanState.VariableIdentifier
+            return TokenType.VariableIdentifier
           }
 
           // Control type tags, eg: {% if %} or {% unless %}
@@ -445,6 +480,12 @@ export default (function () {
           if (spec.type === NodeType.embedded) {
             state = ScanState.EmbeddedLanguage
             return TokenType.Embedded
+          }
+
+          // Singular type tags, eg {% assign %}
+          if (spec.get.singular) {
+            state = ScanState.TagUnknown
+            return TokenType.SingularTag
           }
 
           state = ScanState.TagUnknown
@@ -461,6 +502,41 @@ export default (function () {
 
         state = ScanState.GotoTagEnd
         return TokenType.LiquidTagName
+
+      // VARIABLE
+      // -----------------------------------------------------------------
+      case ScanState.VariableIdentifier:
+
+        if (s.IfRegExp(r.TagKeyword)) {
+          state = ScanState.GotoTagEnd
+          return TokenType.VariableKeyword
+        }
+
+        state = ScanState.GotoTagEnd
+        error = ParseError.InvalidCharacters
+        return TokenType.ParseError
+
+      case ScanState.VariableOperator:
+
+        if (s.IfCodeChar(c.EQS)) {
+          state = ScanState.VariableAssignment
+          return TokenType.VariableKeyword
+        }
+
+        state = ScanState.GotoTagEnd
+        error = ParseError.InvalidOperator
+        return TokenType.ParseError
+
+      case ScanState.VariableAssignment:
+
+        if (s.IfRegExp(r.TagNameWild)) {
+          state = ScanState.GotoTagEnd
+          return TokenType.VariableKeyword
+        }
+
+        state = ScanState.GotoTagEnd
+        error = ParseError.InvalidCharacters
+        return TokenType.ParseError
 
       case ScanState.EmbeddedLanguage:
 
@@ -1085,6 +1161,7 @@ export default (function () {
       // LIQUID CLOSE TAG
       // -----------------------------------------------------------------
       case ScanState.TagClose:
+      case ScanState.EndTagClose:
 
         // Validate right side trim dash character
         if (s.IfCodeChar(c.DSH)) {
@@ -1126,10 +1203,9 @@ export default (function () {
         // Tag is closed, eg: }} or %}
         if (s.IfRegExp(r.DelimitersClose)) {
 
-          if (cache === ScanState.TagEndIdentifier) {
-            cache = ScanCache.Reset
+          if (state === ScanState.EndTagClose) {
             state = ScanState.CharSeq
-            return TokenType.LiquidEndTagClose
+            return TokenType.DelimiterEnder
           }
 
           state = ScanState.CharSeq
