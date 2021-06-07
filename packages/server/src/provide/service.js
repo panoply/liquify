@@ -19,6 +19,8 @@ import { Characters, NodeType } from '@liquify/liquid-parser'
  */
 export default (mode => {
 
+  const signature = -1
+
   return ({
 
     /**
@@ -177,6 +179,59 @@ export default (mode => {
     },
 
     /**
+     * `doSignature`
+     *
+     * @param {Parser.AST} document
+     * @param {LSP.Position} position
+     * @param {LSP.SignatureHelpContext} ctx
+     * @returns {LSP.SignatureHelp}
+     * @memberof LiquidService
+     */
+    doSignature (document, position, ctx) {
+
+      return null
+
+      if (!document.withinToken(position)) return null
+
+      const context = document.getNodeContext(position)
+
+      if (!context) return null
+
+      console.log(context)
+
+      return {
+        activeSignature: 0,
+        activeParameter: null,
+        signatures: [
+          {
+            label: '{% if condition == comparison %}',
+            documentation: 'The for loop',
+            activeParameter: context.length - 1,
+            parameters: [
+              {
+                label: 'if',
+                documentation: 'The tag name'
+              },
+              {
+                label: 'condition',
+                documentation: 'The iteree variable'
+              },
+              {
+                label: '==',
+                documentation: 'The operator'
+              },
+              {
+                label: 'comparison',
+                documentation: 'the array'
+              }
+            ]
+          }
+
+        ]
+      }
+    },
+
+    /**
      * `doComplete`
      *
      * @param {Parser.AST} document
@@ -189,11 +244,11 @@ export default (mode => {
       if (triggerKind !== CompletionTriggerKind.TriggerCharacter) return null
 
       const trigger = triggerCharacter.charCodeAt(0)
-      const offset = document.offsetAt(position)
-      const node = document.getNodeAt(offset, false)
 
       // We are not within a Liquid token, lets load available completions
-      if (!node) {
+      if (!document.withinToken(position)) {
+
+        const offset = document.offsetAt(position)
 
         // User has input % character, load tag completions
         if (trigger === Characters.PER) {
@@ -242,6 +297,7 @@ export default (mode => {
 
       return null
 
+      const node = document.getNodeAt(offset, false)
       // We are within a token
       if (document.withinToken(offset)) {
         return Completion.inToken(document, offset, trigger)

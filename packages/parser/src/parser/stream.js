@@ -858,10 +858,10 @@ export default (
 
         if (match === null || match < 0) return false
 
+        cursor = index
         index = index + match
-
-        cursor = cursor + token.length
         token = source.substring(cursor, index)
+
         return true
 
       },

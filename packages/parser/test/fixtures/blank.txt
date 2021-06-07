@@ -1,5 +1,2 @@
-{% if foo %}
-
-{% endif %}
-
-{% else %}
+{% for %}
+{% endfor %}

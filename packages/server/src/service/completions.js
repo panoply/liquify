@@ -11,7 +11,7 @@ export function getTags (document, position, offset, trigger) {
   if (!Parser.isPrevCodeChar(Characters.LCB, offset)) {
     additionalTextEdits.push(
       TextEdit.insert(
-        PosCharSubtract(trigger === Characters.WSP ? 2 : 1, position),
+        PosCharSubtract(trigger === Characters.WSP ? 3 : 1, position),
         String.fromCharCode(Characters.LCB)
       )
     )
@@ -57,13 +57,11 @@ export function getOutputs (document, position, offset, trigger) {
   if (!Parser.isPrevCodeChar(Characters.LCB, offset)) {
     additionalTextEdits.push(
       TextEdit.insert(
-        PosCharSubtract(trigger === Characters.WSP ? 2 : 1, position),
+        PosCharSubtract(trigger === Characters.WSP ? 3 : 1, position),
         String.fromCharCode(Characters.LCB)
       )
     )
   }
-
-  console.log(document.variables)
 
   return Spec.entries.objects.map((
     [

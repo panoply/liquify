@@ -20,8 +20,9 @@ const server = {
 const { Parser, Spec } = LiquidParser({
   engine: 'shopify',
   license: process.env.MASTER_KEY,
+  context: true,
   frontmatter: false,
-  whitespace: true,
+  whitespace: false,
   newlines: true,
   range: true,
   offsets: true,
@@ -47,7 +48,8 @@ test('FullDocument Parse', t => {
 
   t.log(
     ast.nodes,
-    ast.errors
+    ast.errors,
+    ast.nodes[0].getContext()
   )
 
   t.log(time(end, { verbose: true }))

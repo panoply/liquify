@@ -55,6 +55,11 @@ connection.onInitialize(initializeParams => (
       workDoneProgress: true,
       resolveProvider: true
     }, */
+    signatureHelpProvider: {
+      triggerCharacters: [ ':', ',' ],
+      isRetrigger: true,
+      retriggerCharacters: [ ' ' ]
+    },
     completionProvider: {
       resolveProvider: true,
       triggerCharacters: [
@@ -134,16 +139,24 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   mark('onDidOpenTextDocument')
 
-  const document = Parser.scan(textDocument)
+  try {
 
-  // console.log(document)
+    const document = Parser.scan(textDocument)
 
-  console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
+    // console.log(document)
 
-  if (!document) return null
+    console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)
 
-  if (Server.provider.validateOnOpen) {
+    if (!document) return null
+
+    if (Server.provider.validateOnOpen) {
+      return Service.doValidation(document).then(connection.sendDiagnostics)
+    }
+
     return Service.doValidation(document).then(connection.sendDiagnostics)
+
+  } catch (e) {
+    console.log(e)
   }
 
 })
@@ -156,15 +169,21 @@ connection.onDidChangeTextDocument(({ textDocument, contentChanges }) => {
 
   mark('onDidChangeTextDocument')
 
-  const document = Parser.update(textDocument, contentChanges)
+  try {
 
-  // console.log('executed', document)
+    const document = Parser.update(textDocument, contentChanges)
 
-  console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
+    if (!document) return null
 
-  if (!document) return null
+    // console.log('executed', document)
 
-  return Service.doValidation(document).then(connection.sendDiagnostics)
+    console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`)
+
+    return Service.doValidation(document).then(connection.sendDiagnostics)
+
+  } catch (e) {
+    console.log(e)
+  }
 
 })
 
@@ -244,6 +263,26 @@ connection.onHover(
     if (!document) return null
 
     return Service.doHover(document, position)
+
+  }, null, `Error while computing hover for ${uri}`, token)
+)
+
+/* ---------------------------------------------------------------- */
+/* onSignatureHelp                                                  */
+/* ---------------------------------------------------------------- */
+
+connection.onSignatureHelp(
+  ({
+    position
+    , textDocument: { uri }
+    , context
+  }, token) => runAsync(async () => {
+
+    const document = Parser.document(uri)
+
+    if (!document) return null
+
+    return Service.doSignature(document, position, context)
 
   }, null, `Error while computing hover for ${uri}`, token)
 )

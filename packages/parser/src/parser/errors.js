@@ -127,6 +127,27 @@ export default (error = 0, range = {}) => ({
       message: 'Missing conditional value'
     }
   ),
+  [ParseError.MissingIterationIteree]: (
+    {
+      range,
+      severity: ErrorLevel.Error,
+      message: 'Missing iteree value'
+    }
+  ),
+  [ParseError.MissingIterationArray]: (
+    {
+      range,
+      severity: ErrorLevel.Error,
+      message: 'Missing iteration value'
+    }
+  ),
+  [ParseError.InvalidName]: (
+    {
+      range,
+      severity: ErrorLevel.Error,
+      message: 'Invalid name value has been expressed'
+    }
+  ),
   [ParseError.InvalidTagName]: (
     {
       range,

@@ -368,6 +368,15 @@ export const Booleans = /^\b(?:true|false|nil)\b/;
 export const BooleanTrue = /^\btrue\b/;
 
 /**
+ * `^\bin\b`
+ *
+ * ---
+ *
+ * Captures the `in` operator
+ */
+export const IterationOperator = /^\bin\b/;
+
+/**
  * `^\b(?:false|nil)\b`
  *
  * ---

@@ -159,7 +159,10 @@ export default (function () {
               document.errors.push(
                 Errors(
                   ParseError.MissingEndTag,
-                  document.nodes[index].range
+                  {
+                    start: document.nodes[index].range.start,
+                    end: document.positionAt(s.size)
+                  }
                 )
               )
             }
@@ -467,8 +470,8 @@ export default (function () {
 
           // When no spec exists for the tag
           if (!spec.exists) {
-            state = ScanState.TagUnknown
-            return TokenType.LiquidTag
+            state = ScanState.GotoTagEnd
+            return TokenType.Unknown
           }
 
           // Comment type tags, eg: {% comment %}
@@ -497,14 +500,20 @@ export default (function () {
             return TokenType.Embedded
           }
 
+          // Iteration type tags, eg: {% for %}
+          if (spec.type === NodeType.iteration) {
+            state = ScanState.Iteration
+            return TokenType.Iteration
+          }
+
           // Singular type tags, eg {% assign %}
           if (spec.get.singular) {
-            state = ScanState.TagUnknown
+            state = ScanState.GotoTagEnd
             return TokenType.SingularTag
           }
 
-          state = ScanState.TagUnknown
-          return TokenType.LiquidTag
+          state = ScanState.GotoTagEnd
+          return TokenType.Unknown
 
         }
 
@@ -517,6 +526,47 @@ export default (function () {
 
         state = ScanState.GotoTagEnd
         return TokenType.LiquidTagName
+
+      // ITERATION
+      // -----------------------------------------------------------------
+      case ScanState.Iteration:
+
+        if (s.IsRegExp(r.IterationOperator)) {
+          state = ScanState.GotoTagEnd
+          error = ParseError.InvalidName
+          return TokenType.ParseError
+        }
+
+        if (s.IfRegExp(r.ObjectNameAlpha)) {
+          state = ScanState.IterationOperator
+          return TokenType.IterationIteree
+        }
+
+        state = ScanState.GotoTagEnd
+        error = ParseError.MissingIterationIteree
+        return Scanner()
+
+      case ScanState.IterationOperator:
+
+        if (s.IfRegExp(r.IterationOperator)) {
+          state = ScanState.IterationArray
+          return TokenType.IterationIteree
+        }
+
+        state = ScanState.GotoTagEnd
+        error = ParseError.InvalidOperator
+        return TokenType.ParseError
+
+      case ScanState.IterationArray:
+
+        if (s.IfRegExp(r.ObjectNameAlpha)) {
+          state = ScanState.GotoTagEnd
+          return TokenType.IterationArray
+        }
+
+        state = ScanState.GotoTagEnd
+        error = ParseError.MissingIterationArray
+        return TokenType.ParseError
 
       // VARIABLE
       // -----------------------------------------------------------------
@@ -1237,7 +1287,7 @@ export default (function () {
           // We will consume the invalid character or string
           if (s.ConsumeUntil(/[%}]\}/, /\{[{%]/)) {
 
-            error = s.token.length === 1
+            error = s.token?.length === 1
               ? ParseError.InvalidCharacter
               : ParseError.InvalidCharacters
 

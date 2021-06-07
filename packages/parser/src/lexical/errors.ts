@@ -146,6 +146,30 @@ export const enum ParseError {
   MissingQuotation,
 
   /**
+   * Missing Iteration Iteree
+   *
+   * @example
+   * {% for %}
+   */
+  MissingIterationIteree,
+
+  /**
+   * Missing Iteration Array
+   *
+   * @example
+   * {% for i in  %}
+   */
+  MissingIterationArray,
+
+  /**
+   * Invalid Name
+   *
+   * @example
+   * {% for in in %} // in is invalid
+   */
+  InvalidName,
+
+  /**
    * Invalid Tag Name
    *
    * @example

@@ -1,9 +1,11 @@
 import { NodeType } from 'lexical/types'
 import { NodeKind } from 'lexical/kind'
 import Config from 'parser/options'
+import Context from 'parser/context'
 import Stream from 'parser/stream'
 import inRange from 'lodash/inRange'
 import { TextDocument } from 'vscode-languageserver-textdocument'
+
 /**
  * @type {Parser.AST}
  */
@@ -117,6 +119,8 @@ export default class IAST {
     this.nodes = []
     this.comments = []
 
+    Context.reset()
+
   }
 
   /**
@@ -139,6 +143,8 @@ export default class IAST {
 
     if (i === 0) return this.clear()
 
+    i = i - 1
+
     const node = (
       this.nodes[i].root === 0 &&
       this.nodes[i].parent === this.nodes[i].index &&
@@ -147,13 +153,13 @@ export default class IAST {
 
     console.log(node)
 
-    if (!node) return this.clear()
-
     Stream.Jump(node.start)
 
     if (this.errors.length > 0) this.errors.splice(node.error)
     if (this.embeds.length > 0) this.embeds.splice(this.embeds.findIndex(n => n >= i))
     if (this.comments.length > 0) this.comments.splice(this.comments.findIndex(n => n >= i))
+
+    Context.remove(node.context[0])
 
     this.nodes.splice(i)
 
@@ -267,9 +273,21 @@ export default class IAST {
    * Returns a node context information.
    *
    */
-  getNodeContext (node = this.node) {
+  getNodeContext (position, node = this.node) {
 
-    return {}
+    const offset = typeof position === 'number' ? this.offsetAt(position) : position
+    const token = this.withinEndToken(offset, node)
+    const context = node.getContext()[token ? 1 : 0]
+
+    return context
+
+    let i = 0
+
+    while (context.length > i) {
+      if (inRange(offset, context[i].start, context[i].end)) return context[i]
+      i++
+    }
+
   }
 
   getEmbedAt (position, updateNode = true) {
@@ -309,7 +327,7 @@ export default class IAST {
 
     return (
       node.parent === node.index &&
-      node.root === node.parent
+      node?.root === 0
     ) ? false : this.nodes[node.parent]
 
   }

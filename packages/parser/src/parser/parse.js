@@ -160,6 +160,7 @@ export function parse (document, cursor = false) {
       // -----------------------------------------------------------------
       case TokenType.ObjectTag:
       case TokenType.SingularTag:
+      case TokenType.Unknown:
       case TokenType.StartTag:
 
         index = document.nodes.length
@@ -383,6 +384,8 @@ export function parse (document, cursor = false) {
 
         if (Config.context) Context.add(TokenContext.Identifier)
 
+        console.log(node)
+
         node.name = Scanner.token
 
         if (!Scanner.spec?.singular) {
@@ -473,23 +476,32 @@ export function parse (document, cursor = false) {
 
       // ITERATION TAG
       // -----------------------------------------------------------------
-      case TokenType.IterationIteree:
+      case TokenType.Iteration:
 
-        Context.add(TokenContext.Iteree)
+        node.name = Scanner.token
+        node.type = Spec.type
+
+        if (!Spec.get.singular) {
+          Scanner.syntactic.list.push(node.name, index)
+        }
+
+        if (Config.context) Context.add(TokenContext.Identifier)
 
         break
-
+      case TokenType.IterationIteree:
+        if (Config.context) Context.add(TokenContext.Iteree)
+        break
       case TokenType.IterationOperator:
-        Context.add(TokenContext.Operator)
+        if (Config.context) Context.add(TokenContext.Operator)
         break
       case TokenType.IterationArray:
-        Context.add(TokenContext.Array)
+        if (Config.context) Context.add(TokenContext.Array)
         break
       case TokenType.IterationParameter:
-        Context.add(TokenContext.Keyword)
+        if (Config.context) Context.add(TokenContext.Keyword)
         break
       case TokenType.IterationParameterValue:
-        Context.add(TokenContext.Integer)
+        if (Config.context) Context.add(TokenContext.Integer)
         break
 
       // HTML START TAG OPEN

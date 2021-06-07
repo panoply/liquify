@@ -11,16 +11,7 @@ import scanner from 'parser/scanner'
  */
 export default (function Context (node) {
 
-  const refs = new Map()
-
   let context = []
-
-  function Update (uri) {
-
-    if (!refs.has(uri)) context = refs.set(uri, []).get(uri)
-    else context = refs.get(uri)
-
-  }
 
   /**
    * Returns the contexts of a specific node on the AST
@@ -63,17 +54,20 @@ export default (function Context (node) {
    * Delete from array
    *
    * @param {number} start
-   * @param {number} [deleteCount=1]
    */
-  const remove = (start, deleteCount = 1) => context.splice(start, deleteCount)
+  const remove = (start) => {
 
+    context.splice(start)
+
+    node = start
+
+  }
   return {
-
-    Update,
 
     get,
     add,
     remove,
+    reset: () => { context = [] },
 
     /**
      * Returns the context list

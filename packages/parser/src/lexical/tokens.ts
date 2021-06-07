@@ -34,6 +34,7 @@ export const enum TokenType {
 
   /* ITERATION ---------------------------------- */
 
+  Iteration,
   IterationIteree,
   IterationOperator,
   IterationArray,

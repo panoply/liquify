@@ -228,7 +228,7 @@ export class AST {
   /**
    * **NOT YET AVAILABLE**
    */
-  getNodeContext(node?: ASTNode): {};
+  getNodeContext(location: Position | number, node?: ASTNode): {};
 
   /**
    * **NOT YET AVAILABLE**
@@ -375,6 +375,12 @@ export class ASTNode {
    * type nodes, else returns boolean false.
    */
   document(): TextDocument | false;
+
+  /**
+   * Returns a Text Document instance for embedded language
+   * type nodes, else returns boolean false.
+   */
+  getContext(): Context[][];
   /**
    * Returns the inner contents of the node when it is an
    * syntactic pair type, else returns a boolean false value.

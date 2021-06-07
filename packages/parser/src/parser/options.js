@@ -11,7 +11,7 @@ export default {
   context: true,
   persist: true,
   frontmatter: false,
-  whitespace: true,
+  whitespace: false,
   newlines: false,
   range: true,
   offsets: true,

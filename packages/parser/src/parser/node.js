@@ -4,6 +4,7 @@ import { NodeType } from 'lexical/types'
 import { NodeLanguage } from 'lexical/language'
 import Scanner from 'parser/scanner'
 import yamljs from 'yamljs'
+import Context from 'parser/context'
 
 /**
  * AST Node
@@ -55,6 +56,11 @@ export default document => class INode {
       )
     )
 
+  }
+
+  getContext () {
+
+    return Context.get(this.context)
   }
 
   document () {
