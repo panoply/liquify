@@ -139,11 +139,13 @@ export default class IAST {
 
     if (i === 0) return this.clear()
 
-    i = i - 1
+    const node = (
+      this.nodes[i].root === 0 &&
+      this.nodes[i].parent === this.nodes[i].index &&
+      this.nodes[i].index > 0
+    ) ? this.nodes[i] : this.nodes[this.nodes[i].root]
 
-    const node = this.nodes[this.nodes[i].root]
-
-    // console.log(node)
+    console.log(node)
 
     if (!node) return this.clear()
 
@@ -174,6 +176,7 @@ export default class IAST {
   get prevNode () { return this.nodes[this.node.index - 1] }
   get nextNode () { return this.nodes[this.node.index + 1] }
   get lastNode () { return this.nodes[this.nodes.length - 1] }
+  get parentNode () { return this.nodes[this.node.parent] }
 
   getNodeAt (position, updateNode = true) {
 
@@ -296,11 +299,18 @@ export default class IAST {
 
   getScope (node = this.node) {
 
+    if (node?.parent === node.index && node?.root === node.parent) return false
+
+    return this.nodes[node.parent]
+
   }
 
-  getParentNode () {
+  getParentNode (node = this.node) {
 
-    return this.node.parent ? this.nodes[this.node.parent] : null
+    return (
+      node.parent === node.index &&
+      node.root === node.parent
+    ) ? false : this.nodes[node.parent]
 
   }
 
@@ -350,7 +360,13 @@ export default class IAST {
 
   }
 
-  withinScope () { return true }
+  withinScope (node, scope) {
+
+    const parentNode = this.getParentNode(node)
+
+    if (parentNode) return scope.test(parentNode.name)
+
+  }
 
   withinEndToken (position, node = this.node) {
 

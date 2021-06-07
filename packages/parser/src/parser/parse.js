@@ -167,7 +167,7 @@ export function parse (document, cursor = false) {
         node = new INode()
         node.type = Spec.type
         node.root = typeof root === 'number' ? root : index
-        node.parent = Scanner.syntactic.parent || index
+        node.parent = Scanner.syntactic.parentNode || index
 
         if (token === TokenType.StartTag) {
           node.singular = false
@@ -431,7 +431,9 @@ export function parse (document, cursor = false) {
         node.name = Scanner.token
         node.type = Spec.type
 
-        Scanner.syntactic.list.push(node.name, index)
+        if (!Spec.get.singular) {
+          Scanner.syntactic.list.push(node.name, index)
+        }
 
         if (Config.context) Context.add(TokenContext.Identifier)
 

@@ -167,12 +167,11 @@ export default (mode => {
 
       if (!spec) return null
 
+      const reference = `[${upperFirst(Spec.variant.engine)} Reference](${spec.link})`
+
       return {
         kind: 'markdown',
-        contents: [
-          spec.description,
-          `\n[${upperFirst(Spec.variant.engine)} Reference](${spec.link})`
-        ].join('\n')
+        contents: `${spec.description}\n\n${reference}`
       }
 
     },
@@ -199,6 +198,7 @@ export default (mode => {
         // User has input % character, load tag completions
         if (trigger === Characters.PER) {
           return Completion.getTags(
+            document,
             position,
             offset,
             trigger
@@ -208,6 +208,7 @@ export default (mode => {
         // User has input { character, load output/object completions
         if (trigger === Characters.LCB) {
           return Completion.getOutputs(
+            document,
             position,
             offset,
             trigger
@@ -220,6 +221,7 @@ export default (mode => {
           // We will persist tag completions is previous character is %
           if (Parser.isPrevCodeChar(Characters.PER, offset)) {
             return Completion.getTags(
+              document,
               position,
               offset,
               trigger
@@ -229,6 +231,7 @@ export default (mode => {
           // We will persist tag completions is previous character is %
           if (Parser.isPrevCodeChar(Characters.LCB, offset)) {
             return Completion.getOutputs(
+              document,
               position,
               offset,
               trigger

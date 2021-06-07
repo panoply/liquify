@@ -136,8 +136,6 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   const document = Parser.scan(textDocument)
 
-  console.log(document)
-
   // console.log(document)
 
   console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`)

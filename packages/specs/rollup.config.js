@@ -31,7 +31,7 @@ export const defaults = {
     singular: false,
     trims: true,
     deprecated: false,
-    arguments: false
+    arguments: true
   }
 }
 

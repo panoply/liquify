@@ -1,12 +1,5 @@
-{% comment %}
-The is the fo variable
-{% endcomment %}
-{% capture foo %}
+{% if foo %}
 
-{% endcapture %}
+{% endif %}
 
-
-{% comment %}
-The is the bar variable
-{% endcomment %}
-{% assign bar = 'foo' %}
+{% else %}

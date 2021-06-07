@@ -472,21 +472,29 @@
       "description": "Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",
       "link": "https://shopify.github.io/liquid/tags/variable/#decrement",
       "singular": true,
-      "type": "variable"
+      "type": "variable",
+      "arguments": [
+        {
+          "type": "keyword",
+          "required": true
+        }
+      ]
     },
     "else": {
       "description": "Add condition within an if or unless block.",
       "link": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "scope": "if|elsif|case|unless|when|for"
+      "scope": "if|elsif|case|unless|when|for",
+      "arguments": false
     },
     "elsif": {
       "description": "Adds more conditions within an if or unless block.",
       "link": "https://shopify.github.io/liquid/tags/control-flow/#unless",
       "singular": true,
       "type": "control",
-      "scope": "if"
+      "scope": "if",
+      "arguments": true
     },
     "for": {
       "description": "Repeatedly executes a block of code.",
@@ -517,7 +525,8 @@
     "if": {
       "description": "Executes a block of code only if a certain condition is met.",
       "link": "https://shopify.github.io/liquid/tags/control-flow/#if",
-      "type": "control"
+      "type": "control",
+      "arguments": true
     },
     "increment": {
       "description": "Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",

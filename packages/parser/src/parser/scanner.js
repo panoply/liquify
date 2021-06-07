@@ -32,6 +32,13 @@ export default (function () {
   let start
 
   /**
+   * Scope
+   *
+   * @type {number}
+   */
+  let scope
+
+  /**
    * Error Number
    *
    * Parsing errors, holds value of the parse errors
@@ -98,7 +105,15 @@ export default (function () {
          * @readonly
          * @returns {number}
          */
-        get parent () { return hierarch[hierarch.length - 1] },
+        get parenNode () { return hierarch[hierarch.length - 1] },
+
+        /**
+         * Returns the current parent
+         *
+         * @readonly
+         * @returns {string}
+         */
+        get parentName () { return hierarch[hierarch.length - 2] },
 
         /**
          * Returns the hierarchal state array
@@ -472,7 +487,7 @@ export default (function () {
 
           // Control type tags, eg: {% if %} or {% unless %}
           if (spec.type === NodeType.control) {
-            state = ScanState.ControlCondition
+            state = ScanState.Control
             return TokenType.Control
           }
 
@@ -546,6 +561,44 @@ export default (function () {
 
       // CONTROL TAG
       // -----------------------------------------------------------------
+      case ScanState.Control:
+
+        // Check to see if this control tag has scope
+        if (spec.get?.scope) {
+
+          // Lets validate the scope against the last syntactic parent
+          if (!spec.tag.scope(syntactic.parentName)) {
+            error = ParseError.InvalidPlacement
+            state = ScanState.GotoTagEnd
+            return TokenType.ParseError
+          }
+        }
+
+        // Check if control tag accepts arguments expressions
+        if (!spec.get.arguments) {
+
+          // No arguments accepted by the tag, we move to end
+          state = ScanState.GotoTagEnd
+
+          if (s.IsRegExp(r.TagCloseClear)) return Scanner()
+
+          // If the tag does not accept any arguments but some are found
+          error = ParseError.InvalidCharacters
+          return TokenType.ParseError
+
+        }
+
+        // Make sure the control tag is not empty
+        if (s.IsRegExp(r.TagCloseClear)) {
+          state = ScanState.GotoTagEnd
+          error = ParseError.MissingCondition
+          return TokenType.ParseError
+        }
+
+        // Lets progress forward and check condition
+        state = ScanState.ControlCondition
+        return Scanner()
+
       case ScanState.ControlCondition:
 
         // Condition is a integer or float number value
@@ -591,6 +644,7 @@ export default (function () {
               return TokenType.Object
             }
 
+            // If we get here, lets check for operators
             state = ScanState.ControlOperator
             return TokenType.Object
 
@@ -606,7 +660,6 @@ export default (function () {
           // Reaching here we have a variable
           state = ScanState.ControlOperator
           return TokenType.Variable
-
         }
 
         cache = ScanCache.Reset

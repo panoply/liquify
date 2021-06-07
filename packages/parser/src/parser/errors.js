@@ -183,6 +183,13 @@ export default (error = 0, range = {}) => ({
       message: 'Invalid syntactic tag placement'
     }
   ),
+  [ParseError.InvalidPlacement]: (
+    {
+      range,
+      severity: ErrorLevel.Error,
+      message: 'Invalid tag placement'
+    }
+  ),
   [ParseError.InvalidOperator]: (
     {
       range,

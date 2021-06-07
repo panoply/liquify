@@ -225,11 +225,21 @@ export const enum ParseError {
    * child type tag incorrectly placed.
    *
    * @example
-   * {% else %} // Invalid Syntactic
+   * {% if foo %}
+   */
+  InvalidSyntactic,
+
+  /**
+   * Invalid Placement Syntactic
+   *
+   * Thrown when tag is not in correct scope
+   *
+   * @example
+   * {% else %} // Invalid Placement
    * {% if foo %}
    * {% endif %}
    */
-  InvalidSyntactic,
+  InvalidPlacement,
 
   /**
    * Invalid Operator

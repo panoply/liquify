@@ -1,11 +1,10 @@
-import isArray from 'lodash/isArray'
 import { CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver'
 import { Spec, Parser } from 'provide/parser'
 import { PosCharSubtract } from 'utils/positions'
 import { CompletionState } from 'enums/completions'
 import { Characters } from '@liquify/liquid-parser'
 
-export function getTags (position, offset, trigger) {
+export function getTags (document, position, offset, trigger) {
 
   const additionalTextEdits = []
 
@@ -51,7 +50,7 @@ export function getTags (position, offset, trigger) {
  * offset index numbers and property value ear either string of array types.
  *
  */
-export function getOutputs (position, offset, trigger) {
+export function getOutputs (document, position, offset, trigger) {
 
   const additionalTextEdits = []
 
@@ -63,6 +62,9 @@ export function getOutputs (position, offset, trigger) {
       )
     )
   }
+
+  console.log(document.variables)
+
   return Spec.entries.objects.map((
     [
       label,

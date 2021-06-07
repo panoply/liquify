@@ -126,6 +126,7 @@ export class AST {
   get lastNode(): ASTNode;
   get nextNode(): ASTNode;
   get prevNode(): ASTNode;
+  get parentNode(): ASTNode;
 
   /**
    * Executes a reset on tracked nodes and data within the AST.
@@ -248,6 +249,11 @@ export class AST {
   getScope(): void;
 
   /**
+   * Returns the parent of node
+   */
+  getParentNode(node?: ASTNode): ASTNode | null;
+
+  /**
    * Check if position or offset location is within range.
    * This method is a shortcut to the lodash `inRange`. It will convert
    * a position if position is passed.
@@ -276,9 +282,10 @@ export class AST {
   withinBody(location: Position | number, node?: ASTNode): boolean;
 
   /**
-   * **NOT YET AVAILABLE**
+   * Check if the node is within scope. This is executed at the parse
+   * level and requires an expression `OR`.
    */
-  withinScope(location: Position | number, node?: ASTNode): boolean;
+  withinScope(node: ASTNode, scope: RegExp): boolean;
 
   /**
    * Checks the passed in position of offset is within

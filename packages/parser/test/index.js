@@ -45,7 +45,10 @@ test('FullDocument Parse', t => {
   const ast = Parser.scan(server)
   const end = process.hrtime(start)
 
-  t.log(ast.variables)
+  t.log(
+    ast.nodes,
+    ast.errors
+  )
 
   t.log(time(end, { verbose: true }))
   t.pass()
