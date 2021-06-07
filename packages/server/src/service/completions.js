@@ -1,3 +1,4 @@
+import isArray from 'lodash/isArray'
 import { CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver'
 import { Spec, Parser } from 'provide/parser'
 import { PosCharSubtract } from 'utils/positions'
@@ -80,6 +81,64 @@ export function getOutputs (document, position, offset, trigger) {
       additionalTextEdits
     }
   ))
+}
+
+/**
+ * Set Completion Items
+ *
+ * Sets the completion items that are passed to the completion resolver.
+ * Extracts necessary values from the passed in specification record.
+ */
+function setCompletionItems (
+  [
+    name,
+    {
+      description,
+      snippet = name
+    }
+  ]
+) {
+  return {
+    label: name,
+    kind: CompletionItemKind.Property,
+    insertText: snippet,
+    insertTextFormat: InsertTextFormat.Snippet,
+    documentation: description,
+    data: { snippet }
+  }
+}
+
+export async function getObjectCompletion (document, offset) {
+
+  const node = document.getNodeAt(offset)
+  const record = document.node.objects[offset]
+
+  console.log(node)
+
+  if (!record) return false
+
+  if (isArray(record) && record.length === 1) {
+    const { properties } = Spec.variant.objects[record[0]]
+    return Object.entries(properties).map(setCompletionItems)
+  }
+
+  if (typeof record === 'number') {
+
+    const objects = node.objects[record]
+
+    return (function walk (prop, spec) {
+
+      const object = spec?.[prop[0]]?.properties
+
+      return prop.length > 1
+        ? object && walk(prop.slice(1), object)
+        : object
+          ? Object.entries(object).map(setCompletionItems)
+          : false
+
+    }(objects.slice(1), Spec.variant.objects[objects[0]].properties))
+  }
+
 }
 
 /**
@@ -186,33 +245,6 @@ export async function findCompleteItems (document, mode, position) {
   console.log(document)
 
   return null
-
-}
-
-/**
- * Set Completion Items
- *
- * Sets the completion items that are passed to the completion resolver.
- * Extracts necessary values from the passed in specification record.
- */
-export function setCompletionItems (
-  [
-    name,
-    {
-      description,
-      snippet = name
-    }
-  ]
-) {
-
-  return {
-    label: name,
-    kind: CompletionItemKind.Property,
-    insertText: snippet,
-    insertTextFormat: InsertTextFormat.Snippet,
-    documentation: description,
-    data: { snippet }
-  }
 
 }
 

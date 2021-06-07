@@ -244,11 +244,12 @@ export default (mode => {
       if (triggerKind !== CompletionTriggerKind.TriggerCharacter) return null
 
       const trigger = triggerCharacter.charCodeAt(0)
+      const offset = document.offsetAt(position)
+
+      console.log(trigger, trigger === Characters.DOT)
 
       // We are not within a Liquid token, lets load available completions
-      if (!document.withinToken(position)) {
-
-        const offset = document.offsetAt(position)
+      if (!document.withinToken(offset)) {
 
         // User has input % character, load tag completions
         if (trigger === Characters.PER) {
@@ -293,6 +294,12 @@ export default (mode => {
             )
           }
         }
+      }
+
+      console.log(trigger, trigger === Characters.DOT)
+
+      if (trigger === Characters.DOT) {
+        return Completion.getObjectCompletion(document, offset)
       }
 
       return null
