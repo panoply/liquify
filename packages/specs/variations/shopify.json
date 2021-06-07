@@ -1490,89 +1490,54 @@
         }
       }
     },
-    "location": {
-      "description": "This object allows you access store location information using Liquid.",
-      "type": "object",
-      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/location",
-      "properties": {
-        "address": {
-          "description": "Returns the address object corresponding to this location.",
-          "type": "object"
-        },
-        "id": {
-          "description": "Returns the ID of the location.",
-          "type": "integer"
-        },
-        "latitude": {
-          "description": "Returns the latitude associated to the location. It will return null if the address is not verified.",
-          "type": "integer"
-        },
-        "longitude": {
-          "description": "Returns the longitude associated with the location. It will return null if the address is not verified.",
-          "type": "integer"
-        },
-        "name": {
-          "description": "Returns the name of location.",
-          "type": "string"
-        }
-      }
-    },
     "images": {
       "type": "object",
       "description": "Allows you to access any image in a store by its filename",
       "link": "https://help.shopify.com/themes/liquid/objects#images"
     },
-    "link": {
-      "type": "object",
-      "description": "The link object cannot be invoked on its own. It must be invoked inside a linklist.",
-      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/link",
-      "properties": {
-        "active": {
-          "type": "boolean",
-          "description": "Returns true if the link object is active, or false if the link object is inactive."
-        },
-        "child_active": {
-          "type": "boolean",
-          "description": "Similar to link.active, but returns true if a child link of the parent link is active, or false if no child links of the parent link are active."
-        },
-        "current": {
-          "type": "boolean",
-          "description": "Returns true if the page content associated with the link is considered a match to the current page. Returns false if the content isn't considered a match."
-        },
-        "child_current": {
-          "type": "boolean",
-          "description": "Returns true if a child link has a link object with link.current equal to true. Returns false if no child links have a link object with link.current equal to true."
-        },
-        "levels": {
-          "type": "number",
-          "description": "Returns the number of nested levels that a link contains."
-        },
-        "links": {
-          "type": "array",
-          "description": "Returns an array of the child links associated with the parent link."
-        },
-        "object": {
-          "type": "object",
-          "description": "Returns the variable associated to the link."
-        },
-        "title": {
-          "type": "string",
-          "description": "Returns the title of the link."
-        },
-        "type": {
-          "type": "object",
-          "description": "Returns the type of the link."
-        },
-        "url": {
-          "type": "string",
-          "description": "Returns the URL of the link."
-        }
-      }
-    },
     "linklists": {
       "description": "Returns a list of all the menus (link lists) in your store. You can use linklists to access your link lists with their handles.",
       "link": "https://help.shopify.com/themes/liquid/objects#linklists",
       "type": "array"
+    },
+    "page": {
+      "type": "object",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/page",
+      "description": "The page object has the following attributes",
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Returns the author of a page."
+        },
+        "content": {
+          "type": "string",
+          "description": "Returns the content of a page."
+        },
+        "handle": {
+          "type": "string",
+          "description": "Returns the handle of the page."
+        },
+        "id": {
+          "type": "string",
+          "description": "Returns the id of the page."
+        },
+        "published_at": {
+          "type": "timestamp",
+          "description": "Returns the timestamp of when the page was created. Use the date filter to format the timestamp."
+        },
+        "template_suffix": {
+          "type": "string",
+          "description": "Returns the name of the custom page template assigned to the page, without the page."
+        },
+        "title": {
+          "type": "string",
+          "description": "Returns the title of a page."
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns the relative URL of the page."
+        }
+      }
     },
     "product": {
       "type": "object",
@@ -1856,6 +1821,56 @@
         "settings": {
           "description": "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
           "type": "object"
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/model",
+      "description": "The model object contains information about a 3D model uploaded from the product details page in the Shopify admin.",
+      "properties": {
+        "alt": {
+          "type": "string",
+          "description": "Returns the alt tag of the model set on the product details page of the Shopify admin."
+        },
+        "id": {
+          "type": "string",
+          "description": "Returns the media_id of the model."
+        },
+        "media_type": {
+          "type": "object",
+          "description": "Returns the type of the object (model)."
+        },
+        "position": {
+          "type": "number",
+          "description": "Returns the position of the model in the product object's media array"
+        },
+        "preview_image": {
+          "type": "string",
+          "description": "Returns a preview image for the model."
+        },
+        "sources": {
+          "type": "array",
+          "description": "Returns an array of model source objects."
+        }
+      }
+    },
+    "model_source": {
+      "type": "object",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/model-source",
+      "description": "The model_source object contains information about the source files for a model associated with a product.",
+      "properties": {
+        "mime_type": {
+          "type": "string",
+          "description": "Returns the MIME type of the model source file."
+        },
+        "format": {
+          "type": "string",
+          "description": "Returns the format of the model source file."
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns the URL of the model source file."
         }
       }
     },
