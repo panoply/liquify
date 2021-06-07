@@ -2130,6 +2130,11 @@
       "type": "import",
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"
     },
+    "page_description": {
+      "type": "object",
+      "description": "Returns the description of a page set in its respective section in the admin.",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/page-description"
+    },
     "paginate": {
       "description": "Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",
       "link": "https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include",
