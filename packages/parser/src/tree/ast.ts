@@ -61,7 +61,7 @@ export class IAST {
    * List of indexes where embedded nodes
    * exist on the tree
    */
-  public variables: {};
+  public variables: object = {};
 
   /**
    * The abstract syntax tree.

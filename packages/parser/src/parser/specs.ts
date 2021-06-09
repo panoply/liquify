@@ -156,7 +156,7 @@ export const Specs = (() => {
 
       // Liquid Standard has no known objects in its specification
       // we will prevent any walks occuring.
-      if (variation.engine !== IEngine.Standard && variation?.objects?.[name]) {
+      if (variation.engine !== 'standard' && variation?.objects?.[name]) {
         cursor = variation.objects[name] as IObject;
         type = NodeType.object;
         this.object.cursor();
@@ -365,7 +365,13 @@ export const Specs = (() => {
          * Returns a boolean indicating whether or not the argument
          * at the current position is required.
          */
-        get required (): boolean { return (cursor as IFilter).arguments[state]?.required; },
+        get required (): boolean {
+
+          return has(cursor as IFilter, 'arguments')
+            ? (cursor as IFilter).arguments[state]?.required
+            : false;
+
+        },
 
         /**
          * Returns a boolean indicating filter cursor arguments
@@ -380,7 +386,16 @@ export const Specs = (() => {
          * Returns a boolean indicating if this is the last argument
          * available to the filter, according to its specification.
          */
-        get last (): boolean { return (cursor as IFilter).$i.argsize === state; },
+        get last (): boolean {
+
+          if (has(cursor as IFilter, '$i.argsize')) {
+
+            return has(cursor as IFilter, '$i.argsize')
+              ? (cursor as IFilter).$i.argsize === state
+              : false;
+          };
+
+        },
 
         /**
          * Moves to the next argument on a filter. Returns a
