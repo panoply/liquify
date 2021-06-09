@@ -1,54 +1,52 @@
-import { plugins, jsonmin } from '@liquify/rollup-plugin-utils'
-import { terser } from 'rollup-plugin-terser'
-import { resolve } from 'path'
-import alias from '@rollup/plugin-alias'
-import replace from '@rollup/plugin-replace'
-import babel from '@rollup/plugin-babel'
-import commonjs from '@rollup/plugin-commonjs'
-import filesize from 'rollup-plugin-filesize'
-import noderesolve from '@rollup/plugin-node-resolve'
-import globs from '@liquify/rollup-plugin-globs'
-import { config } from 'dotenv'
+import { plugins, jsonmin } from '@liquify/rollup-plugin-utils';
+import typescript from '@rollup/plugin-typescript';
+import { terser } from 'rollup-plugin-terser';
+import { basename } from 'path';
+import alias from '@rollup/plugin-alias';
+import commonjs from '@rollup/plugin-commonjs';
+import filesize from 'rollup-plugin-filesize';
+import noderesolve from '@rollup/plugin-node-resolve';
+import globs from '@liquify/rollup-plugin-globs';
+import { config } from 'dotenv';
 
-config()
+config();
 
 export default {
-  input: 'src/index.js',
+  input: 'src/index.ts',
   output: {
     format: 'cjs',
-    dir: 'package',
+    dir: require('./tsconfig.json').compilerOptions.outDir,
     sourcemap: process.env.prod ? false : 'inline',
     preferConst: true,
-    chunkFileNames: '[name].js'
+    chunkFileNames: '[name].js',
+    manualChunks (id) {
+      if (id.includes('specs/package')) {
+
+        if (basename(id) === 'index.js') return '@specs/index';
+
+        if (id.includes('d992dc09dd916b8a.js')) {
+          return '@specs/variation/' + 'd992dc09dd916b8a';
+        }
+
+        if (id.includes('d98ed217d09660.js')) {
+          return '@specs/variation/' + 'd98ed217d09660';
+        }
+
+        if (id.includes('c083d61ed59c.js')) {
+          return '@specs/variation/' + 'c083d61ed59c';
+        }
+
+      }
+
+    }
   },
   external: process.env.prod ? [] : [
     '@liquify/liquid-language-specs'
   ],
 
   plugins: plugins([
-    replace({
-      preventAssignment: true,
-      values: {
-        'process.env.MASTER_KEY': `${process.env.MASTER_KEY}`
-      }
-    }),
-    alias({
-      entries: {
-        parser: resolve(__dirname, 'src/parser'),
-        enums: resolve(__dirname, './src/enums'),
-        scanner: resolve(__dirname, './src/scanner'),
-        lexical: resolve(__dirname, './src/lexical')
-      }
-    }),
+    typescript(),
     noderesolve({
-      extensions: [
-        '.ts',
-        '.js'
-      ]
-    }),
-    babel({
-      babelHelpers: 'runtime',
-      configFile: './.babelrc',
       extensions: [
         '.ts',
         '.js'
@@ -83,4 +81,4 @@ export default {
       showMinifiedSize: true
     })
   ])
-}
+};

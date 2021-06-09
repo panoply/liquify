@@ -1,8 +1,8 @@
-import { Range } from "vscode-languageserver-textdocument";
-import { ErrorLevel } from "lexical/errors";
-import { Options } from "./options";
-import { Variation, VariationEntries } from "@liquify/liquid-language-specs";
-import { AST, DocumentScan, DocumentUpdate, DocumentGet } from "./ast";
+import { Range } from 'vscode-languageserver-textdocument';
+import { ErrorLevel } from '../lexical/errors';
+import { NodeLanguage } from '../lexical/language';
+import { Variation, VariationEntries } from '@liquify/liquid-language-specs';
+import { AST, DocumentScan, DocumentUpdate, DocumentGet } from './ast';
 
 /* -------------------------------------------- */
 /* DOCUMENT                                     */
@@ -34,6 +34,12 @@ export type Offsets = number[];
  */
 export type Cursor = Specs.IObject | Specs.IFilter | Specs.ITag;
 
+export interface AssociateTags {
+  language: NodeLanguage;
+  kind: 'html' | 'liquid';
+  name: string;
+  attr?: string;
+}
 /* -------------------------------------------- */
 /*                  DIAGNOSTIC                  */
 /* -------------------------------------------- */
@@ -103,18 +109,6 @@ export interface IIFilters {
   spec: Specs.IFilter;
 }
 
-export interface IScanner {
-  readonly index: number;
-  readonly position: number;
-  readonly token: string;
-  readonly spec: Specs.Variation;
-  readonly line: number;
-  readonly error: number;
-  getToken: () => string;
-  getText: () => string;
-  getRange: () => string;
-}
-
 /**
  * Creates an instance of Liquid parser and returns
  * methods to work within a Language Server.
@@ -142,7 +136,7 @@ export function LiquidParser(options: Options): {
     /**
      * Returns each grouped spec as an `entries` array type.
      */
-    get entries(): VariationEntries
+    get entries(): VariationEntries;
   };
   /**
    * The Parser instance exposes methods we will use in

@@ -1,19 +1,19 @@
-import { NodeKind } from "lexical/kind";
-import { TokenContext } from "lexical/context";
-import { NodeType } from "lexical/types";
-import { NodeLanguage } from "lexical/language";
+import { NodeKind } from '../lexical/kind';
+import { TokenContext } from '../lexical/context';
+import { NodeType } from '../lexical/types';
+import { NodeLanguage } from '../lexical/language';
 import {
   TextDocument,
   Position,
   Range,
-} from "vscode-languageserver-textdocument";
+  TextDocumentContentChangeEvent
+} from 'vscode-languageserver-textdocument';
 import {
-  TextDocumentContentChangeEvent,
   TextDocumentItem,
   VersionedTextDocumentIdentifier,
-  Diagnostic,
-} from "vscode-languageserver";
-import { IParseError, Token, Offsets } from "./parser";
+  Diagnostic
+} from 'vscode-languageserver-types';
+import { Token, Offsets } from './parser';
 
 /**
  * Document Create
@@ -64,6 +64,7 @@ export function DocumentUpdate(
  * also perform actions.
  */
 export class AST {
+
   /**
    * The TextDocument literal for the AST instance
    * We will reset this for every document change, a private
@@ -126,13 +127,12 @@ export class AST {
   get lastNode(): ASTNode;
   get nextNode(): ASTNode;
   get prevNode(): ASTNode;
-  get parentNode(): ASTNode;
 
   /**
    * Executes a reset on tracked nodes and data within the AST.
    * Used when executing a full document parse.
    */
-  clear(): void;
+  private clear(): void;
 
   /**
    * Updates the tree when a change is performed on the document.
@@ -217,7 +217,7 @@ export class AST {
   /**
    * Returns all the comment type nodes found on the AST
    */
-  getComments(languages?: string[]): ASTNode[] | [];
+  getComments(languages?: string[]): ASTNode[] | false;
 
   /**
    * Accepts a list of indexes which point to nodes on the
@@ -310,6 +310,7 @@ export class AST {
    * method event.
    */
   withinEmbed(location: Position | number, node?: ASTNode): boolean;
+
 }
 
 /* -------------------------------------------- */
@@ -354,6 +355,7 @@ export interface Context {
  * contains methods to interact with that specific node.
  */
 export class ASTNode {
+
   /**
    * The name of the node
    */
@@ -381,6 +383,24 @@ export class ASTNode {
    * type nodes, else returns boolean false.
    */
   getContext(): Context[][];
+
+  /**
+   * Returns the root node of this node. If no root node exists
+   * then the node is returned.
+   */
+  getRoot(): ASTNode;
+  /**
+   * Returns the parent node of this node. If no root node exists
+   * then the node is returned.
+   */
+  getParent(): ASTNode;
+
+  /**
+   * Returns node context which contains character by character
+   * parsed data about the nodes inner contents.
+   */
+  getContext(): Context[][];
+
   /**
    * Returns the inner contents of the node when it is an
    * syntactic pair type, else returns a boolean false value.
@@ -437,7 +457,7 @@ export class ASTNode {
   /**
    * The start and end Range position of the node.
    */
-  range: { start?: Position; end?: Position };
+  range: Range;
   /**
    * The nodes children indexes
    *
@@ -446,7 +466,7 @@ export class ASTNode {
    * It's important to not that values here are only
    * applied to token that accept accept child tags, eg: `{% else %}`
    */
-  children?: Children[];
+  children?: number[];
   /**
    * Whether or not the node is a singular type node, ie:
    * is not syntactic.
@@ -503,6 +523,7 @@ export class ASTNode {
     | {
         [attribute: string]: string;
       };
+
 }
 
 export function INode(document: AST): typeof ASTNode;

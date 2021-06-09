@@ -16,39 +16,39 @@
  * ---
  */
 
-export const NodeLanguage = {
+export enum NodeLanguage {
   /**
    * Liquid Language - ALL TAGS DEFAULT TO LIQUID
    */
-  liquid: "liquid",
+  "liquid" = 'liquid',
 
   /**
    * HTML Language
    */
-  html: "html",
+  "html" = 'html',
 
   /**
    * YAML Language
    */
-  yaml: "yaml",
+  "yaml" = 'yaml',
 
   /**
    * JavaScript Language
    */
-  javascript: "javascript",
+  "javascript" = 'javascript',
 
   /**
    * JSON Language
    */
-  json: "json",
+  "json" = 'json',
 
   /**
    * CSS Language
    */
-  css: "css",
+  "css" = 'css',
 
   /**
    * SCSS Language
    */
-  scss: "scss",
-};
+  "scss" = 'scss',
+}

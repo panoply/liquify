@@ -182,8 +182,5 @@
     "stripliteral",
     "turbolinks"
   ],
-  "cSpell.ignoreWords": [
-    "mvasilkov",
-    "outdent"
-  ]
+  "cSpell.ignoreWords": ["mvasilkov", "outdent"]
 }
