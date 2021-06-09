@@ -6,7 +6,7 @@ Liquify leverages the [Rollup](https://rollupjs.org/guide/en/) module bundler ac
 
 Liquify is written in JavaScript/TypeScript and developed within a monorepo pnpm workspace. Almost all packages use Rollup. The [plugin](https://rollupjs.org/guide/en/#plugin-development) API provides a efficient way to hook into transpilation processes when generating distributed bundles which prevents the need of having to rely upon addition tooling in development.
 
-## Plugins
+### Plugins
 
 #### [@liquify/rollup-plugin-cryptospec](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/cryptospec)
 
@@ -24,12 +24,10 @@ Implements [JavaScript Obfuscator](https://github.com/javascript-obfuscator/java
 
 Various project specific rollup plugin utilities that are commonly used modules across the [Liquify](https://github.com/panoply/liquify) monorepo and included within package `rollup.config.js` files contained in the workspace.
 
-## Usage
+### Usage
 
-Plugins are installed as a development dependencies via `pnpm i` in packages. The plugins are provided on the public npm registry and can be appropriated outside of the Liquify workspace.
+Plugins are installed as a development dependencies via `pnpm i` in packages.
 
-Refer to the containing readme of each plugin for information.
-
-## Author
+### Author
 
 🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
