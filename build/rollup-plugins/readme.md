@@ -1,4 +1,4 @@
-# Liquify Rollup Plugins
+# Rollup Plugins
 
 Liquify leverages the [Rollup](https://rollupjs.org/guide/en/) module bundler across its workspace and almost all the containing packages use Rollup for transpilation. Packages within the Liquify project use these plugins to assist development process. The plugins are available on the public NPM registry for consumption and in addition can be appropriated outside the project.
 
