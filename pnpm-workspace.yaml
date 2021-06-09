@@ -1,6 +1,10 @@
 packages:
   - "."
 
+  - "build/eslint-config/packages/javascript"
+  - "build/eslint-config/packages/typescript"
+  - "build/eslint-config"
+
   - "build/cryptographer"
 
   - "build/rollup-plugins/cryptospec"

@@ -1,5 +1,6 @@
 {
-  "exclude": ["node_modules", "package"],
+  "exclude": ["node_modules/**", "package", "test"],
+  "include": ["src/index.ts", "src/**/*.ts", "src/types/*"],
   "typeAcquisition": {
     "enable": true,
     "include": [
@@ -12,18 +13,24 @@
   },
   "compilerOptions": {
     "types": ["node"],
-    "target": "es2020",
+    "rootDir": "src",
+    "typeRoots": ["node_modules/@types", "src/types/*"],
+    "declaration": true,
+    "declarationDir": "package/@types",
+    "outDir": "package",
+    "target": "ES6",
+    "removeComments": true,
     "lib": ["es2020"],
-    "module": "commonjs",
-    "checkJs": true,
-    "allowJs": true,
+    "module": "ESNext",
+    "alwaysStrict": true,
     "allowUmdGlobalAccess": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "preserveSymlinks": true,
+    "skipDefaultLibCheck": false,
     "moduleResolution": "node",
-    "noEmit": true,
     "noEmitOnError": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -31,10 +38,9 @@
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"],
-      "enums": ["./src/enums/*"],
-      "provide": ["./src/provide/*"],
       "service": ["./src/service/*"],
-      "utils": ["./src/utils/*"]
+      "provider": ["./src/provider/*"],
+      "mode": ["./src/provider/mode/*"]
     }
   }
 }

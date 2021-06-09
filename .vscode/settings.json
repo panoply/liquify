@@ -107,6 +107,12 @@
   "prettier.disableLanguages": ["html"],
   "vsicons.associations.files": [
     {
+      "icon": "eslint2",
+      "extensions": ["eslint.rules.js"],
+      "filename": true,
+      "format": "svg"
+    },
+    {
       "icon": "vscode",
       "extensions": [
         "extensions.json",

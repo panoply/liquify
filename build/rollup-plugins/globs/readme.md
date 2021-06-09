@@ -4,7 +4,7 @@
 
 # @liquify/rollup-plugin-globs
 
-A [rollup](https://rollupjs.org) plugin used by the [Liquify](#) IDE extension/package. The plugin provides watch, copy, transform, repath and rename capabilities for files in a development workspace.
+A [rollup](https://rollupjs.org) plugin used by the [Liquify](#) IDE extension/package. The plugin provides watch, copy, transform, re-path and rename capabilities for files in a development workspace.
 
 ## Why?
 
