@@ -1,5 +1,35 @@
 # Rollup Plugins
 
+Liquify leverages the [Rollup](https://rollupjs.org/guide/en/) module bundler across its workspace. Various packages within the Liquify project use Rollup plugins which assist in the development process of Liquify. This directory contains those plugins which in addition are available on for consumption on the NPM registry.
+
+### Why?
+
+Liquify is written in JavaScript/TypeScript and developed within a monorepo pnpm workspace. Almost all packages use Rollup. The [plugin](https://rollupjs.org/guide/en/#plugin-development) API provides a efficient way to hook into transpilation processes when generating distributed bundles which prevents the need of having to rely upon addition tooling in development.
+
+## Plugins
+
+#### [@liquify/rollup-plugin-cryptospec](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/cryptospec)
+
+Facilitates encryption using [aes-256](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithms. Transforms objects, strings and numbers. The cryptospec plugin transforms the propreitary specifications into enigmatic strings exports.
+
+#### [@liquify/rollup-plugin-globs](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/globs)
+
+Provides watch, copy, transform, re-path and rename capabilities for files in a development workspace. The plugin is essentially a stripped down and hard-fork extended version of [rollup-plugin-globsync](https://github.com/tivac/).
+
+#### [@liquify/rollup-plugin-obfuscator](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/obfuscator)
+
+Implements [JavaScript Obfuscator](https://github.com/javascript-obfuscator/javascript-obfuscator) and facilitates in obfuscation. This is a hard-fork of the current[rollup-plugin-javascript-obfuscator](https://github.com/javascript-obfuscator/) plugin which is using a deprecated API.
+
+#### [@liquify/rollup-plugin-utils](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/utils)
+
+Various project specific rollup plugin utilities that are commonly used modules across the [Liquify](https://github.com/panoply/liquify) monorepo and included within package `rollup.config.js` files contained in the workspace.
+
+## Usage
+
+Plugins are installed as a development dependencies via `pnpm i` in packages. The plugins are provided on the public npm registry and can be appropriated outside of the Liquify workspace.
+
+Refer to the containing readme of each plugin for information.
+
 ## Author
 
-🥛 <small>Laced with [Vellocet](#) by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
