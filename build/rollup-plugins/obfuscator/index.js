@@ -2,7 +2,7 @@ import JavaScriptObfuscator from 'javascript-obfuscator'
 
 /**
  * Replace - Runs a regular expression and replaces
- * all matched tag occurances
+ * all matched tag occurrences
  *
  */
 export default function (options = {}) {
@@ -19,6 +19,7 @@ export default function (options = {}) {
       }
 
       return result
+
     }
   })
 }

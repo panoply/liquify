@@ -22,6 +22,9 @@
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --watch --verbose"
   },
+  "eslintConfig": {
+    "extends": ["@liquify/eslint-config-js"]
+  },
   "ava": {
     "require": ["esm", "@babel/register"],
     "babel": true,
@@ -30,6 +33,7 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
+    "@liquify/eslint-config-js": "workspace:^1.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@types/node": "^14.14.19",

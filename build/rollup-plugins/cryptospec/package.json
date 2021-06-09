@@ -25,6 +25,9 @@
   "esm": {
     "cjs": true
   },
+  "eslintConfig": {
+    "extends": ["@liquify/eslint-config-js"]
+  },
   "ava": {
     "babel": true,
     "files": ["test/**/**"],
@@ -35,6 +38,7 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
+    "@liquify/eslint-config-js": "workspace:^1.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
     "ava": "^3.15.0",
     "chalk": "^4.1.1",

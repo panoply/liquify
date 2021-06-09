@@ -3,8 +3,6 @@
 import test from 'ava'
 import cryptographer from '../package/index.cjs'
 
-const seed = require('./data/example.json')
-
 test.before(t => {
 
   t.context.crypto = cryptographer('$ecret')

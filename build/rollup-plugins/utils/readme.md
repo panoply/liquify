@@ -4,11 +4,11 @@
 
 # @liquify/rollup-plugin-utils
 
-Various rollup plugin utilities for [Liquify](#) IDE extension/package. These utilities are collection of commonly used modules in the development workspace.
+Various rollup plugin utilities for [Liquify](https://liquify.dev) IDE extension/package. These utilities are collection of commonly used modules in the development workspace.
 
 ## Why?
 
-In the Liquify development workspace modules are bundled using [Rollup](#) and a collection of various project specific plugins that assist in bundling process of various packages. The utilties exported in this module provide a clean and easy way to execute commonly used functions.
+In the Liquify development workspace modules are bundled using [Rollup](https://rollupjs.org/) and a collection of various project specific plugins that assist in bundling process of various packages. The utilities exported in this module provide a clean and easy way to execute commonly used functions.
 
 ## Install
 
