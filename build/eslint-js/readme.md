@@ -26,16 +26,9 @@ Extend the configuration with `package.json`.
 
 > Required peer dependency on eslint is required
 
-### Troubleshoot
-
-If the shareable config is being consumed outside the Liquify monorepo then you may need install deps into that project, however this should be last resort, everything should load correctly.
-
-```cli
-pnpm i @babel/eslint-parser @babel/eslint-plugin eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-promise --save-dev
-```
-
 ### Related
 
+- [@liquify/eslint-config](https://github.com/liquify)
 - [@liquify/eslint-config-ts](https://github.com/liquify)
 
 ### License

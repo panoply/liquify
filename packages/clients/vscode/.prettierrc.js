@@ -1,5 +1,6 @@
 module.exports = {
   overrides: [
+
     {
       files: ['*.jsonc', '.liquidrc', '*.json'],
       options: {

@@ -22,7 +22,7 @@
     "packer": "cd versions; pnpm pack ../ && cd .."
   },
   "devDependencies": {
-    "@liquify/rollup-plugin-globs": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-globs": "workspace:^0.1.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
     "rollup-plugin-terser": "^7.0.2"
   }

@@ -1,9 +1,9 @@
 packages:
   - "."
 
-  - "build/eslint-config/packages/javascript"
-  - "build/eslint-config/packages/typescript"
   - "build/eslint-config"
+  - "build/eslint-ts"
+  - "build/eslint-js"
 
   - "build/cryptographer"
 

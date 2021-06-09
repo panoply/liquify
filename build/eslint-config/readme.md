@@ -1,20 +1,32 @@
-# ESLint Configs
+# ESLint Config
 
-Liquify is development in both JavaScript and TypeScript. This directory contains 2 shareable eslint configs which are available on the public NPM registry to any project that wishes to use them. All packages in the [Liquify](https://https://liquify.dev) workspace are employing the configurations on a per-project basis as a development dependency.
+Liquify is development in both JavaScript and TypeScript. This directory contains an **extendable** shareable config for eslint which maintain a code style aesthetic across the project in by languages. ESLint [Standard](https://github.com/standard/eslint-config-standard) is extended with additional rule sets.
 
 ### Reasoning
 
-Liquify exists as a monorepo that ships both closed open sourced packages. The more complex modules contained in the project are written in TypeScript while smaller packages are written in JavaScript. Contributing to the open sourced modules without access to the lint rule sets would result in code that does align with the style aesthetics maintained across the project. These lint configs are included as development dependencies in all the packages and used to enforce the aesthetics upon all modules regardless of the open or closed source status.
+Liquify exists as a monorepo that ships both closed open sourced packages. The more complex modules contained in the project are written in TypeScript while smaller packages are written in JavaScript. These lint configs are included as development dependencies in all the packages and used to enforce the aesthetics upon all modules regardless of the open or closed source status.
 
-### Rules
+### Install
 
-Both TypeScript and JavaScript languages are using a shared rule set. The packages available configurations available for consumption included the additional eslint plugins required by the language. This approach might seem extraneous but it limits the amount of dependencies each sharable config will depend upon.
+[pnpm](https://pnpm.js.org/en/cli/install)
 
-### Build
+```cli
+pnpm i @liquify/eslint-config --save-dev
+```
 
-The `rules/eslint.rules.js` file is used by both configs. Because we are sharing the rule sets, we need to trigger a build via `pnpm build` or `pnpm dev` (for watching) which will write CJS files to each packages. Contained in the `packages` directory is the shareable configs which is linked to the pnpm workspace.
+### Usage
 
-### Configs
+This is used as an extendable and within Liquify is digested by `eslint-config-js` and `eslint-config-ts` in their respective packages.
+
+```json
+{
+  "extends": ["@liquify/eslint-config"]
+}
+```
+
+> Required peer dependency on eslint is required
+
+### Shareable
 
 #### [@liquify/eslint-config-js](https://github.com/panoply/liquify/tree/next/build/eslint-config/packages/javascript)
 

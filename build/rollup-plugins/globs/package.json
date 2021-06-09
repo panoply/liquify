@@ -1,6 +1,6 @@
 {
   "name": "@liquify/rollup-plugin-globs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Rollup plugins and utilities for working with the Liquify monorepo codebase",
   "author": "Nikolas Savvidis <nicos@gmx.com>",
   "license": "MIT",

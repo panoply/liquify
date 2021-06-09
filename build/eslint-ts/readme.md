@@ -36,6 +36,7 @@ pnpm i @typescript-eslint/eslint-plugin eslint-config-standard @typescript-eslin
 
 ### Related
 
+- [@liquify/eslint-config](https://github.com/liquify)
 - [@liquify/eslint-config-js](https://github.com/liquify)
 
 ### License

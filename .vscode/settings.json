@@ -76,7 +76,7 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {
-    "**/node_modules": true,
+    //"**/node_modules": true,
     "**/package/node_modules": false,
     "**/versions": true,
     "**/.git": true,
@@ -103,8 +103,7 @@
   "eslint.codeActionsOnSave.mode": "all",
   "eslint.validate": ["html", "javascript"],
   "prettier.useEditorConfig": true,
-  "prettier.requireConfig": true,
-  "prettier.disableLanguages": ["html"],
+  "prettier.requireConfig": false,
   "vsicons.associations.files": [
     {
       "icon": "eslint2",
@@ -188,5 +187,5 @@
     "stripliteral",
     "turbolinks"
   ],
-  "cSpell.ignoreWords": ["mvasilkov", "outdent"]
+  "cSpell.ignoreWords": ["camelcase", "linebreak", "mvasilkov", "outdent"]
 }
