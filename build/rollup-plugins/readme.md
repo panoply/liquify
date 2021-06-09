@@ -1,10 +1,10 @@
 # Rollup Plugins
 
-Liquify leverages the [Rollup](https://rollupjs.org/guide/en/) module bundler across its workspace. Various packages within the Liquify project use Rollup plugins which assist in the development process of Liquify. This directory contains those plugins which in addition are available on for consumption on the NPM registry.
+Liquify leverages the [Rollup](https://rollupjs.org/guide/en/) module bundler across its workspace and almost all the containing packages use Rollup for transpilation. Packages within the Liquify project use these plugins to assist development process. The plugins are available on the public NPM registry for consumption and in addition can be appropriated outside the project.
 
 ### Why?
 
-Liquify is written in JavaScript/TypeScript and developed within a monorepo pnpm workspace. Almost all packages use Rollup. The [plugin](https://rollupjs.org/guide/en/#plugin-development) API provides a efficient way to hook into transpilation processes when generating distributed bundles which prevents the need of having to rely upon addition tooling in development.
+The [plugin](https://rollupjs.org/guide/en/#plugin-development) API provides a efficient way to hook into transpilation processes when generating distributed bundles. Developing a Rollup plugin is rather simple and prevents the need of having to rely upon additional tooling in development resulting in a centralized workflow.
 
 ### Plugins
 
