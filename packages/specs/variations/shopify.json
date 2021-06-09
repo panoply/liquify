@@ -2150,10 +2150,24 @@
       "description": "Returns the description of a page set in its respective section in the admin.",
       "link": "https://shopify.dev/docs/themes/liquid/reference/objects/page-description"
     },
-    "part": {
+    "policy": {
       "type": "object",
-      "description": "Each part returned by the paginate.parts array represents a link in the pagination's navigation.",
-      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/part"
+      "description": "A policy represents an individual policy of the shop.policies object.",
+      "link": "https://shopify.dev/docs/themes/liquid/reference/objects/policy",
+      "properties": {
+        "body": {
+          "type": "string",
+          "description": "Returns the content of the policy."
+        },
+        "title": {
+          "type": "string",
+          "description": "Returns the title of the policy."
+        },
+        "url": {
+          "type": "string",
+          "description": "Returns the relative URL of the policy."
+        }
+      }
     },
     "paginate": {
       "description": "Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",
