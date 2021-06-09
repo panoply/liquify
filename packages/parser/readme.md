@@ -2,13 +2,13 @@
 
 # @liquify/liquid-parser
 
-An incremental parser/scanner for the Liquid Template Language. Written in pure JavaScript and used by the [Liquify IDE](#) text editor plugin to construct a workable Abstract Syntax Tree. The parser is used in combination with the [Node LSP](#) (Language Server Protocol) implementation.
+An incremental parser/scanner for the Liquid Template Language. Developed for the [Liquify IDE](https://liquify.dev) text editor plugin to construct a detailed workable Abstract Syntax Tree. The parser is used in combination with the [Node LSP](https://microsoft.github.io/language-server-protocol/) (Language Server Protocol) implementation.
 
-> **IMPORTANT** This parser is used to construct and query an AST, not perform actions on parsed code. Use [liquidjs](#) by [Harttle](#) for Liquid engine support in JavaScript, and consider supporting that project or alternatively you can use the standard [liquid](#) ruby based engine.
+> **IMPORTANT** This parser is used to construct and query an AST, not perform actions on parsed code. Use [liquidjs](https://github.com/harttle/liquidjs) by [Harttle](https://github.com/harttle) for Liquid engine support in JavaScript and consider supporting that project. Alternatively you can use the standard [liquid](https://github.com/Shopify/liquid) ruby based engine.
 
 ## Why?
 
-Facilitating modern IDE capabilities when working with the Liquid Template Language in text editors required a performant parser to construct a detailed representation of Liquid syntax contained in documents. Due to the unique manner in which Liquid is expressed and to seamlessly couple with the Language Server developing a parser that made interacting with LSP a whole lot easier.
+Facilitating modern IDE capabilities when working with the Liquid Template Language in text editors required a performant parser to construct a detailed representation of Liquid syntax contained in documents. The parser uses grammars known as Liquid [Variation Specifications](#) to provide parsing, validations, linting, completions and other various LSP capabilities. The grammars (specs) are basic JSON schemas so developers of all levels can compose, extend or leverage.
 
 ## Install
 
@@ -18,496 +18,359 @@ Facilitating modern IDE capabilities when working with the Liquid Template Langu
 
 ## Usage
 
-**Please note:** there are very little use cases where you would require this parser in the real world. The Liquify IDE plugin that consumes this package should suffice and facilitate most (if not all) your requirements when developing with Liquid.
+**Please note:** there are very little use cases where you would require this parser in the real world. The Liquify IDE plugin that consumes this package should suffice and facilitate most (if not all) your requirements when developing with Liquid. The parser is specifically designed to work with a Language Server but can be appropriated to different use cases.
 
-```js
+```ts
+import { LiquidParser } from '@liquify/liquid-parser'
+
+const {
+  Documents,
+  Spec,
+  Parser
+} =  LiquidParser(options: Options)
+
+
+/* PARSER ------------------------------------- */
+
 /**
- * Creates an instance of Liquid parser and returns
- * methods to work within a Language Server.
+ * Full Document Scan. In LSP this is called at
+ * `onDocumentOpen` this must be executed first.
  */
-export function LiquidParser(options: Options): {
-  /**
-   * Returns the `Documents` Map.
-   */
-  get Documents(): Documents;
-  /**
-   * Specification Handling, exposes methods we will
-   * use in the Language Server when dealing with the spec.
-   */
-  Spec: {
-    /**
-     * Defines a Liquid variation specification engine.
-     * The parameter value will swap the specification.
-     */
-    engine(engine: Specs.Engine): void;
-    /**
-     * Returns the current variation being used, this will
-     * align with the specified engine.
-     */
-    get variant(): Variation;
-    /**
-     * Returns each grouped spec as an `entries` array type.
-     */
-    get entries(): VariationEntries
-  };
-  /**
-   * The Parser instance exposes methods we will use in
-   * the language
-   */
-  Parser: {
-    /**
-     * Executes a full document scan
-     */
-    scan: typeof DocumentScan;
-    /**
-     * Returns a TextDocument Instance by its URI
-     */
-    document: typeof DocumentGet;
-    /**
-     * Updates a document, execute partial scans and
-     * manages an existing text document literal.
-     */
-    update: typeof DocumentUpdate;
-    /**
-     * Executes an regular expression test at a range offset
-     * location. You can use the AST method to get a range offset.
-     */
-    isRegExp(regex: RegExp, offset: [number, number]): boolean;
-    /**
-     * Validates character code matches a condition
-     * at specific offset location.
-     */
-    isCodeChar(code: number, offset: number): boolean;
-    /**
-     * Validates character code matches a condition
-     * at the previous offset location, (moves 2 steps back)
-     */
-    isPrevCodeChar(code: number, offset: number): boolean;
-    /**
-     * Validates character code matches a condition
-     * at the next offset location, (moves 1 step forward)
-     */
-    isNextCodeChar(code: number, offset: number): boolean;
-  };
-};
+Parser.scan(textDocument: TextDocument): AST
+
+/**
+ * Partial Document Scan (Incremental). In LSP
+ * this is called at `onDocumentChange`
+ */
+Parser.update(textDocument: VersionedTextDocument, contentChanges): AST
+
+/**
+ * Returns a Document AST via a URI identifier. In LSP
+ * this is called for different capabilities.
+ */
+Parser.document(uri: string): AST
+
+/**
+ * Executes an regular expression test at a range offset
+ * location. You can use the AST method to get a range offset.
+ */
+Parser.isRegExp(regex: RegExp, offset: [number, number]): boolean;
+
+/**
+ * Validates character code matches a condition
+ * at specific offset location.
+ */
+Parser.isCodeChar(code: number, offset: number): boolean;
+
+/**
+ * Validates character code matches a condition
+ * at the previous offset location, (moves 2 steps back)
+ */
+Parser.isPrevCodeChar(code: number, offset: number): boolean;
+
+/**
+ * Validates character code matches a condition
+ * at the next offset location, (moves 1 step forward)
+ */
+Parser.isNextCodeChar(code: number, offset: number): boolean;
+
+
+/* SPEC ---------------------------------------- */
+
+/**
+ * Updates/changes the specification variation engine
+ */
+Spec.engine(engine: IEngine): void
+
+/**
+ * Returns the current variation reference
+ */
+Spec.variant
+
+/**
+ * Returns the entries mapping of specification items.
+ * This is used in completions in LSP.
+ */
+Spec.entries
+
+/* Documents ---------------------------------- */
+
+/**
+ * Returns a document AST via URI (Parser.document(uri) is faster)
+ */
+Documents.get(uri: string): AST
+
+/**
+ * Sets a document URI (Model)
+ */
+Documents.set(uri: string, AST): AST
+
+/**
+ * Removes document from model cache
+ */
+Documents.delete(uri: string, AST): boolean
+
+/**
+ * Purges the entire model cache
+ */
+Documents.clear(): boolean
+
+// etc, etc
+
 ```
 
 ### AST
 
+Each text document stores in the `Documents` Map hold an AST instance reference. The AST
+provides a methods and maintains a cache of all open documents in the editor.
+
+<!-- prettier-ignore -->
 ```typescript
 export class AST {
-  /**
-   * The TextDocument literal for the AST instance
-   * We will reset this for every document change, a private
-   * is assigned and maintained for each content change.
-   * In addition, the `Stream` is intialized.
-   *
-   */
-  constructor(textDocument: TextDocument);
 
-  /**
-   * Getter/Setter for the Text Document Literal,
-   * its return value is a private property. The private
-   * is using the private property class proposal which
-   * transpile via babel.
-   */
-  get textDocument(): TextDocument;
-  set textDocument(newDocument: TextDocument);
+  // DATA
 
-  /**
-   * List of parsing errors and validations
-   * encountered while scanning the document.
-   */
+  textDocument: TextDocument;
   errors: Diagnostic[];
-
-  /**
-   * The cursor offset index, which is generated from
-   * a start and end range position each incremental parse.
-   */
   cursor: number;
-
-  /**
-   * List of indexes where embedded nodes
-   * exist on the tree
-   */
   embeds: number[];
-
-  /**
-   * List of indexes where comment nodes
-   * exist on the tree
-   */
   comments: number[];
+  variables: object;
+  nodes: INode[];
+  node: INode;
 
-  /**
-   * List of indexes where embedded nodes
-   * exist on the tree
-   */
-  variables: {};
-
-  /**
-   * The abstract syntax tree.
-   */
-  nodes: ASTNode[];
-
-  /**
-   * Returns the node at the current cursor location or null
-   * if the cursor is not located within a node on the tree.
-   */
-  node: ASTNode;
+  // NAVIGATORS
 
   get lastNode(): ASTNode;
   get nextNode(): ASTNode;
   get prevNode(): ASTNode;
 
-  /**
-   * Executes a reset on tracked nodes and data within the AST.
-   * Used when executing a full document parse.
-   */
-  clear(): void;
+  // UPDATES
 
-  /**
-   * Updates the tree when a change is performed on the document.
-   * The `contentChanges` event from the Language Server is
-   * passed as the parameter.
-   */
   update(change: TextDocumentContentChangeEvent): void;
-
-  /**
-   * Generates a document literal of current textDocument,
-   *
-   * @default 'tmp'
-   */
   literal(extension?: string): TextDocument;
 
-  /**
-   * Converts a location offset to position via
-   * textDocument instance method: `positionAt()`
-   */
+  // LOCATION
+
   positionAt(location: number): Position;
-  /**
-   * Converts a position to an offset via
-   * textDocument instance method `offsetAt()`
-   */
   offsetAt(location: Position): number;
-
-  /**
-   * Converts a offset/s to range location.
-   * If Niether `start`or `end` params are passed,
-   * the full document range is returned.
-   */
   toRange(start?: number, end?: number): Range;
-
-  /**
-   * Converts range to offset location. The returning value is of
-   * type array, where the first item is `start` offset and second
-   * value is `end` offset.
-   */
   toRangeOffset(location: Range): [number, number];
-  /**
-   * Generates a line Range from either a position or an offset.
-   * The return value is a Range the will begin at start of the
-   * line where the location was passed and finish at the end of
-   * the line (character `0` of next line).
-   */
   toLineRange(location: Position | number): Range;
 
-  /**
-   * Returns text contents via the `textDocument` instance. Accepts
-   * a Range, Position, offset or offset range and will return the
-   * string value found at the location.
-   */
+  // EXPLORERS
+
   getText(location?: Range | Position | number | [number, number]): string;
-
-  /**
-   * Attempts to find a node at either a position or offset and
-   * returning the first match found between start and end location.
-   * If successful, returns the Node and also updates the `node`
-   * cursor property, unless false is passed as second parameter
-   */
-  getNodeAt(
-    position: Position | number,
-    updateNode?: true | false
-  ): ASTNode | false;
-
-  /**
-   * Attempts to find an embed type node returning first match
-   * found between the inner content start and end location.
-   * If successful, returns the Node and also updates the `node`
-   * cursor property.
-   */
-  getEmbedAt(
-    position: Position | number,
-    updateNode?: true | false
-  ): ASTNode | false;
-
-  /**
-   * Returns all the embed type nodes found on AST.
-   */
-  getEmbeds(languages?: string[]): ASTNode[] | false;
-
-  /**
-   * Returns all the comment type nodes found on the AST
-   */
-  getComments(languages?: string[]): ASTNode[] | [];
-
-  /**
-   * Accepts a list of indexes which point to nodes on the
-   * AST. This is used to (for example) return childNodes.
-   */
-  getNodes(indexes: number[]): ASTNode[];
-
-  /**
-   * **NOT YET AVAILABLE**
-   */
-  getNodeContext(node?: ASTNode): {};
-
-  /**
-   * **NOT YET AVAILABLE**
-   *
-   * Returns all associated type nodes, like those defined within
-   * a `.liquidrc` file.
-   */
-  getAssociates(names: string[]): ASTNode[];
-
-  /**
-   * **NOT YET AVAILABLE**
-   */
+  getNodeAt(position: Position | number, updateNode?: true | false): INode | false;
+  getEmbedAt(position: Position | number, updateNode?: true | false): INode | false;
+  getEmbeds(languages?: string[]): INode[] | false;
+  getComments(languages?: string[]): INode[] | [];
+  getNodes(indexes: number[]): INode[];
+  getNodeContext(node?: INode): {};
+  getAssociates(names: string[]): INode[];
   getVariables(): void;
+  getScope(): INode;
 
-  /**
-   * **NOT YET AVAILABLE**
-   */
-  getScope(): void;
+  // FINDERS
 
-  /**
-   * Check if position or offset location is within range.
-   * This method is a shortcut to the lodash `inRange`. It will convert
-   * a position if position is passed.
-   *
-   * The function will checks if `n` is between `start` and up to,
-   * but not including, `end`. If end is not specified, it's set to start
-   * with `start` then set to `0`. If `start` is greater than `end` the
-   * params are swapped to support negative ranges.
-   */
-  within(location: Position | number, start: number, end?: number): boolean;
+  withinNode(location: Position | number, node?: INode): boolean;
+  withinBody(location: Position | number, node?: INode): boolean;
+  withinScope(location: Position | number, node?: INode): boolean;
+  withinToken(location: Position | number, node?: INode): boolean;
+  withinEndToken(location: Position | number, node?: INode): boolean;
+  withinEmbed(location: Position | number, node?: INode): boolean;
 
-  /**
-   * Checks the passed in position of offset is within
-   * a node between the start and end locations. It will
-   * preface the `node` value assigned by either the previous
-   * document change or method event.
-   */
-  withinNode(location: Position | number, node?: ASTNode): boolean;
-
-  /**
-   * Checks the passed in position of offset is within
-   * the body of a node, between ending start token and start of
-   * end token. It will preface the `node` value assigned
-   * by either the previous document change or method event.
-   */
-  withinBody(location: Position | number, node?: ASTNode): boolean;
-
-  /**
-   * **NOT YET AVAILABLE**
-   */
-  withinScope(location: Position | number, node?: ASTNode): boolean;
-
-  /**
-   * Checks the passed in position of offset is within
-   * a start or singular based token. It will preface
-   * the `node` value assigned by either the previous
-   * document change or method event.
-   */
-  withinToken(location: Position | number, node?: ASTNode): boolean;
-
-  /**
-   * Checks the passed in position of offset is within
-   * an end token tag. It will preface the `node` value
-   * assigned by either the previous document change or method event.
-   */
-  withinEndToken(location: Position | number, node?: ASTNode): boolean;
-
-  /**
-   * Checks the passed in position of offset is within
-   * an embed type node. It shortcuts to the `withinNode` method
-   * but runs some addition checks. It will preface the `node`
-   * value assigned by either the previous document change or
-   * method event.
-   */
-  withinEmbed(location: Position | number, node?: ASTNode): boolean;
 }
 ```
 
 ### AST Nodes
 
-Each node contained on the AST is a class instance. Depending on what type of node (tag) that is parsed some properties may differ, essentially it all boils down to the below:
+Each node contained on the AST is a class instance. Depending on what type of node (tag) that is parsed some properties may differ, essentially it all boils down to the below.
 
+<!-- prettier-ignore -->
 ````typescript
- */
 export class ASTNode {
-  /**
-   * The name of the node
-   */
+
+  // DATA
+
   name: string;
-  /**
-   * The starting offset location of the node
-   */
-  get start(): number;
-  /**
-   * The ending offset location of the node
-   */
-  get end(): number;
-  /**
-   * The context indexes of the node
-   */
-  get context(): number[];
-  /**
-   * Returns a Text Document instance for embedded language
-   * type nodes, else returns boolean false.
-   */
-  document(): TextDocument | false;
-  /**
-   * Returns the inner contents of the node when it is an
-   * syntactic pair type, else returns a boolean false value.
-   */
-  get content(): string | false;
-  /**
-   * The string literal token value/s. When the tag is
-   * syntactic the _end_ tag is the second value.
-   */
-  token: Token[];
-  /**
-   * The language pretaining to this node. This defaults
-   * to a `liquid` value.
-   */
-  language: NodeLanguage;
-  /**
-   * The node type value, which is used to distinguish its
-   * functionality and use, as described in Node Types.
-   */
-  type: NodeType;
-  /**
-   * The number of parsing errors encountered before this
-   * node was consumed.
-   */
+  token: string[];
+  language: string;
+  type: number;
   error: number;
-  /**
-   * The root node index position on the AST. It informs of
-   * the parent index. If this is equal with `index` the node
-   * is not a child of nested within a pair.
-   */
   root: number;
-  /**
-   * The parent node index position on the AST. The parent index
-   * is the tag which is encapsulating the node.
-   */
   parent: number;
-  /**
-   * The index position of the node located on the AST.
-   */
   index: number;
-  /**
-   * The nodes kind value, which is used to distinguish the
-   * language it belongs to, as described in Node Kinds.
-   */
-  kind: NodeKind;
-  /**
-   * The offsets location. This contains a list of offsets,
-   * starting from the open location of the node and finishing at
-   * the closing location of the node. When this node is a
-   * syntactic pair, it will contain `4` entries, the first `2`
-   * are the starting node and the last `2` are the ending node.
-   */
-  offsets: Offsets;
-  /**
-   * The start and end Range position of the node.
-   */
+  kind: number;
+  offsets: number[];
   range: { start?: Position; end?: Position };
-  /**
-   * The nodes children indexes
-   *
-   * **IMPORTANT**
-   *
-   * It's important to not that values here are only
-   * applied to token that accept accept child tags, eg: `{% else %}`
-   */
-  children?: Children[];
-  /**
-   * Whether or not the node is a singular type node, ie:
-   * is not syntactic.
-   */
+  children?: number[];
   singular: boolean;
-  /**
-   * Objects this tag contains. Each property contained on the
-   * object is an offset location, the value of each property will either
-   * be a string array or a number.
-   *
-   * When the value of the property is type number, is value will point to
-   * offset property which contains the string values. When property values
-   * are a string array, each items in that array is the property value
-   * expressed.
-   *
-   * ----
-   *
-   * Example:
-   *
-   * `{{ object.prop.foo | filter: bar.baz }}`
-   *
-   * ```javascript
-   * {
-   *   4:[ 'object', 'prop', 'foo' ],
-   *   11: 4,
-   *   16: 4,
-   *   30: ['bar', 'baz'],
-   *   34: 30
-   * }
-   * ```
-   *
-   * Notice here how the offsets point back to the property where
-   * the object began. The objects within Liquid tags are asserted
-   * in this manner as we want to walk the specifications in the fasted
-   * possible manner.
-   */
   objects?: object | { [offset: number]: string[] | number };
-
-  /**
-   * Filters this tag contains. Each property contained on the
-   * object is an offset location, its value is the name of the filter.
-   *
-   * @todo IMPROVE THIS LOGIC
-   */
   filters?: object | { [offset: number]: string };
+  attributes?: object | { [attribute: string]: string; };
 
-  /**
-   * An object containing attribute values.
-   *
-   *  @todo IMPROVE THIS LOGIC
-   */
-  attributes?:
-    | object
-    | {
-        [attribute: string]: string;
-      };
+  // LOCATION
+
+  get start(): number;
+  get end(): number;
+  get context(): number[];
+  get content(): string | false;
+
+  // METHODS
+
+  public getErrors (): Array<Parser.Diagnostic>
+  public getRoot (): INode;
+  public getParent (): INode;
+  public getContext (): Parser.Context[]
+  public getDocument(): TextDocument | false;
+
 }
 ````
 
+## Node Context
+
+The parser provides `contextual` parsing, which is disabled by default to improve speed. A context parse will compose a structure of the characters and tokens contained within a node. If `context` is set to `true` and you call the `node.getContext()` method, you will receive an array with the following data:
+
+<!-- prettier-ignore -->
+```typescript
+
+/**
+ * Singular / Output Tags
+ *
+ * Context for singular type tags. Where context contains only
+ * 1 item in the array.
+ *
+ * @example
+ *
+ * {% if "foo" == bar.baz %} {% endif %}
+ */
+node.getContext(): [
+  [
+   {
+      end: number,
+      start: number,
+      type: 'delimiter',
+      value: '{{',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'keyword',
+      value: 'foo',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'delimiter',
+      value: '}}',
+    }
+  ]
+]
+
+/**
+ * Tag Pairs
+ *
+ * Context for start/end type pair tags. Where
+ * index 0 is start and 1 is end.
+ *
+ * @example
+ *
+ * {% if "foo" == bar.baz %} {% endif %}
+ */
+node.getContext(): [
+  [
+    {
+      end: number,
+      start: number,
+      type: 'delimiter',
+      value: '{%',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'identifier',
+      value: 'if',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'string',
+      value: '"foo"',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'operator',
+      value: '==',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'object',
+      value: 'bar',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'separator',
+      value: '.',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'property',
+      value: 'bar',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'delimiter',
+      value: '%}',
+    }
+  ],
+  [
+    {
+      end: number,
+      start: number,
+      type: 'delimiter',
+      value: '{%',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'keyword',
+      value: 'endif',
+    },
+    {
+      end: number,
+      start: number,
+      type: 'delimiter',
+      value: '%}',
+    }
+  ]
+]
+```
+
 ## Grammar
 
-Liquid exists in a multitude of variations and no official/formal grammar exists for the language outside of its [standard](https://shopify.github.io/liquid/) open sourced variation. In order for the parser to compose the AST it leverages a collection of grammars made available via _Liquid Language Variation Specifications_. These specs are data reference files that describe Liquid syntax and provide a way to compose formal grammars for the Liquid Language.
+Liquid exists in a multitude of variations and no official/formal grammar exists for the language outside of its [standard](https://shopify.github.io/liquid/) open sourced variation. In order for the parser to compose the AST it leverages a collection of grammars made available via Variation Specifications. These specs are data reference files that describe Liquid syntax and provide a way to compose formal grammars for the Liquid Language.
 
 ## Development
 
-The Liquid Parser is written in ES2020 JavaScript with some TypeScript features that are using Babel for transpilation. Type checking is processed with [JSDocs](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html#supported-jsdoc) and TypeScript declarations files are leveraged for the more complex structures. Declarations are declared globally and referenced where necessary in jsdoc comment/type params. TypeScript is also leveraged for numeric/string enums.
+The parser is written in [TypeScript](https://www.typescriptlang.org/) and compiled using [Rollup](https://rollupjs.org/guide/en/). You will need to have access to Specification to preform any meaningful development as it depends the Spec grammars to function.
 
-> TypeScript files are not processed with the TypeScript compiler but instead using Babel and Terser. The `tsconfig.json` located at root exists to provide vscode intellisense features, for bundle configuration, see the `rollup.config.js` file.
+1. Clone the Liquify Repository
+2. Ensure [pnpm](https://pnpm.js.org/) is installed globally `npm i pnpm -g`
+3. Clone this repository `git clone https://github.com/panoply/liquify.git`
+4. Run `pnpm i`
+5. Run `pnpm build`
 
-#### Why only partially TypeScript?
-
-I love TypeScript but I generally just prefer to write pure JavaScript with a sprinkle of TypeScript. It is my personal preference and forces me to write detailed comments. If you reject that approach or idealogy, then maybe you should get a life.
+Optionally, you can `cd` into this package from root and run `pnpm dev` (recommended approach). If you want to develop on the Language Server, changes made in dev mode sync to the Server when in Debug mode.
 
 ## Tests
 
-Tests are provided using [AVA](#) and can be found in the `/test` directory. When running `pnpm dev` and launching development, tests will run along side bundling.
+Tests are provided using [AVA](https://github.com/avajs/ava) and can be found in the `/test` directory. When running `pnpm dev` and launching development, tests will run along side bundling.
 
 `pnpm test`
 
