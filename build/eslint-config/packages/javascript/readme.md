@@ -1,13 +1,13 @@
-## @brixtol/eslint-config-javascript
+## @liquify/eslint-config-js
 
-This package includes the shareable ESLint configuration consumed by [Liquify](https://liquify.dev). The config supports JavaScript via the [Babel Parser](https://github.com/babel/babel/tree/main/eslint/babel-eslint-parser).
+This package includes the shareable ESLint configuration consumed by [Liquify](https://liquify.dev). The config supports **JavaScript** via the [Babel Parser](https://github.com/babel/babel/tree/main/eslint/babel-eslint-parser).
 
 ### Install
 
 [pnpm](https://pnpm.js.org/en/cli/install)
 
 ```cli
-pnpm i @brixtol/eslint-config-javascript --save-dev
+pnpm i @liquify/eslint-config-js --save-dev
 ```
 
 ### Usage
@@ -18,34 +18,26 @@ Extend the configuration with `package.json`.
 {
   "eslintConfig": {
     "ignorePatterns": "*.html",
-    "extends": ["@liquify/eslint-config"],
+    "extends": ["@liquify/eslint-config-js"],
     "rules": {}
   }
 }
 ```
 
-### TypeScript
-
-The TypeScript projects require
+> Required peer dependency on eslint is required
 
 ### Troubleshoot
 
-If the shareable config is being consumed outside the brixtol monorepo then you may need install deps into that project:
+If the shareable config is being consumed outside the Liquify monorepo then you may need install deps into that project, however this should be last resort, everything should load correctly.
 
 ```cli
-pnpm i @babel/eslint-parser @babel/eslint-plugin eslint eslint-config-standard eslint-import-resolver-babel-module eslint-plugin-import eslint-plugin-node eslint-plugin-promise --save-dev
+pnpm i @babel/eslint-parser @babel/eslint-plugin eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-promise --save-dev
 ```
 
 ### Related
 
-- [@brixtol/eslint-config-typescript](https://github.com/brixtol/eslint-config-typescript)
-- [@brixtol/prettier-config](https://github.com/brixtol/prettier-config)
-- [@brixtol/browserslist-config](https://github.com/brixtol/browserslist-config)
+- [@liquify/eslint-config-ts](https://github.com/liquify)
 
 ### License
 
 [MIT](#LICENCE)
-
----
-
-We [♡](https://www.brixtoltextiles.com/discount/4D3V3L0P3RS]) open source!
