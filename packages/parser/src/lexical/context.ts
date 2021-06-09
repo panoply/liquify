@@ -1,167 +1,169 @@
+/* eslint-disable */
+
 /**
  * Token Context
  *
  * Describes the inner context of Liquid tokens. It breaks down the
  * stack of each node as we walk over its inner characters.
  */
-export const enum TokenContext {
+export enum TokenContext {
   /**
    * Opening Delimiter: `{{` `{%` `<` `</` `---`
    */
-  OpenTag = "open",
+  OpenTag = 'open',
 
   /**
    * Closing Delimiter: `}}` `%}` `>` ` />` `---`
    */
-  CloseTag = "close",
+  CloseTag = 'close',
 
   /**
    * Left Whitespace Trim Dash: `-`
    */
-  LeftTrim = "trim",
+  LeftTrim = 'trim',
 
   /**
    * Right Whitespace Trim Dash: `-`
    */
-  RightTrim = "trim",
+  RightTrim = 'trim',
 
   /**
    * Whitespace: `\s`
    */
-  Whitespace = "whitespace",
+  Whitespace = 'whitespace',
 
   /**
    * Invalid: `\n`
    */
-  Invalid = "invalid",
+  Invalid = 'invalid',
 
   /**
    * Newlines: `\n`
    */
-  Newline = "newline",
+  Newline = 'newline',
 
   /**
    * The tag name
    */
-  Identifier = "identifier",
+  Identifier = 'identifier',
 
   /**
    * Control Operators `!=|==|<|>|<=|=>|and|or|contains`
    */
-  Operator = "operator",
+  Operator = 'operator',
 
   /**
    * Control Condition
    */
-  Condition = "condition",
+  Condition = 'condition',
 
   /**
    * Iteration iteree value
    */
-  Iteree = "iteree",
+  Iteree = 'iteree',
 
   /**
    * Assignment Character: `=` or `:`
    */
-  Assignment = "assignment",
+  Assignment = 'assignment',
 
   /**
    * Variable value
    */
-  Variable = "variable",
+  Variable = 'variable',
 
   /**
    * Filters and Keywords: `in` or `upcase`
    */
-  Keyword = "keyword",
+  Keyword = 'keyword',
 
   /**
    * Seperator character: `,` or `|`
    */
-  Separator = "seperator",
+  Separator = 'seperator',
 
   /**
    * Value between:  `""` or `''`
    */
-  String = "string",
+  String = 'string',
 
   /**
    * Number Value: `1, 2, 3`
    */
-  Number = "number",
+  Number = 'number',
 
   /**
    * Number Value: `1, 2, 3`
    */
-  Integer = "integer",
+  Integer = 'integer',
 
   /**
    * Number Value: `1.12, -23.32, 3.22`
    */
-  Float = "float",
+  Float = 'float',
 
   /**
    * Boolean Value: `true` or `false`
    */
-  Boolean = "boolean",
+  Boolean = 'boolean',
 
   /**
    * An object value: `object.prop`
    */
-  Object = "object",
+  Object = 'object',
 
   /**
    * An object property value: `object.prop`
    */
-  Property = "property",
+  Property = 'property',
 
   /**
    * An object or array property bracket value: `[`
    */
-  OpenBracket = "start",
+  OpenBracket = 'start',
 
   /**
    * An object or array property bracket value: `]`
    */
-  CloseBracket = "end",
+  CloseBracket = 'end',
 
   /**
    * An object string property value: `object[name.prop]`
    */
-  PropertyObject = "PropertyObject",
+  PropertyObject = 'PropertyObject',
 
   /**
    * An object string property value: `object["prop"]`
    */
-  PropertyString = "PropertyString",
+  PropertyString = 'PropertyString',
 
   /**
    * Array value (used in iteration)
    */
-  Array = "array",
+  Array = 'array',
 
   /**
    * Attribute HTML Name
    */
-  Attribute = "attribute",
+  Attribute = 'attribute',
 
   /**
    * Range value (used in iteration): `(1..2)`
    */
-  Range = "range",
+  Range = 'range',
 
   /**
    * Control Condition
    */
-  Parameter = "parameter",
+  Parameter = 'parameter',
 
   /**
    * Empty Drop (used on objects)
    */
-  EndTag = "end_tag",
+  EndTag = 'end_tag',
 
   /**
    * Empty Drop (used on objects)
    */
-  EmptyDrop = "EmptyDrop",
+  EmptyDrop = 'EmptyDrop',
 }

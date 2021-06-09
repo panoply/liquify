@@ -1,4 +1,4 @@
-import { ParseError, ErrorLevel } from '../lexical/errors';
+import { ParseError, ErrorLevel } from 'lexical/errors';
 import { Range } from 'vscode-languageserver-textdocument';
 
 /**
@@ -14,7 +14,7 @@ import { Range } from 'vscode-languageserver-textdocument';
  * error messages for non-english developers._
  *
  */
-export default (error = 0, range: Range) =>
+export const errors = (error = 0, range: Range) =>
   ({
     [ParseError.ParsingError]: {
       range,

@@ -1,5 +1,5 @@
-import { WSP, TAB, NWL, LFD, CAR, BWS } from '../lexical/characters';
-import { Document } from '../tree/document';
+import { WSP, TAB, NWL, LFD, CAR, BWS } from 'lexical/characters';
+import { Document } from 'tree/document';
 import { Position } from 'vscode-languageserver-textdocument';
 
 /**

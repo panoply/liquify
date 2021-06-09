@@ -1,6 +1,6 @@
 import has from 'lodash/has';
 import isArray from 'lodash/isArray';
-import { NodeType } from '../lexical/types';
+import { NodeType } from 'lexical/types';
 import specs, {
   IEngine,
   ObjectTypes,

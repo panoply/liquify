@@ -1,11 +1,5 @@
 {
-  "exclude": [
-    "node_modules/**",
-    "package",
-    "old/lexical/**",
-    "old/parser/**",
-    "test"
-  ],
+  "exclude": ["node_modules/**", "package", "test"],
   "include": ["src/index.ts", "src/**/*.ts", "src/types/*"],
   "typeAcquisition": {
     "enable": true,
@@ -35,6 +29,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "pretty": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./src/*"],
+      "parser": ["./src/parser/*"],
+      "lexical": ["./src/lexical/*"],
+      "tree": ["./src/lexical/tree/*"]
+    }
   }
 }

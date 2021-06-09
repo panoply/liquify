@@ -1,18 +1,14 @@
-import { NodeType } from '../lexical/types';
-import { TokenType } from '../lexical/tokens';
-import { ScanState, ScanCache } from '../lexical/state';
-import { ParseError } from '../lexical/errors';
-import Errors from './errors';
-import { Specs as spec } from './specs';
-import { IAST } from '../tree/ast';
-import { Stream as s } from './stream';
-import * as r from '../lexical/expressions';
-import * as c from '../lexical/characters';
-import {
-  IFilter,
-  IObject,
-  ITag
-} from '@liquify/liquid-language-specs';
+import { IAST } from 'tree/ast';
+import { NodeType } from 'lexical/types';
+import { TokenType } from 'lexical/tokens';
+import { ScanState, ScanCache } from 'lexical/state';
+import { ParseError } from 'lexical/errors';
+import { errors } from 'parser/errors';
+import { Specs as spec } from 'parser/specs';
+import { Stream as s } from 'parser/stream';
+import * as r from 'lexical/expressions';
+import * as c from 'lexical/characters';
+import { IFilter, IObject, ITag } from '@liquify/liquid-language-specs';
 
 /**
  * Scan
@@ -124,7 +120,7 @@ export const Scanner = (() => {
         // Lets ensure that its a number, then assert the errors
         if (typeof index === 'number') {
           document.errors.push(
-            Errors(ParseError.MissingEndTag, {
+            errors(ParseError.MissingEndTag, {
               start: document.nodes[index].range.start,
               end: document.positionAt(s.size)
             })

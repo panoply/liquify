@@ -1,21 +1,17 @@
-import { TokenType } from '../lexical/tokens';
-import { TokenContext } from '../lexical/context';
-import { NodeType } from '../lexical/types';
-import { NodeLanguage } from '../lexical/language';
-import { NodeKind } from '../lexical/kind';
-import { ParseError } from '../lexical/errors';
-import { Config as config } from '../config';
-import context from '../tree/context';
-import { INode } from '../tree/node';
-import { IAST } from '../tree/ast';
-import { Scanner as scanner } from './scanner';
-import { Specs as spec } from './specs';
-import errors from './errors';
-import {
-  // IFilter,
-  // IObject,
-  ITag
-} from '@liquify/liquid-language-specs';
+import { TokenType } from 'lexical/tokens';
+import { TokenContext } from 'lexical/context';
+import { NodeType } from 'lexical/types';
+import { NodeLanguage } from 'lexical/language';
+import { NodeKind } from 'lexical/kind';
+import { ParseError } from 'lexical/errors';
+import { Config as config } from 'config';
+import { Context as context } from 'tree/context';
+import { INode } from 'tree/node';
+import { IAST } from 'tree/ast';
+import { Scanner as scanner } from 'parser/scanner';
+import { Specs as spec } from 'parser/specs';
+import { errors } from 'parser/errors';
+import { ITag } from '@liquify/liquid-language-specs';
 
 /**
  * Parser
@@ -56,7 +52,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
    * Holds an instance of the current node being parsed.
    * We construct the data of each node via this letting.
    */
-  let node: Parser.ASTNode;
+  let node: INode;
 
   /**
    * Root Node Index

@@ -1,7 +1,8 @@
+import { TextDocumentItem, VersionedTextDocumentIdentifier } from 'vscode-languageserver-types';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { IAST } from './ast';
-import { parse } from '../parser/parse';
-import { handleError } from './utils';
+import { IAST } from 'tree/ast';
+import { parse } from 'parser/parse';
+import { handleError } from 'tree/utils';
 
 /* GLOBALS ------------------------------------ */
 
@@ -52,7 +53,7 @@ export const Document = (function () {
        * Creates a document model manager for the text document, this
        * function is executed per document open.
        */
-      scan: ({ uri, languageId, version, text }) => {
+      scan: ({ uri, languageId, version, text }: TextDocumentItem) => {
         textDocument = TextDocument.create(uri, languageId, version, text);
         AST = model.set(uri, new IAST(textDocument)).get(uri);
         return parse(AST);
@@ -76,7 +77,7 @@ export const Document = (function () {
        * Update the text document model, this is executed each time the document
        * content changes and is called via the `onDidChangeTextDocument` event.
        */
-      update: ({ uri, version }, changes: any) => {
+      update: ({ uri, version }: VersionedTextDocumentIdentifier, changes: any) => {
         if (textDocument.uri !== uri) {
           if (model.has(uri)) {
             AST = model.get(uri);

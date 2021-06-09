@@ -1,10 +1,10 @@
-import { NodeKind } from '../lexical/kind';
-import { NodeType } from '../lexical/types';
-import { NodeLanguage } from '../lexical/language';
-import { Scanner } from '../parser/scanner';
-import Context from './context';
+import { NodeKind } from 'lexical/kind';
+import { NodeType } from 'lexical/types';
+import { NodeLanguage } from 'lexical/language';
+import { Scanner } from 'parser/scanner';
+import { Context } from 'tree/context';
 import { TextDocument, Range } from 'vscode-languageserver-textdocument';
-import { Document } from './document';
+import { Document } from 'tree/document';
 
 /**
  * AST Node
@@ -190,7 +190,7 @@ export class INode {
    * Returns the root node of this node. If no root node exists
    * then the node is returned.
    */
-  public getRoot (): Parser.ASTNode {
+  public getRoot (): INode {
     return Document.AST.nodes[this.root];
   }
 
@@ -198,7 +198,7 @@ export class INode {
    * Returns the parent node of this node. If no root node exists
    * then the node is returned.
    */
-  public getParent (): Parser.ASTNode {
+  public getParent (): INode {
     return Document.AST.nodes[this.parent];
   }
 

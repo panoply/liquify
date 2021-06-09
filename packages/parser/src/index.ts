@@ -1,17 +1,17 @@
 import { Config, IConfig } from './config';
-import { Specs } from './parser/specs';
-import { Document } from './tree/document';
-import { Stream } from './parser/stream';
+import { Specs } from 'parser/specs';
+import { Document } from 'tree/document';
+import { Stream } from 'parser/stream';
 import { Variation, VariationEntries, IEngine } from '@liquify/liquid-language-specs';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
 export { IEngine } from '@liquify/liquid-language-specs';
 export { TextDocument } from 'vscode-languageserver-textdocument';
-export { NodeLanguage } from './lexical/language';
-export { NodeType } from './lexical/types';
-export { NodeKind } from './lexical/kind';
-export * as Characters from './lexical/characters'; ;
+export { NodeLanguage } from 'lexical/language';
+export { NodeType } from 'lexical/types';
+export { NodeKind } from 'lexical/kind';
+export * as Characters from 'lexical/characters'; ;
 
 export function LiquidParser (options: IConfig) {
 

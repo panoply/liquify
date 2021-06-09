@@ -9,7 +9,8 @@ import { Scanner } from '../parser/scanner';
  *
  * @param {number} node
  */
-export default (function Context (node) {
+export const Context = ((node) => {
+
   let context = [];
 
   /**

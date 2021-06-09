@@ -1,7 +1,7 @@
 import { plugins, jsonmin } from '@liquify/rollup-plugin-utils';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
-import { basename } from 'path';
+import { basename, resolve } from 'path';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
@@ -15,11 +15,12 @@ export default {
   input: 'src/index.ts',
   output: {
     format: 'cjs',
-    dir: require('./tsconfig.json').compilerOptions.outDir,
+    dir: 'package',
     sourcemap: process.env.prod ? false : 'inline',
     preferConst: true,
     chunkFileNames: '[name].js',
     manualChunks (id) {
+
       if (id.includes('specs/package')) {
 
         if (basename(id) === 'index.js') return '@specs/index';
@@ -45,6 +46,16 @@ export default {
   ],
 
   plugins: plugins([
+    alias(
+      {
+        entries: {
+          lexical: resolve(__dirname, 'src/lexical'),
+          parser: resolve(__dirname, 'src/parser'),
+          tree: resolve(__dirname, 'src/tree'),
+          config: resolve(__dirname, 'src/config')
+        }
+      }
+    ),
     typescript(),
     noderesolve({
       extensions: [

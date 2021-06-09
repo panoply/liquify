@@ -1,5 +1,5 @@
 import test from 'ava';
-import { LiquidParser } from '../dist/index';
+import { LiquidParser } from '../package/index';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import time from 'pretty-hrtime';

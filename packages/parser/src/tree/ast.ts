@@ -1,11 +1,19 @@
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { NodeType } from '../lexical/types';
-import { NodeKind } from '../lexical/kind';
-import { Config } from '../config';
-import Context from './context';
-import { Stream as stream } from '../parser/stream';
 import inRange from 'lodash/inRange';
+import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
+import { NodeType } from 'lexical/types';
+import { NodeKind } from 'lexical/kind';
+import { Config } from 'config';
+import { Context } from 'tree/context';
+import { Stream as stream } from 'parser/stream';
+import { INode } from 'tree/node';
 
+/**
+ * Abstract Syntax Tree
+ *
+ * This instance is generated for every document. It
+ * contains methods to interact with parsed nodes and
+ * also perform actions.
+ */
 export class IAST {
 
   /**
@@ -23,7 +31,7 @@ export class IAST {
    * The TextDocument literal for the AST instance.
    * For every document, this value is unique.
    */
-  public textDocument: Parser.TextDocument;
+  public textDocument: TextDocument;
 
   /**
    * List of parsing errors and validations
@@ -58,13 +66,13 @@ export class IAST {
   /**
    * The abstract syntax tree.
    */
-  public nodes: Parser.ASTNode[] = [];
+  public nodes: INode[] = [];
 
   /**
    * Returns the node at the current cursor location or null
    * if the cursor is not located within a node on the tree.
    */
-  public node: Parser.ASTNode = null;
+  public node: INode = null;
 
   /**
    * Generates a document literal of current
@@ -86,7 +94,7 @@ export class IAST {
    * Converts a location offset to position via
    * textDocument instance method: `positionAt()`
    */
-  public positionAt (offset: number): Parser.Position {
+  public positionAt (offset: number): Position {
     return this.textDocument.positionAt(offset);
   }
 
@@ -94,7 +102,7 @@ export class IAST {
    * Converts a position to an offset via
    * textDocument instance method `offsetAt()`
    */
-  public offsetAt (location: Parser.Position): number {
+  public offsetAt (location: Position): number {
     return this.textDocument.offsetAt(location);
   }
 
@@ -106,7 +114,7 @@ export class IAST {
   public toRange (
     start: number = 0,
     end: number = this.textDocument.getText().length
-  ): Parser.Range {
+  ): Range {
     return {
       start: this.textDocument.positionAt(start),
       end: this.textDocument.positionAt(end)
@@ -118,7 +126,7 @@ export class IAST {
    * type array, where the first item is `start` offset and second
    * value is `end` offset.
    */
-  public toRangeOffset (location: Parser.Range): [number, number] {
+  public toRangeOffset (location: Range): [number, number] {
     return [
       this.textDocument.offsetAt(location.start),
       this.textDocument.offsetAt(location.end)
@@ -131,7 +139,7 @@ export class IAST {
    * line where the location was passed and finish at the end of
    * the line (character `0` of next line).
    */
-  public toLineRange (location: number | Parser.Position): Parser.Range {
+  public toLineRange (location: number | Position): Range {
     const range = {
       start: {
         character: 0,
@@ -238,7 +246,7 @@ export class IAST {
    * Returns the previous node from the current
    * node reference.
    */
-  get prevNode (): Parser.ASTNode {
+  get prevNode (): INode {
     return this.nodes[this.node.index - 1];
   }
 
@@ -246,14 +254,14 @@ export class IAST {
    * Returns the next node from the current
    * node reference.
    */
-  get nextNode (): Parser.ASTNode {
+  get nextNode (): INode {
     return this.nodes[this.node.index + 1];
   }
 
   /**
    * Returns the very last node on the AST
    */
-  get lastNode (): Parser.ASTNode {
+  get lastNode (): INode {
     return this.nodes[this.nodes.length - 1];
   }
 
@@ -264,9 +272,9 @@ export class IAST {
    * cursor property, unless false is passed as second parameter
    */
   public getNodeAt (
-    position: Parser.Position | number,
+    position: Position | number,
     updateNode: boolean = true
-  ): Parser.ASTNode | false {
+  ): INode | false {
     const offset =
       typeof position === 'number' ? position : this.offsetAt(position);
 
@@ -307,8 +315,8 @@ export class IAST {
    *
    */
   public getNodeContext (
-    position: Parser.Position | number,
-    node: Parser.ASTNode = this.node
+    position: Position | number,
+    node: INode = this.node
   ) {
     const offset =
       typeof position === 'number' ? position : this.offsetAt(position);
@@ -332,7 +340,7 @@ export class IAST {
    * cursor property.
    */
   public getEmbedAt (
-    position: Parser.Position | number,
+    position: Position | number,
     updateNode: boolean = true
   ) {
     if (this.embeds.length === 0) return false;
@@ -366,7 +374,7 @@ export class IAST {
    * essentially the one encapsulting it. This is
    * different from a root node.
    */
-  public getParentNode (node = this.node): Parser.ASTNode | false {
+  public getParentNode (node = this.node): INode | false {
     return node.parent === node.index && node?.root === 0
       ? false
       : this.nodes[node.parent];
@@ -376,7 +384,7 @@ export class IAST {
    * Accepts a list of indexes which point to nodes on the
    * AST. This is used to (for example) return childNodes.
    */
-  public getNodes (indexes: number[]): Parser.ASTNode[] {
+  public getNodes (indexes: number[]): INode[] {
     return indexes.map((n) => this.nodes[n]);
   }
 
@@ -385,7 +393,7 @@ export class IAST {
    * We need a method for this as comments may sometimes
    * contain rulesets or their contents used in features.
    */
-  public getComments (): Parser.ASTNode[] | false {
+  public getComments (): INode[] | false {
     if (this.comments.length === 0) return false;
 
     return this.comments.map((n) => this.nodes[n]);
@@ -397,7 +405,7 @@ export class IAST {
    * within thier contents. You can optionally past an
    * array list of languages to filter from results.
    */
-  public getEmbeds (languages: string[] = undefined): Parser.ASTNode[] | false {
+  public getEmbeds (languages: string[] = undefined): INode[] | false {
     if (this.embeds.length === 0) return false;
 
     const embeds = this.embeds.map((n) => this.nodes[n]);
@@ -430,7 +438,7 @@ export class IAST {
    * params are swapped to support negative ranges.
    */
   private within (
-    position: Parser.Position | number,
+    position: Position | number,
     start: number,
     end?: number
   ): boolean {
@@ -447,7 +455,7 @@ export class IAST {
    * Check if the node is within scope. This is executed at the parse
    * level and requires an expression `OR`.
    */
-  public withinScope (node: Parser.ASTNode, scope: RegExp): boolean {
+  public withinScope (node: INode, scope: RegExp): boolean {
     const parentNode = this.getParentNode(node);
     if (parentNode) return scope.test(parentNode.name);
   }
@@ -458,8 +466,8 @@ export class IAST {
    * assigned by either the previous document change or method event.
    */
   public withinEndToken (
-    position: Parser.Position | number,
-    node: Parser.ASTNode = this.node
+    position: Position | number,
+    node: INode = this.node
   ): boolean {
     if (!node || node.singular) return false;
 
@@ -473,8 +481,8 @@ export class IAST {
    * document change or method event.
    */
   public withinNode (
-    position: Parser.Position | number,
-    node: Parser.ASTNode = this.node
+    position: Position | number,
+    node: INode = this.node
   ): boolean {
     if (!node) return false;
 
@@ -488,8 +496,8 @@ export class IAST {
    * by either the previous document change or method event.
    */
   public withinBody (
-    position: Parser.Position | number,
-    node: Parser.ASTNode = this.node
+    position: Position | number,
+    node: INode = this.node
   ): boolean {
     if (!node || node.singular) return false;
     return this.within(position, node.offsets[1], node.offsets[2]);
@@ -502,8 +510,8 @@ export class IAST {
    * document change or method event.
    */
   public withinToken (
-    position: Parser.Position | number,
-    node: Parser.ASTNode = this.node
+    position: Position | number,
+    node: INode = this.node
   ): boolean {
     if (!node) return false;
     return this.within(position, node.offsets[0], node.offsets[1]);
@@ -517,8 +525,8 @@ export class IAST {
    * method event.
    */
   public withinEmbed (
-    position: Parser.Position | number,
-    node: Parser.ASTNode = this.node
+    position: Position | number,
+    node: INode = this.node
   ): boolean {
     if (!node || node.singular) return false;
 
