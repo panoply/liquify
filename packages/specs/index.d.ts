@@ -2,6 +2,38 @@
 
 export type Engine = "standard" | "shopify" | "jekyll" | "eleventy";
 
+export enum IEngine {
+
+  /**
+   * Liquid Standard Variation
+   *
+   * **FREE**
+   */
+  Standard = "standard",
+
+  /**
+   * Liquid Shopify Variation
+   *
+   * **LICENSED**
+   */
+  Shopify = "shopify",
+
+  /**
+   * Liquid Jekyll Variation
+   *
+   * **FREE**
+   */
+  Jekyll = "jekyll",
+
+  /**
+   * Liquid Eleventy Variation
+   *
+   * **FREE**
+   */
+  Eleventy = "eleventy"
+
+}
+
 /* OBJECT TYPEOF ------------------------------ */
 
 export type ObjectTypes =
@@ -238,6 +270,13 @@ export type IFilter = {
   readonly arguments?: FilterArguments[];
 
   /**
+   * The filters scope
+   *
+   * @default undefined
+   */
+  readonly scope?: string[];
+
+  /**
    * Information field which holds some additional information
    * about the filter spec. This is auto-generated within cryptospec.
    *
@@ -424,9 +463,9 @@ export type ITag = {
   /**
    * List of parameters available to this tag
    *
-   * @default undefined
+   * @default false
    */
-  readonly arguments?: TagArguments[];
+  readonly arguments?: TagArguments[] | false;
   /**
    * List of arguments available to this tag
    *
@@ -485,6 +524,8 @@ export interface Options {
   variation: "standard" | "shopify" | "jekyll" | "eleventy";
   license?: string;
 }
+
+export type Specifiers = IFilter & IObject & ITag;
 
 /* -------------------------------------------- */
 /*                 SPECIFICATION                */

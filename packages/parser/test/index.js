@@ -1,13 +1,13 @@
-import test from 'ava'
-import { LiquidParser } from '../package/index'
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
-import time from 'pretty-hrtime'
-import { config } from 'dotenv'
+import test from 'ava';
+import { LiquidParser } from '../package/index';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import time from 'pretty-hrtime';
+import { config } from 'dotenv';
 
-config()
+config();
 
-const document = readFileSync(resolve('test/fixtures/blank.txt'), 'utf8').toString()
+const document = readFileSync(resolve('test/fixtures/blank.txt'), 'utf8').toString();
 
 const server = {
   languageId: 'liquid',
@@ -15,7 +15,7 @@ const server = {
   text: document,
   uri: 'full_parse',
   getText: () => document
-}
+};
 
 const { Parser, Spec } = LiquidParser({
   engine: 'shopify',
@@ -36,23 +36,23 @@ const { Parser, Spec } = LiquidParser({
   error_tolerance: 1,
   exclude: [],
   associate_tags: []
-})
+});
 
-Spec.engine('shopify')
+Spec.engine('shopify');
 
 test('FullDocument Parse', t => {
 
-  const start = process.hrtime()
-  const ast = Parser.scan(server)
-  const end = process.hrtime(start)
+  const start = process.hrtime();
+  const ast = Parser.scan(server);
+  const end = process.hrtime(start);
 
   t.log(
     ast.nodes,
     ast.errors,
     ast.nodes[0].getContext()
-  )
+  );
 
-  t.log(time(end, { verbose: true }))
-  t.pass()
+  t.log(time(end, { verbose: true }));
+  t.pass();
 
-})
+});

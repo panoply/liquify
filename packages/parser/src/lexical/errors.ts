@@ -1,4 +1,6 @@
-export const enum ErrorLevel {
+/* eslint-disable */
+
+export enum ErrorLevel {
   /**
    * Reports an error.
    */
@@ -20,14 +22,20 @@ export const enum ErrorLevel {
   Hint = 4,
 }
 
-export const enum ParseError {
+export enum ParseError {
+  /**
+   * Parsing error occured. This could
+   * be any error, its a fallback
+   */
+  ParsingError = 1,
+
   /**
    * Tag name is missing
    *
    * @example
    * {% %}
    */
-  MissingTagName = 1,
+  MissingTagName,
 
   /**
    * Object name is missing

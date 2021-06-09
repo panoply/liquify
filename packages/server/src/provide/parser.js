@@ -1,4 +1,4 @@
-import { LiquidParser } from '@liquify/liquid-parser'
+import { LiquidParser, IEngine } from '@liquify/liquid-parser'
 
 /**
  * Liquid Parsers
@@ -11,7 +11,6 @@ export const { Spec, Parser, Documents } = LiquidParser(
     frontmatter: false,
     whitespace: false,
     newlines: false,
-    range: true,
     offsets: true,
     process_unknown: true,
     parse_html: false,
