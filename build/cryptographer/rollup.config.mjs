@@ -1,21 +1,26 @@
 import { terser } from 'rollup-plugin-terser'
 import commonjs from '@rollup/plugin-commonjs'
-import pkg from './package.json'
+import { banner, read } from '@liquify/rollup-plugin-utils'
 
 export default {
   input: 'src/index.js',
   output: [
     {
-      format: 'es',
-      file: pkg.module,
+      format: 'cjs',
+      file: read.pkg.exports.require,
       sourcemap: process.env.prod ? false : 'inline',
-      preferConst: true
+      exports: 'auto',
+      esModule: false,
+      preferConst: true,
+      banner: banner('CC BY-NC-ND 4.0')
     },
     {
-      format: 'cjs',
-      file: pkg.main,
+      format: 'es',
+      file: read.pkg.exports.import,
       sourcemap: process.env.prod ? false : 'inline',
-      exports: 'auto'
+      esModule: false,
+      preferConst: true,
+      banner: banner('CC BY-NC-ND 4.0')
     }
   ],
   external: [ 'crypto' ],

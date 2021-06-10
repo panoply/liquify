@@ -1,23 +1,27 @@
 import { terser } from 'rollup-plugin-terser'
 import json from '@rollup/plugin-json'
-import pkg from './package.json'
+import { read, banner } from '@liquify/rollup-plugin-utils'
 
 export default {
   input: 'index.js',
   output: [
     {
       format: 'cjs',
-      file: pkg.main,
+      file: read.pkg.exports.require,
       sourcemap: process.env.prod ? false : 'inline',
-      exports: 'default'
+      banner: banner('MIT'),
+      exports: 'default',
+      esModule: false,
+      preferConst: true
     },
     {
-      format: 'module',
-      file: pkg.module,
+      format: 'es',
+      file: read.pkg.exports.import,
+      banner: banner('MIT'),
       sourcemap: process.env.prod ? false : 'inline'
     }
   ],
-  external: [ ...Object.keys(pkg.dependencies), 'path' ],
+  external: [ ...Object.keys(read.pkg.dependencies), 'path' ],
   plugins: [
     json({
       preferConst: true

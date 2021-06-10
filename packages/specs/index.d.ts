@@ -2,7 +2,7 @@
 
 export type Engine = "standard" | "shopify" | "jekyll" | "eleventy";
 
-export enum IEngine {
+export const enum IEngine {
 
   /**
    * Liquid Standard Variation

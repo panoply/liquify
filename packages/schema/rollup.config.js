@@ -10,19 +10,19 @@ export default {
     sourcemap: process.env.prod ? false : 'inline',
     exports: 'default',
     plugins: [
-      terser({
-        ecma: 6
-        , warnings: 'verbose'
-        , compress: { passes: 2 }
-      })
+      terser(
+        {
+          ecma: 6
+          , warnings: 'verbose'
+          , compress: { passes: 2 }
+        }
+      )
     ]
   },
-  plugins: process.env.stores
-    ? [
-      globs({
-        globs: [
-          'stores/*.json'
-        ],
+  plugins: process.env.stores ? [
+    globs(
+      {
+        globs: [ 'stores/*.json' ],
         dest: 'package',
         transform: {
           'stores/*.json': ({ content }) => ({
@@ -30,7 +30,7 @@ export default {
             dest: 'package'
           })
         }
-      })
-    ]
-    : null
+      }
+    )
+  ] : null
 }

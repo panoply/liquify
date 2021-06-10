@@ -187,5 +187,13 @@
     "stripliteral",
     "turbolinks"
   ],
-  "cSpell.ignoreWords": ["camelcase", "linebreak", "mvasilkov", "outdent"]
+  "cSpell.ignoreWords": [
+    "camelcase",
+    "harttle",
+    "linebreak",
+    "liquidjs",
+    "mvasilkov",
+    "outdent",
+    "repath"
+  ]
 }

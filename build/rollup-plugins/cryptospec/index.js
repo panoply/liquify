@@ -11,16 +11,20 @@ import { has } from 'rambda'
  *
  *  @return {import('rollup').Plugin}
  */
-export default function (options = {
+export default function cryptospec (options = {
   include: [],
   exclude: [],
   password: null,
+  dir: '@specs',
+  fileName: 'index',
   defaults: {}
 }) {
 
   const parse = {}
   const filter = createFilter(options.include, options.exclude)
   const crypto = cryptographer(options.password)
+  const cjs = options.fileName
+  const esm = options.fileName + '.es'
 
   /**
    * Virtual Generated Export
@@ -61,7 +65,11 @@ export default function (options = {
       ]
     ) => /* js */`
 
-      if (variation === '${engine}') return decrypt(base,  require('./${encodedPath}'));
+      if (variation === '${engine}') {
+        return decrypt(
+          base,
+          require('./${options.dir || ''}/${encodedPath}'));
+      }
 
     `).join('\n\n')
 
@@ -142,7 +150,7 @@ export default function (options = {
        *
        * @type {string}
        */
-      const ${standardNameEncoded} = require('./${standardPath}');
+      const ${standardNameEncoded} = require('./${options.dir || ''}/${standardPath}');
 
       /** __
        *
@@ -251,19 +259,20 @@ export default function (options = {
 
       parse.input = Object.entries(config.input)
 
-      config.input.index = 'index.js'
+      config.input[cjs] = cjs
+      config.input[esm] = esm
 
       for (const prop in config.input) {
+        if ([ esm, cjs ].includes(prop)) continue
 
-        if (prop === 'index') continue
-        config.input[crypto.encode(prop)] = config.input[prop]
+        config.input[`${options.dir || '.'}/${crypto.encode(prop)}`] = config.input[prop]
         delete config.input[prop]
       }
 
       /**
        * Change Parse JSON names to encrypted equivalents
        */
-      parse.input = parse.input.map(([ name, path ]) => [
+      parse.input = parse.input.map(([ name ]) => [
         name,
         `${crypto.encode(name)}.js`
       ])
@@ -274,12 +283,13 @@ export default function (options = {
 
     resolveId (source) {
 
-      return source === 'index.js' ? source : null
+      return (source === cjs || source === esm) ? source : null
+
     },
 
     load (id) {
 
-      if (id !== 'index.js') return null
+      if (![ cjs, esm ].includes(id)) return null
 
       /**
        * Get Standard variation

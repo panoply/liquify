@@ -5,6 +5,8 @@ packages:
   - "build/eslint-ts"
   - "build/eslint-js"
 
+  - "build/rollup-plugins/entries"
+
   - "build/cryptographer"
 
   - "build/rollup-plugins/cryptospec"

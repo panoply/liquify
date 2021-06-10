@@ -1,8 +1,26 @@
 import jsonStrip from 'strip-json-comments'
 import jsonMinify from 'jsonminify'
-import { basename } from 'path'
+import { basename, join } from 'path'
+import { readFileSync } from 'fs'
 import stripIndent from 'strip-indent'
 import chalk from 'chalk'
+
+/**
+ * Reads files contained at roots like package.json
+ */
+export const read = (
+  () => ({
+
+    get pkg () {
+
+      const cwd = process.cwd()
+      const pkg = readFileSync(join(cwd, 'package.json')).toString()
+
+      return JSON.parse(jsonStrip(pkg))
+
+    }
+  })
+)()
 
 /**
  * Minify JSON and strip JSONC files
@@ -52,16 +70,10 @@ export const plugins = (devPlugins, prodPlugins) => {
  * @param {object} package
  * @returns {string}
  */
-export const banner = ({
-  name
-  , main
-  , version
-  , author
-  , owner
-}, license = 'PROPRIETARY') => {
+export const banner = (license = 'PROPRIETARY') => {
 
-  owner = owner || author
-
+  const { name, main, version, author } = read.pkg
+  const owner = author
   const date = new Date()
     .toISOString()
     .replace(/T/, ' ')

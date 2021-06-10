@@ -1,7 +1,7 @@
 import { join, basename } from 'path'
 import chokidar from 'chokidar'
 import minimatch from 'minimatch'
-import { readFile, outputFile, copy, remove, existsSync } from 'fs-extra'
+import fs from 'fs-extra'
 import { mark, stop } from 'marky'
 import pretty from 'pretty-ms'
 import chalk from 'chalk'
@@ -25,9 +25,9 @@ const transformer = (dest, transform) => async (base, file) => {
     throw new Error(`${file} transform must be of type object or function`)
   }
 
-  try { existsSync(file) } catch (error) { throw new Error(error) }
+  try { fs.existsSync(file) } catch (error) { throw new Error(error) }
 
-  const content = await readFile(file)
+  const content = await fs.readFile(file)
 
   if (typeof transform === 'function') return transform({ name: file, content, dest })
 
@@ -118,7 +118,7 @@ const changes = (files, dest, transform) => async item => {
 
   if (typeof file === 'boolean' || typeof file === 'string') {
 
-    await copy(item, join(repath(base, file, dest), rename(base, file, item, files)))
+    await fs.copy(item, join(repath(base, file, dest), rename(base, file, item, files)))
 
     log(chalk`{bold copied} {cyan ${item}} in {dim ${pretty(stop(item).duration)}}`)
 
@@ -133,7 +133,7 @@ const changes = (files, dest, transform) => async item => {
 
     if (file.content) {
 
-      await outputFile(join(file.dest, file.name), file.content, 'utf8')
+      await fs.outputFile(join(file.dest, file.name), file.content, 'utf8')
 
       log(chalk`{bold modified} {cyan ${item}} in {dim ${pretty(stop(item).duration)}}`)
 
@@ -161,7 +161,7 @@ const removal = (files, dest) => async item => {
 
   const path = join(dest, basename(item))
 
-  await remove(path)
+  await fs.remove(path)
 
   files.delete(item)
 
@@ -219,9 +219,9 @@ export default (options = {}) => {
   if (!globs) throw new Error('Missing { globs: [] } in rollup-plugin-globs')
 
   let runs = 0
-    , build
-    , watch
-    , initialize
+  let build
+  let watch
+  let initialize
 
   return {
     name: '@liquify/rollup-plugin-globs',
@@ -233,7 +233,7 @@ export default (options = {}) => {
     async buildStart () {
 
       if (runs++) return
-      if (clean) await remove(dest)
+      if (clean) await fs.remove(dest)
 
       const files = new Map()
 
@@ -261,7 +261,7 @@ export default (options = {}) => {
     },
     buildEnd () {
 
-      if (build) watch.close()
+      if (build && watch) watch.close()
 
     }
 

@@ -2,10 +2,14 @@
   "name": "@liquify/rollup-plugin-cryptospec",
   "version": "0.1.0",
   "description": "Rollup plugin used by Liquify IDE editor tool for encryption and cryptography bundle processing",
-  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
   "license": "MIT",
-  "main": "./package/index.cjs.js",
-  "module": "./package/index.es.js",
+  "type": "module",
+  "main": "package/cryptospec.cjs",
+  "exports": {
+    "require": "./package/cryptospec.cjs",
+    "import": "./package/cryptospec.mjs"
+  },
   "private": false,
   "repository": {
     "type": "git",
@@ -16,7 +20,7 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c --environment prod && node -r esm ./scripts/strip.js",
+    "build": "rollup -c --environment prod && node ./scripts/strip.mjs",
     "tests": "node ./test/require-specs.js",
     "prepack": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",

@@ -38,7 +38,7 @@
   "dependencies": {
     "@liquify/cryptographer": "workspace:^0.1.0",
     "@liquify/liquid-language-specs": "workspace:^0.1.2",
-    "@liquify/liquid-parser": "workspace:^0.0.0",
+    "@liquify/liquid-parser": "workspace:^0.1.1-beta.1",
     "@liquify/schema-stores": "workspace:^0.1.4",
     "fs-extra": "^10.0.0",
     "lodash": "^4.17.21",
@@ -66,7 +66,7 @@
     "@babel/preset-typescript": "^7.13.0",
     "@babel/register": "^7.13.16",
     "@liquify/rollup-plugin-globs": "workspace:^0.1.0",
-    "@liquify/rollup-plugin-obfuscator": "workspace:^0.0.0",
+    "@liquify/rollup-plugin-obfuscator": "workspace:^0.2.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
     "@rollup/plugin-alias": "^3.1.2",
     "@rollup/plugin-commonjs": "^19.0.0",

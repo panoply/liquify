@@ -4,7 +4,7 @@
 
 An incremental parser/scanner for the Liquid Template Language. Developed for the [Liquify IDE](https://liquify.dev) text editor plugin to construct a detailed workable Abstract Syntax Tree. The parser is used in combination with the [Node LSP](https://microsoft.github.io/language-server-protocol/) (Language Server Protocol) implementation.
 
-> **IMPORTANT** This parser is used to construct and query an AST, not perform actions on parsed code. Use [liquidjs](https://github.com/harttle/liquidjs) by [Harttle](https://github.com/harttle) for Liquid engine support in JavaScript and consider supporting that project. Alternatively you can use the standard [liquid](https://github.com/Shopify/liquid) ruby based engine.
+> **IMPORTANT** This parser is used to construct and query an AST, not perform actions on parsed code. Use [liquidjs](https://github.com/harttle/liquidjs) by [Harttle](https://github.com/harttle) for Liquid engine support in JavaScript.
 
 ## Why?
 
@@ -18,19 +18,13 @@ Facilitating modern IDE capabilities when working with the Liquid Template Langu
 
 ## Usage
 
-**Please note:** there are very little use cases where you would require this parser in the real world. The Liquify IDE plugin that consumes this package should suffice and facilitate most (if not all) your requirements when developing with Liquid. The parser is specifically designed to work with a Language Server but can be appropriated to different use cases.
+There are very little use cases where you would require this parser in the real world. The Liquify IDE plugin that consumes this package should suffice and facilitate most (if not all) your requirements when developing with Liquid. The parser is specifically designed to work with a Language Server but can be appropriated to different use cases.
 
 ```ts
 import { LiquidParser } from '@liquify/liquid-parser'
 
-const {
-  Documents,
-  Spec,
-  Parser
-} =  LiquidParser(options: Options)
+const { Documents, Spec, Parser } =  LiquidParser(options: Options)
 
-
-/* PARSER ------------------------------------- */
 
 /**
  * Full Document Scan. In LSP this is called at
@@ -357,6 +351,9 @@ node.getContext(): [
 Liquid exists in a multitude of variations and no official/formal grammar exists for the language outside of its [standard](https://shopify.github.io/liquid/) open sourced variation. In order for the parser to compose the AST it leverages a collection of grammars made available via Variation Specifications. These specs are data reference files that describe Liquid syntax and provide a way to compose formal grammars for the Liquid Language.
 
 ## Development
+
+- [node](https://nodejs.org/) v14
+- [pnpm](https://pnpm.js.org/en/cli/install) v6
 
 The parser is written in [TypeScript](https://www.typescriptlang.org/) and compiled using [Rollup](https://rollupjs.org/guide/en/). You will need to have access to Specification to preform any meaningful development as it depends the Spec grammars to function.
 

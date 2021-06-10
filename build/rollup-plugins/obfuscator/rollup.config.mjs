@@ -1,24 +1,26 @@
 import { terser } from 'rollup-plugin-terser'
-import { banner } from '@liquify/rollup-plugin-utils'
-import pkg from './package.json'
+import { banner, read } from '@liquify/rollup-plugin-utils'
 
 export default {
   input: 'index.js',
   output: [
     {
       format: 'cjs',
-      file: pkg.main,
+      file: read.pkg.exports.require,
       sourcemap: process.env.prod ? false : 'inline',
       exports: 'auto',
-      banner: banner(pkg, 'MIT')
+      banner: banner('MIT')
     },
     {
-      format: 'module',
-      file: pkg.module,
+      format: 'es',
+      file: read.pkg.exports.import,
       sourcemap: process.env.prod ? false : 'inline',
-      exports: 'auto',
-      banner: banner(pkg, 'MIT')
+      banner: banner('MIT')
     }
+  ],
+  external: [
+    '@rollup/pluginutils',
+    'javascript-obfuscator'
   ],
   plugins: [
     terser({

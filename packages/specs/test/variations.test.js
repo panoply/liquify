@@ -2,11 +2,36 @@ import test from 'ava'
 import { config } from 'dotenv'
 import { has, keys } from 'rambda'
 import specs from '../package/index'
-import { defaults } from '../rollup.config'
 import sizeof from 'object-sizeof'
 import ps from 'pretty-bytes'
 
 config()
+
+/**
+ * **!!    IMPORTANT    !!**
+ *
+ * This must match the "defaults" option supplied in specs
+ */
+const defaults = {
+  filters: {
+    type: 'filter'
+  },
+  objects: {
+    type: 'object',
+    filters: true,
+    singular: true,
+    global: false,
+    deprecated: false,
+    trims: true
+  },
+  tags: {
+    filters: false,
+    singular: false,
+    trims: true,
+    deprecated: false,
+    arguments: true
+  }
+}
 
 /**
  * Defaults Merger

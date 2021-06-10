@@ -1,11 +1,15 @@
 {
   "name": "@liquify/rollup-plugin-obfuscator",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "description": "Rollup plugin support for JavaScript code obfuscation using JavaScript  Obfuscator",
-  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
   "license": "MIT",
-  "main": "./package/index.cjs.js",
-  "module": "./package/index.es.js",
+  "type": "module",
+  "main": "package/rollup-plugin-obfuscator.cjs",
+  "exports": {
+    "require": "./package/rollup-plugin-obfuscator.cjs",
+    "import": "./package/rollup-plugin-obfuscator.mjs"
+  },
   "private": false,
   "repository": {
     "type": "git",
@@ -22,32 +26,29 @@
     "test": "ava --verbose"
   },
   "eslintConfig": {
-    "extends": [
-      "@liquify/eslint-config-js"
-    ]
+    "extends": ["@liquify/eslint-config-js"]
   },
   "ava": {
     "babel": true,
-    "files": [
-      "test/**/**"
-    ],
+    "files": ["test/**/**"],
     "concurrency": 5
   },
   "release": {
-    "branches": [
-      "master",
-      "next"
-    ]
+    "branches": ["master", "next"]
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
     "@liquify/eslint-config-js": "workspace:^1.0.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
     "ava": "^3.15.0",
+    "rollup": "^2.51.1",
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
     "@rollup/pluginutils": "^4.1.0",
     "javascript-obfuscator": "^2.14.0"
+  },
+  "peerDependencies": {
+    "rollup": "^2.51.1"
   }
 }

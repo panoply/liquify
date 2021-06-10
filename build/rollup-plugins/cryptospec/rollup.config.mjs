@@ -1,26 +1,31 @@
 import { terser } from 'rollup-plugin-terser'
-import { banner } from '@liquify/rollup-plugin-utils'
+import { banner, read } from '@liquify/rollup-plugin-utils'
 import strip from 'rollup-plugin-strip-code'
-import pkg from './package.json'
 
 export default {
   input: 'index.js',
   output: [
     {
       format: 'cjs',
-      file: 'package/index.cjs.js',
+      file: read.pkg.exports.require,
       sourcemap: process.env.prod ? false : 'inline',
-      banner: banner(pkg, 'CC BY-NC-ND 4.0'),
-      exports: 'named'
+      banner: banner('PROPRIETARY'),
+      exports: 'default',
+      esModule: false,
+      preferConst: true
     },
     {
       format: 'es',
-      file: 'package/index.es.js',
+      file: read.pkg.exports.import,
       sourcemap: process.env.prod ? false : 'inline',
-      banner: banner(pkg, 'CC BY-NC-ND 4.0')
+      banner: banner('PROPRIETARY')
     }
   ],
-  external: [ '@liquify/cryptographer', 'path', 'crypto' ],
+  external: [
+    ...Object.keys(read.pkg.dependencies),
+    'path',
+    'crypto'
+  ],
   plugins: [
     strip({
       pattern: /\/\*{2}\s+_{2}[\s\S]*?\*\//g
