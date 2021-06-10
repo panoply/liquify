@@ -1,17 +1,12 @@
 # DIRECTORIES
-# --------------------
-node_modules/
-samples/
-variations/
-versions/
+samples
+variations
 test
+versions
+typings
 
 # FILES
-# -------------------
 .env
-.gitignore
-.liquifyrc.json
-.liquifyrc
-rollup.config.js
+.env.example
+rollup.config.mjs
 pnpm-debug.log
-readme.md

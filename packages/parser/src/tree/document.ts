@@ -2,7 +2,6 @@ import { TextDocumentItem, VersionedTextDocumentIdentifier } from 'vscode-langua
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { IAST } from 'tree/ast';
 import { parse } from 'parser/parse';
-import { handleError } from 'tree/utils';
 
 /* GLOBALS ------------------------------------ */
 
@@ -65,9 +64,7 @@ export const Document = (function () {
         if (textDocument?.uri !== uri) {
           if (model.has(uri)) AST = model.get(uri);
           else {
-            throw handleError(`"${uri}"
-              Unable to locate document at the provided URI\n
-            `);
+            throw new Error('Unable to locate document at the provided URI');
           }
         }
 
@@ -83,10 +80,8 @@ export const Document = (function () {
             AST = model.get(uri);
             textDocument = AST.textDocument;
           } else {
-            throw handleError(`"${uri}"
-              The document/file provided has not yet been created or
-              is unknown, thus it cannot be updated.\n
-            `);
+            throw new Error('No document exists with the uri');
+
           }
         }
 

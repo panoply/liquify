@@ -1,10 +1,10 @@
 import { terser } from 'rollup-plugin-terser'
-import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import { jsonmin, env, read } from '@liquify/rollup-plugin-utils'
 import beep from '@rollup/plugin-beep'
+import watch from 'rollup-plugin-watch-assets'
 import copy from 'rollup-plugin-copy'
 import del from 'rollup-plugin-delete'
-import { banner, read, env } from '@liquify/rollup-plugin-utils'
-import strip from 'rollup-plugin-strip-code'
 
 export default {
   input: 'src/index.js',
@@ -13,8 +13,7 @@ export default {
       format: 'cjs',
       file: read.pkg.exports.require,
       sourcemap: process.env.prod ? false : 'inline',
-      banner: banner('PROPRIETARY'),
-      exports: 'default',
+      exports: 'named',
       esModule: false,
       preferConst: true
     },
@@ -22,18 +21,18 @@ export default {
       format: 'es',
       file: read.pkg.exports.import,
       sourcemap: process.env.prod ? false : 'inline',
-      banner: banner('PROPRIETARY')
+      esModule: false,
+      preferConst: true
     }
-  ],
-  external: [
-    '@rollup/pluginutils',
-    'path',
-    'rambda',
-    'crypto'
   ],
   plugins: env.unless(process.env.prod)(
     [
-      resolve(),
+      commonjs(
+        {
+          transformMixedEsModules: true
+        }
+      ),
+      beep(),
       del(
         {
           verbose: true,
@@ -41,35 +40,41 @@ export default {
           targets: 'package/*'
         }
       ),
+      watch(
+        {
+          assets: [
+            'stores/**/*.json',
+            'src/index.d.ts'
+          ]
+        }
+      ),
       copy(
         {
           verbose: true,
-          copyOnce: !process.env.prod,
+          copyOnce: !!process.env.prod,
           targets: [
             {
               src: 'src/index.d.ts',
               dest: 'package'
+            },
+            {
+              src: 'stores/**/*.json',
+              dest: 'package/@stores',
+              transform: contents => jsonmin(contents.toString())
             }
           ]
         }
-      ),
-      strip(
-        {
-          pattern: /\/\*{2}\s+_{2}[\s\S]*?\*\//g
-        }
-      ),
-      beep()
+      )
     ]
   )(
     [
       terser(
         {
-          ecma: 2016
+          ecma: 6
           , warnings: 'verbose'
           , compress: { passes: 2 }
         }
       )
     ]
   )
-
 }

@@ -8,13 +8,13 @@ This package is available on the npm registry for modules consumed by the [Liqui
 
 ## Why?
 
-The [Liquid Language Server](#) requires these Liquid specification variation references to compose a workable AST and provide LSP capabilities to the various Liquify clients.
+Due to the versatile nature or Liquid and in order to provide LSP capabilities to the Liquid Language Server. The Liquify IDE extension and parser treat these specs as grammars.
 
-## What the F\*ck are Liquid Language Specs?
+## Liquid Specs === Grammars
 
-In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax and enable developers to compose formal grammars. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation. Due to the versatile nature and endless implementations of Liquid, supporting intelliSense capabilities is difficult so by providing the server with these specs we can ensure that the modern IDE features expected can be facilitated.
+In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax. They are not quite Grammars but close enough and exists to enable developers of any level to quickly compose contextual grammars and formal schema that described tags, filters and objects. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation. There are implementations of Liquid and these files allow us to establish formal specs for the language.
 
-## Specification Specs
+## Schema
 
 Each specification contains 5 fields. The `engine` field refers to the name of the Liquid variation. Liquify supports 4 variations (Standard, Shopify, Jekyll and Eleventy) and its here where the one would specify the variation (or engine) the spec is describing. The `updated` field is a date field which informs of the last time the specification was updated. The `filters`, `tags` and `objects` fields are where all the information and the logic is contained for the variation we are writing the specification.
 
@@ -28,7 +28,7 @@ Each specification contains 5 fields. The `engine` field refers to the name of t
 }
 ```
 
-## Contextual Grammars
+## Contextual
 
 The specifications provide different fields which can be leveraged to describe the formation and structure for how a Liquid tag or filter should be expressed. Tag and Filter contexts are expressed using a simple meta-syntax notation. Each keyword compiles into an expression and used to validate the tags or filters. Below is the grammar guide which is used to describe the contexts of characters or words in the specifications.
 

@@ -1,4 +1,4 @@
-import { CipherCCMOptions } from"crypto"
+import { CipherCCMOptions } from "crypto"
 
 
 interface Cryptographers {

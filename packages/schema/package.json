@@ -14,16 +14,24 @@
     "url": "https://github.com/panoply/liquify"
   },
   "main": "package/index.js",
-  "types": "index.d.ts",
+  "types": "package/index.d.ts",
+  "exports": {
+    "require": "./package/index.js",
+    "import": "./package/index.es.js"
+  },
   "scripts": {
-    "dev": "rollup -c -w --environment stores",
-    "stores": "rollup -c --environment stores",
-    "build": "pnpm stores && rollup -c --environment prod",
-    "packer": "cd versions; pnpm pack ../ && cd .."
+    "dev": "rollup -c -w",
+    "build": "rollup -c --environment prod",
+    "pack": "cd versions; pnpm pack ../ && cd .."
   },
   "devDependencies": {
     "@liquify/rollup-plugin-globs": "workspace:^0.1.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "@rollup/plugin-beep": "^0.2.0",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-watch-assets": "^1.0.1"
   }
 }

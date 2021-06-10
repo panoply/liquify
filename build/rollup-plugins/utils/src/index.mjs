@@ -6,6 +6,29 @@ import stripIndent from 'strip-indent'
 import chalk from 'chalk'
 
 /**
+ */
+export const env = {
+  if (condition) {
+
+    return initial => combined => {
+
+      if (condition) return initial
+
+      if (Array.isArray(initial) && Array.isArray(combined)) {
+        return [ ...initial, ...combined ]
+      }
+
+      return combined
+    }
+
+  },
+  unless (condition) {
+
+    return this.if(!condition)
+
+  }
+}
+/**
  * Reads files contained at roots like package.json
  */
 export const read = (

@@ -5,11 +5,11 @@
  *
  * @param {import('./index.d').Filenames} store
  */
-function store (name) {
+async function store (name) {
 
   try {
 
-    const schema = require(`./${name}.json`)
+    const schema = await import(`./@stores/${name}.json`)
 
     return schema
 

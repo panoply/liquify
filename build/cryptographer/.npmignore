@@ -1,0 +1,12 @@
+# DIRECTORIES
+test
+src
+versions
+
+# DOT FILES
+
+.gitgnore
+.pnpm-debug.log
+
+# FILES
+rollup.config.mjs

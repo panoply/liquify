@@ -18,3 +18,21 @@ export function plugins(devPlugins: [], prodPlugins: []): [];
 export function banner(
   license:  "MIT" | "PROPRIETARY" | "CC BY-NC-ND 4.0"
 ):  string;
+
+
+
+type IEnv = (
+  condition: string | boolean
+) => (
+  initial: any
+) => (
+  combined: any
+) => []
+
+/**
+ * Validates env variable and executes a contenation. This run an
+ */
+export const env: {
+  if?: IEnv,
+  unless?: IEnv
+}

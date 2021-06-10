@@ -1,3 +1,8 @@
-rollup.config.js
-index.js
-test/
+# DIRECTORIES
+test
+scripts
+src
+versions
+
+# FILES
+rollup.config.mjs

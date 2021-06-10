@@ -19,7 +19,7 @@ This is a node module, it is not supported in browsers. You can access the schem
 ```js
 import stores from "@liquify/schema-stores";
 
-const store = stores("filename"); // without the .json extension
+const store = stores("filename"): Promise; // without the .json extension
 ```
 
 ## CDN

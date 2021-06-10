@@ -1,13 +1,15 @@
 import cjs from '@rollup/plugin-commonjs'
 import beep from '@rollup/plugin-beep'
+import copy from 'rollup-plugin-copy'
+import del from 'rollup-plugin-delete'
 import { terser } from 'rollup-plugin-terser'
-import { read } from './index.mjs'
+import { read } from './src/index.mjs'
 
 /**
  * @type {import('rollup').RollupOptions}
  */
 export default {
-  input: 'index.mjs',
+  input: 'src/index.mjs',
   output: [
     {
       format: 'cjs',
@@ -25,11 +27,33 @@ export default {
     }
   ],
   external: [
-    ...Object.keys(read.pkg.dependencies),
+    'chalk',
+    'jsonminify',
+    'strip-indent',
+    'strip-json-comments',
     'path',
     'fs'
   ],
   plugins: [
+    del(
+      {
+        verbose: true,
+        runOnce: !process.env.prod,
+        targets: 'package/*'
+      }
+    ),
+    copy(
+      {
+        verbose: true,
+        copyOnce: !process.env.prod,
+        targets: [
+          {
+            src: 'src/index.d.ts',
+            dest: 'package'
+          }
+        ]
+      }
+    ),
     beep(),
     cjs(),
     terser({

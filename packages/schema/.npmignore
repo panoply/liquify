@@ -1,13 +1,12 @@
 # DIRECTORIES
 # --------------------
-node_modules/
-stores/
-versions/
+stores
+versions
+src
 
 # FILES
 # -------------------
-.gitignore
-rollup.config.js
+rollup.config.mjs
 .pnpm-debug.log
 readme.md
 changelog.md
