@@ -1,90 +1,53 @@
-import { TokenContext } from '../lexical/context';
-import { Scanner } from '../parser/scanner';
+import { TokenContext } from 'lexical/context';
+import { token, spaces, offset } from 'parser/stream';
+
+export interface IContext {
+  type: TokenContext;
+  value?: string | number;
+  start: number;
+  end: number;
+}
+
+export let context = [];
+
+let node: number = NaN;
 
 /**
- * Context Generator
+ * Returns the contexts of a specific node on the AST
  *
- * Each token (tag) is constructed in an array,
- * The `context[]` stack is an array or arrays.
- *
- * @param {number} node
+ * @param {number[]}  offsets
+ * @returns {Parser.Context[][]}
  */
-export const Context = ((node) => {
+export const get = (offsets: number[]): [IContext][] => offsets.map(n => context[n]);
 
-  let context = [];
+/**
+ * Add to stack
+ */
+export const add = (type: TokenContext) => {
 
-  /**
-   * Returns the contexts of a specific node on the AST
-   *
-   * @param {number[]}  offsets
-   * @returns {Parser.Context[][]}
-   */
-  function get (offsets) {
-    return offsets.map((offset) => context[offset]);
-  }
-
-  /**
-   * Add to stack
-   *
-   * @param {Parser.TokenContext} type
-   */
-  function add (type) {
-    const entry = {
-      type,
-      start: Scanner.offset,
-      end:
-        TokenContext.Newline === type || TokenContext.Whitespace === type
-          ? Scanner.offset + Scanner.space
-          : Scanner.offset + Scanner.token.length,
-      value:
-        TokenContext.Newline === type || TokenContext.Whitespace === type
-          ? Scanner.space
-          : type === TokenContext.EndTag
-            ? 'end' + Scanner.token
-            : Scanner.token
-    };
-
-    if (type === TokenContext.OpenTag) node = context.push([ entry ]) - 1;
-    else if (type === TokenContext.CloseTag) context[node].push(entry);
-    else context[node].push(entry);
-  }
-
-  /**
-   * Delete from array
-   *
-   * @param {number} start
-   */
-  const remove = (start) => {
-    context.splice(start);
-
-    node = start;
+  const entry = {
+    type,
+    start: offset,
+    end: TokenContext.Newline === type || TokenContext.Whitespace === type
+      ? offset + spaces
+      : offset + token.length,
+    value: TokenContext.Newline === type || TokenContext.Whitespace === type
+      ? spaces
+      : type === TokenContext.EndTag
+        ? 'end' + token
+        : token
   };
-  return {
-    get,
-    add,
-    remove,
-    reset: () => {
-      context = [];
-    },
 
-    /**
-     * Returns the context list
-     *
-     * @readonly
-     * @returns {Parser.Context[][]}
-     */
-    get list () {
-      return context;
-    },
+  if (type === TokenContext.OpenTag) node = context.push([ entry ]) - 1;
+  else if (type === TokenContext.CloseTag) context[node].push(entry);
+  else context[node].push(entry);
+};
 
-    /**
-     * Returns the context stack size
-     *
-     * @readonly
-     * @returns {number}
-     */
-    get size () {
-      return context.length - 1;
-    }
-  };
-})(NaN);
+export const remove = (start: number) => {
+  context.splice(start);
+  node = start;
+};
+
+export const reset = () => { context = []; };
+
+export const size = () => context.length - 1; ;
