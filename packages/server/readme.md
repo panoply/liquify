@@ -2,32 +2,23 @@
 
 # Liquid Language Server
 
-An [LSP](#) implementation for the Liquid templating language.
+An [LSP](#) implementation for the Liquid template language.
 
 ## Capabilities
 
 - Parsing
 - Hovers
 - Completions
+- Signatures
 - Formatting
 - Diagnostics
 - Validations
 
-### Install NPM
+### Install
 
 ```
-npm install liquid-language-server
+pnpm i liquid-language-server
 ```
-
-### Install Yarn
-
-```
-yarn add liquid-language-server
-```
-
-## Licensing
-
-Features available to this language server are provided
 
 ## Specifications
 
