@@ -11,4 +11,4 @@ declare type Filenames =
  *
  * @param filename
  */
-export default function store(filename: Filenames): object;
+export default function store(filename: Filenames):Promise<object>;
