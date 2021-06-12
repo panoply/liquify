@@ -3,10 +3,10 @@ import { TextDocument, Position, Range } from 'vscode-languageserver-textdocumen
 import { NodeType } from 'lexical/types';
 import { NodeKind } from 'lexical/kind';
 import { Config } from 'config';
-import { Context } from 'tree/context';
-import { Stream as stream } from 'parser/stream';
+import * as context from 'tree/context';
+import * as s from 'parser/stream';
 import { INode } from 'tree/node';
-
+import { GetFormedRange } from 'parser/utils';
 /**
  * Abstract Syntax Tree
  *
@@ -16,22 +16,40 @@ import { INode } from 'tree/node';
  */
 export class IAST {
 
-  /**
-   * Sets the TextDocument literal for the AST instance
-   * This is modified for every for each content change.
-   * In addition, when an AST is created a new `stream `
-   * is intialized in preparation for parsing.
-   */
-  constructor (textDocument: TextDocument) {
-    this.textDocument = textDocument;
-    stream.create();
+  constructor (uri: string, languageId: string, version: number, content: string) {
+
+    this.uri = uri;
+    this.languageId = languageId;
+    this.version = version;
+    this.content = s.Create(content);
+    this.lines = this.getLineOffsets();
+
   }
 
   /**
-   * The TextDocument literal for the AST instance.
-   * For every document, this value is unique.
+   * The documents URI identifier
    */
-  public textDocument: TextDocument;
+  public uri: string;
+
+  /**
+   * The document version
+   */
+  public version: number;
+
+  /**
+   * The documents language identifier
+   */
+  public languageId: string;
+
+  /**
+   * The document text content in string form
+   */
+  public content: string;
+
+  /**
+   * Line offsets for the document
+   */
+  public lines: number[]
 
   /**
    * List of parsing errors and validations
@@ -83,10 +101,10 @@ export class IAST {
    */
   public literal (extension: string = 'tmp'): TextDocument {
     return TextDocument.create(
-      this.textDocument.uri + '.' + extension,
-      this.textDocument.languageId,
-      this.textDocument.version,
-      this.textDocument.getText()
+      this.uri + '.' + extension,
+      this.languageId,
+      this.version,
+      this.content
     );
   }
 
@@ -94,8 +112,28 @@ export class IAST {
    * Converts a location offset to position via
    * textDocument instance method: `positionAt()`
    */
-  public positionAt (offset: number): Position {
-    return this.textDocument.positionAt(offset);
+  public positionAt (location: number): Position {
+
+    location = Math.max(Math.min(location, this.content.length), 0);
+
+    const lineOffsets = this.getLineOffsets();
+
+    let low = 0; let high = lineOffsets.length;
+
+    if (high === 0) return { line: 0, character: location };
+
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (lineOffsets[mid] > location) high = mid; else low = mid + 1;
+    }
+
+    const line = low - 1;
+
+    return {
+      line,
+      character: location - lineOffsets[line]
+    };
+
   }
 
   /**
@@ -103,7 +141,45 @@ export class IAST {
    * textDocument instance method `offsetAt()`
    */
   public offsetAt (location: Position): number {
-    return this.textDocument.offsetAt(location);
+
+    const lineOffsets = this.getLineOffsets();
+
+    if (location.line >= lineOffsets.length) return this.content.length;
+    else if (location.line < 0) return 0;
+
+    const lineOffset = lineOffsets[location.line];
+    const nextLineOffset = (location.line + 1 < lineOffsets.length)
+      ? lineOffsets[location.line + 1]
+      : this.content.length;
+
+    return Math.max(
+      Math.min(lineOffset + location.character, nextLineOffset),
+      lineOffset
+    );
+
+  }
+
+  /**
+   * Range
+   *
+   * Returns `start` and `end` range information
+   *
+   * **DOES NOT MODIFY**
+   *
+   * ---
+   *
+   * @param {number} [start] defaults to cursor
+   * @param {number} [end] defaults to current index
+   */
+  public getRange (
+    start: number = s.cursor,
+    end: number = s.offset
+  ): Parser.Range {
+
+    return {
+      start: this.positionAt(start),
+      end: this.positionAt(end)
+    };
   }
 
   /**
@@ -113,12 +189,22 @@ export class IAST {
    */
   public toRange (
     start: number = 0,
-    end: number = this.textDocument.getText().length
+    end: number = this.content.length
   ): Range {
     return {
-      start: this.textDocument.positionAt(start),
-      end: this.textDocument.positionAt(end)
+      start: this.positionAt(start),
+      end: this.positionAt(end)
     };
+  }
+
+  public getLineOffsets (): number[] {
+
+    if (this.lines === undefined) {
+      this.lines = s.ComputeLineOffsets(this.content, true);
+    }
+
+    return this.lines;
+
   }
 
   /**
@@ -128,8 +214,8 @@ export class IAST {
    */
   public toRangeOffset (location: Range): [number, number] {
     return [
-      this.textDocument.offsetAt(location.start),
-      this.textDocument.offsetAt(location.end)
+      this.offsetAt(location.start),
+      this.offsetAt(location.end)
     ];
   }
 
@@ -152,7 +238,7 @@ export class IAST {
     };
 
     if (typeof location === 'number') {
-      const { line } = this.textDocument.positionAt(location);
+      const { line } = this.positionAt(location);
       range.start.line = line;
       range.end.line = line + 1;
       return range;
@@ -178,7 +264,80 @@ export class IAST {
     this.nodes = [];
     this.comments = [];
 
-    Context.reset();
+    context.reset();
+
+    return 0;
+  }
+
+  public increment (
+    edits: {
+      range: Range,
+      text: string
+    }[],
+    version: number
+  ) {
+
+    this.version = version;
+
+    let index = 0;
+    const length = edits.length;
+
+    for (; index < length; index++) {
+
+      const change = edits[index];
+      const range = GetFormedRange(change.range);
+      const start = this.offsetAt(range.start);
+      const end = this.offsetAt(range.end);
+
+      this.content = this.content.substring(0, start) +
+        change.text +
+        this.content.substring(end, this.content.length);
+
+      const startLine = Math.max(range.start.line, 0);
+      const enderLine = Math.max(range.end.line, 0);
+      const newlines = s.ComputeLineOffsets(change.text, false, start);
+
+      let lineoffset = this.lines!;
+
+      if (enderLine - startLine === newlines.length) {
+
+        let i = 0;
+        const len = newlines.length;
+
+        for (; i < len; i++) lineoffset[i + startLine + 1] = newlines[i];
+
+      } else {
+
+        if (newlines.length < 10000) {
+          lineoffset.splice(startLine + 1, enderLine - startLine, ...newlines);
+        } else {
+          this.lines = lineoffset = lineoffset
+            .slice(0, startLine + 1)
+            .concat(newlines, lineoffset.slice(enderLine + 1));
+        }
+
+      }
+
+      const diff = change.text.length - (end - start);
+
+      if (diff !== 0) {
+        let x = startLine + 1 + newlines.length;
+        const linesize = lineoffset.length;
+        for (; x < linesize; x++) lineoffset[x] = lineoffset[x] + diff;
+      }
+
+      if (length - 1 === index) this.cursor = start;
+
+    }
+
+    s.Create(this.content);
+
+    if (edits.length > 1 || this.nodes.length === 0) this.clear();
+
+    console.log(this.cursor);
+
+    return this.update();
+
   }
 
   /**
@@ -186,13 +345,7 @@ export class IAST {
    * The `contentChanges` event from the Language Server is
    * passed as the parameter.
    */
-  public update (edits: any) {
-    // Lets create a new stream
-    stream.create();
-
-    this.cursor = this.offsetAt(edits[edits.length - 1].range.start);
-
-    if (edits.length > 1 || this.nodes.length === 0) return this.clear();
+  public update (): number {
 
     let i = 0;
 
@@ -212,34 +365,53 @@ export class IAST {
         ? this.nodes[i]
         : this.nodes[this.nodes[i].root];
 
-    console.log(node);
+    // console.log(node);
 
-    stream.Jump(node.start);
+    if (this.errors.length > 0) {
+      this.errors.splice(node.error);
+    }
 
-    if (this.errors.length > 0) this.errors.splice(node.error);
-    if (this.embeds.length > 0) { this.embeds.splice(this.embeds.findIndex((n) => n >= i)); }
-    if (this.comments.length > 0) { this.comments.splice(this.comments.findIndex((n) => n >= i)); }
+    if (this.embeds.length > 0) {
+      this.embeds.splice(this.embeds.findIndex((n) => n >= i));
+    }
 
-    Context.remove(node.context[0]);
+    if (this.comments.length > 0) {
+      this.comments.splice(this.comments.findIndex((n) => n >= i));
+    }
+
+    context.remove(node.context[0]);
 
     this.nodes.splice(i);
+
+    s.Jump(node.start);
+
   }
 
   /**
-   * Returns text contents via the `textDocument` instance. Accepts
-   * a Range, Position, offset or offset range and will return the
-   * string value found at the location.
+     * Returns text string at offset locations. You can optionally
+     * provide an `end` offset index, when non is provided, current
+     * index position is used. So treat the `start` param as a backtrack
+     * position.
    */
-  public getText (location = undefined) {
-    if (typeof location === 'undefined') return this.textDocument.getText();
-    if (typeof location === 'number') return stream.GetChar(location);
-    if (typeof location === 'object') {
-      return location?.start
-        ? this.textDocument.getText(location)
-        : stream.GetChar(this.offsetAt(location));
+  public getText (
+    location: Range | number | undefined,
+    endOffset: number | undefined = undefined
+  ) {
+
+    if (typeof location === 'number') {
+      return endOffset === undefined
+        ? s.GetChar(location)
+        : this.content.substring(location, endOffset);
     }
 
-    return this.textDocument.getText(this.toRange(location[0], location[1]));
+    if (typeof location === 'object') {
+      return this.content.substring(
+        this.offsetAt(location.start),
+        this.offsetAt(location.end)
+      );
+    }
+
+    return this.content;
   }
 
   /**
@@ -445,7 +617,7 @@ export class IAST {
     return inRange(
       typeof position === 'number'
         ? position
-        : this.textDocument.offsetAt(position),
+        : this.offsetAt(position),
       start,
       end
     );
