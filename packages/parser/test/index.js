@@ -13,11 +13,10 @@ const server = {
   languageId: 'liquid',
   version: 1,
   text: document,
-  uri: 'full_parse',
-  getText: () => document
+  uri: 'full_parse'
 };
 
-const { Parser, Spec } = LiquidParser({
+const parser = new LiquidParser({
   engine: 'shopify',
   license: process.env.MASTER_KEY,
   context: true,
@@ -38,18 +37,17 @@ const { Parser, Spec } = LiquidParser({
   associate_tags: []
 });
 
-Spec.engine('shopify');
+parser.engine('shopify');
 
 test('FullDocument Parse', t => {
 
   const start = process.hrtime();
-  const ast = Parser.scan(server);
+  const ast = parser.scan(server);
   const end = process.hrtime(start);
 
-  t.log(
+  console.log(
     ast.nodes,
-    ast.errors,
-    ast.nodes[0].getContext()
+    ast
   );
 
   t.log(time(end, { verbose: true }));
