@@ -1,15 +1,14 @@
 {
   "exclude": ["node_modules/**", "package", "test"],
-  "include": ["src/index.ts", "src/**/*.ts", "src/types/*"],
+  "include": [
+    "src/index.ts",
+    "src/**/*.ts",
+    "src/**/**/*.ts",
+    "src/types/*"
+  ],
   "typeAcquisition": {
     "enable": true,
-    "include": [
-      "vscode-languageserver",
-      "languageserver-textdocument",
-      "node",
-      "@liquify/liquid-parser",
-      "@types/lodash"
-    ]
+    "include": ["node"]
   },
   "compilerOptions": {
     "types": ["node"],
@@ -38,9 +37,10 @@
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"],
+      "types": ["./src/types/*"],
       "service": ["./src/service/*"],
-      "provider": ["./src/provider/*"],
-      "mode": ["./src/provider/mode/*"]
+      "provide": ["./src/provide/*"],
+      "modes": ["src/provide/modes/*"]
     }
   }
 }

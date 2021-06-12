@@ -1,9 +1,0 @@
----
-frontmatter: true
-prop:
-  - array_item_1
-  - array_item_2
-string: 'foo'
----
-
-{%-  if section.settings.show_announcement == boolean or    foo and bar !=    foo-%}
