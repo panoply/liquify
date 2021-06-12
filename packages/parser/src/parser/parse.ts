@@ -5,10 +5,11 @@ import { NodeLanguage } from 'lexical/language';
 import { NodeKind } from 'lexical/kind';
 import { ParseError } from 'lexical/errors';
 import { Config as config } from 'config';
-import { Context as context } from 'tree/context';
-import { INode } from 'tree/node';
+import * as context from 'tree/context';
+import * as stream from 'parser/stream';
 import { IAST } from 'tree/ast';
-import { Scanner as scanner } from 'parser/scanner';
+import { INode } from 'tree/node';
+import * as scanner from 'parser/scanner';
 import { Specs as spec } from 'parser/specs';
 import { errors } from 'parser/errors';
 import { ITag } from '@liquify/liquid-language-specs';
@@ -20,7 +21,10 @@ import { ITag } from '@liquify/liquid-language-specs';
  *
  * @param {Parser.AST} document
  */
-export function parse (document: IAST, cursor: boolean = false): IAST {
+export function parse (document: IAST, changes?: [] | undefined): IAST {
+
+  let cursor: boolean = !!changes;
+
   /**
    * Token Index
    *
@@ -122,7 +126,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       // PARSE ERROR
       // -----------------------------------------------------------------
       case TokenType.ParseError:
-        document.errors.push(errors(scanner.error, scanner.range));
+        document.errors.push(errors(scanner.error, document.getRange()));
 
         break;
 
@@ -170,19 +174,23 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       case TokenType.SingularTag:
       case TokenType.Unknown:
       case TokenType.StartTag:
+
         index = document.nodes.length;
 
         node = new INode();
+
         node.type = spec.type;
+        node.index = index;
         node.root = typeof root === 'number' ? root : index;
         node.parent = scanner.syntactic.parentNode || index;
+        node.offsets.push(scanner.start);
 
         if (token === TokenType.StartTag) {
           node.singular = false;
           if (typeof root === 'undefined') root = index;
         }
 
-        if (config.context) node.context.push(context.size);
+        if (config.context) node.context.push(context.size());
 
         break;
 
@@ -192,10 +200,10 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
         // Find hierarch - The parental node
         node = document.nodes[scanner.syntactic.match];
 
-        // console.log(scanner.syntactic.list, node?.name, scanner.token)
+        // console.log(scanner.syntactic.list, node?.name, stream.token)
 
         // Validate the parent matches the hierarch node
-        if (node?.name === scanner.token) {
+        if (node?.name === stream.token) {
           if (scanner.syntactic.list.length === 0) root = undefined;
 
           if (config.context) context.add(TokenContext.EndTag);
@@ -210,7 +218,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
 
           node.offsets.push(scanner.start);
 
-          if (config.context) node.context.push(context.size);
+          if (config.context) node.context.push(context.size());
 
           // AST LOGIC
           index = node.index;
@@ -222,7 +230,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
         // create a new node on the AST representing this invalid node
 
         node = new INode();
-        node.name = scanner.token;
+        node.name = stream.token;
 
         // AST LOGIC
         state = ParseError.InvalidSyntactic;
@@ -230,7 +238,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
         // CONTEXT
         if (config.context) {
           context.add(TokenContext.EndTag);
-          node.context.push(context.size);
+          node.context.push(context.size());
         }
 
         break;
@@ -240,9 +248,9 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       // -----------------------------------------------------------------
       case TokenType.DelimiterClose:
       case TokenType.DelimiterEnder:
-        node.offsets.push(scanner.offset);
-        node.token.push(scanner.tag);
-        node.range.end = scanner.range.end;
+        node.offsets.push(stream.offset);
+        node.token.push(document.getText(scanner.start, stream.offset));
+        node.range.end = document.getRange().end;
 
         if (config.context) context.add(TokenContext.CloseTag);
 
@@ -278,10 +286,10 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       case TokenType.VariableIdentifier:
         if (config.context) context.add(TokenContext.Identifier);
 
-        node.name = scanner.token;
+        node.name = stream.token;
         node.type = spec.type;
 
-        if (!(scanner.spec as ITag)?.singular) {
+        if (!(spec.get as ITag)?.singular) {
           scanner.syntactic.list.push(node.name, index);
         }
 
@@ -290,7 +298,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       case TokenType.VariableKeyword:
         if (config.context) context.add(TokenContext.Keyword);
 
-        document.variables[node.index] = { label: scanner.token };
+        document.variables[node.index] = { label: stream.token };
 
         if (document.nodes[node.index - 1]?.type === NodeType.comment) {
           document.variables[node.index].description =
@@ -312,11 +320,11 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
         if (config.context) context.add(TokenContext.Object);
 
         // SAVE OFFSET
-        spec.object.at(scanner.offset);
+        spec.object.at(stream.offset);
 
         node.objects = {
           ...node.objects,
-          [spec.object.offset]: [ scanner.token ]
+          [spec.object.offset]: [ stream.token ]
         };
 
         break;
@@ -332,26 +340,26 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
 
         // VALIDATE PROPERTY
         if (scanner.error === ParseError.UnknownProperty) {
-          document.errors.push(errors(scanner.error, scanner.range));
+          document.errors.push(errors(scanner.error, document.getRange()));
         }
 
         // PUSH NEXT PROPERTY
-        node.objects[spec.object.offset].push(scanner.token);
-        node.objects[scanner.offset + 1] = spec.object.offset;
+        node.objects[spec.object.offset].push(stream.token);
+        node.objects[stream.offset + 1] = spec.object.offset;
 
         // SAVE OFFSET
-        spec.object.at(scanner.offset);
+        spec.object.at(stream.offset);
 
         break;
       case TokenType.ObjectPropertyString:
         if (config.context) context.add(TokenContext.Property);
 
         // PUSH NEXT PROPERTY
-        node.objects[spec.object.offset].push(scanner.token);
-        node.objects[scanner.offset + 1] = spec.object.offset;
+        node.objects[spec.object.offset].push(stream.token);
+        node.objects[stream.offset + 1] = spec.object.offset;
 
         // SAVE OFFSET
-        spec.object.at(scanner.offset);
+        spec.object.at(stream.offset);
 
         break;
       case TokenType.ObjectPropertyNumber:
@@ -371,9 +379,9 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
 
         console.log(node);
 
-        node.name = scanner.token;
+        node.name = stream.token;
 
-        if (!(scanner.spec as ITag)?.singular) {
+        if (!(spec.get as ITag)?.singular) {
           // ASSERT HIERARCH
           scanner.syntactic.list.push(node.name, index);
         }
@@ -383,7 +391,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       // EMBEDDED LANGUAGE TAG
       // -----------------------------------------------------------------
       case TokenType.Embedded:
-        node.name = scanner.token;
+        node.name = stream.token;
         node.type = spec.type;
         node.language = NodeLanguage[(spec.get as ITag).language];
 
@@ -398,7 +406,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       // COMMENT TAG
       // -----------------------------------------------------------------
       case TokenType.Comment:
-        node.name = scanner.token;
+        node.name = stream.token;
         node.type = spec.type;
 
         // ASSERT HIERARCH
@@ -413,7 +421,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       // CONTROL TAG
       // -----------------------------------------------------------------
       case TokenType.Control:
-        node.name = scanner.token;
+        node.name = stream.token;
         node.type = spec.type;
 
         if (!(spec.get as ITag).singular) {
@@ -440,7 +448,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
         if (config.context) context.add(TokenContext.Keyword);
         node.filters = {
           ...node.filters,
-          [scanner.offset + scanner.token.length]: scanner.token
+          [stream.offset + stream.token.length]: stream.token
         };
         break;
       case TokenType.FilterOperator:
@@ -459,7 +467,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       // ITERATION TAG
       // -----------------------------------------------------------------
       case TokenType.Iteration:
-        node.name = scanner.token;
+        node.name = stream.token;
         node.type = spec.type;
 
         if (!(spec.get as ITag).singular) {
@@ -501,11 +509,11 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
         node.singular = false;
 
         if (config.context) {
-          node.context.push(context.size);
+          node.context.push(context.size());
           context.add(TokenContext.Identifier);
         }
 
-        node.name = scanner.token;
+        node.name = stream.token;
         scanner.syntactic.list.push(node.name, node.index);
 
         break;
@@ -514,7 +522,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       // -----------------------------------------------------------------
       case TokenType.HTMLAttributeName:
         if (config.context) context.add(TokenContext.Attribute);
-        // state = scanner.token;
+        // state = stream.token;
         node.attributes[state] = null;
         break;
       case TokenType.HTMLOperatorValue:
@@ -522,20 +530,20 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
         break;
       case TokenType.HTMLAttributeValue:
         if (config.context) context.add(TokenContext.String);
-        //  node.attributes[state] = scanner.token;
+        //  node.attributes[state] = stream.token;
         break;
       case TokenType.HTMLEndTag:
         // Find hierarch - The parental node
         node = document.nodes[scanner.syntactic.match];
 
         // Validate the parent matches the hierarch node
-        if (node?.name === scanner.token) {
+        if (node?.name === stream.token) {
           // CONTEXT
           if (config.context) context.add(TokenContext.EndTag);
 
           node.offsets.push(scanner.start);
 
-          if (config.context) node.context.push(context.size);
+          if (config.context) node.context.push(context.size());
 
           // AST LOGIC
           index = node.index;
@@ -552,9 +560,9 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
       case TokenType.HTMLStartTagClose:
         if (!node) break;
 
-        node.offsets.push(scanner.offset);
-        node.token.push(scanner.tag);
-        node.range.end = scanner.range.end;
+        node.offsets.push(stream.offset);
+        node.token.push(document.getText(scanner.start, stream.offset));
+        node.range.end = document.getRange().end;
 
         // CONTEXT
         if (config.context) context.add(TokenContext.CloseTag);
@@ -575,6 +583,7 @@ export function parse (document: IAST, cursor: boolean = false): IAST {
     }
 
     token = scanner.scan();
+
   }
 
   scanner.syntactic.hierarch(document);
