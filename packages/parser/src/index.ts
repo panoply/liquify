@@ -1,51 +1,110 @@
 import { Config, IConfig } from './config';
 import { Specs } from 'parser/specs';
-import { Document } from 'tree/document';
-import { Stream } from 'parser/stream';
-import {
-  Variation,
-  VariationEntries,
-  IEngine
-} from '@liquify/liquid-language-specs';
+import { create, update, get, remove } from 'tree/model';
+import { parse } from 'parser/parse';
+import { IAST } from 'tree/ast';
+import { Variation, VariationEntries, IEngine } from '@liquify/liquid-language-specs';
+import { VersionedTextDocumentIdentifier, Range } from 'vscode-languageserver-types';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
+export { IAST } from './tree/ast';
+export { INode } from './tree/node';
 export { IEngine } from '@liquify/liquid-language-specs';
-export { TextDocument } from 'vscode-languageserver-textdocument';
-export { NodeLanguage } from 'lexical/language';
-export { NodeType } from 'lexical/types';
-export { NodeKind } from 'lexical/kind';
+export { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
+export { NodeLanguage } from './lexical/language';
+export { NodeType } from './lexical/types';
+export { NodeKind } from './lexical/kind';
+export * as Characters from './lexical/characters';
 
-export * as Characters from 'lexical/characters';
+export class LiquidParser {
 
-export function LiquidParser (options: IConfig) {
-  Object.assign(Config, options);
+  static engine (engine: IEngine) {
 
-  Specs.ref(Config.engine, Config.license);
+    return Specs.ref(engine, Config.license);
 
-  if (Config.associate_tags.length > 0) {
-    Specs.associates.setup(Config.associate_tags);
   }
 
-  return {
-    get Document () {
-      return Document.documents();
-    },
+  constructor (options: IConfig) {
 
-    get Spec () {
-      return {
-        engine: (engine: IEngine): void => Specs.ref(engine, Config.license),
-        get variant (): Variation {
-          return Specs.variation;
-        },
-        get entries (): VariationEntries {
-          return Specs.variation.entries;
-        }
-      };
-    },
-    Parser: {
-      ...Document.global(),
-      ...Stream.global()
+    Object.assign(Config, options);
+
+    Specs.ref(Config.engine, Config.license);
+
+  }
+
+  get spec () {
+    return {
+      get variant (): Variation {
+
+        return Specs.variation;
+      },
+      get entries (): VariationEntries {
+
+        return Specs.variation.entries;
+      }
+    };
+  }
+
+  /**
+     * Change Specification Engine
+     */
+  engine (engine: IEngine): void {
+
+    return Specs.ref(
+      engine,
+      Config.license
+    );
+
+  }
+
+  /**
+   * Executes a full document scan. Call this method to create
+   * a document reference and perform a full text scan.
+   */
+  scan (
+    textDocument: {
+      uri: string,
+      languageId: string,
+      version: number,
+      text: string
     }
-  };
+  ): IAST {
+
+    return parse(
+      create(textDocument)
+    );
+  }
+
+  get (uri: string): IAST {
+
+    return get(uri);
+  }
+
+  delete (uri: string) {
+
+    return remove(uri);
+  }
+
+  update (
+    {
+      textDocument,
+      contentChanges
+    }: {
+        textDocument: VersionedTextDocumentIdentifier,
+        contentChanges: {
+          range: Range,
+          text: string
+        }[]
+      }
+  ): IAST {
+
+    return parse(
+      update(
+        textDocument,
+        contentChanges
+      )
+    );
+  }
+
 }
