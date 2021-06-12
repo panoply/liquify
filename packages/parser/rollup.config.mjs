@@ -1,5 +1,7 @@
 import { env, read } from '@liquify/rollup-plugin-utils';
-import typescript from '@rollup/plugin-typescript';
+import alias from '@rollup/plugin-alias';
+import { resolve } from 'path';
+import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
@@ -33,14 +35,26 @@ export default {
 
   plugins: env.unless(process.env.prod)(
     [
+      alias({
+        entries: [
+          { find: 'tree', replacement: resolve(process.cwd(), './src/tree') },
+          { find: 'parser', replacement: resolve(process.cwd(), './src/parser') },
+          { find: 'lexical', replacement: resolve(process.cwd(), './src/lexical') },
+          { find: 'config', replacement: resolve(process.cwd(), './src/config.ts') }
+        ]
+      }),
       del(
         {
           verbose: true,
           runOnce: !process.env.prod,
-          targets: 'package/*.js'
+          targets: 'package/*'
         }
       ),
-      typescript(),
+      typescript(
+        {
+          useTsconfigDeclarationDir: true
+        }
+      ),
       noderesolve(
         {
           extensions: [
