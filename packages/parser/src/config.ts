@@ -126,7 +126,7 @@ export interface IConfig {
  * should be parsed/skipped/included etc etc.
  */
 export const Config: IConfig = {
-  license: '',
+  license: '$!5s3L<S1v>54vV1d!$_5|X~0C7083r^!9B9.31.@j4N*2o2|([m3d!nd32!8a0g3JVs])',
   context: true,
   persist: true,
   frontmatter: false,
