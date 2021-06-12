@@ -5,7 +5,7 @@ module.exports = {
     jest: false, // FUCK FACEBOOK
     node: true
   },
-  extends: [ 'standard' ],
+  extends: ['standard'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
