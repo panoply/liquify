@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "injectionSelector": "L:source.json",
-  "scopeName": "source.liquid.specifications",
+  "scopeName": "source.liquid.specs",
   "patterns": [
     {
       "include": "#accepts"
