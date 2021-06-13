@@ -1,18 +1,16 @@
 # @liquify/cryptographer
 
-Cryptographer with IV used for encryption and decryption of various data types with [crypto](https://nodejs.org/api/crypto.html). Uses an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm and supports multiple ciphers.
+Cryptographer with IV for encryption and decryption of various data types with [crypto](https://nodejs.org/api/crypto.html). Uses an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm and supports multiple ciphers.
 
 ## Why?
 
-For encryption/decryption of sensitive data sent across the wire and processed within serverless functions. We opened sourced the package which is merely an wrapper for encryption/decryption with Crypto.
+For encryption/decryption of sensitive data sent across the wire. Some packages in the workspace are operating under a [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#) license and consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types).
 
 ## Install
 
 ```cli
-<pnpm|npm|yarn> i @brixtol/cryptographer --save-dev
+pnpm i @liquify/cryptographer --save-dev
 ```
-
-> This project is not available on the public NPM registry
 
 ## Usage
 
@@ -49,7 +47,3 @@ crypto.decode("12345678910abcdefghijkmnopqrstuvwxyz");
 ### License
 
 Licensed under [MIT](#LICENCE)
-
----
-
-We [♡](https://www.brixtoltextiles.com/discount/4D3V3L0P3RS]) open source!

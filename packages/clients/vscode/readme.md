@@ -1,8 +1,8 @@
-<img src="https://github.com/panoply/liquify/blob/master/assets/github-banner-center.gif?raw=true"  atl="Liquify Logo"  width="100%">
+<img src="https://github.com/panoply/liquify/blob/next/assets/github-banner-center.gif?raw=true"  atl="Liquify Logo"  width="100%">
 
 # Liquify (vscode)
 
-💧 A vscode extension for the [Liquid Templating Language](https://shopify.github.io/liquid/). Liquify brings intelliSense features for multiple [Liquid variations](#) to vscode which provides modern IDE tooling to developers who are working the language.
+💧 A vscode extension for the [Liquid Template Language](https://shopify.github.io/liquid/). Liquify brings intelliSense features for multiple [Liquid variations](#) to vscode and provides modern IDE capabilities to developers who are working the language.
 
 - [Documentation](https://liquify.dev)
 - [Playground](https://liquify.dev)
@@ -27,29 +27,13 @@ code --install-extension sissel.liquify
 
 ## Licensing
 
-Liquify operates on a freemium license model and developers are free to use the software unlicenced. Variations of Liquid pertaining to an open source project (ie: Jekyll) unlicenced users will have access some licensed features but when the variation is pertaining to a SaaS (ie: Shopify) unlicensed users will only have access to unlicensed features.
+Liquify operates on a freemium license model and developers are free to use the software unlicensed. Variations of Liquid pertaining to an open source project (ie: Jekyll). Unlicensed users will have access some licensed features but when the variation is pertaining to a SaaS (ie: Shopify) unlicensed users will only have access to unlicensed features.
 
 - [Get License](https://liquify.dev/licensing)
 
 ## Contributing
 
-This repository is part of a closed source [monorepo](#) which leverages [pnpm](#) for dependency management. Liquify implements the Language Server Protocol and though the proprietary code is closed source the language clients and syntax grammars have been released under an [MIT license](#) so contributions are welcome 📥 here.
-
-### Development
-
-Those who wish to contribute to this project:
-
-1. Ensure Liquify is installed in your editor.
-2. Clone this repository and run `pnpm install`
-3. Run `pnpm run dev` and launch the debugger.
-
-> Liquify will automatically detect the development workspace and can distinguish between contributors and collaborator environments which is made possible using the [@liquify/cli](#) tool.
-
-| Command         | Description                                 |
-| --------------- | ------------------------------------------- |
-| `pnpm run cli`  | Launches the interactive CLI                |
-| `pnpm run dev`  | Launches debugger and bundler in watch mode |
-| `pnpm run test` | Runs a bunch of tests using Mocha           |
+This repository is part of a closed source [monorepo](#) which leverages [pnpm](#) for dependency management. Liquify implements the Language Server Protocol and though the proprietary code is closed source the language clients and syntax grammars have been released under a different license which allow contributions.
 
 ## Credits
 

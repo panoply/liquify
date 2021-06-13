@@ -2,13 +2,25 @@
 
 # @liquify/liquid-parser
 
-An incremental parser/scanner for the Liquid Template Language. Developed for the [Liquify IDE](https://liquify.dev) text editor plugin to construct a detailed workable Abstract Syntax Tree. The parser is used in combination with the [Node LSP](https://microsoft.github.io/language-server-protocol/) (Language Server Protocol) implementation.
+An incremental parser/scanner for the Liquid Template Language. Developed for the [Liquify IDE](https://liquify.dev) text editor plugin to construct a detailed workable Abstract Syntax Tree. The parser is used in combination with the [Language Server Protocol](https://microsoft.github.io/language-server-protocol/) implementation.
 
-> **IMPORTANT** This parser is used to construct and query an AST, not perform actions on parsed code. Use [liquidjs](https://github.com/harttle/liquidjs) by [Harttle](https://github.com/harttle) for Liquid engine support in JavaScript.
+## Goals
+
+- Speed, a text editor parser needs to be fast.
+- Incremental, changes are constant.
+- Fault Tolerant, errors handled gracefully.
+- Language Aware, understand different languages.
+- LSP friendly, easily integrate with a Language Server.
+
+The parser performs well when changes are persisted to the AST. The incremental and partial updates to nodes allow changes to be applied exceptionally fast on the tree so features provided by the Language Server can execute quickly.
+
+###### IMPORTANT
+
+**This parser is used to construct and query an AST, not perform actions on parsed code. Use [liquidjs](https://github.com/harttle/liquidjs) by [Harttle](https://github.com/harttle) for Liquid engine support in JavaScript.**
 
 ## Why?
 
-Facilitating modern IDE capabilities when working with the Liquid Template Language in text editors required a performant parser to construct a detailed representation of Liquid syntax contained in documents. The parser uses grammars known as Liquid [Variation Specifications](#) to provide parsing, validations, linting, completions and other various LSP capabilities. The grammars (specs) are basic JSON schemas so developers of all levels can compose, extend or leverage.
+Facilitating modern IDE capabilities with the Liquid Template Language required a performant parser to construct a detailed representation of Liquid syntax contained in documents. The parser needed to work together with different languages like HTML and also be aware of embedded regions in those languages while at the same time handle consistent changes.
 
 ## Install
 
@@ -18,13 +30,12 @@ Facilitating modern IDE capabilities when working with the Liquid Template Langu
 
 ## Usage
 
-There are very little use cases where you would require this parser in the real world. The Liquify IDE plugin that consumes this package should suffice and facilitate most (if not all) your requirements when developing with Liquid. The parser is specifically designed to work with a Language Server but can be appropriated to different use cases.
+There are only few use cases where you would require this parser outside of the Liquify IDE plugin. The parser is specifically designed to work within a Language Server but nothing is stopping one from appropriating elsewhere.
 
 ```ts
 import { LiquidParser } from '@liquify/liquid-parser'
 
 const { Documents, Spec, Parser } =  LiquidParser(options: Options)
-
 
 /**
  * Full Document Scan. In LSP this is called at
@@ -42,7 +53,17 @@ Parser.update(textDocument: VersionedTextDocument, contentChanges): AST
  * Returns a Document AST via a URI identifier. In LSP
  * this is called for different capabilities.
  */
-Parser.document(uri: string): AST
+Parser.get(uri: string): AST
+
+/**
+ * Deletes a document record from the AST
+ */
+Parser.delete(uri: string): AST
+
+/**
+ * Updates/changes the specification variation engine
+ */
+Parser.engine(engine: IEngine): void
 
 /**
  * Executes an regular expression test at a range offset
@@ -71,45 +92,18 @@ Parser.isNextCodeChar(code: number, offset: number): boolean;
 
 /* SPEC ---------------------------------------- */
 
-/**
- * Updates/changes the specification variation engine
- */
-Spec.engine(engine: IEngine): void
 
 /**
  * Returns the current variation reference
  */
-Spec.variant
+Parser.spec.variant
 
 /**
  * Returns the entries mapping of specification items.
  * This is used in completions in LSP.
  */
-Spec.entries
+Parser.spec.entries
 
-/* Documents ---------------------------------- */
-
-/**
- * Returns a document AST via URI (Parser.document(uri) is faster)
- */
-Documents.get(uri: string): AST
-
-/**
- * Sets a document URI (Model)
- */
-Documents.set(uri: string, AST): AST
-
-/**
- * Removes document from model cache
- */
-Documents.delete(uri: string, AST): boolean
-
-/**
- * Purges the entire model cache
- */
-Documents.clear(): boolean
-
-// etc, etc
 
 ```
 
@@ -348,14 +342,27 @@ node.getContext(): [
 
 ## Grammar
 
-Liquid exists in a multitude of variations and no official/formal grammar exists for the language outside of its [standard](https://shopify.github.io/liquid/) open sourced variation. In order for the parser to compose the AST it leverages a collection of grammars made available via Variation Specifications. These specs are data reference files that describe Liquid syntax and provide a way to compose formal grammars for the Liquid Language.
+Liquid exists in a multitude of variations and no official grammar exists for the language outside of what one can find in its [standard](https://shopify.github.io/liquid/) open sourced variation. In order for the parser to compose a detailed AST it leverages a collection of grammars made available via variation specifications. These specs are data reference files that describe Liquid syntax structures.
+
+- [Liquid Language Specifications](#)
 
 ## Development
 
-- [node](https://nodejs.org/) v14
-- [pnpm](https://pnpm.js.org/en/cli/install) v6
+<details>
+<summary>
+  Pre-requisites
+</summary>
+<p>
 
-The parser is written in [TypeScript](https://www.typescriptlang.org/) and compiled using [Rollup](https://rollupjs.org/guide/en/). You will need to have access to Specification to preform any meaningful development as it depends the Spec grammars to function.
+- [Git](https://git-scm.com/)
+- [Node v14^](https://nodejs.org/)
+- [Pnpm v5^](https://pnpm.js.org/)
+- [VSCode](https://code.visualstudio.com/)
+
+</p>
+</details>
+
+The parser is written in [TypeScript](https://www.typescriptlang.org/) and compiled using [Rollup](https://rollupjs.org/guide/en/). You will need to have access to the [specifications](#) to preform any meaningful development as it depends those files to operate.
 
 1. Clone the Liquify Repository
 2. Ensure [pnpm](https://pnpm.js.org/) is installed globally `npm i pnpm -g`

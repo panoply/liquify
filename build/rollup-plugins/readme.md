@@ -1,16 +1,16 @@
 # Rollup Plugins
 
-Liquify leverages the [Rollup](https://rollupjs.org/guide/en/) module bundler across its workspace and almost all the containing packages use Rollup for transpilation. Packages within the Liquify project use these plugins to assist development process. The plugins are available on the public NPM registry for consumption and in addition can be appropriated outside the project.
+Liquify leverages the [Rollup](https://rollupjs.org/guide/en/) module bundler for transpilation. Packages within the Liquify project use these plugins to assist development process.
 
 ### Reasoning
 
-The [plugin](https://rollupjs.org/guide/en/#plugin-development) API provides a efficient way to hook into transpilation processes when generating distributed bundles. Developing a Rollup plugin is rather simple and prevents the need of having to rely upon additional tooling in development resulting in a centralized workflow.
+The Rollup [plugin](https://rollupjs.org/guide/en/#plugin-development) API provides a efficient way to hook into the transpilation process when generating distributed bundles. Developing a Rollup plugin is rather simple and prevents the need of having to rely upon additional tooling.
 
 ### Plugins
 
 #### [@liquify/rollup-plugin-cryptospec](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/cryptospec)
 
-Facilitates encryption using [aes-256](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithms. Transforms objects, strings and numbers. The cryptospec plugin transforms the propreitary specifications into enigmatic strings exports.
+Facilitates encryption using [aes-256](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithms. Transforms objects, strings and numbers. The cryptospec plugin transforms the proprietary specifications into enigmatic strings exports.
 
 #### [@liquify/rollup-plugin-obfuscator](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/obfuscator)
 
@@ -23,6 +23,10 @@ Various project specific rollup plugin utilities that are commonly used modules 
 ### Usage
 
 Plugins are installed as a development dependencies via `pnpm i` in packages.
+
+```cli
+pnpm i @liquify/rollup-plugin-* --save-dev
+```
 
 ### Author
 
