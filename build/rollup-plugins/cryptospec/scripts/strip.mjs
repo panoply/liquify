@@ -1,13 +1,10 @@
 import { readFileSync, writeFileSync } from 'fs'
-import { read } from '@liquify/rollup-plugin-utils'
+import { config } from '@liquify/rollup-plugin-utils'
 import chalk from 'chalk'
 
 const { log } = console
 
-const arr = [
-  read.pkg.exports.import
-  , read.pkg.exports.require
-]
+const arr = [ config.output.cjs, config.output.esm ]
 
 log(chalk`{cyanBright running {bold Template Literal post build script}}`)
 

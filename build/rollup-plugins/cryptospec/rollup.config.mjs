@@ -3,7 +3,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import beep from '@rollup/plugin-beep'
 import copy from 'rollup-plugin-copy'
 import del from 'rollup-plugin-delete'
-import { banner, read, env } from '@liquify/rollup-plugin-utils'
+import { banner, config, env } from '@liquify/rollup-plugin-utils'
 import strip from 'rollup-plugin-strip-code'
 
 export default {
@@ -11,7 +11,7 @@ export default {
   output: [
     {
       format: 'cjs',
-      file: read.pkg.exports.require,
+      file: config.output.cjs,
       sourcemap: process.env.prod ? false : 'inline',
       banner: banner('PROPRIETARY'),
       exports: 'default',
@@ -20,7 +20,7 @@ export default {
     },
     {
       format: 'es',
-      file: read.pkg.exports.import,
+      file: config.output.esm,
       sourcemap: process.env.prod ? false : 'inline',
       banner: banner('PROPRIETARY')
     }
