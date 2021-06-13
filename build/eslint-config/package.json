@@ -14,6 +14,7 @@
     "url": "https://github.com/panoply/liquify/issues"
   },
   "scripts": {
+    "update:workspace": "pnpm update @liquify/eslint-config -r",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

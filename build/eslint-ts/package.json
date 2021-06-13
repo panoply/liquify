@@ -1,9 +1,10 @@
 {
   "name": "@liquify/eslint-config-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shareable ESLint config for TypeScript projects within the Liquify development workspace",
   "main": "index.js",
   "scripts": {
+    "update:workspace": "pnpm update @liquify/eslint-config-ts -r",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
