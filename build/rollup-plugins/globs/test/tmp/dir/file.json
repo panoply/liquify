@@ -1,7 +1,0 @@
-{
-  "foo": "bar",
-  "array": ["one", "two", "three"],
-  "object": {
-    "foo": "bar"
-  }
-}
