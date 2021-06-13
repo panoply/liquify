@@ -27,18 +27,25 @@
     "test": "ava --watch --verbose"
   },
   "eslintConfig": {
-    "extends": ["@liquify/eslint-config-js"]
+    "extends": [
+      "@liquify/eslint-config-js"
+    ]
   },
   "ava": {
-    "require": ["esm", "@babel/register"],
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
     "babel": true,
-    "files": ["test/index.js"],
+    "files": [
+      "test/index.js"
+    ],
     "concurrency": 5
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
     "@liquify/eslint-config-js": "workspace:^1.0.0",
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
     "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@types/node": "^15.12.2",

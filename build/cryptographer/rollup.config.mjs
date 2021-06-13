@@ -3,27 +3,25 @@ import beep from '@rollup/plugin-beep'
 import copy from 'rollup-plugin-copy'
 import del from 'rollup-plugin-delete'
 import { terser } from 'rollup-plugin-terser'
-import { banner, read, env } from '@liquify/rollup-plugin-utils'
+import { config, env } from '@liquify/rollup-plugin-utils'
 
 export default {
   input: 'src/index.js',
   output: [
     {
       format: 'cjs',
-      file: read.pkg.exports.require,
+      file: config.output.cjs,
       sourcemap: env.if(process.env.prod)(false)('inline'),
       exports: 'auto',
       esModule: false,
-      preferConst: true,
-      banner: banner('MIT')
+      preferConst: true
     },
     {
       format: 'es',
-      file: read.pkg.exports.import,
+      file: config.output.esm,
       sourcemap: env.if(process.env.prod)(false)('inline'),
       esModule: false,
-      preferConst: true,
-      banner: banner('MIT')
+      preferConst: true
     }
   ],
   external: [ 'crypto' ],
