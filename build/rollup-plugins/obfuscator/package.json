@@ -47,7 +47,7 @@
   "devDependencies": {
     "@ava/babel": "^1.0.1",
     "@liquify/eslint-config-js": "workspace:^1.0.0",
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
     "@rollup/plugin-beep": "^0.2.0",
     "ava": "^3.15.0",
     "rollup": "^2.51.1",

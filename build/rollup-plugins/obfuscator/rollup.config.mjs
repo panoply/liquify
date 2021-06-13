@@ -2,14 +2,14 @@ import { terser } from 'rollup-plugin-terser'
 import beep from '@rollup/plugin-beep'
 import copy from 'rollup-plugin-copy'
 import del from 'rollup-plugin-delete'
-import { banner, read } from '@liquify/rollup-plugin-utils'
+import { banner, config } from '@liquify/rollup-plugin-utils'
 
 export default {
   input: 'src/index.js',
   output: [
     {
       format: 'cjs',
-      file: read.pkg.exports.require,
+      file: config.output.cjs,
       sourcemap: process.env.prod ? false : 'inline',
       exports: 'default',
       esModule: false,
@@ -18,7 +18,7 @@ export default {
     },
     {
       format: 'es',
-      file: read.pkg.exports.import,
+      file: config.output.esm,
       sourcemap: process.env.prod ? false : 'inline',
       esModule: false,
       preferConst: true,
