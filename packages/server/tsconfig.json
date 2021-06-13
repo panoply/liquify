@@ -40,7 +40,7 @@
       "types": ["./src/types/*"],
       "service": ["./src/service/*"],
       "provide": ["./src/provide/*"],
-      "modes": ["src/provide/modes/*"]
+      "modes": ["./src/modes/*"]
     }
   }
 }
