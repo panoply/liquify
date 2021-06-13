@@ -1,6 +1,5 @@
-import { env, read } from '@liquify/rollup-plugin-utils';
+import { env, config } from '@liquify/rollup-plugin-utils';
 import alias from '@rollup/plugin-alias';
-import { resolve } from 'path';
 import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
@@ -14,7 +13,7 @@ export default {
   output: [
     {
       format: 'cjs',
-      file: read.pkg.exports.require,
+      file: config.output.cjs,
       sourcemap: process.env.prod ? false : 'inline',
       preferConst: true,
       esModule: false,
@@ -22,7 +21,7 @@ export default {
     },
     {
       format: 'es',
-      file: read.pkg.exports.import,
+      file: config.output.esm,
       sourcemap: process.env.prod ? false : 'inline',
       preferConst: true,
       esModule: false,
@@ -36,12 +35,12 @@ export default {
   plugins: env.unless(process.env.prod)(
     [
       alias({
-        entries: [
-          { find: 'tree', replacement: resolve(process.cwd(), './src/tree') },
-          { find: 'parser', replacement: resolve(process.cwd(), './src/parser') },
-          { find: 'lexical', replacement: resolve(process.cwd(), './src/lexical') },
-          { find: 'config', replacement: resolve(process.cwd(), './src/config.ts') }
-        ]
+        entries: {
+          tree: config.path('src/tree'),
+          parser: config.path('src/parser'),
+          lexical: config.path('src/lexical'),
+          config: config.path('src/config.ts')
+        }
       }),
       del(
         {
