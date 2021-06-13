@@ -2,13 +2,13 @@
   "name": "liquify-vscode",
   "version": "0.0.1",
   "displayName": "Liquify",
-  "description": "Syntax highlighting, intellisense, diagnostics, formatting and support for the Liquid template language support.",
+  "description": "Liquid Language Support for vscode. Provides syntax highlighting, IntelliSense capabilities, diagnostic and validations, formatting, hovers, completions and more!",
   "publisher": "sissel",
   "icon": "assets/logo.png",
-  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
   "preview": false,
   "private": false,
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "see LICENSE.txt",
   "keywords": [
     "liquid",
     "shopify",
@@ -28,12 +28,27 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/panoply/vscode-liquid.git"
+    "url": "https://github.com/panoply/liquify.git"
   },
   "bugs": {
-    "url": "https://github.com/panoply/vscode-liquid/issues"
+    "url": "https://github.com/panoply/liquify/issues"
   },
-  "main": "./extension.js",
+  "main": "package/client.js",
+  "exports": {
+    "require": "./package/client.js",
+    "import": "./package/client.es.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@liquify/eslint-config-ts"
+    ],
+    "rules": {
+      "semi": [
+        "error",
+        "always"
+      ]
+    }
+  },
   "engines": {
     "vscode": "^1.52.0"
   },
@@ -50,13 +65,7 @@
     "workspaceContains:**/.liquidrc",
     "workspaceContains:**/.liquidrc.json"
   ],
-  "extensionDependencies": [
-    "vscode.html-language-features"
-  ],
   "contributes": {
-    "css.customData": [
-      "./liquid-css.json"
-    ],
     "themes": [
       {
         "label": "Potion Theme",
@@ -70,13 +79,34 @@
           ".liquidrc",
           ".liquidrc.json"
         ],
-        "url": "./stores/liquidrc.json"
+        "url": "./@stores/liquidrc.json"
+      },
+      {
+        "fileMatch": [
+          ".liquidspec",
+          ".liquidspec.json"
+        ],
+        "url": "./@stores/specs.json"
+      },
+      {
+        "fileMatch": "settings_data.json",
+        "url": "./@stores/settings_data.json"
+      },
+      {
+        "fileMatch": [
+          "settings_schema.json"
+        ],
+        "url": "./@stores/settings_schema.json"
       }
     ],
     "commands": [
       {
         "command": "liquid.releaseNotes",
         "title": "Liquid: Release Notes"
+      },
+      {
+        "command": "liquid.validateDocument",
+        "title": "Liquid: Validate Document"
       },
       {
         "command": "liquid.disableFormatting",
@@ -104,7 +134,7 @@
       },
       {
         "command": "liquid.liquidrc",
-        "title": "Liquid: Generate a .liquidrc rule file"
+        "title": "Liquid: Generate a .liquidrc file"
       }
     ],
     "keybindings": [
@@ -134,6 +164,12 @@
         ],
         "extensions": [
           ".liquid"
+        ],
+        "filenamePatterns": [
+          "layout/*.liquid",
+          "snippets/*.liquid",
+          "sections/*.liquid",
+          "templates/**/*.liquid"
         ]
       },
       {
@@ -179,27 +215,34 @@
           ".liquidrc",
           ".liquidrc.json"
         ]
+      },
+      {
+        "id": "liquidspec",
+        "filenames": [
+          ".liquidspec",
+          ".liquidspec.json"
+        ]
       }
     ],
     "grammars": [
       {
         "language": "liquid",
         "scopeName": "source.liquid",
-        "path": "./syntaxes/liquid.tmLanguage.json"
+        "path": "./package/syntax/liquid.tmLanguage.json"
       },
       {
         "language": "liquid-shopify",
         "scopeName": "source.liquid.shopify",
-        "path": "./syntaxes/liquid-shopify.tmLanguage.json"
+        "path": "./package/syntax/liquid-shopify.tmLanguage.json"
       },
       {
         "language": "liquid-jekyll",
         "scopeName": "source.liquid.jekyll",
-        "path": "./syntaxes/liquid-jekyll.tmLanguage.json"
+        "path": "./package/syntax/liquid-jekyll.tmLanguage.json"
       },
       {
         "scopeName": "source.liquid.frontmatter",
-        "path": "./syntaxes/injections/frontmatter.json",
+        "path": "./package/syntax/injections/frontmatter.json",
         "injectTo": [
           "source.liquid.jekyll"
         ],
@@ -209,7 +252,7 @@
       },
       {
         "scopeName": "markdown.liquid.codeblock",
-        "path": "./syntaxes/injections/liquid-markdown.codeblock.json",
+        "path": "./package/syntax/injections/liquid-markdown.codeblock.json",
         "injectTo": [
           "text.html.markdown"
         ],
@@ -218,15 +261,16 @@
         }
       },
       {
-        "scopeName": "source.liquid.specifications",
-        "path": "./syntaxes/injections/specifications.inject.json",
+        "language": "liquidspec",
+        "scopeName": "source.liquid.specs",
         "injectTo": [
           "source.json"
-        ]
+        ],
+        "path": "./package/syntax/injections/liquify-specs.inject.json"
       },
       {
         "scopeName": "source.liquid.embedded",
-        "path": "./syntaxes/injections/embedded.inject.json",
+        "path": "./package/syntax/injections/embedded.inject.json",
         "injectTo": [
           "source.liquid.shopify"
         ],
@@ -314,14 +358,24 @@
     }
   },
   "dependencies": {
-    "fs-extra": "^10.0.0",
     "strip-json-comments": "^3.1.1",
     "vscode-languageclient": "^7.0.0"
   },
   "devDependencies": {
-    "@liquify/rollup-plugin-globs": "workspace:^0.1.0",
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
+    "@liquify/eslint-config-ts": "workspace:^1.0.1",
+    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+    "@liquify/schema-stores": "workspace:^0.1.5",
+    "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-replace": "^2.4.2",
-    "@types/vscode": "^1.56.0"
+    "@types/vscode": "^1.56.0",
+    "rollup": "^2.51.2",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-filesize": "^9.1.1",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-watch-assets": "^1.0.1",
+    "typescript": "^4.3.2"
+  },
+  "peerDependencies": {
+    "rollup": "^2.51.2"
   }
 }
