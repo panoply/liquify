@@ -1,0 +1,157 @@
+{
+  "$schema": "../src/stores/shopify/sections.json",
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_height",
+      "label": "Full height",
+      "info": "Adjust to the full height of the browser window. Image cropping occurs from the center. Does not apply to small screens.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Hero Title"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_position",
+      "label": "Horizontal position",
+      "default": "hero__content--left",
+      "options": [
+        {
+          "label": "Left",
+          "value": "hero__content--left"
+        },
+        {
+          "label": "Center",
+          "value": "hero__content--center"
+        },
+        {
+          "label": "Right",
+          "value": "hero__content--right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "vertical_position",
+      "label": "Vertical position",
+      "default": "hero__content--top",
+      "options": [
+        {
+          "label": "Top",
+          "value": "hero__content--top"
+        },
+        {
+          "label": "Middle",
+          "value": "hero__content--middle"
+        },
+        {
+          "label": "Bottom",
+          "value": "hero__content--bottom"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_theme",
+      "label": "Theme",
+      "default": "light",
+      "options": [
+        {
+          "label": "Dark",
+          "value": "dark"
+        },
+        {
+          "label": "Light",
+          "value": "light"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "background_opacity",
+      "label": "Background Opacity",
+      "default": "0.5",
+      "options": [
+        {
+          "label": "90%",
+          "value": "0.9"
+        },
+        {
+          "label": "80%",
+          "value": "0.8"
+        },
+        {
+          "label": "70%",
+          "value": "0.7"
+        },
+        {
+          "label": "60%",
+          "value": "0.6"
+        },
+        {
+          "label": "50%",
+          "value": "0.5"
+        },
+        {
+          "label": "40%",
+          "value": "0.4"
+        },
+        {
+          "label": "30%",
+          "value": "0.3"
+        },
+        {
+          "label": "20%",
+          "value": "0.2"
+        },
+        {
+          "label": "10%",
+          "value": "0.1"
+        },
+        {
+          "label": "0%",
+          "value": "0"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "category": "Image"
+    }
+  ]
+}
