@@ -26,13 +26,7 @@
   "eslintConfig": {
     "extends": [
       "@liquify/eslint-config-ts"
-    ],
-    "rules": {
-      "semi": [
-        "error",
-        "always"
-      ]
-    }
+    ]
   },
   "ava": {
     "require": [
@@ -54,7 +48,7 @@
     "@liquify/cryptographer": "workspace:^0.1.0",
     "@liquify/liquid-language-specs": "workspace:^0.1.2",
     "@liquify/liquid-parser": "workspace:^0.1.1-beta.1",
-    "@liquify/schema-stores": "workspace:^0.1.4",
+    "@liquify/schema-stores": "workspace:^0.1.5",
     "lodash": "^4.17.21",
     "prettydiff": "^101.2.6",
     "strip-json-comments": "^3.1.1",
@@ -72,10 +66,9 @@
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
-    "@liquify/eslint-config-ts": "workspace:^1.0.0",
-    "@liquify/rollup-plugin-globs": "workspace:^0.1.0",
+    "@liquify/eslint-config-ts": "workspace:^1.0.1",
     "@liquify/rollup-plugin-obfuscator": "workspace:^0.2.0",
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
     "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
