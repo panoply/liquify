@@ -1,4 +1,23 @@
 {
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    //"**/node_modules": true,
+    "**/package/node_modules": false,
+    "**/versions": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/.pnpm-debug.log": true
+  },
+  "files.associations": {
+    ".meta": "json",
+    ".packages": "json",
+    "*.sublime-settings": "jsonc",
+    "*.sublime-commands": "jsonc"
+  },
   "editor.semanticHighlighting.enabled": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
@@ -72,25 +91,6 @@
         }
       ]
     }
-  },
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true,
-  "files.exclude": {
-    //"**/node_modules": true,
-    "**/package/node_modules": false,
-    "**/versions": true,
-    "**/.git": true,
-    "**/.svn": true,
-    "**/.hg": true,
-    "**/CVS": true,
-    "**/.DS_Store": true,
-    "**/.pnpm-debug.log": true
-  },
-  "files.associations": {
-    ".meta": "json",
-    ".packages": "json",
-    "*.sublime-settings": "jsonc",
-    "*.sublime-commands": "jsonc"
   },
   "javascript.suggest.enabled": true,
   "javascript.suggestionActions.enabled": false,
@@ -194,6 +194,8 @@
     "liquidjs",
     "mvasilkov",
     "outdent",
-    "repath"
+    "repath",
+    "νικολας",
+    "σαββιδης"
   ]
 }
