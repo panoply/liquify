@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-var data = ''
+let data = ''
+
 function withPipe (data) {
   console.log('content was piped')
   console.log(data.trim())
@@ -9,15 +10,17 @@ function withoutPipe () {
   console.log('no content was piped')
 }
 
-var self = process.stdout
+const self = process.stdout
+
 self.on('readable', function () {
-  var chunk = this.read()
+  const chunk = this.read()
   if (chunk === null) {
     withoutPipe()
   } else {
     data += chunk
   }
 })
+
 self.on('end', function () {
   withPipe(data)
 })
