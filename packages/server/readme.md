@@ -17,7 +17,7 @@ An [LSP](#) implementation for the Liquid template language.
 ### Install
 
 ```
-<pnpm|npm|yarn> i liquid-language-server
+<pnpm|npm|yarn> i @liquify/liquid-language-server
 ```
 
 ## Specifications
@@ -32,7 +32,7 @@ Server capabilities are made possible by providing the Language Server with Liqu
 
 The parser only cares about Liquid and HTML syntax. It supports full and incremental parses. The parser will build a detailed AST representation of documents on a per change basis.
 
-- [@liquid/liquid-parser](#)
+- [@liquify/liquid-parser](#)
 
 ## Language Services
 
