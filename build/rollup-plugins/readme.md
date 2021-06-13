@@ -12,10 +12,6 @@ The [plugin](https://rollupjs.org/guide/en/#plugin-development) API provides a e
 
 Facilitates encryption using [aes-256](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithms. Transforms objects, strings and numbers. The cryptospec plugin transforms the propreitary specifications into enigmatic strings exports.
 
-#### [@liquify/rollup-plugin-globs](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/globs)
-
-Provides watch, copy, transform, re-path and rename capabilities for files in a development workspace. The plugin is essentially a stripped down and hard-fork extended version of [rollup-plugin-globsync](https://github.com/tivac/).
-
 #### [@liquify/rollup-plugin-obfuscator](https://github.com/panoply/liquify/tree/next/build/rollup-plugins/obfuscator)
 
 Implements [JavaScript Obfuscator](https://github.com/javascript-obfuscator/javascript-obfuscator) and facilitates in obfuscation. This is a hard-fork of the current[rollup-plugin-javascript-obfuscator](https://github.com/javascript-obfuscator/) plugin which is using a deprecated API.
