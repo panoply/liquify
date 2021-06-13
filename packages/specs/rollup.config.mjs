@@ -8,6 +8,7 @@ import beep from '@rollup/plugin-beep'
 import watch from 'rollup-plugin-watch-assets'
 import copy from 'rollup-plugin-copy'
 import del from 'rollup-plugin-delete'
+import filesize from 'rollup-plugin-filesize'
 import { config } from 'dotenv'
 
 config()
@@ -146,6 +147,12 @@ export default {
           stringArrayWrappersType: 'variable',
           stringArrayThreshold: 0.75,
           unicodeEscapeSequence: false
+        }
+      ),
+      filesize(
+        {
+          showGzippedSize: false,
+          showMinifiedSize: true
         }
       )
     ]
