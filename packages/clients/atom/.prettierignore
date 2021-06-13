@@ -1,5 +1,5 @@
-src/language/liquid.configuration.json
-test/**
+# DONT TOUCH THE JS/TS FILES
+# LEAVE THIS UPTO ESLINT
 *.js
 *.mjs
 *.ts
