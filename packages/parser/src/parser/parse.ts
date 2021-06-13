@@ -1,3 +1,4 @@
+import { ITag } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { TokenContext } from 'lexical/context';
 import { NodeType } from 'lexical/types';
@@ -5,14 +6,13 @@ import { NodeLanguage } from 'lexical/language';
 import { NodeKind } from 'lexical/kind';
 import { ParseError } from 'lexical/errors';
 import { Config as config } from 'config';
-import * as context from 'tree/context';
-import * as stream from 'parser/stream';
-import { IAST } from 'tree/ast';
-import { INode } from 'tree/node';
-import * as scanner from 'parser/scanner';
 import { Specs as spec } from 'parser/specs';
 import { errors } from 'parser/errors';
-import { ITag } from '@liquify/liquid-language-specs';
+import { IAST } from 'tree/ast';
+import { INode } from 'tree/node';
+import * as context from 'tree/context';
+import * as stream from 'parser/stream';
+import * as scanner from 'parser/scanner';
 
 /**
  * Parser
