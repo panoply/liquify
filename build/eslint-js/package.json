@@ -4,17 +4,14 @@
   "description": "Shareable ESLint config for JavaScript projects within the Liquify development workspace",
   "main": "index.js",
   "scripts": {
+    "update:workspace": "pnpm update @liquify/eslint-config-js -r",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/panoply/liquify/master/build/eslint-config/packages/javascript"
   },
-  "keywords": [
-    "eslint-config",
-    "eslint-javascript",
-    "liquify"
-  ],
+  "keywords": ["eslint-config", "eslint-javascript", "liquify"],
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
   "license": "MIT",
   "dependencies": {
