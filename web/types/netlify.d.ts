@@ -3,8 +3,8 @@ import {
   APIGatewayProxyResult,
   Callback,
   Context,
-  ClientContext,
-} from "aws-lambda";
+  ClientContext
+} from 'aws-lambda';
 
 export interface NetlifyFunctionEvent extends APIGatewayProxyEvent {
   path: string;

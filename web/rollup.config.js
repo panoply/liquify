@@ -1,7 +1,9 @@
-import babel from '@rollup/plugin-babel'
-import noderesolve from '@rollup/plugin-node-resolve'
-import buble from '@rollup/plugin-buble'
-import { terser } from 'rollup-plugin-terser'
+import typescript from 'rollup-plugin-typescript2';
+import buble from '@rollup/plugin-buble';
+import beep from '@rollup/plugin-beep';
+// import copy from 'rollup-plugin-copy';
+import del from 'rollup-plugin-delete';
+import { terser } from 'rollup-plugin-terser';
 
 export default {
   input: 'src/app/index.js',
@@ -12,13 +14,30 @@ export default {
     sourcemap: true
   },
   plugins: [
-    buble({
-      transforms: { forOf: false }
-    }),
-    process.env.prod && terser({
-      ecma: 6
-      , warnings: 'verbose'
-      , compress: { passes: 2 }
-    })
+    del(
+      {
+        verbose: true,
+        runOnce: !process.env.prod,
+        targets: 'package/*'
+      }
+    ),
+    typescript(
+      {
+        check: false,
+        useTsconfigDeclarationDir: true
+      }
+    ),
+    beep(),
+    buble(
+      {
+        transforms: { forOf: false }
+      }
+    ),
+    process.env.prod && terser(
+      {
+        ecma: 2016,
+        compress: { passes: 2 }
+      }
+    )
   ]
-}
+};

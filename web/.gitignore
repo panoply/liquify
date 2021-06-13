@@ -1,6 +1,7 @@
 # DIRECTORIES
 # --------------------
 node_modules/
+.netlify
 
 # FILES
 # -------------------
@@ -8,6 +9,3 @@ node_modules/
 .eslintcache
 pnpm-lock.yaml
 pnpm-debug.log
-
-# Local Netlify folder
-.netlify

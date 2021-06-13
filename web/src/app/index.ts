@@ -1,3 +1,5 @@
+export default {};
+
 /*
 window.addEventListener('load', function () {
   const velocity = 5

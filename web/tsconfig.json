@@ -1,26 +1,38 @@
 {
-  "exclude": ["node_modules", "public"],
+  "exclude": ["node_modules/**", "package", "test"],
+  "include": ["src/index.ts", "src/**/*.ts", "src/**/**/*.ts", "src/types/*"],
   "typeAcquisition": {
     "enable": true,
-    "include": ["node", "dom"]
+    "include": ["node"]
   },
   "compilerOptions": {
-    "target": "ESNext",
+    "types": ["node"],
+    "rootDir": "src",
+    "typeRoots": ["node_modules/@types", "src/types/*"],
+    "declaration": true,
+    "declarationDir": "package/@types",
+    "outDir": "package",
+    "target": "ES6",
+    "removeComments": true,
     "lib": ["es2020"],
-    "module": "esnext",
-    "checkJs": true,
-    "allowJs": true,
+    "module": "ESNext",
+    "alwaysStrict": true,
     "allowUmdGlobalAccess": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "preserveSymlinks": true,
+    "skipDefaultLibCheck": false,
     "moduleResolution": "node",
-    "noEmit": true,
     "noEmitOnError": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "pretty": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "app": ["./src/app/index.js"],
+      "components": ["./src/app/components/*"]
+    }
   }
 }
