@@ -1,6 +1,6 @@
 import { terser } from 'rollup-plugin-terser'
 import commonjs from '@rollup/plugin-commonjs'
-import { jsonmin, env, read } from '@liquify/rollup-plugin-utils'
+import { jsonmin, env, config } from '@liquify/rollup-plugin-utils'
 import beep from '@rollup/plugin-beep'
 import watch from 'rollup-plugin-watch-assets'
 import copy from 'rollup-plugin-copy'
@@ -11,7 +11,7 @@ export default {
   output: [
     {
       format: 'cjs',
-      file: read.pkg.exports.require,
+      file: config.output.cjs,
       sourcemap: process.env.prod ? false : 'inline',
       exports: 'named',
       esModule: false,
@@ -19,7 +19,7 @@ export default {
     },
     {
       format: 'es',
-      file: read.pkg.exports.import,
+      file: config.output.esm,
       sourcemap: process.env.prod ? false : 'inline',
       esModule: false,
       preferConst: true
@@ -43,7 +43,7 @@ export default {
       watch(
         {
           assets: [
-            'stores/**/*.json',
+            'src/stores/**/*.json',
             'src/index.d.ts'
           ]
         }
@@ -58,8 +58,18 @@ export default {
               dest: 'package'
             },
             {
-              src: 'stores/**/*.json',
+              src: [ 'src/stores/liquidrc.json', 'src/stores/specs.json' ],
               dest: 'package/@stores',
+              transform: contents => jsonmin(contents.toString())
+            },
+            {
+              src: 'src/stores/jekyll/_config.json',
+              dest: 'package/@stores/jekyll',
+              transform: contents => jsonmin(contents.toString())
+            },
+            {
+              src: 'src/stores/shopify/*.json',
+              dest: 'package/@stores/shopify',
               transform: contents => jsonmin(contents.toString())
             }
           ]

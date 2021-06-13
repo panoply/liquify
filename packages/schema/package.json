@@ -1,18 +1,22 @@
 {
   "name": "@liquify/schema-stores",
-  "created": "2021",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "license": "SEE LICENSE IN LICENSE.txt",
-  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
   "description": "Liquid language variation specification references used by Liquify",
   "engines": {
     "pnpm": ">=4",
     "node": ">=12"
   },
   "repository": {
-    "url": "https://github.com/panoply/liquify"
+    "type": "git",
+    "url": "https://github.com/panoply/liquify.git"
   },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
+  "type": "module",
   "main": "package/index.js",
   "types": "package/index.d.ts",
   "exports": {
@@ -25,8 +29,7 @@
     "pack": "cd versions; pnpm pack ../ && cd .."
   },
   "devDependencies": {
-    "@liquify/rollup-plugin-globs": "workspace:^0.1.0",
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.0",
+    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
     "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-commonjs": "^19.0.0",
     "rollup-plugin-copy": "^3.4.0",
