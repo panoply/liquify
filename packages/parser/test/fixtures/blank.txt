@@ -1,2 +1,24 @@
-{% for %}
-{% endfor %}
+{% if foo %}
+
+  {{ example }}
+
+  {% unless bar %}
+
+    {{ test }}
+
+  {% endunless %}
+
+{% endif %}
+
+
+{% if hello %}
+
+  {{ world }}
+
+  {% unless test %}
+
+    {{ boooo }}
+
+  {% endunless %}
+
+{% endif %}

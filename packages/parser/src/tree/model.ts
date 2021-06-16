@@ -1,4 +1,6 @@
 import { IAST } from 'tree/ast';
+import { INode } from 'tree/node';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 import { TextDocumentItem, VersionedTextDocumentIdentifier } from 'vscode-languageserver-types';
 
 const model: Map<string, IAST> = new Map();
@@ -11,6 +13,20 @@ const model: Map<string, IAST> = new Map();
  * We provide this static to prevent circular references.
  */
 export let document: IAST;
+
+/**
+ * Creat Text Document
+ *
+ * Creates an AST instance and stores it to within the cache model.
+ * This logic is lifted mostly from vscode-languageserver-node.
+ */
+export function embedded (node: INode) {
+
+  const uri = document.uri.replace('.liquid', `.${node.language}`);
+  const embed = TextDocument.create(uri, node.language, 1, node.content);
+  node.embed = document.documents.push(embed) - 1;
+
+}
 
 /**
  * Creat Text Document
