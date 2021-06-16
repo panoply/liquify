@@ -138,6 +138,7 @@ export const enum TokenType {
   HTMLEndTagClose,
   HTMLStartCommentTag,
   HTMLComment,
+  HTMLEmbedded,
   HTMLEndCommentTag,
   HTMLAttributeName,
   HTMLOperatorValue,
