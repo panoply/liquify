@@ -48,7 +48,7 @@ export function Create (text: string): string {
   offset = 0;
   token = '';
   spaces = 0;
-  size = source.length;
+  size = text.length;
 
   return source;
 
@@ -68,12 +68,14 @@ export function ComputeLineOffsets (
 ): number[] {
 
   const result: number[] = isLineStart ? [ textOffset ] : [];
-  let i = 0;
 
-  for (; i < size; i++) {
+  for (let i = 0; i < text.length; i++) {
     const ch = text.charCodeAt(i);
+
     if (ch === CAR || ch === NWL) {
-      if (ch === CAR && (i + 1) < size && text.charCodeAt(i + 1) === NWL) i++;
+
+      if (ch === CAR && i + 1 < text.length && text.charCodeAt(i + 1) === NWL) i++;
+
       result.push(textOffset + i + 1);
     }
   }
@@ -248,7 +250,7 @@ export function Jump (n: number): number {
 
   if (n > size) return GotoEnd();
 
-  offset = n < 0 ? 0 : n;
+  offset = n;
   cursor = offset;
 
   return offset;
