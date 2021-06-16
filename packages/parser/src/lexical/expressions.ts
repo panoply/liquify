@@ -456,3 +456,48 @@ export const HTMLTagAttribute = /^[a-zA-Z0-9-]+/;
  * HTML End Tag name identifier
  */
 export const HTMLTagEnd = /^[^\s"'>]+/;
+
+/**
+ * `^\bscript`
+ *
+ * ---
+ *
+ * HTML Script Tag
+ */
+export const HTMLScriptEmbed = /^\bscript/;
+
+/**
+ * `^\bstyle`
+ *
+ * ---
+ *
+ * HTML Style Tag
+ */
+export const HTMLStyleEmbed = /^\bstyle/;
+
+/**
+ * `^\b(?:style|script)`
+ *
+ * ---
+ *
+ * HTML Style Tag
+ */
+export const HTMLEmbedded = /^\b(?:style|script)/;
+
+/**
+ * `/(module|(text|application)\/(java|ecma)script|text\/babel)/`
+ *
+ * ---
+ *
+ * HTML Script Attributes
+ */
+export const HTMLAttrJS = /(module|(text|application)\/(java|ecma)script|text\/babel)/;
+
+/**
+ * `/(module|(text|application)\/(java|ecma)script|text\/babel)/`
+ *
+ * ---
+ *
+ * HTML JSON Attributes
+ */
+export const HTMLAttrJSON = /application\/(?:ld\+)?json/;
