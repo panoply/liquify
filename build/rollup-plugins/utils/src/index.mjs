@@ -9,21 +9,37 @@ import chalk from 'chalk'
  * Environment conditional executor
  */
 export const env = {
+  get dev () { return !process.env.prod },
+  get prod () { return process.env.prod === 'true' },
+  get watch () { return process.env.ROLLUP_WATCH === 'true' },
+  is: (condition, returns) => env[condition]
+    ? returns
+    : typeof returns === 'function' ? null : false,
+  if: condition => initial => combined => {
 
-  if (condition) {
+    if (env[condition]) return initial
 
-    return initial => combined => {
-      if (condition) return initial
-      if (Array.isArray(initial) && Array.isArray(combined)) {
-        return [ ...initial, ...combined ]
-      }
+    const arrInitial = Array.isArray(initial)
+    const arrCombined = Array.isArray(combined)
 
-      return combined
-    }
+    if (arrInitial && arrCombined) return [ ...initial, ...combined ]
 
-  },
-  unless (condition) {
-    return this.if(!condition)
+    const strInitial = typeof initial === 'string'
+    const strCombined = typeof combined === 'string'
+
+    if (arrInitial && strCombined) return [ ...initial, combined ]
+    if (strInitial && arrCombined) return [ initial, ...combined ]
+    if (strInitial && strCombined) return [ initial, combined ]
+
+    const fnInitial = typeof initial === 'function'
+    const fnCombined = typeof combined === 'function'
+
+    if (arrInitial && fnCombined) return [ ...initial, combined ]
+    if (fnInitial && arrCombined) return [ initial, ...combined ]
+    if (fnInitial && fnCombined) return [ initial, combined ]
+
+    return combined
+
   }
 }
 
@@ -91,21 +107,6 @@ export const jsonmin = content => {
 
     throw new Error(e)
   }
-
-}
-
-/**
- * Plugins - Concat development and production plugins
- * based on process env variable.
- *
- * @param {array} devPlugins
- * @param {array} prodPlugins
- */
-export const plugins = (devPlugins, prodPlugins) => {
-
-  if (process.env.prod) return [ ...devPlugins, ...prodPlugins ]
-
-  return devPlugins
 
 }
 
