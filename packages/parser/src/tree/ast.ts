@@ -1,4 +1,4 @@
-import inRange from 'lodash/inRange';
+import inRange from 'lodash.inrange';
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 import { NodeType } from 'lexical/types';
 import { NodeKind } from 'lexical/kind';
@@ -7,6 +7,7 @@ import * as context from 'tree/context';
 import * as s from 'parser/stream';
 import { INode } from 'tree/node';
 import { GetFormedRange } from 'parser/utils';
+
 /**
  * Abstract Syntax Tree
  *
@@ -22,9 +23,20 @@ export class IAST {
     this.languageId = languageId;
     this.version = version;
     this.content = s.Create(content);
-    this.lines = this.getLineOffsets();
+    this.lines = s.ComputeLineOffsets(this.content, true);
 
   }
+
+  /**
+   * Line offsets for the document
+   */
+  private lines: number[] | undefined
+
+  /**
+   * The cursor offset index, which is generated from
+   * a start and end range position each incremental parse.
+   */
+  private cursor: number = NaN;
 
   /**
    * The documents URI identifier
@@ -47,21 +59,10 @@ export class IAST {
   public content: string;
 
   /**
-   * Line offsets for the document
-   */
-  public lines: number[]
-
-  /**
    * List of parsing errors and validations
    * encountered while scanning the document.
    */
   public errors: Parser.Diagnostic[] = [];
-
-  /**
-   * The cursor offset index, which is generated from
-   * a start and end range position each incremental parse.
-   */
-  public cursor: number = NaN;
 
   /**
    * List of indexes where embedded nodes
@@ -79,7 +80,7 @@ export class IAST {
    * List of indexes where embedded nodes
    * exist on the tree
    */
-  public variables: object = {};
+  public variables: object = Object.create(null);
 
   /**
    * The abstract syntax tree.
@@ -112,26 +113,27 @@ export class IAST {
    * Converts a location offset to position via
    * textDocument instance method: `positionAt()`
    */
-  public positionAt (location: number): Position {
+  public positionAt (offset: number): Position {
 
-    location = Math.max(Math.min(location, this.content.length), 0);
+    offset = Math.max(Math.min(offset, this.content.length), 0);
 
     const lineOffsets = this.getLineOffsets();
 
-    let low = 0; let high = lineOffsets.length;
+    let low = 0;
+    let high = lineOffsets.length;
 
-    if (high === 0) return { line: 0, character: location };
+    if (high === 0) return { line: 0, character: offset };
 
     while (low < high) {
       const mid = Math.floor((low + high) / 2);
-      if (lineOffsets[mid] > location) high = mid; else low = mid + 1;
+      if (lineOffsets[mid] > offset) high = mid; else low = mid + 1;
     }
 
     const line = low - 1;
 
     return {
       line,
-      character: location - lineOffsets[line]
+      character: offset - lineOffsets[line]
     };
 
   }
@@ -140,20 +142,20 @@ export class IAST {
    * Converts a position to an offset via
    * textDocument instance method `offsetAt()`
    */
-  public offsetAt (location: Position): number {
+  public offsetAt (position: Position): number {
 
     const lineOffsets = this.getLineOffsets();
 
-    if (location.line >= lineOffsets.length) return this.content.length;
-    else if (location.line < 0) return 0;
+    if (position.line >= lineOffsets.length) return this.content.length;
+    else if (position.line < 0) return 0;
 
-    const lineOffset = lineOffsets[location.line];
-    const nextLineOffset = (location.line + 1 < lineOffsets.length)
-      ? lineOffsets[location.line + 1]
+    const lineOffset = lineOffsets[position.line];
+    const nextLineOffset = (position.line + 1 < lineOffsets.length)
+      ? lineOffsets[position.line + 1]
       : this.content.length;
 
     return Math.max(
-      Math.min(lineOffset + location.character, nextLineOffset),
+      Math.min(lineOffset + position.character, nextLineOffset),
       lineOffset
     );
 
@@ -226,6 +228,7 @@ export class IAST {
    * the line (character `0` of next line).
    */
   public toLineRange (location: number | Position): Range {
+
     const range = {
       start: {
         character: 0,
@@ -263,12 +266,28 @@ export class IAST {
     this.errors = [];
     this.nodes = [];
     this.comments = [];
-
     context.reset();
-
-    return 0;
   }
 
+  /**
+   * **INCREMENTAL TEXT UPDATE**
+   *
+   * Updates the document content string and line offsets
+   * are incremental. This logic is lifted from `vscode-languageserver-node`
+   * module. The vscode team chooses line/column locations opposed to
+   * offsets which makes applying incremental updates to the AST difficult
+   * and somewhat extrenous so only partial updates are applied to the AST
+   * following content string update.
+   *
+   * @see https://git.io/Jnsql
+   *
+   * **PARTIAL AST UPDATES**
+   *
+   * The AST is updated directly after document content changes have
+   * been applied. A _partial_ incremental update is applied to the tree
+   * wherein nodes are split at the change location and re-parsed from
+   * a root/singular node position existing 2 levels up in the tree.
+   */
   public increment (
     edits: {
       range: Range,
@@ -277,113 +296,111 @@ export class IAST {
     version: number
   ) {
 
+    this.cursor = NaN;
     this.version = version;
 
-    let index = 0;
-    const length = edits.length;
+    /* -------------------------------------------- */
+    /* CONTENT UPDATE                               */
+    /* -------------------------------------------- */
 
-    for (; index < length; index++) {
+    for (const change of edits) {
 
-      const change = edits[index];
       const range = GetFormedRange(change.range);
-      const start = this.offsetAt(range.start);
-      const end = this.offsetAt(range.end);
+      const startoffset = this.offsetAt(range.start);
+      const endoffset = this.offsetAt(range.end);
 
-      this.content = this.content.substring(0, start) +
+      this.content = (
+        this.content.substring(0, startoffset) +
         change.text +
-        this.content.substring(end, this.content.length);
+        this.content.substring(endoffset, this.content.length)
+      );
 
-      const startLine = Math.max(range.start.line, 0);
-      const enderLine = Math.max(range.end.line, 0);
-      const newlines = s.ComputeLineOffsets(change.text, false, start);
+      const startline = Math.max(range.start.line, 0);
+      const endline = Math.max(range.end.line, 0);
+      const newlines = s.ComputeLineOffsets(change.text, false, startoffset);
+      const linecount = newlines.length;
 
-      let lineoffset = this.lines!;
+      let lines = this.lines!;
 
-      if (enderLine - startLine === newlines.length) {
-
-        let i = 0;
-        const len = newlines.length;
-
-        for (; i < len; i++) lineoffset[i + startLine + 1] = newlines[i];
-
+      if (endline - startline === linecount) {
+        for (let i = 0; i < linecount; i++) lines[i + startline + 1] = newlines[i];
       } else {
-
-        if (newlines.length < 10000) {
-          lineoffset.splice(startLine + 1, enderLine - startLine, ...newlines);
-        } else {
-          this.lines = lineoffset = lineoffset
-            .slice(0, startLine + 1)
-            .concat(newlines, lineoffset.slice(enderLine + 1));
+        if (linecount < 10000) lines.splice(startline + 1, endline - startline, ...newlines);
+        else {
+          this.lines = lines = lines
+            .slice(0, startline + 1)
+            .concat(newlines, lines.slice(endline + 1));
         }
-
       }
 
-      const diff = change.text.length - (end - start);
+      const diff = change.text.length - (endoffset - startoffset);
 
       if (diff !== 0) {
-        let x = startLine + 1 + newlines.length;
-        const linesize = lineoffset.length;
-        for (; x < linesize; x++) lineoffset[x] = lineoffset[x] + diff;
+        for (let i = startline + 1 + linecount
+          , s = lines.length; i < s; i++) lines[i] = lines[i] + diff;
       }
 
-      if (length - 1 === index) this.cursor = start;
+      if (isNaN(this.cursor)) this.cursor = startoffset;
 
     }
 
     s.Create(this.content);
 
-    if (edits.length > 1 || this.nodes.length === 0) this.clear();
+    /* -------------------------------------------- */
+    /* AST UPDATE                                   */
+    /* -------------------------------------------- */
 
-    console.log(this.cursor);
+    let curr: number = 0;
+    let prev: number = 0;
 
-    return this.update();
+    for (let i = 0; i < this.nodes.length; i++) {
 
-  }
+      if (i > 0) prev = this.nodes[i - 1].getRoot().start;
 
-  /**
-   * Updates the tree when a change is performed on the document.
-   * The `contentChanges` event from the Language Server is
-   * passed as the parameter.
-   */
-  public update (): number {
-
-    let i = 0;
-
-    while (this.nodes.length > i) {
-      if (this.nodes[i].end > this.cursor) break;
-      else i++;
+      if (this.nodes[i].end > this.cursor) {
+        curr = this.nodes[i].root;
+        break;
+      }
     }
 
-    if (i === 0) return this.clear();
+    // console.log(curr, this.nodes[curr]);
 
-    i = i - 1;
+    if (curr === 0 || !this.nodes[curr]) return this.clear();
 
-    const node =
-      this.nodes[i].root === 0 &&
-      this.nodes[i].parent === this.nodes[i].index &&
-      this.nodes[i].index > 0
-        ? this.nodes[i]
-        : this.nodes[this.nodes[i].root];
+    const node = this.nodes[curr];
 
     // console.log(node);
+    // console.log(this.content.slice(0, prev));
 
     if (this.errors.length > 0) {
-      this.errors.splice(node.error);
+
+      const slice = this.errors.findIndex(({
+        data: {
+          offset
+        }
+      }) => inRange(
+        offset,
+        prev,
+        s.size
+      ));
+
+      if (slice >= 0) this.errors.splice(slice);
+
     }
 
     if (this.embeds.length > 0) {
-      this.embeds.splice(this.embeds.findIndex((n) => n >= i));
+      this.embeds.splice(this.embeds.findIndex(n => n >= curr));
     }
 
     if (this.comments.length > 0) {
-      this.comments.splice(this.comments.findIndex((n) => n >= i));
+      this.comments.splice(this.comments.findIndex(n => n >= curr));
     }
 
+    this.nodes.splice(curr);
+
+    s.Jump(prev);
+
     context.remove(node.context[0]);
-
-    this.nodes.splice(i);
-
-    s.Jump(node.start);
 
   }
 
@@ -447,8 +464,10 @@ export class IAST {
     position: Position | number,
     updateNode: boolean = true
   ): INode | false {
-    const offset =
-      typeof position === 'number' ? position : this.offsetAt(position);
+
+    const offset = typeof position === 'number'
+      ? position
+      : this.offsetAt(position);
 
     let from = 0;
 
@@ -457,20 +476,18 @@ export class IAST {
       else if (
         (this.node.type === NodeType.embedded &&
           inRange(offset, this.node.offsets[1], this.node.offsets[2])) ||
-        inRange(offset, this.node.offsets[0], this.node.offsets[1]) ||
-        inRange(offset, this.node.offsets[2], this.node.offsets[3])
-      ) { return this.node; }
+          inRange(offset, this.node.offsets[0], this.node.offsets[1]) ||
+          inRange(offset, this.node.offsets[2], this.node.offsets[3])
+      ) return this.node;
     }
 
     const node = this.nodes
       .slice(from)
-      .find(
-        ({ offsets, type }) =>
-          inRange(offset, offsets[0], offsets[1]) ||
+      .find(({ offsets, type }) =>
+        inRange(offset, offsets[0], offsets[1]) ||
           (type === NodeType.embedded &&
             inRange(offset, offsets[1], offsets[2])) ||
-          inRange(offset, offsets[2], offsets[3])
-      );
+            inRange(offset, offsets[2], offsets[3]));
 
     if (!node) return false;
 
@@ -490,8 +507,11 @@ export class IAST {
     position: Position | number,
     node: INode = this.node
   ) {
-    const offset =
-      typeof position === 'number' ? position : this.offsetAt(position);
+
+    const offset = typeof position === 'number'
+      ? position
+      : this.offsetAt(position);
+
     const token = this.withinEndToken(offset, node);
     const context = node.getContext()[token ? 1 : 0];
 
@@ -534,6 +554,7 @@ export class IAST {
   }
 
   public getScope (node = this.node) {
+
     if (node?.parent === node.index && node?.root === node.parent) return false;
 
     return this.nodes[node.parent];
