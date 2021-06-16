@@ -9,11 +9,7 @@ export { NodeKind } from 'lexical/kind';
 export { NodeType } from 'lexical/types';
 export { NodeLanguage } from 'lexical/language';
 export { ParseError } from 'lexical/errors';
-export { Range,
-  Position,
-  TextDocument } from 'vscode-languageserver-textdocument';
-export { TextDocumentItem,
-  VersionedTextDocumentIdentifier,
-  Diagnostic } from 'vscode-languageserver-types';
+export { Range, Position, TextDocument } from 'vscode-languageserver-textdocument';
+export { TextDocumentItem, VersionedTextDocumentIdentifier } from 'vscode-languageserver-types';
 
 export as namespace Parser;
