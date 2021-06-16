@@ -4,17 +4,13 @@
   "created": "2020",
   "private": false,
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
-  "contributors": [
-    "Νίκος Σαβίδης",
-    "Joseph Curtis"
-  ],
+  "contributors": ["Νίκος Σαβίδης", "Joseph Curtis"],
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
   "main": "package/index.js",
   "types": "package/index.d.ts",
   "exports": {
-    "require": "./package/index.js",
-    "import": "./package/index.es.js"
+    "require": "./package/index.js"
   },
   "engines": {
     "pnpm": ">=4",
@@ -31,12 +27,8 @@
     "test:log": "ava --verbose -- logs"
   },
   "ava": {
-    "require": [
-      "esm"
-    ],
-    "files": [
-      "test/**/**"
-    ],
+    "require": ["esm"],
+    "files": ["test/**/**"],
     "concurrency": 5
   },
   "devDependencies": {
