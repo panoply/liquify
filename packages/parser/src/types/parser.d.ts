@@ -1,4 +1,20 @@
 import { NodeLanguage } from '../lexical/language';
+import { Diagnostic as IDiagnostic } from 'vscode-languageserver-types';
+
+/**
+ * Diagnostic extended data. We assert the the offset at which
+ * the error or warning occurs and write it the data entry field
+ * that is preserved between a `textDocument/publishDiagnostics` notification
+ * and `textDocument/codeAction` request.
+ *
+ * The offset is used to splice errors when running an incremenal (partial)
+ * parse on the AST tree.
+ */
+export interface Diagnostic extends IDiagnostic {
+  data: {
+    offset?: number
+  }
+}
 
 /**
  * Tags are captured and applied as an array of strings.
