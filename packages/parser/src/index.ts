@@ -1,6 +1,6 @@
 import { Variation, VariationEntries, IEngine } from '@liquify/liquid-language-specs';
 import { VersionedTextDocumentIdentifier, Range } from 'vscode-languageserver-types';
-import { Specs } from 'parser/specs';
+import { Engine, variation } from 'parser/specs';
 import { parse } from 'parser/parse';
 import { create, update, get, remove } from 'tree/model';
 import { IAST } from './tree/ast';
@@ -21,7 +21,7 @@ export class LiquidParser {
 
   static engine (engine: IEngine) {
 
-    return Specs.ref(engine, Config.license);
+    return Engine(engine, Config.license);
 
   }
 
@@ -29,7 +29,7 @@ export class LiquidParser {
 
     Object.assign(Config, options);
 
-    Specs.ref(Config.engine, Config.license);
+    Engine(Config.engine, Config.license);
 
   }
 
@@ -37,11 +37,11 @@ export class LiquidParser {
     return {
       get variant (): Variation {
 
-        return Specs.variation;
+        return variation;
       },
       get entries (): VariationEntries {
 
-        return Specs.variation.entries;
+        return variation.entries;
       }
     };
   }
@@ -51,10 +51,7 @@ export class LiquidParser {
      */
   engine (engine: IEngine): void {
 
-    return Specs.ref(
-      engine,
-      Config.license
-    );
+    return Engine(engine, Config.license);
 
   }
 
