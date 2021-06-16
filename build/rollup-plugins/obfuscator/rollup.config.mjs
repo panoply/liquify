@@ -1,61 +1,64 @@
+import { defineConfig as Rollup } from 'rollup'
 import { terser } from 'rollup-plugin-terser'
 import beep from '@rollup/plugin-beep'
 import copy from 'rollup-plugin-copy'
 import del from 'rollup-plugin-delete'
-import { banner, config } from '@liquify/rollup-plugin-utils'
+import { banner, config, env } from '@liquify/rollup-plugin-utils'
 
-export default {
-  input: 'src/index.js',
-  output: [
-    {
-      format: 'cjs',
-      file: config.output.cjs,
-      sourcemap: process.env.prod ? false : 'inline',
-      exports: 'default',
-      esModule: false,
-      preferConst: true,
-      banner: banner('MIT')
-    },
-    {
-      format: 'es',
-      file: config.output.esm,
-      sourcemap: process.env.prod ? false : 'inline',
-      esModule: false,
-      preferConst: true,
-      banner: banner('MIT')
-    }
-  ],
-  external: [
-    '@rollup/pluginutils',
-    'javascript-obfuscator'
-  ],
-  plugins: [
-    del(
+export default Rollup(
+  {
+    input: 'src/index.js',
+    output: [
       {
-        verbose: true,
-        runOnce: !process.env.prod,
-        targets: 'package/*'
-      }
-    ),
-    copy(
+        format: 'cjs',
+        file: config.output.cjs,
+        sourcemap: env.is('dev', 'inline'),
+        exports: 'default',
+        esModule: false,
+        preferConst: true,
+        banner: banner('MIT')
+      },
       {
-        verbose: true,
-        copyOnce: !process.env.prod,
-        targets: [
-          {
-            src: 'src/index.d.ts',
-            dest: 'package'
-          }
-        ]
+        format: 'es',
+        file: config.output.esm,
+        sourcemap: env.is('dev', 'inline'),
+        esModule: false,
+        preferConst: true,
+        banner: banner('MIT')
       }
-    ),
-    beep(),
-    terser(
-      {
-        ecma: 2016
-        , warnings: 'verbose'
-        , compress: { passes: 2 }
-      }
-    )
-  ]
-}
+    ],
+    external: [
+      '@rollup/pluginutils',
+      'javascript-obfuscator'
+    ],
+    plugins: [
+      del(
+        {
+          verbose: true,
+          runOnce: env.watch,
+          targets: 'package/*'
+        }
+      ),
+      copy(
+        {
+          verbose: true,
+          copyOnce: env.watch,
+          targets: [
+            {
+              src: 'src/index.d.ts',
+              dest: 'package'
+            }
+          ]
+        }
+      ),
+      beep(),
+      terser(
+        {
+          ecma: 2016
+          , warnings: 'verbose'
+          , compress: { passes: 2 }
+        }
+      )
+    ]
+  }
+)

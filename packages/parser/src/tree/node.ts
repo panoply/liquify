@@ -48,6 +48,11 @@ export class INode {
   public singular: boolean = true;
 
   /**
+   * The embedded index
+   */
+  public embed: number = NaN;
+
+  /**
    * The offsets location. This contains a list of offsets,
    * starting from the open location of the node and finishing at
    * the closing location of the node. When this node is a
@@ -83,7 +88,7 @@ export class INode {
    * The number of parsing errors encountered before this
    * node was consumed.
    */
-  error: number = NaN;
+  errors: number[] = [];
 
   /**
    * The nodes children indexes
@@ -133,7 +138,7 @@ export class INode {
    *
    *  @todo IMPROVE THIS LOGIC
    */
-  attributes?: object = {};
+  attributes?: object ={};
 
   /**
    * Filters this tag contains. Each property contained on the
@@ -149,6 +154,7 @@ export class INode {
   get range (): Range {
 
     return document.getRange(this.start, this.end);
+
   };
 
   /**
@@ -173,24 +179,9 @@ export class INode {
    */
   get content (): string {
 
-    return document.getText(this.offsets[1], this.offsets[2]);
-  }
-
-  /**
-   * Returns any parse errors/diagnositcs which might exists
-   * for this node. If none exist, any empty error will be returned.
-   */
-  public getErrors (): Array<Parser.Diagnostic> {
-
-    if (this.error === 0) return document.errors;
-
-    const next = document.nodes[this.index + 1];
-
-    if (!next) return [];
-
-    return document.errors.slice(
-      this.error,
-      next.error
+    return document.getText(
+      this.offsets[1],
+      this.offsets[2]
     );
   }
 
@@ -225,12 +216,12 @@ export class INode {
    * Returns a Text Document instance for embedded language
    * type nodes, else returns boolean false.
    */
-  public getDocument (): TextDocument {
+  public getDocument (ext?: '.html' | '.css' | '.js'): TextDocument {
 
     if (this.language === 'liquid' || this.content.length === 0) return null;
 
     return TextDocument.create(
-     `${this.name}-${this.index}.${this.language}`,
+     `${this.name}-${this.index}.${this.language}${ext || ''}`,
      this.language,
      document.version,
      this.content
