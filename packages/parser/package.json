@@ -18,8 +18,7 @@
   "main": "package/parser.js",
   "types": "./package/@types/index.d.ts",
   "exports": {
-    "require": "./package/parser.js",
-    "import": "./package/parser.es.js"
+    "require": "./package/parser.js"
   },
   "eslintConfig": {
     "extends": [
@@ -43,8 +42,7 @@
   },
   "dependencies": {
     "@liquify/liquid-language-specs": "workspace:^0.1.2",
-    "lodash": "^4.17.21",
-    "rollup-plugin-typescript2": "^0.30.0",
+    "lodash.inrange": "^3.3.6",
     "vscode-languageserver-textdocument": "^1.0.1",
     "yamljs": "^0.3.0"
   },
@@ -60,19 +58,23 @@
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
+    "@types/lodash.inrange": "^3.3.6",
     "ava": "^3.15.0",
     "chalk": "^4.1.1",
     "dotenv": "^10.0.0",
     "esm": "^3.2.25",
     "pretty-hrtime": "^1.0.3",
     "rollup": "^2.51.1",
+    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-filesize": "^9.1.1",
+    "rollup-plugin-typescript2": "^0.30.0",
     "tslib": "^2.2.0",
     "typescript": "^4.3.2",
     "vscode-languageserver-types": "^3.16.0"
   },
   "peerDependencies": {
-    "rollup": "^2.51.1"
+    "rollup": "^2.51.1",
+    "typescript": "^4.3.2"
   }
 }
