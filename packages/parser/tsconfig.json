@@ -8,6 +8,7 @@
   "compilerOptions": {
     "types": ["node"],
     "rootDir": "src",
+    "incremental": true,
     "typeRoots": ["node_modules/@types", "src/types/*"],
     "declaration": true,
     "declarationDir": "package/@types",
