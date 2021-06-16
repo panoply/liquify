@@ -100,6 +100,7 @@ export enum NodeType {
    * - `{% render '' %}`
    * - `{% section '' %}`
    * - `{% include '' %}`
+   * - `<script src="">`
    */
   "import",
 
