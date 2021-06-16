@@ -1,5 +1,5 @@
 import test from 'ava';
-import { LiquidParser } from '../package/index';
+import { LiquidParser } from '../package/parser';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import time from 'pretty-hrtime';
@@ -13,7 +13,7 @@ const server = {
   languageId: 'liquid',
   version: 1,
   text: document,
-  uri: 'full_parse'
+  uri: 'test.liquid'
 };
 
 const parser = new LiquidParser({
@@ -46,7 +46,32 @@ test('FullDocument Parse', t => {
   const end = process.hrtime(start);
 
   console.log(
-    ast.nodes,
+    ast
+  );
+
+  parser.update({
+    textDocument: {
+      uri: 'test.liquid',
+      version: 2
+    },
+    contentChanges: [
+      {
+        text: '\n',
+        range: {
+          start: {
+            character: 4,
+            line: 1
+          },
+          end: {
+            character: 0,
+            line: 2
+          }
+        }
+      }
+    ]
+  });
+
+  console.log(
     ast
   );
 
