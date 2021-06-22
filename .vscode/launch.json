@@ -4,23 +4,21 @@
     /* -------------------------------------------- */
     /* MAIN                                         */
     /* -------------------------------------------- */
-
     {
       "type": "extensionHost",
       "request": "launch",
       "name": "Client",
       "runtimeExecutable": "${execPath}",
-      "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/packages/clients/vscode/package/extension.js"
-      ],
       "env": {
         "SERVER_PATH": "${workspaceRoot}"
       },
+      "outFiles": [
+        "${workspaceRoot}/packages/vscode/client/vscode/package/*.js"
+      ],
       "args": [
         "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}/packages/clients/vscode/package",
-        "${workspaceRoot}/tests/documents"
+        "--extensionDevelopmentPath=${workspaceRoot}/packages/clients/vscode",
+        "${workspaceRoot}/tests"
       ]
     },
     {

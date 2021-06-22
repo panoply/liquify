@@ -34,7 +34,8 @@ export class Config implements IServer.Config {
     signatures: true
   }
 
-  service: IServer.Services= {
+  service: IServer.Services = {
+    html: true,
     json: true,
     css: false,
     scss: false,

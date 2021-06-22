@@ -58,6 +58,7 @@ connection.onInitialize(initializeParams => (
         ':',
         '.',
         '<',
+        '/',
         '%',
         '|',
         '{',
@@ -212,6 +213,7 @@ connection.onDocumentOnTypeFormatting((
   , token
 ) => !Server.provider.formatOnType || runSync(() => {
 
+  return null;
   const document = Parser.get(uri);
 
   if (!document) return null;
@@ -228,6 +230,8 @@ connection.onDocumentRangeFormatting((
   { textDocument: { uri } }
   , token
 ) => !Server.provider.format || runSync(() => {
+
+  return null;
 
   const document = Parser.get(uri);
 
@@ -266,6 +270,8 @@ connection.onSignatureHelp(
     , textDocument: { uri }
     , context
   }, token) => runAsync(async () => {
+
+    return null;
 
     const document = Parser.get(uri);
 
@@ -350,6 +356,8 @@ connection.onCompletion((
   }, token
 ) => !Server.provider.completion || runAsync(async () => {
 
+  return null;
+
   const document = Parser.get(uri);
 
   if (!document) return null;
@@ -367,6 +375,8 @@ connection.onCompletionResolve((
   , token
 ) => runSync(() => {
 
+  return null;
+
   return Service.doCompleteResolve(item);
 
 }, item, 'Error while resolving completion proposal', token));
@@ -379,6 +389,8 @@ connection.onExecuteCommand((
   item
   , token
 ) => runSync(() => {
+
+  return null;
 
   return item.arguments[0];
 

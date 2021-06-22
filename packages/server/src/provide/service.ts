@@ -1,11 +1,12 @@
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { JSONService } from 'service/modes/json';
+import { HTMLService } from 'service/modes/html';
 import { Parser } from 'provide/parser';
 import { Format } from 'service/format';
 import * as Completion from 'service/completions';
 import * as Hover from 'service/hovers';
 import upperFirst from 'lodash/upperFirst';
-import { Characters, Position, IAST } from '@liquify/liquid-parser';
+import { Characters, Position, IAST, INode, NodeKind } from '@liquify/liquid-parser';
 import { Services } from 'types/server';
 import store from '@liquify/schema-stores';
 import {
@@ -14,7 +15,9 @@ import {
   PublishDiagnosticsParams,
   FormattingOptions,
   SignatureHelpContext,
-  SignatureHelp
+  SignatureHelp,
+  CompletionItem,
+  CompletionContext
 } from 'vscode-languageserver';
 
 /**
@@ -29,11 +32,11 @@ export class LiquidService {
   private mode: {
     css: boolean
     scss: boolean
-    html: boolean
+    html: HTMLService
     json: JSONService
   } = {
     json: undefined,
-    html: false,
+    html: undefined,
     css: false,
     scss: false
   }
@@ -47,10 +50,16 @@ export class LiquidService {
    */
   async configure (support: Services) {
 
+    if (support.html) {
+
+      this.mode.html = new HTMLService();
+
+    }
+
     // JSON Language Service
     if (support.json) {
 
-      const schema = await store('shopify-sections');
+      const schema = await store('shopify/sections');
 
       this.mode.json = new JSONService(schema);
 
@@ -66,11 +75,6 @@ export class LiquidService {
 
   /**
    * `doValidation`
-   *
-   * @param {Parser.AST} document
-   * @param {LSP.Connection} connection
-   * @returns {Promise<LSP.PublishDiagnosticsParams>}
-   * @memberof LiquidService
    */
   async doValidation (document: IAST): Promise<PublishDiagnosticsParams> {
 
@@ -166,9 +170,15 @@ export class LiquidService {
   async doHover (document: IAST, position: Position) {
 
     const offset = document.offsetAt(position);
-    const node = document.getNodeAt(offset, false);
+    const node: INode = document.getNodeAt(offset, false);
 
-    if (!node) return null;
+    if (node.kind === NodeKind.HTML) {
+      return this.mode.html.doHover(node.getDocument('.html'), position);
+    };
+
+    if (!node) {
+      return this.mode.html.doHover(document.literal(), position);
+    }
 
     if (document.withinEmbed(offset, node) && document.withinBody(offset, node)) {
       if (this.mode?.[node.language]) return this.mode[node.language].doHover(node, position);
@@ -255,7 +265,7 @@ export class LiquidService {
     {
       triggerCharacter,
       triggerKind
-    }: LSP.CompletionContext
+    }: CompletionContext
   ) {
 
     // Prevent Completions when double
@@ -263,6 +273,10 @@ export class LiquidService {
 
     const trigger = triggerCharacter.charCodeAt(0);
     const offset = document.offsetAt(position);
+
+    if (trigger === Characters.LAN) {
+      return this.mode.html.doComplete(document.literal('.html'), position);
+    }
 
     console.log(trigger, trigger === Characters.DOT);
 
@@ -355,7 +369,7 @@ export class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doCompleteResolve (completionItem: LSP.CompletionItem) {
+  doCompleteResolve (completionItem: CompletionItem) {
 
     if (completionItem.data?.language) {
       return this.mode[completionItem.data.language].doResolve(completionItem);

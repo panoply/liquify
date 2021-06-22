@@ -4,8 +4,8 @@ import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
 import { errors } from 'parser/errors';
-import { Specs as spec } from 'parser/specs';
 import { IAST } from 'tree/ast';
+import * as spec from 'parser/specs';
 import * as s from 'parser/stream';
 import * as r from 'lexical/expressions';
 import * as c from 'lexical/characters';
@@ -115,11 +115,17 @@ export const syntactic = (
 
         // Lets ensure that its a number, then assert the errors
         if (typeof index === 'number') {
-          document.errors.push(
-            errors(ParseError.MissingEndTag, {
-              start: document.nodes[index].range.start,
-              end: document.positionAt(s.size)
-            })
+          document.nodes[index].errors.push(
+            document.errors.push(
+              errors(
+                ParseError.MissingEndTag,
+                {
+                  start: document.nodes[index]?.range.start || document.positionAt(start),
+                  end: document.positionAt(s.size)
+                },
+                document.nodes[index].end
+              )
+            ) - 1
           );
         }
       }
@@ -142,6 +148,7 @@ export function scan (offset: number = 0): number {
   if (s.size <= s.offset) return TokenType.EOS;
 
   return state === ScanState.CharSeq ? CharSeq() : Scan();
+
 };
 
 /**
@@ -153,6 +160,7 @@ export function scan (offset: number = 0): number {
  * @returns {number}
  */
 function CharSeq (): number {
+
   if (cache === TokenType.Comment) {
     if (s.ConsumeUntil(r.CommentTagEnd)) {
       cache = ScanCache.Reset;
@@ -172,7 +180,7 @@ function CharSeq (): number {
       if (s.IfRegExp(r.DelimitersOutputOpen)) {
         // Preset the specification type incase we are dealing with
         // a known object value
-        spec.type = NodeType.object;
+        spec.TypePreset(NodeType.object);
 
         state = ScanState.AfterOutputTagOpen;
         return TokenType.DelimiterOpen;
@@ -186,7 +194,29 @@ function CharSeq (): number {
     }
   }
 
-  // if (s.IsCodeChar(c.LAN)) {    }
+  if (s.IsCodeChar(c.LAN)) {
+
+    // Assert Start position of token
+    start = s.offset;
+
+    // Ensure no whitespace proceeds delimiter
+    if (!s.Whitespace()) {
+
+      s.Advance(1);
+
+      if (s.IfCodeChar(c.FWS) && !s.Whitespace()) {
+        if (s.IsRegExp(r.HTMLTagName)) {
+          state = ScanState.HTMLTagClose;
+          return TokenType.HTMLEndTagOpen;
+        }
+      }
+
+      if (s.IsRegExp(r.HTMLTagName)) {
+        state = ScanState.HTMLTagOpen;
+        return TokenType.HTMLStartTagOpen;
+      }
+    }
+  }
 
   if (state !== ScanState.CharSeq) state = ScanState.CharSeq;
 
@@ -208,17 +238,15 @@ function Scan (): number {
   if (s.Newlines()) return TokenType.Newline;
 
   switch (state) {
+
     // HTML TAG OPEN
     // -----------------------------------------------------------------
     case ScanState.HTMLTagOpen:
+
       // We are within a HTML start tag, eg: <^tag
       if (s.IfRegExp(r.HTMLTagName)) {
-        // We will check to see if this tag is a known associate
-        // if (s.TokenContains(spec.associates.match)) {
-        // We know about this tag, lets look for attributes
-        // state = ScanState.HTMLAttributeName;
-        // return TokenType.HTMLTagName;
-        // }
+        state = ScanState.HTMLAttributeName;
+        return TokenType.HTMLTagName;
       }
 
       // This tag means nothing to us, lets keep scanning
@@ -226,18 +254,22 @@ function Scan (): number {
       return TokenType.ParseCancel;
 
     case ScanState.HTMLAttributeName:
+
+      // We have an embedded region, eg `<script>`
       if (s.IfCodeChar(c.RAN)) {
         state = ScanState.CharSeq;
-        return TokenType.HTMLStartTagClose;
+        return TokenType.DelimiterClose;
       }
 
+      // We have an attribute value on the tag, eg: `<script src^`
       if (s.IfRegExp(r.HTMLTagAttribute)) {
         state = ScanState.HTMLAttributeOperator;
         return TokenType.HTMLAttributeName;
       }
 
       state = ScanState.CharSeq;
-      return TokenType.ParseSkip;
+      error = ParseError.MissingCloseDelimiter;
+      return TokenType.ParseError;
 
     case ScanState.HTMLAttributeOperator:
       if (s.IfCodeChar(c.EQS)) {
@@ -261,6 +293,7 @@ function Scan (): number {
     // HTML TAG CLOSE
     // -----------------------------------------------------------------
     case ScanState.HTMLTagClose:
+
       // The HTML closing tag name, eg: </^tag
       if (s.IfRegExp(r.HTMLTagName)) {
         state = ScanState.HTMLTagCloseName;
@@ -278,17 +311,21 @@ function Scan (): number {
       }
 
       // If we get here we have an error, eg: </^
-      state = ScanState.ParseError;
+      state = ScanState.CharSeq;
       error = ParseError.InvalidTagName;
       return TokenType.ParseError;
 
     case ScanState.HTMLTagCloseName:
+
       if (s.IfCodeChar(c.RAN)) {
         state = ScanState.CharSeq;
         return TokenType.HTMLEndTagClose;
       }
 
-      break;
+      // Assert the error
+      state = ScanState.CharSeq;
+      error = ParseError.MissingCloseDelimiter;
+      return TokenType.ParseError;
 
     // OUTPUT TAG OPEN
     // -----------------------------------------------------------------
@@ -347,7 +384,7 @@ function Scan (): number {
       // Variable or Object was detected, eg: {{ name }} or {{ object.prop }}
       if (s.IfRegExp(r.ObjectNameAlpha)) {
         // Match captured token with a cursor value
-        spec.cursor(s.token);
+        spec.Cursor(s.token);
 
         // Next call we will look for a property notation
         state = ScanState.Object;
@@ -387,47 +424,47 @@ function Scan (): number {
       // Tag is a "Tag", lets get its identifier
       if (s.IfRegExp(r.TagName)) {
         // Match captured token with a cursor value
-        spec.cursor(s.token);
+        spec.Cursor(s.token);
 
         // When no spec exists for the tag
-        if (!spec.exists) {
+        if (spec.cursor === undefined) {
           state = ScanState.GotoTagEnd;
           return TokenType.Unknown;
         }
 
         // Comment type tags, eg: {% comment %}
-        if (spec.type === NodeType.comment) {
+        if (spec.TypeOfNode(NodeType.comment)) {
           state = ScanState.GotoTagEnd;
           cache = TokenType.Comment;
           return cache;
         }
 
         // Control type tags, eg: {% if %} or {% unless %}
-        if (spec.type === NodeType.variable) {
+        if (spec.TypeOfNode(NodeType.variable)) {
           state = ScanState.VariableIdentifier;
           return TokenType.VariableIdentifier;
         }
 
         // Control type tags, eg: {% if %} or {% unless %}
-        if (spec.type === NodeType.control) {
+        if (spec.TypeOfNode(NodeType.control)) {
           state = ScanState.Control;
-          return TokenType.Control;
+          return TokenType.TagName;
         }
 
         // Embedded language type tags, eg: {% schema %}
-        if (spec.type === NodeType.embedded) {
+        if (spec.TypeOfNode(NodeType.embedded)) {
           state = ScanState.EmbeddedLanguage;
           return TokenType.Embedded;
         }
 
         // Iteration type tags, eg: {% for %}
-        if (spec.type === NodeType.iteration) {
+        if (spec.TypeOfNode(NodeType.iteration)) {
           state = ScanState.Iteration;
           return TokenType.Iteration;
         }
 
         // Singular type tags, eg {% assign %}
-        if ((spec.get as ITag | IObject).singular) {
+        if ((spec.cursor as ITag | IObject).singular) {
           state = ScanState.GotoTagEnd;
           return TokenType.SingularTag;
         }
@@ -524,10 +561,10 @@ function Scan (): number {
     // -----------------------------------------------------------------
     case ScanState.Control:
       // Check to see if this control tag has scope
-      if (spec.get?.scope) {
+      if (spec.cursor?.scope) {
 
         // Lets validate the scope against the last syntactic parent
-        if (!spec.tag.scope(syntactic.parentName)) {
+        if (!spec.tag.Scope(syntactic.parentName)) {
           error = ParseError.InvalidPlacement;
           state = ScanState.GotoTagEnd;
           return TokenType.ParseError;
@@ -535,7 +572,7 @@ function Scan (): number {
       }
 
       // Check if control tag accepts arguments expressions
-      if (!(spec.get as IFilter).arguments) {
+      if (!(spec.cursor as IFilter).arguments) {
         // No arguments accepted by the tag, we move to end
         state = ScanState.GotoTagEnd;
 
@@ -588,8 +625,8 @@ function Scan (): number {
       if (s.IfRegExp(r.ControlCondition)) {
         // Lets consult the specification to see if we know about the value
         // If we do we will set the specification
-        if (spec.object.exists(s.token)) {
-          spec.cursor(s.token);
+        if (spec.object.Exists(s.token)) {
+          spec.Cursor(s.token);
 
           // If we have a property, we assert a return to operator Scan
           if (s.IsRegExp(r.ObjectHasProperty)) {
@@ -694,7 +731,7 @@ function Scan (): number {
       // Check to see if we scanning filter arguments
       if (spec.filter.within) {
         // Reconnect to filter specification
-        spec.filter.cursor();
+        spec.filter.Cursor();
 
         // Next characters should be separators, eg: | foo: bar.baz^, }}
         state = ScanState.FilterSeparator;
@@ -716,7 +753,7 @@ function Scan (): number {
     case ScanState.ObjectDotNotation:
       // Gets property value on object, eg: "prop" in "object.prop"
       if (s.IfRegExp(r.ObjectNameAlpha)) {
-        if (spec.exists) {
+        if (spec.cursor !== undefined) {
           // Reference an unknown property Error warning
           /* if (!spec.object.exists(s.token)) {
               error = ParseError.UnknownProperty
@@ -854,10 +891,10 @@ function Scan (): number {
       // Filter identifier, lets capture, eg: {{ tag | ^filter }}
       if (s.IfRegExp(r.FilterIdentifier)) {
         // Find specification for this filter
-        spec.cursor(s.token);
+        spec.Cursor(s.token);
 
         // We are dealing with an unknown filter, consume token
-        if (!spec.exists) {
+        if (spec.cursor === undefined) {
           error = ParseError.InvalidFilter;
           state = ScanState.GotoTagEnd;
           return TokenType.ParseError;
@@ -903,17 +940,17 @@ function Scan (): number {
       return TokenType.ParseError;
 
     case ScanState.FilterArgumentType:
-      if (spec.filter.type('argument')) {
+      if (spec.filter.Type('argument')) {
         state = ScanState.FilterArgument;
         return Scan();
       }
 
-      if (spec.filter.type('parameter')) {
+      if (spec.filter.Type('parameter')) {
         state = ScanState.GotoTagEnd;
         return Scan();
       }
 
-      if (spec.filter.type('spread')) {
+      if (spec.filter.Type('spread')) {
         state = ScanState.GotoTagEnd;
         return Scan();
       }
@@ -925,7 +962,7 @@ function Scan (): number {
       // Capture an argument expressed as a string
       if (s.SkipQuotedString()) {
         // Make sure filter argument accepts a string
-        if (spec.filter.accept('string')) {
+        if (spec.filter.Accept('string')) {
           // If another filter argument is required pass to separator
           state = ScanState.FilterSeparator;
           return TokenType.FilterArgument;
@@ -947,7 +984,7 @@ function Scan (): number {
       // Capture normal expression integer
       if (s.IfRegExp(r.NumberInteger)) {
         // Filter argument accepts number, eg: {{ tag | filter: 10 }}
-        if (spec.filter.accept('integer')) {
+        if (spec.filter.Accept('integer')) {
           state = ScanState.FilterSeparator;
           return TokenType.Integer;
         }
@@ -960,7 +997,7 @@ function Scan (): number {
       // Capture float expression numbers
       if (s.IfRegExp(r.NumberFloat)) {
         // Ensure we accept float numbers
-        if (spec.filter.accept('float')) {
+        if (spec.filter.Accept('float')) {
           // Ensure number is not missing decimal
           if (s.IfCodeChar(c.DOT)) {
             error = ParseError.MissingNumber;
@@ -979,7 +1016,7 @@ function Scan (): number {
       // Check for boolean argument values
       if (s.IfRegExp(r.Booleans)) {
         // Ensure the argument accepts a boolean value
-        if (spec.filter.accept('boolean')) {
+        if (spec.filter.Accept('boolean')) {
           state = ScanState.FilterSeparator;
           return TokenType.Boolean;
         }
@@ -992,13 +1029,13 @@ function Scan (): number {
       // If we get here, we will have either a variable or reference
       if (s.IfRegExp(r.ObjectNameAlpha)) {
         // Filter argument accepts reference
-        if (spec.filter.accept('reference')) {
+        if (spec.filter.Accept('reference')) {
           // Match captured token with a cursor value
-          spec.cursor(s.token);
+          spec.Cursor(s.token);
 
           // Check to to see if we are dealing with an object
           if (
-            spec.typeof(NodeType.object) ||
+            spec.TypeOfNode(NodeType.object) ||
             s.IsNextRegExp(r.ObjectHasProperty)
           ) {
             // Next call we will look for a property notation
@@ -1038,7 +1075,7 @@ function Scan (): number {
       // If last argument was processed pass back to filter
       if (spec.filter.last) {
         // Reset filter specification
-        spec.filter.reset();
+        spec.filter.Reset();
 
         // Re-scan for additional filters
         state = ScanState.Filter;
@@ -1046,7 +1083,7 @@ function Scan (): number {
       }
 
       // Move to next argument in specification
-      spec.filter.next();
+      spec.filter.Next();
 
       // We have a comma separator character, lets proceed
       if (s.IfCodeChar(c.COM)) {
@@ -1058,7 +1095,7 @@ function Scan (): number {
 
       if (!spec.filter.required) {
         // Reset filter specification
-        spec.filter.reset();
+        spec.filter.Reset();
         state = ScanState.Filter;
 
         return Scan();
@@ -1117,6 +1154,7 @@ function Scan (): number {
     // -----------------------------------------------------------------
     case ScanState.TagClose:
     case ScanState.EndTagClose:
+
       // Validate right side trim dash character
       if (s.IfCodeChar(c.DSH)) {
         // Check to see if whitespace proceeds the character
