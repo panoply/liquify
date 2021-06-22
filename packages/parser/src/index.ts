@@ -1,7 +1,7 @@
 import { Variation, VariationEntries, IEngine } from '@liquify/liquid-language-specs';
 import { VersionedTextDocumentIdentifier, Range } from 'vscode-languageserver-types';
 import { Engine, variation } from 'parser/specs';
-import { parse } from 'parser/parse';
+import { parse } from 'parser/parser';
 import { create, update, get, remove } from 'tree/model';
 import { IAST } from './tree/ast';
 import { Config, IConfig } from './config';

@@ -7,6 +7,7 @@
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "rollup": "rollup -c",
+    "data": "node ./scripts/custom-data.js",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava --color --verbose --watch",
     "perf": "node -r esm test/perf/parsing.js"
@@ -21,23 +22,17 @@
     "require": "./package/parser.js"
   },
   "eslintConfig": {
-    "extends": [
-      "@liquify/eslint-config-ts"
-    ]
+    "extends": ["@liquify/eslint-config-ts"]
   },
   "ava": {
-    "require": [
-      "esm"
-    ],
+    "require": ["esm"],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": [
-      "test/index.js"
-    ],
+    "files": ["test/index.js"],
     "concurrency": 5
   },
   "dependencies": {
@@ -71,7 +66,8 @@
     "rollup-plugin-typescript2": "^0.30.0",
     "tslib": "^2.2.0",
     "typescript": "^4.3.2",
-    "vscode-languageserver-types": "^3.16.0"
+    "vscode-languageserver-types": "^3.16.0",
+    "vscode-web-custom-data": "^0.3.4"
   },
   "peerDependencies": {
     "rollup": "^2.51.1",

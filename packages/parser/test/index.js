@@ -45,11 +45,9 @@ test('FullDocument Parse', t => {
   const ast = parser.scan(server);
   const end = process.hrtime(start);
 
-  console.log(
-    ast
-  );
+  console.log(ast.nodes[0]);
 
-  parser.update({
+  /* parser.update({
     textDocument: {
       uri: 'test.liquid',
       version: 2
@@ -71,9 +69,7 @@ test('FullDocument Parse', t => {
     ]
   });
 
-  console.log(
-    ast
-  );
+  console.log(ast.nodes); */
 
   t.log(time(end, { verbose: true }));
   t.pass();

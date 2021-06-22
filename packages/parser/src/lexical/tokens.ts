@@ -34,6 +34,18 @@ export const enum TokenType {
   DelimiterClose,
   DelimiterEnder,
 
+  StartTagOpen,
+  StartTagClose,
+
+  EndTagOpen,
+  EndTagClose,
+
+  SingularTagOpen,
+  SingularTagClose,
+
+  OutputTagOpen,
+  OutputTagClose,
+
   /* ITERATION ---------------------------------- */
 
   Iteration,
@@ -53,6 +65,8 @@ export const enum TokenType {
 
   TrimDashLeft,
   TrimDashRight,
+
+  TagName,
 
   /**
    * Object

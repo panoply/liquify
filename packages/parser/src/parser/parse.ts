@@ -16,6 +16,8 @@ import * as context from 'tree/context';
 import * as stream from 'parser/stream';
 import * as scanner from 'parser/scanner';
 
+const voids = /\b(area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)\b/;
+
 /**
  * Parser
  *
@@ -67,6 +69,16 @@ export function parse (document: IAST): IAST {
    * decendents of the root hold reference to its AST index.
    */
   let root: number | undefined;
+
+  /**
+   * AST Node Child
+   */
+  let child: INode;
+
+  /**
+   * AST Node Child
+   */
+  let parent: INode;
 
   /**
    * Resets the current parse lettings. We execute this
@@ -400,6 +412,7 @@ export function parse (document: IAST): IAST {
       // EMBEDDED LANGUAGE TAG
       // -----------------------------------------------------------------
       case TokenType.Embedded:
+
         node.name = stream.token;
         node.type = specs.type;
         node.language = NodeLanguage[(specs.cursor as ITag).language];
@@ -531,7 +544,10 @@ export function parse (document: IAST): IAST {
           node.language = NodeLanguage.css;
         }
 
-        scanner.syntactic.list.push(node.name, node.index);
+        if (!voids.test(node.name)) {
+          node.singular = true;
+          scanner.syntactic.list.push(node.name, node.index);
+        }
 
         if (config.context) {
           node.context.push(context.size());

@@ -12,6 +12,8 @@ export type FilterAcceptsTypes =
 
 export type FilterArgumentTypes = 'argument' | 'parameter' | 'spread';
 
+/* FILTER SPECIFICATION ----------------------- */
+
 interface FilterArgumentOptions {
   /**
    * Name of the parameter this tag accepts
@@ -22,8 +24,6 @@ interface FilterArgumentOptions {
    */
   readonly description?: string;
 }
-
-/* FILTER ARGUMENTS --------------------------- */
 
 interface FilterArguments {
   /**
@@ -72,7 +72,7 @@ interface FilterArguments {
   readonly options?: FilterArgumentOptions[];
 }
 
-export type IFilter = {
+export interface IFilter {
   /**
    * Description of the filter
    *
@@ -140,7 +140,7 @@ export type IFilter = {
      */
     argsize?: number;
   };
-};
+}
 
 /* REFERENCE ---------------------------------- */
 

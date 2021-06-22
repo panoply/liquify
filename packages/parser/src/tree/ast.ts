@@ -24,7 +24,6 @@ export class IAST {
     this.version = version;
     this.content = s.Create(content);
     this.lines = s.ComputeLineOffsets(this.content, true);
-
   }
 
   /**
@@ -92,6 +91,31 @@ export class IAST {
    * if the cursor is not located within a node on the tree.
    */
   public node: INode = null;
+
+  /**
+   * Returns the node at the current cursor location or null
+   * if the cursor is not located within a node on the tree.
+   */
+  public documents: {
+
+    html: TextDocument,
+    css: TextDocument[],
+    json: TextDocument[]
+
+  } = Object.create(null);
+
+  /**
+   * Generates a document literal of current
+   * textDocument. This allows us to create a quick
+   * temporary literal for features like formatting.
+   *
+   * @default 'tmp'
+   */
+  get HTMLDocument (): TextDocument {
+
+    return this.documents.html;
+
+  }
 
   /**
    * Generates a document literal of current
@@ -402,6 +426,7 @@ export class IAST {
 
     context.remove(node.context[0]);
 
+    console.log(this.HTMLDocument);
   }
 
   /**

@@ -1,24 +1,7 @@
-{% if foo %}
 
-  {{ example }}
-
-  {% unless bar %}
-
-    {{ test }}
-
-  {% endunless %}
-
-{% endif %}
+  {% if template contains 'product' %}
 
 
-{% if hello %}
+    {{ product.bundle | asset_url | stylesheet_tag }}
 
-  {{ world }}
-
-  {% unless test %}
-
-    {{ boooo }}
-
-  {% endunless %}
-
-{% endif %}
+  {% endif %}

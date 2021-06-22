@@ -43,6 +43,13 @@ export interface IConfig {
    */
   context?: boolean;
   /**
+   * Whether or not to parser HTML markup and include
+   * tags in the generated AST.
+   *
+   * @default true
+   */
+  html?: boolean;
+  /**
    * An LSP specific option which informs that we will
    * be persisting, ie: executing frequent parses like
    * that which is relevant to LSP or other editors.

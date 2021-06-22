@@ -22,11 +22,27 @@ export type TagParameterTypes =
   | 'boolean'
   | 'reference';
 
+/* TAG EMBEDDED LANGUAGES --------------------- */
+
+export type TagEmbeddedLanguages =
+  | 'liquid'
+  | 'html'
+  | 'yaml'
+  | 'javascript'
+  | 'typescript'
+  | 'json'
+  | 'css'
+  | 'scss'
+  | 'markdown';
+
 /* TAG ARGUMENT ACCEPTS ----------------------- */
 
 export type TagArgumentAccepts = 'keyword' | 'string' | 'reference';
 
+/* TAGS SPECIFICATION ------------------------- */
+
 interface TagArguments {
+
   /**
    * Name of the parameter this tag accepts
    */
@@ -42,8 +58,6 @@ interface TagArguments {
    */
   readonly description?: string;
 }
-
-/* TAG PARAMETERS ----------------------------- */
 
 interface TagParameters {
   /**
@@ -70,7 +84,10 @@ interface TagParameters {
   readonly required?: boolean;
 }
 
-export type ITag = {
+/* TAG SPECIFICATIONS ------------------------- */
+
+export interface ITag {
+
   /**
    * The argument value this tag supports
    */
@@ -127,6 +144,7 @@ export type ITag = {
    * @default false
    */
   readonly filters: boolean;
+
   /**
    * When the contents of the tag is pertaining to another language,
    * this property is used to define the language contained within the
@@ -136,14 +154,7 @@ export type ITag = {
    *
    * @default true
    */
-  readonly language?:
-    | 'liquid'
-    | 'html'
-    | 'yaml'
-    | 'javascript'
-    | 'json'
-    | 'css'
-    | 'scss';
+  readonly language?: TagEmbeddedLanguages;
 
   /**
    * Does this tag accept whitespace dashes?
@@ -151,31 +162,35 @@ export type ITag = {
    * @default true
    */
   readonly trims?: boolean;
+
   /**
    * Is this tag deprecated?
    *
    * @default false
    */
   readonly deprecated?: boolean;
+
   /**
    * The tag scope
    *
    * @default undefined
    */
   readonly scope?: string[];
+
   /**
    * List of parameters available to this tag
    *
    * @default false
    */
   readonly arguments?: TagArguments[] | false;
+
   /**
    * List of arguments available to this tag
    *
    * @default undefined
    */
   readonly parameters?: TagParameters[];
-};
+}
 
 /* REFERENCE ---------------------------------- */
 

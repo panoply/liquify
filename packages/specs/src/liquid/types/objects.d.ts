@@ -8,7 +8,7 @@ export type ObjectTypes =
   | 'array'
   | 'variable';
 
-/* OBJECT PROPERTIES -------------------------- */
+/* OBJECT SPECIFICATION ----------------------- */
 
 interface ObjectProperties {
   /**
@@ -27,9 +27,7 @@ interface ObjectProperties {
   };
 }
 
-/* OBJECT SPECS ------------------------------- */
-
-export type IObject = {
+export interface IObject {
   /**
    * Name of the Object
    */
@@ -103,7 +101,7 @@ export type IObject = {
   readonly properties?: {
     [name: string]: ObjectProperties;
   };
-};
+}
 
 /* REFERENCE ---------------------------------- */
 

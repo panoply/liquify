@@ -98,7 +98,7 @@ export class INode {
    * It's important to not that values here are only
    * applied to token that accept accept child tags, eg: `{% else %}`
    */
-  children?: number[] = [];
+  children?: INode[] = [];
 
   /**
    * Objects this tag contains. Each property contained on the

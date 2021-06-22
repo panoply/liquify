@@ -1,10 +1,10 @@
-import { Filters, IFilter } from './filters'
-import { Objects, IObject } from './objects'
-import { Tags, ITag } from './tags'
+import { Filters, IFilter } from './filters';
+import { Objects, IObject } from './objects';
+import { Tags, ITag } from './tags';
 
 /* ENGINES ------------------------------------ */
 
-export type Engine = "standard" | "shopify" | "jekyll" | "eleventy";
+export type Engine = 'standard' | 'shopify' | 'jekyll' | 'eleventy';
 
 export const enum IEngine {
 
@@ -13,28 +13,28 @@ export const enum IEngine {
    *
    * **FREE**
    */
-  Standard = "standard",
+  Standard = 'standard',
 
   /**
    * Liquid Shopify Variation
    *
    * **LICENSED**
    */
-  Shopify = "shopify",
+  Shopify = 'shopify',
 
   /**
    * Liquid Jekyll Variation
    *
    * **FREE**
    */
-  Jekyll = "jekyll",
+  Jekyll = 'jekyll',
 
   /**
    * Liquid Eleventy Variation
    *
    * **FREE**
    */
-  Eleventy = "eleventy"
+  Eleventy = 'eleventy'
 
 }
 
@@ -80,6 +80,5 @@ export interface Variation {
   readonly tags: Tags;
   readonly entries: VariationEntries;
 }
-
 
 export type Specifiers = IFilter & IObject & ITag;
