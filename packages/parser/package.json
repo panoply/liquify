@@ -22,17 +22,23 @@
     "require": "./package/parser.js"
   },
   "eslintConfig": {
-    "extends": ["@liquify/eslint-config-ts"]
+    "extends": [
+      "@liquify/eslint-config-ts"
+    ]
   },
   "ava": {
-    "require": ["esm"],
+    "require": [
+      "esm"
+    ],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": ["test/index.js"],
+    "files": [
+      "test/index.js"
+    ],
     "concurrency": 5
   },
   "dependencies": {
@@ -58,6 +64,7 @@
     "chalk": "^4.1.1",
     "dotenv": "^10.0.0",
     "esm": "^3.2.25",
+    "json-stringify-safe": "^5.0.1",
     "pretty-hrtime": "^1.0.3",
     "rollup": "^2.51.1",
     "rollup-plugin-copy": "^3.4.0",

@@ -34,17 +34,25 @@ export const enum TokenType {
   DelimiterClose,
   DelimiterEnder,
 
-  StartTagOpen,
-  StartTagClose,
+  /* TAGS --------------------------------------- */
+
+  TagOpen,
 
   EndTagOpen,
   EndTagClose,
-
-  SingularTagOpen,
-  SingularTagClose,
-
   OutputTagOpen,
   OutputTagClose,
+
+  StartTagClose,
+  SingularTagClose,
+
+  /* TAG NAMES ---------------------------------- */
+
+  StartTagName,
+  EndTagName,
+  SingularTagName,
+  OutputTagName,
+  ObjectTagName,
 
   /* ITERATION ---------------------------------- */
 
@@ -57,11 +65,6 @@ export const enum TokenType {
 
   /* LIQUID TAG TYPES --------------------------- */
 
-  StartTag,
-  EndTag,
-
-  SingularTag,
-  OutputTag,
 
   TrimDashLeft,
   TrimDashRight,
@@ -77,7 +80,6 @@ export const enum TokenType {
    * - `foo` in `{% if foo.bar %}`
    */
   Object,
-  ObjectTag,
   ObjectProperty,
   ObjectPropertyString,
   ObjectPropertyObject,
@@ -144,11 +146,13 @@ export const enum TokenType {
   /* HTML --------------------------------------- */
 
   HTMLStartTagOpen,
+  HTMLStartTagName,
   HTMLTagName,
   HTMLStartTagClose,
-  HTMLStartTagSelfClose,
+  HTMLVoidTagName,
+  HTMLVoidTagClose,
   HTMLEndTagOpen,
-  HTMLEndTag,
+  HTMLEndTagName,
   HTMLEndTagClose,
   HTMLStartCommentTag,
   HTMLComment,

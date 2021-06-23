@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import time from 'pretty-hrtime';
 import { config } from 'dotenv';
+import Stringify from 'json-stringify-safe';
 
 config();
 
@@ -45,7 +46,7 @@ test('FullDocument Parse', t => {
   const ast = parser.scan(server);
   const end = process.hrtime(start);
 
-  console.log(ast.nodes[0]);
+  console.log(Stringify(ast.nodes, null, 2));
 
   /* parser.update({
     textDocument: {

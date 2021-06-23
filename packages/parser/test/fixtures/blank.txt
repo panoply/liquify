@@ -1,7 +1,20 @@
+<div class="foo">
 
-  {% if template contains 'product' %}
+  {% assign var = 'hello world' %}
+
+  {% if parent %}
+
+    {{ foo }}
 
 
-    {{ product.bundle | asset_url | stylesheet_tag }}
+
+    {% unless nested %}
+
+      {{ baz }}
+
+    {% endunless %}
+
 
   {% endif %}
+
+</div>

@@ -88,13 +88,38 @@ export const enum ScanState {
   /* LIQUID TAG TYPES                             */
   /* -------------------------------------------- */
 
-  AfterOutputTagOpen,
-  BeforeOutputTagName,
-  BeforeStartTagName,
+  BeforeTagName,
   BeforeEndTagName,
-  AfterTagOpen,
+  BeforeOutputTagName,
 
-  EndTagClose,
+  AfterTagOpen,
+  AfterEndTagOpen,
+
+  AfterOutputTagOpen,
+  AfterOutputTagName,
+
+
+
+  BeforeOutputTagClose,
+  BeforeStartTagClose,
+  BeforeEndTagClose,
+  BeforeSingularTagClose,
+
+
+  // HTML TAG OPEN
+
+  AfterHTMLStartTagOpen,
+  AfterHTMLEndTagOpen,
+
+  // HTML TAG CLOSE
+
+  BeforeHTMLStartTagClose,
+  BeforeHTMLEndTagClose,
+  BeforeHTMLVoidTagClose,
+
+  // HTML TAG NAME
+
+  AfterHTMLTagName,
 
   TagBasicName,
   TagType,

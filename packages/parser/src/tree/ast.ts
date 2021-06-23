@@ -5,7 +5,7 @@ import { NodeKind } from 'lexical/kind';
 import { Config } from 'config';
 import * as context from 'tree/context';
 import * as s from 'parser/stream';
-import { INode } from 'tree/node';
+import { INode } from 'tree/nodes';
 import { GetFormedRange } from 'parser/utils';
 
 /**
@@ -437,7 +437,7 @@ export class IAST {
    */
   public getText (
     location: Range | number | undefined,
-    endOffset: number | undefined = undefined
+    endOffset?: number | undefined
   ) {
 
     if (typeof location === 'number') {

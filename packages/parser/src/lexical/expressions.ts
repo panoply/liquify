@@ -182,14 +182,14 @@ export const RawTagEnd = /{%-?\s*\bendraw/;
 /* -------------------------------------------- */
 
 /**
- * `^["'a-zA-Z0-9\-$_]`
+ * `^["'a-zA-Z0-9$_-]`
  *
  * ---
  *
  * Object tag first character validators. Object tags
  * can only start with these characters.
  */
-export const ObjectFirstCharacter = /^["'a-zA-Z0-9\-$_]/;
+export const OutputFirstCharacter = /^["'a-zA-Z0-9$_-]/;
 
 /**
  * `^[a-zA-Z0-9\-$_]+`
@@ -198,7 +198,7 @@ export const ObjectFirstCharacter = /^["'a-zA-Z0-9\-$_]/;
  *
  * Alphabetical Object tag name
  */
-export const ObjectNameAlpha = /^[a-zA-Z0-9$_]+/;
+export const OutputNameAlpha = /^[a-zA-Z0-9$_]+/;
 
 /**
  * `^[\s\t\r\n\f]*?[[.]`
@@ -208,7 +208,7 @@ export const ObjectNameAlpha = /^[a-zA-Z0-9$_]+/;
  * Detects whether the next character is a dot or opening bracket.
  * If detected indicates a property value.
  */
-export const ObjectHasProperty = /^[\s\t\r\n\f]*?[[.]/;
+export const OutputNameHasObjectNotation = /^[\s\t\r\n\f]*?[[.]/;
 
 /**
  * `^[a-zA-Z0-9$\-_]+`
@@ -390,7 +390,7 @@ export const BooleanFalse = /^\b(?:false|nil)\b/;
 /* -------------------------------------------- */
 
 /**
- * `^["'a-zA-Z0-9\-$_]+`
+ * `^[a-zA-Z0-9\-$_]+`
  *
  * ---
  *
@@ -501,3 +501,12 @@ export const HTMLAttrJS = /(module|(text|application)\/(java|ecma)script|text\/b
  * HTML JSON Attributes
  */
 export const HTMLAttrJSON = /application\/(?:ld\+)?json/;
+
+/**
+ * `/(area|base|br|col|embed|hr|img|input)/`
+ *
+ * ---
+ *
+ * HTML Void Tags
+ */
+export const HTMLVoidTags = /\b(area|b(ase|r)|col|embed|hr|i(mg|nput)|keygen|link|me(nuitem|ta)|param|source|track|wbr)\b/;

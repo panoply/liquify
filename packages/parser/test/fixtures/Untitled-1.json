@@ -1,0 +1,49 @@
+[
+  {
+    "tag": "div",
+    "index": 0,
+    "singular": true,
+    "kind": 1,
+    "offsets": [0, 17, 134, 140],
+    "children": [
+      {
+        "tag": "if",
+        "index": 0,
+        "singular": true,
+        "kind": 1,
+        "parent": "[Circular ~.0]",
+        "offsets": [21, 36, 121, 132],
+        "children": [
+          {
+            "tag": "foo",
+            "parent": "[Circular ~.0.children.0.children.0]",
+            "offsets": [42, 51],
+            "children": [],
+            "index": 0,
+            "singular": true,
+            "kind": 1
+          },
+          {
+            "tag": "unless",
+            "parent": "[Circular ~.0.children.0]",
+            "index": 0,
+            "singular": true,
+            "kind": 1,
+            "offsets": [59, 78, 101, 116],
+            "children": [
+              {
+                "tag": "baz",
+                "parent": "[Circular ~.0.children.0.children.1.children.0]",
+                "offsets": [86, 95],
+                "children": [],
+                "index": 0,
+                "singular": true,
+                "kind": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
