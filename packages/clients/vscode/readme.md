@@ -10,7 +10,7 @@
 
 ###### IMPORTANT
 
-###### Do not use Liquify along side the [theme-check](https://marketplace.visualstudio.com/items?itemName=Shopify.theme-check-vscode) extension by Shopify, see [below][#] for more info.
+**Do not use Liquify along side the [theme-check](https://marketplace.visualstudio.com/items?itemName=Shopify.theme-check-vscode) extension by Shopify. Theme Check (Shopify Liquid) offers 1/10th of what Liquify provides you as a developer. See the [below](#) reasoning for more information.**
 
 ## Key Features
 
