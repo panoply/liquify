@@ -8,8 +8,7 @@
 - [Documentation](https://liquify.dev)
 - [Playground](https://liquify.dev)
 
-**IMPORTANT**
-
+**IMPORTANT**<br>
 Do not use Liquify along side the [theme-check](https://marketplace.visualstudio.com/items?itemName=Shopify.theme-check-vscode) extension by Shopify. Theme Check offers 1/10th of what Liquify provides, see the [below](#) reasoning for more information.
 
 ## Key Features
