@@ -19,7 +19,7 @@ Liquify was created to solve this issue, it aims to be the _crème de la crème_
 
 ### Pricing / License
 
-Liquify is currently free to use as it exists in an alpha pre-release stage. A yearly licensing cost will be incurred for those who want all the features for the Shopify variation upon its official 1.0 release. If you think Shopify should front the costs, please let me know.
+Liquify is currently free to use as it exists in an alpha pre-release stage. A yearly licensing cost will be incurred for those who want all the features for the Shopify variation upon its official 1.0 release.
 
 ### Packages
 
