@@ -1,0 +1,13 @@
+{
+  "name": "Liquid Jekyll",
+  "scopeName": "source.liquid.jekyll",
+  "injections": {
+    "L:string - (string.quoted.*.html)": {
+      "patterns": [
+        { "include": "source.liquid#tags" },
+        { "include": "source.liquid#output" }
+      ]
+    }
+  },
+  "patterns": [{ "include": "source.liquid" }]
+}

@@ -1,0 +1,16 @@
+{
+  "scopeName": "source.liquid.injection",
+  "fileTypes": [
+    ".js.liquid",
+    ".css.liquid",
+    ".scss.liquid",
+    ".sass.liquid",
+    ".json.liquid"
+  ],
+  "patterns": [
+    { "include": "source.liquid#comments" },
+    { "include": "source.liquid#tags" },
+    { "include": "source.liquid#output" }
+  ],
+  "injectionSelector": "L:text.html -string, L:source.css -comment -string -meta.property-value, L:source.js -string.quoted.*.js -comment -string -meta.embedded, L:source.jsx -comment -string -string.quoted.*.jsx, L:source.js.jsx -comment -string, L:source.ts -string -comment -string.quoted.*.ts, L:source.json -string -comment -meta.embedded, R:text.html.markdown -comment"
+}
