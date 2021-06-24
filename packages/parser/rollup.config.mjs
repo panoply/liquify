@@ -3,7 +3,6 @@ import { env, config } from '@liquify/rollup-plugin-utils';
 import alias from '@rollup/plugin-alias';
 import ts from 'rollup-plugin-typescript2';
 import typescript from 'typescript';
-
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
