@@ -4,6 +4,7 @@
 
 💧 A vscode extension for the [Liquid Template Language](https://shopify.github.io/liquid/). Liquify brings intelliSense features for multiple [Liquid variations](#) to vscode and provides modern IDE capabilities to developers working with the language or an environment which implements it.
 
+- [Marketplace](#)
 - [Documentation](https://liquify.dev)
 - [Playground](https://liquify.dev)
 
@@ -11,7 +12,7 @@
 
 Do not use Liquify along side the [theme-check](https://marketplace.visualstudio.com/items?itemName=Shopify.theme-check-vscode) extension by Shopify. Theme Check offers 1/10th of what Liquify provides, see the [below](#) reasoning for more information.
 
-### Key Features
+## Key Features
 
 - Intellisense features for Liquid [Standard](https://shopify.github.io/liquid/), [Jekyll](https://jekyllrb.com/docs/liquid/) and [Shopify](https://www.shopify.com/partners/shopify-cheat-sheet) variations
 - Code linting, validations and diagnostics
