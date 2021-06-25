@@ -6,7 +6,7 @@ import { Config } from 'config';
 import * as context from 'tree/context';
 import * as s from 'parser/stream';
 import { INode } from 'tree/nodes';
-import { GetFormedRange } from 'parser/utils';
+import { GetFormedRange, findFirst, searchTree, binarySearch } from 'parser/utils';
 
 /**
  * Abstract Syntax Tree
@@ -17,7 +17,29 @@ import { GetFormedRange } from 'parser/utils';
  */
 export class IAST {
 
-  constructor (uri: string, languageId: string, version: number, content: string) {
+  constructor (
+
+    /**
+     * The documents URI identifier
+     */
+    public uri: string,
+
+    /**
+     * The documents language identifier
+     */
+    public languageId: string,
+
+    /**
+     * The document version
+     */
+    public version: number,
+
+    /**
+     * The document text content in string form
+     */
+    public content: string
+
+  ) {
 
     this.uri = uri;
     this.languageId = languageId;
@@ -25,6 +47,11 @@ export class IAST {
     this.content = s.Create(content);
     this.lines = s.ComputeLineOffsets(this.content, true);
   }
+
+  /**
+   * The content string length
+   */
+  get size () { return s.size; }
 
   /**
    * Line offsets for the document
@@ -36,26 +63,6 @@ export class IAST {
    * a start and end range position each incremental parse.
    */
   private cursor: number = NaN;
-
-  /**
-   * The documents URI identifier
-   */
-  public uri: string;
-
-  /**
-   * The document version
-   */
-  public version: number;
-
-  /**
-   * The documents language identifier
-   */
-  public languageId: string;
-
-  /**
-   * The document text content in string form
-   */
-  public content: string;
 
   /**
    * List of parsing errors and validations
@@ -82,9 +89,15 @@ export class IAST {
   public variables: object = Object.create(null);
 
   /**
+   * Returns the node at the current cursor location or null
+   * if the cursor is not located within a node on the tree.
+   */
+  public root: INode = null;
+
+  /**
    * The abstract syntax tree.
    */
-  public nodes: INode[] = [];
+  get nodes (): INode[] { return this.root.children; };
 
   /**
    * Returns the node at the current cursor location or null
@@ -479,49 +492,67 @@ export class IAST {
     return this.nodes[this.nodes.length - 1];
   }
 
+  public getHTMLNodes () {
+
+    const arr = [];
+
+    let i = 0;
+
+    for (let index = 0; index < this.nodes.length; index += 1) {
+
+      const stack = [ this.nodes[index] ];
+
+      while (stack.length) {
+
+        const node = stack.shift()!;
+
+        arr.push({
+          no: i++,
+          index: node.index,
+          // tag: node.tag,
+          parent: node.parent.getToken(1),
+          children: node?.children?.length || 0,
+          token_start: node.getToken(1),
+          token_end: node.singular ? null : node.getToken(3),
+
+          // nextSibling: node.nextSibling?.getToken(1),
+          offsets: node.offsets
+        });
+
+        if (node?.children) stack.push(...node.children);
+
+      }
+
+    }
+
+    return arr;
+
+  }
+
+  public getNodeBefore (location: Position | number): INode {
+
+    const offset = typeof location === 'number'
+      ? location
+      : this.offsetAt(location);
+
+    return this.root.getNodeBefore(offset);
+
+  }
+
   /**
    * Attempts to find a node at either a position or offset and
    * returning the first match found between start and end location.
    * If successful, returns the Node and also updates the `node`
    * cursor property, unless false is passed as second parameter
    */
-  public getNodeAt (
-    position: Position | number,
-    updateNode: boolean = true
-  ): INode | false {
+  public getNodeAt (location: Position | number): INode {
 
-    const offset = typeof position === 'number'
-      ? position
-      : this.offsetAt(position);
+    const offset = typeof location === 'number'
+      ? location
+      : this.offsetAt(location);
 
-    let from = 0;
+    return this.root.getNodeAt(offset);
 
-    if (this.node) {
-      if (offset > this.node.end) from = this.node.index;
-      else if (
-        (this.node.type === NodeType.embedded &&
-          inRange(offset, this.node.offsets[1], this.node.offsets[2])) ||
-          inRange(offset, this.node.offsets[0], this.node.offsets[1]) ||
-          inRange(offset, this.node.offsets[2], this.node.offsets[3])
-      ) return this.node;
-    }
-
-    const node = this.nodes
-      .slice(from)
-      .find(({ offsets, type }) =>
-        inRange(offset, offsets[0], offsets[1]) ||
-          (type === NodeType.embedded &&
-            inRange(offset, offsets[1], offsets[2])) ||
-            inRange(offset, offsets[2], offsets[3]));
-
-    if (!node) return false;
-
-    if (updateNode) {
-      this.node = node;
-      return this.node;
-    }
-
-    return node;
   }
 
   /**

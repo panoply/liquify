@@ -1,20 +1,34 @@
 <div class="foo">
+  <nav class="bar">
 
-  {% assign var = 'hello world' %}
+    {% if grandparent %}
 
-  {% if parent %}
+      {% assign var = 'hello world' %}
 
-    {{ foo }}
+      {% unless first %}
 
+        {% if parent %}
 
-
-    {% unless nested %}
-
-      {{ baz }}
-
-    {% endunless %}
+          {{ foo }}
+          {{ faz }}
 
 
-  {% endif %}
 
+          {% unless nested %}
+            {{ saz }}
+
+              <ul>
+              <li>{{ baz }}</li>
+              </ul>
+
+            {{ laz }}
+          {% endunless %}
+
+        {% endfi %}
+
+      {% endunless %}
+
+    {% endif %}
+
+  </nav>
 </div>

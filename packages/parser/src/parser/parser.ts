@@ -1,8 +1,12 @@
 import { TokenType } from 'lexical/tokens';
 import { NodeKind } from 'lexical/kind';
+import { NodeLanguage } from 'lexical/language';
+import { NodeType } from 'lexical/types';
 import { IAST } from 'tree/ast';
-import { INode } from 'tree/nodes';
+import { INode, Type } from 'tree/nodes';
+import * as pair from 'parser/hierarch';
 import * as stream from 'parser/stream';
+import * as regex from 'lexical/expressions';
 import * as scanner from 'parser/scanning';
 import { Config as config } from 'config';
 
@@ -17,49 +21,32 @@ export function parse (document: IAST): IAST {
 
   let token: number = scanner.scan();
 
-  let root: INode;
-  let node: INode;
-  let parent: INode;
+  document.root = new INode(Type.Root);
 
-  const pairs: INode[] = [];
+  let root: INode = document.root;
+  let node: INode;
+  let name: string;
+  let attr: string | number;
 
   while (token !== TokenType.EOS) {
 
     switch (token) {
-
       case TokenType.HTMLStartTagOpen:
+        node = new INode(Type.Pair, scanner.start, root, NodeKind.HTML);
+        break;
       case TokenType.TagOpen:
+        node = new INode(Type.Pair, scanner.start, root);
+        break;
       case TokenType.OutputTagOpen:
-
-        node = new INode();
-        node.offsets.push(scanner.start);
-
-        if (token === TokenType.HTMLStartTagOpen) {
-          node.kind = NodeKind.HTML;
-        }
-
+        node = new INode(Type.Void, scanner.start, root);
         break;
 
-      case TokenType.HTMLEndTagOpen:
-      case TokenType.EndTagOpen:
-
-        node = root;
-        node.offsets.push(scanner.start);
-
-        break;
-
-      case TokenType.HTMLStartTagName:
       case TokenType.StartTagName:
-
-        parent = pairs[pairs.length - 1];
+      case TokenType.HTMLStartTagName:
 
         node.tag = stream.token;
-        node.parent = parent;
+        node.index = root.children.length;
         node.singular = false;
-
-        root = node;
-
-        pairs.push(node);
 
         break;
 
@@ -68,6 +55,8 @@ export function parse (document: IAST): IAST {
       case TokenType.OutputTagName:
 
         node.tag = stream.token;
+        node.singular = true;
+        node.closed = true;
 
         break;
 
@@ -75,6 +64,9 @@ export function parse (document: IAST): IAST {
       case TokenType.StartTagClose:
 
         node.offsets.push(stream.offset);
+        root.children.push(node);
+
+        root = node;
 
         break;
 
@@ -82,16 +74,16 @@ export function parse (document: IAST): IAST {
       case TokenType.OutputTagClose:
       case TokenType.SingularTagClose:
 
-        node.parent = node;
         node.offsets.push(stream.offset);
+        node.closed = true;
+        root.children.push(node);
 
-        parent = node;
+        break;
 
-        if (pairs.length === 0) {
-          document.nodes.push(node);
-        } else {
-          root.children.push(node);
-        }
+      case TokenType.HTMLEndTagOpen:
+      case TokenType.EndTagOpen:
+
+        node = root;
 
         break;
 
@@ -99,9 +91,13 @@ export function parse (document: IAST): IAST {
       case TokenType.EndTagName:
 
         if (node.tag === stream.token) {
-
-          // node.offsets.push(scanner.start);
+          node.offsets.push(scanner.start);
+          break;
         }
+
+        while (root.tag === stream.token) root = node.parent;
+
+        console.log(node.tag);
 
         break;
 
@@ -109,17 +105,33 @@ export function parse (document: IAST): IAST {
       case TokenType.EndTagClose: {
 
         node.offsets.push(stream.offset);
-
-        if (pairs.length > 1) {
-          pairs[pairs.length - 2].children.push(pairs.pop());
-          root = pairs[pairs.length - 1];
-          break;
-        }
-
-        document.nodes.push(node);
+        node.closed = true;
+        root = node.parent;
 
         break;
       }
+
+      case TokenType.HTMLAttributeName:
+
+        attr = stream.token;
+        node.attributes[attr] = null;
+
+        if (attr === 'src') node.type = NodeType.import;
+
+        break;
+
+      case TokenType.HTMLAttributeValue:
+
+        if (regex.HTMLJavaScript.test(stream.token)) {
+          node.languageId = NodeLanguage.javascript;
+        } else if (regex.HTMLJSON.test(stream.token)) {
+          node.languageId = NodeLanguage.json;
+        }
+
+        node.attributes[attr] = stream.token;
+        attr = undefined;
+
+        break;
 
     }
 

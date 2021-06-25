@@ -7,6 +7,7 @@
  * - Context ends before the closing delimeter, eg: `}}` or `%}`
  */
 export enum NodeType {
+
   /**
    * Control Type
    *

@@ -46,7 +46,9 @@ test('FullDocument Parse', t => {
   const ast = parser.scan(server);
   const end = process.hrtime(start);
 
-  console.log(Stringify(ast.nodes, null, 2));
+  // console.log(Stringify(ast.root, null, 2));
+
+  // console.log(ast.getHTMLNodes());
 
   /* parser.update({
     textDocument: {

@@ -3,7 +3,23 @@ import { NodeKind } from 'lexical/kind';
 import { NodeType } from 'lexical/types';
 import { NodeLanguage } from 'lexical/language';
 import { document } from 'tree/model';
-import { findFirst } from 'parser/utils';
+import { findFirst, createObject } from 'parser/utils';
+import { cursor } from 'parser/specs';
+
+export const enum Type {
+  Root,
+  Pair,
+  Void
+}
+
+export const enum Token {
+  Token = 1,
+  Start = 1,
+  Inner,
+  Ender,
+  Outer
+}
+
 /**
  * AST Node
  *
@@ -11,90 +27,184 @@ import { findFirst } from 'parser/utils';
  */
 export class INode {
 
-  tag: string | undefined;
-  offsets: [number?, number?, number?, number?] = [];
-  parent: INode
-  children: INode[] = []
-  root: boolean
-  index: number = 0;
-  singular: boolean = true;
-  kind = NodeKind.Liquid;
-  type: NodeType
+  constructor (
+    inode?: Type,
+    start?: number,
+    parent?: INode,
+    kind?: NodeKind
+  ) {
 
+    if (inode === Type.Root) {
+
+      this.offsets.push(0, document.size);
+      this.children = [];
+      this.type = Type.Root;
+
+    } else {
+
+      this.offsets.push(start);
+      this.kind = kind;
+      this.parent = parent;
+
+      if (this.kind === NodeKind.HTML) {
+        this.attributes = {};
+      } else {
+        this.objects = {};
+        this.filters = {};
+      }
+
+      if (inode === Type.Pair) {
+        this.closed = false;
+        this.singular = false;
+      } else {
+        this.closed = true;
+      }
+    }
+  }
+
+  public tag: string | undefined;;
+  public parent: INode
+  public children: INode[] = [];
+  public index: number;
+  public kind: NodeKind = NodeKind.Liquid
+  public offsets: [number?, number?, number?, number?] = [];
+  public type: Type.Root | NodeType
+  public closed: boolean = true
+  public singular: boolean;
+  public objects?: object;
+  public attributes?: object;
+  public filters?: object;
+  public languageId?: NodeLanguage;
+
+  /**
+   * Returns the starting offset index of this node
+   */
   get start () {
     return this.offsets[0];
   }
 
+  /**
+   * Returns the ending offset index of this node
+   */
   get end () {
     return this.offsets[this.offsets.length - 1];
   }
 
+  /**
+   * The start and end Range position of the node.
+   */
   get range (): Range {
     return document.getRange(this.start, this.end);
   };
 
-  get startToken () {
-    return document.getText(this.offsets[0], this.offsets[1]);
+  /**
+   * Returns the previous sibling immediately preceding this node.
+   * If the previous node is the fist child of this parent then
+   * `null` is returned.
+   */
+  get prevSibling () {
+    return this.parent?.children?.[this.index - 1] || null;
   }
 
-  get endToken () {
-    return this.singular ? null : document.getText(this.offsets[2], this.offsets[3]);
+  /**
+   * Returns the next sibling immediately following this node.
+   * If the next node is the last child of this parent then
+   * `null` is returned.
+   */
+  get nextSibling (): INode | null {
+    return this.parent?.children?.[this.index + 1] || null;
   }
 
+  /**
+   * Returns the first child in this nodes tree. Returns `null`
+   * if the node has no children or is a void/singular type.
+   */
   get firstChild (): INode | undefined {
-    return this.children[0];
+    return this.children?.[0] || null;
   }
 
+  /**
+   * Returns the last child in this nodes tree. Returns `null`
+   * if the node has no children or is a void/singular type.
+   */
   get lastChild (): INode | undefined {
-    return this.children.length
-      ? this.children[this.children.length - 1]
-      : undefined;
+    return this.children?.[this.children.length - 1] || null;
   }
 
-  isSameTag (tagInLowerCase: string | undefined) {
-    if (this.tag === undefined) {
-      return tagInLowerCase === undefined;
-    } else {
-      return tagInLowerCase !== undefined && this.tag.length === tagInLowerCase.length && this.tag.toLowerCase() === tagInLowerCase;
+  /**
+   * Returns raw string content token of the node.
+   */
+  public getToken (token: Token): string {
+
+    if (token === Token.Start || this.singular) {
+      return document.getText(this.offsets[0], this.offsets[1]);
     }
+
+    if (!this.singular && this.closed) {
+
+      if (token === Token.Outer) {
+        return document.getText(this.start, this.end);
+      }
+
+      if (token === Token.Inner) {
+        return document.getText(this.offsets[1], this.offsets[2]);
+      }
+
+      if (token === Token.Ender) {
+        return document.getText(this.offsets[2], this.offsets[3]);
+      }
+    }
+
+    return this.getToken(Token.Outer);
+
   }
 
-  findNodeBefore (offset: number): INode {
+  public isSameTag (tagInLowerCase: string | undefined) {
 
-    const idx = findFirst(this.children, c => offset <= c.start) - 1;
+    if (this.tag === undefined) return tagInLowerCase === undefined;
 
-    if (idx >= 0) {
-      const child = this.children[idx];
+    return (
+      tagInLowerCase !== undefined &&
+      this.tag.length === tagInLowerCase.length &&
+      this.tag.toLowerCase() === tagInLowerCase
+    );
+
+  }
+
+  public getNodeBefore (offset: number): INode {
+
+    const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
+
+    if (node >= 0) {
+
+      const child = this.children[node];
+
       if (offset > child.start) {
-        if (offset < child.end) {
-          return child.findNodeBefore(offset);
-        }
-        const lastChild = child.lastChild;
-        if (lastChild && lastChild.end === child.end) {
-          return child.findNodeBefore(offset);
-        }
+        if (offset < child.end) return child.getNodeBefore(offset);
+        const { lastChild } = child;
+        if (lastChild && lastChild.end === child.end) return child.getNodeBefore(offset);
         return child;
       }
     }
-    return this;
+
+    return this.type !== Type.Root ? this : this.firstChild || this;
+
   }
 
-  findNodeAt (offset: number): INode {
-    const idx = findFirst(this.children, c => offset <= c.start) - 1;
-    if (idx >= 0) {
-      const child = this.children[idx];
-      if (offset > child.start && offset <= child.end) {
-        return child.findNodeAt(offset);
-      }
+  /**
+   * Returns a node located the provided location offset index.
+   */
+  public getNodeAt (offset: number): INode {
+
+    const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
+
+    if (node >= 0) {
+      const child = this.children[node];
+      if (offset > child.start && offset <= child.end) return child.getNodeAt(offset);
     }
-    return this;
+
+    return this.type !== Type.Root ? this : this.firstChild || this;
+
   }
-
-  // public get attributeNames (): string[] { return this.attributes ? Object.keys(this.attributes) : [];
-  // }
-
-  // objects?: object = Object.create(null);
-  // attributes?: object = Object.create(null);
-  // filters?: object = Object.create(null);
 
 };

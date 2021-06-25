@@ -491,7 +491,7 @@ export const HTMLEmbedded = /^\b(?:style|script)/;
  *
  * HTML Script Attributes
  */
-export const HTMLAttrJS = /(module|(text|application)\/(java|ecma)script|text\/babel)/;
+export const HTMLJavaScript = /(module|(text|application)\/(java|ecma)script|text\/babel)/;
 
 /**
  * `/(module|(text|application)\/(java|ecma)script|text\/babel)/`
@@ -500,7 +500,7 @@ export const HTMLAttrJS = /(module|(text|application)\/(java|ecma)script|text\/b
  *
  * HTML JSON Attributes
  */
-export const HTMLAttrJSON = /application\/(?:ld\+)?json/;
+export const HTMLJSON = /application\/(?:ld\+)?json/;
 
 /**
  * `/(area|base|br|col|embed|hr|img|input)/`

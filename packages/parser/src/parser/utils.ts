@@ -12,6 +12,10 @@ export function GetFormedRange (range: Range): Range {
 
 }
 
+export function createObject () {
+  return Object.create(null);
+}
+
 export function EmbeddedDocumentText (str: string, text: string) {
   const start = str.indexOf(text);
   return str.substring(0, start) + ' '.repeat(text.length) + str.substring(start + text.length);
@@ -19,27 +23,71 @@ export function EmbeddedDocumentText (str: string, text: string) {
 
 export function findFirst<T> (array: T[], p: (x: T) => boolean): number {
 
-  let low = 0; let high = array.length;
+  let low = 0;
+  let high = array?.length || 0;
 
   if (high === 0) return 0; // no children
 
   while (low < high) {
     const mid = Math.floor((low + high) / 2);
-
-    if (p(array[mid])) high = mid;
-    else low = mid + 1;
+    if (p(array[mid])) high = mid; else low = mid + 1;
   }
 
   return low;
+
 }
 
-export function binarySearch<T> (array: T[], key: T, comparator: (op1: T, op2: T) => number): number {
+export function searchTree (
+  tree: Record<string, any>[],
+  value: unknown,
+  key = 'value',
+  withChildren = false
+) {
+
+  let result = null;
+
+  if (!Array.isArray(tree)) return result;
+
+  for (let index = 0; index < tree.length; index += 1) {
+
+    const stack = [ tree[index] ];
+
+    while (stack.length) {
+
+      const node = stack.shift()!;
+
+      if (node[key] === value) {
+        result = node;
+        break;
+      }
+
+      if (node?.children) {
+        stack.push(...node.children);
+      }
+    }
+
+    if (result) break;
+  }
+
+  if (withChildren !== true) {
+    delete result?.children;
+  }
+
+  return result;
+
+}
+
+export function binarySearch<T> (
+  array: T[],
+  comparator: (op1: T) => number
+): number {
+
   let low = 0;
   let high = array.length - 1;
 
   while (low <= high) {
     const mid = ((low + high) / 2) | 0;
-    const comp = comparator(array[mid], key);
+    const comp = comparator(array[mid]);
     if (comp < 0) {
       low = mid + 1;
     } else if (comp > 0) {

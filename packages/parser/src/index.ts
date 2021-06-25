@@ -11,7 +11,7 @@ import { Config, IConfig } from './config';
 export { IEngine } from '@liquify/liquid-language-specs';
 export { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 export { IAST } from './tree/ast';
-export { INode } from './tree/node';
+export { INode } from './tree/nodes';
 export { NodeLanguage } from './lexical/language';
 export { NodeType } from './lexical/types';
 export { NodeKind } from './lexical/kind';
