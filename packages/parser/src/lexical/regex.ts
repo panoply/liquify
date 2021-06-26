@@ -112,7 +112,7 @@ export const TagFirstCharWild = /^[a-zA-Z0-9$_]/;
  * ---
  *
 
- */
+  */
 export const TagKeyword = /^[a-zA-Z0-9_]+/;
 
 /**
@@ -208,7 +208,7 @@ export const OutputNameAlpha = /^[a-zA-Z0-9$_]+/;
  * Detects whether the next character is a dot or opening bracket.
  * If detected indicates a property value.
  */
-export const OutputNameHasObjectNotation = /^[\s\t\r\n\f]*?[[.]/;
+export const PropertyNotation = /^[\s\t\r\n\f]*?[[.]/;
 
 /**
  * `^[a-zA-Z0-9$\-_]+`

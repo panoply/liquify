@@ -3,11 +3,11 @@ import { NodeType } from 'lexical/types';
 import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
-import { errors } from 'parser/errors';
+import { errors } from 'tree/errors';
 import { IAST } from 'tree/ast';
 import * as spec from 'parser/specs';
 import * as s from 'parser/stream';
-import * as r from 'lexical/expressions';
+import * as r from 'lexical/regex';
 import * as c from 'lexical/characters';
 
 /**
@@ -354,7 +354,7 @@ function Scan (): number {
         spec.Cursor(s.token);
 
         // Lets check if output name contains an object notation character
-        if (s.IsRegExp(r.OutputNameHasObjectNotation)) {
+        if (s.IsRegExp(r.PropertyNotation)) {
 
           // Next call we will look for a property notation
           state = ScanState.Object;
@@ -823,7 +823,7 @@ function Scan (): number {
           // Check to to see if we are dealing with an object
           if (
             spec.TypeOfNode(NodeType.object) ||
-            s.IsNextRegExp(r.OutputNameHasObjectNotation)
+            s.IsNextRegExp(r.PropertyNotation)
           ) {
 
             // Next call we will look for a property notation
@@ -961,7 +961,7 @@ function Scan (): number {
 
           // We have set the specification, lets now determine
           // if the value contains object notation and proceed accordingly
-          if (s.IsRegExp(r.OutputNameHasObjectNotation)) {
+          if (s.IsRegExp(r.PropertyNotation)) {
             cache = ScanState.ControlOperator;
             state = ScanState.Object;
             return TokenType.Object;

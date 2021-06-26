@@ -2,6 +2,7 @@ import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
 import { NodeType } from 'lexical/types';
 import { NodeLanguage } from 'lexical/language';
+import { IDiagnostic } from 'lexical/diagnostics';
 import { document } from 'tree/model';
 import { findFirst, createObject } from 'parser/utils';
 import { cursor } from 'parser/specs';
@@ -62,6 +63,7 @@ export class INode {
     }
   }
 
+  public errors: number[] = [];
   public tag: string | undefined;;
   public parent: INode
   public children: INode[] = [];

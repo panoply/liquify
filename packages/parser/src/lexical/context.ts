@@ -6,7 +6,7 @@
  * Describes the inner context of Liquid tokens. It breaks down the
  * stack of each node as we walk over its inner characters.
  */
-export enum TokenContext {
+export const enum TokenContext {
   /**
    * Opening Delimiter: `{{` `{%` `<` `</` `---`
    */

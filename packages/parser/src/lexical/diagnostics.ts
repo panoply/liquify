@@ -1,5 +1,16 @@
+/* eslint no-unused-vars: "off" */
+
 import { ParseError, ErrorLevel } from 'lexical/errors';
-import { Range } from 'vscode-languageserver-textdocument';
+import { Diagnostic, Range } from 'vscode-languageserver-types';
+
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+export interface IDiagnostic extends Omit<Diagnostic, 'range'> {
+  range?: Range
+  data?: {
+    offset?: number
+  }
+}
 
 /**
  * Parsing Errors
@@ -14,357 +25,281 @@ import { Range } from 'vscode-languageserver-textdocument';
  * error messages for non-english developers._
  *
  */
-export const errors = (error = 0, range: Range, offset: number) => ({
-  [ParseError.ParsingError]: {
-    range,
+export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
+  [ParseError.InvalidQuotation]: {
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Parse error',
-    data: {
-      offset
-    }
+    data: {}
   },
-
+  [ParseError.RejectFloat]: {
+    source: 'Liquid',
+    severity: ErrorLevel.Error,
+    message: 'Parse error',
+    data: {}
+  },
+  [ParseError.RejectFilters]: {
+    source: 'Liquid',
+    severity: ErrorLevel.Error,
+    message: 'Parse error',
+    data: {}
+  },
+  [ParseError.ParsingError]: {
+    source: 'Liquid',
+    severity: ErrorLevel.Error,
+    message: 'Parse error',
+    data: {}
+  },
   [ParseError.MissingTagName]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing tag name',
-    data: {
-      offset
-    }
+    data: {}
   },
-
   [ParseError.MissingTagName]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing tag name',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingObjectName]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing Object name',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingBracketNotation]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing object property bracket notation',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingStartTag]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing Start tag',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingEndTag]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
-    message: 'Missing end tag',
-    data: {
-      offset
-    }
+    message: 'Missing or invalid end tag',
+    data: {}
   },
   [ParseError.MissingOpenDelimiter]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing opening tag delimiter',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingCloseDelimiter]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing closing tag delimiter',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingColon]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing colon separator',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingQuotation]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Malformed string, missing quotation character',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingProperty]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing object property',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingFilter]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing Filter, a filter must follow a pipe character',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingFilterArgument]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing filter argument',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingFilterSeparator]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing filter separator character',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingNumber]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing number',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingCondition]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing conditional value',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingIterationIteree]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing iteree value',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.MissingIterationArray]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Missing iteration value',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidName]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid name value has been expressed',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidTagName]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid tag name',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidObjectName]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid object name was expressed',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidProperty]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid Property',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidPropertyNotation]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid Property Notation, expected "." or "[" character',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidCharacter]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid character',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidCharacters]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid characters or word',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidFilter]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid or unknown filter',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidSyntactic]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid syntactic tag placement',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidPlacement]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid tag placement',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.InvalidOperator]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Invalid operator sequence',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectString]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'String value not accepted',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectNumber]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Number value not accepted',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectInteger]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Number value not accepted',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectBoolean]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Boolean value not accepted',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectArray]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Array value not accepted',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectObject]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Object value not accepted',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectProperty]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Property value is not of type object',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectParameters]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Tag does not accept parameters',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectFilterArguments]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Filter does not accept arguments',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectWhitespace]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Extraneous and/or unnecessary spacing characters',
-    data: {
-      offset
-    }
+    data: {}
   },
   [ParseError.RejectWhitespaceControl]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Error,
     message: 'Tag does not accept whitespace strips',
-    data: {
-      offset
-    }
+    data: {}
   },
-
-  /* -------------------------------------------- */
-  /* WARNINGS                                     */
-  /* -------------------------------------------- */
-
   [ParseError.WarnWhitespace]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Warning,
     message: 'Extraneous whitespace detected',
-    data: {
-      offset
-    }
+    data: {}
   },
-
   [ParseError.UnknownProperty]: {
-    range,
+    source: 'Liquid',
     severity: ErrorLevel.Warning,
     message: 'Unknown property value expressed',
-    data: {
-      offset
-    }
+    data: {}
   }
-}[error]);
+};

@@ -8,11 +8,15 @@ export function GetFormedRange (range: Range): Range {
     start.line > end.line || (
       start.line === end.line && start.character > end.character
     )
-  ) ? { start: end, end: start } : range;
+  ) ? {
+      start: end,
+      end: start
+    } : range;
 
 }
 
 export function createObject () {
+
   return Object.create(null);
 }
 

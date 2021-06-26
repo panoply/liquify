@@ -380,7 +380,7 @@ export const Cursor = (name?: string): boolean => {
 
   if (variation?.tags?.[name]) {
     cursor = variation.tags[name] as ITag;
-    type = NodeType[cursor.type || 'unknown'];
+    type = NodeType[`${cursor.type || 'unknown'}`];
 
     // Activate tag navigator, only when we have
     // arguments, if the tag arguments returns `undefined`

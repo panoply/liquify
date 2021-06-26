@@ -3,11 +3,11 @@ import { NodeType } from 'lexical/types';
 import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
-import { errors } from 'parser/errors';
+import { errors } from 'tree/errors';
 import { IAST } from 'tree/ast';
 import * as spec from 'parser/specs';
 import * as s from 'parser/stream';
-import * as r from 'lexical/expressions';
+import * as r from 'lexical/regex';
 import * as c from 'lexical/characters';
 
 /**

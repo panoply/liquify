@@ -25,7 +25,7 @@ export default {
       preferConst: true
     }
   ],
-  plugins: env.unless(process.env.prod)(
+  plugins: env.if('dev')(
     [
       commonjs(
         {

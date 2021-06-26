@@ -2,11 +2,13 @@ import { TokenType } from 'lexical/tokens';
 import { NodeKind } from 'lexical/kind';
 import { NodeLanguage } from 'lexical/language';
 import { NodeType } from 'lexical/types';
+import { ParseError } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { INode, Type } from 'tree/nodes';
+import { IDiagnostic } from 'lexical/diagnostics';
 import * as pair from 'parser/hierarch';
 import * as stream from 'parser/stream';
-import * as regex from 'lexical/expressions';
+import * as regex from 'lexical/regex';
 import * as scanner from 'parser/scanning';
 import { Config as config } from 'config';
 
@@ -25,8 +27,9 @@ export function parse (document: IAST): IAST {
 
   let root: INode = document.root;
   let node: INode;
-  let name: string;
   let attr: string | number;
+
+  let error: IDiagnostic;
 
   while (token !== TokenType.EOS) {
 
@@ -95,18 +98,24 @@ export function parse (document: IAST): IAST {
           break;
         }
 
-        while (root.tag === stream.token) root = node.parent;
-
-        console.log(node.tag);
+        error = document.errors.report(ParseError.MissingEndTag, node);
 
         break;
 
       case TokenType.HTMLEndTagClose:
       case TokenType.EndTagClose: {
 
-        node.offsets.push(stream.offset);
-        node.closed = true;
         root = node.parent;
+        node.closed = true;
+
+        if (error) {
+          error.range = node.range;
+          error.data.offset = node.start;
+          error = undefined;
+          break;
+        }
+
+        node.offsets.push(stream.offset);
 
         break;
       }

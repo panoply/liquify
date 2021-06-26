@@ -22,20 +22,26 @@
     "require": "./package/parser.js"
   },
   "eslintConfig": {
-    "extends": ["@liquify/eslint-config-ts"],
+    "extends": [
+      "@liquify/eslint-config-ts"
+    ],
     "rules": {
       "no-use-before-define": "off"
     }
   },
   "ava": {
-    "require": ["esm"],
+    "require": [
+      "esm"
+    ],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": ["test/index.js"],
+    "files": [
+      "test/index.js"
+    ],
     "concurrency": 5
   },
   "dependencies": {
@@ -64,6 +70,7 @@
     "json-stringify-safe": "^5.0.1",
     "pretty-hrtime": "^1.0.3",
     "rollup": "^2.51.1",
+    "rollup-plugin-consts": "^1.0.2",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-filesize": "^9.1.1",

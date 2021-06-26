@@ -2,11 +2,14 @@ import inRange from 'lodash.inrange';
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 import { NodeType } from 'lexical/types';
 import { NodeKind } from 'lexical/kind';
+import { ParseError } from 'lexical/errors';
 import { Config } from 'config';
 import * as context from 'tree/context';
 import * as s from 'parser/stream';
 import { INode } from 'tree/nodes';
 import { GetFormedRange, findFirst, searchTree, binarySearch } from 'parser/utils';
+import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
+import { Errors } from 'tree/errors';
 
 /**
  * Abstract Syntax Tree
@@ -46,12 +49,18 @@ export class IAST {
     this.version = version;
     this.content = s.Create(content);
     this.lines = s.ComputeLineOffsets(this.content, true);
+    this.errors = new Errors();
   }
 
   /**
    * The content string length
    */
   get size () { return s.size; }
+
+  /**
+   * The abstract syntax tree.
+   */
+  get nodes (): INode[] { return this.root.children; };
 
   /**
    * Line offsets for the document
@@ -68,7 +77,7 @@ export class IAST {
    * List of parsing errors and validations
    * encountered while scanning the document.
    */
-  public errors: Parser.Diagnostic[] = [];
+  public errors: Errors;
 
   /**
    * List of indexes where embedded nodes
@@ -93,11 +102,6 @@ export class IAST {
    * if the cursor is not located within a node on the tree.
    */
   public root: INode = null;
-
-  /**
-   * The abstract syntax tree.
-   */
-  get nodes (): INode[] { return this.root.children; };
 
   /**
    * Returns the node at the current cursor location or null
@@ -199,16 +203,9 @@ export class IAST {
   }
 
   /**
-   * Range
-   *
-   * Returns `start` and `end` range information
-   *
-   * **DOES NOT MODIFY**
-   *
-   * ---
-   *
-   * @param {number} [start] defaults to cursor
-   * @param {number} [end] defaults to current index
+   * Returns `start` and `end` range information. Defaults
+   * to the streams current cursor and offset locations if
+   * no params are passed,
    */
   public getRange (
     start: number = s.cursor,
@@ -222,18 +219,15 @@ export class IAST {
   }
 
   /**
-   * Converts a offset/s to range location.
-   * If Niether `start`or `end` params are passed,
-   * the full document range is returned.
+   * Converts range to offset location. The returning value is of
+   * type array, where the first item is `start` offset and second
+   * value is `end` offset.
    */
-  public toRange (
-    start: number = 0,
-    end: number = this.content.length
-  ): Range {
-    return {
-      start: this.positionAt(start),
-      end: this.positionAt(end)
-    };
+  public getRangeOffsets (location: Range): [number, number] {
+    return [
+      this.offsetAt(location.start),
+      this.offsetAt(location.end)
+    ];
   }
 
   public getLineOffsets (): number[] {
@@ -247,24 +241,12 @@ export class IAST {
   }
 
   /**
-   * Converts range to offset location. The returning value is of
-   * type array, where the first item is `start` offset and second
-   * value is `end` offset.
-   */
-  public toRangeOffset (location: Range): [number, number] {
-    return [
-      this.offsetAt(location.start),
-      this.offsetAt(location.end)
-    ];
-  }
-
-  /**
    * Generates a line Range from either a position or an offset.
    * The return value is a Range the will begin at start of the
    * line where the location was passed and finish at the end of
    * the line (character `0` of next line).
    */
-  public toLineRange (location: number | Position): Range {
+  public getLineRange (location: number | Position): Range {
 
     const range = {
       start: {
@@ -516,7 +498,8 @@ export class IAST {
           token_end: node.singular ? null : node.getToken(3),
 
           // nextSibling: node.nextSibling?.getToken(1),
-          offsets: node.offsets
+          offsets: node.offsets,
+          errors: this.errors.map(node.errors)[0]
         });
 
         if (node?.children) stack.push(...node.children);
