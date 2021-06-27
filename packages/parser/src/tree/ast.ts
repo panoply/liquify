@@ -49,7 +49,6 @@ export class IAST {
     this.version = version;
     this.content = s.Create(content);
     this.lines = s.ComputeLineOffsets(this.content, true);
-    this.errors = new Errors();
   }
 
   /**
@@ -77,7 +76,7 @@ export class IAST {
    * List of parsing errors and validations
    * encountered while scanning the document.
    */
-  public errors: Errors;
+  public errors: IDiagnostic[] = []
 
   /**
    * List of indexes where embedded nodes
@@ -120,6 +119,18 @@ export class IAST {
     json: TextDocument[]
 
   } = Object.create(null);
+
+  public report (error: ParseError): (node: INode) => void {
+
+    const diagnostic = Diagnostics[error];
+
+    return ({ errors, range, offsets: [ offset ] }: INode) => {
+
+      errors.push(this.errors.length);
+      this.errors.push({ ...diagnostic, range, data: { offset } });
+
+    };
+  }
 
   /**
    * Generates a document literal of current
@@ -282,7 +293,7 @@ export class IAST {
    */
   private clear () {
     this.embeds = [];
-    this.errors = [];
+    this.diagnostic = [];
     this.nodes = [];
     this.comments = [];
     context.reset();
@@ -391,9 +402,9 @@ export class IAST {
     // console.log(node);
     // console.log(this.content.slice(0, prev));
 
-    if (this.errors.length > 0) {
+    if (this.diagnostic.length > 0) {
 
-      const slice = this.errors.findIndex(({
+      const slice = this.diagnostic.findIndex(({
         data: {
           offset
         }
@@ -403,7 +414,7 @@ export class IAST {
         s.size
       ));
 
-      if (slice >= 0) this.errors.splice(slice);
+      if (slice >= 0) this.diagnostic.splice(slice);
 
     }
 
@@ -491,15 +502,16 @@ export class IAST {
         arr.push({
           no: i++,
           index: node.index,
-          // tag: node.tag,
-          parent: node.parent.getToken(1),
+          tag: node.tag,
+          parent: node.parent.tag,
           children: node?.children?.length || 0,
-          token_start: node.getToken(1),
-          token_end: node.singular ? null : node.getToken(3),
+          // token_start: node.getToken(),
+          // token_end: node.singular ? null : node.getToken(3),
 
           // nextSibling: node.nextSibling?.getToken(1),
           offsets: node.offsets,
-          errors: this.errors.map(node.errors)[0]
+          errors: node.diagnostics
+          // errors: this.diagnostics.map(node.errors)[0]
         });
 
         if (node?.children) stack.push(...node.children);

@@ -12,6 +12,7 @@ export const enum ScanCache {
   StringOpen,
   StringClose,
   HTMLToken,
+  HTMLVoidTag,
   BracketNotation,
   BracketNotationObject,
   BracketNotationString,
@@ -108,8 +109,9 @@ export const enum ScanState {
 
   // HTML TAG OPEN
 
-  AfterHTMLStartTagOpen,
-  AfterHTMLEndTagOpen,
+  AfterHTMLStartTagName,
+  AfterHTMLEndTagName,
+  AfterHTMLVoidTagName,
 
   // HTML TAG CLOSE
 

@@ -1,5 +1,6 @@
 import { IFilter, IObject, ITag } from '@liquify/liquid-language-specs';
 import { NodeType } from 'lexical/types';
+import { NodeKind } from 'lexical/kind';
 import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
@@ -7,7 +8,7 @@ import { errors } from 'tree/errors';
 import { IAST } from 'tree/ast';
 import * as spec from 'parser/specs';
 import * as s from 'parser/stream';
-import * as r from 'lexical/regex';
+import * as Regexp from 'lexical/regex';
 import * as c from 'lexical/characters';
 
 /**
@@ -26,6 +27,14 @@ export let start: number;
  * encountered while scanning tags.
  */
 export let error: number;
+
+/**
+ * Language Kind
+ *
+ * Informs upon the tokens language currently
+ * being scanned.
+ */
+export let kind: NodeKind;
 
 /**
  * Cache
@@ -81,35 +90,36 @@ export function scan (offset: number = 0): number {
 function CharSeq (): number {
 
   if (cache === TokenType.Comment) {
-    if (s.ConsumeUntil(r.CommentTagEnd)) {
+    if (s.ConsumeUntil(Regexp.CommentTagEnd)) {
       cache = ScanCache.Reset;
     }
   }
 
   // Search until we hit a character of interest
-  s.UntilSequence(r.Delimiters);
+  s.UntilSequence(Regexp.Delimiters);
 
   // Liquid left-side delimiter detected, eg: {
-  if (s.IsCodeChar(c.LCB)) {
+  if (s.IfCodeChar(c.LCB)) {
 
     // Validate we have a Liquid tag, eg: {{ or {%
-    if (s.IsRegExp(/^\{[{%]/)) {
+    if (s.IsRegExp(Regexp.DelimitersOpen)) {
 
       // Assert Start position of token
       start = s.offset;
+      kind = NodeKind.Liquid;
 
       // Liquid output type delimiter, eg: {{
-      if (s.IfRegExp(r.DelimitersOutputOpen)) {
+      if (s.IfRegExp(Regexp.DelimitersOutputOpen)) {
         state = ScanState.AfterOutputTagOpen;
         return TokenType.OutputTagOpen;
       }
 
       // Liquid tag delimiter, eg: {%
-      if (s.IfRegExp(r.DelimitersTagOpen)) {
+      if (s.IfRegExp(Regexp.DelimitersTagOpen)) {
 
         // Lets peek ahead to see if we are dealing with an {% end %}
         // type tag, but we will not consume, just check
-        if (s.IsRegExp(r.TagIsEnd)) {
+        if (s.IsRegExp(Regexp.TagIsEnd)) {
           state = ScanState.AfterEndTagOpen;
           return TokenType.EndTagOpen;
         }
@@ -131,26 +141,42 @@ function CharSeq (): number {
     // Ensure no whitespace proceeds delimiter, eg: `< tag`
     if (!s.Whitespace()) {
 
+      kind = NodeKind.HTML;
+
       s.Advance(1);
 
       // Character is a forward slash and proceeded by no whitespace, eg: `</`
-      if (s.IfCodeChar(c.FWS) && !s.Whitespace()) {
+      if (s.IfCodeChar(c.FWS)) {
 
         // Check we have a tag name, do not conumse though, eg: `</tag`
-        if (s.IsRegExp(r.HTMLTagName)) {
-          state = ScanState.AfterHTMLEndTagOpen;
+        if (s.IfRegExp(Regexp.HTMLTagEndName)) {
+          state = ScanState.AfterHTMLEndTagName;
           return TokenType.HTMLEndTagOpen;
         }
       }
 
-      // We have start or void type HTML tag, eg: `<tag`
-      if (s.IsRegExp(r.HTMLTagName)) {
-        state = ScanState.AfterHTMLStartTagOpen;
+      // We are within a HTML start tag, eg: <^tag
+      if (s.IfRegExp(Regexp.HTMLTagName)) {
+
+        state = ScanState.HTMLAttributeName;
+
+        // Determine if the HTML tag is of type void
+        if (s.TokenContains(Regexp.HTMLVoidTags)) {
+
+          // We save a cache reference when dealing with a void tag
+          cache = ScanCache.HTMLVoidTag;
+          return TokenType.HTMLVoidTagOpen;
+        }
+
+        // If we get here, we have a HTML start type tag
         return TokenType.HTMLStartTagOpen;
       }
 
     }
   }
+
+  // Reset language lind
+  kind = undefined;
 
   // Reset state if not CharSeq, lets continue sequencing...
   if (state !== ScanState.CharSeq) state = ScanState.CharSeq;
@@ -179,39 +205,44 @@ function Scan (): number {
 
   switch (state) {
 
-    case ScanState.AfterHTMLStartTagOpen:
-
-      // We are within a HTML start tag, eg: <^tag
-      if (s.IfRegExp(r.HTMLTagName)) {
-        state = ScanState.HTMLAttributeName;
-        return s.TokenContains(r.HTMLVoidTags)
-          ? TokenType.HTMLVoidTagName
-          : TokenType.HTMLStartTagName;
-      }
-
-      // This tag means nothing to us, lets keep scanning
-      state = ScanState.CharSeq;
-      return TokenType.ParseCancel;
-
     case ScanState.HTMLAttributeName:
 
-      // We have an embedded region, eg `<script>`
-      if (s.IfCodeChar(c.RAN)) {
-        state = ScanState.CharSeq;
-        return TokenType.HTMLStartTagClose;
-      }
-
       // We have an attribute value on the tag, eg: `<script src^`
-      if (s.IfRegExp(r.HTMLTagAttribute)) {
+      if (s.IfRegExp(Regexp.HTMLAttribute)) {
         state = ScanState.HTMLAttributeOperator;
         return TokenType.HTMLAttributeName;
       }
 
+      // Next scan we will be passed back to CharSeq
       state = ScanState.CharSeq;
+
+      // We have an embedded region, eg `<script>`
+      if (s.IfCodeChar(c.RAN)) {
+
+        // Return a void close token type and reset the cache reference
+        if (cache === ScanCache.HTMLVoidTag) {
+          cache = ScanCache.Reset;
+          return TokenType.HTMLVoidTagClose;
+        }
+
+        // Return a start tag close
+        return TokenType.HTMLStartTagClose;
+      }
+
+      // Handle self closing void type tags, eg: `<tag />`
+      if (s.IfRegExp(Regexp.HTMLSelfClose)) {
+
+        // Reset the cache reference for void type tags
+        cache = ScanCache.Reset;
+        return TokenType.HTMLVoidTagClose;
+      }
+
+      // If we get here we are missing a closing delimiter
       error = ParseError.MissingCloseDelimiter;
       return TokenType.ParseError;
 
     case ScanState.HTMLAttributeOperator:
+
       if (s.IfCodeChar(c.EQS)) {
         state = ScanState.HTMLAttributeValue;
         return TokenType.HTMLOperatorValue;
@@ -222,47 +253,24 @@ function Scan (): number {
 
     case ScanState.HTMLAttributeValue:
 
+      state = ScanState.HTMLAttributeName;
+
       // Capture HTML string attribute value
-      if (s.SkipQuotedString(true)) {
-        state = ScanState.HTMLAttributeName;
+      // Handle attributes that are not using quotations, eg: <tag attr=foo
+      if (s.SkipQuotedString(true) || s.IfRegExp(Regexp.HTMLAttributeValue)) {
         return TokenType.HTMLAttributeValue;
       }
 
       state = ScanState.HTMLAttributeName;
       return Scan();
 
-    case ScanState.AfterHTMLEndTagOpen:
+    case ScanState.AfterHTMLEndTagName:
 
-      // The HTML closing tag name, eg: </^tag
-      if (s.IfRegExp(r.HTMLTagName)) {
-        state = ScanState.BeforeHTMLEndTagClose;
-        return TokenType.HTMLEndTagName;
-      }
-
-      // The HTML closing tag name, eg: </^>
-      if (s.IfCodeChar(c.RAN)) {
-        // Begin scanning again after consuming the character
-        state = ScanState.CharSeq;
-
-        // Assert the error
-        error = ParseError.MissingTagName;
-        return TokenType.ParseError;
-      }
-
-      // If we get here we have an error, eg: </^
       state = ScanState.CharSeq;
-      error = ParseError.InvalidTagName;
-      return TokenType.ParseError;
 
-    case ScanState.BeforeHTMLEndTagClose:
+      if (s.IfCodeChar(c.RAN)) return TokenType.HTMLEndTagClose;
 
-      if (s.IfCodeChar(c.RAN)) {
-        state = ScanState.CharSeq;
-        return TokenType.HTMLEndTagClose;
-      }
-
-      // Assert the error
-      state = ScanState.CharSeq;
+      // Assert an error if missing close tag delimiter detected
       error = ParseError.MissingCloseDelimiter;
       return TokenType.ParseError;
 
@@ -285,7 +293,7 @@ function Scan (): number {
         // Lets consume the "end" portion of the name, eg: {%- end^tag
         // We have already confirmed this exists in CharSeq
         // We do not returns a token type, we do this at next run
-        if (s.IfRegExp(r.TagEndKeyword)) {
+        if (s.IfRegExp(Regexp.TagEndKeyword)) {
           state = ScanState.BeforeEndTagName;
           return Scan();
         }
@@ -298,7 +306,7 @@ function Scan (): number {
     case ScanState.BeforeEndTagName:
 
       // Lets consume the end tag name identifier, eg: {%- endtag^
-      if (s.IfRegExp(r.TagName)) {
+      if (s.IfRegExp(Regexp.TagName)) {
         state = ScanState.BeforeEndTagClose;
         return TokenType.EndTagName;
       }
@@ -314,7 +322,7 @@ function Scan (): number {
 
       // Lets make sure our intercepted character is valid
       // If this returns a false, we have an invalid  output tag name
-      if (!s.IsRegExp(r.OutputFirstCharacter)) {
+      if (!s.IsRegExp(/^["'a-zA-Z0-9$_-]/)) {
         error = ParseError.InvalidCharacter;
         state = ScanState.ParseError;
         return Scan();
@@ -323,7 +331,7 @@ function Scan (): number {
       // CHECK 2
 
       // Lets check if output name value is a string, eg: {{ 'value'
-      if (s.IsRegExp(r.StringQuotations)) {
+      if (s.IsRegExp(Regexp.StringQuotations)) {
 
         // Next call we will look for a filter value, eg: {{ 'value' |^
         state = ScanState.Filter;
@@ -340,7 +348,7 @@ function Scan (): number {
       // CHECK 3
 
       // Lets check is the value is a integer/float, eg: {{ 100 }}
-      if (s.IfRegExp(r.Number)) {
+      if (s.IfRegExp(Regexp.Number)) {
         state = ScanState.Filter;
         return TokenType.Number;
       }
@@ -348,13 +356,13 @@ function Scan (): number {
       // CHECK 4
 
       // Reference or variable name was detected, eg: {{ name }}
-      if (s.IfRegExp(r.OutputNameAlpha)) {
+      if (s.IfRegExp(Regexp.OutputNameAlpha)) {
 
         // Match captured token with a cursor value
         spec.Cursor(s.token);
 
         // Lets check if output name contains an object notation character
-        if (s.IsRegExp(r.PropertyNotation)) {
+        if (s.IsRegExp(Regexp.PropertyNotation)) {
 
           // Next call we will look for a property notation
           state = ScanState.Object;
@@ -378,7 +386,7 @@ function Scan (): number {
 
       // Lets make sure our intercepted character is valid
       // If this returns a false, we have an invalid starting tag name character
-      if (!s.IsRegExp(r.TagFirstChar)) {
+      if (!s.IsRegExp(/^[a-zA-Z0-9$_]/)) {
         error = ParseError.InvalidCharacter;
         state = ScanState.ParseError;
         return Scan();
@@ -388,7 +396,7 @@ function Scan (): number {
 
       // Lets consume the tag name identifier and then consult our
       // specification to determine the type of tag we are dealing with
-      if (s.IfRegExp(r.TagName)) {
+      if (s.IfRegExp(Regexp.TagName)) {
 
         // Lets update our specification cursor
         spec.Cursor(s.token);
@@ -494,7 +502,7 @@ function Scan (): number {
       if (pairs.length > 0) {
 
         // Rewind token to unclosed LOB and capture error
-        s.TokenRewind(pairs.shift(), r.PropertyBrackets);
+        s.TokenRewind(pairs.shift(), Regexp.PropertyBrackets);
 
         // Clear the pairs array
         while (pairs.length > 0) pairs.pop();
@@ -529,13 +537,13 @@ function Scan (): number {
     case ScanState.ObjectDotNotation:
 
       // Gets property value on object, eg: "prop" in "object.prop"
-      if (s.IfRegExp(r.OutputNameAlpha)) {
+      if (s.IfRegExp(Regexp.OutputNameAlpha)) {
         state = ScanState.Object;
         return TokenType.ObjectProperty;
       }
 
       // Ensure we have a missing property, eg: {{ object.^ }}
-      if (s.IsRegExp(r.TagCloseClear)) {
+      if (s.IsRegExp(Regexp.TagCloseClear)) {
         // Align token cursor, eg: {{ object^. }}
         s.Prev();
 
@@ -574,7 +582,7 @@ function Scan (): number {
       if (s.SkipQuotedString()) {
 
         // Detect an empty property string value, eg: "" or "   "
-        if (s.token.length === 2 || s.TokenContains(r.StringEmpty)) {
+        if (s.token.length === 2 || s.TokenContains(Regexp.StringEmpty)) {
 
           // Advance 1 step to align cursor and tokenize
           s.Advance(1);
@@ -592,7 +600,7 @@ function Scan (): number {
       }
 
       // We have a missing quotation character, eg: "prop
-      if (s.IsPrevRegExp(r.StringQuotations)) {
+      if (s.IsPrevRegExp(Regexp.StringQuotations)) {
 
         // Advance 1 step to align cursor and tokenize
         s.Advance(1);
@@ -605,7 +613,7 @@ function Scan (): number {
       }
 
       // Property is a number value, eg: object.prop[0]
-      if (s.IfRegExp(r.NumberDigit)) {
+      if (s.IfRegExp(Regexp.NumberDigit)) {
 
         // Next character should be closing bracket notation, eg ]
         state = ScanState.ObjectBracketNotationEnd;
@@ -613,7 +621,7 @@ function Scan (): number {
       }
 
       // Capture inner variable or object reference, eg: object[variable]
-      if (s.IfRegExp(r.PropertyValue)) {
+      if (s.IfRegExp(Regexp.PropertyValue)) {
 
         // Pass it back to object scan, check for any properties
         state = ScanState.Object;
@@ -649,7 +657,7 @@ function Scan (): number {
     case ScanState.Control:
 
       // Make sure the control tag is not empty, eg: {% if ^ %}
-      if (s.IsRegExp(r.TagCloseClear)) {
+      if (s.IsRegExp(Regexp.TagCloseClear)) {
         state = ScanState.GotoTagEnd;
         error = ParseError.MissingCondition;
         return TokenType.ParseError;
@@ -672,7 +680,7 @@ function Scan (): number {
 
     case ScanState.FilterIdentifier:
       // Filter identifier, lets capture, eg: {{ tag | ^filter }}
-      if (s.IfRegExp(r.FilterIdentifier)) {
+      if (s.IfRegExp(Regexp.FilterIdentifier)) {
         // Find specification for this filter
         spec.Cursor(s.token);
 
@@ -762,14 +770,14 @@ function Scan (): number {
       }
 
       // We have a missing quotation character, eg: "argument
-      if (s.IsPrevRegExp(r.StringQuotations)) {
+      if (s.IsPrevRegExp(Regexp.StringQuotations)) {
         error = ParseError.MissingQuotation;
         state = ScanState.ParseError;
         return Scan();
       }
 
       // Capture normal expression integer
-      if (s.IfRegExp(r.NumberInteger)) {
+      if (s.IfRegExp(Regexp.NumberInteger)) {
         // Filter argument accepts number, eg: {{ tag | filter: 10 }}
         if (spec.filter.Accept('integer')) {
           state = ScanState.FilterSeparator;
@@ -782,7 +790,7 @@ function Scan (): number {
       }
 
       // Capture float expression numbers
-      if (s.IfRegExp(r.NumberFloat)) {
+      if (s.IfRegExp(Regexp.NumberFloat)) {
         // Ensure we accept float numbers
         if (spec.filter.Accept('float')) {
           // Ensure number is not missing decimal
@@ -801,7 +809,7 @@ function Scan (): number {
       }
 
       // Check for boolean argument values
-      if (s.IfRegExp(r.Booleans)) {
+      if (s.IfRegExp(Regexp.Booleans)) {
         // Ensure the argument accepts a boolean value
         if (spec.filter.Accept('boolean')) {
           state = ScanState.FilterSeparator;
@@ -814,7 +822,8 @@ function Scan (): number {
       }
 
       // If we get here, we will have either a variable or reference
-      if (s.IfRegExp(r.OutputNameAlpha)) {
+      if (s.IfRegExp(Regexp.OutputNameAlpha)) {
+
         // Filter argument accepts reference
         if (spec.filter.Accept('reference')) {
           // Match captured token with a cursor value
@@ -823,7 +832,7 @@ function Scan (): number {
           // Check to to see if we are dealing with an object
           if (
             spec.TypeOfNode(NodeType.object) ||
-            s.IsNextRegExp(r.PropertyNotation)
+            s.IsNextRegExp(Regexp.PropertyNotation)
           ) {
 
             // Next call we will look for a property notation
@@ -852,7 +861,7 @@ function Scan (): number {
 
         // Capture the next character sequence and ensure its valid
         // If the true, we have is invalid character, eg {{ t | foo: bar"^ }}
-        if (!s.IsRegExp(r.FilterPipeOrClose)) {
+        if (!s.IsRegExp(Regexp.FilterPipeOrClose)) {
           s.Advance(1, true);
           error = ParseError.InvalidCharacter;
           state = ScanState.GotoTagEnd;
@@ -895,7 +904,7 @@ function Scan (): number {
         return TokenType.ParseError;
       }
 
-      error = s.IfRegExp(r.Spacing)
+      error = s.IfRegExp(Regexp.Spacing)
         ? ParseError.InvalidCharacter
         : ParseError.MissingFilterArgument;
 
@@ -916,7 +925,7 @@ function Scan (): number {
       // CHECK NUMBER
 
       // Condition is a integer or float number value, eg: {% if 100 %}
-      if (s.IfRegExp(r.Number)) {
+      if (s.IfRegExp(Regexp.Number)) {
         state = ScanState.ControlOperator;
         return TokenType.ControlCondition;
       }
@@ -924,7 +933,7 @@ function Scan (): number {
       // CHECK STRING
 
       // Condition is a string value, eg: {% if 'foo' %}
-      if (s.IsRegExp(r.StringQuotations)) {
+      if (s.IsRegExp(Regexp.StringQuotations)) {
 
         // If the condition value is a valid string
         if (s.SkipQuotedString()) {
@@ -941,7 +950,7 @@ function Scan (): number {
       // CHECK BOOLEAN
 
       // Lets check for boolean condition, eg {% if foo == true %}
-      if (s.IfRegExp(r.Booleans)) {
+      if (s.IfRegExp(Regexp.Booleans)) {
         state = ScanState.ControlOperator;
         return TokenType.Boolean;
       }
@@ -949,7 +958,7 @@ function Scan (): number {
       // CHECK ALPHA NUMERIC
 
       // Lets check for a reference variable name or object
-      if (s.IfRegExp(r.ControlCondition)) {
+      if (s.IfRegExp(Regexp.ControlCondition)) {
 
         // Lets consult the specification to see if we know about the value
         // If we know about the value, we will validate it accordingly
@@ -961,7 +970,7 @@ function Scan (): number {
 
           // We have set the specification, lets now determine
           // if the value contains object notation and proceed accordingly
-          if (s.IsRegExp(r.PropertyNotation)) {
+          if (s.IsRegExp(Regexp.PropertyNotation)) {
             cache = ScanState.ControlOperator;
             state = ScanState.Object;
             return TokenType.Object;
@@ -992,10 +1001,10 @@ function Scan (): number {
       cache = ScanCache.Reset;
 
       // Lets validate the control operators provided, eg {% if foo ^== %}
-      if (s.IfRegExp(r.ControlOperators)) {
+      if (s.IfRegExp(/^(?:==|!=|>=|<=|<|>|\b(?:and|or)\b)/)) {
 
         // Lets ensure that a comparison value was passed proceeding the operators
-        if (s.IsRegExp(r.TagCloseClear)) {
+        if (s.IsRegExp(Regexp.TagCloseClear)) {
           state = ScanState.GotoTagEnd;
           error = ParseError.MissingCondition;
           return TokenType.ParseError;
@@ -1008,7 +1017,7 @@ function Scan (): number {
 
       // If we get here no further conditions or comparison values
       // Lets now attempt to close the tag and ensure we have a clearance
-      if (s.IsRegExp(r.TagCloseClear)) {
+      if (s.IsRegExp(Regexp.TagCloseClear)) {
         state = ScanState.BeforeStartTagClose;
         return Scan();
       }
@@ -1020,7 +1029,7 @@ function Scan (): number {
     case ScanState.VariableIdentifier:
 
       // We will consume the variable keyword identifier, eg: {% assing var^ %}
-      if (s.IfRegExp(r.TagKeyword)) {
+      if (s.IfRegExp(Regexp.TagKeyword)) {
 
         // TODO: HANDLE CAPTURES
 
@@ -1048,7 +1057,7 @@ function Scan (): number {
     case ScanState.VariableAssignment:
 
       // Variable name keyword identifier can be wild
-      if (s.IfRegExp(r.TagNameWild)) {
+      if (s.IfRegExp(Regexp.TagNameWild)) {
         state = ScanState.GotoTagEnd;
         return TokenType.VariableKeyword;
       }
@@ -1134,7 +1143,7 @@ function Scan (): number {
       }
 
       // Tag is closed so we will consume, eg: }} or %}
-      if (s.IfRegExp(r.DelimitersClose)) {
+      if (s.IfRegExp(/^[%}]\}/)) {
 
         // Start tag close, eg: {% tag %}^
         if (state === ScanState.BeforeStartTagClose) {

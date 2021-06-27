@@ -1,45 +1,37 @@
 import { ParseError } from 'lexical/errors';
 import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
+import { NodeKind } from 'lexical/kind';
 import { INode } from 'tree/nodes';
 import { Position, Range } from 'vscode-languageserver-types';
 
 export class Errors {
 
+  public node: INode
   public issues: number
-  public cursor: IDiagnostic
-  public diagnostics: IDiagnostic[] = []
+  public syntactic: Set<INode> = new Set()
+  public entries: IDiagnostic[] = []
 
-  public create (error: ParseError, node: INode) {
-
-    const diagnostic = Diagnostics[error];
-
-    diagnostic.range = node.range;
-    diagnostic.data.offset = node.start;
-
-    node.errors.push(this.diagnostics.length);
-
-    this.issues = this.diagnostics.push(diagnostic);
-
-  }
-
-  public report (error: ParseError, node: INode) {
+  public add (error: ParseError): (node: INode) => void {
 
     const diagnostic = Diagnostics[error];
 
-    diagnostic.data.offset = node.start;
-    node.errors.push(this.diagnostics.length);
+    return ({
+      range,
+      start,
+      errors
+    }: INode) => {
 
-    this.issues = this.diagnostics.push(diagnostic);
+      errors.push(this.entries.length);
 
-    return diagnostic;
+      this.entries.push({
+        ...diagnostic,
+        range,
+        data: {
+          offset: start
+        }
+      });
 
-  }
-
-  public assert (range: Range, offset: number) {
-
-    this.cursor.range = range;
-    this.cursor.data.offset = offset;
-    this.cursor = undefined;
+    };
 
   }
 
@@ -57,13 +49,13 @@ export class Errors {
 
   public map (at: number[]) {
 
-    if (at.length > 0) return at.map(e => this.diagnostics[e]);
+    if (at.length > 0) return at.map(e => this.entries[e]);
 
     return at;
   }
 
   public get (
-    at: number | number[] = this.diagnostics.length - 1,
+    at: number | number[] = this.entries.length - 1,
     fn?: (undefined | ((
       errors: IDiagnostic[],
       error: IDiagnostic,
@@ -72,11 +64,11 @@ export class Errors {
   ) {
 
     if (typeof at === 'number') {
-      if (fn === undefined) return this.diagnostics[at];
-      return fn(this.diagnostics, this.diagnostics[at], at);
+      if (fn === undefined) return this.entries[at];
+      return fn(this.entries, this.entries[at], at);
     }
 
-    for (const e of at) fn(this.diagnostics, this.diagnostics[e], e);
+    for (const e of at) fn(this.entries, this.entries[e], e);
 
   }
 

@@ -133,27 +133,27 @@ export const TagNameWild = /^[a-zA-Z0-9$_]+/;
  *
  * Captures the "end" word boundary in an end tag.
  */
-export const TagEndKeyword = /^\bend/;
+export const TagEndKeyword = /^\bend/i;
 
 /**
- * `^-?[\s\t\r\n\f]*?\bend[a-zA-Z]`
+ * `^-?\s*\bend`
  *
  * ---
  *
  * Peeks the expression to detect whether we are dealing with
  * an end tag or not. Must be called at character sequencing level.
  */
-export const TagIsEnd = /^-?[\s\t\r\n\f]*?\bend/;
+export const TagIsEnd = /^-?\s*\bend/i;
 
 /**
- * `^[\s\t\r\n\f]*?[-%}]`
+ * `^\s*-?[%}]}`
  *
  * ---
  *
  * Captures a clear closing delimiter path, ensuring no
  * invalid characters located between
  */
-export const TagCloseClear = /^[\s\t\r\n\f]*?[-%}]/;
+export const TagCloseClear = /^\s*-?[%}]}/;
 
 /* -------------------------------------------- */
 /* INNER CONTENT SKIPS                          */
@@ -166,7 +166,7 @@ export const TagCloseClear = /^[\s\t\r\n\f]*?[-%}]/;
  *
  * Looks for the comment end tag.
  */
-export const CommentTagEnd = /{%-?\s*\bendcomment/;
+export const CommentTagEnd = /{%-?\s*\bendcomment/i;
 
 /**
  * `/{%-?\s*\bendraw/;`
@@ -175,7 +175,7 @@ export const CommentTagEnd = /{%-?\s*\bendcomment/;
  *
  * Looks for the raw end tag.
  */
-export const RawTagEnd = /{%-?\s*\bendraw/;
+export const RawTagEnd = /{%-?\s*\bendraw/i;
 
 /* -------------------------------------------- */
 /* OBJECT TAG EXPRESSIONS                       */
@@ -208,7 +208,7 @@ export const OutputNameAlpha = /^[a-zA-Z0-9$_]+/;
  * Detects whether the next character is a dot or opening bracket.
  * If detected indicates a property value.
  */
-export const PropertyNotation = /^[\s\t\r\n\f]*?[[.]/;
+export const PropertyNotation = /^\s{0,}[[.]/;
 
 /**
  * `^[a-zA-Z0-9$\-_]+`
@@ -249,7 +249,7 @@ export const StringQuotations = /^['"]/;
  *
  * Empty String or a string containing just whitespace
  */
-export const StringEmpty = /^["']\s*?["']/;
+export const StringEmpty = /^["']\s*["']/;
 
 /* -------------------------------------------- */
 /* SPACING EXPRESSIONS                          */
@@ -262,7 +262,7 @@ export const StringEmpty = /^["']\s*?["']/;
  *
  * Greedy Capture of both whitespace and newline characters.
  */
-export const Spacing = /^[\s\t\r\n\f]+/;
+export const Spacing = /^\s*/;
 
 /**
  * `^[\n\r\f]`
@@ -337,26 +337,26 @@ export const NumberFloat = /^-?\d[\d.]+/;
 export const FilterIdentifier = /^[^_][a-zA-Z_]+/;
 
 /**
- * `^(?:\||-?[%}])`
+ * `^(\||-?[%}])`
  *
  * ---
  *
  * Captures a pipe filter character or closing delimiters
  */
-export const FilterPipeOrClose = /^(?:\||-?[%}])/;
+export const FilterPipeOrClose = /^(\||-?[%}])/;
 
 /* -------------------------------------------- */
 /* BOOLEAN EXPRESSION                           */
 /* -------------------------------------------- */
 
 /**
- * `^\b(?:true|false|nil)\b`
+ * `^\b(true|false|nil)\b`
  *
  * ---
  *
  * Captures word bounded "true", "false" or "nil" boolean
  */
-export const Booleans = /^\b(?:true|false|nil)\b/;
+export const Booleans = /^\b(true|false|nil)\b/i;
 
 /**
  * `^\btrue\b`
@@ -365,7 +365,7 @@ export const Booleans = /^\b(?:true|false|nil)\b/;
  *
  * Captures word bounded "true"  boolean
  */
-export const BooleanTrue = /^\btrue\b/;
+export const BooleanTrue = /^\btrue\b/i;
 
 /**
  * `^\bin\b`
@@ -374,7 +374,7 @@ export const BooleanTrue = /^\btrue\b/;
  *
  * Captures the `in` operator
  */
-export const IterationOperator = /^\bin\b/;
+export const IterationOperator = /^in/i;
 
 /**
  * `^\b(?:false|nil)\b`
@@ -383,7 +383,7 @@ export const IterationOperator = /^\bin\b/;
  *
  * Captures word bounded "false" or "nil" boolean
  */
-export const BooleanFalse = /^\b(?:false|nil)\b/;
+export const BooleanFalse = /^\b(false|nil)\b/i;
 
 /* -------------------------------------------- */
 /* CONTROL TAG EXPRESSIONS                      */
@@ -405,7 +405,7 @@ export const ControlCondition = /^[a-zA-Z0-9\-$_]+/;
  *
  * Captures Standard Liquid control operators.
  */
-export const ControlOperators = /^(?:==|!=|>=|<=|<|>|\b(?:and|or)\b)/;
+export const ControlOperators = /^(?:==|!=|>=|<=|<|>|\b(and|or)\b)/i;
 
 /**
  * `^(?:==|!=|[>=]{2}|[<>]|\b(?:contains)\b)`
@@ -414,7 +414,7 @@ export const ControlOperators = /^(?:==|!=|>=|<=|<|>|\b(?:and|or)\b)/;
  *
  * Captures Shopify Liquid variation control operators.
  */
-export const ControlOperatorsShopify = /^\b(?:contains)\b/;
+export const ControlOperatorsShopify = /^(contains)/i;
 
 /**
  * `\b(?:and|or)\b`
@@ -424,29 +424,22 @@ export const ControlOperatorsShopify = /^\b(?:contains)\b/;
  * Captures Join operator keyword values used to combine
  * conditional control
  */
-export const ControlJoins = /\b(?:and|or)\b/;
+export const ControlJoins = /(and|or)/i;
 
 /* -------------------------------------------- */
 /* HTML TAG EXPRESSIONS                         */
 /* -------------------------------------------- */
 
 /**
- * `^[a-zA-Z]+`
+ * `^[_:\w][_:\w-.\d]*`
  *
  * ---
  *
  * HTML Tag name identifier
- */
-export const HTMLTagName = /^[a-zA-Z]+/;
-
-/**
- * `^[a-zA-Z0-9-]+`
  *
- * ---
- *
- * HTML Tag name identifier
+ * - Regex Expression lifted from vscode-html-languageservice
  */
-export const HTMLTagAttribute = /^[a-zA-Z0-9-]+/;
+export const HTMLTagName = /^[_:\w][_:\w-.\d]*/;
 
 /**
  * `^[^\s"'>]+`
@@ -455,58 +448,98 @@ export const HTMLTagAttribute = /^[a-zA-Z0-9-]+/;
  *
  * HTML End Tag name identifier
  */
-export const HTMLTagEnd = /^[^\s"'>]+/;
+export const HTMLTagEndName = /^[^\s"'>]+/;
+
+/**
+ * `^\/>`
+ *
+ * ---
+ *
+ * HTML Self close character sequence
+ */
+export const HTMLSelfClose = /^\/>/;
+
+/**
+ * `^!doctype`
+ *
+ * ---
+ *
+ * HTML !DOCTYPE tag name
+ */
+export const HTMLDoctype = /^!doctype/i;
 
 /**
  * `^\bscript`
  *
  * ---
  *
- * HTML Script Tag
+ * HTML script tag Name
  */
-export const HTMLScriptEmbed = /^\bscript/;
+export const HTMLScriptName = /^\bscript/i;
 
 /**
  * `^\bstyle`
  *
  * ---
  *
- * HTML Style Tag
+ * HTML style tag name
  */
-export const HTMLStyleEmbed = /^\bstyle/;
+export const HTMLStyleName = /^\bstyle/i;
 
 /**
- * `^\b(?:style|script)`
+ * `^[^\s"'{%></=\x00-\x0F\x7F\x80-\x9F]+`
  *
  * ---
  *
- * HTML Style Tag
+ * HTML Tag Attribute
+ *
+ * - Regex Expression lifted from vscode-html-languageservice
  */
-export const HTMLEmbedded = /^\b(?:style|script)/;
+export const HTMLAttribute = /^[^\s"'{%></=\x00-\x0F\x7F\x80-\x9F]+/;
 
 /**
- * `/(module|(text|application)\/(java|ecma)script|text\/babel)/`
+ * `^[^\s"'\x60=<>]+`
  *
  * ---
  *
- * HTML Script Attributes
+ * HTML Non-string quoted attribute value
+ *
+ * - Regex Expression lifted from vscode-html-languageservice
  */
-export const HTMLJavaScript = /(module|(text|application)\/(java|ecma)script|text\/babel)/;
+export const HTMLAttributeValue = /^[^\s"'\x60=<>]+/;
 
 /**
- * `/(module|(text|application)\/(java|ecma)script|text\/babel)/`
+ * `(module|(text|application)\/(java|ecma)script|text\/babel)`
  *
  * ---
  *
- * HTML JSON Attributes
+ * HTML script tag attributes
+ *
+ * - Regex Expression lifted from vscode-html-languageservice
  */
-export const HTMLJSON = /application\/(?:ld\+)?json/;
+export const HTMLAttributeJS = /(module|(text|application)\/(java|ecma)script|text\/babel)/i;
 
 /**
- * `/(area|base|br|col|embed|hr|img|input)/`
+ * `application\/(?:ld\+)?json`
  *
  * ---
  *
- * HTML Void Tags
+ * HTML json script tag attributes
  */
-export const HTMLVoidTags = /\b(area|b(ase|r)|col|embed|hr|i(mg|nput)|keygen|link|me(nuitem|ta)|param|source|track|wbr)\b/;
+export const HTMLAttributeJSON = /application\/(ld\+)?json/i;
+
+/**
+ * `(area|br|base|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)`
+ *
+ * ---
+ *
+ * HTML Void tags
+ *
+ * @todo
+ * Ensure all void tags are covered
+ */
+export const HTMLVoidTags = (
+
+  /(area|br|base|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)/i
+
+);

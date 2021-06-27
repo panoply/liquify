@@ -149,6 +149,7 @@ export const enum TokenType {
   HTMLStartTagName,
   HTMLTagName,
   HTMLStartTagClose,
+  HTMLVoidTagOpen,
   HTMLVoidTagName,
   HTMLVoidTagClose,
   HTMLEndTagOpen,

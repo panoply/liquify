@@ -49,8 +49,13 @@ test('FullDocument Parse', t => {
   // console.log(Stringify(ast.root, null, 2));
 
   console.log(ast);
+  console.log(ast.getHTMLNodes());
 
-  console.log(...ast.getHTMLNodes());
+  // console.log(...ast.diagnostics);
+
+  for (const n of ast.errors) console.log(n, ast.getText(n.range));
+
+  // console.log(ast.nodes[0].getToken());
 
   /* parser.update({
     textDocument: {

@@ -1,4 +1,37 @@
+<div class="foo">
+  <nav class="bar"
 
+    {% if grandparent %}
+
+      {% assign var = 'hello world' %}
+
+      {% unless first %}
+
+        {% if parent %}
+
+          {{ foo }}
+          {{ faz }}
+
+
+
+          {% unless nested %}
+            {{ saz }}
+
+              <ul>
+              <li>{{ baz }}</li>
+              </ul>
+
+            {{ laz }}
+          {% endunless %}
+
+        {% endfi %}
+
+      {% endnless %}
+
+    {% endi %}
+
+  </nav>
+</div>
     /**
      * Increment
      *

@@ -49,6 +49,7 @@ export class INode {
 
       if (this.kind === NodeKind.HTML) {
         this.attributes = {};
+        this.type = inode;
       } else {
         this.objects = {};
         this.filters = {};
@@ -57,8 +58,6 @@ export class INode {
       if (inode === Type.Pair) {
         this.closed = false;
         this.singular = false;
-      } else {
-        this.closed = true;
       }
     }
   }
@@ -70,13 +69,20 @@ export class INode {
   public index: number;
   public kind: NodeKind = NodeKind.Liquid
   public offsets: [number?, number?, number?, number?] = [];
-  public type: Type.Root | NodeType
-  public closed: boolean = true
+  public type: Type | NodeType
+  public closed: boolean = false
   public singular: boolean;
   public objects?: object;
   public attributes?: object;
   public filters?: object;
   public languageId?: NodeLanguage;
+
+  /**
+   * Returns diagnostics existing on this node
+   */
+  get diagnostics () {
+    return this.errors.map(e => document.errors[e]);
+  }
 
   /**
    * Returns the starting offset index of this node
@@ -90,6 +96,13 @@ export class INode {
    */
   get end () {
     return this.offsets[this.offsets.length - 1];
+  }
+
+  /**
+   * Returns the ending offset index of this node
+   */
+  set end (offset: number) {
+    this.offsets.splice(this.offsets.length - 1, 1, offset);
   }
 
   /**
@@ -136,7 +149,7 @@ export class INode {
   /**
    * Returns raw string content token of the node.
    */
-  public getToken (token: Token): string {
+  public getToken (token?: Token): string {
 
     if (token === Token.Start || this.singular) {
       return document.getText(this.offsets[0], this.offsets[1]);
