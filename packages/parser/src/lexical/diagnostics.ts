@@ -6,7 +6,10 @@ import { Diagnostic, Range } from 'vscode-languageserver-types';
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 export interface IDiagnostic extends Omit<Diagnostic, 'range'> {
-  range?: Range
+  range?: Range | {
+    start: number,
+    end: number
+  }
   data?: {
     offset?: number
   }

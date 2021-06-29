@@ -35,6 +35,16 @@ export let size: number = 0;
 /* FUNCTIONS                                    */
 /* -------------------------------------------- */
 
+export let start: number = 0;
+export let end: number = size;
+
+export function Increment (_start: number, _end: number) {
+
+  start = _start;
+  end = _end;
+
+}
+
 /**
  * Creates a stream
  *
@@ -475,7 +485,7 @@ export function SkipQuotedString (consume?: number | number[] | true): boolean {
  *
  * > - `cursor` Moves to current index
  * > - `offset` Moves to position before matched index
- * > - `token` Optionally tokenize the match
+ * > - `token` Optionally tokenize the match, defaults to `undefined`
  */
 export function ConsumeUntil (regex: RegExp, tokenize?: boolean): boolean {
 
@@ -631,6 +641,57 @@ function WhileChar (condition: Function): boolean {
   }
 
   return false;
+}
+
+/**
+ * Reverse Whitespace
+ *
+ * Reverses the previous consumed whitespace. In some cases the
+ * stream will move forward before we have processed our token which
+ * throws the cursor and offset locations out of sync. This is likely
+ * to occur when we encounter a parse error.
+ *
+ * The function will reverse to the stream to last known character
+ * before whitespace was consumed. It uses the current cursor location
+ * and walks backwards until a non-whitespace character is found.
+ *
+ *
+ * ---
+ *
+ * **OPTIONAL MODIFIER**
+ *
+ * > - `cursor` Moves cursor to previous match
+ * > - `offset` Moves offset to previous match
+ *
+ * ---
+ *
+ * @returns {number|boolean}
+ * If tokenize parameter is `false` the offset index is returned. If
+ * tokenize is `true` a boolean `true` is returned.
+ */
+export function ReverseWhitespace (tokenize: boolean = true): number | true {
+
+  const pos = (offset >= cursor ? cursor : offset) - spaces;
+
+  if (!tokenize) return pos;
+
+  let rev: number;
+
+  while (rev--) {
+    if (
+      source.charCodeAt(rev) !== WSP ||
+      source.charCodeAt(rev) !== TAB ||
+      source.charCodeAt(rev) !== NWL ||
+      source.charCodeAt(rev) !== LFD ||
+      source.charCodeAt(rev) !== LFD
+    ) break;
+  }
+
+  cursor = rev;
+  offset = pos;
+
+  return true;
+
 }
 
 /**

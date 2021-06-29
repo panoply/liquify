@@ -1,12 +1,39 @@
-<div class="foo">
-<main
-  <nav class="bar"
+<div class="one">
+  {% unless bar %}
     <ul>
-    </li>
-      <li><img src=""</li>
-      </li>
-      <li></li>
-      <li></li
-  </nav>
+      <li>{{ foo }}</li>
+      <li>{{ bar }}</li>
+      <li>{{ baz }}</li>
+      <li>{{ ban }}</li>
+      <li>{{ bae }}</li>
+      <li>{{ baw }}</li>
+    </ul>
+  {% endunless %}
 </div>
 
+
+<div class="one">
+  {% unless bar %}
+    <ul>
+      <li>{{ foo }}</li>
+      <li>{{ bar }}</li>
+      <li>{{ baz }}</li>
+      <li>{{ ban }}</li>
+      <li>{{ bae }}</li>
+      <li>{{ baw }}</li>
+    </ul>
+  {% endunless %}
+</div>
+
+<div class="one">
+  {% unless bar %}
+    <ul>
+      <li>{{ foo }}</li>
+      <li>{{ bar }}</li>
+      <li>{{ baz }}</li>
+      <li>{{ ban }}</li>
+      <li>{{ bae }}</li>
+      <li>{{ baw }}</li>
+    </ul>
+  {% endunless %}
+</div>

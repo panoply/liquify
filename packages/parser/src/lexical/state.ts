@@ -8,11 +8,13 @@ export const enum ScanCache {
   SkipClose,
   TrimRight,
   GotoEnd,
+  UnterminatedDelimiter,
   Tokenize,
   StringOpen,
   StringClose,
   HTMLToken,
   HTMLVoidTag,
+  RequireParent,
   BracketNotation,
   BracketNotationObject,
   BracketNotationString,
@@ -646,6 +648,10 @@ export const enum ScanState {
   /* -------------------------------------------- */
   /* HTML TAGS                                    */
   /* -------------------------------------------- */
+
+  HTMLLiquidAttribute,
+  HTMLLiquidAttributeEnd,
+
 
   /**
    * `<^`

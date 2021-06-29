@@ -78,7 +78,7 @@ export class LiquidService {
    */
   async doValidation (document: IAST): Promise<PublishDiagnosticsParams> {
 
-    const embeds = document.getEmbeds();
+    /* const embeds = document.getEmbeds();
 
     if (embeds) {
       for (const node of embeds) {
@@ -86,12 +86,12 @@ export class LiquidService {
         const diagnostics = await this.mode[node.language].doValidation(node);
         if (diagnostics) document.errors.push(...diagnostics);
       }
-    }
+    } */
 
     return {
       uri: document.uri,
       version: document.version,
-      diagnostics: document.errors
+      diagnostics: document.diagnostics
     };
 
   }

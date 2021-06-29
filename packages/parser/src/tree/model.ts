@@ -3,7 +3,7 @@ import { INode } from 'tree/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { TextDocumentItem, VersionedTextDocumentIdentifier } from 'vscode-languageserver-types';
 
-const model: Map<string, IAST> = new Map();
+export const model: Map<string, IAST> = new Map();
 
 /**
  * Current Text Document

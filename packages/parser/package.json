@@ -36,7 +36,7 @@
         "configFile": false
       }
     },
-    "files": ["test/index.js"],
+    "files": ["test/develop.test.js"],
     "concurrency": 5
   },
   "dependencies": {

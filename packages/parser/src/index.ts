@@ -2,9 +2,10 @@ import { Variation, VariationEntries, IEngine } from '@liquify/liquid-language-s
 import { VersionedTextDocumentIdentifier, Range } from 'vscode-languageserver-types';
 import { Engine, variation } from 'parser/specs';
 import { parse } from 'parser/parser';
-import { create, update, get, remove } from 'tree/model';
+import { create, update, get, remove, model } from 'tree/model';
 import { IAST } from './tree/ast';
 import { Config, IConfig } from './config';
+import { INode, Type } from './tree/nodes';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
@@ -55,6 +56,22 @@ export class LiquidParser {
 
   }
 
+  parse (text: string) {
+
+    if (model.has('raw')) model.delete('raw');
+
+    return parse(
+      create(
+        {
+          uri: 'raw',
+          languageId: 'raw',
+          version: 1,
+          text
+        }
+      )
+    );
+  }
+
   /**
    * Executes a full document scan. Call this method to create
    * a document reference and perform a full text scan.
@@ -68,9 +85,7 @@ export class LiquidParser {
     }
   ): IAST {
 
-    return parse(
-      create(textDocument)
-    );
+    return parse(create(textDocument));
   }
 
   get (uri: string): IAST {

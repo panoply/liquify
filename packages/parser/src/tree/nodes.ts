@@ -1,16 +1,18 @@
+/* eslint no-unused-vars: "off" */
+
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
 import { NodeType } from 'lexical/types';
 import { NodeLanguage } from 'lexical/language';
-import { IDiagnostic } from 'lexical/diagnostics';
 import { document } from 'tree/model';
-import { findFirst, createObject } from 'parser/utils';
-import { cursor } from 'parser/specs';
+import { findFirst } from 'parser/utils';
+import inRange from 'lodash.inrange';
 
 export const enum Type {
   Root,
   Pair,
-  Void
+  Void,
+  Start
 }
 
 export const enum Token {
@@ -28,6 +30,21 @@ export const enum Token {
  */
 export class INode {
 
+  public errors: number[] = [];
+  public tag: string | undefined;;
+  public root: number;
+  public parent: INode
+  public children: INode[] = [];
+  public index: number;
+  public kind: NodeKind = NodeKind.Liquid
+  public offsets: [number?, number?, number?, number?] = [];
+  public singular: boolean;
+  public objects?: object;
+  public attributes?: object;
+  public filters?: object;
+  public type: Type | NodeType
+  public languageId?: NodeLanguage;
+
   constructor (
     inode?: Type,
     start?: number,
@@ -39,13 +56,17 @@ export class INode {
 
       this.offsets.push(0, document.size);
       this.children = [];
-      this.type = Type.Root;
+      this.type = inode;
+      this.tag = 'ROOT';
 
     } else {
 
       this.offsets.push(start);
-      this.kind = kind;
       this.parent = parent;
+
+      this.kind = kind;
+      this.index = parent.children.length;
+      this.singular = true;
 
       if (this.kind === NodeKind.HTML) {
         this.attributes = {};
@@ -56,26 +77,10 @@ export class INode {
       }
 
       if (inode === Type.Pair) {
-        this.closed = false;
         this.singular = false;
       }
     }
   }
-
-  public errors: number[] = [];
-  public tag: string | undefined;;
-  public parent: INode
-  public children: INode[] = [];
-  public index: number;
-  public kind: NodeKind = NodeKind.Liquid
-  public offsets: [number?, number?, number?, number?] = [];
-  public type: Type | NodeType
-  public closed: boolean = false
-  public singular: boolean;
-  public objects?: object;
-  public attributes?: object;
-  public filters?: object;
-  public languageId?: NodeLanguage;
 
   /**
    * Returns diagnostics existing on this node
@@ -99,7 +104,8 @@ export class INode {
   }
 
   /**
-   * Returns the ending offset index of this node
+   * Provide a offset reset on the last offset. This helps
+   * align parse errors
    */
   set end (offset: number) {
     this.offsets.splice(this.offsets.length - 1, 1, offset);
@@ -127,7 +133,10 @@ export class INode {
    * `null` is returned.
    */
   get nextSibling (): INode | null {
-    return this.parent?.children?.[this.index + 1] || null;
+
+    return this.parent?.type === Type.Root
+      ? (document.nodes[this.root + 1].children[0] || null)
+      : (this.parent?.children?.[this.index + 1] || null);
   }
 
   /**
@@ -147,67 +156,50 @@ export class INode {
   }
 
   /**
-   * Returns raw string content token of the node.
+   * Validates a node tag and kind. This is used by the parser
+   * to detect parent nodes.
    */
-  public getToken (token?: Token): string {
+  public isSameNode (tag: string, kind: NodeKind) {
 
-    if (token === Token.Start || this.singular) {
-      return document.getText(this.offsets[0], this.offsets[1]);
+    if (this.tag === undefined && this.kind === undefined) {
+      return tag === undefined && kind === undefined;
     }
-
-    if (!this.singular && this.closed) {
-
-      if (token === Token.Outer) {
-        return document.getText(this.start, this.end);
-      }
-
-      if (token === Token.Inner) {
-        return document.getText(this.offsets[1], this.offsets[2]);
-      }
-
-      if (token === Token.Ender) {
-        return document.getText(this.offsets[2], this.offsets[3]);
-      }
-    }
-
-    return this.getToken(Token.Outer);
-
-  }
-
-  public isSameTag (tagInLowerCase: string | undefined) {
-
-    if (this.tag === undefined) return tagInLowerCase === undefined;
 
     return (
-      tagInLowerCase !== undefined &&
-      this.tag.length === tagInLowerCase.length &&
-      this.tag.toLowerCase() === tagInLowerCase
+      tag !== undefined &&
+      kind !== undefined &&
+      this.tag !== undefined &&
+      this.tag === tag &&
+      this.kind === kind
     );
 
   }
 
-  public getNodeBefore (offset: number): INode {
+  /**
+   * Returns raw string content token of the node.
+   */
+  public getToken (offset: number = document.cursor): string {
 
-    const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
-
-    if (node >= 0) {
-
-      const child = this.children[node];
-
-      if (offset > child.start) {
-        if (offset < child.end) return child.getNodeBefore(offset);
-        const { lastChild } = child;
-        if (lastChild && lastChild.end === child.end) return child.getNodeBefore(offset);
-        return child;
-      }
+    if (inRange(offset, this.offsets[0], this.offsets[1])) {
+      return this.getToken(Token.Start);
     }
 
-    return this.type !== Type.Root ? this : this.firstChild || this;
+    if (inRange(offset, this.offsets[1], this.offsets[2])) {
+      return this.getToken(Token.Inner);
+    }
+
+    if (inRange(offset, this.offsets[2], this.offsets[3])) {
+      return this.getToken(Token.Ender);
+    }
 
   }
 
   /**
-   * Returns a node located the provided location offset index.
+   * Returns node at the provided offset location.
+   * Use the AST `getNodeAt()` method to convert from
+   * a position to offset and return this method.
+   *
+   * - Lifted from vscode-html-languageservice
    */
   public getNodeAt (offset: number): INode {
 

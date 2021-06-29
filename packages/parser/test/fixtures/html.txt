@@ -1,0 +1,29 @@
+
+WILL HANDLE ERRORS
+
+<div class="foo">
+  <nav class="bar"
+    <ul>
+      <li><img src=""</li>
+      </li>
+      <li></li>
+      <li></li
+  </nav>
+</div>
+<main>
+
+<div class="foo">
+  <ul>
+    <li>{{ foo }}</li>
+    <li>{{ bar }}</li>
+  </ul>
+</div>
+
+  <div class="foo">
+    {% unless bar %}
+      <ul>
+        <li>{{ foo }}</li>
+        <li>{{ bar }}</li>
+      </ul>
+    {% endunless %}
+  </div>

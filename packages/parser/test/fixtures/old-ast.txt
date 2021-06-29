@@ -2,13 +2,12 @@ import inRange from 'lodash.inrange';
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 import { NodeType } from 'lexical/types';
 import { NodeKind } from 'lexical/kind';
-import { NWL, CAR } from 'lexical/characters';
 import { ParseError } from 'lexical/errors';
 import { Config } from 'config';
 import * as context from 'tree/context';
 import * as s from 'parser/stream';
 import { INode } from 'tree/nodes';
-import { GetFormedRange, findFirst, binaryIndex, binarySearch } from 'parser/utils';
+import { GetFormedRange, findFirst, searchTree, binarySearch } from 'parser/utils';
 import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
 import { Errors } from 'tree/errors';
 
@@ -50,9 +49,6 @@ export class IAST {
     this.version = version;
     this.content = s.Create(content);
     this.lines = s.ComputeLineOffsets(this.content, true);
-
-    s.Increment(0, s.size);
-
   }
 
   /**
@@ -66,11 +62,6 @@ export class IAST {
   get nodes (): INode[] { return this.root.children; };
 
   /**
-   * The error diagnostics consumed by LSP
-   */
-  get diagnostics () { return [ ...this.errors ]; }
-
-  /**
    * Line offsets for the document
    */
   private lines: number[] | undefined
@@ -79,13 +70,25 @@ export class IAST {
    * The cursor offset index, which is generated from
    * a start and end range position each incremental parse.
    */
-  public cursor: number = NaN;
+  private cursor: number = NaN;
 
   /**
    * List of parsing errors and validations
    * encountered while scanning the document.
    */
   public errors: IDiagnostic[] = []
+
+  /**
+   * List of indexes where embedded nodes
+   * exist on the tree
+   */
+  public embeds: number[] = [];
+
+  /**
+   * List of indexes where comment nodes
+   * exist on the tree
+   */
+  public comments: number[] = [];
 
   /**
    * List of indexes where embedded nodes
@@ -103,23 +106,28 @@ export class IAST {
    * Returns the node at the current cursor location or null
    * if the cursor is not located within a node on the tree.
    */
-  public node: INode;
+  public node: INode = null;
 
   /**
-   * Error Reporter. Generates the diagnostics which are
-   * consumed within LSP.
+   * Returns the node at the current cursor location or null
+   * if the cursor is not located within a node on the tree.
    */
+  public documents: {
+
+    html: TextDocument,
+    css: TextDocument[],
+    json: TextDocument[]
+
+  } = Object.create(null);
+
   public report (error: ParseError): (node: INode) => void {
 
-    const diagnostic = { ...Diagnostics[error] };
+    const diagnostic = Diagnostics[error];
 
-    return ({ errors, range }: INode) => {
+    return ({ errors, range, offsets: [ offset ] }: INode) => {
 
       errors.push(this.errors.length);
-
-      diagnostic.range = range;
-
-      this.errors.push(diagnostic);
+      this.errors.push({ ...diagnostic, range, data: { offset } });
 
     };
   }
@@ -280,6 +288,18 @@ export class IAST {
   /* -------------------------------------------- */
 
   /**
+   * Executes a reset on tracked nodes and data within the AST.
+   * Used when executing a full document parse.
+   */
+  private clear () {
+    this.embeds = [];
+    this.diagnostic = [];
+    this.nodes = [];
+    this.comments = [];
+    context.reset();
+  }
+
+  /**
    * **INCREMENTAL TEXT UPDATE**
    *
    * Updates the document content string and line offsets
@@ -304,11 +324,10 @@ export class IAST {
       text: string
     }[],
     version: number
-  ): string {
+  ) {
 
     this.cursor = NaN;
     this.version = version;
-    this.errors = [];
 
     /* -------------------------------------------- */
     /* CONTENT UPDATE                               */
@@ -355,17 +374,72 @@ export class IAST {
 
     }
 
-    this.node = this.root.getNodeAt(this.cursor);
+    s.Create(this.content);
 
-    return s.Create(this.content);
+    /* -------------------------------------------- */
+    /* AST UPDATE                                   */
+    /* -------------------------------------------- */
 
+    let curr: number = 0;
+    let prev: number = 0;
+
+    for (let i = 0; i < this.nodes.length; i++) {
+
+      if (i > 0) prev = this.nodes[i - 1].getRoot().start;
+
+      if (this.nodes[i].end > this.cursor) {
+        curr = this.nodes[i].root;
+        break;
+      }
+    }
+
+    // console.log(curr, this.nodes[curr]);
+
+    if (curr === 0 || !this.nodes[curr]) return this.clear();
+
+    const node = this.nodes[curr];
+
+    // console.log(node);
+    // console.log(this.content.slice(0, prev));
+
+    if (this.diagnostic.length > 0) {
+
+      const slice = this.diagnostic.findIndex(({
+        data: {
+          offset
+        }
+      }) => inRange(
+        offset,
+        prev,
+        s.size
+      ));
+
+      if (slice >= 0) this.diagnostic.splice(slice);
+
+    }
+
+    if (this.embeds.length > 0) {
+      this.embeds.splice(this.embeds.findIndex(n => n >= curr));
+    }
+
+    if (this.comments.length > 0) {
+      this.comments.splice(this.comments.findIndex(n => n >= curr));
+    }
+
+    this.nodes.splice(curr);
+
+    s.Jump(prev);
+
+    context.remove(node.context[0]);
+
+    console.log(this.HTMLDocument);
   }
 
   /**
-   * Returns text string at offset locations. You can optionally
-   * provide an `end` offset index, when non is provided, current
-   * index position is used. So treat the `start` param as a backtrack
-   * position.
+     * Returns text string at offset locations. You can optionally
+     * provide an `end` offset index, when non is provided, current
+     * index position is used. So treat the `start` param as a backtrack
+     * position.
    */
   public getText (
     location: Range | number | undefined,
@@ -389,6 +463,76 @@ export class IAST {
   }
 
   /**
+   * Returns the previous node from the current
+   * node reference.
+   */
+  get prevNode (): INode {
+    return this.nodes[this.node.index - 1];
+  }
+
+  /**
+   * Returns the next node from the current
+   * node reference.
+   */
+  get nextNode (): INode {
+    return this.nodes[this.node.index + 1];
+  }
+
+  /**
+   * Returns the very last node on the AST
+   */
+  get lastNode (): INode {
+    return this.nodes[this.nodes.length - 1];
+  }
+
+  public getHTMLNodes () {
+
+    const arr = [];
+
+    for (let index = 0; index < this.nodes.length; index += 1) {
+
+      const stack = [ this.nodes[index] ];
+
+      while (stack.length) {
+
+        const node = stack.shift()!;
+
+        arr.push({
+          root: node.root,
+          index: node.index,
+          tag: node.tag,
+          parent: node.parent.tag || 'ROOT',
+          children: node?.children?.length || 0,
+          // token_start: node.getToken(),
+          // token_end: node.singular ? null : node.getToken(3),
+
+          // nextSibling: node.nextSibling?.getToken(1),
+          offsets: node.offsets,
+          errors: node.diagnostics
+          // errors: this.diagnostics.map(node.errors)[0]
+        });
+
+        if (node?.children) stack.push(...node.children);
+
+      }
+
+    }
+
+    return arr;
+
+  }
+
+  public getNodeBefore (location: Position | number): INode {
+
+    const offset = typeof location === 'number'
+      ? location
+      : this.offsetAt(location);
+
+    return this.root.getNodeBefore(offset);
+
+  }
+
+  /**
    * Attempts to find a node at either a position or offset and
    * returning the first match found between start and end location.
    * If successful, returns the Node and also updates the `node`
@@ -402,6 +546,32 @@ export class IAST {
 
     return this.root.getNodeAt(offset);
 
+  }
+
+  /**
+   * Returns a node context information.
+   *
+   */
+  public getNodeContext (
+    position: Position | number,
+    node: INode = this.node
+  ) {
+
+    const offset = typeof position === 'number'
+      ? position
+      : this.offsetAt(position);
+
+    const token = this.withinEndToken(offset, node);
+    const context = node.getContext()[token ? 1 : 0];
+
+    return context;
+
+    /* let i = 0;
+
+    while (context.length > i) {
+      if (inRange(offset, context[i].start, context[i].end)) return context[i];
+      i++;
+    } */
   }
 
   /**

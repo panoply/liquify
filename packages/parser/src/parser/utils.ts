@@ -1,4 +1,5 @@
 import { Range } from 'vscode-languageserver-textdocument';
+import { INode } from 'tree/nodes';
 
 export function GetFormedRange (range: Range): Range {
 
@@ -38,6 +39,10 @@ export function findFirst<T> (array: T[], p: (x: T) => boolean): number {
   }
 
   return low;
+
+}
+
+export function getParent () {
 
 }
 
@@ -81,9 +86,25 @@ export function searchTree (
 
 }
 
+export function binaryIndex<T> (array: T[], fn: (item: T) => boolean): number {
+
+  let low = 0;
+  let high = array.length - 1;
+
+  while (low <= high) {
+    const mid = ((low + high) / 2) | 0;
+    const idx = fn(array[mid]);
+    if (idx) low = mid + 1; else if (idx) high = mid - 1; else return mid;
+  }
+
+  return -(low + 1);
+
+}
+
 export function binarySearch<T> (
   array: T[],
-  comparator: (op1: T) => number
+  key: T,
+  comparator: (op1: T, op2: T) => number
 ): number {
 
   let low = 0;
@@ -91,7 +112,7 @@ export function binarySearch<T> (
 
   while (low <= high) {
     const mid = ((low + high) / 2) | 0;
-    const comp = comparator(array[mid]);
+    const comp = comparator(array[mid], key);
     if (comp < 0) {
       low = mid + 1;
     } else if (comp > 0) {

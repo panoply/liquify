@@ -103,6 +103,7 @@ export const enum TokenType {
 
   /* ERRORS AND WARNINGS ------------------------ */
 
+  ParseResolve,
   ParseCancel,
   ParseError,
   ParseWarning,
@@ -162,4 +163,10 @@ export const enum TokenType {
   HTMLAttributeName,
   HTMLOperatorValue,
   HTMLAttributeValue,
+
+  HTMLLiquidAttribute,
+  HTMLLiquidAttributeBegin,
+  HTMLLiquidAttributeEnd,
+
+
 }

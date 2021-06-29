@@ -12,14 +12,14 @@
 export const Delimiters = /[{<]/;
 
 /**
- * `^\{[{%]`
+ * `^{[{%]`
  *
  * ---
  *
  * Open Delimiters for Liquid basic tags
  *
  */
-export const DelimitersOpen = /^\{[{%]/;
+export const DelimitersOpen = /^{[{%]/;
 
 /**
  * `^{%`
@@ -29,7 +29,7 @@ export const DelimitersOpen = /^\{[{%]/;
  * Open Delimiters for Liquid basic tags
  *
  */
-export const DelimitersTagOpen = /^{%/;
+export const DelimitersTagOpen = /^{%-?/;
 
 /**
  * `^{{`
@@ -39,7 +39,7 @@ export const DelimitersTagOpen = /^{%/;
  * Open Delimiters for Liquid object tags.
  *
  */
-export const DelimitersOutputOpen = /^{{/;
+export const DelimitersOutputOpen = /^{{2}-?/;
 
 /**
  * `^%}`
@@ -153,7 +153,7 @@ export const TagIsEnd = /^-?\s*\bend/i;
  * Captures a clear closing delimiter path, ensuring no
  * invalid characters located between
  */
-export const TagCloseClear = /^\s*-?[%}]}/;
+export const TagCloseClear = /^\s*[-%}]/;
 
 /* -------------------------------------------- */
 /* INNER CONTENT SKIPS                          */
@@ -440,6 +440,15 @@ export const ControlJoins = /(and|or)/i;
  * - Regex Expression lifted from vscode-html-languageservice
  */
 export const HTMLTagName = /^[_:\w][_:\w-.\d]*/;
+
+/**
+ * `^\s*<\/?[\w_:]`
+ *
+ * ---
+ *
+ * HTML End Tag name identifier
+ */
+export const HTMLNextTagClose = /^\s*<\/?[\w_:]/;
 
 /**
  * `^[^\s"'>]+`
