@@ -103,6 +103,7 @@ export const enum TokenType {
 
   /* ERRORS AND WARNINGS ------------------------ */
 
+  ParsePrevNode,
   ParseResolve,
   ParseCancel,
   ParseError,
@@ -144,29 +145,42 @@ export const enum TokenType {
   LiquidObjectName,
   LiquidObjectTagClose,
 
-  /* HTML --------------------------------------- */
+  /* -------------------------------------------- */
+  /* HTML TOKENS                                  */
+  /* -------------------------------------------- */
+
+  /* HTML START TAGS ---------------------------- */
 
   HTMLStartTagOpen,
-  HTMLStartTagName,
-  HTMLTagName,
   HTMLStartTagClose,
-  HTMLVoidTagOpen,
-  HTMLVoidTagName,
-  HTMLVoidTagClose,
+  HTMLStartTagLiquidStart,
+  HTMLStartTagLiquidEnd,
+  HTMLStartTagLiquidOutput,
+
+  /* HTML END TAGS ------------------------------ */
+
   HTMLEndTagOpen,
-  HTMLEndTagName,
   HTMLEndTagClose,
+
+  /* HTML VOID TAGS ----------------------------- */
+
+  HTMLVoidTagOpen,
+  HTMLVoidTagClose,
+  HTMLVoidTagLiquidStart,
+  HTMLVoidTagLiquidEnd,
+  HTMLVoidTagLiquidOutput,
+
   HTMLStartCommentTag,
   HTMLComment,
   HTMLEmbedded,
-  HTMLEndCommentTag,
   HTMLAttributeName,
-  HTMLOperatorValue,
-  HTMLAttributeValue,
-
   HTMLLiquidAttribute,
-  HTMLLiquidAttributeBegin,
-  HTMLLiquidAttributeEnd,
+  HTMLAttributeValue,
+  HTMLOperatorValue,
+
+  /* HTML LIQUID -------------------------------- */
+
+
 
 
 }

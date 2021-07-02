@@ -4,6 +4,7 @@ import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
 import { NodeType } from 'lexical/types';
 import { NodeLanguage } from 'lexical/language';
+import { IDiagnostic } from 'lexical/diagnostics';
 import { document } from 'tree/model';
 import { findFirst } from 'parser/utils';
 import inRange from 'lodash.inrange';
@@ -65,6 +66,7 @@ export class INode {
       this.parent = parent;
 
       this.kind = kind;
+      this.root = document.root.children.length;
       this.index = parent.children.length;
       this.singular = true;
 
@@ -85,21 +87,21 @@ export class INode {
   /**
    * Returns diagnostics existing on this node
    */
-  get diagnostics () {
+  get diagnostics (): IDiagnostic[] {
     return this.errors.map(e => document.errors[e]);
   }
 
   /**
    * Returns the starting offset index of this node
    */
-  get start () {
+  get start (): number {
     return this.offsets[0];
   }
 
   /**
    * Returns the ending offset index of this node
    */
-  get end () {
+  get end (): number {
     return this.offsets[this.offsets.length - 1];
   }
 
@@ -123,8 +125,8 @@ export class INode {
    * If the previous node is the fist child of this parent then
    * `null` is returned.
    */
-  get prevSibling () {
-    return this.parent?.children?.[this.index - 1] || null;
+  get prevSibling (): INode | null {
+    return this.parent.children[this.index - 1];
   }
 
   /**
@@ -133,10 +135,7 @@ export class INode {
    * `null` is returned.
    */
   get nextSibling (): INode | null {
-
-    return this.parent?.type === Type.Root
-      ? (document.nodes[this.root + 1].children[0] || null)
-      : (this.parent?.children?.[this.index + 1] || null);
+    return this.parent?.children?.[this.index + 1] || null;
   }
 
   /**

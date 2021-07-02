@@ -8,7 +8,6 @@ export const enum ScanCache {
   SkipClose,
   TrimRight,
   GotoEnd,
-  UnterminatedDelimiter,
   Tokenize,
   StringOpen,
   StringClose,
@@ -20,6 +19,14 @@ export const enum ScanCache {
   BracketNotationString,
   BracketNotationVariable,
   BracketNotationClose,
+  UnterminatedDelimiter,
+}
+
+export const enum ScanScope {
+  Reset,
+  WithinHTMLAttribute,
+  WithinHTMLStartTag,
+  WithinHTMLVoidTag
 }
 
 /**

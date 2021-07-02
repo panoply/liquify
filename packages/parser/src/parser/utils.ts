@@ -55,8 +55,6 @@ export function searchTree (
 
   let result = null;
 
-  if (!Array.isArray(tree)) return result;
-
   for (let index = 0; index < tree.length; index += 1) {
 
     const stack = [ tree[index] ];
@@ -103,8 +101,7 @@ export function binaryIndex<T> (array: T[], fn: (item: T) => boolean): number {
 
 export function binarySearch<T> (
   array: T[],
-  key: T,
-  comparator: (op1: T, op2: T) => number
+  comparator: (op1: T) => number
 ): number {
 
   let low = 0;
@@ -112,7 +109,7 @@ export function binarySearch<T> (
 
   while (low <= high) {
     const mid = ((low + high) / 2) | 0;
-    const comp = comparator(array[mid], key);
+    const comp = comparator(array[mid]);
     if (comp < 0) {
       low = mid + 1;
     } else if (comp > 0) {

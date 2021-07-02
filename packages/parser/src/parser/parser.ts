@@ -2,7 +2,6 @@ import { TokenType } from 'lexical/tokens';
 import { NodeKind } from 'lexical/kind';
 import { NodeLanguage } from 'lexical/language';
 import { NodeType } from 'lexical/types';
-import { ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { INode, Type } from 'tree/nodes';
@@ -20,50 +19,23 @@ import * as scanner from 'parser/scanning';
  */
 export function parse (document: IAST): IAST {
 
-  /* ROOT NODE ---------------------------------- */
+  /* PAIR SETS ---------------------------------- */
+
+  const pair: Set<INode> = new Set();
+
+  /* NODE ROOT ---------------------------------- */
 
   document.root = new INode(Type.Root);
 
-  /* LETTINGS ----------------------------------- */
+  /* STATE -------------------------------------- */
 
-  /**
-   * Index number reference to the root node
-   */
-  let root: number;
-
-  /**
-   * Parent node reference
-   */
-  let parent: INode = document.root;
-
-  /**
-   * Child node instance
-   */
+  let liquid: INode = document.root;
+  let html: INode = liquid;
   let node: INode;
-
-  /**
-   * Node errors
-   */
+  let track: INode;
   let error: (node: INode) => void;
-
-  /**
-   * Token type reference
-   */
   let token: number = scanner.scan();
-
-  /**
-   * HTML attributes reference
-   */
-  let attr: string | number | INode;
-
-  /* PAIR SETS ---------------------------------- */
-
-  /**
-   * Pair set keeps track of missing syntactic
-   * nodes that might otherwise be skipped due to
-   * hierarach placements.
-   */
-  const pair: Set<INode> = new Set();
+  let attr: string | number;
 
   /* -------------------------------------------- */
   /* TOKENIZE                                     */
@@ -76,53 +48,44 @@ export function parse (document: IAST): IAST {
       case TokenType.ParseError:
 
         if (scanner.error === ParseError.MissingCloseDelimiter) {
+          track = undefined;
           if (node.offsets.length < 2) node.offsets.push(s.offset);
         }
 
-        console.log(node);
-
         // Remove syntactic placement errors
         document.report(scanner.error)(node);
+
         break;
 
       case TokenType.HTMLStartTagOpen:
 
-        if (parent.type === Type.Root) root = parent.children.length;
-
-        createNode(Type.Pair, NodeKind.HTML);
-
-        parent = node;
-        pair.add(node);
+        htmlNode(Type.Pair);
 
         break;
 
       case TokenType.HTMLStartTagClose:
 
-        while (node.kind !== NodeKind.HTML && node.parent) node = node.parent;
-
         closeNode(Type.Start);
+        track = undefined;
 
         break;
-
       case TokenType.HTMLVoidTagOpen:
 
-        createNode(Type.Void, NodeKind.HTML);
+        htmlNode(Type.Void);
 
         break;
 
       case TokenType.HTMLVoidTagClose:
-
         closeNode(Type.Void);
-
+        track = undefined;
         break;
 
       case TokenType.HTMLEndTagOpen:
 
-        if (!startEnd(NodeKind.HTML)) {
+        html = node = html;
 
-          // Assert a missing start tag error
+        if (!startEnd(NodeKind.HTML, html)) {
           error = document.report(ParseError.MissingStartTag);
-
         }
 
         break;
@@ -130,18 +93,14 @@ export function parse (document: IAST): IAST {
       case TokenType.HTMLEndTagClose:
 
         closeNode(Type.Pair);
+        track = undefined;
 
         break;
 
       case TokenType.HTMLLiquidAttribute:
 
-        node = node.parent;
-
-        break;
-
-      case TokenType.HTMLLiquidAttributeEnd:
-
-        node = node.parent;
+        // node = parent;
+        node = liquid;
 
         break;
 
@@ -173,16 +132,13 @@ export function parse (document: IAST): IAST {
       /* -------------------------------------------- */
       case TokenType.TagOpen:
 
-        createNode(Type.Pair, NodeKind.Liquid);
-
-        parent = node;
+        liquidNode(Type.Pair);
 
         break;
 
       case TokenType.StartTagName:
 
         node.tag = s.token;
-        node.index = parent.children.length;
         node.singular = false;
 
         pair.add(node);
@@ -197,10 +153,8 @@ export function parse (document: IAST): IAST {
 
       case TokenType.OutputTagOpen:
 
-        // Create Node
-        createNode(Type.Pair, NodeKind.Liquid);
+        liquidNode(Type.Void);
 
-        // Assert node type
         node.type = NodeType.output;
 
         break;
@@ -213,7 +167,7 @@ export function parse (document: IAST): IAST {
 
       case TokenType.OutputTagClose:
 
-        node.offsets.push(s.offset);
+        closeNode(Type.Void);
 
         break;
 
@@ -228,11 +182,10 @@ export function parse (document: IAST): IAST {
 
       case TokenType.EndTagOpen:
 
-        if (!startEnd(NodeKind.Liquid)) {
+        liquid = node = liquid;
 
-          // Assert a missing start tag error
+        if (!startEnd(NodeKind.Liquid, liquid)) {
           error = document.report(ParseError.MissingStartTag);
-
         }
 
         break;
@@ -240,8 +193,6 @@ export function parse (document: IAST): IAST {
       case TokenType.EndTagClose:
 
         closeNode(Type.Pair);
-
-        // console.log(node.children[1]);
 
         break;
 
@@ -254,6 +205,7 @@ export function parse (document: IAST): IAST {
   /* NODE SYNTACTICS ---------------------------- */
 
   if (pair.size > 0) {
+
     pair.forEach(document.report(ParseError.MissingEndTag));
     pair.clear();
   }
@@ -270,16 +222,39 @@ export function parse (document: IAST): IAST {
    * Creates a child node instance, this is called
    * each time we encounter a starting delimeters.
    */
-  function createNode (type: Type, kind: NodeKind): void {
+  function htmlNode (type: Type): void {
 
-    if (parent.type === Type.Root) root = parent.children.length;
+    if (track instanceof INode) pendingClose();
 
-    node = new INode(type, scanner.begin, parent, kind);
+    node = new INode(type, scanner.begin, html, NodeKind.HTML);
     node.tag = s.token;
-    node.root = root;
+    html.children.push(node);
+
+    if (type === Type.Pair) {
+      html = node;
+      pair.add(node);
+    }
+
+    track = node;
+
+  };
+
+  /**
+   * Creates a child node instance, this is called
+   * each time we encounter a starting delimeters.
+   */
+  function liquidNode (type: Type): void {
+
+    node = new INode(type, scanner.begin, liquid, NodeKind.Liquid);
 
     // Add this node child to the parent
-    parent.children.push(node);
+    liquid.children.push(node);
+
+    // parent = node;
+    if (type === Type.Pair) {
+      liquid = node;
+      pair.add(node);
+    }
 
   };
 
@@ -288,10 +263,8 @@ export function parse (document: IAST): IAST {
    * when a start/end parent node close tag is encountered.
    * It walks the AST to locate the parent node.
    */
-  function startEnd (kind: NodeKind | undefined): boolean {
+  function startEnd (kind: NodeKind | undefined, parent: INode): boolean {
 
-    // Find the closest html parent node
-    // Logic for this is lifted from vscode-html-languageservice
     while (!node.isSameNode(s.token, kind) && node.parent) node = node.parent;
 
     // Ensure the node is not root and matches the token
@@ -304,7 +277,6 @@ export function parse (document: IAST): IAST {
     node = new INode(Type.Pair, scanner.begin, parent, kind);
     node.tag = s.token;
     parent.children.push(node);
-
     return false;
 
   };
@@ -320,18 +292,45 @@ export function parse (document: IAST): IAST {
 
     if (type === Type.Pair) {
 
-      // Handle situations where Liquid is used within HTML attributes
-      parent = node.parent;
-
       // Syntactic pair match, remove from the set
-      if (pair.has(node)) pair.delete(node);
+      pair.delete(node);
 
-      if (error) {
-        error(node);
-        error = undefined;
-      }
+      if (node.kind === NodeKind.HTML) html = node.parent;
+      if (node.kind === NodeKind.Liquid) liquid = node.parent;
+      if (!error) return undefined;
+
+      error(node);
+      error = undefined;
+
     }
 
   };
+
+  function pendingClose () {
+
+    let idx = track.children.length;
+
+    if (idx === 0) {
+      track.offsets.push(s.offset);
+    } else {
+
+      while (idx--) {
+
+        const child = track.children[idx];
+
+        if (child.singular) {
+          track.offsets.push(child.end);
+          break;
+        } else if (child.offsets.length > 2) {
+          track.offsets.push(child.end);
+          break;
+        }
+      }
+    }
+
+    document.report(ParseError.MissingCloseDelimiter)(track);
+    track = undefined;
+
+  }
 
 }

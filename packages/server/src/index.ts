@@ -251,6 +251,7 @@ connection.onHover(
     , textDocument: { uri }
   }, token) => !Server.provider.hover || runAsync(async () => {
 
+    return null;
     const document = Parser.get(uri);
 
     if (!document) return null;

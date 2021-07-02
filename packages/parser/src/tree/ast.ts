@@ -51,8 +51,6 @@ export class IAST {
     this.content = s.Create(content);
     this.lines = s.ComputeLineOffsets(this.content, true);
 
-    s.Increment(0, s.size);
-
   }
 
   /**

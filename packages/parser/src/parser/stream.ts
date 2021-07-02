@@ -35,16 +35,6 @@ export let size: number = 0;
 /* FUNCTIONS                                    */
 /* -------------------------------------------- */
 
-export let start: number = 0;
-export let end: number = size;
-
-export function Increment (_start: number, _end: number) {
-
-  start = _start;
-  end = _end;
-
-}
-
 /**
  * Creates a stream
  *
@@ -83,9 +73,7 @@ export function ComputeLineOffsets (
     const ch = text.charCodeAt(i);
 
     if (ch === CAR || ch === NWL) {
-
       if (ch === CAR && i + 1 < text.length && text.charCodeAt(i + 1) === NWL) i++;
-
       result.push(textOffset + i + 1);
     }
   }
@@ -353,19 +341,6 @@ export function IsPrevCodeChar (char: number, step: number = 1): boolean {
 export function IsNextCodeChar (code: number): boolean {
 
   return source.charCodeAt(offset + 1) === code;
-}
-
-/**
- * If Next Regex Expression
- *
- * Executes an expression match from current index
- * but does not modify position
- *
- * **DOES NOT MODIFY**
- */
-export function IsNextRegExp (regex: RegExp): boolean {
-
-  return regex.test(source.substring(offset));
 }
 
 /**
@@ -651,10 +626,17 @@ function WhileChar (condition: Function): boolean {
  * throws the cursor and offset locations out of sync. This is likely
  * to occur when we encounter a parse error.
  *
- * The function will reverse to the stream to last known character
- * before whitespace was consumed. It uses the current cursor location
- * and walks backwards until a non-whitespace character is found.
+ * This function will reverse the stream to a last known character
+ * before whitespace was previously consumed. It uses the current
+ * cursor location and walks backwards until a non-whitespace character
+ * is found.
  *
+ * The `from` optional parameter accepts a offset location and when
+ * provided the stream will reverse starting at that locations index,
+ * this defaults to the current `cursor` location offset.
+ *
+ * The `update` optional parameter accepts a `boolean` that defaults to
+ * `true` and will update the `cursor` and `offset` index.
  *
  * ---
  *
@@ -664,32 +646,31 @@ function WhileChar (condition: Function): boolean {
  * > - `offset` Moves offset to previous match
  *
  * ---
- *
- * @returns {number|boolean}
- * If tokenize parameter is `false` the offset index is returned. If
- * tokenize is `true` a boolean `true` is returned.
  */
-export function ReverseWhitespace (tokenize: boolean = true): number | true {
+export function ReverseWhitespace (
+  from?: number,
+  update: boolean = true
+): number | boolean {
 
-  const pos = (offset >= cursor ? cursor : offset) - spaces;
+  const pos = from === undefined ? cursor : from;
+  const str = source.substring(0, from);
 
-  if (!tokenize) return pos;
-
-  let rev: number;
+  let rev: number = pos;
 
   while (rev--) {
     if (
-      source.charCodeAt(rev) !== WSP ||
-      source.charCodeAt(rev) !== TAB ||
-      source.charCodeAt(rev) !== NWL ||
-      source.charCodeAt(rev) !== LFD ||
-      source.charCodeAt(rev) !== LFD
+      str.charCodeAt(rev) !== WSP ||
+      str.charCodeAt(rev) !== TAB ||
+      str.charCodeAt(rev) !== NWL ||
+      str.charCodeAt(rev) !== LFD ||
+      str.charCodeAt(rev) !== LFD
     ) break;
   }
 
+  if (!update) return rev;
+
   cursor = rev;
   offset = pos;
-
   return true;
 
 }

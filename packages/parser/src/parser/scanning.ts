@@ -1,11 +1,9 @@
 import { IFilter, IObject, ITag } from '@liquify/liquid-language-specs';
 import { NodeType } from 'lexical/types';
-import { NodeKind } from 'lexical/kind';
 import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
 import { errors } from 'tree/errors';
-import { IAST } from 'tree/ast';
 import * as spec from 'parser/specs';
 import * as s from 'parser/stream';
 import * as Regexp from 'lexical/regex';
@@ -23,6 +21,14 @@ import * as c from 'lexical/characters';
  * open delimiter match
  */
 export let begin: number;
+
+/**
+ * Token
+ *
+ * Holds the current token record we are scanning
+ * and is used to keep track of the token we are within
+ */
+export let token: number;
 
 /**
  * Error Number
@@ -43,16 +49,7 @@ export let error: number;
  * and its value may represent anything within
  * the stream.
  */
-export let cache: number = ScanCache.Reset;
-
-/**
- * Token
- *
- * Can hold any value, is used as a cache
- * and its value may represent anything within
- * the stream.
- */
-let token: number;
+let cache: number = ScanCache.Reset;
 
 /**
  * Scan State
@@ -99,7 +96,7 @@ export function scan (start: number = 0): number {
  */
 function CharSeq (): number {
 
-  // Reset Liuid comment trackers
+  // Reset Liquid comment trackers
   if (cache === TokenType.Comment) {
     if (s.ConsumeUntil(Regexp.CommentTagEnd)) {
       cache = ScanCache.Reset;
@@ -111,14 +108,20 @@ function CharSeq (): number {
 
   // Validate we have a Liquid tag, eg: {{ or {%
   if (s.IsCodeChar(c.LCB)) {
-    if (s.IsRegExp(Regexp.DelimitersOpen)) return LiquidSeq();
+    if (s.IsRegExp(Regexp.DelimitersOpen)) {
+      return LiquidSeq();
+    }
+  }
+
+  if (s.IsCodeChar(c.RAN)) {
+    if (token === TokenType.HTMLVoidTagOpen || token === TokenType.HTMLStartTagOpen) {
+      state = ScanState.HTMLTagClose;
+      return Scan();
+    }
   }
 
   // HTML starting delimiter character, eg: <
   if (s.IsCodeChar(c.LAN)) {
-
-    // We need to assert that we stil have an unterminated delimiter
-    // within HTML tags that contain liquid attributes
 
     // Assert Start position of token
     begin = s.cursor;
@@ -139,11 +142,14 @@ function CharSeq (): number {
     if (s.IfRegExp(Regexp.HTMLTagName)) {
 
       state = ScanState.HTMLAttributeName;
+
+      // We record this token
       token = s.TokenContains(Regexp.HTMLVoidTags)
         ? TokenType.HTMLVoidTagOpen
         : TokenType.HTMLStartTagOpen;
 
       return token;
+
     }
 
   }
@@ -227,28 +233,12 @@ function Scan (): number {
     /* -------------------------------------------- */
     /* HTML ATTRIBUTE                               */
     /* -------------------------------------------- */
+
     case ScanState.HTMLLiquidAttribute:
 
       return LiquidSeq();
 
-    case ScanState.HTMLLiquidAttributeEnd:
-
-      // We have a Liquid attribute value, we parse the delimiters
-      if (s.IsRegExp(Regexp.DelimitersOpen)) {
-        state = ScanState.HTMLLiquidAttribute;
-        return TokenType.HTMLLiquidAttribute;
-      }
-
-      state = ScanState.HTMLAttributeName;
-      return TokenType.HTMLLiquidAttribute;
-
     case ScanState.HTMLAttributeName:
-
-      // We have a Liquid attribute value, we parse the delimiters
-      if (s.IsRegExp(Regexp.DelimitersOpen)) {
-        state = ScanState.HTMLLiquidAttribute;
-        return TokenType.HTMLLiquidAttribute;
-      }
 
       // We have an attribute value on the tag, eg: `<script src^`
       if (s.IfRegExp(Regexp.HTMLAttribute)) {
@@ -256,40 +246,35 @@ function Scan (): number {
         return TokenType.HTMLAttributeName;
       }
 
+      // We have a Liquid attribute value, we parse the delimiters
+      if (s.IsRegExp(Regexp.DelimitersOpen)) {
+        state = ScanState.HTMLLiquidAttribute;
+        return TokenType.HTMLLiquidAttribute;
+      }
+
       // Next scan we will pass back to CharSeq
-      state = ScanState.CharSeq;
+      state = ScanState.HTMLTagClose;
+      return Scan();
 
-      // We have an embedded region, eg `<script>`
-      if (s.IfCodeChar(c.RAN)) {
+    case ScanState.HTMLTagClose:
 
-        // Return a void close token type and reset the cache reference
-        if (token === TokenType.HTMLVoidTagOpen) {
-          token = TokenType.HTMLVoidTagClose;
-          return token;
-        }
+      // We have a closing delimiter
+      // Handle self closing void type tags, eg: `<tag />`
+      if (s.IfCodeChar(c.RAN) || s.IfRegExp(Regexp.HTMLSelfClose)) {
+
+        state = ScanState.CharSeq;
+        token = token === TokenType.HTMLVoidTagOpen
+          ? TokenType.HTMLVoidTagClose
+          : TokenType.HTMLStartTagClose;
 
         // Return a start tag close
-        token = TokenType.HTMLStartTagClose;
         return token;
+
       }
-
-      // Handle self closing void type tags, eg: `<tag />`
-      if (s.IfRegExp(Regexp.HTMLSelfClose)) {
-
-        // Reset the cache reference for void type tags
-        token = TokenType.HTMLVoidTagClose;
-        return TokenType.HTMLVoidTagClose;
-      }
-
-      console.log('we are here');
 
       // If we get here we are missing a closing delimiter
       error = ParseError.MissingCloseDelimiter;
-
-      // Reverse any whitespace to ensure we have correct
-      // parse error location alignment
-      s.ReverseWhitespace();
-
+      state = ScanState.CharSeq;
       return TokenType.ParseError;
 
     /* -------------------------------------------- */
@@ -329,7 +314,10 @@ function Scan (): number {
 
       state = ScanState.CharSeq;
 
-      if (s.IfCodeChar(c.RAN)) return TokenType.HTMLEndTagClose;
+      if (s.IfCodeChar(c.RAN)) {
+        token = undefined;
+        return TokenType.HTMLEndTagClose;
+      };
 
       // Assert an error if missing close tag delimiter detected
       error = ParseError.MissingCloseDelimiter;
@@ -570,7 +558,6 @@ function Scan (): number {
         s.TokenRewind(pairs.shift(), Regexp.PropertyBrackets);
 
         // Clear the pairs array
-        // while (pairs.length > 0) pairs.pop();
         pairs = [];
         error = ParseError.MissingBracketNotation;
         return TokenType.ParseError;
@@ -882,10 +869,7 @@ function Scan (): number {
           spec.Cursor(s.token);
 
           // Check to to see if we are dealing with an object
-          if (
-            spec.TypeOfNode(NodeType.object) ||
-            s.IsNextRegExp(Regexp.PropertyNotation)
-          ) {
+          if (spec.TypeOfNode(NodeType.object) || s.IsRegExp(Regexp.PropertyNotation)) {
 
             // Next call we will look for a property notation
             state = ScanState.Object;
@@ -1137,7 +1121,7 @@ function Scan (): number {
 
       // We will attempt to move to the end of the tag and prevent
       // consuming any tags that might be otherwise nested within
-      if (s.ConsumeUnless(/-?[%}]\}/, /{[{%]|<\/?/, false)) {
+      if (s.ConsumeUnless(/-?[%}]\}/, /{[{%]/, false)) {
         state = ScanState.TagClose;
         return Scan();
       }
@@ -1150,7 +1134,7 @@ function Scan (): number {
     case ScanState.ParseError:
 
       // Consume the token until ending delimiters
-      if (s.ConsumeUnless(/-?[%}]\}/, /{[{%]|<\/?/)) {
+      if (s.ConsumeUnless(/-?[%}]\}/, /{[{%]/)) {
 
         state = ScanState.TagClose;
 
@@ -1191,7 +1175,7 @@ function Scan (): number {
       if (!s.IsRegExp(Regexp.DelimitersClose)) {
 
         // We will consume the invalid character or string
-        if (s.ConsumeUnless(/[%}]}/, /({[{%]|<\/?)/i)) {
+        if (s.ConsumeUnless(/[%}]}/, /{[{%]/i)) {
 
           error = s.token?.length === 1
             ? ParseError.InvalidCharacter
@@ -1210,10 +1194,6 @@ function Scan (): number {
 
       // Tag is closed so we will consume, eg: }} or %}
       if (s.IfRegExp(Regexp.DelimitersClose)) {
-
-        //  if (token === TokenType.HTMLStartTagOpen) {
-        //  console.log(s.IfRegExp(Regexp.HTMLNextTagClose), s.source.substring(s.cursor - 10, s.offset));
-        // }
 
         // Start tag close, eg: {% tag %}^
         if (state === ScanState.BeforeStartTagClose) {

@@ -9,7 +9,7 @@
  *
  * Considered the starting points for tags
  */
-export const Delimiters = /[{<]/;
+export const Delimiters = /[{<>]/;
 
 /**
  * `^{[{%]`
@@ -457,7 +457,7 @@ export const HTMLNextTagClose = /^\s*<\/?[\w_:]/;
  *
  * HTML End Tag name identifier
  */
-export const HTMLTagEndName = /^[^\s"'>]+/;
+export const HTMLTagEndName = /^[^\s"'>]*/;
 
 /**
  * `^\/>`
