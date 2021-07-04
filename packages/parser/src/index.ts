@@ -58,7 +58,10 @@ export class LiquidParser {
 
   parse (text: string) {
 
-    if (model.has('raw')) model.delete('raw');
+    if (model.has('raw')) {
+      // model.get('raw').errors = [];
+      model.delete('raw');
+    }
 
     return parse(
       create(

@@ -9,10 +9,6 @@ import { HTMLAttributeJS, HTMLAttributeJSON } from 'lexical/regex';
 import * as s from 'parser/stream';
 import * as scanner from 'parser/scanning';
 
-/* -------------------------------------------- */
-/* PARSE                                        */
-/* -------------------------------------------- */
-
 /**
  * Liquid/HTML parser function which constructs
  * and tokenizes syntaxes to build an AST.
@@ -49,11 +45,16 @@ export function parse (document: IAST): IAST {
 
         if (scanner.error === ParseError.MissingCloseDelimiter) {
           track = undefined;
-          if (node.offsets.length < 2) node.offsets.push(s.offset);
+          node.offsets.length > 2 || node.offsets.push(s.offset);
+          document.report(scanner.error)(node);
+          break;
         }
 
         // Remove syntactic placement errors
-        document.report(scanner.error)(node);
+        document.report(scanner.error)(
+          node,
+          document.getRange(s.cursor, s.offset)
+        );
 
         break;
 

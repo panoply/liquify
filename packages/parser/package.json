@@ -9,7 +9,9 @@
     "rollup": "rollup -c",
     "data": "node ./scripts/custom-data.js",
     "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava --color --verbose --watch",
+    "test": "ava test/dev.test.js --color --verbose --watch",
+    "test:bnf": "node test/bnf.test.js",
+    "test:validate": "ava ./test/validate.test.js --color --verbose --watch",
     "perf": "node -r esm test/perf/parsing.js"
   },
   "private": false,
@@ -36,7 +38,7 @@
         "configFile": false
       }
     },
-    "files": ["test/develop.test.js"],
+    "files": ["test/*.test.js"],
     "concurrency": 5
   },
   "dependencies": {

@@ -4,58 +4,8 @@ import * as parser from './common';
 import Stringify from 'json-stringify-safe';
 
 const text = `
-  <nav class="blue">
-    {% if condition %}
 
-      <div class="red">
-        {{ something }}
-      </div>
-
-      {% unless bar %}
-        <ul>
-          <li>{{ hello }}</li>
-        </ul>
-      {% endunless %}
-
-    {% endif %}
-
-  </nav>
-
-<img src="example.png">
-
-<aside>
-  {% if sidebar %}
-    <div class="blue">
-      {% if nested_1 %}
-        <nav id="sidebar">
-          {% unless nested_1 %}
-            <a href="/some-url">
-              {{ some_url }}
-            </a>
-          {% endunless %}
-        </nav>
-      {% endif %}
-    </div>
-  {% endif %}
-</aside>
-
-
-
-
-<footer>
-  <nav id="footer">
-    <ul>
-      <li>{% if alphabet %} {{ abc }} {% endif %}</li>
-      <li>{{ def }}</li>
-      <li>{{ ghi }}</li>
-    </ul>
-  </nav> slsl
-</footer>
-
-<hr>
-
-<p>This is our test document</p>
-
+{{ " }}
 
 `;
 

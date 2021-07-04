@@ -34,9 +34,9 @@ export class INode {
   public errors: number[] = [];
   public tag: string | undefined;;
   public root: number;
+  public index: number;
   public parent: INode
   public children: INode[] = [];
-  public index: number;
   public kind: NodeKind = NodeKind.Liquid
   public offsets: [number?, number?, number?, number?] = [];
   public singular: boolean;
@@ -106,14 +106,6 @@ export class INode {
   }
 
   /**
-   * Provide a offset reset on the last offset. This helps
-   * align parse errors
-   */
-  set end (offset: number) {
-    this.offsets.splice(this.offsets.length - 1, 1, offset);
-  }
-
-  /**
    * The start and end Range position of the node.
    */
   get range (): Range {
@@ -135,7 +127,7 @@ export class INode {
    * `null` is returned.
    */
   get nextSibling (): INode | null {
-    return this.parent?.children?.[this.index + 1] || null;
+    return this.parent.children?.[this.index + 1] || null;
   }
 
   /**

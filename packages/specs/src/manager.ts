@@ -1,1 +1,1 @@
-export * as Liquid from './liquid/index';
+export * as Specs from './liquid/index';

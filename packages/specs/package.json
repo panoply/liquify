@@ -4,10 +4,7 @@
   "created": "2020",
   "private": false,
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
-  "contributors": [
-    "Νίκος Σαβίδης",
-    "Joseph Curtis"
-  ],
+  "contributors": ["Νίκος Σαβίδης", "Joseph Curtis"],
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
   "main": "package/index.js",
@@ -23,12 +20,11 @@
     "url": "https://github.com/panoply/liquify"
   },
   "eslintConfig": {
-    "extends": [
-      "@liquify/eslint-config-ts"
-    ],
+    "extends": ["@liquify/eslint-config-ts"],
     "rules": {
       "no-template-curly-in-string": "off",
-      "no-unused-vars": "off"
+      "no-unused-vars": "off",
+      "no-control-regex": "off"
     }
   },
   "scripts": {
@@ -36,16 +32,12 @@
     "build": "rollup -c --environment prod",
     "html": "node ./scripts/html-data.js",
     "pkg": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava --verbose",
+    "test": "ava --watch --verbose",
     "test:log": "ava --verbose -- logs"
   },
   "ava": {
-    "require": [
-      "esm"
-    ],
-    "files": [
-      "test/**/**"
-    ],
+    "require": ["esm"],
+    "files": ["test/dev.test.js"],
     "concurrency": 5
   },
   "devDependencies": {

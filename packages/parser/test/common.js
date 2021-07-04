@@ -6,20 +6,28 @@ import { Instance as Chalk } from 'chalk';
 
 config();
 
-const chalk = new Chalk({
+export const chalk = new Chalk({
   level: 2
 });
 
 /**
  * @param {string} input
  * @param {RegExp} match
- * @param {'magenta'|'cyan'|'yellow'} [colour]
  * @returns {string}
  */
 export function log (input, match, colour = 'yellow') {
 
   const regex = new RegExp(match, 'g');
-  return input.replace(regex, string => chalk[colour](string));
+
+  if (typeof colour === 'string') {
+    return input.replace(regex, string => chalk[colour](string));
+  }
+
+  return input.replace(regex, (
+    string,
+    match1,
+    match2
+  ) => chalk[colour[0]](match1) + chalk[colour[1]](match2));
 
 };
 

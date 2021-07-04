@@ -2,10 +2,8 @@ import inRange from 'lodash.inrange';
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 import { NodeType } from 'lexical/types';
 import { NodeKind } from 'lexical/kind';
-import { NWL, CAR } from 'lexical/characters';
 import { ParseError } from 'lexical/errors';
 import { Config } from 'config';
-import * as context from 'tree/context';
 import * as s from 'parser/stream';
 import { INode } from 'tree/nodes';
 import { GetFormedRange, findFirst, binaryIndex, binarySearch } from 'parser/utils';
@@ -107,15 +105,22 @@ export class IAST {
    * Error Reporter. Generates the diagnostics which are
    * consumed within LSP.
    */
-  public report (error: ParseError): (node: INode) => void {
+  public report (error: ParseError): (
+    node: INode,
+    location?: Range | undefined
+  ) => void {
 
     const diagnostic = { ...Diagnostics[error] };
 
-    return ({ errors, range }: INode) => {
+    return ({ errors, range }, location?: Range) => {
 
       errors.push(this.errors.length);
 
-      diagnostic.range = range;
+      if (location instanceof INode) {
+        diagnostic.range = range;
+      } else {
+        diagnostic.range = location;
+      }
 
       this.errors.push(diagnostic);
 

@@ -1,6 +1,10 @@
 {
   "exclude": ["node_modules/**", "package", "test"],
-  "include": ["src/index.ts", "src/**/*.ts"],
+  "include": [
+    "src/index.ts",
+    "src/**/*.ts",
+    "src/liquid/grammar/shopify.ts"
+  ],
   "typeAcquisition": {
     "enable": true,
     "include": ["node"]
@@ -9,7 +13,7 @@
     "types": ["node"],
     "rootDir": "src",
     "incremental": true,
-    "typeRoots": ["src/types/*"],
+    "typeRoots": ["src/liquid/types/*"],
     "declaration": true,
     "declarationDir": "package/@types",
     "outDir": "package",

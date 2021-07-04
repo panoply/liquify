@@ -106,13 +106,12 @@ function CharSeq (): number {
   // Search until we hit a character of interest
   s.UntilSequence(Regexp.Delimiters);
 
-  // Validate we have a Liquid tag, eg: {{ or {%
+  // Liquid opening tag delimiter, eg: {{ or {%
   if (s.IsCodeChar(c.LCB)) {
-    if (s.IsRegExp(Regexp.DelimitersOpen)) {
-      return LiquidSeq();
-    }
+    if (s.IsRegExp(Regexp.DelimitersOpen)) return LiquidSeq();
   }
 
+  // HTML closing tag delimiter, eg: >
   if (s.IsCodeChar(c.RAN)) {
     if (token === TokenType.HTMLVoidTagOpen || token === TokenType.HTMLStartTagOpen) {
       state = ScanState.HTMLTagClose;
@@ -121,38 +120,7 @@ function CharSeq (): number {
   }
 
   // HTML starting delimiter character, eg: <
-  if (s.IsCodeChar(c.LAN)) {
-
-    // Assert Start position of token
-    begin = s.cursor;
-
-    s.Advance(1);
-
-    // Character is a forward slash and proceeded by no whitespace, eg: `</`
-    if (s.IfCodeChar(c.FWS)) {
-
-      // Check we have a tag name, do not conumse though, eg: `</tag`
-      if (s.IfRegExp(Regexp.HTMLTagEndName)) {
-        state = ScanState.AfterHTMLEndTagName;
-        return TokenType.HTMLEndTagOpen;
-      }
-    }
-
-    // We are within a HTML start tag, eg: <^tag
-    if (s.IfRegExp(Regexp.HTMLTagName)) {
-
-      state = ScanState.HTMLAttributeName;
-
-      // We record this token
-      token = s.TokenContains(Regexp.HTMLVoidTags)
-        ? TokenType.HTMLVoidTagOpen
-        : TokenType.HTMLStartTagOpen;
-
-      return token;
-
-    }
-
-  }
+  if (s.IsCodeChar(c.LAN)) return HTMLSeq();
 
   // Reset state if not CharSeq, lets continue sequencing...
   if (state !== ScanState.CharSeq) state = ScanState.CharSeq;
@@ -165,48 +133,87 @@ function CharSeq (): number {
 
 }
 
+function HTMLSeq () {
+
+  // Assert Start position of token
+  begin = s.cursor;
+
+  s.Advance(1);
+
+  // Character is a forward slash and proceeded by no whitespace, eg: `</`
+  if (s.IfCodeChar(c.FWS)) {
+
+    // Check we have a tag name, do not conumse though, eg: `</tag`
+    if (s.IfRegExp(Regexp.HTMLTagEndName)) {
+      state = ScanState.AfterHTMLEndTagName;
+      return TokenType.HTMLEndTagOpen;
+    }
+  }
+
+  // We are within a HTML start tag, eg: <^tag
+  if (s.IfRegExp(Regexp.HTMLTagName)) {
+
+    state = ScanState.HTMLAttributeName;
+
+    // We record this token
+    token = s.TokenContains(Regexp.HTMLVoidTags)
+      ? TokenType.HTMLVoidTagOpen
+      : TokenType.HTMLStartTagOpen;
+
+    return token;
+
+  }
+
+  return CharSeq();
+
+}
+
 function LiquidSeq () {
 
   // Assert Start position of token
   begin = s.offset;
 
-  // Liquid output type delimiter, eg: {{ or {{-
-  if (s.IfRegExp(Regexp.DelimitersOutputOpen)) {
-    state = ScanState.AfterOutputTagOpen;
-    return TokenType.OutputTagOpen;
-  }
+  if (s.IfCodeChar(c.LCB)) {
 
-  // Liquid tag delimiter, eg: {% or {%-
-  if (s.IfRegExp(Regexp.DelimitersTagOpen)) {
-
-    // Lets peek ahead to see if we are dealing with an {% end %}
-    // type tag, but we will not consume, just check
-    if (s.IsRegExp(Regexp.TagIsEnd)) {
-
-      // Skip over whitespace
-      s.SkipWhitespace();
-
-      // Lets consume the "end" portion of the name, eg: {%- end^tag
-      // We have already confirmed this exists in CharSeq
-      // We do not returns a token type, we do this at next run
-      if (s.IfRegExp(Regexp.TagEndKeyword)) {
-
-        // Lets consume the end tag name identifier, eg: {%- endtag^
-        if (s.IfRegExp(Regexp.TagName)) {
-          state = ScanState.BeforeEndTagClose;
-          return TokenType.EndTagOpen;
-        }
-
-        // If we get here, we have an invalid end tag name
-        error = ParseError.InvalidTagName;
-        state = ScanState.ParseError;
-        return Scan();
-      }
+    // Liquid output type delimiter, eg: {{ or {{-
+    if (s.IfCodeChar(c.LCB)) {
+      state = ScanState.AfterOutputTagOpen;
+      return TokenType.OutputTagOpen;
     }
 
-    // Getting here then we dealing with a start or singular type tag
-    state = ScanState.AfterTagOpen;
-    return TokenType.TagOpen;
+    // Liquid tag delimiter, eg: {% or {%-
+    if (s.IfCodeChar(c.PER)) {
+
+      // Lets peek ahead to see if we are dealing with an {% end %}
+      // type tag, but we will not consume, just check
+      if (s.IsRegExp(Regexp.TagIsEnd)) {
+
+        // Skip over whitespace
+        s.SkipWhitespace();
+
+        // Lets consume the "end" portion of the name, eg: {%- end^tag
+        // We have already confirmed this exists in CharSeq
+        // We do not returns a token type, we do this at next run
+        if (s.IfRegExp(Regexp.TagEndKeyword)) {
+
+          // Lets consume the end tag name identifier, eg: {%- endtag^
+          if (s.IfRegExp(Regexp.TagName)) {
+            state = ScanState.BeforeEndTagClose;
+            return TokenType.EndTagOpen;
+          }
+
+          // If we get here, we have an invalid end tag name
+          error = ParseError.InvalidTagName;
+          state = ScanState.ParseError;
+          return Scan();
+        }
+      }
+
+      // Getting here then we dealing with a start or singular type tag
+      state = ScanState.AfterTagOpen;
+      return TokenType.TagOpen;
+
+    }
 
   }
 
@@ -557,10 +564,14 @@ function Scan (): number {
         // Rewind token to unclosed LOB and capture error
         s.TokenRewind(pairs.shift(), Regexp.PropertyBrackets);
 
-        // Clear the pairs array
-        pairs = [];
-        error = ParseError.MissingBracketNotation;
-        return TokenType.ParseError;
+        if (error !== ParseError.MissingProperty) {
+
+          // Clear the pairs array
+          pairs = [];
+          error = ParseError.MissingBracketNotation;
+          return TokenType.ParseError;
+        }
+
       }
 
       // Reset the object spec walker
@@ -596,9 +607,8 @@ function Scan (): number {
 
       // Ensure we have a missing property, eg: {{ object.^ }}
       if (s.IsRegExp(Regexp.TagCloseClear)) {
-        // Align token cursor, eg: {{ object^. }}
-        s.Prev();
 
+        // Align token cursor, eg: {{ object^. }}
         error = ParseError.MissingProperty;
         state = ScanState.ParseError;
         return Scan();
@@ -618,15 +628,13 @@ function Scan (): number {
     case ScanState.ObjectBracketNotation:
 
       // Check to see we no empty bracket notations, eg: []
-      if (s.IsCodeChar(c.ROB) && s.TokenCodeChar(c.LOB)) {
+      if (s.IsCodeChar(c.ROB) && s.TokenCodeChar(c.LOB, false)) {
 
         // We advance 1 step and also tokenize for error diagnostic
         s.Advance(1, true);
 
         error = ParseError.MissingProperty;
         state = ScanState.Object;
-
-        // We will continue parsing the token after error
         return TokenType.ParseError;
       }
 

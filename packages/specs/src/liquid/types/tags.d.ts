@@ -1,3 +1,5 @@
+import { IDescription, IReferences, IArguments, IParameters, TagScopes } from './common';
+
 /* TAG TYPES ---------------------------------- */
 
 export type TagTypes =
@@ -13,15 +15,6 @@ export type TagTypes =
   | 'raw'
   | 'unknown';
 
-/* TAG PARAMETER TYPES ------------------------ */
-
-export type TagParameterTypes =
-  | 'keyword'
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'reference';
-
 /* TAG EMBEDDED LANGUAGES --------------------- */
 
 export type TagEmbeddedLanguages =
@@ -35,63 +28,24 @@ export type TagEmbeddedLanguages =
   | 'scss'
   | 'markdown';
 
-/* TAG ARGUMENT ACCEPTS ----------------------- */
-
-export type TagArgumentAccepts = 'keyword' | 'string' | 'reference';
-
-/* TAGS SPECIFICATION ------------------------- */
-
-interface TagArguments {
-
-  /**
-   * Name of the parameter this tag accepts
-   */
-  readonly name: string;
-
-  /**
-   * The type of argument the tag accepts
-   */
-  readonly accepts: TagArgumentAccepts;
-
-  /**
-   * Description of this paramter
-   */
-  readonly description?: string;
-}
-
-interface TagParameters {
-  /**
-   * Name of the parameter this tag accepts
-   */
-  readonly name: string;
-
-  /**
-   * Description of this paramter
-   */
-  readonly description?: string;
-
-  /**
-   * What parameters the tag accepts
-   *
-   */
-  readonly accepts?: TagParameterTypes;
-
-  /**
-   * If the parameter is required
-   *
-   * @default undefined
-   */
-  readonly required?: boolean;
-}
-
 /* TAG SPECIFICATIONS ------------------------- */
 
 export interface ITag {
 
   /**
-   * The argument value this tag supports
+   * The type categorization of the tag. Type categorization is
+   * required on tags.
+   *
+   * @default 'unknown'
    */
-  readonly name: string;
+  readonly type: TagTypes;
+
+  /**
+   * Is this tag singular, ie: does not require an `{% endtag %}`
+   *
+   * @default false
+   */
+  readonly singular?: boolean;
 
   /**
    * Supply a snippet to be used in completions
@@ -101,49 +55,25 @@ export interface ITag {
   readonly snippet?: string;
 
   /**
-   * The language kind of this tag, accepts either html or liquid.
-   * This property is automatically applied to the specification on intialisation.
-   *
-   * @default 'liquid'
-   *
-   * **TODO** FIX THIS
-   */
-  readonly kind?: 'liquid' | 'html';
-
-  /**
-   * The type categorization of the tag. Type categorization is
-   * required on tags.
-   *
-   */
-  readonly type: TagTypes;
-
-  /**
    * Description of this tag
    *
    * @default undefined
    */
-  readonly description?: string;
+  readonly description?: IDescription | string;
 
   /**
    * A URL reference to the documentation pretaining to this tag
    *
    * @default undefined
    */
-  readonly link?: string;
-
-  /**
-   * Is this tag singular, ie: does not require an `{% endtag %}`
-   *
-   * @default false
-   */
-  readonly singular: boolean;
+  readonly references?: IReferences[] | undefined;
 
   /**
    * Does this tag accept filters
    *
    * @default false
    */
-  readonly filters: boolean;
+  readonly filters?: boolean;
 
   /**
    * When the contents of the tag is pertaining to another language,
@@ -158,42 +88,38 @@ export interface ITag {
 
   /**
    * Does this tag accept whitespace dashes?
-   *
-   * @default true
    */
   readonly trims?: boolean;
 
   /**
    * Is this tag deprecated?
-   *
-   * @default false
    */
   readonly deprecated?: boolean;
 
   /**
-   * The tag scope
-   *
-   * @default undefined
+   * When the tag is available within the scope of
+   * a specific object and/or tag.
    */
-  readonly scope?: string[];
+  readonly parents?: TagScopes;
 
   /**
-   * List of parameters available to this tag
-   *
-   * @default false
+   * When a tag requires children to be contained
+   * within, list them here.
    */
-  readonly arguments?: TagArguments[] | false;
+  readonly children?: TagScopes;
 
   /**
-   * List of arguments available to this tag
-   *
-   * @default undefined
+   * Arguments used within the contents of the tag.
    */
-  readonly parameters?: TagParameters[];
+  readonly arguments?: IArguments[]
+
+  /**
+   * Predefined tag parameters
+   */
+  readonly parameters?: { [parameter: string]: IParameters }
+
 }
 
 /* REFERENCE ---------------------------------- */
 
-export interface Tags {
-  [name: string]: ITag;
-}
+export interface Tags { [name: string]: ITag; }

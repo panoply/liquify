@@ -1,10 +1,12 @@
-export default {
+import { Tags as ITags } from '../../types/tags';
+
+const Tags: ITags = {
   assign: {
+    type: 'variable',
     description: 'Creates a new variable.',
     snippet: '$1 = $2',
     filters: true,
     singular: true,
-    type: 'variable',
     references: [
       {
         name: 'Standard Liquid',
@@ -13,10 +15,13 @@ export default {
     ]
   },
   break: {
-    description: 'Causes the loop to stop iterating when it encounters the break tag.',
-    singular: true,
     type: 'iteration',
-    scope: 'for',
+    singular: true,
+    parents: [
+      'for',
+      'tablerow'
+    ],
+    description: 'Causes the loop to stop iterating when it encounters the break tag.',
     references: [
       {
         name: 'Standard Liquid',
@@ -25,8 +30,9 @@ export default {
     ]
   },
   capture: {
-    description: 'Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through {% capture %} are strings.',
     type: 'variable',
+    filters: false,
+    description: 'Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through `{% capture %}` are strings.',
     references: [
       {
         name: 'Standard Liquid',
@@ -35,8 +41,9 @@ export default {
     ]
   },
   case: {
-    description: 'Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.',
     type: 'control',
+    description: 'Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.',
+    children: [ 'when', 'else' ],
     references: [
       {
         name: 'Standard Liquid',
@@ -55,10 +62,13 @@ export default {
     ]
   },
   continue: {
+    type: 'iteration',
     description: 'Causes the loop to skip the current iteration when it encounters the continue tag.',
     singular: true,
-    type: 'iteration',
-    scope: 'for',
+    parents: [
+      'for',
+      'tablerow'
+    ],
     references: [
       {
         name: 'Standard Liquid',
@@ -67,10 +77,10 @@ export default {
     ]
   },
   cycle: {
-    description: 'Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.',
-    singular: true,
     type: 'iteration',
-    scope: 'for',
+    singular: true,
+    description: 'Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.',
+    parents: [ 'for', 'tablerow' ],
     references: [
       {
         name: 'Standard Liquid',
@@ -81,26 +91,27 @@ export default {
   decrement: {
     description: 'Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.',
     singular: true,
+    filters: false,
     type: 'variable',
     references: [
       {
         name: 'Standard Liquid',
         url: 'https://shopify.github.io/liquid/tags/variable/#decrement'
       }
-    ],
-    arguments: [
-      {
-        type: 'keyword',
-        required: true
-      }
     ]
   },
   else: {
+    type: 'control',
     description: 'Add condition within an if or unless block.',
     singular: true,
-    type: 'control',
-    scope: 'if|elsif|case|unless|when|for',
-    arguments: false,
+    parents: [
+      'if',
+      'elsif',
+      'case',
+      'unless',
+      'when',
+      'for'
+    ],
     references: [
       {
         name: 'Standard Liquid',
@@ -112,8 +123,7 @@ export default {
     description: 'Adds more conditions within an if or unless block.',
     singular: true,
     type: 'control',
-    scope: 'if',
-    arguments: true,
+    parents: [ 'if' ],
     references: [
       {
         name: 'Standard Liquid',
@@ -131,31 +141,24 @@ export default {
         url: 'https://shopify.github.io/liquid/tags/iteration/#for'
       }
     ],
-    parameters: [
-      {
-        name: 'offset',
+    parameters: {
+      offset: {
         description: 'Begins the loop at the specified index',
-        required: false,
-        accepts: 'integer|reference'
+        accepts: 'number'
       },
-      {
-        name: 'limit',
+      limit: {
         description: 'Limits the loop to the specified number of iterations',
-        required: false,
-        accepts: 'integer|reference'
+        accepts: 'number'
       },
-      {
-        name: 'reversed',
-        description: 'Reverses the order of the loop. Note that this flag’s spelling is different from the filter reverse',
-        required: false,
-        accepts: 'keyword'
+      reversed: {
+        keyword: true,
+        description: 'Reverses the order of the loop. Note that this flag’s spelling is different from the filter reverse'
       }
-    ]
+    }
   },
   if: {
     description: 'Executes a block of code only if a certain condition is met.',
     type: 'control',
-    arguments: true,
     references: [
       {
         name: 'Standard Liquid',
@@ -166,6 +169,7 @@ export default {
   increment: {
     description: 'Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.',
     singular: true,
+    filters: false,
     type: 'variable',
     references: [
       {
@@ -190,11 +194,6 @@ export default {
     filters: false,
     singular: true,
     type: 'import',
-    context: [
-      {
-        accepts: 'string'
-      }
-    ],
     references: [
       {
         name: 'Standard Liquid',
@@ -205,26 +204,21 @@ export default {
   tablerow: {
     description: 'Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.',
     type: 'iteration',
-    parameters: [
-      {
-        name: 'cols',
+    parameters: {
+      cols: {
         description: 'Defines how many columns the tables should have.',
-        required: false,
-        accepts: 'integer|reference'
+        accepts: 'number'
       },
-      {
-        name: 'limit',
+      limit: {
         description: 'Exits the tablerow loop after a specific index.',
-        required: false,
-        accepts: 'integer|reference'
+        accepts: 'number'
       },
-      {
-        name: 'offset',
+      offset: {
         description: 'Starts the tablerow loop after a specific index.',
-        required: false,
-        accepts: 'integer|reference'
+        accepts: 'number'
       }
-    ],
+    }
+    ,
     references: [
       {
         name: 'Standard Liquid',
@@ -246,7 +240,7 @@ export default {
     description: 'Define the various conditions set by the "{% case %}" tag',
     singular: true,
     type: 'control',
-    scope: 'case',
+    parents: [ 'case' ],
     references: [
       {
         name: 'Standard Liquid',
@@ -255,3 +249,5 @@ export default {
     ]
   }
 };
+
+export default Tags;

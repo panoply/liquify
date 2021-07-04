@@ -1,9 +1,38 @@
-import * as Standard from '../standard/export';
-import IFilters from './filters';
-import ITags from './tags';
+import { standard } from '../standard/export';
+import F from './filters';
+import T from './tags';
+import O from './objects';
 
-export * as Objects from './objects';
+export namespace shopify {
 
-export const Tags = { ...ITags, ...Standard.Tags };
+  /**
+   * Liquid Shopify Spec: Objects
+   */
+  export const objects = O;
 
-export const Filters = { ...IFilters, ...Standard.Tags };
+  /**
+   * Liquid Shopify Type: Object List
+   */
+  export type ObjectList = Array<keyof typeof objects>;
+
+  /**
+   * Liquid Shopify Spec: Filters
+   */
+  export const filters = { ...F, ...standard.filters };
+
+  /**
+   * Liquid Shopify Type: Filter List
+   */
+  export type FilterList = keyof typeof filters;
+
+  /**
+   * Liquid Shopify Spec: Tags
+   */
+  export const tags = { ...T, ...standard.tags };
+
+  /**
+   * Liquid Shopify Type: Filter List
+   */
+  export type TagList = Array<keyof typeof tags>;
+
+}

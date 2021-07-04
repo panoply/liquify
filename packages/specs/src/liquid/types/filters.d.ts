@@ -1,90 +1,20 @@
-/* FILTER ACCEPT TYPES ------------------------ */
-
-export type FilterAcceptsTypes =
-  | 'string'
-  | 'integer'
-  | 'float'
-  | 'boolean'
-  | 'reference'
-  | 'path';
-
-/* FILTER ARGUMENT TYPES ---------------------- */
-
-export type FilterArgumentTypes = 'argument' | 'parameter' | 'spread';
-
-/* FILTER SPECIFICATION ----------------------- */
-
-interface FilterArgumentOptions {
-  /**
-   * Name of the parameter this tag accepts
-   */
-  readonly name: string | string[];
-  /**
-   * Description of this paramter
-   */
-  readonly description?: string;
-}
-
-interface FilterArguments {
-  /**
-   * Name of the parameter this tag accepts
-   */
-  readonly type: FilterArgumentTypes;
-
-  /**
-   * Argument is required for the filter
-   *
-   * @default false
-   */
-  readonly required?: boolean;
-
-  /**
-   * Whether or not options should be validated
-   *
-   * @default false
-   */
-  readonly validate?: boolean;
-
-  /**
-   * Argument is required for the filter
-   *
-   * @default false
-   */
-  readonly accepts?: FilterAcceptsTypes;
-
-  /**
-   * Name of the argument this tag accepts
-   */
-  readonly name?: string;
-
-  /**
-   * Description of this parameter
-   *
-   * @default undefined
-   */
-  readonly description?: string;
-
-  /**
-   * Argument options list
-   *
-   * @default undefined
-   */
-  readonly options?: FilterArgumentOptions[];
-}
+import { IDescription, IReferences, IScopes, IArguments } from './common';
 
 export interface IFilter {
+
   /**
    * Description of the filter
    *
    * @default undefined
    */
-  readonly description?: string;
+  readonly description?: IDescription | string
+
   /**
    * URL reference to online documentation explaining this filter
    *
    * @default undefined
    */
-  readonly link?: string;
+  readonly references?: IReferences[];
 
   /**
    * Is the filter tag deprecated?
@@ -101,13 +31,15 @@ export interface IFilter {
   readonly snippet?: string;
 
   /**
-   * When the filter is available within specific object and/or tag
+   * When the filter is available within the scope of
+   * a specific object and/or tag.
    *
    * @default undefined
    */
-  readonly within?: string[];
+  readonly scope?: IScopes
+
   /**
-   * Filter argument parameters can differ greatly depending on how they are
+   * Filter arguments can differ greatly depending on how they are
    * implemented. The spec understands the below filter structures:
    *
    * @example
@@ -118,32 +50,10 @@ export interface IFilter {
    *
    * @default undefined
    */
-  readonly arguments?: FilterArguments[];
+  readonly arguments?: IArguments[];
 
-  /**
-   * The filters scope
-   *
-   * @default undefined
-   */
-  readonly scope?: string[];
-
-  /**
-   * Information field which holds some additional information
-   * about the filter spec. This is auto-generated within cryptospec.
-   *
-   * @default false
-   */
-  readonly $i?: {
-    /**
-     * The argument length size (minus 1), eg: `filter.arguments.length - 1`
-     * It's a helper function when scanning arguments.
-     */
-    argsize?: number;
-  };
 }
 
 /* REFERENCE ---------------------------------- */
 
-export interface Filters {
-  [name: string]: IFilter;
-}
+export interface Filters { [name: string]: IFilter; }

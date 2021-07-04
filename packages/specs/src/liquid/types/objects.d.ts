@@ -1,9 +1,11 @@
+import { IDescription, IReferences, IScopes } from './common';
+
 /* OBJECT TYPEOF ------------------------------ */
 
 export type ObjectTypes =
   | 'object'
   | 'string'
-  | 'number'
+  | 'integer'
   | 'boolean'
   | 'array'
   | 'variable';
@@ -14,11 +16,15 @@ interface ObjectProperties {
   /**
    * Description of thes property value used by this object
    */
-  readonly description?: string;
+  readonly description?: IDescription | string;
   /**
    * The Typeof object value
    */
   readonly type: ObjectTypes;
+  /**
+   * Documentation References
+   */
+  readonly references?: IReferences[];
   /**
    * Property value contains additional properties, eg: `{{ object.prop1.prop2 }}`
    */
@@ -28,21 +34,17 @@ interface ObjectProperties {
 }
 
 export interface IObject {
-  /**
-   * Name of the Object
-   */
-  readonly name: string;
 
   /**
    * The automatically applied tag type, which is "object"
    */
-  readonly type: ObjectTypes;
+  readonly type?: ObjectTypes;
 
   /**
    * Description of this object
    *
    */
-  readonly description?: string;
+  readonly description?: IDescription | string;
 
   /**
    * A URL reference to the documentation pertaining to this tag
@@ -56,7 +58,7 @@ export interface IObject {
    *
    * @default true
    */
-  readonly singular: true;
+  readonly singular?: true;
 
   /**
    * Does this tag accept filters
@@ -80,19 +82,25 @@ export interface IObject {
   readonly global?: boolean;
 
   /**
-   * Whether or not this object is a content or constanant value
+   * Whether or not this object is a content or constant value
+   *
+   * @default false
    */
   readonly const?: boolean;
 
   /**
    * Is this object tag deprecated?
+   *
+   * @default false
    */
   readonly deprecated?: boolean;
 
   /**
    * Object is only accessible within tag based scope.
+   *
+   * @default []
    */
-  readonly scope?: string[];
+  readonly scope?: IScopes;
 
   /**
    * List of property values this tag object supports, recursively

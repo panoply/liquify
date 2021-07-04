@@ -1,9 +1,11 @@
-export default {
+import { Filters } from '../../types/filters';
+
+const filters: Filters = {
   abs: {
     description: 'Returns the absolute value of a number',
     references: [
       {
-        name: 'Standard Reference',
+        name: 'Standard Liquid',
         url: 'https://shopify.github.io/liquid/filters/abs/'
       }
     ]
@@ -13,14 +15,13 @@ export default {
     snippet: "append: '$1' $0",
     arguments: [
       {
-        type: 'argument',
-        accepts: 'string|reference',
+        type: 'string',
         required: true
       }
     ],
     references: [
       {
-        name: 'Standard Reference',
+        name: 'Standard Liquid',
         url: 'https://shopify.github.io/liquid/filters/append/'
       }
     ]
@@ -30,8 +31,7 @@ export default {
     snippet: 'at_least: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        accepts: 'integer|reference',
+        type: 'number',
         required: true
       }
     ],
@@ -47,8 +47,7 @@ export default {
     snippet: 'at_most: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        accepts: 'integer|reference',
+        type: 'number',
         required: true
       }
     ],
@@ -91,9 +90,8 @@ export default {
     snippet: 'concat: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'reference'
+        type: 'array',
+        required: true
       }
     ],
     references: [
@@ -108,9 +106,8 @@ export default {
     snippet: "date: '$1' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       }
     ],
     references: [
@@ -128,16 +125,15 @@ export default {
     snippet: "default: '$1' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'any',
+        required: true
       },
       {
         type: 'parameter',
-        name: 'allow_false',
-        description: 'To allow variables to return false instead of the default value, you can use the allow_false parameter.',
+        value: 'allow_false',
         required: false,
-        accepts: 'boolean|reference'
+        description: 'To allow variables to return false instead of the default value, you can use the `allow_false` parameter.',
+        accepts: 'boolean'
       }
     ],
     references: [
@@ -152,9 +148,8 @@ export default {
     snippet: 'divided_by: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       }
     ],
     references: [
@@ -220,9 +215,8 @@ export default {
     snippet: "join: '$1' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       }
     ]
   },
@@ -249,9 +243,8 @@ export default {
     snippet: "map: '$1' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       }
     ],
     references: [
@@ -266,9 +259,8 @@ export default {
     snippet: 'minus: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       }
     ],
     references: [
@@ -283,9 +275,8 @@ export default {
     snippet: 'modulo: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       }
     ],
     references: [
@@ -309,9 +300,8 @@ export default {
     snippet: 'plus: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       }
     ],
     references: [
@@ -326,9 +316,8 @@ export default {
     snippet: "prepend: '$1' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       }
     ],
     references: [
@@ -343,9 +332,8 @@ export default {
     snippet: "remove: '$1' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       }
     ],
     references: [
@@ -360,9 +348,8 @@ export default {
     snippet: "remove_first: '$1' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       }
     ],
     references: [
@@ -377,14 +364,12 @@ export default {
     snippet: "replace: '$1', '$2' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       },
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       }
     ],
     references: [
@@ -399,14 +384,12 @@ export default {
     snippet: "replace_first: '$1', '$2' $0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       },
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       }
     ],
     references: [
@@ -457,14 +440,12 @@ export default {
     snippet: 'slice: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       },
       {
-        type: 'argument',
-        required: false,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: false
       }
     ],
     references: [
@@ -478,9 +459,8 @@ export default {
     description: 'Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting',
     arguments: [
       {
-        type: 'argument',
-        required: false,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: false
       }
     ],
     references: [
@@ -504,9 +484,8 @@ export default {
     snippet: 'split: $1',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       }
     ],
     references: [
@@ -548,9 +527,8 @@ export default {
     snippet: 'times: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       }
     ],
     references: [
@@ -565,14 +543,12 @@ export default {
     snippet: 'truncate: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       },
       {
-        type: 'argument',
-        required: false,
-        accepts: 'string|reference'
+        type: 'string',
+        required: false
       }
     ],
     references: [
@@ -587,14 +563,12 @@ export default {
     snippet: 'truncatewords: $1 $0',
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'integer|reference'
+        type: 'number',
+        required: true
       },
       {
-        type: 'argument',
-        required: false,
-        accepts: 'string|reference'
+        type: 'string',
+        required: false
       }
     ],
     references: [
@@ -645,14 +619,12 @@ export default {
     snippet: "where: '$1'$0",
     arguments: [
       {
-        type: 'argument',
-        required: true,
-        accepts: 'string|reference'
+        type: 'string',
+        required: true
       },
       {
-        type: 'argument',
-        required: false,
-        accepts: 'string|reference'
+        type: 'string',
+        required: false
       }
     ],
     references: [
@@ -663,3 +635,5 @@ export default {
     ]
   }
 };
+
+export default filters;

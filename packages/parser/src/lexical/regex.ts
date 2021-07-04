@@ -59,7 +59,7 @@ export const DelimitersTagClose = /^%}/;
  * Open Delimiters for Liquid object tags.
  *
  */
-export const DelimitersObjectClose = /^}}/;
+export const DelimitersObjectClose = /^}{2}/;
 
 /**
  * `^[%}]\}`
@@ -68,7 +68,7 @@ export const DelimitersObjectClose = /^}}/;
  *
  * Close delimiters for Liquid basic and object tags
  */
-export const DelimitersClose = /^[%}]\}/;
+export const DelimitersClose = /^[%}]}/;
 
 /* -------------------------------------------- */
 /* BASIC TAG EXPRESSIONS                        */
@@ -496,15 +496,15 @@ export const HTMLScriptName = /^\bscript/i;
 export const HTMLStyleName = /^\bstyle/i;
 
 /**
- * `^[^\s"'{%></=\x00-\x0F\x7F\x80-\x9F]+`
+ * `^[^\s"'{%}></=\x00-\x0F\x7F\x80-\x9F]+`
  *
  * ---
  *
- * HTML Tag Attribute
+ * HTML Tag Attribute (Excludes Liquid Delimiters)
  *
  * - Regex Expression lifted from vscode-html-languageservice
  */
-export const HTMLAttribute = /^[^\s"'{%></=\x00-\x0F\x7F\x80-\x9F]+/;
+export const HTMLAttribute = /^[^\s"'{%}></=\x00-\x0F\x7F\x80-\x9F]+/;
 
 /**
  * `^[^\s"'\x60=<>]+`

@@ -1,7 +1,7 @@
-import * as Specification from 'liquid/export';
-import { IFilter, Filters } from 'liquid/types/filters';
-import { ITag, Tags } from 'liquid/types/tags';
-import { IObject, Objects } from 'liquid/types/objects';
+import * as Specification from './export';
+import { IFilter } from './types/filters';
+import { ITag } from './types/tags';
+import { IObject } from './types/objects';
 
 /* ENGINE ENUM -------------------------------- */
 
@@ -12,28 +12,28 @@ export const enum IEngine {
    *
    * **FREE**
    */
-  Standard = 'standard',
+  standard = 'standard',
 
   /**
    * Liquid Shopify Variation
    *
    * **LICENSED**
    */
-  Shopify = 'shopify',
+  shopify = 'shopify',
 
   /**
    * Liquid Jekyll Variation
    *
    * **FREE**
    */
-  Jekyll = 'jekyll',
+  jekyll = 'jekyll',
 
   /**
    * Liquid Eleventy Variation
    *
    * **FREE**
    */
-  Eleventy = 'eleventy'
+  eleventy = 'eleventy'
 
 }
 
@@ -52,9 +52,9 @@ type Entries<T> = {
 /* VARIATION ENTRIES -------------------------- */
 
 export interface VariationEntries {
-  readonly filters: Entries<Filters>;
-  readonly objects?: Entries<Objects>;
-  readonly tags: Entries<Tags>;
+  readonly filters: Entries<IFilter>;
+  readonly objects?: Entries<IObject>;
+  readonly tags: Entries<ITag>;
 }
 
 /* VARIATION ---------------------------------- */
@@ -62,12 +62,18 @@ export interface VariationEntries {
 export interface Variation {
   readonly engine?: IEngine;
   readonly updated?: string;
-  readonly filters?: Filters;
-  readonly objects?: Objects;
-  readonly tags?: Tags;
+  readonly filters?: { [tag: string]: IFilter }
+  readonly objects?:{ [tag: string]: IObject; }
+  readonly tags?: { [tag: string]: ITag; }
 }
 
+/* SPECIFIER ---------------------------------- */
+
 export type Specifiers = IFilter & IObject & ITag;
+
+/* -------------------------------------------- */
+/* CONTROLLER                                   */
+/* -------------------------------------------- */
 
 /**
  * Variation
@@ -77,7 +83,7 @@ export let variation: Variation;
 /**
  * Cursor
  */
-export let cursor: ITag | IFilter | IObject | undefined;
+export let cursor: IFilter | IObject | ITag;
 
 /**
  * Liquid Engine
@@ -86,10 +92,9 @@ export let cursor: ITag | IFilter | IObject | undefined;
  * initialization before parsing begins, the engine
  * must be passed and the license.
  */
-export function Engine (variation: IEngine): void {
+export function Engine (engine: keyof typeof IEngine): void {
 
-  variation = Specification[variation];
-
+  variation = Specification[engine] as Variation;
 }
 
 /**
@@ -99,25 +104,36 @@ export function Engine (variation: IEngine): void {
  * each time a new tag with a reference specification is encountered
  * it will be made available on private `cursor` prop.
  */
-export function Cursor (name: string): boolean {
+export function Cursor (
+  name: string,
+  tag: 'filters' | 'tags' | 'objects'
+): boolean {
 
   if (variation === undefined || !name) return false;
 
-  if (variation?.tags?.[name] as ITag) {
-    cursor = variation.tags[name] as ITag;
-    return true;
+  if (tag === 'tags') {
+    if (variation?.tags?.[name]) {
+      cursor = variation.tags[name] as ITag;
+      return true;
+
+    }
   }
 
-  if (variation?.filters?.[name]) {
-    cursor = variation.filters[name] as IFilter;
-    return true;
+  if (tag === 'filters') {
+    if (variation?.filters?.[name]) {
+      cursor = variation.filters[name] as IFilter;
+      return true;
+    }
   }
 
-  // Liquid Standard has no known objects in its specification
-  // we will prevent any walks occuring.
-  if (variation.engine !== IEngine.Standard && variation?.objects?.[name]) {
-    cursor = variation.objects[name] as IObject;
-    return true;
+  if (tag === 'objects') {
+
+    // Liquid Standard has no known objects in its specification
+    // we will prevent any walks occuring.
+    if (variation.engine !== IEngine.standard && variation?.objects?.[name]) {
+      cursor = variation.objects[name] as IObject;
+      return true;
+    }
   }
 
   cursor = undefined;
