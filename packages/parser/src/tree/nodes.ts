@@ -31,7 +31,6 @@ export const enum Token {
  */
 export class INode {
 
-  public errors: number[] = [];
   public tag: string | undefined;;
   public root: number;
   public index: number;
@@ -82,13 +81,6 @@ export class INode {
         this.singular = false;
       }
     }
-  }
-
-  /**
-   * Returns diagnostics existing on this node
-   */
-  get diagnostics (): IDiagnostic[] {
-    return this.errors.map(e => document.errors[e]);
   }
 
   /**

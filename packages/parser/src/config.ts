@@ -14,7 +14,7 @@ export interface IConfig {
    * without a valid license key which you can obtain at
    * [https://liquify.dev/license](https://liquify.dev/license).
    *
-   * @default 'standard
+   * @default 'standard'
    */
   engine?: IEngine;
 

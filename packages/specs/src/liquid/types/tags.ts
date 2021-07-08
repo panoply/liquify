@@ -1,19 +1,6 @@
-import { IDescription, IReferences, IArguments, IParameters, TagScopes } from './common';
-
-/* TAG TYPES ---------------------------------- */
-
-export type TagTypes =
-  | 'associate'
-  | 'control'
-  | 'comment'
-  | 'embedded'
-  | 'import'
-  | 'iteration'
-  | 'object'
-  | 'output'
-  | 'variable'
-  | 'raw'
-  | 'unknown';
+import { IDescription, IReferences, IArgument, IParameters, TagScopes } from './common';
+import { Types } from './types';
+export { Types } from './types';
 
 /* TAG EMBEDDED LANGUAGES --------------------- */
 
@@ -38,7 +25,7 @@ export interface ITag {
    *
    * @default 'unknown'
    */
-  readonly type: TagTypes;
+  readonly type: Types.Tag,
 
   /**
    * Is this tag singular, ie: does not require an `{% endtag %}`
@@ -66,7 +53,7 @@ export interface ITag {
    *
    * @default undefined
    */
-  readonly references?: IReferences[] | undefined;
+  readonly reference?: IReferences | undefined;
 
   /**
    * Does this tag accept filters
@@ -111,7 +98,13 @@ export interface ITag {
   /**
    * Arguments used within the contents of the tag.
    */
-  readonly arguments?: IArguments[]
+  readonly arguments?: IArgument[]
+
+  /**
+   * For values that contain special characters, an
+   * option expression pattern match can be provided.
+   */
+  readonly pattern?: RegExp
 
   /**
    * Predefined tag parameters

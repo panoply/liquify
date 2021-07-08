@@ -5,7 +5,14 @@ import Stringify from 'json-stringify-safe';
 
 const text = `
 
-{{ " }}
+{{ product['id'] | asset_img_url: '240x',  scale:     product.id, format: 'pjpg'  }}
+
+<div>
+    <ul>
+      <li>{{ foo | font_modify: 'weight', '100' }}</li>
+      <li {% if something %} id="bar" {% endif %}>{{ bar }}</li>
+    </ul>
+</div>
 
 `;
 
@@ -22,16 +29,16 @@ function Stack (ast) {
         tag: child.tag,
         root: child.root,
         index: child.index,
-        start: child.parent.start,
-        end: child.parent.end,
-        errors: child.errors,
+        start: child.start,
+        end: child.end,
         children: child.children.map(({ tag }) => tag),
+        filters: child.filters || null,
+        objects: child.objects || null,
         parent: child.parent.tag === 'ROOT' ? 'ROOT' : {
           tag: child.parent.tag,
           start: child.parent.start,
           end: child.parent.end,
           index: child.parent.index,
-          errors: child.parent.errors,
           root: child.parent.root,
           children: child.parent.children.length
         }
@@ -57,7 +64,7 @@ test('FullDocument Parse', t => {
   });
 
   const end = process.hrtime(start);
-  console.log(Stack(ast));
+  // console.log(Stack(ast));
 
   // console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());

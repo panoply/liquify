@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { Parser } from 'provide/parser';
-import { Server, Service } from 'export';
+import { Server } from 'export';
 import { runAsync, runSync } from 'utils/runners';
 import { mark, stop } from 'marky';
 import {
@@ -141,7 +141,11 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
     if (!document) return null;
 
     if (Server.provider.validateOnOpen) {
-      return Service.doValidation(document).then(connection.sendDiagnostics);
+      return connection.sendDiagnostics({
+        uri: document.uri,
+        version: document.version,
+        diagnostics: document.diagnostics
+      });
     }
 
   } catch (e) {
@@ -168,8 +172,11 @@ connection.onDidChangeTextDocument((textDocumentChanges) => {
 
     console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`);
 
-    return Service.doValidation(document).then(connection.sendDiagnostics);
-
+    return connection.sendDiagnostics({
+      uri: document.uri,
+      version: document.version,
+      diagnostics: document.diagnostics
+    });
   } catch (e) {
 
     console.log(e);

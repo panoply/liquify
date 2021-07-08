@@ -1,7 +1,7 @@
 /* eslint no-unused-vars: "off" */
 
 import { ParseError, ErrorLevel } from 'lexical/errors';
-import { Diagnostic, Range } from 'vscode-languageserver-types';
+import { Diagnostic, Range, CodeDescription } from 'vscode-languageserver-types';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -32,6 +32,10 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
   [ParseError.InvalidQuotation]: {
     severity: ErrorLevel.Error,
     message: 'Parse error'
+  },
+  [ParseError.DuplicatedParameters]: {
+    severity: ErrorLevel.Error,
+    message: 'Duplicate/repeating parameters. Parameters must be unique!'
   },
   [ParseError.RejectFloat]: {
     severity: ErrorLevel.Error,
@@ -116,6 +120,10 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
   [ParseError.MissingIterationArray]: {
     severity: ErrorLevel.Error,
     message: 'Missing iteration value'
+  },
+  [ParseError.InvalidArgument]: {
+    severity: ErrorLevel.Error,
+    message: 'Invalid argument expressed'
   },
   [ParseError.InvalidName]: {
     severity: ErrorLevel.Error,
@@ -211,6 +219,6 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
   },
   [ParseError.UnknownProperty]: {
     severity: ErrorLevel.Warning,
-    message: 'Unknown property value expressed'
+    message: 'Unknown property value'
   }
 };

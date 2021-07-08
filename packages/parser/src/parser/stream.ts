@@ -150,6 +150,19 @@ export function TokenContains (regex: RegExp): boolean {
 }
 
 /**
+ * Token Contains
+ *
+ * Matches a RegExp within the current in-stream Token.
+ *
+ * **DOES NOT MODIFY**
+ */
+export function TokenNextWhitespace (regex: RegExp): boolean {
+
+  return regex.test(token);
+
+}
+
+/**
  * Token Capture (Rewind)
  *
  * Captures a token in reverse. The `source` is sliced, the starting
@@ -209,22 +222,40 @@ export function TokenCapture (regex: RegExp): boolean {
  * Returns a cursor offset
  *
  * This provides an addition marker point in the stream.
- * It is used to track positions for tokens.
+ * It is used to track positions for tokens. Negative numbers
+ * will reverse the cursor offset
+ *
+ * `undefined`
+ *
+ * Passing no parameter location value will align the cursor
+ * with the currect offset location.
+ *
+ * `NaN`
+ *
+ * Passing a value of `NaN` will consume the current captured
+ * token length.
+ *
+ * `0`
+ * Resets the cursor to location `0` (offset is not touched)
+ *
+ * ---
  *
  * **MODIFIER**
  *
  * > - `cursor` Adjusts cursor offset
  *
- *
  * ---
- *
- * @param {number} [offset]
- * Passing a value of `NaN` will reset cursor to `0` when
- * no value is passed, cursor will align with `offset`
  */
-export function Cursor (location: number = offset): number {
+export function Cursor (location?: number): number {
 
-  cursor = isNaN(location) ? 0 : location >= 0 ? location : offset;
+  cursor = isNaN(location)
+    ? cursor + token.length
+    : location === 0 ? 0 : location === undefined
+      ? offset
+      : cursor + location;
+
+  if (cursor < 0) cursor = 0;
+
   return cursor;
 
 }
@@ -503,22 +534,22 @@ export function ConsumeUnless (
   tokenize: boolean = true
 ): boolean {
 
-  const match = source.substring(offset).match(regex);
+  const string = source.substring(offset);
+  const match = string.search(regex);
 
-  if (match.index < 0) return false;
+  if (match < 0) return false;
+  if (match === 0) return true;
 
-  if (!unless.test(source.substring(offset, offset + match.index))) {
-    offset = offset + match.index;
+  const capture = string.substring(0, match);
 
-    if (tokenize) {
-      cursor = cursor + token.length;
-      token = source.substring(cursor, offset);
-    }
+  if (unless.test(capture)) return false;
+  if (tokenize) token = capture;
 
-    return true;
-  }
+  cursor = offset;
+  offset = offset + match;
 
-  return false;
+  return true;
+
 }
 
 /**
@@ -804,7 +835,6 @@ export function IsRegExp (regex: RegExp): boolean {
  * **MODIFIER**
  *
  * > - `cursor` Moves to index before match
- * > - `offset`  Increments by `1`
  * > - `token`  Character is tokenized (optional)
  *
  * ---
@@ -813,14 +843,13 @@ export function IsRegExp (regex: RegExp): boolean {
  */
 export function IfCodeChar (code: number, tokenize: boolean = true): boolean {
 
-  if (code === source.charCodeAt(offset)) {
-    if (tokenize) token = source.charAt(offset);
-    Cursor();
-    Advance(1);
-    return true;
-  }
+  if (code !== source.charCodeAt(offset)) return false;
+  if (tokenize) token = source.charAt(offset);
 
-  return false;
+  offset = offset + 1;
+
+  return true;
+
 }
 
 /**

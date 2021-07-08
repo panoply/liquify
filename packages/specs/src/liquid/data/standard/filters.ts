@@ -1,121 +1,103 @@
-import { Filters } from '../../types/filters';
+import { Filters as IFilters, Types } from '../../types/filters';
 
-const filters: Filters = {
+const Filters: IFilters = {
   abs: {
     description: 'Returns the absolute value of a number',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/abs/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/abs/'
+    }
   },
   append: {
     description: 'Concatenates two strings and returns the concatenated value',
     snippet: "append: '$1' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/append/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/append/'
+    }
   },
   at_least: {
     description: 'Limits a number to a minimum value',
     snippet: 'at_least: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/at_least/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/at_least/'
+    }
   },
   at_most: {
     description: 'Limits a number to a maximum value',
     snippet: 'at_most: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/at_most/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/at_most/'
+    }
   },
   capitalize: {
     description: 'Makes the first character of a string capitalized',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/capitalize/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/capitalize/'
+    }
   },
   ceil: {
     description: 'Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/ceil/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/ceil/'
+    }
   },
   compact: {
     description: 'Removes any `nil` values from an array',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/compact/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/compact/'
+    }
   },
   concat: {
     description: 'Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays',
     snippet: 'concat: $1 $0',
     arguments: [
       {
-        type: 'array',
+        type: Types.Basic.array,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/concat/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/concat/'
+    }
   },
   date: {
     description: 'Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby’s `Time.parse`',
     snippet: "date: '$1' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/date/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/date/'
+    }
   },
   default: {
     description: {
@@ -125,515 +107,439 @@ const filters: Filters = {
     snippet: "default: '$1' $0",
     arguments: [
       {
-        type: 'any',
-        required: true
-      },
-      {
-        type: 'parameter',
-        value: 'allow_false',
-        required: false,
-        description: 'To allow variables to return false instead of the default value, you can use the `allow_false` parameter.',
-        accepts: 'boolean'
+        type: Types.Basic.unknown,
+        required: true,
+        parameter: {
+          required: false,
+          value: {
+            allow_false: {
+              type: Types.Basic.boolean,
+              description: 'To allow variables to return false instead of the default value, you can use the `allow_false` parameter.'
+            }
+          }
+        }
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/default/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/default/'
+    }
   },
   divided_by: {
     description: 'Divides a number by another number',
     snippet: 'divided_by: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/divided_by/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/divided_by/'
+    }
   },
   downcase: {
     description: 'Makes each character in a string lowercase. It has no effect on strings which are already all lowercase',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/downcase/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/downcase/'
+    }
   },
   escape: {
     description: 'Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn’t change strings that don’t have anything to escape',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/escape/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/escape/'
+    }
   },
   escape_once: {
     description: 'Escapes a string without changing existing escaped entities. It doesn’t change strings that don’t have anything to escape',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/escape_once/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/escape_once/'
+    }
   },
   first: {
     description: 'Returns the first item of an array.',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/first/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/first/'
+    }
   },
   floor: {
     description: 'Rounds the input down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/floor/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/floor/'
+    }
   },
   join: {
     description: 'Joins the elements of an array with the character passed as the parameter. The result is a single string.',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/join/'
-      }
-    ],
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/join/'
+    },
     snippet: "join: '$1' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ]
   },
   last: {
     description: 'Gets the last element in an array',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/last/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/last/'
+    }
   },
   lstrip: {
     description: 'Removes all whitespace (tabs, spaces, and newlines) from the left side of a string. It does not affect spaces between words',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/lstrip/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/lstrip/'
+    }
   },
   map: {
     description: 'Accepts an array element’s attribute as a parameter and creates a string out of each array element’s value.',
     snippet: "map: '$1' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/map/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/map/'
+    }
   },
   minus: {
     description: 'Subtracts a number from another number',
     snippet: 'minus: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/minus/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/minus/'
+    }
   },
   modulo: {
     description: 'Returns the remainder of a division operation',
     snippet: 'modulo: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/modulo/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/modulo/'
+    }
   },
   newline_to_br: {
     description: 'Replaces every newline in a string with an HTML line break (`<br />`)',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/newline_to_br/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/newline_to_br/'
+    }
   },
   plus: {
     description: 'Adds a number to another number',
     snippet: 'plus: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/plus/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/plus/'
+    }
   },
   prepend: {
     description: 'Adds the specified string to the beginning of another string',
     snippet: "prepend: '$1' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/prepend/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/prepend/'
+    }
   },
   remove: {
     description: 'Removes every occurrence of the specified substring from a string',
     snippet: "remove: '$1' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/remove/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/remove/'
+    }
   },
   remove_first: {
     description: 'Removes only the first occurrence of the specified substring from a string',
     snippet: "remove_first: '$1' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/remove_first/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/remove_first/'
+    }
   },
   replace: {
     description: 'Replaces every occurrence of the first argument in a string with the second argument',
     snippet: "replace: '$1', '$2' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       },
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/replace/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/replace/'
+    }
   },
   replace_first: {
     description: 'Replaces only the first occurrence of the first argument in a string with the second argument',
     snippet: "replace_first: '$1', '$2' $0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       },
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/replace_first/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/replace_first/'
+    }
   },
   reverse: {
     description: 'Reverses the order of the items in an array. `reverse` cannot reverse a string',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/reverse/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/reverse/'
+    }
   },
   round: {
     description: 'Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/round/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/round/'
+    }
   },
   rstrip: {
     description: 'Removes all whitespace (tabs, spaces, and newlines) from the right side of a string. It does not affect spaces between words',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/rstrip/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/rstrip/'
+    }
   },
   size: {
     description: 'Returns the number of characters in a string or the number of items in an array',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/size/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/size/'
+    }
   },
   slice: {
     description: 'Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned',
     snippet: 'slice: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       },
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: false
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/slice/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/slice/'
+    }
   },
   sort: {
     description: 'Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: false
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/sort/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/sort/'
+    }
   },
   sort_natural: {
     description: 'Sorts items in an array in case-insensitive order',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/sort_natural/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/sort_natural/'
+    }
   },
   split: {
     description: 'Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array',
     snippet: 'split: $1',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/split/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/split/'
+    }
   },
   strip: {
     description: 'Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/strip/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/strip/'
+    }
   },
   strip_html: {
     description: 'Removes any HTML tags from a string',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/strip_html/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/strip_html/'
+    }
   },
   strip_newlines: {
     description: 'Removes any newline characters (line breaks) from a string',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/strip_newlines/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/strip_newlines/'
+    }
   },
   times: {
     description: 'Multiplies a number by another number',
     snippet: 'times: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/times/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/times/'
+    }
   },
   truncate: {
     description: 'Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (…) is appended to the string and is included in the character count',
     snippet: 'truncate: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       },
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: false
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/truncate/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/truncate/'
+    }
   },
   truncatewords: {
     description: 'Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (…) is appended to the string',
     snippet: 'truncatewords: $1 $0',
     arguments: [
       {
-        type: 'number',
+        type: Types.Basic.number,
         required: true
       },
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: false
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/truncatewords/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/truncatewords/'
+    }
   },
   uniq: {
     description: 'Removes any duplicate elements in an array',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/uniq/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/uniq/'
+    }
   },
   upcase: {
     description: 'Makes each character in a string uppercase. It has no effect on strings which are already all uppercase',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/upcase/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/upcase/'
+    }
   },
   url_decode: {
     description: 'Decodes a string that has been encoded as a URL or by `url_encode`',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/url_decode/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/url_decode/'
+    }
   },
   url_encode: {
     description: 'Converts any URL-unsafe characters in a string into percent-encoded characters',
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/url_encode/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/url_encode/'
+    }
   },
   where: {
     description: 'Creates an array including only the objects with a given property value, or any truthy value by default',
     snippet: "where: '$1'$0",
     arguments: [
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: true
       },
       {
-        type: 'string',
+        type: Types.Basic.string,
         required: false
       }
     ],
-    references: [
-      {
-        name: 'Standard Liquid',
-        url: 'https://shopify.github.io/liquid/filters/where/'
-      }
-    ]
+    reference: {
+      name: 'Standard Liquid',
+      url: 'https://shopify.github.io/liquid/filters/where/'
+    }
   }
 };
 
-export default filters;
+export default Filters;

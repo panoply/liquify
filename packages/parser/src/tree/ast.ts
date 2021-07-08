@@ -4,11 +4,10 @@ import { NodeType } from 'lexical/types';
 import { NodeKind } from 'lexical/kind';
 import { ParseError } from 'lexical/errors';
 import { Config } from 'config';
-import * as s from 'parser/stream';
 import { INode } from 'tree/nodes';
-import { GetFormedRange, findFirst, binaryIndex, binarySearch } from 'parser/utils';
+import { GetFormedRange } from 'parser/utils';
 import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
-import { Errors } from 'tree/errors';
+import * as s from 'parser/stream';
 
 /**
  * Abstract Syntax Tree
@@ -105,22 +104,15 @@ export class IAST {
    * Error Reporter. Generates the diagnostics which are
    * consumed within LSP.
    */
-  public report (error: ParseError): (
-    node: INode,
-    location?: Range | undefined
-  ) => void {
+  public report (error: ParseError): (location?: Range | undefined) => void {
 
     const diagnostic = { ...Diagnostics[error] };
 
-    return ({ errors, range }, location?: Range) => {
+    return (location?: Range | undefined) => {
 
-      errors.push(this.errors.length);
-
-      if (location instanceof INode) {
-        diagnostic.range = range;
-      } else {
-        diagnostic.range = location;
-      }
+      diagnostic.range = location === undefined
+        ? this.getRange()
+        : location;
 
       this.errors.push(diagnostic);
 

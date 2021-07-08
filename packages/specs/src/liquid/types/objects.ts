@@ -1,14 +1,6 @@
 import { IDescription, IReferences, IScopes } from './common';
-
-/* OBJECT TYPEOF ------------------------------ */
-
-export type ObjectTypes =
-  | 'object'
-  | 'string'
-  | 'integer'
-  | 'boolean'
-  | 'array'
-  | 'variable';
+import { Types } from './types';
+export { Types } from './types';
 
 /* OBJECT SPECIFICATION ----------------------- */
 
@@ -20,11 +12,11 @@ interface ObjectProperties {
   /**
    * The Typeof object value
    */
-  readonly type: ObjectTypes;
+  readonly type: Types.Basic;
   /**
    * Documentation References
    */
-  readonly references?: IReferences[];
+  readonly reference?: IReferences;
   /**
    * Property value contains additional properties, eg: `{{ object.prop1.prop2 }}`
    */
@@ -38,7 +30,7 @@ export interface IObject {
   /**
    * The automatically applied tag type, which is "object"
    */
-  readonly type?: ObjectTypes;
+  readonly type?: Types.Basic;
 
   /**
    * Description of this object
@@ -47,11 +39,9 @@ export interface IObject {
   readonly description?: IDescription | string;
 
   /**
-   * A URL reference to the documentation pertaining to this tag
-   *
-   * @default undefined
+   * Documentation References
    */
-  readonly link?: string;
+  readonly reference?: IReferences;
 
   /**
    * Object tags will always be singular tags, enforces `true`

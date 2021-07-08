@@ -1067,7 +1067,7 @@ function Scan (): number {
         if (!s.IsRegExp(r.FilterPipeOrClose)) {
           s.Advance(1, true);
           error = ParseError.InvalidCharacter;
-          state = ScanState.GotoTagEnd;
+          state = ScanState.ParseError;
           return TokenType.ParseError;
         }
       }
@@ -1153,7 +1153,6 @@ function Scan (): number {
     // LIQUID CLOSE TAG
     // -----------------------------------------------------------------
     case ScanState.TagClose:
-    case ScanState.EndTagClose:
 
       // Validate right side trim dash character
       if (s.IfCodeChar(c.DSH)) {

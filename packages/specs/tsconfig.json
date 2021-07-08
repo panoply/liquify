@@ -1,10 +1,6 @@
 {
   "exclude": ["node_modules/**", "package", "test"],
-  "include": [
-    "src/index.ts",
-    "src/**/*.ts",
-    "src/liquid/grammar/shopify.ts"
-  ],
+  "include": ["src/index.ts", "src/**/*.ts"],
   "typeAcquisition": {
     "enable": true,
     "include": ["node"]

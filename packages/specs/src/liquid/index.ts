@@ -1,143 +1,87 @@
 import * as Specification from './export';
-import { IFilter } from './types/filters';
-import { ITag } from './types/tags';
-import { IObject } from './types/objects';
+import { cursor } from './cursor';
+import { Variation, IEngine, ParameterArgument } from './types/common';
+import { Types } from './types/types';
+import { argument } from './argument';
 
-/* ENGINE ENUM -------------------------------- */
-
-export const enum IEngine {
-
-  /**
-   * Liquid Standard Variation
-   *
-   * **FREE**
-   */
-  standard = 'standard',
-
-  /**
-   * Liquid Shopify Variation
-   *
-   * **LICENSED**
-   */
-  shopify = 'shopify',
-
-  /**
-   * Liquid Jekyll Variation
-   *
-   * **FREE**
-   */
-  jekyll = 'jekyll',
-
-  /**
-   * Liquid Eleventy Variation
-   *
-   * **FREE**
-   */
-  eleventy = 'eleventy'
-
-}
-
-/* COMPLETE VARIATION ------------------------- */
-
-type PickByValue<T, V> = Pick<T, {
-  [K in keyof T]: T[K] extends V ? K : never }[keyof T]
->;
-
-/* ENTRIES ------------------------------------ */
-
-type Entries<T> = {
-  [K in keyof T]: [keyof PickByValue<T, T[K]>, T[K]];
-}[keyof T][];
-
-/* VARIATION ENTRIES -------------------------- */
-
-export interface VariationEntries {
-  readonly filters: Entries<IFilter>;
-  readonly objects?: Entries<IObject>;
-  readonly tags: Entries<ITag>;
-}
-
-/* VARIATION ---------------------------------- */
-
-export interface Variation {
-  readonly engine?: IEngine;
-  readonly updated?: string;
-  readonly filters?: { [tag: string]: IFilter }
-  readonly objects?:{ [tag: string]: IObject; }
-  readonly tags?: { [tag: string]: ITag; }
-}
-
-/* SPECIFIER ---------------------------------- */
-
-export type Specifiers = IFilter & IObject & ITag;
-
-/* -------------------------------------------- */
-/* CONTROLLER                                   */
-/* -------------------------------------------- */
+export let variation: Variation = Specification.standard;
 
 /**
- * Variation
+ * Set variation engine
  */
-export let variation: Variation;
+export function engine (name: IEngine) {
 
-/**
- * Cursor
- */
-export let cursor: IFilter | IObject | ITag;
-
-/**
- * Liquid Engine
- *
- * Sets the variation specification. Called upon
- * initialization before parsing begins, the engine
- * must be passed and the license.
- */
-export function Engine (engine: keyof typeof IEngine): void {
-
-  variation = Specification[engine] as Variation;
-}
-
-/**
- * Liquid Cursor
- *
- * Represents an in-stream specification. The cursor is changed
- * each time a new tag with a reference specification is encountered
- * it will be made available on private `cursor` prop.
- */
-export function Cursor (
-  name: string,
-  tag: 'filters' | 'tags' | 'objects'
-): boolean {
-
-  if (variation === undefined || !name) return false;
-
-  if (tag === 'tags') {
-    if (variation?.tags?.[name]) {
-      cursor = variation.tags[name] as ITag;
-      return true;
-
-    }
+  if (variation.engine !== name) {
+    variation = Specification[name] as Variation;
+    cursor.engine = name;
   }
-
-  if (tag === 'filters') {
-    if (variation?.filters?.[name]) {
-      cursor = variation.filters[name] as IFilter;
-      return true;
-    }
-  }
-
-  if (tag === 'objects') {
-
-    // Liquid Standard has no known objects in its specification
-    // we will prevent any walks occuring.
-    if (variation.engine !== IEngine.standard && variation?.objects?.[name]) {
-      cursor = variation.objects[name] as IObject;
-      return true;
-    }
-  }
-
-  cursor = undefined;
-
-  return false;
 
 };
+
+export function tag (name: string) {
+
+  // Reset states for every new tag encountered
+  if (cursor.tag) cursor.reset();
+  if (!variation.tags?.[name]) return false;
+
+  cursor.tag = variation.tags[name];
+
+  if (cursor.tag?.arguments) cursor.argument = cursor.tag.arguments[0];
+
+  return true;
+
+}
+
+export function object (name: string): boolean {
+
+  if (!variation?.objects?.[name]) return false;
+
+  cursor.object = variation.objects[name];
+
+  return true;
+
+};
+
+export function filter (name: string): boolean {
+
+  // Reset states for every new tag encountered
+  if (cursor.filter) argument.reset();
+  if (!variation.filters?.[name]) return false;
+
+  cursor.filter = variation.filters[name];
+
+  if (!cursor.filter?.arguments) return false;
+
+  cursor.argument = cursor.filter.arguments[0];
+  argument.param = cursor.argument.type === Types.Argument.parameter
+    ? cursor.argument as ParameterArgument
+    : cursor.argument?.parameter;
+
+  return true;
+
+};
+
+export function propofObject (value: string): boolean {
+
+  if (!cursor.object.properties?.[value]) return false;
+
+  cursor.object = cursor.object.properties[value];
+  return true;
+
+}
+
+export function typeofObject (type: Types.Basic): boolean {
+
+  return cursor.object.type === type;
+}
+
+export function typeofTag (type: Types.Tag): boolean {
+
+  return cursor.tag.type === type;
+}
+
+export function typeofArgument (type: Types.Argument | Types.Basic): boolean {
+
+  return cursor.argument.type === type;
+
+}

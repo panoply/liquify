@@ -23,6 +23,7 @@ export const enum TokenType {
   FilterArgumentNumber,
   FilterIdentifier,
   FilterParameter,
+  FilterEnd,
 
   Unknown,
 

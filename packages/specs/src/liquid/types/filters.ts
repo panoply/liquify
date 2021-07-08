@@ -1,4 +1,5 @@
-import { IDescription, IReferences, IScopes, IArguments } from './common';
+import { IDescription, IReferences, IScopes, IArgument } from './common';
+export { Types } from './types';
 
 export interface IFilter {
 
@@ -14,7 +15,7 @@ export interface IFilter {
    *
    * @default undefined
    */
-  readonly references?: IReferences[];
+  readonly reference?: IReferences;
 
   /**
    * Is the filter tag deprecated?
@@ -50,7 +51,7 @@ export interface IFilter {
    *
    * @default undefined
    */
-  readonly arguments?: IArguments[];
+  readonly arguments?: IArgument[];
 
 }
 

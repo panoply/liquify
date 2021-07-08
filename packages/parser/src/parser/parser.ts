@@ -1,8 +1,10 @@
+import * as spec from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
+import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
 import { NodeLanguage } from 'lexical/language';
 import { NodeType } from 'lexical/types';
-import { ParseError } from 'lexical/errors';
+import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { INode, Type } from 'tree/nodes';
 import { HTMLAttributeJS, HTMLAttributeJSON } from 'lexical/regex';
@@ -29,10 +31,11 @@ export function parse (document: IAST): IAST {
   let html: INode = liquid;
   let node: INode;
   let track: INode;
-  let error: (node: INode) => void;
+  let error: (range?: Range) => void;
   let token: number = scanner.scan();
   let attr: string | number;
-
+  let filter: number = NaN;
+  let object: number = NaN;
   /* -------------------------------------------- */
   /* TOKENIZE                                     */
   /* -------------------------------------------- */
@@ -43,18 +46,15 @@ export function parse (document: IAST): IAST {
 
       case TokenType.ParseError:
 
-        if (scanner.error === ParseError.MissingCloseDelimiter) {
+        if (scanner.error === Errors.MissingCloseDelimiter) {
           track = undefined;
           node.offsets.length > 2 || node.offsets.push(s.offset);
-          document.report(scanner.error)(node);
+          document.report(scanner.error)(node.range);
           break;
         }
 
         // Remove syntactic placement errors
-        document.report(scanner.error)(
-          node,
-          document.getRange(s.cursor, s.offset)
-        );
+        document.report(scanner.error)();
 
         break;
 
@@ -86,7 +86,7 @@ export function parse (document: IAST): IAST {
         html = node = html;
 
         if (!startEnd(NodeKind.HTML, html)) {
-          error = document.report(ParseError.MissingStartTag);
+          error = document.report(Errors.MissingStartTag);
         }
 
         break;
@@ -94,6 +94,7 @@ export function parse (document: IAST): IAST {
       case TokenType.HTMLEndTagClose:
 
         closeNode(Type.Pair);
+
         track = undefined;
 
         break;
@@ -166,6 +167,18 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      case TokenType.ObjectTagName:
+
+        node.tag = s.token;
+        object = s.offset;
+
+        Object.assign(node.objects, { [s.offset]: [ s.token ] });
+
+        if (!isNaN(filter) && node.filters?.[filter]) {
+          node.filters[filter].push(object);
+        }
+
+        break;
       case TokenType.OutputTagClose:
 
         closeNode(Type.Void);
@@ -186,7 +199,7 @@ export function parse (document: IAST): IAST {
         liquid = node = liquid;
 
         if (!startEnd(NodeKind.Liquid, liquid)) {
-          error = document.report(ParseError.MissingStartTag);
+          error = document.report(Errors.MissingStartTag);
         }
 
         break;
@@ -197,6 +210,40 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      case TokenType.ObjectProperty:
+
+        node.objects[object].push(s.token);
+        node.objects[s.offset + 1] = object;
+
+        break;
+
+      case TokenType.Filter:
+
+        filter = s.offset + s.cursor;
+
+        Object.assign(node.filters, { [filter]: [ ] });
+
+        break;
+
+      case TokenType.FilterIdentifier:
+
+        node.filters[filter].push(s.token);
+        node.filters[s.offset + 1] = filter;
+
+        break;
+
+      case TokenType.FilterArgument:
+
+        node.filters[filter].push(s.token);
+        node.filters[s.offset + 1] = filter;
+
+        break;
+
+      case TokenType.FilterEnd:
+
+        filter = NaN;
+
+        break;
     }
 
     token = scanner.scan();
@@ -206,8 +253,7 @@ export function parse (document: IAST): IAST {
   /* NODE SYNTACTICS ---------------------------- */
 
   if (pair.size > 0) {
-
-    pair.forEach(document.report(ParseError.MissingEndTag));
+    for (const { range } of pair) document.report(Errors.MissingEndTag)(range);
     pair.clear();
   }
 
@@ -266,7 +312,9 @@ export function parse (document: IAST): IAST {
    */
   function startEnd (kind: NodeKind | undefined, parent: INode): boolean {
 
-    while (!node.isSameNode(s.token, kind) && node.parent) node = node.parent;
+    while (!node.isSameNode(s.token, kind) && node.parent) {
+      node = node.parent;
+    };
 
     // Ensure the node is not root and matches the token
     if (parent.type !== Type.Root && node.tag === s.token) {
@@ -300,7 +348,7 @@ export function parse (document: IAST): IAST {
       if (node.kind === NodeKind.Liquid) liquid = node.parent;
       if (!error) return undefined;
 
-      error(node);
+      error(node.range);
       error = undefined;
 
     }
@@ -312,7 +360,9 @@ export function parse (document: IAST): IAST {
     let idx = track.children.length;
 
     if (idx === 0) {
+
       track.offsets.push(s.offset);
+
     } else {
 
       while (idx--) {
@@ -329,7 +379,7 @@ export function parse (document: IAST): IAST {
       }
     }
 
-    document.report(ParseError.MissingCloseDelimiter)(track);
+    document.report(Errors.MissingCloseDelimiter)(track.range);
     track = undefined;
 
   }
