@@ -277,9 +277,7 @@ function Scan (): number {
           ? TokenType.HTMLVoidTagClose
           : TokenType.HTMLStartTagClose;
 
-        // Return a start tag close
-        return token;
-
+        return token; // Return a start tag close
       }
 
       // If we get here we are missing a closing delimiter
@@ -377,9 +375,9 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.BeforeOutputTagName:
 
-      // CHECK 1
+      /* STRING OUTPUT TAG -------------------------- */
 
-      // Lets check if output name value is a string, eg: {{ 'value'
+      // Output tag name as a string, eg: {{ 'value' }}
       if (s.IsRegExp(Regexp.StringQuotations)) {
 
         // Capture the string token value, eg: 'value' or "value"
@@ -394,17 +392,17 @@ function Scan (): number {
         return Scan();
       }
 
-      // CHECK 2
+      /* NUMBER OUTPUT TAG -------------------------- */
 
-      // Lets check is the value is a integer or float, eg: {{ 100 }}
+      // Output tag name as an integer or float, eg: {{ 100 }}
       if (s.IfRegExp(Regexp.Number)) {
         state = ScanState.Filter;
         return TokenType.Number;
       }
 
-      // CHECK 3
+      /* OBJECT OUTPUT TAG -------------------------- */
 
-      // Reference or variable name was detected, eg: {{ name }}
+      // Output tag name as a variable or object, eg: {{ name }}
       if (s.IfRegExp(Regexp.TagOutputName)) {
 
         // Match captured token with a cursor value
@@ -505,13 +503,14 @@ function Scan (): number {
         return TokenType.Unknown;
       }
 
+      // If we get here we have a missing tag name, eg {% ^ %}
       if (s.IsRegExp(Regexp.TagCloseClear)) {
         error = ParseError.MissingTagName;
         state = ScanState.GotoTagEnd;
         return TokenType.ParseError;
       }
 
-      // If we get here, invalid tag name has be intercepted
+      // If we get here an invalid tag name has be intercepted
       // This is going to be because the tag name has invalid characters
       error = ParseError.InvalidCharacter;
       state = ScanState.ParseError;
@@ -576,7 +575,7 @@ function Scan (): number {
         return Scan();
       }
 
-      // If Tag is an object, we will look for filters, eg: {{ tag | }}
+      // Lets look for filters pipes, eg: {{ tag | }}
       if (s.IsCodeChar(c.PIP)) {
         state = ScanState.Filter;
         return Scan();
