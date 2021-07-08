@@ -177,6 +177,7 @@ connection.onDidChangeTextDocument((textDocumentChanges) => {
       version: document.version,
       diagnostics: document.diagnostics
     });
+
   } catch (e) {
 
     console.log(e);

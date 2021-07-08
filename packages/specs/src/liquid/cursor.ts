@@ -34,15 +34,4 @@ export namespace cursor {
    */
   export let argument: IArgument | null = null;
 
-  /**
-   * Resets the state
-   */
-  export function reset (): void {
-
-    tag = null;
-    filter = null;
-    object = null;
-    argument = null;
-
-  };
 }

@@ -4,10 +4,10 @@ import { parse } from 'parser/parser';
 import { create, update, get, remove, model } from 'tree/model';
 import { IAST } from './tree/ast';
 import { Config, IConfig } from './config';
-import { INode, Type } from './tree/nodes';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
+export * from '@liquify/liquid-language-specs';
 export { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 export { IAST } from './tree/ast';
 export { INode } from './tree/nodes';

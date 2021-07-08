@@ -63,7 +63,7 @@ export class IAST {
   /**
    * The error diagnostics consumed by LSP
    */
-  get diagnostics () { return [ ...this.errors ]; }
+  get diagnostics () { return this.errors; }
 
   /**
    * Line offsets for the document
@@ -303,7 +303,9 @@ export class IAST {
 
     this.cursor = NaN;
     this.version = version;
-    this.errors = [];
+    this.errors.splice(0);
+
+    console.log(this.errors);
 
     /* -------------------------------------------- */
     /* CONTENT UPDATE                               */

@@ -122,13 +122,13 @@ export namespace argument {
 
     prev = prev || value;
 
-    if (cursor.argument.type === Types.Basic.unknown) {
+    if (cursor.argument?.type === Types.Basic.unknown) {
 
       return true;
 
-    } else if (cursor.argument.type === Types.Argument.parameter) {
+    } else if (cursor.argument?.type === Types.Argument.parameter) {
 
-      return !!cursor.argument.value?.[value];
+      return !!cursor.argument?.value?.[value];
 
     } else if (cursor.argument?.pattern) {
 
@@ -140,11 +140,11 @@ export namespace argument {
         return inPattern(pattern[prev], value);
       }
 
-    } else if (cursor.argument.value === value) {
+    } else if (cursor.argument?.value === value) {
 
       return cursor.argument.value === value;
 
-    } else if (typeof cursor.argument.value === 'object') {
+    } else if (typeof cursor.argument?.value === 'object') {
 
       return !!cursor.argument.value?.[prev];
 

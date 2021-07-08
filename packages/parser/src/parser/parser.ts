@@ -1,4 +1,4 @@
-import * as spec from '@liquify/liquid-language-specs';
+// import * as spec from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
@@ -7,9 +7,9 @@ import { NodeType } from 'lexical/types';
 import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { INode, Type } from 'tree/nodes';
-import { HTMLAttributeJS, HTMLAttributeJSON } from 'lexical/regex';
+import * as Regexp from 'lexical/expressions';
 import * as s from 'parser/stream';
-import * as scanner from 'parser/scanning';
+import * as scanner from 'parser/scanner';
 
 /**
  * Liquid/HTML parser function which constructs
@@ -117,9 +117,9 @@ export function parse (document: IAST): IAST {
 
       case TokenType.HTMLAttributeValue:
 
-        if (HTMLAttributeJS.test(s.token)) {
+        if (Regexp.HTMLAttributeJS.test(s.token)) {
           node.languageId = NodeLanguage.javascript;
-        } else if (HTMLAttributeJSON.test(s.token)) {
+        } else if (Regexp.HTMLAttributeJSON.test(s.token)) {
           node.languageId = NodeLanguage.json;
         }
 

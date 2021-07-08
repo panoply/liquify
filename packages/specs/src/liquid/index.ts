@@ -18,10 +18,21 @@ export function engine (name: IEngine) {
 
 };
 
+export function reset (): void {
+
+  cursor.tag = null;
+  cursor.filter = null;
+  cursor.object = null;
+  cursor.argument = null;
+
+  argument.reset();
+
+};
+
 export function tag (name: string) {
 
   // Reset states for every new tag encountered
-  if (cursor.tag) cursor.reset();
+  if (cursor.tag) reset();
   if (!variation.tags?.[name]) return false;
 
   cursor.tag = variation.tags[name];
@@ -63,7 +74,7 @@ export function filter (name: string): boolean {
 
 export function propofObject (value: string): boolean {
 
-  if (!cursor.object.properties?.[value]) return false;
+  if (!cursor.object?.properties?.[value]) return false;
 
   cursor.object = cursor.object.properties[value];
   return true;
@@ -72,16 +83,16 @@ export function propofObject (value: string): boolean {
 
 export function typeofObject (type: Types.Basic): boolean {
 
-  return cursor.object.type === type;
+  return cursor.object?.type === type;
 }
 
 export function typeofTag (type: Types.Tag): boolean {
 
-  return cursor.tag.type === type;
+  return cursor.tag?.type === type;
 }
 
 export function typeofArgument (type: Types.Argument | Types.Basic): boolean {
 
-  return cursor.argument.type === type;
+  return cursor.argument?.type === type;
 
 }
