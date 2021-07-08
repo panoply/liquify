@@ -29,6 +29,15 @@ export const enum ParseError {
    */
   ParsingError = 1,
 
+
+  /**
+   * Duplicated parameter values
+   *
+   * @example
+   * {{- tag | filter: param: 'foo',  param: 'bar' -}} // param must be unqiue
+   */
+  DuplicatedParameters,
+
   /**
    * Tag name is missing
    *
@@ -223,6 +232,15 @@ export const enum ParseError {
    * {{- tag | x = 1 -}} // = is invalid
    */
   InvalidCharacter,
+
+  /**
+   * Invalid Character
+   *
+   * @example
+   * {{ tag | font_modify: 'weight', 'bar' }} // 'bar' is invalid
+   */
+  InvalidArgument,
+
 
   /**
    * Invalid Character

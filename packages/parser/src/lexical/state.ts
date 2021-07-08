@@ -6,6 +6,7 @@
 export const enum ScanCache {
   Reset,
   SkipClose,
+  PassThrough,
   TrimRight,
   GotoEnd,
   Tokenize,
