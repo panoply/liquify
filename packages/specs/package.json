@@ -4,7 +4,10 @@
   "created": "2020",
   "private": false,
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
-  "contributors": ["Νίκος Σαβίδης", "Joseph Curtis"],
+  "contributors": [
+    "Νίκος Σαβίδης",
+    "Joseph Curtis"
+  ],
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
   "main": "package/index.js",
@@ -20,7 +23,9 @@
     "url": "https://github.com/panoply/liquify"
   },
   "eslintConfig": {
-    "extends": ["@liquify/eslint-config-ts"],
+    "extends": [
+      "@liquify/eslint-config-ts"
+    ],
     "rules": {
       "no-template-curly-in-string": "off",
       "no-unused-vars": "off",
@@ -38,14 +43,17 @@
     "test:log": "ava --verbose -- logs"
   },
   "ava": {
-    "require": ["esm"],
-    "files": ["test/dev.test.js"],
+    "require": [
+      "esm"
+    ],
+    "files": [
+      "test/dev.test.js"
+    ],
     "concurrency": 5
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
     "@liquify/eslint-config-ts": "workspace:^1.0.1",
-    "@liquify/rollup-plugin-cryptospec": "workspace:^0.1.0",
     "@liquify/rollup-plugin-obfuscator": "workspace:^0.2.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
     "@rollup/plugin-beep": "^0.2.0",
@@ -54,10 +62,8 @@
     "ava": "^3.15.0",
     "dotenv": "^10.0.0",
     "esm": "^3.2.25",
-    "lodash.has": "^4.5.2",
-    "object-sizeof": "^1.6.1",
     "pretty-bytes": "^5.6.0",
-    "rambda": "^6.7.0",
+    "rollup": "^2.53.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-filesize": "^9.1.1",
@@ -68,10 +74,8 @@
     "vscode-languageserver-types": "^3.16.0",
     "vscode-web-custom-data": "^0.3.4"
   },
-  "dependencies": {
-    "@liquify/cryptographer": "workspace:^0.1.0"
-  },
   "peerDependencies": {
+    "rollup": "^2.53.0",
     "typescript": "^4.3.5"
   }
 }

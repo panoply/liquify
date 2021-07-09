@@ -1,4 +1,4 @@
-import * as Specification from './export';
+import * as Specification from './data/export';
 import { cursor } from './cursor';
 import { Variation, IEngine, ParameterArgument } from './types/common';
 import { Types } from './types/types';
