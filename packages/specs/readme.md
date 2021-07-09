@@ -18,9 +18,9 @@ The [liquify](#) parser treats HTML and Liquid as a single language. Providing L
 
 In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax. They are not quite grammars but close enough and exists to enable developers of any level to quickly compose contextual grammars and formal schema which can described tags, filters and objects used in different variation. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation and the specs provided here allow us to establish formal specs for the language.
 
-1. [Tokens](/docs/01-tokens.md)
-2. [Types](/docs/02-types.md)
-3. [Arguments](/docs/03-arguments.md)
+1. [Tokens](docs/01-tokens.md)
+2. [Types](docs/02-types.md)
+3. [Arguments](docs/03-arguments.md)
 
 ## Author
 
