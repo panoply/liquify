@@ -1,4 +1,5 @@
 import { IDescription, IReferences, IScopes } from './common';
+import ObjectProps from './../data/shopify/objects';
 import { Types } from './types';
 export { Types } from './types';
 
@@ -9,6 +10,10 @@ interface ObjectProperties {
    * Description of thes property value used by this object
    */
   readonly description?: IDescription | string;
+  /**
+   * Point to an object in the spec this array contains
+   */
+  readonly object?: keyof typeof ObjectProps
   /**
    * The Typeof object value
    */

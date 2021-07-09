@@ -1,4 +1,4 @@
-import { shopify, standard } from '../export';
+import { shopify, standard } from '../data/export';
 import { UnionConcat } from './utils';
 import { Types } from './types';
 import { IFilter } from './filters';

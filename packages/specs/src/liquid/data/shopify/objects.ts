@@ -396,7 +396,8 @@ const Objects: IObjects = {
       },
       products: {
         description: 'Returns all of the products in a collection. You can show a maximum of 50 products per page. Use the paginate tag to choose how many products are shown per page',
-        type: Types.Basic.array
+        type: Types.Basic.array,
+        object: 'product'
       },
       sort_options: {
         description: 'Returns an array of sorting options for the collection',
