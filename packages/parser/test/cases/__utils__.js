@@ -1,4 +1,4 @@
-import { LiquidParser } from '../package/parser';
+import { LiquidParser } from '../../package/parser';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { config } from 'dotenv';
