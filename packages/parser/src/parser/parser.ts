@@ -1,9 +1,8 @@
-// import * as spec from '@liquify/liquid-language-specs';
+import { Types } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
 import { NodeLanguage } from 'lexical/language';
-import { NodeType } from 'lexical/types';
 import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { INode, Type } from 'tree/nodes';
@@ -36,6 +35,7 @@ export function parse (document: IAST): IAST {
   let attr: string | number;
   let filter: number = NaN;
   let object: number = NaN;
+
   /* -------------------------------------------- */
   /* TOKENIZE                                     */
   /* -------------------------------------------- */
@@ -111,7 +111,7 @@ export function parse (document: IAST): IAST {
         attr = s.token;
         node.attributes[attr] = null;
 
-        if (attr === 'src') node.type = NodeType.import;
+        if (attr === 'src') node.type = Types.Tag.import;
 
         break;
 
@@ -157,7 +157,7 @@ export function parse (document: IAST): IAST {
 
         liquidNode(Type.Void);
 
-        node.type = NodeType.output;
+        node.type = Types.Tag.output;
 
         break;
 

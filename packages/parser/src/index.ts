@@ -12,7 +12,6 @@ export { TextDocument, Position, Range } from 'vscode-languageserver-textdocumen
 export { IAST } from './tree/ast';
 export { INode } from './tree/nodes';
 export { NodeLanguage } from './lexical/language';
-export { NodeType } from './lexical/types';
 export { NodeKind } from './lexical/kind';
 export * as Characters from './lexical/characters';
 

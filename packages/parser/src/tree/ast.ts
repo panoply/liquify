@@ -1,6 +1,5 @@
 import inRange from 'lodash.inrange';
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
-import { NodeType } from 'lexical/types';
 import { NodeKind } from 'lexical/kind';
 import { ParseError } from 'lexical/errors';
 import { Config } from 'config';
@@ -600,7 +599,7 @@ export class IAST {
     if (!node || node.singular) return false;
 
     return (
-      node.type === NodeType.embedded &&
+      // node.type === NodeType.embedded &&
       node.kind === NodeKind.Liquid &&
       Config.engine === 'shopify' &&
       this.within(position, node.start, node.end)
