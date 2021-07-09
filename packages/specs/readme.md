@@ -6,15 +6,15 @@ This package is available on the npm registry for modules consumed by the [Liqui
 
 **Liquify is partially proprietary closed source software. The distributed code provided in this package is enigmatic and has been encrypted using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm**
 
-## Reasoning
+### Reasoning
 
 Due to the versatile nature of Liquid and in order to provide LSP capabilities to the Liquid Language Server the tool adopts and extends upon the approach introduced by the VS Code team, specifically that of the HTML language Service.
 
-## Why?
+### Why?
 
 The [liquify](#) parser treats HTML and Liquid as a single language. Providing LSP capabilities to both languages was extraneous considering Liquid (generally) extends markup. The Liquify parser separates both Liquid and HTML in an non-conflicting manner and thus allows for HTML to be validated against in a similar manner as Liquid.
 
-## Documentation
+# Documentation
 
 In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax. They are not quite grammars but close enough and exists to enable developers of any level to quickly compose contextual grammars and formal schema which can described tags, filters and objects used in different variation. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation and the specs provided here allow us to establish formal specs for the language.
 
@@ -22,9 +22,11 @@ In the context of the Liquid Language Server, variation specifications are just 
 2. [Types](docs/02-types.md)
 3. [Arguments](docs/03-arguments.md)
 
-## Objects
+### Objects
 
-The specifications map Liquid objects in a hardcoded manner. This means that when a Liquid variation provides objects on the consumer facing end (like in the Shopify variation) the objects are provided to Liquify via manually data entry which is both a very tedious and time consuming task. There is no API endpoint that provided such data that is required for the specs and due to the inconsistencies and constant changing UI of documentation in variations like Shopify we are unable to successfully crawl and compose the data required in an automated manner. Due to these complexities some objects provided in completions and used in validations may be not be completely covered to the full extent of a variations API.
+The specifications map Liquid objects in a hardcoded manner. This means that when a Liquid variation provides objects on the consumer facing end (like in the Shopify variation) the objects are provided to Liquify via manual data entry, which is both a very tedious and time consuming task.
+
+There is no API endpoint that provided such data that is required for the specs and due to the inconsistencies and constant changing UI of documentation in variations like Shopify we are unable to successfully crawl and compose the data required in an automated manner. Due to these complexities some objects provided in completions and used in validations may be not be completely covered to the full extent of a variations API.
 
 Below is a list of objects awaiting triage/input:
 
@@ -36,6 +38,8 @@ Below is a list of objects awaiting triage/input:
 - `metafields`
 - `selling_plan_allocation`
 - `selling_plan_group`
+
+<br>
 
 ## Authors / Maintainers
 
