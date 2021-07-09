@@ -22,6 +22,23 @@ In the context of the Liquid Language Server, variation specifications are just 
 2. [Types](docs/02-types.md)
 3. [Arguments](docs/03-arguments.md)
 
-## Author
+## Objects
 
-🥛 [Νίκος Σαβίδης](mailto:nicos@gmx.com) <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+The specifications map Liquid objects in a hardcoded manner. This means that when a Liquid variation provides objects on the consumer facing end (like in the Shopify variation) the objects are provided to Liquify via manually data entry which is both a very tedious and time consuming task. There is no API endpoint that provided such data that is required for the specs and due to the inconsistencies and constant changing UI of documentation in variations like Shopify we are unable to successfully crawl and compose the data required in an automated manner. Due to these complexities some objects provided in completions and used in validations may be not be completely covered to the full extent of a variations API.
+
+Below is a list of objects awaiting triage/input:
+
+#### Shopify Variation
+
+- `filter_value`
+- `generic_file`
+- `measurement`
+- `metafields`
+- `selling_plan_allocation`
+- `selling_plan_group`
+
+## Authors / Maintainers
+
+🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@kaossissel-1DA1F2?logo=twitter&logoColor=fff" />
+<br>
+🍔 <small>[Joseph Curtis](#)</small> <img align="right" src="https://img.shields.io/badge/-@jCurt-1DA1F2?logo=twitter&logoColor=fff" />
