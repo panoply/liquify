@@ -1,4 +1,4 @@
-## Tokens
+# Tokens
 
 The specifications refer to tokens in not so typical manner. We are not dealing with a _real_ programming language and for the most part, the vast majority of developers who are leveraging it are doing so from an intermediate standpoint.
 
@@ -14,7 +14,7 @@ The specifications refer to tokens in not so typical manner. We are not dealing 
 | Singular  | Refers to a an output tag or a type of tag that does not require an ender        |
 | Keyword   | Refers to a alphanumeric word boundary that holds a value of something           |
 
-#### Tag
+### Tag
 
 Tags are tokens which use a curly brace and percentage character combination delimiters. Tags can be either `singular` or pairs. By default, all tags are considered _pairs_ which means the tag requires an start and end. Takes that are _singular_ in nature require one to explicitly infer this by asserts `true` to the singular property of tags.
 
@@ -29,7 +29,7 @@ Tags are tokens which use a curly brace and percentage character combination del
 {{ tag }}
 ```
 
-#### Filter
+### Filter
 
 Filters are contained within _output_ and sometimes _singular_ or _pair_ tags. Filters begin with a pipe character separator and can be expressed as a `keyword` or `parameter`. Filters will typically require _arguments_ to be defined. All filter keywords that contain arguments will check for a `colon` character.
 
@@ -49,7 +49,7 @@ Filters are contained within _output_ and sometimes _singular_ or _pair_ tags. F
 
 > More on how we construct [arguments](#) in the specs below.
 
-#### Object
+### Object
 
 Objects are just values. Because liquid is a consumer facing template language, objects will generally ship pre-defined. This is not always the case but for the most part it is. Objects can passed as values to tags, filters or be used as the value of an _output_ type token. The _objects_ specifications are composed different to tags and filters.
 

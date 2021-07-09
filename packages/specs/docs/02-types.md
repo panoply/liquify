@@ -1,4 +1,4 @@
-## Types
+# Types
 
 Tags, filters and objects all accept different types that will describe either a value or token. The specs provide 3 separate type groups which might at first seem extraneous or confusing but are actually rather simple to understand.
 
@@ -10,7 +10,7 @@ The 3 type groups are as follows:
 
 > **TIP** Take a look in the [standard](#) data directory to see how each type is defined and used in different files.
 
-#### TT: Tag Types
+### TT: Tag Types
 
 Argument types are those of which describe will the functionality of a tag. Tag types can only be used to describe tags. The specifications describe tag types using a enumerable value:
 
@@ -27,7 +27,7 @@ Argument types are those of which describe will the functionality of a tag. Tag 
 | `9`  | `raw`       | A tag that inner contents should be excluded              |
 | `10` | `unknown`   | A tag of and unknown type                                 |
 
-#### BT: Basic Types
+### BT: Basic Types
 
 Basic types are types of which are common to all languages. The specifications describe basic types using an enumerable value.
 
@@ -42,7 +42,7 @@ Basic types are types of which are common to all languages. The specifications d
 | `7`  | `float`   | A float only number value, eg: `-25.50`         |
 | `8`  | `unknown` | A value that can be _any_ basic type            |
 
-#### AT: Argument Types
+### AT: Argument Types
 
 Argument types are those of which are made available within arguments. The specifications describe argument using an enumerable value. Typically, argument types are used by filters but can also be found within tags.
 
