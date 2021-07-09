@@ -12,11 +12,15 @@ Due to the versatile nature of Liquid and in order to provide LSP capabilities t
 
 ## Why?
 
-The [liquify](#) parser treats HTML and Liquid as a single language. Providing LSP capabilities to both languages was extraneous considering Liquid (generally) extends markup.
+The [liquify](#) parser treats HTML and Liquid as a single language. Providing LSP capabilities to both languages was extraneous considering Liquid (generally) extends markup. The Liquify parser separates both Liquid and HTML in an non-conflicting manner and thus allows for HTML to be validated against in a similar manner as Liquid.
 
-## Specs === Grammars
+## Documentation
 
-In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax. They are not quite Grammars but close enough and exists to enable developers of any level to quickly compose contextual grammars and formal schema that described tags, filters and objects. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation. There are implementations of Liquid and these files allow us to establish formal specs for the language.
+In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax. They are not quite grammars but close enough and exists to enable developers of any level to quickly compose contextual grammars and formal schema which can described tags, filters and objects used in different variation. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation and the specs provided here allow us to establish formal specs for the language.
+
+1. [Tokens](/docs/01-tokens.md)
+2. [Types](/docs/02-types.md)
+3. [Arguments](/docs/03-arguments.md)
 
 ## Author
 
