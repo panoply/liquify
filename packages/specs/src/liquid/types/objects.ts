@@ -5,7 +5,7 @@ export { Types } from './types';
 
 /* OBJECT SPECIFICATION ----------------------- */
 
-interface ObjectProperties {
+export interface IProperties {
   /**
    * Description of thes property value used by this object
    */
@@ -26,7 +26,7 @@ interface ObjectProperties {
    * Property value contains additional properties, eg: `{{ object.prop1.prop2 }}`
    */
   readonly properties?: {
-    [name: string]: ObjectProperties;
+    [name: string]: IProperties;
   };
 }
 
@@ -102,7 +102,7 @@ export interface IObject {
    * supply properties for deep nested objects.
    */
   readonly properties?: {
-    [name: string]: ObjectProperties;
+    [name: string]: IProperties;
   };
 }
 

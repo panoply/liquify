@@ -1401,7 +1401,8 @@ const Objects: IObjects = {
       },
       options_with_values: {
         type: Types.Basic.array,
-        description: "Returns an array of the product's options."
+        description: "Returns an array of the product's options.",
+        object: 'product_options'
       },
       variants: {
         type: Types.Basic.array,
@@ -1495,6 +1496,33 @@ const Objects: IObjects = {
     reference: {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/themes/liquid/objects#product'
+    }
+  },
+  product_options: {
+    type: Types.Basic.object,
+    description: 'The product_option object is available for each option in a product options array. The product options array is accessible via product.options_with_values.',
+    properties: {
+      name: {
+        type: Types.Basic.string,
+        description: 'Returns the product option\'s name'
+      },
+      position: {
+        type: Types.Basic.number,
+        description: 'Returns the product option\'s position in the product options array.'
+      },
+      selected_value: {
+        type: Types.Basic.string,
+        description: 'Returns the currently selected value for this product option.'
+      },
+      values: {
+        type: Types.Basic.array,
+        description: 'Returns an array of possible values for this product option.',
+        object: Types.Basic.string
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/product_option'
     }
   },
   location: {
