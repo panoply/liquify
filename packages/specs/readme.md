@@ -24,9 +24,7 @@ In the context of the Liquid Language Server, variation specifications are just 
 
 ### Objects
 
-The specifications map Liquid objects in a hardcoded manner. This means that when a Liquid variation provides objects on the consumer facing end (like in the Shopify variation) the objects are provided to Liquify via manual data entry, which is both a very tedious and time consuming task.
-
-There is no API endpoint that provided such data that is required for the specs and due to the inconsistencies and constant changing UI of documentation in variations like Shopify we are unable to successfully crawl and compose the data required in an automated manner. Due to these complexities some objects provided in completions and used in validations may be not be completely covered to the full extent of a variations API.
+The specifications map Liquid objects in a hardcoded manner. This means that when a Liquid variation provides objects on the consumer facing end (like in the Shopify variation) the objects are provided to Liquify via manual data entry, which is both a very tedious and time consuming task. There is no API endpoint that provided such data that is required for the specs and due to the inconsistencies and constant changing UI of documentation in variations like Shopify we are unable to successfully crawl and compose the data required in an automated manner.
 
 Below is a list of objects awaiting triage/input:
 
