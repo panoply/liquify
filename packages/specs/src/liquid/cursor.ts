@@ -1,6 +1,6 @@
 import { IFilter } from './types/filters';
 import { ITag } from './types/tags';
-import { IObject } from './types/objects';
+import { IObject, IProperties } from './types/objects';
 import { IArgument, IEngine } from './types/common';
 
 /* -------------------------------------------- */
@@ -22,7 +22,7 @@ export namespace cursor {
   /**
    * Object Specification
    */
-  export let object: IObject | null = null;
+  export let object: IObject & IProperties | null = null;
 
   /**
    * Filter Specification
