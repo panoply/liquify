@@ -14,7 +14,7 @@
     "_build": "rollup -c --environment prod"
   },
   "dependencies": {
-    "atom-languageclient": "^1.0.5"
+    "atom-languageclient": "^1.14.0"
   },
   "repository": {
     "url": "https://github.com/panoply/liquify"

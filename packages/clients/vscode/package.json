@@ -21,7 +21,11 @@
     "validations",
     "linting"
   ],
-  "categories": ["Formatters", "Programming Languages", "Other"],
+  "categories": [
+    "Formatters",
+    "Programming Languages",
+    "Other"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/panoply/liquify.git"
@@ -35,9 +39,14 @@
     "import": "./package/client.es.js"
   },
   "eslintConfig": {
-    "extends": ["@liquify/eslint-config-ts"],
+    "extends": [
+      "@liquify/eslint-config-ts"
+    ],
     "rules": {
-      "semi": ["error", "always"]
+      "semi": [
+        "error",
+        "always"
+      ]
     }
   },
   "engines": {
@@ -66,11 +75,17 @@
     ],
     "jsonValidation": [
       {
-        "fileMatch": [".liquidrc", ".liquidrc.json"],
+        "fileMatch": [
+          ".liquidrc",
+          ".liquidrc.json"
+        ],
         "url": "./@stores/liquidrc.json"
       },
       {
-        "fileMatch": [".liquidspec", ".liquidspec.json"],
+        "fileMatch": [
+          ".liquidspec",
+          ".liquidspec.json"
+        ],
         "url": "./@stores/specs.json"
       },
       {
@@ -78,7 +93,9 @@
         "url": "./@stores/settings_data.json"
       },
       {
-        "fileMatch": ["settings_schema.json"],
+        "fileMatch": [
+          "settings_schema.json"
+        ],
         "url": "./@stores/settings_schema.json"
       }
     ],
@@ -132,14 +149,22 @@
       {
         "id": "liquid",
         "configuration": "./language-configuration.json",
-        "aliases": ["Liquid"],
-        "extensions": [".liquid"]
+        "aliases": [
+          "Liquid"
+        ],
+        "extensions": [
+          ".liquid"
+        ]
       },
       {
         "id": "liquid-shopify",
         "configuration": "./language-configuration.json",
-        "aliases": ["Liquid Shopify"],
-        "extensions": [".liquid"],
+        "aliases": [
+          "Liquid Shopify"
+        ],
+        "extensions": [
+          ".liquid"
+        ],
         "filenamePatterns": [
           "layout/*.liquid",
           "snippets/*.liquid",
@@ -151,32 +176,52 @@
         "id": "liquid-jekyll",
         "configuration": "./language-configuration.json",
         "firstLine": "---",
-        "aliases": ["Liquid Jekyll"],
-        "extensions": [".liquid", ".jekyll"]
+        "aliases": [
+          "Liquid Jekyll"
+        ],
+        "extensions": [
+          ".liquid",
+          ".jekyll"
+        ]
       },
       {
         "id": "javascript",
-        "extensions": [".js.liquid"]
+        "extensions": [
+          ".js.liquid"
+        ]
       },
       {
         "id": "css",
-        "extensions": [".css.liquid"]
+        "extensions": [
+          ".css.liquid"
+        ]
       },
       {
         "id": "scss",
-        "extensions": [".scss.liquid", ".sass.liquid"]
+        "extensions": [
+          ".scss.liquid",
+          ".sass.liquid"
+        ]
       },
       {
         "id": "json",
-        "extensions": [".json.liquid"]
+        "extensions": [
+          ".json.liquid"
+        ]
       },
       {
         "id": "jsonc",
-        "filenames": [".liquidrc", ".liquidrc.json"]
+        "filenames": [
+          ".liquidrc",
+          ".liquidrc.json"
+        ]
       },
       {
         "id": "liquidspec",
-        "filenames": [".liquidspec", ".liquidspec.json"]
+        "filenames": [
+          ".liquidspec",
+          ".liquidspec.json"
+        ]
       }
     ],
     "grammars": [
@@ -198,7 +243,9 @@
       {
         "scopeName": "source.liquid.frontmatter",
         "path": "./package/syntax/frontmatter.json",
-        "injectTo": ["source.liquid.jekyll"],
+        "injectTo": [
+          "source.liquid.jekyll"
+        ],
         "embeddedLanguages": {
           "meta.embedded.block.frontmatter.liquid": "yaml"
         }
@@ -206,7 +253,9 @@
       {
         "scopeName": "markdown.liquid.codeblock",
         "path": "./package/syntax/liquid-markdown.codeblock.json",
-        "injectTo": ["text.html.markdown"],
+        "injectTo": [
+          "text.html.markdown"
+        ],
         "embeddedLanguages": {
           "meta.embedded.block.liquid": "liquid"
         }
@@ -214,13 +263,17 @@
       {
         "language": "liquidspec",
         "scopeName": "source.liquid.specs",
-        "injectTo": ["source.json"],
+        "injectTo": [
+          "source.json"
+        ],
         "path": "./package/syntax/liquify-specs.inject.json"
       },
       {
         "scopeName": "source.liquid.embedded",
         "path": "./package/syntax/embedded.inject.json",
-        "injectTo": ["source.liquid.shopify"],
+        "injectTo": [
+          "source.liquid.shopify"
+        ],
         "embeddedLanguages": {
           "meta.embedded.block.javascript.liquid": "javascript",
           "meta.embedded.block.schema.liquid": "json",
@@ -237,7 +290,11 @@
         "liquid.trace.server": {
           "scope": "window",
           "type": "string",
-          "enum": ["off", "messages", "verbose"],
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
           "default": "off",
           "description": "Traces the communication between VS Code and the language server."
         },
@@ -310,13 +367,13 @@
     "@liquify/schema-stores": "workspace:^0.1.5",
     "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-replace": "^2.4.2",
-    "@types/vscode": "^1.56.0",
-    "rollup": "^2.51.2",
+    "@types/vscode": "^1.58.0",
+    "rollup": "^2.53.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-filesize": "^9.1.1",
     "rollup-plugin-typescript2": "^0.30.0",
     "rollup-plugin-watch-assets": "^1.0.1",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.5"
   },
   "peerDependencies": {
     "rollup": "^2.51.2"
