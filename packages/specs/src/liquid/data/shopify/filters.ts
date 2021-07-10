@@ -157,15 +157,14 @@ const Filters: IFilters = {
         type: Types.Basic.number,
         required: true,
         pattern: {
-          red: /\d{1,3}/,
-          green: /\d{1,3}/,
-          blue: /\d{1,3}/,
-          alpha: /0\.\d{1,2}|1/,
-          hue: /\d{1,3}/,
-          saturation: /\d{1,3}/
+          red: /\b\d{1,3}\b/,
+          green: /\b\d{1,3}\b/,
+          blue: /\b\d{1,3}\b/,
+          alpha: /\b(?:0\.\d{1,2}|1)\b/,
+          hue: /\b\d{1,3}\b/,
+          saturation: /\d{1,3}\b/
         }
       }
-
     ],
     reference: {
       name: 'Shopify Liquid',
@@ -752,23 +751,17 @@ const Filters: IFilters = {
     arguments: [
       {
         type: Types.Basic.string,
-        required: false,
-        parameter: {
-          required: false,
-          unique: true,
-          value: {
-            datetime: {
-              type: Types.Basic.string,
-              description: 'A datetime parameter with strftime shorthand formats to use a custom format for the datetime attribute of the output `<time>` tag.'
-            }
-          }
-        }
+        required: false
       },
       {
         type: Types.Argument.parameter,
         required: false,
         unique: true,
         value: {
+          datetime: {
+            type: Types.Basic.string,
+            description: 'A datetime parameter with strftime shorthand formats to use a custom format for the datetime attribute of the output `<time>` tag.'
+          },
           format: {
             type: Types.Basic.string,
             pattern: /\b(?:(?:abbreviated|on)_date|basic|date(?:_at_time)?|default)\b/,

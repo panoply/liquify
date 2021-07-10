@@ -5,30 +5,15 @@ import Stringify from 'json-stringify-safe';
 
 const text = `
 
-{% for item in collection.products %}
+{{ article.published_at | time_tag: '%a, %b %d, %Y' }}
+{{ article.published_at | time_tag: '%Y', format: 'date'  }}
+{{ article.published_at | time_tag: format: 'date'  }}
+{{ article.published_at | time_tag: '%a, %b %d, %Y', datetime: '%Y-%m-%d', format: 'date' }}
 
-  {{ item.id }}
+{{ foo | font_modify: 'weight', '100' }}
+{{ foo | font_modify: 'style', 'normal' }}
 
-  {% for option in item.options_with_values %}
-
-    {{ option.name }}
-    {{ item.title }}
-
-    {% for value in option.values %}
-
-      VALUE IS STRING
-      {{ value }}
-
-      VALUE IS NOT OBJECT SO REJECT
-      {{ value.title }}
-
-    {% endfor %}
-
-
-  {% endfor %}
-
-
-{% endfor %}
+{{ foo | asset_img_url: '200x', crop: 'top', format: 'pjpg', scale: 2 }}
 
 `;
 

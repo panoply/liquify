@@ -968,7 +968,7 @@ function Scan (): number {
 
       // Check if the filter argument accepts parameters
       if (spec.argument.param) {
-        if (s.IfCodeChar(c.COM)) {
+        if (s.IfCodeChar(c.COM) || s.IsCodeChar(c.COL)) {
           state = ScanState.FilterParameter;
           return Scan();
         }

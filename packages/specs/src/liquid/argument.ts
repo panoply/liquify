@@ -61,6 +61,8 @@ export namespace argument {
 
       if (!param && cursor.argument?.parameter) {
         param = cursor.argument.parameter;
+      } else if (cursor.argument?.type === Types.Argument.parameter) {
+        param = cursor.argument;
       }
 
       if (argument.index === args.arguments.length) {
@@ -102,7 +104,7 @@ export namespace argument {
 
     let arg: IParameters = param?.value;
 
-    if (!arg) return true;
+    if (!arg || !arg[prop]?.value) return true;
 
     arg = arg?.[prop];
 
