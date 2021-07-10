@@ -163,6 +163,14 @@ export const enum ParseError {
   MissingQuotation,
 
   /**
+   * Missing Iteration Range Seperator
+   *
+   * @example
+   * {% for i in (1.5) %} // . is invalid, 2 are required
+   */
+  MissingIterationRangeSeperator,
+
+  /**
    * Missing Iteration Iteree
    *
    * @example
@@ -241,6 +249,13 @@ export const enum ParseError {
    */
   InvalidArgument,
 
+  /**
+   * Invalid Iteration Type
+   *
+   * @example
+   * {% for i in product.title %} // 'title' is not an array
+   */
+  InvalidIterationType,
 
   /**
    * Invalid Character
@@ -399,6 +414,16 @@ export const enum ParseError {
    * {{- foo ['    prop'] }}
    */
   WarnWhitespace,
+
+  /**
+   * Warn Extrenous Whitespace
+   *
+   * @example
+   * {{- foo.  prop -}}
+   * {{- foo ['prop'] }}
+   * {{- foo ['    prop'] }}
+   */
+  RejectItereeTypeValue,
 
   /**
    * Unknown Property

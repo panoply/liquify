@@ -6,16 +6,17 @@ import { NodeLanguage } from 'lexical/language';
 import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { INode, Type } from 'tree/nodes';
+import { isNumber, isString, isObject } from 'parser/utils';
 import * as Regexp from 'lexical/expressions';
 import * as s from 'parser/stream';
 import * as scanner from 'parser/scanner';
+import * as spec from '@liquify/liquid-language-specs';
 
 /**
  * Liquid/HTML parser function which constructs
  * and tokenizes syntaxes to build an AST.
  */
 export function parse (document: IAST): IAST {
-
   /* PAIR SETS ---------------------------------- */
 
   const pair: Set<INode> = new Set();
@@ -30,6 +31,7 @@ export function parse (document: IAST): IAST {
   let html: INode = liquid;
   let node: INode;
   let track: INode;
+  let scope: string | Types.Basic;
   let error: (range?: Range) => void;
   let token: number = scanner.scan();
   let attr: string | number;
@@ -41,11 +43,8 @@ export function parse (document: IAST): IAST {
   /* -------------------------------------------- */
 
   while (token !== TokenType.EOS) {
-
     switch (token) {
-
       case TokenType.ParseError:
-
         if (scanner.error === Errors.MissingCloseDelimiter) {
           track = undefined;
           node.offsets.length > 2 || node.offsets.push(s.offset);
@@ -59,19 +58,16 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.HTMLStartTagOpen:
-
         htmlNode(Type.Pair);
 
         break;
 
       case TokenType.HTMLStartTagClose:
-
         closeNode(Type.Start);
         track = undefined;
 
         break;
       case TokenType.HTMLVoidTagOpen:
-
         htmlNode(Type.Void);
 
         break;
@@ -92,7 +88,6 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.HTMLEndTagClose:
-
         closeNode(Type.Pair);
 
         track = undefined;
@@ -100,14 +95,12 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.HTMLLiquidAttribute:
-
         // node = parent;
         node = liquid;
 
         break;
 
       case TokenType.HTMLAttributeName:
-
         attr = s.token;
         node.attributes[attr] = null;
 
@@ -116,7 +109,6 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.HTMLAttributeValue:
-
         if (Regexp.HTMLAttributeJS.test(s.token)) {
           node.languageId = NodeLanguage.javascript;
         } else if (Regexp.HTMLAttributeJSON.test(s.token)) {
@@ -142,19 +134,18 @@ export function parse (document: IAST): IAST {
 
         node.tag = s.token;
         node.singular = false;
+        node.type = spec.cursor.tag.type;
 
         pair.add(node);
 
         break;
 
       case TokenType.StartTagClose:
-
         closeNode(Type.Start);
 
         break;
 
       case TokenType.OutputTagOpen:
-
         liquidNode(Type.Void);
 
         node.type = Types.Tag.output;
@@ -164,6 +155,7 @@ export function parse (document: IAST): IAST {
       case TokenType.OutputTagName:
 
         node.tag = s.token;
+        node.scope = node.parent?.scope?.[node.tag];
 
         break;
 
@@ -172,6 +164,12 @@ export function parse (document: IAST): IAST {
         node.tag = s.token;
         object = s.offset;
 
+        if (node.parent.type === Types.Tag.iteration) {
+          node.scope = node.parent.scope[s.token];
+        }
+
+        // console.log(liquid.parent.scope[s.token]);
+
         Object.assign(node.objects, { [s.offset]: [ s.token ] });
 
         if (!isNaN(filter) && node.filters?.[filter]) {
@@ -179,8 +177,8 @@ export function parse (document: IAST): IAST {
         }
 
         break;
-      case TokenType.OutputTagClose:
 
+      case TokenType.OutputTagClose:
         closeNode(Type.Void);
 
         break;
@@ -189,13 +187,11 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.SingularTagClose:
-
         closeNode(Type.Void);
 
         break;
 
       case TokenType.EndTagOpen:
-
         liquid = node = liquid;
 
         if (!startEnd(NodeKind.Liquid, liquid)) {
@@ -205,8 +201,49 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.EndTagClose:
-
         closeNode(Type.Pair);
+
+        break;
+
+      case TokenType.Iteration:
+
+        node.scope = {};
+
+        break;
+
+      case TokenType.IterationIteree:
+
+        scope = s.token;
+        node.scope[s.token] = null;
+
+        break;
+
+      case TokenType.IterationArray:
+
+        // node.scope[scope] = spec.cursor.object?.object as string;
+
+        if (node.parent.type === Types.Tag.iteration) {
+        //  Object.assign(node.scope, node.parent.scope);
+        }
+
+        break;
+
+      case TokenType.Object:
+
+        object = s.offset;
+
+        Object.assign(node.objects, { [s.offset]: [ s.token ] });
+
+        if (node.parent.type === Types.Tag.iteration && node.parent.scope?.[s.token]) {
+          Object.assign(node.scope, node.parent.scope);
+          spec.object(node.parent.scope[s.token]);
+        } else {
+          spec.object(s.token);
+        }
+
+        if (!isNaN(filter) && node.filters?.[filter]) {
+          node.filters[filter].push(object);
+        }
 
         break;
 
@@ -215,39 +252,61 @@ export function parse (document: IAST): IAST {
         node.objects[object].push(s.token);
         node.objects[s.offset + 1] = object;
 
+        spec.propofObject(s.token);
+
+        if (node.type === Types.Tag.iteration) {
+
+          node.scope[scope] = spec.cursor.object?.object;
+
+          if (node.parent.type === Types.Tag.iteration) {
+
+            spec.propofObject(s.token);
+
+          } else if (isString(spec.cursor.object?.object)) {
+
+            spec.object(node.scope[scope]);
+
+            if (spec.cursor.object?.object) {
+              spec.object(spec.cursor.object.object as string);
+            }
+          }
+        }
+
+        if (isNumber(node.scope) && !spec.typeofObject(node.scope as number)) {
+          document.report(Errors.RejectObject)();
+        } else if (spec.object(node.scope as string) && !spec.propofObject(s.token)) {
+          document.report(Errors.UnknownProperty)();
+        }
+
         break;
 
       case TokenType.Filter:
 
         filter = s.offset + s.cursor;
 
-        Object.assign(node.filters, { [filter]: [ ] });
+        Object.assign(node.filters, { [filter]: [] });
 
         break;
 
       case TokenType.FilterIdentifier:
-
         node.filters[filter].push(s.token);
         node.filters[s.offset + 1] = filter;
 
         break;
 
       case TokenType.FilterArgument:
-
         node.filters[filter].push(s.token);
         node.filters[s.offset + 1] = filter;
 
         break;
 
       case TokenType.FilterEnd:
-
         filter = NaN;
 
         break;
     }
 
     token = scanner.scan();
-
   }
 
   /* NODE SYNTACTICS ---------------------------- */
@@ -270,7 +329,6 @@ export function parse (document: IAST): IAST {
    * each time we encounter a starting delimeters.
    */
   function htmlNode (type: Type): void {
-
     if (track instanceof INode) pendingClose();
 
     node = new INode(type, scanner.begin, html, NodeKind.HTML);
@@ -283,15 +341,13 @@ export function parse (document: IAST): IAST {
     }
 
     track = node;
-
-  };
+  }
 
   /**
    * Creates a child node instance, this is called
    * each time we encounter a starting delimeters.
    */
   function liquidNode (type: Type): void {
-
     node = new INode(type, scanner.begin, liquid, NodeKind.Liquid);
 
     // Add this node child to the parent
@@ -302,8 +358,7 @@ export function parse (document: IAST): IAST {
       liquid = node;
       pair.add(node);
     }
-
-  };
+  }
 
   /**
    * Handles an opening close type tag. This is executed
@@ -311,14 +366,14 @@ export function parse (document: IAST): IAST {
    * It walks the AST to locate the parent node.
    */
   function startEnd (kind: NodeKind | undefined, parent: INode): boolean {
-
     while (!node.isSameNode(s.token, kind) && node.parent) {
       node = node.parent;
-    };
+    }
 
     // Ensure the node is not root and matches the token
     if (parent.type !== Type.Root && node.tag === s.token) {
       node.offsets.push(scanner.begin);
+      scope = undefined;
       return true;
     }
 
@@ -327,8 +382,7 @@ export function parse (document: IAST): IAST {
     node.tag = s.token;
     parent.children.push(node);
     return false;
-
-  };
+  }
 
   /**
    * Closed a node and completes the parse of the
@@ -336,11 +390,9 @@ export function parse (document: IAST): IAST {
    * completed parsing a node or any type.
    */
   function closeNode (type: Type): void {
-
     node.offsets.push(s.offset);
 
     if (type === Type.Pair) {
-
       // Syntactic pair match, remove from the set
       pair.delete(node);
 
@@ -350,23 +402,28 @@ export function parse (document: IAST): IAST {
 
       error(node.range);
       error = undefined;
-
     }
+  }
 
-  };
+  /**
+   * Creates a child node instance, this is called
+   * each time we encounter a starting delimeters.
+   */
+  function setScope (tag: string): void {
+
+    while (!node.parent.scope[tag]) node.parent = node.parent.parent;
+
+    console.log(tag, node.parent);
+
+  }
 
   function pendingClose () {
-
     let idx = track.children.length;
 
     if (idx === 0) {
-
       track.offsets.push(s.offset);
-
     } else {
-
       while (idx--) {
-
         const child = track.children[idx];
 
         if (child.singular) {
@@ -381,7 +438,5 @@ export function parse (document: IAST): IAST {
 
     document.report(Errors.MissingCloseDelimiter)(track.range);
     track = undefined;
-
   }
-
 }

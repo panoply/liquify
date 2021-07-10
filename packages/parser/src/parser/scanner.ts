@@ -201,7 +201,7 @@ function LiquidSeq () {
       if (s.IfRegExp(r.KeywordEnd)) {
 
         // Lets consume the end tag name identifier, eg: {%- endtag^
-        if (s.IfRegExp(r.TagAlphaName)) {
+        if (s.IfRegExp(r.KeywordAlpha)) {
           state = ScanState.BeforeEndTagClose;
           return TokenType.EndTagOpen;
         }
@@ -360,7 +360,7 @@ function Scan (): number {
     case ScanState.BeforeEndTagName:
 
       // Lets consume the end tag name identifier, eg: {%- endtag^
-      if (s.IfRegExp(r.TagAlphaName)) {
+      if (s.IfRegExp(r.KeywordAlpha)) {
         state = ScanState.BeforeEndTagClose;
         return TokenType.EndTagName;
       }
@@ -403,7 +403,7 @@ function Scan (): number {
       /* OBJECT OUTPUT TAG -------------------------- */
 
       // Output tag name as a variable or object, eg: {{ name }}
-      if (s.IfRegExp(r.TagOutputName)) {
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
         // Match captured token with a cursor value
         if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
@@ -440,7 +440,7 @@ function Scan (): number {
 
       // Lets consume the tag name identifier and then consult our
       // specification to determine the type of tag we are dealing with
-      if (s.IfRegExp(r.TagAlphaName)) {
+      if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Lets update our specification cursor
         spec.tag(s.token);
@@ -596,12 +596,13 @@ function Scan (): number {
 
         state = ScanState.Object;
 
+        return TokenType.ObjectProperty;
         // Validate the property against the specification
-        if (spec.propofObject(s.token)) return TokenType.ObjectProperty;
+        // if (spec.propofObject(s.token)) return TokenType.ObjectProperty;
 
         // When we get here the spec has no knowledge of the object
-        error = ParseError.UnknownProperty;
-        return TokenType.ParseError;
+        // error = ParseError.UnknownProperty;
+        // return TokenType.ParseError;
       }
 
       // Check if an extra dot character was expressed, eg: {{ object.. }}
@@ -736,7 +737,7 @@ function Scan (): number {
     case ScanState.FilterIdentifier:
 
       // Filter identifier, lets capture, eg: {{ tag | ^filter }}
-      if (s.IfRegExp(r.TagAlphaName)) {
+      if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Find specification for this filter
         spec.filter(s.token);
@@ -895,7 +896,7 @@ function Scan (): number {
       }
 
       // If we get here, we will have either a variable or reference
-      if (s.IfRegExp(r.TagOutputName)) {
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
         // Check to to see if we are dealing with an object
         if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
@@ -995,7 +996,7 @@ function Scan (): number {
     case ScanState.FilterParameter:
 
       // Consume the parameter name, eg: {{ tag | filter: param^: }}
-      if (s.IfRegExp(r.TagAlphaName)) {
+      if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Validate that the parameter is unique
         if (!spec.argument.isParamUnique(s.token)) {
@@ -1144,7 +1145,7 @@ function Scan (): number {
       /* ALPHANUMERIC ------------------------------- */
 
       // Lets check for a reference variable name or object
-      if (s.IfRegExp(r.TagOutputName)) {
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
         // Lets consult the specification to see if we know about the value
         // If we know about the value, we will validate it accordingly
@@ -1218,13 +1219,26 @@ function Scan (): number {
     case ScanState.VariableIdentifier:
 
       // We will consume the variable keyword identifier, eg: {% assing var^ %}
-      if (s.IfRegExp(r.TagAlphaName)) {
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
+
+        if (s.TokenContains(r.Digit)) {
+          error = ParseError.InvalidName;
+          state = ScanState.GotoTagEnd;
+          return TokenType.ParseError;
+        }
+
+        // Assign tags accept filters, which mean its not a `capture``
+        // Pass to the operator scan
+        if (spec.cursor.tag?.filters) {
+          state = ScanState.VariableOperator;
+          return Scan();
+        }
 
         // TODO: HANDLE CAPTURES
-
         cache = ScanState.BeforeSingularTagClose;
         state = ScanState.GotoTagEnd;
         return TokenType.VariableKeyword;
+
       }
 
       state = ScanState.GotoTagEnd;
@@ -1251,16 +1265,125 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.VariableAssignment:
 
-      // TODO: HANDLE ASSIGNMENT
+      state = ScanState.Filter;
+
+      if (s.IsRegExp(r.StringQuotations)) {
+
+        if (s.SkipQuotedString(true)) return TokenType.String;
+
+        error = ParseError.MissingQuotation;
+        state = ScanState.GotoTagEnd;
+        return TokenType.ParseError;
+      }
 
       // Variable name keyword identifier can be wild
-      if (s.IfRegExp(r.TagAlphaName)) {
-        state = ScanState.GotoTagEnd;
-        return TokenType.VariableKeyword;
-      }
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) return TokenType.VariableKeyword;
 
       state = ScanState.GotoTagEnd;
       error = ParseError.InvalidCharacters;
+      return TokenType.ParseError;
+
+    /* -------------------------------------------- */
+    /* LIQUID ITERATION TAGS                        */
+    /* -------------------------------------------- */
+    case ScanState.Iteration:
+
+      // Variable name keyword identifier can be wild
+      if (s.IfRegExp(r.KeywordAlpha)) {
+        state = ScanState.IterationIteree;
+        return TokenType.Iteration;
+      }
+
+      break;
+
+    case ScanState.IterationIteree:
+
+      state = ScanState.IterationOperator;
+      return TokenType.IterationIteree;
+
+    case ScanState.IterationOperator:
+
+      // Variable name keyword identifier can be wild
+      if (s.IfRegExp(r.OperatorIteration)) {
+        state = ScanState.IterationArray;
+        return Scan();
+      }
+
+      break;
+
+    case ScanState.IterationArray:
+
+      if (cache === ScanState.IterationArray) {
+
+        cache = ScanCache.Reset;
+        state = ScanState.BeforeStartTagClose;
+        return TokenType.IterationArray;
+
+      }
+
+      // Variable name keyword identifier can be wild
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
+
+        // Check to to see if we are dealing with an object
+        if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
+
+          // Next call we will look for a property notation
+          cache = ScanState.IterationArray;
+          state = ScanState.Object;
+          return TokenType.Object;
+        }
+
+        state = ScanState.IterationArray;
+        return TokenType.IterationArray;
+      }
+
+      if (s.IfCodeChar(c.LOP)) {
+        state = ScanState.IterationRangeStart;
+        return TokenType.VariableKeyword;
+      }
+
+      break;
+
+    case ScanState.IterationRangeStart:
+
+      if (s.IfRegExp(r.Digit)) {
+        state = ScanState.IterationRangeSeparators;
+        return TokenType.VariableKeyword;
+      }
+
+      // Variable name keyword identifier can be wild
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
+
+        // Check to to see if we are dealing with an object
+        if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
+
+          // Next call we will look for a property notation
+          cache = ScanState.IterationRangeSeparators;
+          state = ScanState.Object;
+          return TokenType.ObjectTagName;
+        }
+
+        state = ScanState.IterationArray;
+        return TokenType.VariableKeyword;
+      }
+
+      break;
+    case ScanState.IterationRangeSeparators:
+
+      if (s.IfCodeChar(c.DOT)) {
+
+        if (s.IfCodeChar(c.DOT)) {
+          state = ScanState.IterationRangeStart;
+          return TokenType.VariableKeyword;
+        }
+
+        error = ParseError.MissingIterationRangeSeperator;
+        state = ScanState.GotoTagEnd;
+        return TokenType.ParseError;
+      }
+
+      error = ParseError.InvalidCharacter;
+      state = ScanState.GotoTagEnd;
       return TokenType.ParseError;
 
     /* -------------------------------------------- */

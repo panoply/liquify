@@ -5,9 +5,30 @@ import Stringify from 'json-stringify-safe';
 
 const text = `
 
-{% for item in items %}
+{% for item in collection.products %}
 
-{% endif %}
+  {{ item.id }}
+
+  {% for option in item.options_with_values %}
+
+    {{ option.name }}
+    {{ item.title }}
+
+    {% for value in option.values %}
+
+      VALUE IS STRING
+      {{ value }}
+
+      VALUE IS NOT OBJECT SO REJECT
+      {{ value.title }}
+
+    {% endfor %}
+
+
+  {% endfor %}
+
+
+{% endfor %}
 
 `;
 
@@ -25,7 +46,9 @@ function Stack (ast) {
         root: child.root,
         index: child.index,
         start: child.start,
+        type: child.type,
         end: child.end,
+        scope: child.scope,
         children: child.children.map(({ tag }) => tag),
         filters: child.filters || null,
         objects: child.objects || null,
@@ -59,7 +82,7 @@ test('FullDocument Parse', t => {
   });
 
   const end = process.hrtime(start);
-  // console.log(Stack(ast));
+  console.log(Stack(ast));
 
   // console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());

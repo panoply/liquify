@@ -2,9 +2,8 @@
 
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
-import { NodeType } from 'lexical/types';
 import { NodeLanguage } from 'lexical/language';
-import { IDiagnostic } from 'lexical/diagnostics';
+import { Types } from '@liquify/liquid-language-specs';
 import { document } from 'tree/model';
 import { findFirst } from 'parser/utils';
 import inRange from 'lodash.inrange';
@@ -24,6 +23,7 @@ export const enum Token {
   Outer
 }
 
+export interface IScopes { [tag: string]: string | Types.Basic }
 /**
  * AST Node
  *
@@ -42,8 +42,9 @@ export class INode {
   public objects?: object;
   public attributes?: object;
   public filters?: object;
-  public type: Type | NodeType
+  public type: Type | Types.Tag | Types.Basic
   public languageId?: NodeLanguage;
+  public scope: IScopes | string | number;
 
   constructor (
     inode?: Type,
@@ -56,6 +57,7 @@ export class INode {
 
       this.offsets.push(0, document.size);
       this.children = [];
+      this.scope = {};
       this.type = inode;
       this.tag = 'ROOT';
 

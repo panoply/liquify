@@ -8,6 +8,29 @@ import { GetFormedRange } from 'parser/utils';
 import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
 import * as s from 'parser/stream';
 
+export interface IScope {
+  /**
+   * Scope identifer name
+   */
+  tag: string;
+  /**
+   * Scope ref, use if the tag points to an object
+   */
+  ref?: string;
+  /**
+   * Scope ending point offset
+   */
+  type?: number;
+  /**
+   * Scope starting point offset
+   */
+  start?: number;
+  /**
+   * Scope ending point offset
+   */
+  end?: number;
+}
+
 /**
  * Abstract Syntax Tree
  *
@@ -98,6 +121,11 @@ export class IAST {
    * if the cursor is not located within a node on the tree.
    */
   public node: INode;
+
+  /**
+   * Scope tracking
+   */
+  public scope: IScope[] = []
 
   /**
    * Error Reporter. Generates the diagnostics which are

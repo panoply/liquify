@@ -155,7 +155,7 @@ export const DelimitersClose = /^[%}]}/;
  * Alpha keyword/name capture
  *
  */
-export const TagAlphaName = /^[a-zA-Z_]+/;
+export const KeywordAlpha = /^[a-zA-Z_]+/;
 
 /**
  * `^[$\w][$\w-]+`
@@ -165,7 +165,7 @@ export const TagAlphaName = /^[a-zA-Z_]+/;
  * Alphanumeric keyword capture
  *
  */
-export const TagOutputName = /^[$\w][$\w-]*/;
+export const KeywordAlphaNumeric = /^[$\w][$\w-]*/;
 
 /**
  * `^\s*?-?[%}]`

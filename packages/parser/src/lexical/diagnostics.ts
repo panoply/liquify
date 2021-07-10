@@ -121,6 +121,10 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     severity: ErrorLevel.Error,
     message: 'Missing iteration value'
   },
+  [ParseError.MissingIterationRangeSeperator]: {
+    severity: ErrorLevel.Error,
+    message: 'Missing interation range seperator'
+  },
   [ParseError.InvalidArgument]: {
     severity: ErrorLevel.Error,
     message: 'Invalid argument expressed'
@@ -168,6 +172,10 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
   [ParseError.InvalidOperator]: {
     severity: ErrorLevel.Error,
     message: 'Invalid operator sequence'
+  },
+  [ParseError.InvalidIterationType]: {
+    severity: ErrorLevel.Warning,
+    message: 'Value is not an array type and cannot be iterated'
   },
   [ParseError.RejectString]: {
     severity: ErrorLevel.Error,
