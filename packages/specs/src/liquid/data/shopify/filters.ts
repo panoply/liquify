@@ -93,7 +93,220 @@ const Filters: IFilters = {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/themes/liquid/filters/url-filters#customer_login_link'
     }
+  },
+  camelcase: {
+    description: 'Converts a string into CamelCase.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#camelcase'
+    }
+  },
+  color_to_rgb: {
+    description: 'Converts a CSS color string to CSS `rgb()` format.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_to_rgb'
+    }
+  },
+  color_to_hsl: {
+    description: 'Converts a CSS color string to CSS `hsl()` format.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_to_hsl'
+    }
+  },
+  color_to_hex: {
+    description: 'Converts a CSS color string to `hex6` format.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_to_hex'
+    }
+  },
+  color_extract: {
+    description: 'Extracts a component from the color. Valid components are alpha, red, green, blue, hue, saturation and lightness.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_extract'
+    }
+  },
+  color_brightness: {
+    description: 'Calculates the perceived brightness of the given color. Uses [W3C recommendations for calculating perceived brightness](https://www.w3.org/TR/AERT#color-contrast), for the purpose of ensuring adequate contrast.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_brightness'
+    }
+  },
+  color_modify: {
+    description: 'Modifies the given component of a color',
+    arguments: [
+      {
+        type: Types.Basic.string,
+        required: true,
+        pattern: /\b(?:red|green|blue|alpha|hue|saturation|lightness)\b/,
+        value: [
+          'red',
+          'green',
+          'blue',
+          'alpha',
+          'hue',
+          'saturation',
+          'lightness'
+        ]
+      },
+      {
+        type: Types.Basic.number,
+        required: true,
+        pattern: {
+          red: /\d{1,3}/,
+          green: /\d{1,3}/,
+          blue: /\d{1,3}/,
+          alpha: /0\.\d{1,2}|1/,
+          hue: /\d{1,3}/,
+          saturation: /\d{1,3}/
+        }
+      }
 
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_modify'
+    }
+  },
+  color_lighten: {
+    description: 'Lightens the input color. Takes a value between 0 and 100 percent.',
+    arguments: [
+      {
+        type: Types.Basic.number,
+        pattern: /\d{1,3}/,
+        required: true
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_lighten'
+    }
+  },
+  color_saturate: {
+    description: 'Saturates the input color. Takes a value between 0 and 100 percent.',
+    arguments: [
+      {
+        type: Types.Basic.number,
+        pattern: /\d{1,3}/,
+        required: true
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_saturate'
+    }
+  },
+  color_desaturate: {
+    description: 'Desaturates the input color. Takes a value between 0 and 100 percent.',
+    arguments: [
+      {
+        type: Types.Basic.number,
+        pattern: /\d{1,3}/,
+        required: true
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_desaturate'
+    }
+  },
+  color_mix: {
+    description: 'Blends together two colors. Blend factor should be a value between 0 and 100 percent.',
+    arguments: [
+      {
+        type: Types.Basic.string,
+        pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
+        required: true
+      },
+      {
+        type: Types.Basic.number,
+        pattern: /\d{1,3}/,
+        required: true
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_mix'
+    }
+  },
+  color_contrast: {
+    description: 'Calculates the contrast ratio between two colors. Returns the numerator part of the ratio, which has a denominator of 1. For example, for a contrast ratio of 3.5:1, the filter returns 3.5.\n\nWith regards to accessibility, [WCAG 2.0 level AA](https://www.w3.org/WAI/WCAG20/quickref/#qr-visual-audio-contrast-contrast) requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text. [Level AAA](https://www.w3.org/WAI/WCAG20/quickref/#qr-visual-audio-contrast7) requires a contrast ratio of at least 7:1 for normal text and 4.5:1 for large text.\n\nThe order in which you specify the colors does not matter. The filter will automatically detect the lighter and darker colors.',
+    arguments: [
+      {
+        type: Types.Basic.string,
+        pattern: /#[A-Fa-f0-9]{8}/,
+        required: true
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_contrast'
+    }
+  },
+  color_difference: {
+    description: 'Calculates the [color difference](https://en.wikipedia.org/wiki/Color_difference) or distance between two colors. With regards to accessibility, the W3C [suggests](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) that the color difference should be greater than 500.',
+    arguments: [
+      {
+        type: Types.Basic.string,
+        pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
+        required: true
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#color_difference'
+    }
+  },
+  default_errors: {
+    description: 'Outputs default error messages for the `form.errors` variable. The messages returned are dependent on the strings returned by form.errors.',
+    scope: [ 'form' ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#default_errors'
+    }
+  },
+  default_pagination: {
+    description: 'Creates a set of links for paginated results. Used in conjunction with the [paginate](https://shopify.dev/api/liquid/objects/paginate) variable.',
+    scope: [ 'paginate' ],
+    arguments: [
+      {
+        type: Types.Argument.parameter,
+        required: false,
+        unique: true,
+        value: {
+          next: {
+            type: Types.Basic.string,
+            description: 'The next link label'
+          },
+          prev: {
+            type: Types.Basic.string,
+            description: 'The prev link label'
+          }
+        }
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#default_pagination'
+    }
+  },
+  brightness_difference: {
+    description: 'Calculates the perceived brightness difference between two colors. With regards to accessibility, the W3C [suggests](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) that the brightness difference should be greater than 125.',
+    arguments: [
+      {
+        type: Types.Basic.string,
+        pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
+        required: true
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/color-filters#brightness_difference'
+    }
   },
   file_img_url: {
     description: 'Returns the URL of an image in the Files page of the admin. file_img_url accepts an image size parameter.',
@@ -235,6 +448,50 @@ const Filters: IFilters = {
     }
 
   },
+  format_address: {
+    description: 'Use the `format_address` filter on an address to print the elements of the address in order according to their locale. The filter will only print the parts of the address that have been provided. This filter works on the addresses page for customers who have accounts in your store, or on your store\'s address',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#format_address'
+    }
+  },
+  hmac_sha256: {
+    description: 'Converts a string into a SHA-256 hash using a hash message authentication code (HMAC). Pass the secret key for the message as a parameter to the filter.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#hmac_sha256'
+    }
+  },
+  handle: {
+    description: 'Formats a string into a handle.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#handle-handleize'
+    }
+  },
+  handleize: {
+    description: 'Formats a string into a handle.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#handle-handleize'
+    }
+  },
+  highlight: {
+    description: 'Wraps words inside search results with an HTML `<strong>` tag with the class highlight if it matches the submitted [search.terms](https://shopify.dev/docs/themes/liquid/reference/objects/search/#search.terms).',
+    scope: [ 'search' ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#highlight'
+    }
+  },
+  highlight_active_tag: {
+    description: 'Wraps a tag link in a `<span>` with the class `active` if that tag is being used to filter a collection.',
+    scope: [ 'collection' ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#highlight_active_tag'
+    }
+  },
   global_asset_url: {
     description: 'Returns the URL of a global asset. Global assets are kept in a central directory on Shopify’s servers. Using global assets can improve the load times of your pages.',
     reference: {
@@ -242,6 +499,14 @@ const Filters: IFilters = {
       url: 'https://help.shopify.com/themes/liquid/filters/url-filters#global_asset_url'
     }
 
+  },
+  json: {
+    description: 'Converts a string into JSON format.\n\nYou do not have to wrap the Liquid output in quotations - the json filter will add them in. The json filter will also escape quotes as needed inside the output.',
+    scope: [ 'collection' ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#json'
+    }
   },
   img_tag: {
     description: 'Generates an image tag.',
@@ -341,13 +606,19 @@ const Filters: IFilters = {
     }
 
   },
+  md5: {
+    description: 'Converts a string into an MD5 hash.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#md5'
+    }
+  },
   money: {
     description: 'Formats the price based on the shop’s `HTML without currency` setting',
     reference: {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/en/themes/liquid/filters/money-filters#money'
     }
-
   },
   money_with_currency: {
     description: 'Formats the price based on the shop’s `HTML with currency` setting.',
@@ -374,9 +645,8 @@ const Filters: IFilters = {
     description: 'Creates a dynamic checkout button for a product. This filter must be used on the form object within a product form.',
     reference: {
       name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/filters/html-filters#payment_button'
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#newline_to_br'
     }
-
   },
   payment_type_img_url: {
     description: 'Returns the URL of the payment type’s SVG image. Used in conjunction with the shop.enabled_payment_types variable.',
@@ -396,6 +666,33 @@ const Filters: IFilters = {
     }
 
   },
+  payment_terms: {
+    description: 'Renders the Shop Pay Installments banner for a product. This filter must be used on the form object within a product form.\n\nThis filter is available only to eligible merchants that have been invited to join the Shop Pay Installments early access program. If you\'re a Shopify merchant and haven\'t been invited for early access, then you can join the waitlist.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/html-filters#payment_terms'
+    }
+  },
+  placeholder_svg_tag: {
+    description: 'Takes a placeholder name and outputs a placeholder SVG illustration. An optional argument can be supplied to include a custom class attribute on the SVG tag.',
+    arguments: [
+      {
+        type: Types.Basic.string,
+        required: false
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#placeholder_svg_tag'
+    }
+  },
+  pluralize: {
+    description: 'Outputs the singular or plural version of an English string based on the value of a number. The first parameter is the singular string and the second parameter is the plural string.\n\nPluralize applies **English** pluralization rules to source strings. You shouldn\'t use this filter on non-English strings, because it will result in incorrect pluralizations for strings in other languages.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#pluralize'
+    }
+  },
   script_tag: {
     description: 'Generates a script tag.',
     reference: {
@@ -403,6 +700,20 @@ const Filters: IFilters = {
       url: 'https://help.shopify.com/themes/liquid/filters/html-filters#payment_button'
     }
 
+  },
+  sha1: {
+    description: 'Converts a string into a SHA-1 hash.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#sha1'
+    }
+  },
+  sha256: {
+    description: 'Converts a string into a SHA-256 hash.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#sha256'
+    }
   },
   shopify_asset_url: {
     description: 'Returns the URL of a global assets that are found on Shopify’s servers.',
@@ -429,13 +740,94 @@ const Filters: IFilters = {
     }
 
   },
+  t: {
+    description: 'Uses a translation key to access the locale file for the active language. Returns the corresponding string of translated text in the locale file.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#t-translation'
+    }
+  },
+  time_tag: {
+    description: 'Converts a timestamp into a HTML `<time>` tag. The time_tag filter accepts the same parameters as Ruby\'s strftime method.',
+    arguments: [
+      {
+        type: Types.Basic.string,
+        required: false,
+        parameter: {
+          required: false,
+          unique: true,
+          value: {
+            datetime: {
+              type: Types.Basic.string,
+              description: 'A datetime parameter with strftime shorthand formats to use a custom format for the datetime attribute of the output `<time>` tag.'
+            }
+          }
+        }
+      },
+      {
+        type: Types.Argument.parameter,
+        required: false,
+        unique: true,
+        value: {
+          format: {
+            type: Types.Basic.string,
+            pattern: /\b(?:(?:abbreviated|on)_date|basic|date(?:_at_time)?|default)\b/,
+            description: 'The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use',
+            value: [
+              {
+                value: 'abbreviated_date',
+                description: 'Dec 31, 2018'
+              },
+              {
+                value: 'basic',
+                description: '12/31/2018'
+              },
+              {
+                value: 'date',
+                description: 'December 31, 2018'
+              },
+              {
+                value: 'date_at_time',
+                description: 'December 31, 2018 at 1:00 pm'
+              },
+              {
+                value: 'default',
+                description: 'Monday, December 31, 2018 at 1:00 pm -0500'
+              },
+              {
+                value: 'on_date',
+                description: 'on Dec 31, 2018'
+              }
+            ]
+          }
+        }
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/html-filters#time_tag'
+    }
+  },
+  url_escape: {
+    description: 'Identifies all characters in a string that are not allowed in URLS, and replaces the characters with their escaped variants.',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#url_escape'
+    }
+  },
+  url_param_escape: {
+    description: 'Replaces all characters in a string that are not allowed in URLs with their escaped variants, including the ampersand (&).',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/string-filters#url_param_escape'
+    }
+  },
   url_for_type: {
     description: 'Creates a URL that links to a collection page containing products with a specific product type.',
     reference: {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/themes/liquid/filters/url-filters#url_for_type'
     }
-
   },
   url_for_vendor: {
     description: 'Creates a URL that links to a collection page containing products with a specific product vendor.',
@@ -452,7 +844,19 @@ const Filters: IFilters = {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/themes/liquid/filters/url-filters#within'
     }
-
+  },
+  weight_with_unit: {
+    description: 'Formats the product variant\'s weight. The weight unit is set in [General settings](https://www.shopify.com/admin/settings/general).',
+    arguments: [
+      {
+        type: Types.Basic.string,
+        required: false
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/filters/additional-filters#weight_with_unit'
+    }
   }
 };
 
