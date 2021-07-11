@@ -1,6 +1,8 @@
-import { Filters as IFilters, Types } from 'liquid/types/filters';
+import { Filters as IFilters, Type } from '../../types/filters';
 
-const Filters: IFilters = {
+export let Filters: IFilters;
+
+Filters = {
   asset_img_url: {
     description: {
       kind: 'markdown',
@@ -8,10 +10,9 @@ const Filters: IFilters = {
     },
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         description: 'The original image size',
-        required: false,
-        pattern: /(?!5760)\b(?:master|x?([1-9][0-9]{2,3})|[1-9][0-9]{2,3}x|[1-9][0-9]{2,3}x[1-9][0-9]{2,3})\b/,
+        pattern: /\b(?:master|x?[1-9]\d{2,3}|[1-9]\d{2,3}x|[1-9]\d{2,3}x[1-9]\d{2,3})\b/,
         value: [
           'master',
           '2000x',
@@ -25,11 +26,9 @@ const Filters: IFilters = {
           '250x250'
         ],
         parameter: {
-          required: false,
-          unique: true,
           value: {
             crop: {
-              type: Types.Basic.string,
+              type: Type.string,
               description: 'You can specify a crop parameter to make sure that the resulting image\'s dimensions match the requested dimensions. If the entire image won\'t fit in your requested dimensions, the crop parameter specifies what part of the image to show',
               pattern: /\b(?:top|center|bottom|right)\b/,
               value: [
@@ -41,7 +40,7 @@ const Filters: IFilters = {
               ]
             },
             scale: {
-              type: Types.Basic.number,
+              type: Type.integer,
               description: 'The scale parameter lets you specify the pixel density of the image',
               pattern: /\b[23]\b/,
               value: [
@@ -50,7 +49,7 @@ const Filters: IFilters = {
               ]
             },
             format: {
-              type: Types.Basic.string,
+              type: Type.string,
               description: 'The format parameter lets you specify what file format to use for the displayed image.',
               pattern: /\bp?jpg\b/,
               value: [
@@ -140,9 +139,8 @@ const Filters: IFilters = {
     description: 'Modifies the given component of a color',
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true,
-        pattern: /\b(?:red|green|blue|alpha|hue|saturation|lightness)\b/,
         value: [
           'red',
           'green',
@@ -154,15 +152,15 @@ const Filters: IFilters = {
         ]
       },
       {
-        type: Types.Basic.number,
+        type: Type.integer,
         required: true,
         pattern: {
-          red: /\b\d{1,3}\b/,
-          green: /\b\d{1,3}\b/,
-          blue: /\b\d{1,3}\b/,
-          alpha: /\b(?:0\.\d{1,2}|1)\b/,
-          hue: /\b\d{1,3}\b/,
-          saturation: /\d{1,3}\b/
+          red: [ 0, 255 ],
+          green: [ 0, 255 ],
+          blue: [ 0, 255 ],
+          alpha: [ 0, 1 ],
+          hue: [ 0, 360 ],
+          saturation: [ 0, 100 ]
         }
       }
     ],
@@ -175,8 +173,8 @@ const Filters: IFilters = {
     description: 'Lightens the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: Types.Basic.number,
-        pattern: /\d{1,3}/,
+        type: Type.integer,
+        pattern: [ 0, 100 ],
         required: true
       }
     ],
@@ -189,8 +187,8 @@ const Filters: IFilters = {
     description: 'Saturates the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: Types.Basic.number,
-        pattern: /\d{1,3}/,
+        type: Type.integer,
+        pattern: [ 0, 100 ],
         required: true
       }
     ],
@@ -203,8 +201,8 @@ const Filters: IFilters = {
     description: 'Desaturates the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: Types.Basic.number,
-        pattern: /\d{1,3}/,
+        type: Type.integer,
+        pattern: [ 0, 100 ],
         required: true
       }
     ],
@@ -217,13 +215,13 @@ const Filters: IFilters = {
     description: 'Blends together two colors. Blend factor should be a value between 0 and 100 percent.',
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
         required: true
       },
       {
-        type: Types.Basic.number,
-        pattern: /\d{1,3}/,
+        type: Type.integer,
+        pattern: [ 0, 100 ],
         required: true
       }
     ],
@@ -236,7 +234,7 @@ const Filters: IFilters = {
     description: 'Calculates the contrast ratio between two colors. Returns the numerator part of the ratio, which has a denominator of 1. For example, for a contrast ratio of 3.5:1, the filter returns 3.5.\n\nWith regards to accessibility, [WCAG 2.0 level AA](https://www.w3.org/WAI/WCAG20/quickref/#qr-visual-audio-contrast-contrast) requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text. [Level AAA](https://www.w3.org/WAI/WCAG20/quickref/#qr-visual-audio-contrast7) requires a contrast ratio of at least 7:1 for normal text and 4.5:1 for large text.\n\nThe order in which you specify the colors does not matter. The filter will automatically detect the lighter and darker colors.',
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         pattern: /#[A-Fa-f0-9]{8}/,
         required: true
       }
@@ -250,7 +248,7 @@ const Filters: IFilters = {
     description: 'Calculates the [color difference](https://en.wikipedia.org/wiki/Color_difference) or distance between two colors. With regards to accessibility, the W3C [suggests](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) that the color difference should be greater than 500.',
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
         required: true
       }
@@ -273,16 +271,15 @@ const Filters: IFilters = {
     scope: [ 'paginate' ],
     arguments: [
       {
-        type: Types.Argument.parameter,
-        required: false,
-        unique: true,
+        type: Type.parameter,
+
         value: {
           next: {
-            type: Types.Basic.string,
+            type: Type.string,
             description: 'The next link label'
           },
           prev: {
-            type: Types.Basic.string,
+            type: Type.string,
             description: 'The prev link label'
           }
         }
@@ -297,7 +294,7 @@ const Filters: IFilters = {
     description: 'Calculates the perceived brightness difference between two colors. With regards to accessibility, the W3C [suggests](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) that the brightness difference should be greater than 125.',
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
         required: true
       }
@@ -328,8 +325,8 @@ const Filters: IFilters = {
     description: 'Returns a CSS @font-face declaration to load the chosen font',
     arguments: [
       {
-        type: Types.Argument.parameter,
-        required: false,
+        type: Type.parameter,
+
         value: {
           font_display: {
             pattern: /\b(?:auto|block|swap|fallback|optional)\b/,
@@ -371,24 +368,16 @@ const Filters: IFilters = {
     snippet: "font_modify:  '${1|normal,italic,oblique|}', '${2|100,200,300,400,500,600,700,800,900,lighter,normal,bold,bolder|}'",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true,
-        pattern: /\b(?:style|weight)\b/,
-        value: [
-          {
-            value: 'style'
-          },
-          {
-            value: 'weight'
-          }
-        ]
+        value: [ 'style', 'weight' ]
       },
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true,
         pattern: {
           style: /\b(?:normal|italic|oblique)\b/,
-          weight: /\b(?:normal|bold|bolder|lighter|[1-9]0{2}|-[1-9]0{2}|\+[1-9]0{2})\b/
+          weight: /\b(?:normal|bold|bolder|lighter|[-+]?[1-9]0{2})\b/
         },
         value: {
           style: [
@@ -437,8 +426,7 @@ const Filters: IFilters = {
     snippet: "${1|font_url|font_url: 'woff'}",
     arguments: [
       {
-        type: Types.Basic.string,
-        required: false
+        type: Type.string
       }
     ],
     reference: {
@@ -529,12 +517,11 @@ const Filters: IFilters = {
     snippet: "link_to: '${1:url}', '${2:title}'",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       },
       {
-        type: Types.Basic.string,
-        required: false
+        type: Type.string
       }
     ],
     reference: {
@@ -548,7 +535,7 @@ const Filters: IFilters = {
     snippet: 'link_to_add_tag: ${1}',
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -563,7 +550,7 @@ const Filters: IFilters = {
     snippet: 'link_to_remove_tag: ${1}',
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -578,7 +565,7 @@ const Filters: IFilters = {
     snippet: 'link_to_tag: ${1}',
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -676,8 +663,7 @@ const Filters: IFilters = {
     description: 'Takes a placeholder name and outputs a placeholder SVG illustration. An optional argument can be supplied to include a custom class attribute on the SVG tag.',
     arguments: [
       {
-        type: Types.Basic.string,
-        required: false
+        type: Type.string
       }
     ],
     reference: {
@@ -741,6 +727,13 @@ const Filters: IFilters = {
   },
   t: {
     description: 'Uses a translation key to access the locale file for the active language. Returns the corresponding string of translated text in the locale file.',
+    arguments: [
+      {
+        type: Type.parameter,
+        value: Type.string,
+        seperator: 1
+      }
+    ],
     reference: {
       name: 'Shopify Liquid',
       url: 'https://shopify.dev/api/liquid/filters/additional-filters#t-translation'
@@ -750,20 +743,18 @@ const Filters: IFilters = {
     description: 'Converts a timestamp into a HTML `<time>` tag. The time_tag filter accepts the same parameters as Ruby\'s strftime method.',
     arguments: [
       {
-        type: Types.Basic.string,
-        required: false
+        type: Type.string
       },
       {
-        type: Types.Argument.parameter,
-        required: false,
-        unique: true,
+        type: Type.parameter,
+
         value: {
           datetime: {
-            type: Types.Basic.string,
+            type: Type.string,
             description: 'A datetime parameter with strftime shorthand formats to use a custom format for the datetime attribute of the output `<time>` tag.'
           },
           format: {
-            type: Types.Basic.string,
+            type: Type.string,
             pattern: /\b(?:(?:abbreviated|on)_date|basic|date(?:_at_time)?|default)\b/,
             description: 'The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use',
             value: [
@@ -842,8 +833,7 @@ const Filters: IFilters = {
     description: 'Formats the product variant\'s weight. The weight unit is set in [General settings](https://www.shopify.com/admin/settings/general).',
     arguments: [
       {
-        type: Types.Basic.string,
-        required: false
+        type: Type.string
       }
     ],
     reference: {
