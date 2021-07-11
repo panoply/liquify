@@ -1,27 +1,35 @@
 import { IDescription, IReferences, IScopes } from './common';
-import ObjectProps from './../data/shopify/objects';
-import { Types } from './types';
-export { Types } from './types';
+import { shopify } from './../data/export';
+import { BasicTypeRange } from './types';
 
-/* OBJECT SPECIFICATION ----------------------- */
+/* EXPORT TYPE -------------------------------- */
+
+export { Type } from './types';
+
+/* OBJECT PROPERTY EXPORT --------------------- */
 
 export interface IProperties {
+
   /**
    * Description of thes property value used by this object
    */
   readonly description?: IDescription | string;
+
   /**
    * Point to an object in the spec this array contains
    */
-  readonly object?: keyof typeof ObjectProps
+  readonly object?: keyof typeof shopify.objects
+
   /**
    * The Typeof object value
    */
-  readonly type: Types.Basic;
+  readonly type: BasicTypeRange;
+
   /**
    * Documentation References
    */
   readonly reference?: IReferences;
+
   /**
    * Property value contains additional properties, eg: `{{ object.prop1.prop2 }}`
    */
@@ -30,12 +38,14 @@ export interface IProperties {
   };
 }
 
+/* OBJECT ITERFACE EXPORT --------------------- */
+
 export interface IObject {
 
   /**
    * The automatically applied tag type, which is "object"
    */
-  readonly type?: Types.Basic;
+  readonly type?: BasicTypeRange;
 
   /**
    * Description of this object
@@ -101,13 +111,9 @@ export interface IObject {
    * List of property values this tag object supports, recursively
    * supply properties for deep nested objects.
    */
-  readonly properties?: {
-    [name: string]: IProperties;
-  };
+  readonly properties?: { [name: string]: IProperties; };
 }
 
 /* REFERENCE ---------------------------------- */
 
-export interface Objects {
-  [name: string]: IObject;
-}
+export interface Objects { [name: string]: IObject; }
