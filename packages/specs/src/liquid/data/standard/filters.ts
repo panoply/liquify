@@ -1,6 +1,9 @@
-import { Filters as IFilters, Types } from '../../types/filters';
+import { Filters as IFilters, Type } from '../../types/filters';
 
-const Filters: IFilters = {
+export let Filters: IFilters;
+
+Filters = {
+
   abs: {
     description: 'Returns the absolute value of a number',
     reference: {
@@ -13,7 +16,7 @@ const Filters: IFilters = {
     snippet: "append: '$1' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -27,7 +30,7 @@ const Filters: IFilters = {
     snippet: 'at_least: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       }
     ],
@@ -41,7 +44,7 @@ const Filters: IFilters = {
     snippet: 'at_most: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       }
     ],
@@ -76,7 +79,7 @@ const Filters: IFilters = {
     snippet: 'concat: $1 $0',
     arguments: [
       {
-        type: Types.Basic.array,
+        type: Type.array,
         required: true
       }
     ],
@@ -90,7 +93,7 @@ const Filters: IFilters = {
     snippet: "date: '$1' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -107,13 +110,13 @@ const Filters: IFilters = {
     snippet: "default: '$1' $0",
     arguments: [
       {
-        type: Types.Basic.unknown,
+        type: Type.any,
         required: true,
         parameter: {
           required: false,
           value: {
             allow_false: {
-              type: Types.Basic.boolean,
+              type: Type.boolean,
               description: 'To allow variables to return false instead of the default value, you can use the `allow_false` parameter.'
             }
           }
@@ -130,7 +133,7 @@ const Filters: IFilters = {
     snippet: 'divided_by: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       }
     ],
@@ -183,7 +186,7 @@ const Filters: IFilters = {
     snippet: "join: '$1' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ]
@@ -207,7 +210,7 @@ const Filters: IFilters = {
     snippet: "map: '$1' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -221,7 +224,7 @@ const Filters: IFilters = {
     snippet: 'minus: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       }
     ],
@@ -235,7 +238,7 @@ const Filters: IFilters = {
     snippet: 'modulo: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       }
     ],
@@ -256,7 +259,7 @@ const Filters: IFilters = {
     snippet: 'plus: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       }
     ],
@@ -270,7 +273,7 @@ const Filters: IFilters = {
     snippet: "prepend: '$1' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -284,7 +287,7 @@ const Filters: IFilters = {
     snippet: "remove: '$1' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -298,7 +301,7 @@ const Filters: IFilters = {
     snippet: "remove_first: '$1' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -312,11 +315,11 @@ const Filters: IFilters = {
     snippet: "replace: '$1', '$2' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       },
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -330,11 +333,11 @@ const Filters: IFilters = {
     snippet: "replace_first: '$1', '$2' $0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       },
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       }
     ],
@@ -376,11 +379,11 @@ const Filters: IFilters = {
     snippet: 'slice: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       },
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: false
       }
     ],
@@ -393,7 +396,7 @@ const Filters: IFilters = {
     description: 'Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: false
       }
     ],
@@ -414,7 +417,7 @@ const Filters: IFilters = {
     snippet: 'split: $1',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       }
     ],
@@ -449,7 +452,7 @@ const Filters: IFilters = {
     snippet: 'times: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       }
     ],
@@ -463,11 +466,11 @@ const Filters: IFilters = {
     snippet: 'truncate: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       },
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: false
       }
     ],
@@ -481,11 +484,11 @@ const Filters: IFilters = {
     snippet: 'truncatewords: $1 $0',
     arguments: [
       {
-        type: Types.Basic.number,
+        type: Type.number,
         required: true
       },
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: false
       }
     ],
@@ -527,11 +530,11 @@ const Filters: IFilters = {
     snippet: "where: '$1'$0",
     arguments: [
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: true
       },
       {
-        type: Types.Basic.string,
+        type: Type.string,
         required: false
       }
     ],
@@ -541,5 +544,3 @@ const Filters: IFilters = {
     }
   }
 };
-
-export default Filters;
