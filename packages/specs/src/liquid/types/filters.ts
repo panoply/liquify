@@ -1,5 +1,11 @@
 import { IDescription, IReferences, IScopes, IArgument } from './common';
-export { Types } from './types';
+export { IArgument } from './common';
+
+/* TYPE EXPORT -------------------------------- */
+
+export { Type } from './types';
+
+/* FILTER INTERFACE EXPORT -------------------- */
 
 export interface IFilter {
 
