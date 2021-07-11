@@ -1,6 +1,6 @@
 import { IDescription, IReferences, IArgument, IParameters, TagScopes } from './common';
-import { Types } from './types';
-export { Types } from './types';
+import { TagTypeRange } from './types';
+export { Type } from './types';
 
 /* TAG EMBEDDED LANGUAGES --------------------- */
 
@@ -22,10 +22,8 @@ export interface ITag {
   /**
    * The type categorization of the tag. Type categorization is
    * required on tags.
-   *
-   * @default 'unknown'
    */
-  readonly type: Types.Tag,
+  readonly type: TagTypeRange,
 
   /**
    * Is this tag singular, ie: does not require an `{% endtag %}`
@@ -33,6 +31,14 @@ export interface ITag {
    * @default false
    */
   readonly singular?: boolean;
+
+  /**
+   * If the tag may only be used once per document, assert this
+   * to `true?.
+   *
+   * @default false
+   */
+  readonly unique?: boolean;
 
   /**
    * Supply a snippet to be used in completions
@@ -56,9 +62,9 @@ export interface ITag {
   readonly reference?: IReferences | undefined;
 
   /**
-   * Does this tag accept filters
+   * Whether or not the tag accepts filters,
+   * When `undefined` the parser will assume `false`
    *
-   * @default false
    */
   readonly filters?: boolean;
 
@@ -74,12 +80,14 @@ export interface ITag {
   readonly language?: TagEmbeddedLanguages;
 
   /**
-   * Does this tag accept whitespace dashes?
+   * Whether or not the tag accepts whitespace dash trims.
+   * When `undefined` the parser will assume `true`
    */
   readonly trims?: boolean;
 
   /**
    * Is this tag deprecated?
+   * When `undefined` the parser will assume `false`
    */
   readonly deprecated?: boolean;
 
@@ -101,8 +109,7 @@ export interface ITag {
   readonly arguments?: IArgument[]
 
   /**
-   * For values that contain special characters, an
-   * option expression pattern match can be provided.
+   * When a tag contains arguments, one can optionally provide
    */
   readonly pattern?: RegExp
 
