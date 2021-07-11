@@ -1,6 +1,6 @@
 import { shopify, standard } from '../data/export';
 import { UnionConcat } from './utils';
-import { Types } from './types';
+import { Type, BasicTypeRange, BasicToArgumentTypeRange } from './types';
 import { IFilter } from './filters';
 import { ITag } from './tags';
 import { IObject } from './objects';
@@ -66,22 +66,10 @@ export type Specifiers = IFilter & IObject & ITag;
 export const enum Separator { comma = 1, whitespace, equal }
 
 /* -------------------------------------------- */
-/* TYPES                                        */
-/* -------------------------------------------- */
-
-export type IArgumentTypeKeys = (
-  | keyof typeof Types.Basic
-  | keyof typeof Types.Argument
-);
-
-/* -------------------------------------------- */
 /* ACCEPTS                                      */
 /* -------------------------------------------- */
 
-export type IAccepts = UnionConcat<
-  'string' | 'number' | 'boolean' | 'object' | 'array'
-  , '|'
->;
+declare type IAccepts = UnionConcat<'string' | 'number' | 'boolean' | 'object' | 'array', '|'>;
 
 /* -------------------------------------------- */
 /* TAG SCOPES                                   */
@@ -140,6 +128,12 @@ export type ITemplates =
   | 'search'
 
 /* -------------------------------------------- */
+/* PATTERN TYPE                                 */
+/* -------------------------------------------- */
+
+ type Pattern = string | RegExp | [number, number]
+
+/* -------------------------------------------- */
 /* DESCRIPTION INTERFACE                        */
 /* -------------------------------------------- */
 
@@ -175,26 +169,34 @@ export interface Values {
    * A pre-defined argument value, can be a string or
    * an array of strings (when multiple values occur)
    */
-  value: string | string[],
+  readonly value: string | string[],
   /**
    * An optional desciption for the value to be shown
    * in hovers and completions.
    */
-  description?: string | IDescription
+  readonly description?: string | IDescription,
+
+  /**
+   * A template scope id. when provided, values will only
+   * appear in completions when used within a specific
+   * template (file) that matches the basename+extension URI
+   * that is supplied here.
+   *
+   * This is mostly a Shopify variation specific, typically this
+   * can be omitted.
+   */
+  readonly template?: ITemplates | Array<ITemplates> | undefined;
 }
 
 export interface IParameters {
 
   /**
-   * Argument type is equal to value of 'parameter'
+   * The type value the parameter accepts. When a parameter is a keyword type,
+   * ie: no colon operator then assert the _keyword_ type enum (`10`) and omit
+   * the `value` property. If type is set `keyword` and a value exists, those
+   * entries will be ignored.
    */
-  readonly type?: Types.Basic
-
-  /**
-   * When a parameter is a keyword type, ie: no colon operator
-   * Generally only used on tags, not filters.
-   */
-  readonly keyword?: boolean
+  readonly type?: BasicTypeRange | Type.keyword
 
   /**
    * Description of argument which will be rendered in
@@ -203,10 +205,23 @@ export interface IParameters {
   readonly description?: IDescription | string | undefined;
 
   /**
-   * An optional expression pattern match for values.
-   * Use this when `value` is of type array or requires special chars.
+   * Pattern
+   *
+   * An parameter may accepts a pattern match value. When provided,
+   * the parser will validate the value against the pattern provided.
+   *
+   * You can pass a Regular Expression or _number_ range as array, eg: `[0, 10]`.
+   * In addition, one may also provide a regex string match.
+   *
+   * ---
+   *
+   * **USE WITH CAUTION**
+   *
+   * Use this option with extreme caution. Do not pass global flags or
+   * complex patterns else you will exhaust the parser. Keep it simple.
+   *
    */
-  readonly pattern?: RegExp;
+  readonly pattern?: Pattern,
 
   /**
    * The parameter value can be pre-defined or user defined.
@@ -232,7 +247,8 @@ export interface ParameterArgument {
 
   /**
    * When the parameter should be proceeded by a seperator character.
-   * When `undefined` the parser will assume `comma`.
+   * When `undefined` the parser will assume `comma` or `whitespace`
+   * depending on whether it knows about the tag or filter.
    *
    * - `1` Comma
    * - `2` Whitespace
@@ -241,24 +257,47 @@ export interface ParameterArgument {
   readonly seperator?: Separator
 
   /**
-   * The parameters available to the argument
+   * The parameters available to the argument. If the parameter has no
+   * known values, or can accept a custom parameter not known to the spec,
+   * then pass the expected type.
+   *
+   * For example, the `t` (translation filter) in the Shopify variation
+   * accepts _any_ type parameter values, by passing a basic _string_ type
+   * enum to `value` that parser will suffice, the parser will validate
+   * the character sequence and intercepts value type, but accept any parameter
+   * name that is a alpha-numeric combination.
    */
-  readonly value: { [parameter: string]: IParameters }
+  readonly value: { [parameter: string]: IParameters } | BasicTypeRange
 
 }
 
-interface Argument {
+export interface Argument {
 
   /**
    * Argument type is equal to value of 'parameter'
    */
-  readonly type: Types.Basic | Types.Basic
+  readonly type: BasicToArgumentTypeRange
 
   /**
-   * For values that contain special characters, an
-   * option expression pattern match can be provided.
+   * Pattern
+   *
+   * An argument may accepts a pattern match value. When provided,
+   * the parser will validate the token against the pattern provided.
+   *
+   * You can pass a Regular Expression, _number_ range as array, eg: `[0, 10]`.
+   * The property also accepts an _object_. When passing an `object` the
+   * properties must point to the previous argument values. In addition, one
+   * may also provide a regex string match.
+   *
+   * ---
+   *
+   * **USE WITH CAUTION**
+   *
+   * Use this option with extreme caution. Do not pass global flags or
+   * complex patterns else you will exhaust the parser. Keep it simple.
+   *
    */
-  readonly pattern?: RegExp | { [property: string]: RegExp },
+  readonly pattern?: Pattern | { [property: string]: Pattern },
 
   /**
    * The argument value can be pre-defined or user defined.
@@ -302,12 +341,12 @@ interface ArgumentAsParameter extends ParameterArgument {
   /**
    * Argument type is equal to value of 'parameter'
    */
-  readonly type: Types.Argument.parameter
+  readonly type: Type.parameter;
 
   /**
    * EXCLUDES
    */
-  readonly parameter?: never
+  readonly parameter?: never;
 }
 
 /* -------------------------------------------- */
