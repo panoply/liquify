@@ -1284,66 +1284,99 @@ function Scan (): number {
       return TokenType.ParseError;
 
     /* -------------------------------------------- */
-    /* LIQUID ITERATION TAGS                        */
+    /* LIQUID ITERATION                             */
     /* -------------------------------------------- */
     case ScanState.Iteration:
 
-      // Variable name keyword identifier can be wild
-      if (s.IfRegExp(r.KeywordAlpha)) {
+      // Lets consume the iteree value which was intercepted
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
+
+        // Iteree cannot be a digit, must be alphanumer combination
+        if (s.TokenContains(r.Digit)) {
+          state = ScanState.GotoTagEnd;
+          error = ParseError.RejectNumber;
+          return TokenType.ParseError;
+        }
+
         state = ScanState.IterationIteree;
         return TokenType.Iteration;
       }
 
-      break;
+      // If we get here, iteree is missing, eg {% for ^ %}
+      state = ScanState.GotoTagEnd;
+      error = ParseError.MissingIterationIteree;
+      return TokenType.ParseError;
 
     case ScanState.IterationIteree:
 
       state = ScanState.IterationOperator;
       return TokenType.IterationIteree;
 
+    /* -------------------------------------------- */
+    /* LIQUID ITERATION OPERATOR                    */
+    /* -------------------------------------------- */
     case ScanState.IterationOperator:
 
-      // Variable name keyword identifier can be wild
+      // Lets ensure the iteration tag contains an "in" operator
       if (s.IfRegExp(r.OperatorIteration)) {
         state = ScanState.IterationArray;
         return Scan();
       }
 
-      break;
+      // Invalid or missing "in" operator
+      state = ScanState.GotoTagEnd;
+      error = ParseError.InvalidOperator;
+      return TokenType.ParseError;
 
+    /* -------------------------------------------- */
+    /* LIQUID ITERATION ARRAY                       */
+    /* -------------------------------------------- */
     case ScanState.IterationArray:
 
+      // We get here after running an object scan on the array
+      // value that was intercepted
       if (cache === ScanState.IterationArray) {
-
         cache = ScanCache.Reset;
-        state = ScanState.BeforeStartTagClose;
+        state = ScanState.IterationParameter;
         return TokenType.IterationArray;
-
       }
 
-      // Variable name keyword identifier can be wild
+      // Lets consume the iteration array value
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
+
+        // Ensure an alphanumeric combination was passed and not just a number
+        if (s.IfRegExp(r.Digit)) {
+          state = ScanState.GotoTagEnd;
+          error = ParseError.RejectNumber;
+          return TokenType.ParseError;
+        }
 
         // Check to to see if we are dealing with an object
         if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
-
-          // Next call we will look for a property notation
           cache = ScanState.IterationArray;
           state = ScanState.Object;
           return TokenType.Object;
         }
 
-        state = ScanState.IterationArray;
+        // If we get here, its an unknown object or variable, lets
+        // check to see if any parameter values were passed
+        state = ScanState.IterationParameter;
         return TokenType.IterationArray;
       }
 
       if (s.IfCodeChar(c.LOP)) {
         state = ScanState.IterationRangeStart;
-        return TokenType.VariableKeyword;
+        return Scan();
       }
 
-      break;
+      // Missing iteration array value
+      error = ParseError.MissingIterationArray;
+      state = ScanState.GotoTagEnd;
+      return TokenType.ParseError;
 
+    /* -------------------------------------------- */
+    /* LIQUID ITERATION RANGE START                 */
+    /* -------------------------------------------- */
     case ScanState.IterationRangeStart:
 
       if (s.IfRegExp(r.Digit)) {
@@ -1368,6 +1401,10 @@ function Scan (): number {
       }
 
       break;
+
+    /* -------------------------------------------- */
+    /* LIQUID ITERATION RANGE SEPARATORS            */
+    /* -------------------------------------------- */
     case ScanState.IterationRangeSeparators:
 
       if (s.IfCodeChar(c.DOT)) {
@@ -1386,6 +1423,37 @@ function Scan (): number {
       state = ScanState.GotoTagEnd;
       return TokenType.ParseError;
 
+    /* -------------------------------------------- */
+    /* LIQUID ITERATION PARAMETER                   */
+    /* -------------------------------------------- */
+    case ScanState.IterationParameter:
+
+      if (s.IfRegExp(r.KeywordAlpha)) {
+
+        // Lets check that this parameter is valid
+        if (spec.TagParam(s.token)) {
+          state = ScanState.IterationParameterValue;
+          return Scan();
+        }
+
+        // If the parameter is unknown or invalid
+        error = ParseError.InvalidIterationParameter;
+        state = ScanState.GotoTagEnd;
+        return TokenType.ParseError;
+      }
+
+      state = ScanState.GotoTagEnd;
+      return Scan();
+
+    /* -------------------------------------------- */
+    /* LIQUID ITERATION PARAMETER VALUE             */
+    /* -------------------------------------------- */
+    case ScanState.IterationParameterValue:
+
+      if(spec.cursor.tag.)
+
+
+      break;
     /* -------------------------------------------- */
     /* GOTO TAG END                                 */
     /* -------------------------------------------- */
