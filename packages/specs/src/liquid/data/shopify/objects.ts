@@ -379,6 +379,143 @@ Objects = {
       url: 'https://help.shopify.com/themes/liquid/objects#canonical_url'
     }
   },
+  checkout: {
+    type: Type.object,
+    filters: false,
+    description: 'The checkout object can be accessed in the order status page of the checkout. Shopify Plus merchants can also access properties of the checkout object in the checkout.liquid layout file.',
+    properties: {
+      applied_gift_cards: {
+        type: Type.object,
+        description: 'Returns the gift cards applied to the checkout.'
+      },
+      attributes: {
+        type: Type.object,
+        description: 'Returns the attributes of the checkout, that were captured in the cart.'
+      },
+      billing_address: {
+        type: Type.string,
+        description: 'Returns the billing address of the checkout.'
+      },
+      buyer_accepts_marketing: {
+        type: Type.boolean,
+        description: 'Returns whether the buyer accepted the newsletter during the checkout.'
+      },
+      cart_level_discount_applications: {
+        type: Type.array,
+        description: 'Returns an array of any cart-specific discount applications for the checkout.',
+        object: 'discount-application'
+      },
+      currency: {
+        type: Type.string,
+        description: 'Returns the currency of the checkout.'
+      },
+      customer: {
+        type: Type.object,
+        description: 'Returns the customer associated with the checkout.'
+      },
+      discount_applications: {
+        type: Type.array,
+        description: 'Returns an array of discount applications for a checkout.',
+        object: 'discount-application'
+      },
+      discounts_amount: {
+        type: Type.number,
+        description: 'Returns the sum of the amount of the discounts applied to the checkout.'
+      },
+      discounts_savings: {
+        type: Type.number,
+        description: 'Returns the sum of the savings of the discounts applied to the checkout. The negative opposite of discounts_amount.'
+      },
+      email: {
+        type: Type.string,
+        description: 'Returns the email used during the checkout.'
+      },
+      gift_cards_amount: {
+        type: Type.number,
+        description: 'Returns the amount paid in gift cards of the checkout.'
+      },
+      id: {
+        type: Type.number,
+        description: 'Returns the id of the checkout.'
+      },
+      line_items: {
+        type: Type.array,
+        description: 'Returns all the line items of the checkout.',
+        object: 'line_items'
+      },
+      line_items_subtotal_price: {
+        type: Type.number,
+        description: 'Returns the sum of the cart\'s line item prices after any line item discounts. '
+      },
+      name: {
+        type: Type.string,
+        description: 'Returns the name of the checkout.'
+      },
+      note: {
+        type: Type.string,
+        description: 'Returns the note of the checkout.'
+      },
+      order: {
+        type: Type.object,
+        description: 'Returns the order created by the checkout. '
+      },
+      order_id: {
+        type: Type.number,
+        description: 'Returns the id of the order created by the checkout.'
+      },
+      order_name: {
+        type: Type.string,
+        description: 'Returns the name of the order created by the checkout.'
+      },
+      order_number: {
+        type: Type.number,
+        description: 'Returns the number of the order created by the checkout.'
+      },
+      requires_shipping: {
+        type: Type.boolean,
+        description: 'Returns whether the checkout as a whole requires shipping, that is whether any of the line items require shipping.'
+      },
+      shipping_address: {
+        type: Type.string,
+        description: 'Returns the shipping address of the checkout.'
+      },
+      shipping_method: {
+        type: Type.string,
+        description: 'Returns the shipping method of the checkout.'
+      },
+      shipping_methods: {
+        type: Type.array,
+        description: 'Returns an array of shipping methods of the checkout.',
+        object: 'shipping_methods'
+      },
+      shipping_price: {
+        type: Type.number,
+        description: 'Returns the shipping price of the checkout.'
+      },
+      tax_lines: {
+        type: Type.array,
+        description: 'Returns all the tax lines of the checkout.',
+        object: 'tax_lines'
+      },
+      tax_price: {
+        type: Type.string,
+        description: 'Returns the tax price of the checkout, whether the taxes are included or not in the prices.'
+      },
+      total_price: {
+        type: Type.number,
+        description: 'Returns the total price of the checkout.'
+      },
+      transactions: {
+        type: Type.array,
+        description: 'Returns an array of transactions from the checkout.',
+        object: 'transactions'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/checkout'
+    }
+  },
   collection: {
     type: Type.object,
     filters: false,
@@ -488,6 +625,45 @@ Objects = {
       url: 'https://help.shopify.com/themes/liquid/objects#collections'
     }
   },
+  color: {
+    type: Type.object,
+    filters: false,
+    description: 'The color object is returned from color type settings',
+    properties: {
+      alpha: {
+        type: Type.number,
+        description: 'Returns the alpha component of the color, which is a decimal number between 0 and 1.'
+      },
+      blue: {
+        type: Type.number,
+        description: 'Returns the blue component of the color, which is a number between 0 and 255.'
+      },
+      green: {
+        type: Type.number,
+        description: 'Returns the green component of the color, which is a number between 0 and 255.'
+      },
+      hue: {
+        type: Type.number,
+        description: 'Returns the hue component of the color, which is a number between 0 and 360.'
+      },
+      lightness: {
+        type: Type.number,
+        description: 'Returns the lightness component of the color, which is a number between 0 and 100.'
+      },
+      red: {
+        type: Type.number,
+        description: 'Returns the red component of the color, which is a number between 0 and 255.'
+      },
+      saturation: {
+        type: Type.number,
+        description: 'Returns the saturation component of the color, which is a number between 0 and 100.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/color'
+    }
+  },
   comment: {
     type: Type.object,
     filters: false,
@@ -565,6 +741,33 @@ Objects = {
     reference: {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/en/themes/liquid/objects#content-for-layout'
+    }
+  },
+  country: {
+    type: Type.object,
+    filters: false,
+    description: 'The country object has the following attributes:',
+    properties: {
+      currency: {
+        type: Type.object,
+        description: 'Returns the currency used in the country.'
+      },
+      iso_code: {
+        type: Type.string,
+        description: 'Returns the ISO code of the country. For example, US or FR for United States or France.'
+      },
+      name: {
+        type: Type.string,
+        description: 'Returns the name of the country. For example, United States or France.'
+      },
+      unit_system: {
+        type: Type.string,
+        description: 'Returns the unit system of the country. Can be either imperial or metric'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/country'
     }
   },
   country_option_tags: {
@@ -1041,6 +1244,88 @@ Objects = {
       url: 'https://shopify.dev/docs/themes/liquid/reference/objects/fulfillment'
     }
   },
+  gift_card: {
+    type: Type.object,
+    description: 'The gift_card object can be accessed in the following templates: 1. The Gift card created email notification template Email Notifications > Gift card created.2. The gift_card.liquid template.',
+    properties: {
+      balance: {
+        type: Type.number,
+        description: 'Returns the amount of money remaining on the gift card.'
+      },
+      code: {
+        type: Type.number,
+        description: 'Returns the code that was used to redeem the gift card.'
+      },
+      currency: {
+        type: Type.string,
+        description: 'Returns the currency that the card was issued in. This currency is the currency of the store.'
+      },
+      customer: {
+        type: Type.string,
+        description: 'Returns the customer variable of the customer that the gift card is assigned to.'
+      },
+      enabled: {
+        type: Type.boolean,
+        description: 'Returns true if the card is enabled, or false if the card is disabled.'
+      },
+      expired: {
+        type: Type.boolean,
+        description: 'Returns true if the card is expired, or false if the card is not.'
+      },
+      expires_on: {
+        type: Type.string,
+        description: 'Returns the expiration date of the gift card'
+      },
+      initial_value: {
+        type: Type.number,
+        description: 'Returns the initial amount of money on the gift card'
+      },
+      last_four_characters: {
+        type: Type.number,
+        description: 'Returns the last four characters of the code that was used to redeem the gift card.'
+      },
+      properties: {
+        type: Type.array,
+        description: 'Returns the line item properties assigned to the gift card when it was added to the cart.',
+        object: 'line_item'
+      },
+      product: {
+        type: Type.object,
+        description: 'Returns the product associated with the purchased gift card, or returns nothing if there is no associated product.'
+      },
+      url: {
+        type: Type.string,
+        description: 'Returns the unique URL that links to the gift card\'s page on the shop'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/gift-card'
+    }
+  },
+  group: {
+    type: Type.object,
+    filters: false,
+    description: 'The group object contains information about each default rule set in the robots object for the robots.txt file.',
+    properties: {
+      rules: {
+        type: Type.object,
+        description: 'Returns of a list of rule objects for each rule in the group.'
+      },
+      sitemap: {
+        type: Type.object,
+        description: 'Returns the group\'s sitemap object. If the group doesn\'t require a sitemap, then this returns blank.'
+      },
+      user_agent: {
+        type: Type.object,
+        description: 'Returns the group\'s user_agent object.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/group'
+    }
+  },
   handle: {
     type: Type.string,
     global: true,
@@ -1313,6 +1598,34 @@ Objects = {
     reference: {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/themes/liquid/objects/linklist'
+    }
+  },
+  localization: {
+    type: Type.object,
+    description: 'The localization object has the following attributes:',
+    properties: {
+      available_countries: {
+        type: Type.array,
+        description: 'Returns a list of country objects for each country that the store supports.',
+        object: 'country'
+      },
+      available_languages: {
+        type: Type.array,
+        description: 'Returns a list of shop_locale objects for each language that the currently selected country supports.',
+        object: 'shop_locale'
+      },
+      country: {
+        type: Type.object,
+        description: 'Returns the country object for the currently selected country.'
+      },
+      language: {
+        type: Type.object,
+        description: 'Returns the shop_locale object for the currently selected language.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/localization'
     }
   },
   images: {
@@ -1727,10 +2040,638 @@ Objects = {
         description: "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
         type: Type.object
       }
+    }
+  },
+  recommendations: {
+    type: Type.object,
+    description: 'The recommendations object provides product recommendations that are related to a given product, based on data from sales, product descriptions, and relations between products and collections.',
+    properties: {
+      performed: {
+        type: Type.boolean,
+        description: 'Returns true if the recommendations object is referenced inside a theme section that is rendered through the recommendations endpoint with valid parameters:'
+      },
+      products_count: {
+        type: Type.number,
+        description: 'Returns the number of product recommendations, or returns 0 if recommendations.performed is false.'
+      },
+      products: {
+        type: Type.array,
+        description: 'Returns product recommendations.',
+        object: 'product'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/recommendations'
+    }
+  },
+  request: {
+    type: Type.object,
+    description: 'The request object returns information about the URL used to access your store and the page being accessed.',
+    properties: {
+      design_mode: {
+        type: Type.boolean,
+        description: 'Whether the request is being made from the theme editor.'
+      },
+      host: {
+        type: Type.string,
+        description: 'You can use request.host to check which domain a customer is visiting from.'
+      },
+      locale: {
+        type: Type.string,
+        description: 'Returns the shop_locale of the current request.'
+      },
+      path: {
+        type: Type.string,
+        description: 'Returns the path to the current page.'
+      },
+      page_type: {
+        type: Type.string,
+        description: 'Returns the type of the current page.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/request'
+    }
+  },
+  robots: {
+    type: Type.object,
+    description: 'The request object returns information about the URL used to access your store and the page being accessed.',
+    properties: {
+      default_groups: {
+        type: Type.array,
+        description: 'Returns a list of group objects for each group of rules.',
+        object: 'group'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/robots'
+    }
+  },
+  routes: {
+    type: Type.object,
+    description: 'You can use the routes object to generate dynamic URLs to your storefront.',
+    properties: {
+      root_url: {
+        type: Type.string,
+        description: 'Returns the base URL of the shop.'
+      },
+      account_url: {
+        type: Type.string,
+        description: 'Returns the URL for the account page.'
+      },
+      account_login_url: {
+        type: Type.string,
+        description: 'Returns the URL for the account login page.'
+      },
+      account_logout_url: {
+        type: Type.string,
+        description: 'Returns the URL to log the customer out of their account.'
+      },
+      account_register_url: {
+        type: Type.string,
+        description: 'Returns the URL for the account registration page.'
+      },
+      account_addresses_url: {
+        type: Type.string,
+        description: 'Returns the URL for the page where the customer can manage the addresses associated with their account.'
+      },
+      collections_url: {
+        type: Type.string,
+        description: 'Returns the URL for the collections page.'
+      },
+      all_products_collection_url: {
+        type: Type.string,
+        description: 'Returns the URL for the collection that contains all of the products in the shop.'
+      },
+      search_url: {
+        type: Type.string,
+        description: 'Returns the search URL.'
+      },
+      cart_url: {
+        type: Type.string,
+        description: 'Returns the cart URL.'
+      },
+      cart_add_url: {
+        type: Type.string,
+        description: 'Returns the URL that accepts items to be added to a cart.'
+      },
+      cart_change_url: {
+        type: Type.string,
+        description: 'Returns the URL that allows you to change the quantity of an item.'
+      },
+      cart_clear_url: {
+        type: Type.string,
+        description: 'Returns the URL that allows you to clear the cart.'
+      },
+      cart_update_url: {
+        type: Type.string,
+        description: 'Returns the URL that allows you to update the quantity of an item.'
+      },
+      product_recommendations_url: {
+        type: Type.string,
+        description: 'Returns the URL that serves product recommendations.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/routes'
+    }
+  },
+  rule: {
+    type: Type.object,
+    description: 'The rule object returns an individual rule for the robots.txt file',
+    properties: {
+      directive: {
+        type: Type.string,
+        description: 'Returns the rule directive, which can be either Allow to allow crawlers to access the specified URL, or Disallow to block them.'
+      },
+      value: {
+        type: Type.string,
+        description: 'Returns the associated URL path for the rule.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/rule'
+    }
+  },
+  script: {
+    type: Type.string,
+    description: 'script objects contain information about the Shopify Scripts published in your store.',
+    properties: {
+      id: {
+        type: Type.number,
+        description: 'Returns the script\'s ID.'
+      },
+      name: {
+        type: Type.string,
+        description: 'Returns the script\'s name.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/script'
+    }
+  },
+  search: {
+    type: Type.object,
+    description: 'The search object has the following attributes:',
+    properties: {
+      performed: {
+        type: Type.boolean,
+        description: 'Returns true if an HTML form with the attribute action="/search" was submitted successfully.'
+      },
+      results: {
+        type: Type.array,
+        description: 'Returns an array of matching search result items.'
+      },
+      results_count: {
+        type: Type.number,
+        description: 'Returns the number of results found.'
+      },
+      terms: {
+        type: Type.string,
+        description: 'Returns the string that was entered in the search input box.'
+      },
+      types: {
+        type: Type.array,
+        description: 'Returns an array of strings representing the types the search was performed on. '
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/search'
+    }
+  },
+  section: {
+    description: "The section object lets you access a section's properties and setting values.",
+    type: Type.object,
+    properties: {
+      blocks: {
+        description: "Returns an array of the section's blocks.",
+        type: Type.array
+      },
+      id: {
+        description: "For static sections, returns the section's file name without \".liquid\". For dynamic sections, returns a dynamically generated ID.",
+        type: Type.number
+      },
+      settings: {
+        description: "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
+        type: Type.object
+      }
     },
     reference: {
       name: 'Shopify Liquid',
       url: 'https://shopify.dev/docs/themes/liquid/reference/objects/section'
+    }
+  },
+  selling_plan: {
+    type: Type.object,
+    description: 'The selling_plan object captures the intent of a selling plan applied on a line item.',
+    properties: {
+      description: {
+        type: Type.string,
+        description: 'Returns the selling plan\'s description.'
+      },
+      group_id: {
+        type: Type.number,
+        description: 'The unique ID of the selling_plan_group that the selling plan belongs to.'
+      },
+      id: {
+        type: Type.number,
+        description: 'The unique ID of the selling plan.'
+      },
+      name: {
+        type: Type.string,
+        description: 'The selling plan\'s name.'
+      },
+      options: {
+        type: Type.array,
+        description: 'An array of selling_plan_option objects that contain information about the selling plan\'s value for a particular selling_plan_group_option.'
+      },
+      price_adjustments: {
+        type: Type.array,
+        description: 'An array of selling_plan_price_adjustment objects.'
+      },
+      recurring_deliveries: {
+        type: Type.number,
+        description: 'Returns true when the selling plan includes multiple recurring deliveries'
+      },
+      selected: {
+        type: Type.boolean,
+        description: 'Returns true if the selling plan\'s ID is identified by the selling_plan URL parameter.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/selling-plan'
+    }
+  },
+  shipping_method: {
+    type: Type.object,
+    description: 'The shipping_method object has the following attributes:',
+    properties: {
+      handle: {
+        type: Type.string,
+        description: 'Returns the handle of the shipping method.'
+      },
+      original_price: {
+        type: Type.number,
+        description: 'Returns the original price of the shipping method before discounts were applied.'
+      },
+      price: {
+        type: Type.number,
+        description: 'Returns the price of the shipping method.'
+      },
+      title: {
+        type: Type.string,
+        description: 'Returns the title of the shipping method.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/shipping_method'
+    }
+  },
+  shop: {
+    type: Type.object,
+    description: 'The shop object',
+    properties: {
+      address: {
+        type: Type.object,
+        description: 'You can add attributes to shop.address to return information about a shop\'s address.'
+      },
+      collections_count: {
+        type: Type.number,
+        description: 'Returns the number of collections in a shop.'
+      },
+      currency: {
+        type: Type.string,
+        description: 'Returns the store currency (in ISO 4217 format.)'
+      },
+      customer_accounts_enabled: {
+        type: Type.boolean,
+        description: 'Returns true when a customer account is required to complete a checkout.'
+      },
+      customer_accounts_optional: {
+        type: Type.boolean,
+        description: 'Returns true when a customer account is optional to complete a checkout. Otherwise, returns false.'
+      },
+      description: {
+        type: Type.string,
+        description: 'Returns the description of the store.'
+      },
+      domain: {
+        type: Type.string,
+        description: 'Returns the primary domain of the shop.'
+      },
+      email: {
+        type: Type.string,
+        description: 'Returns the shop\'s email address.'
+      },
+      enabled_currencies: {
+        type: Type.object,
+        description: 'Returns the list of currency objects that the store accepts.'
+      },
+      enabled_payment_types: {
+        type: Type.array,
+        description: 'Returns an array of the shop\'s accepted credit cards, cryptocurrencies, and other payment types.'
+      },
+      id: {
+        type: Type.number,
+        description: 'Returns the shop\'s ID.'
+      },
+      metafields: {
+        type: Type.array,
+        description: 'Returns the shop\'s metafields.'
+      },
+      money_format: {
+        type: Type.string,
+        description: 'Returns a string that is used by Shopify to format money without showing the currency.'
+      },
+      money_with_currency_format: {
+        type: Type.string,
+        description: 'Returns a string that is used by Shopify to format money while also displaying the currency.'
+      },
+      name: {
+        type: Type.string,
+        description: 'Returns the shop\'s name.'
+      },
+      password_message: {
+        type: Type.string,
+        description: 'Returns the shop\'s password page message.'
+      },
+      permanent_domain: {
+        type: Type.string,
+        description: 'Returns the .myshopify.com URL of a shop.'
+      },
+      phone: {
+        type: Type.string,
+        description: 'Returns the shop\'s phone number.'
+      },
+      policies: {
+        type: Type.array,
+        description: 'Returns an array of your shop\'s policy objects.',
+        object: 'policy'
+      },
+      privacy_policy: {
+        type: Type.object,
+        description: 'Returns a policy object for your store\'s privacy policy.'
+      },
+      published_locales: {
+        type: Type.array,
+        description: 'Returns an array of shop_locale objects.',
+        object: 'shop_locale'
+      },
+      refund_policy: {
+        type: Type.object,
+        description: 'Returns a policy object for your store\'s refund policy.'
+      },
+      shipping_policy: {
+        type: Type.object,
+        description: 'Returns a policy object for your store\'s shipping policy.'
+      },
+      subscription_policy: {
+        type: Type.object,
+        description: 'Returns a policy object for your store\'s subscription policy.'
+      },
+      terms_of_service: {
+        type: Type.object,
+        description: 'Returns a policy object for your store\'s terms of service.'
+      },
+      products_count: {
+        type: Type.object,
+        description: 'Returns the number of products in a shop.'
+      },
+      secure_url: {
+        type: Type.string,
+        description: 'Returns the full URL of a shop prepended by the https protocol.'
+      },
+      types: {
+        type: Type.array,
+        description: 'Returns an array of all unique product types in a shop.',
+        object: 'product_type'
+      },
+      url: {
+        type: Type.string,
+        description: 'Returns the full URL of a shop.'
+      },
+      vendors: {
+        type: Type.array,
+        description: 'Returns an array of all unique vendors in a shop.',
+        object: 'product_vendor'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/shop'
+    }
+  },
+  shop_locale: {
+    type: Type.object,
+    description: 'A shop_local is an element of the shop.published_locales array',
+    properties: {
+      endonym_name: {
+        type: Type.string,
+        description: 'Returns the locale endonym name.'
+      },
+      iso_code: {
+        type: Type.string,
+        description: 'Returns the locale code.'
+      },
+      name: {
+        type: Type.string,
+        description: 'Returns the locale name.'
+      },
+      primary: {
+        type: Type.boolean,
+        description: 'Returns true when the locale is the shop\'s primary locale. '
+      },
+      root_url: {
+        type: Type.string,
+        description: 'Returns the root relative URL of the locale.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/shop-locale'
+    }
+  },
+  sitemap: {
+    type: Type.object,
+    description: 'The sitemap object returns the sitemap for a specific group in the robots.txt file.',
+    properties: {
+      directive: {
+        type: Type.object,
+        description: 'Returns Sitemap.'
+      },
+      value: {
+        type: Type.string,
+        description: 'Returns the URL that the sitemap is hosted at.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/sitemap'
+    }
+  },
+  store_availability: {
+    type: Type.object,
+    description: 'The store_availability object is used to show what variants are stocked at physical store locations, regardless of the current stock level.',
+    properties: {
+      available: {
+        type: Type.boolean,
+        description: 'Returns true if the variant has stock.'
+      },
+      location: {
+        type: Type.object,
+        description: 'Returns the location object that the variant is stocked at.'
+      },
+      pick_up_enabled: {
+        type: Type.boolean,
+        description: 'Returns true if the variant is stocked at a location that has pickup enabled.'
+      },
+      pick_up_time: {
+        type: Type.string,
+        description: 'Returns the amount of time it takes for pickup to be ready (Example: Usually ready in 24 hours).'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/storeavailability'
+    }
+  },
+  tax_line: {
+    type: Type.object,
+    description: 'The tax_line object has the following',
+    properties: {
+      price: {
+        type: Type.number,
+        description: 'Returns the amount of the tax.'
+      },
+      rate: {
+        type: Type.number,
+        description: 'Returns the rate of the tax in decimal notation.'
+      },
+      rate_percentage: {
+        type: Type.string,
+        description: 'Returns the rate of the tax in percentage format.'
+      },
+      title: {
+        type: Type.string,
+        description: 'Returns the title of the tax.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/tax_line'
+    }
+  },
+  template: {
+    type: Type.object,
+    description: 'Referencing just template returns the name of the template used to render the current page, with the .liquid extension omitted.',
+    properties: {
+      directory: {
+        type: Type.string,
+        description: 'Returns the name of the template\'s parent directory'
+      },
+      name: {
+        type: Type.string,
+        description: 'Returns the template\'s name without the template\'s custom suffix, if it exists.'
+      },
+      suffix: {
+        type: Type.string,
+        description: 'Returns the name of the custom template without the template.name prefix or the .liquid extension. '
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/template'
+    }
+  },
+  theme: {
+    type: Type.object,
+    description: 'The theme object contains information about a store\'s published theme.',
+    properties: {
+      id: {
+        type: Type.string,
+        description: 'Returns the theme\'s ID.'
+      },
+      name: {
+        type: Type.string,
+        description: 'Returns the name of the theme.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/theme'
+    }
+  },
+  transaction: {
+    type: Type.object,
+    description: '',
+    properties: {
+      amount: {
+        type: Type.string,
+        description: 'Returns the amount of the transaction.'
+      },
+      created_at: {
+        type: Type.number,
+        description: 'Returns the timestamp of when the transaction was created.'
+      },
+      gateway: {
+        type: Type.string,
+        description: 'Returns the name of the payment provider used for the transaction.'
+      },
+      id: {
+        type: Type.number,
+        description: 'Returns a unique numeric identifier for the transaction.'
+      },
+      kind: {
+        type: Type.string,
+        description: 'Returns the type of transaction.'
+      },
+      name: {
+        type: Type.string,
+        description: 'Returns the name of the transaction.'
+      },
+      payment_details: {
+        type: Type.object,
+        description: 'The payment_details object contains additional properties related to the payment method used in the transaction.'
+      },
+      receipt: {
+        type: Type.string,
+        description: 'Returns text with information from the payment provider about the payment receipt. This includes whether the payment was a test case and an authorization code if one was included in the transaction.'
+      },
+      status: {
+        type: Type.string,
+        description: 'Returns the status of the transaction.'
+      },
+      status_label: {
+        type: Type.string,
+        description: 'Returns the translated output of a transaction\'s status.'
+      }
+    },
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/objects/transaction'
+    }
+  },
+  user_agent: {
+    type: Type.object,
+    description: 'The user_agent object returns the user-agent, which is the name of the crawler, for a specific group in the robots.txt file.',
+    properties: {
+      directive: {
+        type: Type.string,
+        description: 'Returns User-agent.'
+      },
+      value: {
+        type: Type.string,
+        description: 'Returns the user-agent name.'
+      }
     }
   },
   model: {
