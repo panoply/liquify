@@ -855,5 +855,3 @@ Filters = {
     }
   }
 };
-
-export default Filters;
