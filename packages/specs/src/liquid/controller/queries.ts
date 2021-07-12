@@ -1,5 +1,5 @@
 import * as Specification from '../data/export';
-import { IEngine, Variation, Values, IArgument, ITemplates } from '../types/common';
+import { IEngine, Variation, Values, IArgument, ITemplates, IParameter } from '../types/common';
 import { ITag } from '../types/tags';
 import { IFilter } from '../types/filters';
 import { IObject } from '../types/objects';
@@ -23,6 +23,7 @@ export const enum Within {
   Filter,
   Arguments,
   Parameter,
+  ParameterValue
 }
 
 /* -------------------------------------------- */
@@ -84,14 +85,14 @@ let index: number = NaN;
 let within: Within;
 
 /**
- * The current active parameters supplied
- */
-let unique: Array<string> = [];
-
-/**
  * The previous arguments value
  */
 let prev: string;
+
+/**
+ * The current active parameters supplied
+ */
+const unique: Set<string> = new Set();
 
 /* -------------------------------------------- */
 /* SETTER FUNCTIONS                             */
@@ -101,15 +102,15 @@ let prev: string;
 
 export function Reset (): void {
 
-  !cursor || (cursor = undefined);
-  !tag || (tag = undefined);
-  !object || (object = undefined);
-  !filter || (filter = undefined);
-  !argument || (argument = undefined);
-  !prev || (prev = undefined);
-  !isNaN(index) || (index = NaN);
+  cursor = undefined;
+  tag = undefined;
+  object = undefined;
+  filter = undefined;
+  argument = undefined;
+  prev = undefined;
 
-  unique.length === 0 || (unique = []);
+  !isNaN(index) || (index = NaN);
+  unique.clear();
 
 }
 
@@ -119,6 +120,30 @@ export function Reset (): void {
 export function GetVariation (): Variation {
 
   return variation;
+
+};
+
+/**
+ * Next Argument
+ *
+ * Moves to the _next_ argument (if available) on the current spec
+ * in stream and update the states.
+ */
+export function GetArgument (type: Type): boolean {
+
+  let next: number = index;
+
+  while ((argument.type !== type && argument?.required !== true)) {
+    argument = cursor.arguments[next++];
+  }
+
+  if (argument.type !== type) {
+    argument = cursor.arguments[index];
+    return false;
+  }
+
+  index = next;
+  return true;
 
 };
 
@@ -157,7 +182,7 @@ export function SetTag (name: string): boolean {
   if (!variation.tags?.[name]) return false;
 
   cursor = tag = variation.tags[name];
-  argument = cursor.arguments?.[0] as IArgument.Argument;
+  argument = cursor?.arguments?.[0] as IArgument.Argument;
   within = Within.Arguments;
   index = argument ? 0 : NaN;
 
@@ -180,7 +205,8 @@ export function SetFilter (name: string): boolean {
   argument = cursor?.arguments?.[0] as IArgument.Argument;
   within = Within.Arguments;
   index = argument ? 0 : NaN;
-  unique.length === 0 || (unique = []);
+
+  unique.clear();
 
   return true;
 
@@ -218,7 +244,7 @@ export function PrevArgument (): boolean {
   within = Within.Arguments;
   argument = cursor.arguments[index];
 
-  if (unique.length > 0 && argument.type === Type.parameter) unique.pop();
+  if (argument.type === Type.parameter && unique.has(prev)) unique.delete(prev);
 
   return true;
 
@@ -239,6 +265,24 @@ export function NextArgument (): boolean {
   argument = cursor.arguments[index];
 
   return true;
+
+};
+
+/**
+ * Next Parameter
+ *
+ * Resets the parameters, movies the argument from within the parameter
+ * value back to the `value` of the parameter, moving up in spec.
+ */
+export function NextParameter (): boolean {
+
+  if (isWithin(Within.ParameterValue)) {
+    within = Within.Parameter;
+    argument = cursor.arguments[index];
+    return true;
+  }
+
+  return false;
 
 };
 
@@ -268,41 +312,23 @@ export function isProperty (value: string): boolean {
  */
 export function isParameter (value: string) {
 
-  // If current argument is not a parameter and not required
-  // we will attempt to check the next argument in the array.
-  if (!isType(Type.parameter) && !isRequired()) {
-    if (isUnique(value) && (!NextArgument() || !isType(Type.parameter))) {
-      PrevArgument();
-      return false;
-    }
-  }
-
+  if (argument === undefined) return false;
+  if (argument.type !== Type.parameter && !GetArgument(Type.parameter)) return false;
   if (isNumber(argument.value)) return true;
 
   const param = argument.value?.[value];
 
   if (!param) {
 
-    // If we are not within a parameter
-    if (within !== Within.Parameter) return false;
+    console.log(value);
 
-    // Get the last known parameter
-    const name = unique[unique.length - 1];
-
-    // If it does not match the parameter value passed in
-    if (name !== value) return false;
-
-    // Identical parameter has been passed in
-    console.warn(`The "${unique[unique.length - 1]}" value has not been passed`);
-
-    return true;
-
+    return false;
   }
 
-  unique.push(value);
+  unique.add(value);
 
   argument = param;
-  within = Within.Parameter;
+  within = Within.ParameterValue;
 
   return true;
 
@@ -324,7 +350,7 @@ export function isUnique (value: string) {
 
   const prop = (argument as IArgument.Parameter)?.unique;
 
-  if (isUndefined(prop) || prop === true) return unique.indexOf(value) < 0;
+  if (isUndefined(prop) || prop === true) return !unique.has(value);
 
   return false;
 }
@@ -374,7 +400,18 @@ export function isTagType (type: Type): boolean {
  */
 export function isType (type: Type): boolean {
 
-  return argument.type === type;
+  return argument?.type === type;
+
+}
+
+/**
+ * Is Within
+ *
+ * Checks where the query engine is currently at.
+ */
+export function isWithin (value: Within): boolean {
+
+  return within === value;
 
 }
 
@@ -402,7 +439,7 @@ export function isRequired () {
  */
 export function isValue (value: string): boolean {
 
-  if (isType(Type.any)) return true;
+  if ((isType(Type.any) || !argument?.value)) return true;
 
   const prop = prev || value;
   const param: IArgument.Argument = argument as IArgument.Argument;
@@ -410,28 +447,24 @@ export function isValue (value: string): boolean {
   let valid: boolean;
 
   if (param?.pattern) {
-    if (isRegExp(param.pattern)) {
+    if (param.pattern instanceof RegExp) {
       valid = inPattern(param.pattern as RegExp, value);
     } else if (isObject(param.pattern)) {
       valid = inPattern(param.pattern?.[prop], value);
     } else if (isArray(param.pattern)) {
       valid = value >= param.pattern[0] && value <= param.pattern[1];
     }
+  } else {
+    valid = (
+      param.value === value ||
+      !!param.value?.[prop] ||
+      inValues(param.value as Values[], value)
+    );
   }
 
-  if (isString(param.value)) valid = param.value === value;
-  if (isObject(param.value)) valid = !!param.value?.[prop];
-  if (isArray(param.value)) valid = inValues(param.value as Values[], value);
+  if (!valid && (isUndefined(param.strict) || param.strict)) return false;
+  if (within === Within.Arguments) prev = value;
 
-  if (valid) {
-    if (within === Within.Parameter) argument = cursor.arguments[index];
-    if (within === Within.Arguments) {
-      if (index === 0) NextArgument();
-      prev = value;
-    }
-    return true;
-  }
-
-  return false;
+  return true;
 
 };

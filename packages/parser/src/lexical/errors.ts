@@ -29,7 +29,6 @@ export const enum ParseError {
    */
   ParsingError = 1,
 
-
   /**
    * Duplicated parameter values
    *
@@ -205,6 +204,14 @@ export const enum ParseError {
   InvalidTagName,
 
   /**
+   * Invalid Decimal point
+   *
+   * @example
+   * {{- tag | plus: 100. -}} // has a hanging decimal
+   */
+  InvalidDecimalPoint,
+
+  /**
    * Invalid Object Name
    *
    * @example
@@ -264,7 +271,6 @@ export const enum ParseError {
    * {% for i in array foo %} // 'foo' is invalid
    */
   InvalidIterationParameter,
-
 
   /**
    * Invalid Character
@@ -413,6 +419,14 @@ export const enum ParseError {
    * {%- schema -%} // dash "-" is not allowed
    */
   RejectWhitespaceControl,
+
+  /**
+   * Required Filter Argument
+   *
+   * @example
+   * {{ tag | append^ }} // Filter argument is required
+   */
+  RequireFilterArgument,
 
   /**
    * Warn Extrenous Whitespace

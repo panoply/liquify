@@ -3,9 +3,18 @@ import time from 'pretty-hrtime';
 import * as parser from './cases/__utils__';
 import Stringify from 'json-stringify-safe';
 
+const filters = `
+{{ sort | sort }}
+{{ append | append: 'foo' }}
+{{ replace | replace: 'bar', 'baz' }}
+{{ plus | plus: 10 }}
+{{ truncate | truncate: 220, 'xxx' }}
+{{ font_modify | font_modify: 'style', 'normal' }}
+`;
+
 const text = `
 
-{{ foo | asset_img_url: 'master', scale: 2 }}
+{{ product['id'] | asset_img_url: '200x',  scale: product.id, format: 'pjpg'  }}
 
 `;
 

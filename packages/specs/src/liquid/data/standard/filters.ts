@@ -379,11 +379,11 @@ Filters = {
     snippet: 'slice: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: Type.integer,
         required: true
       },
       {
-        type: Type.number,
+        type: Type.integer,
         required: false
       }
     ],
@@ -396,7 +396,7 @@ Filters = {
     description: 'Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting',
     arguments: [
       {
-        type: Type.number,
+        type: Type.integer,
         required: false
       }
     ],
@@ -417,7 +417,7 @@ Filters = {
     snippet: 'split: $1',
     arguments: [
       {
-        type: Type.number,
+        type: Type.integer,
         required: true
       }
     ],
@@ -466,7 +466,7 @@ Filters = {
     snippet: 'truncate: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: Type.integer,
         required: true
       },
       {
@@ -484,7 +484,7 @@ Filters = {
     snippet: 'truncatewords: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: Type.integer,
         required: true
       },
       {

@@ -405,7 +405,7 @@ export const enum ScanState {
    *
    * Position is after property parameter argument
    */
-  FilterParameterArgument,
+  FilterArgumentParameter,
 
   /**
    * `| filter: argument,^ }}`

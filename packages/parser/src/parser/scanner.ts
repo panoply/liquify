@@ -1,7 +1,8 @@
-import { spec, Type } from '@liquify/liquid-language-specs';
+import { spec, Type, Within } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
+import { isUndefined } from 'parser/utils';
 import * as s from 'parser/stream';
 import * as r from 'lexical/expressions';
 import * as c from 'lexical/characters';
@@ -569,7 +570,6 @@ function Scan (): number {
 
       // If cache holds a filter reference, we refer to it in the next scan
       if (cache === ScanState.FilterSeparator) {
-        cache = ScanCache.Reset;
         state = ScanState.FilterSeparator;
         return Scan();
       }
@@ -738,19 +738,16 @@ function Scan (): number {
       // Filter identifier, lets capture, eg: {{ tag | ^filter }}
       if (s.IfRegExp(r.KeywordAlpha)) {
 
-        // Find specification for this filter
-        spec.SetFilter(s.token);
-
-        // We are dealing with an unknown filter, consume token
-        if (!spec.filter) {
-          error = ParseError.InvalidFilter;
-          state = ScanState.GotoTagEnd;
-          return TokenType.ParseError;
+        // Next scan we will look for color operator, eg: {{ tag | filter^:}}
+        if (spec.SetFilter(s.token)) {
+          state = ScanState.FilterOperator;
+          return TokenType.FilterIdentifier;
         }
 
-        // Next scan we will look for color operator, eg: {{ tag | filter^:}}
-        state = ScanState.FilterOperator;
-        return TokenType.FilterIdentifier;
+        // We are dealing with an unknown filter, consume token
+        error = ParseError.InvalidFilter;
+        state = ScanState.GotoTagEnd;
+        return TokenType.ParseError;
       }
 
       // If we get here, its an empty filter expression, eg: {{ tag | }}
@@ -772,10 +769,10 @@ function Scan (): number {
           state = ScanState.Filter;
           return TokenType.ParseError;
         }
-      }
 
-      // Lets consume the colon operator, eg: {{ tag | filter:^ }}
-      if (s.IfCodeChar(c.COL)) {
+        // Lets consume the colon operator, eg: {{ tag | filter:^ }}
+        s.Advance(1, true);
+
         state = ScanState.FilterArgument;
         return TokenType.FilterOperator;
       }
@@ -783,6 +780,12 @@ function Scan (): number {
       // Filter contains no arguments
       if (!spec.argument) {
         state = ScanState.Filter;
+        return Scan();
+      }
+
+      // No filter argument was detected a
+      if (!spec.isRequired()) {
+        state = spec.NextArgument() ? ScanState.FilterArgument : ScanState.Filter;
         return Scan();
       }
 
@@ -796,91 +799,92 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.FilterArgument:
 
-      // Capture an argument expressed as a string
-      if (s.SkipQuotedString(true)) {
+      // If the spec query engine is walking over parameter and
+      // a string is intercepted, it signifies a new argument.
+      if (spec.isWithin(Within.Parameter)) {
 
-        // Filter Parameter
-        if (cache === ScanState.FilterParameter) {
-          cache = TokenType.String;
-          state = ScanState.FilterParameterArgument;
-          return Scan();
+        // We are looking for specific characters and word boundries
+        if (s.IsRegExp(r.ParameterBreak)) {
+
+          // Lets attempt to move to the next argument.
+          // If last argument, we can exit the scan with parse error.
+          if (!spec.NextArgument()) {
+            error = ParseError.InvalidArgument;
+            state = ScanState.ParseError;
+            return TokenType.ParseError;
+          }
         }
-
-        // Make sure filter argument accepts a string
-        if (spec.isType(Type.string)) {
-
-          if (spec.isValue(s.token)) {
-            state = ScanState.FilterSeparator;
-            return TokenType.FilterArgument;
-          };
-
-          error = ParseError.InvalidArgument;
-          state = ScanState.FilterSeparator;
-          return TokenType.ParseError;
-        }
-
-        // If we get here, the filter argument does not accept string type
-        error = ParseError.RejectString;
-        state = ScanState.FilterSeparator;
-        return TokenType.ParseError;
       }
 
-      // We have a missing quotation character, eg: "argument
-      if (s.IsPrevRegExp(r.StringQuotations)) {
+      if (s.IsRegExp(r.StringQuotations)) {
+
+        // Capture an argument expressed as a string
+        if (s.SkipQuotedString(true)) {
+
+          // If value does not match the specification
+          if (!spec.isValue(s.token)) {
+            error = ParseError.InvalidArgument;
+            state = ScanState.FilterSeparator;
+            return TokenType.ParseError;
+          };
+
+          // Make sure filter argument accepts a string
+          if (!spec.isType(Type.string)) {
+            error = ParseError.RejectString;
+            state = ScanState.FilterSeparator;
+            return TokenType.ParseError;
+          }
+
+          state = ScanState.FilterSeparator;
+          return TokenType.FilterArgument;
+        }
+
+        // We have a missing quotation character, eg: "argument
         error = ParseError.MissingQuotation;
         state = ScanState.ParseError;
         return Scan();
       }
 
-      // Capture normal expression integer
-      if (s.IfRegExp(r.Integer)) {
+      // Capture normal expression integer, eg: 1, 25, -50, 100
+      if (s.IfRegExp(r.Number)) {
 
-        // Filter Parameter
-        if (cache === ScanState.FilterParameter) {
-          cache = TokenType.Integer;
-          state = ScanState.FilterParameterArgument;
-          return Scan();
+        // Validate integer number types, these are not floats
+        if (spec.isType(Type.integer)) {
+
+          // Ensure we are dealing with an integer
+          if (s.TokenContains(r.Integer)) {
+            state = ScanState.FilterSeparator;
+            return TokenType.Integer;
+          }
+
+          state = ScanState.GotoTagEnd;
+          error = ParseError.RejectFloat;
+          return TokenType.ParseError;
         }
 
-        // Filter argument accepts number, eg: {{ tag | filter: 10 }}
-        if (spec.isType(Type.integer)) {
+        // Validate float number types, in the specs they use a number type
+        if (spec.isType(Type.number)) {
+
+          // Ensure we do not have a hanging decimal, eg: 25.^
+          if (s.UnlessPrevCodeChar(c.DOT)) {
+            state = ScanState.GotoTagEnd;
+            error = ParseError.InvalidDecimalPoint;
+            return TokenType.ParseError;
+          }
+
+          // Number can be either float or integer, lets proceed
           state = ScanState.FilterSeparator;
           return TokenType.Integer;
         }
 
+        // If we reach this point, we have an invalid number
+        state = ScanState.GotoTagEnd;
         error = ParseError.RejectNumber;
-        state = ScanState.GotoTagEnd;
-        return TokenType.ParseError;
-      }
-
-      // Capture float expression numbers
-      if (s.IfRegExp(r.Float)) {
-        if (spec.isType(Type.number)) {
-
-          // Ensure number is not missing decimal
-          if (s.IfCodeChar(c.DOT)) {
-            error = ParseError.MissingNumber;
-            return TokenType.ParseError;
-          }
-
-          state = ScanState.FilterSeparator;
-          return TokenType.Float;
-        }
-
-        error = ParseError.RejectInteger;
-        state = ScanState.GotoTagEnd;
         return TokenType.ParseError;
       }
 
       // Check for boolean argument values
       if (s.IfRegExp(r.Boolean)) {
-
-        // Filter Parameter
-        if (cache === ScanState.FilterParameter) {
-          cache = TokenType.Boolean;
-          state = ScanState.FilterParameterArgument;
-          return Scan();
-        }
 
         // Ensure the argument accepts a boolean value
         if (spec.isType(Type.boolean)) {
@@ -897,15 +901,24 @@ function Scan (): number {
       // If we get here, we will have either a variable or reference
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
-        // Check to to see if we are dealing with an object
-        if (spec.SetObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
+        // Lets check if the value is an argument parameter
+        if (spec.isParameter(s.token)) {
+          state = ScanState.FilterParameter;
+          return Scan();
+        }
 
-          // Next call we will look for a property notation
+        // Supply the object to spec query engine, if value is not
+        // a known object, no harm is done, but we will still run the check
+        spec.SetObject(s.token);
+
+        // Check to to see if we are dealing with an object
+        if (s.IsRegExp(r.PropertyNotation)) {
           cache = ScanState.FilterSeparator;
           state = ScanState.Object;
           return TokenType.ObjectTagName;
         }
 
+        // If we get here, we have a keyword or variable
         state = ScanState.FilterSeparator;
         return TokenType.Variable;
       }
@@ -913,16 +926,28 @@ function Scan (): number {
       // Missing filter argument, eg: {{ tag | filter: ^ }}
       if (spec.isRequired()) {
 
-        // If current stream token is comma value, consume it
+        // Consume comma value
         if (s.TokenCodeChar(c.COM)) s.Cursor();
+        error = ParseError.RequireFilterArgument;
+        state = ScanState.GotoTagEnd;
+        return TokenType.ParseError;
+      }
 
+      // If we get here we have hanging colon, eg: {{ tag | filter:^ }}
+      if (s.TokenCodeChar(c.COL)) {
+
+        // Ensure we have a correctly aligned cursor
+        s.ReverseWhitespace();
         error = ParseError.MissingFilterArgument;
         state = ScanState.GotoTagEnd;
         return TokenType.ParseError;
       }
 
-      // Align the cursor with offset
-      s.Cursor();
+      // If we get here, lets check if another argument exists
+      // so as to capture any optional arguments in the spec.
+      if (s.UnlessPrevCodeChar(c.COM) && spec.NextArgument()) return Scan();
+
+      s.Cursor(); // Align the cursor with offset
 
       cache = ScanCache.Reset;
       error = ParseError.InvalidCharacter;
@@ -934,6 +959,19 @@ function Scan (): number {
     /* LIQUID FILTER ARGUMENT SEPARATOR             */
     /* -------------------------------------------- */
     case ScanState.FilterSeparator:
+
+      // console.log(s.token, spec.argument, spec.isWithin(Within.Parameter));
+
+      if (spec.isWithin(Within.Parameter)) {
+        console.log(s.token, cache, ScanState.FilterSeparator);
+      }
+
+      if (spec.NextParameter()) {
+        if (s.IfCodeChar(c.COM)) {
+          state = ScanState.FilterArgument;
+          return TokenType.Separator;
+        }
+      }
 
       // Move to the next argument in the spec
       if (spec.NextArgument()) {
@@ -965,23 +1003,10 @@ function Scan (): number {
         return TokenType.Filter;
       }
 
-      // Check if the filter argument accepts parameters
-      if (spec.isParameter(s.token)) {
-        if (s.IfCodeChar(c.COM) || s.IsCodeChar(c.COL)) {
-          state = ScanState.FilterParameter;
-          return Scan();
-        }
-      }
-
       // Ensure we have a clear closing path, eg: {{ tag | filter ^ }}
       if (s.IfRegExp(r.TagCloseClear)) {
         state = ScanState.GotoTagEnd;
         return TokenType.FilterEnd;
-      }
-
-      if (s.IfCodeChar(c.COM)) {
-        state = ScanState.FilterArgument;
-        return Scan();
       }
 
       // We have invalid characters, eg: {{ tag | filter ^# }}
@@ -994,113 +1019,23 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.FilterParameter:
 
-      // Consume the parameter name, eg: {{ tag | filter: param^: }}
-      if (s.IfRegExp(r.KeywordAlpha)) {
-
-        // Validate that the parameter is unique
-        if (!spec.isUnique(s.token)) {
-          error = ParseError.DuplicatedParameters;
-          return TokenType.ParseError;
-        }
-
-        // No spacing between parameter and colon, eg: {{ tag | filter ^ : }}
-        if (s.SkipWhitespace()) {
-          s.Cursor(); // Align the cursor with offset
-          error = ParseError.RejectWhitespace;
-          return TokenType.ParseError;
-        }
+      // Validate that the parameter is unique
+      if (spec.isUnique(s.token)) {
+        error = ParseError.DuplicatedParameters;
+        state = ScanState.GotoTagEnd;
+        return TokenType.ParseError;
       }
 
       // Parameters must contain a colon character
       if (s.IfCodeChar(c.COL, false)) {
-
         state = ScanState.FilterArgument;
-        cache = ScanState.FilterParameter;
-
-        if (spec.isParameter(s.token)) return Scan();
-
+        return Scan();
       }
 
       // Missing a colon separator, eg: {{ tag | filter: param^ }}
-      error = ParseError.MissingColon;
+      // error = ParseError.MissingColon;
       state = ScanState.GotoTagEnd;
-      return TokenType.ParseError;
-
-    /* -------------------------------------------- */
-    /* LIQUID FILTER PARAMETER ARGUMENT             */
-    /* -------------------------------------------- */
-    case ScanState.FilterParameterArgument:
-
-      // Next scan we will look for argument seperator
-      state = ScanState.FilterSeparator;
-
-      // If filter argument parameter was a string
-      if (cache === TokenType.String) {
-
-        cache = ScanCache.Reset;
-
-        // Ensure the intercepted value is the correct type
-        if (!spec.isType(Type.string)) {
-          error = ParseError.RejectString;
-          return TokenType.ParseError;
-        }
-
-        // Validate the intercepted value against the specification
-        if (!spec.isValue(s.token)) {
-          error = ParseError.InvalidArgument;
-          state = ScanState.GotoTagEnd;
-          return TokenType.ParseError;
-        }
-
-        // Scan for additional arguments
-        return TokenType.FilterArgument;
-
-      }
-
-      // If filter argument parameter was an integer
-      if (cache === TokenType.Integer) {
-
-        cache = ScanCache.Reset;
-
-        // Ensure the intercepted value is the correct type
-        if (!spec.isType(Type.integer)) {
-          error = ParseError.RejectNumber;
-          return TokenType.ParseError;
-        }
-
-        // Validate the intercepted value against the specification
-        if (!spec.isValue(s.token)) {
-          error = ParseError.InvalidArgument;
-          state = ScanState.GotoTagEnd;
-          return TokenType.ParseError;
-        }
-
-        // Scan for additional arguments
-        return TokenType.FilterArgument;
-      }
-
-      // If filter argument parameter was an boolean
-      if (cache === TokenType.Boolean) {
-
-        cache = ScanCache.Reset;
-
-        if (!spec.isType(Type.boolean)) {
-          error = ParseError.RejectBoolean;
-          return TokenType.ParseError;
-        }
-
-        // Validate the intercepted value against the specification
-        if (!spec.isValue(s.token)) {
-          error = ParseError.InvalidArgument;
-          state = ScanState.GotoTagEnd;
-          return TokenType.ParseError;
-        }
-
-        // Scan for additional arguments
-        return TokenType.FilterArgument;
-      }
-
-      break;
+      return Scan();
 
     /* -------------------------------------------- */
     /* LIQUID CONTROL TAG                           */

@@ -64,14 +64,15 @@ export const enum Type {
    * **BASIC TYPE**
    *
    * A value that is a digit integer type. It assumes
-   * a non negative number value with no decimal points
+   * a negative number (without decimal point) or basic
+   * number (without decimal point).
    *
    * ---
    *
    * **Example**
    *
    * - `25`
-   * - `-39.756`
+   * - `1000`
    *
    * ---
    *

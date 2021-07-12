@@ -101,7 +101,7 @@ export function ComputeLineOffsets (
  */
 export function Tokenize (from?: number, to?: number): string {
 
-  token = source.substring(from || cursor, to || offset);
+  token = source.slice(from || cursor, to || offset);
   return token;
 
 }
@@ -179,7 +179,7 @@ export function TokenNextWhitespace (regex: RegExp): boolean {
  */
 export function TokenRewind (start: number, regex: RegExp): boolean {
 
-  const string = source.substring(start, offset);
+  const string = source.slice(start, offset);
   const end = string.search(regex);
 
   if (end < 0) return false;
@@ -206,11 +206,12 @@ export function TokenRewind (start: number, regex: RegExp): boolean {
  */
 export function TokenCapture (regex: RegExp): boolean {
 
-  const match = source.substring(offset).match(regex);
+  const match = regex.exec(source.slice(offset));
 
   if (match === null) return false;
 
   token = match[0];
+
   return true;
 }
 
@@ -320,7 +321,7 @@ export function Prev (n: number = 1) {
 export function Advance (location: number, tokenize: boolean = false): number {
   offset = offset + location;
 
-  if (tokenize) token = source.substring(cursor, offset);
+  if (tokenize) token = source.slice(cursor, offset);
   return offset;
 }
 
@@ -340,6 +341,26 @@ export function GotoEnd (): number {
   cursor = offset;
 
   return size;
+}
+
+/**
+ * Unless Previous Code Character
+ *
+ * Reverse of `IsPrevCodeChar` matching a code character
+ * backwards but returning false if true and true if false.
+ * Optionally pass a `step` number to move further back from
+ * current index.
+ *
+ * **DOES NOT MODIFY**
+ *
+ * ---
+ *
+ * @param {number} [step=1]
+ * How many steps backwards, defaults to `1`
+ */
+export function UnlessPrevCodeChar (char: number, step: number = 1): boolean {
+
+  return source.charCodeAt(offset - step) !== char;
 }
 
 /**
@@ -449,7 +470,7 @@ export function SkipQuotedString (consume?: number | number[] | true): boolean {
 
   const n = offset;
 
-  if (!/^["']/.test(source.substring(n))) return false;
+  if (!/^["']/.test(source.slice(n))) return false;
 
   const location = source.indexOf(source.charAt(n), n + 1);
 
@@ -472,8 +493,8 @@ export function SkipQuotedString (consume?: number | number[] | true): boolean {
   offset = location + 1;
   token =
     consume === true
-      ? source.substring(n + 1, location)
-      : source.substring(n, offset);
+      ? source.slice(n + 1, location)
+      : source.slice(n, offset);
 
   return true;
 }
@@ -495,14 +516,14 @@ export function SkipQuotedString (consume?: number | number[] | true): boolean {
  */
 export function ConsumeUntil (regex: RegExp, tokenize?: boolean): boolean {
 
-  const match = source.substring(offset).search(regex);
+  const match = source.slice(offset).search(regex);
 
   if (match === null || match < 0) return false;
 
   cursor = offset;
   offset = offset + match;
 
-  if (tokenize) token = source.substring(cursor, offset);
+  if (tokenize) token = source.slice(cursor, offset);
 
   return true;
 }
@@ -534,7 +555,7 @@ export function ConsumeUnless (
   tokenize: boolean = true
 ): boolean {
 
-  const string = source.substring(offset);
+  const string = source.slice(offset);
   const match = string.search(regex);
 
   if (match < 0) return false;
@@ -573,7 +594,7 @@ export function ConsumeUnless (
  */
 export function UntilSequence (regex: RegExp): number {
 
-  const match = source.substring(offset).search(regex);
+  const match = source.slice(offset).search(regex);
 
   if (match < 0) {
     GotoEnd();
@@ -608,7 +629,7 @@ export function UntilSequence (regex: RegExp): number {
   */
 export function IfSequence (regex: RegExp, tokenize: boolean = true): boolean {
 
-  const substring = source.substring(offset);
+  const substring = source.slice(offset);
   const match = substring.search(regex);
 
   if (match < 0) return false;
@@ -664,7 +685,7 @@ function WhileChar (condition: Function): boolean {
  *
  * The `from` optional parameter accepts a offset location and when
  * provided the stream will reverse starting at that locations index,
- * this defaults to the current `cursor` location offset.
+ * this defaults to the current `offset` location offset.
  *
  * The `update` optional parameter accepts a `boolean` that defaults to
  * `true` and will update the `cursor` and `offset` index.
@@ -675,16 +696,12 @@ function WhileChar (condition: Function): boolean {
  *
  * > - `cursor` Moves cursor to previous match
  * > - `offset` Moves offset to previous match
- *
  * ---
  */
-export function ReverseWhitespace (
-  from?: number,
-  update: boolean = true
-): number | boolean {
+export function ReverseWhitespace (from?: number): boolean {
 
   const pos = from === undefined ? cursor : from;
-  const str = source.substring(0, from);
+  const str = source.slice(0, pos);
 
   let rev: number = pos;
 
@@ -698,10 +715,8 @@ export function ReverseWhitespace (
     ) break;
   }
 
-  if (!update) return rev;
-
   cursor = rev;
-  offset = pos;
+
   return true;
 
 }
@@ -781,7 +796,7 @@ export function Newlines (): boolean {
   */
 export function IsPrevRegExp (regex: RegExp, reverse: number = 1): boolean {
 
-  return regex.test(source.substring(offset - reverse, offset));
+  return regex.test(source.slice(offset - reverse, offset));
 }
 
 /**
@@ -799,13 +814,13 @@ export function IsPrevRegExp (regex: RegExp, reverse: number = 1): boolean {
  */
 export function IfRegExp (regex: RegExp): boolean {
 
-  const match = source.substring(offset).match(regex);
+  const match = regex.exec(source.slice(offset));
 
-  if (!match) return false;
+  if (match === null) return false;
 
-  cursor = offset + match.index;
-  offset = cursor + match[0].length;
   token = match[0];
+  cursor = offset + match.index;
+  offset = cursor + token.length;
 
   return true;
 }
@@ -820,7 +835,7 @@ export function IfRegExp (regex: RegExp): boolean {
  */
 export function IsRegExp (regex: RegExp): boolean {
 
-  return regex.test(source.substring(offset));
+  return regex.test(source.slice(offset));
 }
 
 /**

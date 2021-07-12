@@ -23,10 +23,10 @@ export const Whitespace = /^[ \t]/;
  *
  * ---
  *
- * Captures word bounded "true", "false" or "nil" boolean
+ * Captures word bounded "true", "false" boolean
  *
  */
-export const Boolean = /^(?:true|false|nil)\s?/;
+export const Boolean = /^(?:true|false)\b/;
 
 /**
  * `^-?[\d.]+`
@@ -56,7 +56,7 @@ export const Integer = /^-?\d+/;
  * Greedy float number capture
  *
  */
-export const Float = /^-?\d[\d.]*/;
+export const Float = /^-?\d[\d.]*\d/;
 
 /**
  * `^\d+`
@@ -270,6 +270,16 @@ export const PropertyValue = /^[$\w-]+/;
  *
  */
 export const PropertyBrackets = /^[[\]]/;
+
+/**
+ * `^['"\d-]|^(?:true|false)\b`
+ *
+ * ---
+ *
+ * Used to break out of an argument parameter walk
+ *
+ */
+export const ParameterBreak = /^(?:['"\d-]|(?:true|false)\b)/;
 
 /**
  * `^[:\w][:\w-]*`

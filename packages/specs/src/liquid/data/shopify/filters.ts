@@ -739,22 +739,37 @@ Filters = {
     }
   },
   time_tag: {
-    description: 'Converts a timestamp into a HTML `<time>` tag. The time_tag filter accepts the same parameters as Ruby\'s strftime method.',
+    description: 'Converts a timestamp into a HTML `<time>` tag.',
     arguments: [
       {
-        type: Type.string
+        type: Type.string,
+        pattern: /%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,
+        description: 'The time_tag filter accepts the same parameters as Ruby\'s strftime method.'
+      },
+      {
+        type: Type.string,
+        value: 'foo'
+      },
+      {
+        type: Type.string,
+        value: 'bar'
+      },
+      {
+        type: Type.string,
+        value: 'baz'
       },
       {
         type: Type.parameter,
         value: {
           datetime: {
             type: Type.string,
+            pattern: /%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,
             description: 'A datetime parameter with strftime shorthand formats to use a custom format for the datetime attribute of the output `<time>` tag.'
           },
           format: {
             type: Type.string,
-            pattern: /\b(?:(?:abbreviated|on)_date|basic|date(?:_at_time)?|default)\b/,
             description: 'The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use',
+            strict: false,
             value: [
               {
                 value: 'abbreviated_date',
