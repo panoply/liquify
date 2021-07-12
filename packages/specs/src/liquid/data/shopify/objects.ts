@@ -2024,24 +2024,6 @@ Objects = {
       url: 'https://shopify.dev/docs/themes/liquid/reference/objects/order'
     }
   },
-  section: {
-    description: "The section object lets you access a section's properties and setting values.",
-    type: Type.object,
-    properties: {
-      blocks: {
-        description: "Returns an array of the section's blocks.",
-        type: Type.array
-      },
-      id: {
-        description: "For static sections, returns the section's file name without \".liquid\". For dynamic sections, returns a dynamically generated ID.",
-        type: Type.number
-      },
-      settings: {
-        description: "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
-        type: Type.object
-      }
-    }
-  },
   recommendations: {
     type: Type.object,
     description: 'The recommendations object provides product recommendations that are related to a given product, based on data from sales, product descriptions, and relations between products and collections.',
