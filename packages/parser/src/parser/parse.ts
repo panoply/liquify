@@ -1,660 +1,429 @@
-import { ITag } from '@liquify/liquid-language-specs';
+import { spec, Type as Types } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
-import { TokenContext } from 'lexical/context';
-import { NodeType } from 'lexical/types';
-import { NodeLanguage } from 'lexical/language';
+import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
-import { ParseError } from 'lexical/errors';
-import { Config as config } from 'config';
-import { errors } from 'tree/errors';
+import { NodeLanguage } from 'lexical/language';
+import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
-import { INode } from 'tree/node';
-// import { embedded } from 'tree/model';
-import * as regex from 'lexical/regex';
-import * as specs from 'parser/specs';
-import * as context from 'tree/context';
-import * as stream from 'parser/stream';
+import { INode, Type } from 'tree/nodes';
+import { isNumber, isString } from 'parser/utils';
+import * as Regexp from 'lexical/expressions';
+import * as s from 'parser/stream';
 import * as scanner from 'parser/scanner';
 
-const voids = /\b(area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)\b/;
-
 /**
- * Parser
- *
- * Liquid/HTML parser function which constructs and tokenized syntaxes.
- *
- * @param {Parser.AST} document
+ * Liquid/HTML parser function which constructs
+ * and tokenizes syntaxes to build an AST.
  */
 export function parse (document: IAST): IAST {
+  /* PAIR SETS ---------------------------------- */
 
-  /**
-   * Token Index
-   *
-   * Represents the token type returned by the scanner.
-   * Up until EOS (End of String) enum is returned.
-   */
-  let token: number = scanner.scan();
+  const pair: Set<INode> = new Set();
 
-  /**
-   * State Reference
-   *
-   * Holds a state value that can interchange between
-   * parse execution. Generally points an enum value
-   * to reference between cases.
-   */
-  let state: number | string;
+  /* NODE ROOT ---------------------------------- */
 
-  /**
-   * AST Node Index
-   *
-   * The current index of a node on the tree. Essentially
-   * this is just holding the length of the AST.
-   */
-  let index: number;
+  document.root = new INode(Type.Root);
 
-  /**
-   * AST Node Instance
-   *
-   * Holds an instance of the current node being parsed.
-   * We construct the data of each node via this letting.
-   */
+  /* STATE -------------------------------------- */
+
+  let liquid: INode = document.root;
+  let html: INode = liquid;
   let node: INode;
+  let track: INode;
+  let scope: string | Types;
+  let error: (range?: Range) => void;
+  let token: number = scanner.scan();
+  let attr: string | number;
+  let filter: number = NaN;
+  let object: number = NaN;
 
-  /**
-   * Root Node Index
-   *
-   * Holds the value of a root nodes contains on the AST.
-   * Root nodes are pair types which contain children, for
-   * example a root node would be a `{% for %}` tag and all
-   * decendents of the root hold reference to its AST index.
-   */
-  let root: number | undefined;
-
-  /**
-   * AST Node Child
-   */
-  let child: INode;
-
-  /**
-   * AST Node Child
-   */
-  let parent: INode;
-
-  /**
-   * Resets the current parse lettings. We execute this
-   * after every node we sucessfully parse.
-   */
-  const reset = (): void => {
-    // RESET LETTINGS
-    state = undefined;
-    node = undefined;
-
-    // RESET SPECS
-    specs.Reset();
-    specs.object.Reset();
-  };
+  /* -------------------------------------------- */
+  /* TOKENIZE                                     */
+  /* -------------------------------------------- */
 
   while (token !== TokenType.EOS) {
     switch (token) {
-      // SPACING
-      // -----------------------------------------------------------------
-      case TokenType.Whitespace:
-        if (config.context && config.whitespace) { context.add(TokenContext.Whitespace); }
-        break;
-      case TokenType.Newline:
-        if (config.context && config.newlines) { context.add(TokenContext.Newline); }
-        break;
-
-      // BOOLEAN
-      // -----------------------------------------------------------------
-      case TokenType.Boolean:
-        if (config.context) context.add(TokenContext.Boolean);
-        break;
-
-      // NUMBERS
-      // -----------------------------------------------------------------
-      case TokenType.Integer:
-        if (config.context) context.add(TokenContext.Integer);
-        break;
-      case TokenType.Float:
-        if (config.context) context.add(TokenContext.Float);
-        break;
-      case TokenType.Number:
-        if (config.context) context.add(TokenContext.Number);
-        break;
-
-      // STRINGS
-      // -----------------------------------------------------------------
-      case TokenType.String:
-        if (config.context) context.add(TokenContext.String);
-        break;
-      case TokenType.StringSingleQuote:
-        if (config.context) context.add(TokenContext.Object);
-        break;
-      case TokenType.StringDoubleQuote:
-        if (config.context) context.add(TokenContext.Object);
-        break;
-
-      // PARSE ERROR
-      // -----------------------------------------------------------------
       case TokenType.ParseError:
-
-        node.errors.push(
-          document.errors.push(
-            errors(
-              scanner.error,
-              document.getRange(),
-              stream.offset
-            )
-          ) - 1
-        );
-
-        break;
-
-      // PARSE CANCEL
-      // -----------------------------------------------------------------
-      case TokenType.ParseCancel:
-        break;
-
-      // PARSE SKIP
-      // -----------------------------------------------------------------
-      case TokenType.ParseSkip:
-        if (node) {
-          if (!node.singular) {
-            scanner.syntactic.list.pop();
-            scanner.syntactic.list.pop();
-          }
-
-          node = undefined;
-        }
-
-        break;
-
-      // DELIMITER OPEN
-      // -----------------------------------------------------------------
-      case TokenType.DelimiterOpen:
-        if (config.context) context.add(TokenContext.OpenTag);
-        break;
-
-      // DELIMITER TRIMS
-      // -----------------------------------------------------------------
-      case TokenType.TrimDashLeft:
-        if (config.context) context.add(TokenContext.LeftTrim);
-        break;
-      case TokenType.TrimDashRight:
-        if (config.context) context.add(TokenContext.RightTrim);
-        break;
-
-      case TokenType.Separator:
-        if (config.context) context.add(TokenContext.Separator);
-        break;
-
-      // OUTPUT TAG NAME
-      // -----------------------------------------------------------------
-      case TokenType.ObjectTag:
-      case TokenType.SingularTag:
-      case TokenType.Unknown:
-      case TokenType.StartTag:
-
-        index = document.nodes.length;
-
-        node = new INode();
-
-        node.type = specs.type;
-        node.index = index;
-        node.root = typeof root === 'number' ? root : index;
-        node.parent = scanner.syntactic.parentNode || index;
-        node.offsets.push(scanner.start);
-
-        if (token === TokenType.StartTag) {
-          node.singular = false;
-          if (typeof root === 'undefined') root = index;
-        }
-
-        if (config.context) node.context.push(context.size());
-
-        break;
-
-      // END TAG
-      // -----------------------------------------------------------------
-      case TokenType.EndTag: {
-
-        // Find hierarch - The parental node
-        node = document.nodes[scanner.syntactic.match];
-
-        // console.log(scanner.syntactic.list, node?.name, stream.token)
-
-        // Validate the parent matches the hierarch node
-        if (node?.name === stream.token) {
-
-          if (scanner.syntactic.list.length === 0) root = undefined;
-          if (config.context) context.add(TokenContext.EndTag);
-
-          node.offsets.push(scanner.start);
-
-          if (config.context) node.context.push(context.size());
-
-          // AST LOGIC
-          index = node.index;
-          state = TokenType.EndTag;
+        if (scanner.error === Errors.MissingCloseDelimiter) {
+          track = undefined;
+          node.offsets.length > 2 || node.offsets.push(s.offset);
+          document.report(scanner.error)(node.range);
           break;
         }
 
-        // The endtag is invalid - missing parental hierarch
-        // create a new node on the AST representing this invalid node
-
-        node = new INode();
-        node.name = stream.token;
-
-        // AST LOGIC
-        state = ParseError.InvalidSyntactic;
-
-        // CONTEXT
-        if (config.context) {
-          context.add(TokenContext.EndTag);
-          node.context.push(context.size());
-        }
-
-        break;
-      }
-
-      // DELIMITER CLOSE
-      // -----------------------------------------------------------------
-      case TokenType.DelimiterClose:
-      case TokenType.DelimiterEnder:
-
-        node.offsets.push(stream.offset);
-        node.token.push(document.getText(scanner.start, stream.offset));
-        node.range.end = document.getRange().end;
-
-        if (config.context) context.add(TokenContext.CloseTag);
-
-        // ONLY START OR SINGULAR TYPE TAGS ARE PUSHED ONTO AST
-        if (token === TokenType.DelimiterClose) document.nodes.push(node);
-
-        if (state === ParseError.InvalidSyntactic) {
-          node.index = document.nodes.length;
-          node.errors.push(
-            document.errors.push(
-              errors(
-                ParseError.InvalidSyntactic,
-                node.range,
-                stream.offset
-              )
-            ) - 1
-          );
-        }
-
-        reset();
+        // Remove syntactic placement errors
+        document.report(scanner.error)();
 
         break;
 
-      // VARIABLE
-      // -----------------------------------------------------------------
-      case TokenType.Variable:
-        if (config.context) context.add(TokenContext.Variable);
-
-        break;
-
-      case TokenType.VariableIdentifier:
-        if (config.context) context.add(TokenContext.Identifier);
-
-        node.name = stream.token;
-        node.type = specs.type;
-
-        if (!(specs.cursor as ITag)?.singular) {
-          scanner.syntactic.list.push(node.name, index);
-        }
-
-        break;
-
-      case TokenType.VariableKeyword:
-        if (config.context) context.add(TokenContext.Keyword);
-
-        document.variables[node.index] = { label: stream.token };
-
-        if (document.nodes[node.index - 1]?.type === NodeType.comment) {
-          document.variables[node.index].description =
-            document.nodes[node.index - 1].content;
-        }
-
-        break;
-
-      case TokenType.VariableOperator:
-        if (config.context) context.add(TokenContext.Operator);
-        break;
-      case TokenType.VariableValue:
-        if (config.context) context.add(TokenContext.Assignment);
-        break;
-
-      // OBJECT NAME
-      // -----------------------------------------------------------------
-      case TokenType.Object:
-        if (config.context) context.add(TokenContext.Object);
-
-        // SAVE OFFSET
-        specs.object.Start(stream.offset);
-
-        node.objects = {
-          ...node.objects,
-          [specs.object.offset]: [ stream.token ]
-        };
-
-        break;
-
-      case TokenType.ObjectBracketNotationOpen:
-        if (config.context) context.add(TokenContext.OpenBracket);
-        break;
-      case TokenType.ObjectBracketNotationClose:
-        if (config.context) context.add(TokenContext.CloseBracket);
-        break;
-      case TokenType.ObjectProperty:
-        if (config.context) context.add(TokenContext.Property);
-
-        // VALIDATE PROPERTY
-        if (scanner.error === ParseError.UnknownProperty) {
-          node.errors.push(
-            document.errors.push(
-              errors(
-                scanner.error,
-                document.getRange(),
-                stream.offset
-              )
-            ) - 1
-          );
-        }
-
-        // PUSH NEXT PROPERTY
-        node.objects[specs.object.offset].push(stream.token);
-        node.objects[stream.offset + 1] = specs.object.offset;
-
-        // SAVE OFFSET
-        specs.object.Start(stream.offset);
-
-        break;
-      case TokenType.ObjectPropertyString:
-        if (config.context) context.add(TokenContext.Property);
-
-        // PUSH NEXT PROPERTY
-        node.objects[specs.object.offset].push(stream.token);
-        node.objects[stream.offset + 1] = specs.object.offset;
-
-        // SAVE OFFSET
-        specs.object.Start(stream.offset);
-
-        break;
-      case TokenType.ObjectPropertyNumber:
-        if (config.context) context.add(TokenContext.Integer);
-        break;
-      case TokenType.ObjectPropertyObject:
-        if (config.context) context.add(TokenContext.PropertyObject);
-        break;
-      case TokenType.ObjectDotNotation:
-        if (config.context) context.add(TokenContext.Separator);
-        break;
-
-      // BASIC TAG NAME
-      // -----------------------------------------------------------------
-      case TokenType.LiquidTagName:
-        if (config.context) context.add(TokenContext.Identifier);
-
-        console.log(node);
-
-        node.name = stream.token;
-
-        if (!(specs.cursor as ITag)?.singular) {
-          // ASSERT HIERARCH
-          scanner.syntactic.list.push(node.name, index);
-        }
-
-        break;
-
-      // EMBEDDED LANGUAGE TAG
-      // -----------------------------------------------------------------
-      case TokenType.Embedded:
-
-        node.name = stream.token;
-        node.type = specs.type;
-        node.language = NodeLanguage[(specs.cursor as ITag).language];
-
-        // ASSERT HIERARCH
-        scanner.syntactic.list.push(node.name, index);
-        document.embeds.push(index);
-
-        if (config.context) context.add(TokenContext.Identifier);
-
-        break;
-
-      // COMMENT TAG
-      // -----------------------------------------------------------------
-      case TokenType.Comment:
-        node.name = stream.token;
-        node.type = specs.type;
-
-        // ASSERT HIERARCH
-        scanner.syntactic.list.push(node.name, index);
-
-        document.comments.push(index);
-
-        if (config.context) context.add(TokenContext.Identifier);
-
-        break;
-
-      // CONTROL TAG
-      // -----------------------------------------------------------------
-      case TokenType.Control:
-        node.name = stream.token;
-        node.type = specs.type;
-
-        if (!(specs.cursor as ITag).singular) {
-          scanner.syntactic.list.push(node.name, index);
-        }
-
-        if (config.context) context.add(TokenContext.Identifier);
-
-        break;
-
-      case TokenType.ControlCondition:
-        if (config.context) context.add(TokenContext.Condition);
-        break;
-      case TokenType.ControlOperator:
-        if (config.context) context.add(TokenContext.Operator);
-        break;
-
-      // FILTERS
-      // -----------------------------------------------------------------
-      case TokenType.Filter:
-        if (config.context) context.add(TokenContext.Separator);
-        break;
-      case TokenType.FilterIdentifier:
-        if (config.context) context.add(TokenContext.Keyword);
-        node.filters = {
-          ...node.filters,
-          [stream.offset + stream.token.length]: stream.token
-        };
-        break;
-      case TokenType.FilterOperator:
-        if (config.context) context.add(TokenContext.Operator);
-        break;
-      case TokenType.FilterArgument:
-        if (config.context) context.add(TokenContext.String);
-        break;
-      case TokenType.FilterArgumentNumber:
-        if (config.context) context.add(TokenContext.Integer);
-        break;
-      case TokenType.FilterParameter:
-        if (config.context) context.add(TokenContext.Parameter);
-        break;
-
-      // ITERATION TAG
-      // -----------------------------------------------------------------
-      case TokenType.Iteration:
-        node.name = stream.token;
-        node.type = specs.type;
-
-        if (!(specs.cursor as ITag).singular) {
-          scanner.syntactic.list.push(node.name, index);
-        }
-
-        if (config.context) context.add(TokenContext.Identifier);
-
-        break;
-      case TokenType.IterationIteree:
-        if (config.context) context.add(TokenContext.Iteree);
-        break;
-      case TokenType.IterationOperator:
-        if (config.context) context.add(TokenContext.Operator);
-        break;
-      case TokenType.IterationArray:
-        if (config.context) context.add(TokenContext.Array);
-        break;
-      case TokenType.IterationParameter:
-        if (config.context) context.add(TokenContext.Keyword);
-        break;
-      case TokenType.IterationParameterValue:
-        if (config.context) context.add(TokenContext.Integer);
-        break;
-
-      // HTML START TAG OPEN
-      // -----------------------------------------------------------------
       case TokenType.HTMLStartTagOpen:
-        if (config.context) context.add(TokenContext.OpenTag);
+        htmlNode(Type.Pair);
+
         break;
 
-      case TokenType.HTMLTagName:
+      case TokenType.HTMLStartTagClose:
+        closeNode(Type.Start);
+        track = undefined;
 
-        index = document.nodes.length;
+        break;
+      case TokenType.HTMLVoidTagOpen:
+        htmlNode(Type.Void);
 
-        node = new INode();
+        break;
 
-        node.name = stream.token;
-        node.index = index;
-        node.type = NodeType.embedded;
-        node.kind = NodeKind.HTML;
-        node.singular = false;
-        node.root = typeof root === 'number' ? root : index;
-        node.parent = scanner.syntactic.parentNode || index;
-        node.offsets.push(scanner.start);
+      case TokenType.HTMLVoidTagClose:
+        closeNode(Type.Void);
+        track = undefined;
+        break;
 
-        if (regex.HTMLScriptEmbed.test(stream.token)) {
-          node.language = NodeLanguage.javascript;
-        }
+      case TokenType.HTMLEndTagOpen:
 
-        if (regex.HTMLStyleEmbed.test(stream.token)) {
-          node.language = NodeLanguage.css;
-        }
+        html = node = html;
 
-        if (!voids.test(node.name)) {
-          node.singular = true;
-          scanner.syntactic.list.push(node.name, node.index);
-        }
-
-        if (config.context) {
-          node.context.push(context.size());
-          context.add(TokenContext.Identifier);
+        if (!startEnd(NodeKind.HTML, html)) {
+          error = document.report(Errors.MissingStartTag);
         }
 
         break;
 
-      // HTML ATTRIBUTE
-      // -----------------------------------------------------------------
+      case TokenType.HTMLEndTagClose:
+        closeNode(Type.Pair);
+
+        track = undefined;
+
+        break;
+
+      case TokenType.HTMLLiquidAttribute:
+        // node = parent;
+        node = liquid;
+
+        break;
+
       case TokenType.HTMLAttributeName:
+        attr = s.token;
+        node.attributes[attr] = null;
 
-        if (config.context) context.add(TokenContext.Attribute);
+        if (attr === 'src') node.type = Types.import;
 
-        state = stream.token;
-        node.attributes[state] = null;
-
-        if (state === 'src') node.type = NodeType.import;
-
-        break;
-
-      case TokenType.HTMLOperatorValue:
-        if (config.context) context.add(TokenContext.Operator);
         break;
 
       case TokenType.HTMLAttributeValue:
-
-        if (config.context) context.add(TokenContext.String);
-
-        if (regex.HTMLAttrJS.test(stream.token)) {
-          node.language = NodeLanguage.javascript;
+        if (Regexp.HTMLAttributeJS.test(s.token)) {
+          node.languageId = NodeLanguage.javascript;
+        } else if (Regexp.HTMLAttributeJSON.test(s.token)) {
+          node.languageId = NodeLanguage.json;
         }
 
-        if (regex.HTMLAttrJSON.test(stream.token)) {
-          node.language = NodeLanguage.json;
-        }
+        node.attributes[attr as string] = s.token;
 
-        node.attributes[state] = stream.token;
-        state = undefined;
+        attr = undefined;
 
         break;
 
-      case TokenType.HTMLEndTag:
+      /* -------------------------------------------- */
+      /* LIQUID                                       */
+      /* -------------------------------------------- */
+      case TokenType.TagOpen:
 
-        // Find hierarch - The parental node
-        node = document.nodes[scanner.syntactic.match];
+        liquidNode(Type.Pair);
 
-        // console.log(node);
-        // Validate the parent matches the hierarch node
-        if (node?.name === stream.token) {
-          // CONTEXT
-          if (config.context) context.add(TokenContext.EndTag);
+        break;
 
-          node.offsets.push(scanner.start);
+      case TokenType.StartTagName:
 
-          if (config.context) node.context.push(context.size());
+        node.tag = s.token;
+        node.singular = false;
+        node.type = spec.tag.type;
 
-          // AST LOGIC
-          index = node.index;
+        pair.add(node);
 
-          break;
+        break;
+
+      case TokenType.StartTagClose:
+        closeNode(Type.Start);
+
+        break;
+
+      case TokenType.OutputTagOpen:
+        liquidNode(Type.Void);
+
+        node.type = Types.output;
+
+        break;
+
+      case TokenType.OutputTagName:
+
+        node.tag = s.token;
+        node.scope = node.parent?.scope?.[node.tag];
+
+        break;
+
+      case TokenType.ObjectTagName:
+
+        node.tag = s.token;
+        object = s.offset;
+
+        if (node.parent.type === Types.iteration) {
+          node.scope = node.parent.scope[s.token];
+        }
+
+        // console.log(liquid.parent.scope[s.token]);
+
+        Object.assign(node.objects, { [s.offset]: [ s.token ] });
+
+        if (!isNaN(filter) && node.filters?.[filter]) {
+          node.filters[filter].push(object);
         }
 
         break;
 
-      // HTML START TAG OPEN
-      // -----------------------------------------------------------------
-      case TokenType.HTMLEndTagClose:
-      case TokenType.HTMLEndCommentTag:
-      case TokenType.HTMLStartTagClose:
+      case TokenType.OutputTagClose:
+        closeNode(Type.Void);
 
-        if (!node) break;
+        break;
 
-        node.offsets.push(stream.offset);
-        node.token.push(document.getText(scanner.start, stream.offset));
-        node.range.end = document.getRange().end;
+      case TokenType.SingularTagName:
+        break;
 
-        // CONTEXT
-        if (config.context) context.add(TokenContext.CloseTag);
+      case TokenType.SingularTagClose:
+        closeNode(Type.Void);
 
-        // ADD ONLY START BASIC TAGS TO AST
-        if (token !== TokenType.HTMLEndTagClose) {
-          // node.language = spec.associates.match(
-          //   node.name,
-          //   Object.values(node.attributes)
-          // );
-          node.index = document.nodes.length;
+        break;
 
-          document.embeds.push(node.index);
-          document.nodes.push(node);
+      case TokenType.EndTagOpen:
+        liquid = node = liquid;
 
+        if (!startEnd(NodeKind.Liquid, liquid)) {
+          error = document.report(Errors.MissingStartTag);
+        }
+
+        break;
+
+      case TokenType.EndTagClose:
+        closeNode(Type.Pair);
+
+        break;
+
+      case TokenType.Iteration:
+
+        node.scope = {};
+
+        break;
+
+      case TokenType.IterationIteree:
+
+        scope = s.token;
+        node.scope[s.token] = null;
+
+        break;
+
+      case TokenType.IterationArray:
+
+        // node.scope[scope] = spec.cursor.object?.object as string;
+
+        if (node.parent.type === Types.iteration) {
+        //  Object.assign(node.scope, node.parent.scope);
+        }
+
+        break;
+
+      case TokenType.Object:
+
+        object = s.offset;
+
+        Object.assign(node.objects, { [s.offset]: [ s.token ] });
+
+        if (node.parent.type === Types.iteration && node.parent.scope?.[s.token]) {
+          Object.assign(node.scope, node.parent.scope);
+          spec.SetObject(node.parent.scope[s.token]);
         } else {
-
-          // embedded(node);
-
+          spec.SetObject(s.token);
         }
 
-        reset();
+        if (!isNaN(filter) && node.filters?.[filter]) {
+          node.filters[filter].push(object);
+        }
+
+        break;
+
+      case TokenType.ObjectProperty:
+
+        node.objects[object].push(s.token);
+        node.objects[s.offset + 1] = object;
+
+        spec.isProperty(s.token);
+
+        if (node.type === Types.iteration) {
+
+          node.scope[scope] = spec.object?.object;
+
+          if (node.parent.type === Types.iteration) {
+
+            spec.isProperty(s.token);
+
+          } else if (isString(spec.object?.object)) {
+
+            spec.SetObject(node.scope[scope]);
+
+            if (spec.object?.object) {
+              spec.SetObject(spec.object.object as string);
+            }
+          }
+        }
+
+        if (isNumber(node.scope) && !spec.isObjectType(node.scope as number)) {
+          document.report(Errors.RejectObject)();
+        } else if (spec.SetObject(node.scope as string) && !spec.isProperty(s.token)) {
+          document.report(Errors.UnknownProperty)();
+        }
+
+        break;
+
+      case TokenType.Filter:
+
+        filter = s.offset + s.cursor;
+
+        Object.assign(node.filters, { [filter]: [] });
+
+        break;
+
+      case TokenType.FilterIdentifier:
+        node.filters[filter].push(s.token);
+        node.filters[s.offset + 1] = filter;
+
+        break;
+
+      case TokenType.FilterArgument:
+        node.filters[filter].push(s.token);
+        node.filters[s.offset + 1] = filter;
+
+        break;
+
+      case TokenType.FilterEnd:
+        filter = NaN;
 
         break;
     }
 
     token = scanner.scan();
-
   }
 
-  scanner.syntactic.hierarch(document);
+  /* NODE SYNTACTICS ---------------------------- */
+
+  if (pair.size > 0) {
+    for (const { range } of pair) document.report(Errors.MissingEndTag)(range);
+    pair.clear();
+  }
+
+  /* RETURN ------------------------------------- */
 
   return document;
+
+  /* -------------------------------------------- */
+  /* HELPER FUNCTIONS                             */
+  /* -------------------------------------------- */
+
+  /**
+   * Creates a child node instance, this is called
+   * each time we encounter a starting delimeters.
+   */
+  function htmlNode (type: Type): void {
+    if (track instanceof INode) pendingClose();
+
+    node = new INode(type, scanner.begin, html, NodeKind.HTML);
+    node.tag = s.token;
+    html.children.push(node);
+
+    if (type === Type.Pair) {
+      html = node;
+      pair.add(node);
+    }
+
+    track = node;
+  }
+
+  /**
+   * Creates a child node instance, this is called
+   * each time we encounter a starting delimeters.
+   */
+  function liquidNode (type: Type): void {
+    node = new INode(type, scanner.begin, liquid, NodeKind.Liquid);
+
+    // Add this node child to the parent
+    liquid.children.push(node);
+
+    // parent = node;
+    if (type === Type.Pair) {
+      liquid = node;
+      pair.add(node);
+    }
+  }
+
+  /**
+   * Handles an opening close type tag. This is executed
+   * when a start/end parent node close tag is encountered.
+   * It walks the AST to locate the parent node.
+   */
+  function startEnd (kind: NodeKind | undefined, parent: INode): boolean {
+    while (!node.isSameNode(s.token, kind) && node.parent) {
+      node = node.parent;
+    }
+
+    // Ensure the node is not root and matches the token
+    if (parent.type !== Type.Root && node.tag === s.token) {
+      node.offsets.push(scanner.begin);
+      scope = undefined;
+      return true;
+    }
+
+    // If we get here, we have invalid syntactic placement
+    node = new INode(Type.Pair, scanner.begin, parent, kind);
+    node.tag = s.token;
+    parent.children.push(node);
+    return false;
+  }
+
+  /**
+   * Closed a node and completes the parse of the
+   * token. Called each time we have successfully
+   * completed parsing a node or any type.
+   */
+  function closeNode (type: Type): void {
+    node.offsets.push(s.offset);
+
+    if (type === Type.Pair) {
+      // Syntactic pair match, remove from the set
+      pair.delete(node);
+
+      if (node.kind === NodeKind.HTML) html = node.parent;
+      if (node.kind === NodeKind.Liquid) liquid = node.parent;
+      if (!error) return undefined;
+
+      error(node.range);
+      error = undefined;
+    }
+  }
+
+  function pendingClose () {
+    let idx = track.children.length;
+
+    if (idx === 0) {
+      track.offsets.push(s.offset);
+    } else {
+      while (idx--) {
+        const child = track.children[idx];
+
+        if (child.singular) {
+          track.offsets.push(child.end);
+          break;
+        } else if (child.offsets.length > 2) {
+          track.offsets.push(child.end);
+          break;
+        }
+      }
+    }
+
+    document.report(Errors.MissingCloseDelimiter)(track.range);
+    track = undefined;
+  }
 }

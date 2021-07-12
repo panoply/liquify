@@ -1,6 +1,6 @@
 import { spec, IEngine } from '@liquify/liquid-language-specs';
 import { VersionedTextDocumentIdentifier, Range } from 'vscode-languageserver-types';
-import { parse } from 'parser/parser';
+import { parse } from 'parser/parse';
 import { create, update, get, remove, model } from 'tree/model';
 import { IAST } from './tree/ast';
 import { Config, IConfig } from './config';
