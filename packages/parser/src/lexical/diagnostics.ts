@@ -177,6 +177,10 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     severity: ErrorLevel.Warning,
     message: 'Value is not an array type and cannot be iterated'
   },
+  [ParseError.InvalidIterationParameter]: {
+    severity: ErrorLevel.Warning,
+    message: 'Iteration parameter is not valid'
+  },
   [ParseError.RejectString]: {
     severity: ErrorLevel.Error,
     message: 'String value not accepted'

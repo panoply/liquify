@@ -15,113 +15,100 @@ Tags = {
   form: {
     type: Type.generator,
     description: 'Creates an HTML `<form>` element along with the required `<input>` elements to submit the form to a particular endpoint.',
-    pattern: /(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)/,
     arguments: [
       {
         type: Type.string,
-        value: 'activate_customer_password',
-        template: 'customer/activate_account',
-        description: 'Generates a form for activating a customer account on the activate_account.liquid template.'
+        required: true,
+        pattern: /(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)/,
+        value: [
+          {
+            value: 'activate_customer_password',
+            template: 'customer/activate_account',
+            description: 'Generates a form for activating a customer account on the activate_account.liquid template.'
+          },
+          {
+            value: 'product',
+            description: 'Generates a form for adding a product variant to the cart. Requires a "product" object as a parameter.'
+          },
+          {
+            value: 'new_comment',
+            template: 'article',
+            description: 'Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter.'
+          },
+          {
+            description: 'Generates a form for creating a new customer account on the register.liquid template.',
+            value: 'create_customer',
+            template: 'customer/register'
+          },
+          {
+            value: 'customer',
+            description: "Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup."
+          },
+          {
+            value: 'customer_address',
+            description: 'Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address.'
+          },
+          {
+            value: 'customer_login',
+            description: 'Generates a form for logging into Customer Accounts on the login.liquid template.',
+            template: 'customer/login'
+          },
+          {
+            value: 'recover_customer_password',
+            description: 'Generates a form for recovering a lost password on the login.liquid template.',
+            template: 'customer/login'
+          },
+          {
+            value: 'contact',
+            description: 'Generates a form for submitting an email through the Liquid contact form'
+          },
+          {
+            value: 'reset_customer_password',
+            description: 'Generates a form on the customers/reset_password.liquid template for a customer to reset their password.',
+            template: 'customer/login'
+          },
+          {
+            value: 'guest_login',
+            description: 'Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.',
+            template: 'customer/login'
+
+          },
+          {
+            value: 'storefront_password',
+            description: 'Generates a form on the password.liquid template for entering a password-protected storefront.'
+          },
+          {
+            value: 'currency',
+            description: 'Generates a form that lets your customer change the currency in your storefront.'
+          }
+        ]
       },
       {
-        type: Type.string,
-        value: 'product',
-        description: 'Generates a form for adding a product variant to the cart. Requires a "product" object as a parameter.',
-        parameter: {
-          seperator: 1,
-          required: true,
-          value: {
-            product: {
-              type: Type.keyword,
+        type: Type.object,
+        value: {
+          product: [
+            {
+              value: 'product',
               description: 'The `product` object is required when generating a form for adding a product variant to the cart'
             }
-          }
-        }
-      },
-      {
-        type: Type.string,
-        value: 'new_comment',
-        template: 'article',
-        description: 'Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter.',
-        parameter: {
-          seperator: 1,
-          required: true,
-          value: {
-            article: {
-              type: Type.keyword,
+          ],
+          new_comment: [
+            {
+              value: 'article',
               description: 'The `article` object'
             }
-          }
-        }
-      },
-      {
-        description: 'Generates a form for creating a new customer account on the register.liquid template.',
-        type: Type.string,
-        value: 'create_customer',
-        template: 'customer/register'
-      },
-      {
-        type: Type.string,
-        value: 'customer',
-        description: "Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup."
-      },
-      {
-        type: Type.string,
-        value: 'customer_address',
-        description: 'Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address.',
-        parameter: {
-          seperator: 1,
-          value: {
-            'customer.new_address': {
-              type: Type.keyword,
+          ],
+          customer_address: [
+            {
+              value: 'customer.new_address',
               description: 'The `customer.new_address` is required for creating a new address'
             },
-            address: {
-              type: Type.keyword,
+            {
+              value: 'address',
               description: 'The `address` is required when editing an existing address'
             }
-          }
+          ]
         }
-      },
-      {
-        value: 'customer_login',
-        description: 'Generates a form for logging into Customer Accounts on the login.liquid template.',
-        type: Type.string,
-        template: 'customer/login'
-      },
-      {
-        value: 'recover_customer_password',
-        description: 'Generates a form for recovering a lost password on the login.liquid template.',
-        type: Type.string,
-        template: 'customer/login'
-      },
-      {
-        value: 'contact',
-        description: 'Generates a form for submitting an email through the Liquid contact form',
-        type: Type.string
-      },
-      {
-        value: 'reset_customer_password',
-        description: 'Generates a form on the customers/reset_password.liquid template for a customer to reset their password.',
-        type: Type.string,
-        template: 'customer/login'
-      },
-      {
-        value: 'guest_login',
-        description: 'Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.',
-        type: Type.string,
-        template: 'customer/login'
-
-      },
-      {
-        value: 'storefront_password',
-        description: 'Generates a form on the password.liquid template for entering a password-protected storefront.',
-        type: Type.string
-      },
-      {
-        value: 'currency',
-        description: 'Generates a form that lets your customer change the currency in your storefront.',
-        type: Type.string
       }
     ],
     reference: {

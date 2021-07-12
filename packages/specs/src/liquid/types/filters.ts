@@ -57,7 +57,7 @@ export interface IFilter {
    *
    * @default undefined
    */
-  readonly arguments?: IArgument[];
+  readonly arguments?: Array<IArgument.Argument | IArgument.Parameter>;
 
 }
 

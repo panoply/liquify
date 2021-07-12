@@ -1,4 +1,4 @@
-import { IDescription, IReferences, IArgument, IParameters, TagScopes } from './common';
+import { IDescription, IReferences, IArgument, IParameter, TagScopes } from './common';
 import { TagTypeRange } from './types';
 export { Type } from './types';
 
@@ -106,17 +106,12 @@ export interface ITag {
   /**
    * Arguments used within the contents of the tag.
    */
-  readonly arguments?: IArgument[]
-
-  /**
-   * When a tag contains arguments, one can optionally provide
-   */
-  readonly pattern?: RegExp
+  readonly arguments?: Array<IArgument.Argument | IArgument.Parameter>
 
   /**
    * Predefined tag parameters
    */
-  readonly parameters?: { [parameter: string]: IParameters }
+  readonly parameters?: { [parameter: string]: IParameter }
 
 }
 

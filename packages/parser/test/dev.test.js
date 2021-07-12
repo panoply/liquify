@@ -5,15 +5,7 @@ import Stringify from 'json-stringify-safe';
 
 const text = `
 
-{{ article.published_at | time_tag: '%a, %b %d, %Y' }}
-{{ article.published_at | time_tag: '%Y', format: 'date'  }}
-{{ article.published_at | time_tag: format: 'date'  }}
-{{ article.published_at | time_tag: '%a, %b %d, %Y', datetime: '%Y-%m-%d', format: 'date' }}
-
-{{ foo | font_modify: 'weight', '100' }}
-{{ foo | font_modify: 'style', 'normal' }}
-
-{{ foo | asset_img_url: '200x', crop: 'top', format: 'pjpg', scale: 2 }}
+{{ foo | asset_img_url: 'master', scale: 2 }}
 
 `;
 

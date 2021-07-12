@@ -541,6 +541,24 @@ export const enum ScanState {
    */
   IterationRangeClose,
 
+  /**
+   * `{% for i in array ^param %}`
+   *
+   * ---
+   *
+   * Position before a parameter
+   */
+  IterationParameter,
+
+  /**
+   * `{% for i in array param: ^value %}`
+   *
+   * ---
+   *
+   * Position before a parameter value
+   */
+  IterationParameterValue,
+
   /* -------------------------------------------- */
   /* LIQUID VARIABLE TAGS                         */
   /* -------------------------------------------- */

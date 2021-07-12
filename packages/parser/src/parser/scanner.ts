@@ -1,5 +1,4 @@
-import * as spec from '@liquify/liquid-language-specs';
-import { Types } from '@liquify/liquid-language-specs';
+import { spec, Type } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
@@ -406,7 +405,7 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
         // Match captured token with a cursor value
-        if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
+        if (spec.SetObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
           state = ScanState.Object;
           return TokenType.ObjectTagName;
         }
@@ -443,10 +442,10 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Lets update our specification cursor
-        spec.tag(s.token);
+        spec.SetTag(s.token);
 
         // When no spec exists for the tag, this is an unknown tag
-        if (!spec.cursor.tag) {
+        if (!spec.tag) {
           state = ScanState.GotoTagEnd;
           return TokenType.Unknown;
         }
@@ -454,7 +453,7 @@ function Scan (): number {
         /* COMMENT TYPE ------------------------------- */
 
         // Comment type tags, eg: {% comment %}
-        if (spec.typeofTag(Types.Tag.comment)) {
+        if (spec.isTagType(Type.comment)) {
           state = ScanState.GotoTagEnd;
           cache = TokenType.Comment;
           return cache;
@@ -463,11 +462,11 @@ function Scan (): number {
         /* VARIABLE TYPE ------------------------------ */
 
         // Control type tags, eg: {% assign %} or {% capture %}
-        if (spec.typeofTag(Types.Tag.variable)) {
+        if (spec.isTagType(Type.variable)) {
 
           state = ScanState.VariableIdentifier;
 
-          return spec.cursor.tag?.singular
+          return spec.tag?.singular
             ? TokenType.SingularTagName
             : TokenType.StartTagName;
 
@@ -476,7 +475,7 @@ function Scan (): number {
         /* CONTROL TYPE ------------------------------- */
 
         // Control type tags, eg: {% if %} or {% unless %}
-        if (spec.typeofTag(Types.Tag.control)) {
+        if (spec.isTagType(Type.control)) {
           state = ScanState.Control;
           return TokenType.StartTagName;
         }
@@ -484,7 +483,7 @@ function Scan (): number {
         /* EMBEDDED TYPE ------------------------------ */
 
         // Embedded language type tags, eg: {% schema %}
-        if (spec.typeofTag(Types.Tag.embedded)) {
+        if (spec.isTagType(Type.embedded)) {
           state = ScanState.EmbeddedLanguage;
           return TokenType.StartTagName;
         }
@@ -492,7 +491,7 @@ function Scan (): number {
         /* ITERATION TYPE ----------------------------- */
 
         // Iteration type tags, eg: {% for %}
-        if (spec.typeofTag(Types.Tag.iteration)) {
+        if (spec.isTagType(Type.iteration)) {
           state = ScanState.Iteration;
           return TokenType.StartTagName;
         }
@@ -645,7 +644,7 @@ function Scan (): number {
         }
 
         // Validate the property against the specification
-        if (!spec.propofObject(s.token)) {
+        if (!spec.isProperty(s.token)) {
           error = ParseError.UnknownProperty;
           state = ScanState.Object;
           return TokenType.ParseError;
@@ -672,7 +671,7 @@ function Scan (): number {
         state = ScanState.ObjectBracketNotationEnd;
 
         // Next character should be closing bracket notation, eg ]
-        if (spec.typeofObject(Types.Basic.array)) {
+        if (spec.isType(Type.array)) {
           return TokenType.ObjectPropertyNumber;
         }
 
@@ -740,10 +739,10 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Find specification for this filter
-        spec.filter(s.token);
+        spec.SetFilter(s.token);
 
         // We are dealing with an unknown filter, consume token
-        if (!spec.cursor.filter) {
+        if (!spec.filter) {
           error = ParseError.InvalidFilter;
           state = ScanState.GotoTagEnd;
           return TokenType.ParseError;
@@ -768,7 +767,7 @@ function Scan (): number {
       if (s.IsCodeChar(c.COL)) {
 
         // If spec exists and arguments do not exist, throw an error
-        if (!spec.cursor.argument) {
+        if (!spec.argument) {
           error = ParseError.RejectFilterArguments;
           state = ScanState.Filter;
           return TokenType.ParseError;
@@ -782,7 +781,7 @@ function Scan (): number {
       }
 
       // Filter contains no arguments
-      if (!spec.cursor.argument) {
+      if (!spec.argument) {
         state = ScanState.Filter;
         return Scan();
       }
@@ -808,9 +807,9 @@ function Scan (): number {
         }
 
         // Make sure filter argument accepts a string
-        if (spec.typeofArgument(Types.Basic.string)) {
+        if (spec.isType(Type.string)) {
 
-          if (spec.argument.isValue(s.token)) {
+          if (spec.isValue(s.token)) {
             state = ScanState.FilterSeparator;
             return TokenType.FilterArgument;
           };
@@ -844,7 +843,7 @@ function Scan (): number {
         }
 
         // Filter argument accepts number, eg: {{ tag | filter: 10 }}
-        if (spec.typeofArgument(Types.Basic.number)) {
+        if (spec.isType(Type.integer)) {
           state = ScanState.FilterSeparator;
           return TokenType.Integer;
         }
@@ -856,7 +855,7 @@ function Scan (): number {
 
       // Capture float expression numbers
       if (s.IfRegExp(r.Float)) {
-        if (spec.typeofArgument(Types.Basic.number)) {
+        if (spec.isType(Type.number)) {
 
           // Ensure number is not missing decimal
           if (s.IfCodeChar(c.DOT)) {
@@ -884,7 +883,7 @@ function Scan (): number {
         }
 
         // Ensure the argument accepts a boolean value
-        if (spec.typeofArgument(Types.Basic.boolean)) {
+        if (spec.isType(Type.boolean)) {
           state = ScanState.FilterSeparator;
           return TokenType.Boolean;
         }
@@ -899,7 +898,7 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
         // Check to to see if we are dealing with an object
-        if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
+        if (spec.SetObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
 
           // Next call we will look for a property notation
           cache = ScanState.FilterSeparator;
@@ -912,7 +911,7 @@ function Scan (): number {
       }
 
       // Missing filter argument, eg: {{ tag | filter: ^ }}
-      if (spec.cursor?.argument?.required) {
+      if (spec.isRequired()) {
 
         // If current stream token is comma value, consume it
         if (s.TokenCodeChar(c.COM)) s.Cursor();
@@ -937,7 +936,7 @@ function Scan (): number {
     case ScanState.FilterSeparator:
 
       // Move to the next argument in the spec
-      if (spec.argument.next()) {
+      if (spec.NextArgument()) {
 
         // We have a comma separator character, lets proceed
         if (s.IfCodeChar(c.COM)) {
@@ -947,7 +946,7 @@ function Scan (): number {
 
         // If the argument is required according to spec but
         // no comma seperator was intercepted we have an error.
-        if (spec.cursor.argument?.required) {
+        if (spec.isRequired()) {
 
           // Arguments must be seperated by comma characters
           // We need to align the cursor for diagnostics
@@ -967,7 +966,7 @@ function Scan (): number {
       }
 
       // Check if the filter argument accepts parameters
-      if (spec.argument.param) {
+      if (spec.isParameter(s.token)) {
         if (s.IfCodeChar(c.COM) || s.IsCodeChar(c.COL)) {
           state = ScanState.FilterParameter;
           return Scan();
@@ -999,7 +998,7 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Validate that the parameter is unique
-        if (!spec.argument.isParamUnique(s.token)) {
+        if (!spec.isUnique(s.token)) {
           error = ParseError.DuplicatedParameters;
           return TokenType.ParseError;
         }
@@ -1018,7 +1017,7 @@ function Scan (): number {
         state = ScanState.FilterArgument;
         cache = ScanState.FilterParameter;
 
-        if (spec.argument.isParamProp(s.token)) return Scan();
+        if (spec.isParameter(s.token)) return Scan();
 
       }
 
@@ -1035,26 +1034,27 @@ function Scan (): number {
       // Next scan we will look for argument seperator
       state = ScanState.FilterSeparator;
 
-      // Validate the intercepted value against the specification
-      if (!spec.argument.isParamValue(s.token)) {
-        error = ParseError.InvalidArgument;
-        state = ScanState.GotoTagEnd;
-        return TokenType.ParseError;
-      }
-
       // If filter argument parameter was a string
       if (cache === TokenType.String) {
 
         cache = ScanCache.Reset;
 
         // Ensure the intercepted value is the correct type
-        if (!spec.argument.isParamValueType(Types.Basic.string)) {
+        if (!spec.isType(Type.string)) {
           error = ParseError.RejectString;
+          return TokenType.ParseError;
+        }
+
+        // Validate the intercepted value against the specification
+        if (!spec.isValue(s.token)) {
+          error = ParseError.InvalidArgument;
+          state = ScanState.GotoTagEnd;
           return TokenType.ParseError;
         }
 
         // Scan for additional arguments
         return TokenType.FilterArgument;
+
       }
 
       // If filter argument parameter was an integer
@@ -1063,8 +1063,15 @@ function Scan (): number {
         cache = ScanCache.Reset;
 
         // Ensure the intercepted value is the correct type
-        if (!spec.argument.isParamValueType(Types.Basic.number)) {
+        if (!spec.isType(Type.integer)) {
           error = ParseError.RejectNumber;
+          return TokenType.ParseError;
+        }
+
+        // Validate the intercepted value against the specification
+        if (!spec.isValue(s.token)) {
+          error = ParseError.InvalidArgument;
+          state = ScanState.GotoTagEnd;
           return TokenType.ParseError;
         }
 
@@ -1077,8 +1084,15 @@ function Scan (): number {
 
         cache = ScanCache.Reset;
 
-        if (!spec.argument.isParamValueType(Types.Basic.boolean)) {
+        if (!spec.isType(Type.boolean)) {
           error = ParseError.RejectBoolean;
+          return TokenType.ParseError;
+        }
+
+        // Validate the intercepted value against the specification
+        if (!spec.isValue(s.token)) {
+          error = ParseError.InvalidArgument;
+          state = ScanState.GotoTagEnd;
           return TokenType.ParseError;
         }
 
@@ -1149,7 +1163,7 @@ function Scan (): number {
 
         // Lets consult the specification to see if we know about the value
         // If we know about the value, we will validate it accordingly
-        if (spec.object(s.token)) {
+        if (spec.SetObject(s.token)) {
 
           // We have set the specification, lets now determine
           // if the value contains object notation and proceed accordingly
@@ -1229,7 +1243,7 @@ function Scan (): number {
 
         // Assign tags accept filters, which mean its not a `capture``
         // Pass to the operator scan
-        if (spec.cursor.tag?.filters) {
+        if (spec.tag?.filters) {
           state = ScanState.VariableOperator;
           return Scan();
         }
@@ -1352,7 +1366,7 @@ function Scan (): number {
         }
 
         // Check to to see if we are dealing with an object
-        if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
+        if (spec.SetObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
           cache = ScanState.IterationArray;
           state = ScanState.Object;
           return TokenType.Object;
@@ -1388,7 +1402,7 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
         // Check to to see if we are dealing with an object
-        if (spec.object(s.token) || s.IsRegExp(r.PropertyNotation)) {
+        if (spec.SetObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
 
           // Next call we will look for a property notation
           cache = ScanState.IterationRangeSeparators;
@@ -1431,7 +1445,7 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Lets check that this parameter is valid
-        if (spec.TagParam(s.token)) {
+        if (spec.isParameter(s.token)) {
           state = ScanState.IterationParameterValue;
           return Scan();
         }
@@ -1450,8 +1464,7 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.IterationParameterValue:
 
-      if(spec.cursor.tag.)
-
+      // if(spec.cursor.tag.)
 
       break;
     /* -------------------------------------------- */
@@ -1535,7 +1548,7 @@ function Scan (): number {
       if (s.IfRegExp(r.DelimitersClose)) {
 
         // Reset the cursor spec
-        spec.reset();
+        // spec.reset();
 
         // Start tag close, eg: {% tag %}^
         if (state === ScanState.BeforeStartTagClose) {

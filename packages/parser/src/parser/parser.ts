@@ -1,4 +1,4 @@
-import { Types } from '@liquify/liquid-language-specs';
+import { spec, Type as Types } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
@@ -10,7 +10,6 @@ import { isNumber, isString, isObject } from 'parser/utils';
 import * as Regexp from 'lexical/expressions';
 import * as s from 'parser/stream';
 import * as scanner from 'parser/scanner';
-import * as spec from '@liquify/liquid-language-specs';
 
 /**
  * Liquid/HTML parser function which constructs
@@ -31,7 +30,7 @@ export function parse (document: IAST): IAST {
   let html: INode = liquid;
   let node: INode;
   let track: INode;
-  let scope: string | Types.Basic;
+  let scope: string | Types;
   let error: (range?: Range) => void;
   let token: number = scanner.scan();
   let attr: string | number;
@@ -104,7 +103,7 @@ export function parse (document: IAST): IAST {
         attr = s.token;
         node.attributes[attr] = null;
 
-        if (attr === 'src') node.type = Types.Tag.import;
+        if (attr === 'src') node.type = Types.import;
 
         break;
 
@@ -134,7 +133,7 @@ export function parse (document: IAST): IAST {
 
         node.tag = s.token;
         node.singular = false;
-        node.type = spec.cursor.tag.type;
+        node.type = spec.tag.type;
 
         pair.add(node);
 
@@ -148,7 +147,7 @@ export function parse (document: IAST): IAST {
       case TokenType.OutputTagOpen:
         liquidNode(Type.Void);
 
-        node.type = Types.Tag.output;
+        node.type = Types.output;
 
         break;
 
@@ -164,7 +163,7 @@ export function parse (document: IAST): IAST {
         node.tag = s.token;
         object = s.offset;
 
-        if (node.parent.type === Types.Tag.iteration) {
+        if (node.parent.type === Types.iteration) {
           node.scope = node.parent.scope[s.token];
         }
 
@@ -222,7 +221,7 @@ export function parse (document: IAST): IAST {
 
         // node.scope[scope] = spec.cursor.object?.object as string;
 
-        if (node.parent.type === Types.Tag.iteration) {
+        if (node.parent.type === Types.iteration) {
         //  Object.assign(node.scope, node.parent.scope);
         }
 
@@ -234,11 +233,11 @@ export function parse (document: IAST): IAST {
 
         Object.assign(node.objects, { [s.offset]: [ s.token ] });
 
-        if (node.parent.type === Types.Tag.iteration && node.parent.scope?.[s.token]) {
+        if (node.parent.type === Types.iteration && node.parent.scope?.[s.token]) {
           Object.assign(node.scope, node.parent.scope);
-          spec.object(node.parent.scope[s.token]);
+          spec.SetObject(node.parent.scope[s.token]);
         } else {
-          spec.object(s.token);
+          spec.SetObject(s.token);
         }
 
         if (!isNaN(filter) && node.filters?.[filter]) {
@@ -252,29 +251,29 @@ export function parse (document: IAST): IAST {
         node.objects[object].push(s.token);
         node.objects[s.offset + 1] = object;
 
-        spec.propofObject(s.token);
+        spec.isProperty(s.token);
 
-        if (node.type === Types.Tag.iteration) {
+        if (node.type === Types.iteration) {
 
-          node.scope[scope] = spec.cursor.object?.object;
+          node.scope[scope] = spec.object?.object;
 
-          if (node.parent.type === Types.Tag.iteration) {
+          if (node.parent.type === Types.iteration) {
 
-            spec.propofObject(s.token);
+            spec.isProperty(s.token);
 
-          } else if (isString(spec.cursor.object?.object)) {
+          } else if (isString(spec.object?.object)) {
 
-            spec.object(node.scope[scope]);
+            spec.SetObject(node.scope[scope]);
 
-            if (spec.cursor.object?.object) {
-              spec.object(spec.cursor.object.object as string);
+            if (spec.object?.object) {
+              spec.SetObject(spec.object.object as string);
             }
           }
         }
 
-        if (isNumber(node.scope) && !spec.typeofObject(node.scope as number)) {
+        if (isNumber(node.scope) && !spec.isObjectType(node.scope as number)) {
           document.report(Errors.RejectObject)();
-        } else if (spec.object(node.scope as string) && !spec.propofObject(s.token)) {
+        } else if (spec.SetObject(node.scope as string) && !spec.isProperty(s.token)) {
           document.report(Errors.UnknownProperty)();
         }
 

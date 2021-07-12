@@ -111,14 +111,14 @@ Filters = {
     arguments: [
       {
         type: Type.any,
-        required: true,
-        parameter: {
-          required: false,
-          value: {
-            allow_false: {
-              type: Type.boolean,
-              description: 'To allow variables to return false instead of the default value, you can use the `allow_false` parameter.'
-            }
+        required: true
+      },
+      {
+        type: Type.parameter,
+        value: {
+          allow_false: {
+            type: Type.boolean,
+            description: 'To allow variables to return false instead of the default value, you can use the `allow_false` parameter.'
           }
         }
       }

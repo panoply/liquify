@@ -258,6 +258,15 @@ export const enum ParseError {
   InvalidIterationType,
 
   /**
+   * Invalid Iteration Parameter
+   *
+   * @example
+   * {% for i in array foo %} // 'foo' is invalid
+   */
+  InvalidIterationParameter,
+
+
+  /**
    * Invalid Character
    *
    * @example

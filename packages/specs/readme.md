@@ -14,6 +14,62 @@ Due to the versatile nature of Liquid and in order to provide LSP capabilities t
 
 The [liquify](#) parser treats HTML and Liquid as a single language. Providing LSP capabilities to both languages was extraneous considering Liquid (generally) extends markup. The Liquify parser separates both Liquid and HTML in an non-conflicting manner and thus allows for HTML to be validated against in a similar manner as Liquid.
 
+# Usage
+
+This module provides a query engine to interfaces with the HTML and Liquid specifications. The module enables the Liquify parser and the Liquid Language Server to both interact and traverse the data files via exposed export methods.
+
+### Install
+
+The module is available on the public NPM registry:
+
+```
+pnpm i @liquify/specs
+```
+
+### Query Engine
+
+The query engine is used by the parser. Each time a tag is encountered we assign the current token (tag) in stream to the `cursor` letting.
+
+```typescript
+
+// States
+spec.engine;
+spec.cursor;
+spec.object;
+spec.argument;
+
+// Getters
+spec.getVariation(): Variation
+
+// Setters
+spec.setEngine(String): void;
+spec.setObject(String): Boolean;
+spec.setFilter(String): Boolean;
+spec.setTag(String): Boolean;
+spec.setTemplate(String): void;
+
+// Navigators
+spec.nextArgument(): Boolean;
+spec.prevArgument(): Boolean;
+
+// Validators
+spec.isProperty(String): Boolean;
+spec.isParameter(String): Boolean;
+spec.isValue(String): Boolean;
+spec.isType(Number): Boolean;
+spec.isObjectType(Number):Boolean
+spec.isTagType(Number):Boolean
+spec.isTemplate(String): Boolean;
+
+// Completions
+spec.provideTags();
+spec.provideObjects();
+spec.provideFilters();
+spec.provideArguments();
+spec.provideParameters();
+spec.provideAttributes();
+```
+
 # Documentation
 
 In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax. They are not quite grammars but close enough and exists to enable developers of any level to quickly compose contextual grammars and formal schema which can described tags, filters and objects used in different variation. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation and the specs provided here allow us to establish formal specs for the language.

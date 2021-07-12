@@ -24,44 +24,45 @@ Filters = {
           '1000x1000',
           '500x500',
           '250x250'
-        ],
-        parameter: {
-          value: {
-            crop: {
-              type: Type.string,
-              description: 'You can specify a crop parameter to make sure that the resulting image\'s dimensions match the requested dimensions. If the entire image won\'t fit in your requested dimensions, the crop parameter specifies what part of the image to show',
-              pattern: /\b(?:top|center|bottom|right)\b/,
-              value: [
-                'top',
-                'center',
-                'bottom',
-                'left',
-                'right'
-              ]
-            },
-            scale: {
-              type: Type.integer,
-              description: 'The scale parameter lets you specify the pixel density of the image',
-              pattern: /\b[23]\b/,
-              value: [
-                '2',
-                '3'
-              ]
-            },
-            format: {
-              type: Type.string,
-              description: 'The format parameter lets you specify what file format to use for the displayed image.',
-              pattern: /\bp?jpg\b/,
-              value: [
-                {
-                  value: 'jpg'
-                },
-                {
-                  value: 'pjpg',
-                  description: 'pjpg is progressive JPEG. A browser loads a full-sized progressive JPEG with gradually increasing quality, instead of loading the full-quality image from top to bottom like a traditional JPEG.'
-                }
-              ]
-            }
+        ]
+      },
+      {
+        type: Type.parameter,
+        value: {
+          crop: {
+            type: Type.string,
+            description: 'You can specify a crop parameter to make sure that the resulting image\'s dimensions match the requested dimensions. If the entire image won\'t fit in your requested dimensions, the crop parameter specifies what part of the image to show',
+            pattern: /\b(?:top|center|bottom|right)\b/,
+            value: [
+              'top',
+              'center',
+              'bottom',
+              'left',
+              'right'
+            ]
+          },
+          scale: {
+            type: Type.integer,
+            description: 'The scale parameter lets you specify the pixel density of the image',
+            pattern: /\b[23]\b/,
+            value: [
+              '2',
+              '3'
+            ]
+          },
+          format: {
+            type: Type.string,
+            description: 'The format parameter lets you specify what file format to use for the displayed image.',
+            pattern: /\bp?jpg\b/,
+            value: [
+              {
+                value: 'jpg'
+              },
+              {
+                value: 'pjpg',
+                description: 'pjpg is progressive JPEG. A browser loads a full-sized progressive JPEG with gradually increasing quality, instead of loading the full-quality image from top to bottom like a traditional JPEG.'
+              }
+            ]
           }
         }
       }
@@ -272,7 +273,6 @@ Filters = {
     arguments: [
       {
         type: Type.parameter,
-
         value: {
           next: {
             type: Type.string,
@@ -326,7 +326,6 @@ Filters = {
     arguments: [
       {
         type: Type.parameter,
-
         value: {
           font_display: {
             pattern: /\b(?:auto|block|swap|fallback|optional)\b/,
@@ -377,7 +376,7 @@ Filters = {
         required: true,
         pattern: {
           style: /\b(?:normal|italic|oblique)\b/,
-          weight: /\b(?:normal|bold|bolder|lighter|[-+]?[1-9]0{2})\b/
+          weight: /\b(?:normal|bold|bolder|lighter|[+-]?[1-9]0{2})\b/
         },
         value: {
           style: [
@@ -747,7 +746,6 @@ Filters = {
       },
       {
         type: Type.parameter,
-
         value: {
           datetime: {
             type: Type.string,
