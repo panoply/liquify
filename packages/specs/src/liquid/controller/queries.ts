@@ -1,19 +1,10 @@
 import * as Specification from '../data/export';
-import { IEngine, Variation, Values, IArgument, ITemplates, IParameter } from '../types/common';
+import { IEngine, Variation, Values, IArgument, ITemplates } from '../types/common';
 import { ITag } from '../types/tags';
 import { IFilter } from '../types/filters';
 import { IObject } from '../types/objects';
 import { Type } from '../types/types';
-import {
-  isString,
-  isObject,
-  isUndefined,
-  isArray,
-  isNumber,
-  isRegExp,
-  inPattern,
-  inValues
-} from './utils';
+import { isNumber, inPattern, inValues } from './utils';
 
 /**
  * Resets
@@ -98,8 +89,6 @@ const unique: Set<string> = new Set();
 /* SETTER FUNCTIONS                             */
 /* -------------------------------------------- */
 
-// const { tag, filter, object, reset } = state;
-
 export function Reset (): void {
 
   cursor = undefined;
@@ -108,8 +97,8 @@ export function Reset (): void {
   filter = undefined;
   argument = undefined;
   prev = undefined;
+  index = 0;
 
-  !isNaN(index) || (index = NaN);
   unique.clear();
 
 }
@@ -184,7 +173,6 @@ export function SetTag (name: string): boolean {
   cursor = tag = variation.tags[name];
   argument = cursor?.arguments?.[0] as IArgument.Argument;
   within = Within.Arguments;
-  index = argument ? 0 : NaN;
 
   return true;
 
@@ -204,7 +192,7 @@ export function SetFilter (name: string): boolean {
   cursor = filter = variation.filters[name];
   argument = cursor?.arguments?.[0] as IArgument.Argument;
   within = Within.Arguments;
-  index = argument ? 0 : NaN;
+  index = 0;
 
   unique.clear();
 
@@ -221,7 +209,6 @@ export function SetFilter (name: string): boolean {
  */
 export function SetObject (name: string): boolean {
 
-  // if (object.spec) reset(Resets.Object);
   if (!variation.objects?.[name]) return false;
 
   object = variation.objects[name];
@@ -318,12 +305,7 @@ export function isParameter (value: string) {
 
   const param = argument.value?.[value];
 
-  if (!param) {
-
-    console.log(value);
-
-    return false;
-  }
+  if (!param) return false;
 
   unique.add(value);
 
@@ -350,7 +332,7 @@ export function isUnique (value: string) {
 
   const prop = (argument as IArgument.Parameter)?.unique;
 
-  if (isUndefined(prop) || prop === true) return !unique.has(value);
+  if (prop === undefined || prop === true) return !unique.has(value);
 
   return false;
 }
@@ -449,9 +431,9 @@ export function isValue (value: string): boolean {
   if (param?.pattern) {
     if (param.pattern instanceof RegExp) {
       valid = inPattern(param.pattern as RegExp, value);
-    } else if (isObject(param.pattern)) {
+    } else if (typeof param.pattern === 'object') {
       valid = inPattern(param.pattern?.[prop], value);
-    } else if (isArray(param.pattern)) {
+    } else if (Array.isArray(param.pattern)) {
       valid = value >= param.pattern[0] && value <= param.pattern[1];
     }
   } else {
@@ -462,7 +444,7 @@ export function isValue (value: string): boolean {
     );
   }
 
-  if (!valid && (isUndefined(param.strict) || param.strict)) return false;
+  if (!valid && (param.strict === undefined || param.strict)) return false;
   if (within === Within.Arguments) prev = value;
 
   return true;
