@@ -866,7 +866,7 @@ function Scan (): number {
         if (spec.isType(Type.number)) {
 
           // Ensure we do not have a hanging decimal, eg: 25.^
-          if (s.UnlessPrevCodeChar(c.DOT)) {
+          if (s.IsPrevCodeChar(c.DOT)) {
             state = ScanState.GotoTagEnd;
             error = ParseError.InvalidDecimalPoint;
             return TokenType.ParseError;
@@ -962,9 +962,9 @@ function Scan (): number {
 
       // console.log(s.token, spec.argument, spec.isWithin(Within.Parameter));
 
-      if (spec.isWithin(Within.Parameter)) {
-        console.log(s.token, cache, ScanState.FilterSeparator);
-      }
+      // if (spec.isWithin(Within.Parameter)) {
+      // console.log(s.token, cache, ScanState.FilterSeparator);
+      // }
 
       if (spec.NextParameter()) {
         if (s.IfCodeChar(c.COM)) {

@@ -1,5 +1,5 @@
 import { IAST } from 'tree/ast';
-import { INode } from 'tree/node';
+import { INode } from 'types/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { TextDocumentItem, VersionedTextDocumentIdentifier } from 'vscode-languageserver-types';
 

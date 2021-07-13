@@ -330,9 +330,7 @@ export class IAST {
 
     this.cursor = NaN;
     this.version = version;
-    this.errors.splice(0);
-
-    console.log(this.errors);
+    this.errors = [];
 
     /* -------------------------------------------- */
     /* CONTENT UPDATE                               */

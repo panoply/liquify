@@ -1,7 +1,7 @@
 /* eslint no-unused-vars: "off" */
 
 import { ParseError, ErrorLevel } from 'lexical/errors';
-import { Diagnostic, Range, CodeDescription } from 'vscode-languageserver-types';
+import { Diagnostic, Range } from 'vscode-languageserver-types';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
