@@ -2,66 +2,74 @@
 
 # @liquify/language-specs
 
-This package is available on the npm registry for modules consumed by the [Liquify](https://liquify.dev) parser and text editor extension/plugin.
+This package is available on the npm registry for modules consumed by the [Liquify](https://liquify.dev) parser and text editor extension/plugin. The language specs provide capabilities to the Liquid Language Server and in addition the Liquify [Language Parser](#). That module extends upon the approach first introduced by the VS Code team, specifically that used by HTML language Service.
 
 **Liquify is partially proprietary closed source software. The distributed code provided in this package is enigmatic and has been encrypted using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm**
 
-### Reasoning
-
-Due to the versatile nature of Liquid and in order to provide LSP capabilities to the Liquid Language Server the tool adopts and extends upon the approach introduced by the VS Code team, specifically that of the HTML language Service.
-
 ### Why?
 
-The [liquify](#) parser treats HTML and Liquid as a single language. Providing LSP capabilities to both languages was extraneous considering Liquid (generally) extends markup. The Liquify parser separates both Liquid and HTML in an non-conflicting manner and thus allows for HTML to be validated against in a similar manner as Liquid.
+The [Liquify](#) parser treats HTML and Liquid as a single language. Providing LSP capabilities to both languages was extraneous when leaning upon the [vscode-html-languageservice](https://github.com/microsoft/vscode-html-languageservice) as a Liquid documents were being parsed by twice resulting in performance bottlenecks. The Liquify parser separates both Liquid and HTML in an non-conflicting manner and thus allows for HTML to be validated against in a similar manner as Liquid. Providing language features to both was far better facilitated using this single query engine module.
 
 # Usage
 
-This module provides a query engine to interfaces with the HTML and Liquid specifications. The module enables the Liquify parser and the Liquid Language Server to both interact and traverse the data files via exposed export methods.
+The module provides a query engine to interfaces with the HTML and Liquid specifications. The module enables the Liquify parser and the Liquid Language Server to both interact and traverse the data files at different points and provide capabilities like code completions efficiently.
 
 ### Install
 
 The module is available on the public NPM registry:
 
 ```
-pnpm i @liquify/specs
+pnpm i @liquify/language-specs
 ```
 
 ### Query Engine
 
-The query engine is used by the parser. Each time a tag is encountered we assign the current token (tag) in stream to the `cursor` letting.
+The query engine is used by the parser. Each time a tag, object or filter is encountered we query its specification and the scanner can act accordingly. The module has a single names export `spec` from which all methods can be accessed.
 
 ```typescript
 
-// States
+// STATES
+
 spec.engine;
-spec.cursor;
+spec.tag;
+spec.filter;
 spec.object;
 spec.argument;
 
-// Getters
-spec.getVariation(): Variation
+// GETTERS
 
-// Setters
-spec.setEngine(String): void;
-spec.setObject(String): Boolean;
-spec.setFilter(String): Boolean;
-spec.setTag(String): Boolean;
-spec.setTemplate(String): void;
+spec.GetVariation(): Variation
+spec.GetArgument(string): boolean
 
-// Navigators
-spec.nextArgument(): Boolean;
-spec.prevArgument(): Boolean;
+// SETTERS
 
-// Validators
-spec.isProperty(String): Boolean;
-spec.isParameter(String): Boolean;
-spec.isValue(String): Boolean;
-spec.isType(Number): Boolean;
-spec.isObjectType(Number):Boolean
-spec.isTagType(Number):Boolean
-spec.isTemplate(String): Boolean;
+spec.SetEngine(string): void;
+spec.SetTemplate(string): void;
+spec.SetObject(string): boolean;
+spec.SetFilter(string): boolean;
+spec.SetTag(string): boolean;
 
-// Completions
+// NAVIGATORS
+
+spec.PrevArgument(): boolean;
+spec.NextArgument(): boolean;
+spec.NextParameter(): boolean;
+
+// VALIDATORS
+
+spec.isProperty(string): boolean;
+spec.isParameter(string): boolean;
+spec.isValue(string): boolean;
+spec.isUnique(string): boolean;
+spec.isWithin(number): boolean;
+spec.isTagType(number): boolean;
+spec.isObjectType(number): boolean;
+spec.isArgumentType(number): boolean;
+spec.isTemplate(string): boolean;
+spec.isRequired(): boolean;
+
+// PROVIDERS
+
 spec.provideTags();
 spec.provideObjects();
 spec.provideFilters();
@@ -72,7 +80,7 @@ spec.provideAttributes();
 
 # Documentation
 
-In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax. They are not quite grammars but close enough and exists to enable developers of any level to quickly compose contextual grammars and formal schema which can described tags, filters and objects used in different variation. A template language like Liquid exists in a multitude of variations that extend upon its default [standard](https://shopify.github.io/liquid/) variation and the specs provided here allow us to establish formal specs for the language.
+In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax, not quite grammars but close enough. The specs exist to enable developers of any level to quickly compose contextual grammar and formal schemas that described tags, filters and objects used in a multitude of variations which extend upon the default [standard](https://shopify.github.io/liquid/) variation.
 
 1. [Tokens](docs/01-tokens.md)
 2. [Types](docs/02-types.md)
@@ -80,7 +88,9 @@ In the context of the Liquid Language Server, variation specifications are just 
 
 ### Objects
 
-The specifications map Liquid objects in a hardcoded manner. This means that when a Liquid variation provides objects on the consumer facing end (like in the Shopify variation) the objects are provided to Liquify via manual data entry, which is both a very tedious and time consuming task. There is no API endpoint that provided such data that is required for the specs and due to the inconsistencies and constant changing UI of documentation in variations like Shopify we are unable to successfully crawl and compose the data required in an automated manner.
+The specifications map Liquid objects in a hardcoded manner. When a Liquid variation provides objects on the consumer facing end (like those in the Shopify variation) the objects are provided to Liquify via manual data entry. This is both a very tedious and time consuming task.
+
+There is no API endpoint to provided such data required to compose the specs in an automated manner and due to the inconsistencies, the constant changing UI and general unpredictability in documentation that informs upon objects, specifically that of Shopify, we are unable crawl and compose this data required in an automated manner and thus, support is made possible through manual entry.
 
 Below is a list of objects awaiting triage/input:
 
@@ -92,6 +102,23 @@ Below is a list of objects awaiting triage/input:
 - `metafields`
 - `selling_plan_allocation`
 - `selling_plan_group`
+
+#### Jekyll Variation
+
+_Not yet supported_
+
+# Contributing
+
+Contributions are welcome. If you stumble upon inconsistencies or inaccurate data, all files using by Liquify [Parser](#) and [Language Server](#) exist the within `/data` directories. Because Liquify is developed in a monorepo architecture, contributing requires forking from the root.
+
+Consult the root [readme](#) for more information:
+
+- Ensure [pnpm](https://pnpm.js.org/) is installed globally `npm i pnpm -g`
+- Clone this repository `git clone https://github.com/panoply/liquify.git`
+- Run `pnpm i`
+- Run `pnpm build`
+- CD into `packages/specs`
+- Run `pnpm dev`
 
 <br>
 

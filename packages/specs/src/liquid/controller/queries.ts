@@ -7,7 +7,7 @@ import { Type } from '../types/types';
 import { isNumber, inPattern, inValues } from './utils';
 
 /**
- * Resets
+ * Within Enums
  */
 export const enum Within {
   Tag = 1,
@@ -32,7 +32,7 @@ export let engine: IEngine = IEngine.standard;
 export let tag: ITag;
 
 /**
- * Tag Specification
+ * Filter Specification
  */
 export let filter: IFilter;
 
@@ -42,7 +42,7 @@ export let filter: IFilter;
 export let object: IObject;
 
 /**
- * The current argument
+ * Reference to the current arugment or parameter.
  */
 export let argument: IArgument.Argument | IArgument.Parameter;
 
@@ -86,37 +86,50 @@ let prev: string;
 const unique: Set<string> = new Set();
 
 /* -------------------------------------------- */
-/* SETTER FUNCTIONS                             */
+/* FUNCTIONS                                    */
 /* -------------------------------------------- */
 
+/**
+ * Reset
+ *
+ * Resets all states. This si executed everytime we
+ * encounter a new tag.
+ */
 export function Reset (): void {
 
-  cursor = undefined;
   tag = undefined;
   object = undefined;
   filter = undefined;
   argument = undefined;
+
   prev = undefined;
   index = 0;
 
   unique.clear();
-
 }
 
+/* -------------------------------------------- */
+/* GETTERS                                      */
+/* -------------------------------------------- */
+
 /**
- * Set variation engine
+ * Get Variation
+ *
+ * Returns the Liquid variation we are currently
+ * querying. This is simply an export function which
+ * returns localised state.
  */
 export function GetVariation (): Variation {
 
   return variation;
-
 };
 
 /**
- * Next Argument
+ * Get Argument
  *
- * Moves to the _next_ argument (if available) on the current spec
- * in stream and update the states.
+ * Walks over _optional_ arugments contained on a tag
+ * or filter until a `type` match is detected. If an
+ * argument is `required` walk is cancelled.
  */
 export function GetArgument (type: Type): boolean {
 
@@ -132,12 +145,19 @@ export function GetArgument (type: Type): boolean {
   }
 
   index = next;
-  return true;
 
+  return true;
 };
+
+/* -------------------------------------------- */
+/* SETTERS                                      */
+/* -------------------------------------------- */
 
 /**
  * Set Template
+ *
+ * Sets the local `template` state reference vairable.
+ * This is called for every new document we encounter.
  */
 export function SetTemplate (name: ITemplates): void {
 
@@ -146,7 +166,10 @@ export function SetTemplate (name: ITemplates): void {
 };
 
 /**
- * Set variation engine
+ * Set Engine
+ *
+ * Sets the Liquid `variation` and `engine` variable.
+ * This will change what specification we reference.
  */
 export function SetEngine (name: IEngine): void {
 
@@ -160,9 +183,9 @@ export function SetEngine (name: IEngine): void {
 /**
  * Set Tag
  *
- * Finds a tag specification and updates the cursor and state
- * when a match is successful. Returns a boolean which signals
- * a matched or unmatched tag.
+ * Finds a tag matching specification and updates the cursor.
+ * States are changed when a match is successful. Returns a
+ * boolean which signals a matched or unmatched tag.
  */
 export function SetTag (name: string): boolean {
 
@@ -175,15 +198,14 @@ export function SetTag (name: string): boolean {
   within = Within.Arguments;
 
   return true;
-
 }
 
 /**
  * Set Filter
  *
- * Finds a filter specification and updates the cursor and state
- * when a match is successful. Returns a boolean which signals
- * a matched or unmatched filter.
+ * Finds a filter matching specification and updates the cursor.
+ * States are changed when a match is successful. Returns a
+ * boolean which signals a matched or unmatched filter.
  */
 export function SetFilter (name: string): boolean {
 
@@ -197,15 +219,14 @@ export function SetFilter (name: string): boolean {
   unique.clear();
 
   return true;
-
 };
 
 /**
  * Set Object
  *
- * Finds a object specification and updates the cursor and state
- * when a match is successful. Returns a boolean which signals
- * a matched or unmatched object.
+ * Finds a matching object specification. Objects can be
+ * contained in tags and filter, so the `cursor` is not
+ * modified, instead the `object` state variable is updated.
  */
 export function SetObject (name: string): boolean {
 
@@ -214,14 +235,18 @@ export function SetObject (name: string): boolean {
   object = variation.objects[name];
 
   return true;
-
 };
 
+/* -------------------------------------------- */
+/* NAVIGATORS                                   */
+/* -------------------------------------------- */
+
 /**
- * Next Argument
+ * Previous Argument
  *
- * Moves to the _next_ argument (if available) on the current spec
- * in stream and update the states.
+ * Moves the arugment back a position. If we are currently
+ * walking the index `2` (argument 3) calling this will
+ * move the arugment reference states to index `1`.
  */
 export function PrevArgument (): boolean {
 
@@ -231,17 +256,19 @@ export function PrevArgument (): boolean {
   within = Within.Arguments;
   argument = cursor.arguments[index];
 
-  if (argument.type === Type.parameter && unique.has(prev)) unique.delete(prev);
+  if (argument.type === Type.parameter && unique.has(prev)) {
+    unique.delete(prev);
+  }
 
   return true;
-
 };
 
 /**
  * Next Argument
  *
- * Moves to the _next_ argument (if available) on the current spec
- * in stream and update the states.
+ * Moves to the _next_ argument (if available) and updates the
+ * reference state variables. Returns a `boolean` which
+ * indicates if we have reached the last argument or not.
  */
 export function NextArgument (): boolean {
 
@@ -252,32 +279,38 @@ export function NextArgument (): boolean {
   argument = cursor.arguments[index];
 
   return true;
-
 };
 
 /**
  * Next Parameter
  *
- * Resets the parameters, movies the argument from within the parameter
- * value back to the `value` of the parameter, moving up in spec.
+ * Despite its name, this function will reset the `argument`
+ * state reference to its index starting point. When we
+ * encounter a `parameter` type, the `argument` variable is
+ * moved to its property value. This function reverts that.
  */
 export function NextParameter (): boolean {
 
   if (isWithin(Within.ParameterValue)) {
-    within = Within.Parameter;
     argument = cursor.arguments[index];
+    within = Within.Parameter;
     return true;
   }
 
   return false;
-
 };
+
+/* -------------------------------------------- */
+/* VALIDATORS                                   */
+/* -------------------------------------------- */
 
 /**
  * Is Property
  *
- * Used for matching object properties. For every new object
- * property matched, state is updated to the property.
+ * Queries the current object for a property value
+ * matching the parameter `value`provided. The object state
+ * reference will update and point to the property
+ * value when a match occurs.
  */
 export function isProperty (value: string): boolean {
 
@@ -288,45 +321,66 @@ export function isProperty (value: string): boolean {
   object = prop;
 
   return true;
-
 }
 
 /**
  * Is Parameter
  *
- * Used for matching tag or filter parameter argument keys.
- * The cursor is updated and aligned to the parameter spec.
+ * Queries the current argument for a `parameter` type. When
+ * an argument does not have a `parameter` type, it attempts
+ * to find a parameter argument via the `GetArgument` function.
+ *
+ * The function will return a boolean value to inform upon a
+ * successful or unsuccessful match.
+ *
+ * ---
+ *
+ * **GET ARGUMENT**
+ *
+ * If an argument does equal type `parameter` it will attempt
+ * to match the parameter passed value to a property listed
+ * on the arguments `value` and if successful, the state reference
+ * `argument` variable is updated and points to the parameter.
+ *
+ * ---
+ *
+ * **VALUE AS TYPE**
+ *
+ * If a parameters `value` points a _enum_  (number) the state
+ * reference `argument` will remain pointing to the argument at index
+ * and a boolean `true` will be returned.
  */
 export function isParameter (value: string) {
 
   if (argument === undefined) return false;
-  if (argument.type !== Type.parameter && !GetArgument(Type.parameter)) return false;
+  if (argument.type !== Type.parameter && !GetArgument(Type.parameter)) {
+    return false;
+  }
+
   if (isNumber(argument.value)) return true;
 
   const param = argument.value?.[value];
 
   if (!param) return false;
 
+  argument = param;
   unique.add(value);
 
-  argument = param;
   within = Within.ParameterValue;
 
   return true;
-
 }
 
 /**
  * Is Unique
  *
  * Checks whether a parameter value is unqiue. Each time a parameter
- * value is interceptd via `ifParameter()` it is saved to the
- * _active_ state Set of either a Filter or Tag.
+ * value is interceptd via `isParameter()` it is saved to the
+ * _unqiue_ state Set.
  *
  * Parameters are assumed to be unique by default, so if the `unqiue`
- * property is `undefined` or `true` and the `active` state Set returns
- * `false` the parameter it will return `true` else if those conditions
- * are not met, it returns `false`
+ * property is `undefined` or `true` and the no record exists in the
+ * locale Set reference then `false` is returned.
  */
 export function isUnique (value: string) {
 
@@ -340,56 +394,56 @@ export function isUnique (value: string) {
 /**
  * Is Template
  *
- * Validate the current template name. This is a sugar shortcut
+ * Validate the current template name against the local state
+ * `template` reference variable This is a sugar shortcut
  * function called when parsing.
  */
 export function isTemplate (name: ITemplates): boolean {
 
   return template === name;
-
 }
 
 /**
  * Is Object Type
  *
- * Validate a object `type` value. This is a sugar shortcut function
- * called when scanning a token by the parser.
+ * Validate the current object reference `type` value.
+ * The object being validate will be type matched against
+ * the most recent object applied at `SetObject()` or via
+ * `isProperty()` function.
  */
 export function isObjectType (type: Type): boolean {
 
-  return object.type === type;
-
+  return object?.type === type;
 }
 
 /**
  * Is Tag Type
  *
- * Validate a tag `type` value. This is a sugar shortcut function
- * called when scanning a token by the parser.
+ * Validate a current tag `type` value. This is a sugar shortcut
+ * function called when scanning a token by the parser.
  */
 export function isTagType (type: Type): boolean {
 
-  return tag.type === type;
-
+  return tag?.type === type;
 }
 
 /**
  * Is Type
  *
- * Validate a argument or parameter `type`
- * value. This is a sugar shortcut function called when scanning
- * a token by the parser.
+ * Validate the current argument `type` value. It will match
+ * an argument/parameter value type. This is a sugar shortcut
+ * function called when scanning a token by the parser.
  */
 export function isType (type: Type): boolean {
 
   return argument?.type === type;
-
 }
 
 /**
  * Is Within
  *
- * Checks where the query engine is currently at.
+ * Used to validate the whereabouts of the current tag or filter
+ * argument query engine position.
  */
 export function isWithin (value: Within): boolean {
 
@@ -402,7 +456,7 @@ export function isWithin (value: Within): boolean {
  *
  * Checks the requirement for arguments, argument parameters or
  * parameter values. When a parameter has a `keyword` type, then
- * this return `true`.
+ * this returns `true`.
  */
 export function isRequired () {
 
@@ -416,8 +470,10 @@ export function isRequired () {
 /**
  * Is Value
  *
- * Validates an a value against the current cursor. This function executes
- * several conditional checks to validate the value.
+ * Validates an a argument value. This function will run
+ * several typeof checks to fingure out how a value should
+ * be validated, starting with patterns and working its way
+ * down to a specs `value` entries.
  */
 export function isValue (value: string): boolean {
 
@@ -426,25 +482,20 @@ export function isValue (value: string): boolean {
   const prop = prev || value;
   const param: IArgument.Argument = argument as IArgument.Argument;
 
-  let valid: boolean;
+  if (!(param.pattern instanceof RegExp ? (
+    inPattern(param.pattern as RegExp, value)
+  ) : typeof param.pattern === 'object' ? (
+    inPattern(param.pattern?.[prop], value)
+  ) : Array.isArray(param.pattern) ? (
+    value >= param.pattern[0] && value <= param.pattern[1]
+  ) : (
+    param.value === value ||
+    !!param.value?.[prop] ||
+    inValues(param.value as Values[], value)
+  )) && (
+    param.strict === undefined || param.strict
+  )) return false;
 
-  if (param?.pattern) {
-    if (param.pattern instanceof RegExp) {
-      valid = inPattern(param.pattern as RegExp, value);
-    } else if (typeof param.pattern === 'object') {
-      valid = inPattern(param.pattern?.[prop], value);
-    } else if (Array.isArray(param.pattern)) {
-      valid = value >= param.pattern[0] && value <= param.pattern[1];
-    }
-  } else {
-    valid = (
-      param.value === value ||
-      !!param.value?.[prop] ||
-      inValues(param.value as Values[], value)
-    );
-  }
-
-  if (!valid && (param.strict === undefined || param.strict)) return false;
   if (within === Within.Arguments) prev = value;
 
   return true;
