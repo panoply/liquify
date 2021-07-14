@@ -29,7 +29,6 @@ export default Rollup(
       'strip-json-comments',
       'vscode-languageserver',
       'vscode-css-languageservice',
-      'vscode-html-languageservice',
       'vscode-json-languageservice',
       'vscode-languageserver',
       'vscode-languageserver-textdocument',
@@ -59,6 +58,13 @@ export default Rollup(
             ]
           }
         ),
+        ts(
+          {
+            check: false,
+            useTsconfigDeclarationDir: true,
+            typescript
+          }
+        ),
         noderesolve(
           {
             preferBuiltins: true,
@@ -68,12 +74,9 @@ export default Rollup(
             ]
           }
         ),
-        commonjs(),
-        ts(
+        commonjs(
           {
-            check: false,
-            useTsconfigDeclarationDir: true,
-            typescript
+            requireReturnsDefault: 'namespace'
           }
         ),
         beep()

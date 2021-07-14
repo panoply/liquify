@@ -34,7 +34,6 @@
     "noEmitOnError": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "pretty": true,
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"],
