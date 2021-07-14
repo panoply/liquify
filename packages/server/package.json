@@ -65,7 +65,7 @@
     "url": "https://github.com/panoply/liquify"
   },
   "devDependencies": {
-    "@ava/babel": "^1.0.1",
+    "@ava/babel": "^2.0.0",
     "@liquify/eslint-config-ts": "workspace:^1.0.1",
     "@liquify/rollup-plugin-obfuscator": "workspace:^0.2.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
@@ -80,7 +80,7 @@
     "esm": "^3.2.25",
     "marky": "^1.2.2",
     "pretty-ms": "^7.0.1",
-    "rollup": "^2.53.0",
+    "rollup": "^2.53.1",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-filesize": "^9.1.1",
