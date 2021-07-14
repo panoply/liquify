@@ -244,7 +244,7 @@ export const OperatorIteration = /^in/;
  * Captures control condition operators
  *
  */
-export const OperatorControl = /^(?:==|!=|>=|<=|<|>|and|or)/;
+export const OperatorControl = /^(?:=[!=]|[<>]=?|(?:and|or|contains)\b)/;
 
 /**
  * `^\s*?[[.]`
