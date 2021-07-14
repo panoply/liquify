@@ -1,31 +1,5 @@
 import test from 'ava';
-import * as c from './__utils__';
-
-function toToken (input) {
-
-  const document = c.parse(input);
-
-  return document.getText(document.diagnostics[0].range);
-
-}
-
-const doTests = (errors) => fn => {
-
-  errors.forEach((input, index) => {
-
-    const token = toToken(Array.isArray(input) ? input[0] : input);
-
-    return fn({
-      title: 'Test Case: ' + index++,
-      input: Array.isArray(input) ? input[0] : input,
-      token,
-      match: Array.isArray(input) ? input[1] : input,
-      newline: index === errors.length ? '\n' : ''
-    });
-
-  });
-
-};
+import * as c from './../shared';
 
 /* -------------------------------------------- */
 /* BRACKET NOTATION                             */
@@ -33,7 +7,7 @@ const doTests = (errors) => fn => {
 
 test.serial('Liquid Missing end tag\n', t => {
 
-  doTests(
+  c.doTests(
     [
       [ '{% if x %}', '{% if x %}' ],
       [ '{% unless x %}{% if x %}{% endunless %}', '{% if x %}' ],
@@ -51,7 +25,7 @@ test.serial('Liquid Missing end tag\n', t => {
   ) => {
 
     t.is(token, match);
-    t.log(title, c.log(input, match, 'cyan'), newline);
+    t.log(title, c.log(input, match, 'redBright'), newline);
     t.pass();
 
   });
@@ -60,7 +34,7 @@ test.serial('Liquid Missing end tag\n', t => {
 
 test.serial('HTML Missing end tag\n', t => {
 
-  doTests(
+  c.doTests(
     [
       '<div>',
       '<html><body><div></body></html>'
@@ -75,7 +49,7 @@ test.serial('HTML Missing end tag\n', t => {
   ) => {
 
     t.is(token, '<div>');
-    t.log(title, c.log(input, '<div>', 'cyan'), newline);
+    t.log(title, c.log(input, '<div>', 'redBright'), newline);
     t.pass();
 
   });
@@ -84,7 +58,7 @@ test.serial('HTML Missing end tag\n', t => {
 
 test.serial('Liquid Missing start tag\n', t => {
 
-  doTests(
+  c.doTests(
     [
       '{% endif %}'
     ]
@@ -98,7 +72,7 @@ test.serial('Liquid Missing start tag\n', t => {
   ) => {
 
     t.is(token, '{% endif %}');
-    t.log(title, c.log(input, '{% endif %}', 'cyan'), newline);
+    t.log(title, c.log(input, '{% endif %}', 'redBright'), newline);
     t.pass();
 
   });

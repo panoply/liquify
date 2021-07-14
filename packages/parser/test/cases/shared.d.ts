@@ -1,4 +1,5 @@
 import { LiquidParser } from '../../package/parser';
+import { Chalk } from 'chalk';
 
 type LogColors = (
   'black'
@@ -39,6 +40,10 @@ type LogColors = (
   | 'bgWhiteBright'
 );
 
+/* CHALK -------------------------------------- */
+
+export const chalk: Chalk;
+
 /* TO TOKEN ----------------------------------- */
 
 export function toToken(input: string): string
@@ -46,18 +51,23 @@ export function toToken(input: string): string
 /* DO MULTIPLE TESTS -------------------------- */
 
 export function doTests (
-  entries: string[] | [string, string][]
+  entries: string[] | [string, string][],
+  options?: {
+    message: boolean
+  }
 ): (fn: (props: {
   title: string,
   input: string,
   token: string,
   match: string,
+  message?: string,
   newline: string
 }) => {
   title: string,
   input: string,
   token: string,
   match: string,
+  message?: string,
   newline: string
 }) => void
 

@@ -1,19 +1,67 @@
 import test from 'ava';
 import * as c from './../shared';
 
-const filters = `
-{{ sort | sort }}
-{{ append | append: 'foo' }}
-{{ replace | replace: 'bar', 'baz' }}
-{{ plus | plus: 10 }}
-{{ truncate | truncate: 220, 'xxx' }}
-{{ font_modify | font_modify: 'style', 'normal' }}
-{{ time_tag | time_tag: '%a, %b %d, %Y', datetime: '%Y-%m-%d', format: 'date' }}
-`;
-
 /* -------------------------------------------- */
 /* BRACKET NOTATION                             */
 /* -------------------------------------------- */
+
+test.serial('Filter expression errors\n', t => {
+
+  c.doTests(
+    [
+      [ '{{ tag |  }}', 'tag |  ' ],
+      [ '{{ tag | append "foo"  }}', 'append ' ],
+      [ '{{ tag | remove:: "foo"  }}', 'remove:' ],
+      [ '{{ tag | plus=10  }}', 'plus' ]
+    ]
+  )((
+    {
+      title,
+      input,
+      message,
+      token,
+      match,
+      newline
+    }
+  ) => {
+
+    t.is(token, match);
+    t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
+    // t.log('Diagnostic :', c.chalk.white.italic(message));
+    t.pass();
+
+  });
+
+});
+
+test.serial('Unknown Filter name\n', t => {
+
+  c.doTests(
+    [
+      [ '{{ tag | append "foo"  }}', 'append ' ],
+      [ '{{ tag | remove:: "foo"  }}', 'remove:' ],
+      [ '{{ tag | plus=10  }}', 'plus' ]
+
+    ]
+  )((
+    {
+      title,
+      input,
+      token,
+      match,
+      message,
+      newline
+    }
+  ) => {
+
+    t.is(token, match);
+    t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
+    // t.log('Diagnostic :', c.chalk.white.italic(message));
+    t.pass();
+
+  });
+
+});
 
 test.serial('Missing Argument\n', t => {
 
@@ -31,12 +79,14 @@ test.serial('Missing Argument\n', t => {
       input,
       token,
       match,
+      message,
       newline
     }
   ) => {
 
     t.is(token, match);
-    t.log(title, c.log(input, match, 'redBright'), newline);
+    t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
+    // t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });
@@ -59,12 +109,14 @@ test.serial('Invalid argument types\n', t => {
       input,
       token,
       match,
+      message,
       newline
     }
   ) => {
 
     t.is(token, match);
-    t.log(title, c.log(input, match, 'redBright'), newline);
+    t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
+    // t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });
@@ -76,7 +128,9 @@ test.serial('Invalid argument parameter\n', t => {
   c.doTests(
     [
       [ '{{ tag | asset_img_url: "100x",  foo: 20 }}', 'foo' ],
-      [ '{{ tag | time_tag: "%a, %b %d, %Y", quux: "%Y-%m-%d" }}', 'quux' ]
+      [ '{{ tag | time_tag: "%a, %b %d, %Y", quux: "%Y-%m-%d" }}', 'quux' ],
+      [ '{{ foo | color_modify: "red", 1000  }}', '1000' ],
+      [ '{{ tag | asset_img_url: "100x10" }}', '"100x10"' ]
     ]
   )((
     {
@@ -84,12 +138,14 @@ test.serial('Invalid argument parameter\n', t => {
       input,
       token,
       match,
+      message,
       newline
     }
   ) => {
 
     t.is(token, match);
-    t.log(title, c.log(input, match, 'redBright'), newline);
+    t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
+    // t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });
@@ -108,17 +164,20 @@ test.serial('Duplicate argument parameters\n', t => {
       input,
       token,
       match,
+      message,
       newline
     }
   ) => {
 
     t.is(token, match);
-    t.log(title, c.log(input, match, 'redBright'), newline);
+    t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
+    // t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });
 
 });
+
 test.skip('Filter parameters\n', t => {
 
   c.doTests(
@@ -138,7 +197,7 @@ test.skip('Filter parameters\n', t => {
   ) => {
 
     t.is(token, match);
-    t.log(title, c.log(input, /\w:|["\w0-9]+/, 'cyan'), newline);
+    t.log(c.chalk.green(title), c.log(input, /\w:|["\w0-9]+/, 'cyan'), newline);
     t.pass();
 
   });

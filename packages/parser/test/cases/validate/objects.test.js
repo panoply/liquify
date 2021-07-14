@@ -1,31 +1,5 @@
 import test from 'ava';
-import * as c from './__utils__';
-
-function toToken (input) {
-
-  const document = c.parse(input);
-
-  return document.getText(document.diagnostics[0].range);
-
-}
-
-const doTests = (errors) => fn => {
-
-  errors.forEach((input, index) => {
-
-    const token = toToken(Array.isArray(input) ? input[0] : input);
-
-    return fn({
-      title: 'Test Case: ' + index++,
-      input: Array.isArray(input) ? input[0] : input,
-      token,
-      match: Array.isArray(input) ? input[1] : input,
-      newline: index === errors.length ? '\n' : ''
-    });
-
-  });
-
-};
+import * as c from './../shared';
 
 /* -------------------------------------------- */
 /* BRACKET NOTATION                             */
@@ -33,38 +7,13 @@ const doTests = (errors) => fn => {
 
 test.serial('Missing property in object bracket notation\n', t => {
 
-  doTests(
+  c.doTests(
     [
-      '{{ object[] }}',
-      '{{ object.prop[inner[]] }}',
-      '{{ object["prop"][] }}',
-      '{{ object["prop"][inner.prop[deeper[]]] }}',
-      '{{ object.prop["foo"].bar[] }}'
-    ]
-  )((
-    {
-      token,
-      title,
-      input,
-      newline
-    }
-  ) => {
-
-    t.is(token, '[]');
-    t.log(title, c.log(input, /\[]/, 'cyan'), newline);
-    t.pass();
-
-  });
-
-});
-
-test.serial('Missing quotation character\n', t => {
-
-  doTests(
-    [
-      [ '{{ "foo }}', ' "foo ' ],
-      [ '{{ object["] }}', '"] ' ],
-      [ '{{ object["prop ] }}', '"prop ] ' ]
+      [ '{{ object[] }}', 'object[]' ],
+      [ '{{ object.prop[inner[]] }}', 'inner[]' ],
+      [ '{{ object["prop"][] }}', '"prop"' ],
+      [ '{{ object["prop"][inner.prop[deeper[]]] }}', '"prop"' ],
+      [ '{{ object.prop["foo"].bar[] }}', '"foo"' ]
     ]
   )((
     {
@@ -77,7 +26,33 @@ test.serial('Missing quotation character\n', t => {
   ) => {
 
     t.is(token, match);
-    t.log(title, c.log(input, /(")(\s*.*?)/, [ 'cyan', 'bgBlackBright' ]), newline);
+    t.log(title, c.log(input, match, 'redBright'), newline);
+    t.pass();
+
+  });
+
+});
+
+test.serial('Missing quotation character\n', t => {
+
+  c.doTests(
+    [
+      [ '{{ "foo }}', 'foo ' ],
+      [ '{{ object["] }}', 'object["] ' ],
+      [ '{{ object["prop ] }}', 'rop ] ' ]
+    ]
+  )((
+    {
+      token,
+      title,
+      input,
+      match,
+      newline
+    }
+  ) => {
+
+    t.is(token, match);
+    t.log(title, c.log(input, match, 'redBright'), newline);
     t.pass();
 
   });

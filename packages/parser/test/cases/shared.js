@@ -10,23 +10,28 @@ export function toToken (input) {
 
   const document = parser.parse(input);
 
-  return document.getText(document.diagnostics[0].range);
+  return {
+    text: document.getText(document.diagnostics[0].range),
+    message: document.diagnostics[0].message
+  };
 
 }
 
-export const doTests = (errors) => fn => {
+export const doTests = (errors, options) => fn => {
 
   errors.forEach((input, index) => {
 
     const token = toToken(Array.isArray(input) ? input[0] : input);
-
-    return fn({
-      title: 'Test Case: ' + index++,
+    const callback = {
+      title: chalk.magenta('Test Case: ' + index++),
       input: Array.isArray(input) ? input[0] : input,
-      token,
+      token: token.text,
       match: Array.isArray(input) ? input[1] : input,
+      message: token.message,
       newline: index === errors.length ? '\n' : ''
-    });
+    };
+
+    return fn(callback);
 
   });
 
