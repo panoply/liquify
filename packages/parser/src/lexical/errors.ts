@@ -449,6 +449,14 @@ export const enum ParseError {
   RejectItereeTypeValue,
 
   /**
+   * Unknown Filter Argument Parameter
+   *
+   * @example
+   * {{ tag | filter: foo: 'bar' }} // 'foo' is unknown
+   */
+  UnknownFilterArgumentParameter,
+
+  /**
    * Unknown Property
    *
    * @example
