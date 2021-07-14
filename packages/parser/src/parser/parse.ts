@@ -316,6 +316,12 @@ export function parse (document: IAST): IAST {
         document.root.scope[scope] = s.token;
 
         break;
+
+      case TokenType.EmbeddedJSON:
+
+        node.languageId = NodeLanguage.json;
+
+        break;
     }
 
     token = scanner.scan();

@@ -1426,6 +1426,19 @@ function Scan (): number {
       break;
 
     /* -------------------------------------------- */
+    /* LIQUID ITERATION ITEREE                      */
+    /* -------------------------------------------- */
+    case ScanState.EmbeddedLanguage:
+
+      state = ScanState.GotoTagEnd;
+
+      if (spec.tag.language === 'json') {
+        return TokenType.EmbeddedJSON;
+      }
+
+      return Scan();
+
+    /* -------------------------------------------- */
     /* GOTO TAG END                                 */
     /* -------------------------------------------- */
     case ScanState.GotoTagEnd:

@@ -1,9 +1,8 @@
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { JSONService } from 'service/modes/json';
-import { HTMLService } from 'service/modes/html';
 import { Parser } from 'provide/parser';
 import { Format } from 'service/format';
-import * as Completion from 'service/completions';
+// import * as Completion from 'service/completions';
 import * as Hover from 'service/hovers';
 import upperFirst from 'lodash/upperFirst';
 import { Characters, Position, IAST, INode, NodeKind } from '@liquify/liquid-parser';
@@ -32,11 +31,9 @@ export class LiquidService {
   private mode: {
     css: boolean
     scss: boolean
-    html: HTMLService
     json: JSONService
   } = {
     json: undefined,
-    html: undefined,
     css: false,
     scss: false
   }
@@ -50,19 +47,10 @@ export class LiquidService {
    */
   async configure (support: Services) {
 
-    if (support.html) {
-
-      this.mode.html = new HTMLService();
-
-    }
-
     // JSON Language Service
     if (support.json) {
-
       const schema = await store('shopify/sections');
-
       this.mode.json = new JSONService(schema);
-
     }
 
     // CSS Language Service
@@ -103,6 +91,10 @@ export class LiquidService {
 
     // Do not format empty documents
 
+    if (!document.format) {
+      return console.log('cannot format document until errors fixed');
+    }
+
     // const filename = basename(document.textDocument.uri)
     // if (settings.ignore.files.includes(filename)) return
 
@@ -110,7 +102,7 @@ export class LiquidService {
 
     const literal = document.literal();
     const format = Format(document, literal);
-    const embeds = document.getEmbeds();
+    const embeds = false; // document.getEmbeds();
 
     if (embeds) {
 
@@ -119,14 +111,14 @@ export class LiquidService {
       if (regions.length > 0) {
         return [
           TextEdit.replace(
-            document.toRange(),
+            document.root.range(),
             format.markup(TextDocument.applyEdits(literal, regions))
           )
         ];
       }
     }
 
-    return [ TextEdit.replace(document.toRange(), format.markup()) ];
+    return [ TextEdit.replace(document.root.range, format.markup()) ];
 
   }
 

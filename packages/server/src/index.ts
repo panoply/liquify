@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { Parser } from 'provide/parser';
-import { Server } from 'export';
+import { Server, Service } from 'export';
 import { runAsync, runSync } from 'utils/runners';
 import { mark, stop } from 'marky';
 import {
@@ -238,8 +238,6 @@ connection.onDocumentRangeFormatting((
   { textDocument: { uri } }
   , token
 ) => !Server.provider.format || runSync(() => {
-
-  return null;
 
   const document = Parser.get(uri);
 

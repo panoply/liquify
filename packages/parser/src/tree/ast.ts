@@ -100,6 +100,11 @@ export class IAST {
   public cursor: number = NaN;
 
   /**
+   * Boolean value used to enable formatting
+   */
+  public format: boolean = true
+
+  /**
    * List of parsing errors and validations
    * encountered while scanning the document.
    */
@@ -138,6 +143,8 @@ export class IAST {
 
     return (location?: Range | undefined) => {
 
+      if (!diagnostic.data.format && this.format) this.format = false;
+
       diagnostic.range = location === undefined
         ? this.getRange()
         : location;
@@ -145,19 +152,6 @@ export class IAST {
       this.errors.push(diagnostic);
 
     };
-  }
-
-  /**
-   * Generates a document literal of current
-   * textDocument. This allows us to create a quick
-   * temporary literal for features like formatting.
-   *
-   * @default 'tmp'
-   */
-  get HTMLDocument (): TextDocument {
-
-    return this.documents.html;
-
   }
 
   /**
