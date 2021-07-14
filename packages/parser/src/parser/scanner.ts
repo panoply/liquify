@@ -463,9 +463,7 @@ function Scan (): number {
 
         // Control type tags, eg: {% assign %} or {% capture %}
         if (spec.isTagType(Type.variable)) {
-
           state = ScanState.VariableIdentifier;
-
           return spec.tag?.singular
             ? TokenType.SingularTagName
             : TokenType.StartTagName;
@@ -477,7 +475,9 @@ function Scan (): number {
         // Control type tags, eg: {% if %} or {% unless %}
         if (spec.isTagType(Type.control)) {
           state = ScanState.Control;
-          return TokenType.StartTagName;
+          return spec.tag?.singular
+            ? TokenType.SingularTagName
+            : TokenType.StartTagName;
         }
 
         /* EMBEDDED TYPE ------------------------------ */
@@ -493,7 +493,9 @@ function Scan (): number {
         // Iteration type tags, eg: {% for %}
         if (spec.isTagType(Type.iteration)) {
           state = ScanState.Iteration;
-          return TokenType.StartTagName;
+          return spec.tag?.singular
+            ? TokenType.SingularTagName
+            : TokenType.StartTagName;
         }
 
         /* UNKNOWN TYPE ------------------------------- */
@@ -852,6 +854,13 @@ function Scan (): number {
         // Validate integer number types, these are not floats
         if (spec.isType(Type.integer)) {
 
+          // Test against the argument value
+          if (!spec.isValue(s.token)) {
+            state = ScanState.FilterSeparator;
+            error = ParseError.InvalidNumberRange;
+            return TokenType.ParseError;
+          }
+
           // Ensure we are dealing with an integer
           if (s.TokenContains(r.Integer)) {
             state = ScanState.FilterSeparator;
@@ -1185,7 +1194,7 @@ function Scan (): number {
         // Pass to the operator scan
         if (spec.tag?.filters) {
           state = ScanState.VariableOperator;
-          return Scan();
+          return TokenType.VariableKeyword;
         }
 
         // TODO: HANDLE CAPTURES
@@ -1207,7 +1216,7 @@ function Scan (): number {
       // If the variable requires an operator character, we consume
       if (s.IfCodeChar(c.EQS)) {
         state = ScanState.VariableAssignment;
-        return TokenType.VariableKeyword;
+        return Scan();
       }
 
       state = ScanState.GotoTagEnd;
@@ -1223,7 +1232,9 @@ function Scan (): number {
 
       if (s.IsRegExp(r.StringQuotations)) {
 
-        if (s.SkipQuotedString(true)) return TokenType.String;
+        if (s.SkipQuotedString(true)) {
+          return TokenType.VariableValue;
+        }
 
         error = ParseError.MissingQuotation;
         state = ScanState.GotoTagEnd;
@@ -1231,7 +1242,10 @@ function Scan (): number {
       }
 
       // Variable name keyword identifier can be wild
-      if (s.IfRegExp(r.KeywordAlphaNumeric)) return TokenType.VariableKeyword;
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
+
+        return TokenType.VariableValue;
+      }
 
       state = ScanState.GotoTagEnd;
       error = ParseError.InvalidCharacters;

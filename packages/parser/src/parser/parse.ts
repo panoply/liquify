@@ -1,4 +1,4 @@
-import { spec, Type as Types } from '@liquify/liquid-language-specs';
+import { spec, Type as Types, IProperties } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
@@ -6,7 +6,6 @@ import { NodeLanguage } from 'lexical/language';
 import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { INode, Type } from 'tree/nodes';
-import { isNumber, isString } from 'parser/utils';
 import * as Regexp from 'lexical/expressions';
 import * as s from 'parser/stream';
 import * as scanner from 'parser/scanner';
@@ -145,6 +144,7 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.OutputTagOpen:
+
         liquidNode(Type.Void);
 
         node.type = Types.output;
@@ -178,11 +178,18 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.OutputTagClose:
+
         closeNode(Type.Void);
 
         break;
 
       case TokenType.SingularTagName:
+
+        node.tag = s.token;
+        node.type = spec.tag.type;
+
+        pair.delete(node);
+
         break;
 
       case TokenType.SingularTagClose:
@@ -233,9 +240,11 @@ export function parse (document: IAST): IAST {
 
         Object.assign(node.objects, { [s.offset]: [ s.token ] });
 
-        if (node.parent.type === Types.iteration && node.parent.scope?.[s.token]) {
-          Object.assign(node.scope, node.parent.scope);
-          spec.SetObject(node.parent.scope[s.token]);
+        if (node.parent.type === Types.iteration) {
+          if (node.parent.scope?.[s.token]) {
+            Object.assign(node.scope, node.parent.scope);
+            spec.SetObject(node.parent.scope[s.token]);
+          }
         } else {
           spec.SetObject(s.token);
         }
@@ -254,25 +263,16 @@ export function parse (document: IAST): IAST {
         spec.isProperty(s.token);
 
         if (node.type === Types.iteration) {
-
-          node.scope[scope] = spec.object?.object;
-
-          if (node.parent.type === Types.iteration) {
-
-            spec.isProperty(s.token);
-
-          } else if (isString(spec.object?.object)) {
-
+          node.scope[scope] = (spec.object as IProperties)?.object;
+          if (typeof node.scope[scope] === 'string') {
             spec.SetObject(node.scope[scope]);
-
-            if (spec.object?.object) {
-              spec.SetObject(spec.object.object as string);
-            }
           }
         }
 
-        if (isNumber(node.scope) && !spec.isObjectType(node.scope as number)) {
-          document.report(Errors.RejectObject)();
+        if (typeof node.scope === 'number') {
+          if (!spec.isObjectType(node.scope as number)) {
+            document.report(Errors.RejectObject)();
+          }
         } else if (spec.SetObject(node.scope as string) && !spec.isProperty(s.token)) {
           document.report(Errors.UnknownProperty)();
         }
@@ -303,6 +303,19 @@ export function parse (document: IAST): IAST {
         filter = NaN;
 
         break;
+
+      case TokenType.VariableKeyword:
+
+        scope = s.token;
+        document.root.scope[s.token] = null;
+
+        break;
+
+      case TokenType.VariableValue:
+
+        document.root.scope[scope] = s.token;
+
+        break;
     }
 
     token = scanner.scan();
@@ -328,6 +341,7 @@ export function parse (document: IAST): IAST {
    * each time we encounter a starting delimeters.
    */
   function htmlNode (type: Type): void {
+
     if (track instanceof INode) pendingClose();
 
     node = new INode(type, scanner.begin, html, NodeKind.HTML);
@@ -353,10 +367,8 @@ export function parse (document: IAST): IAST {
     liquid.children.push(node);
 
     // parent = node;
-    if (type === Type.Pair) {
-      liquid = node;
-      pair.add(node);
-    }
+    if (type === Type.Pair) liquid = node;
+
   }
 
   /**
@@ -411,6 +423,7 @@ export function parse (document: IAST): IAST {
       track.offsets.push(s.offset);
     } else {
       while (idx--) {
+
         const child = track.children[idx];
 
         if (child.singular) {

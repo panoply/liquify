@@ -7,6 +7,7 @@ import { INode } from 'tree/nodes';
 import { GetFormedRange } from 'parser/utils';
 import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
 import * as s from 'parser/stream';
+import { spec } from '@liquify/liquid-language-specs';
 
 export interface IScope {
   /**
@@ -133,7 +134,7 @@ export class IAST {
    */
   public report (error: ParseError): (location?: Range | undefined) => void {
 
-    const diagnostic = { ...Diagnostics[error] };
+    const diagnostic: IDiagnostic = Object.assign({}, Diagnostics[error]);
 
     return (location?: Range | undefined) => {
 

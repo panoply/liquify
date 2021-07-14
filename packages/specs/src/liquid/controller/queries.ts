@@ -4,7 +4,7 @@ import { ITag } from '../types/tags';
 import { IFilter } from '../types/filters';
 import { IObject } from '../types/objects';
 import { Type } from '../types/types';
-import { isNumber, inPattern, inValues } from './utils';
+import { isNumber, inPattern, inValues, inRange } from './utils';
 
 /**
  * Within Enums
@@ -53,6 +53,11 @@ export let object: IObject;
  * Reference to the current arugment or parameter.
  */
 export let argument: IArgument.Argument | IArgument.Parameter;
+
+/**
+ * Value reference
+ */
+export let value: string;
 
 /* -------------------------------------------- */
 /* LOCAL                                        */
@@ -115,6 +120,7 @@ export function Reset (): void {
   filter = undefined;
   argument = undefined;
   error = undefined;
+  value = undefined;
 
   prev = undefined;
   index = 0;
@@ -194,7 +200,7 @@ export function GetArgument (type: Type): boolean {
  * reference `argument` will remain pointing to the argument at index
  * and a boolean `true` will be returned.
  */
-export function isParameter (value: string) {
+export function isParameter (token: string) {
 
   if (argument === undefined) return false;
   if (argument.type !== Type.parameter && !GetArgument(Type.parameter)) {
@@ -203,7 +209,7 @@ export function isParameter (value: string) {
 
   if (isNumber(argument.value)) return true;
 
-  const param = argument.value?.[value];
+  const param = argument.value?.[token];
 
   if (!param) {
     error = QueryErrors.ParameterUnknown;
@@ -211,11 +217,11 @@ export function isParameter (value: string) {
   }
 
   const uniq = param?.unique;
-  if ((uniq === undefined || uniq === true) && unique.has(value)) {
+  if ((uniq === undefined || uniq === true) && unique.has(token)) {
     error = QueryErrors.ParameterNotUnique;
+  } else {
+    unique.add(token);
   }
-
-  unique.add(value);
 
   argument = param;
   within = Within.ParameterValue;
@@ -231,30 +237,45 @@ export function isParameter (value: string) {
  * be validated, starting with patterns and working its way
  * down to a specs `value` entries.
  */
-export function isValue (value: string): boolean {
+export function isValue (token: string): boolean {
 
-  // console.log('inValue', index, value, argument);
+  if ((
+    isType(Type.any) || (
+      !argument?.value &&
+      !(argument as IArgument.Argument)?.pattern
+    )
+  )) return true;
 
-  if ((isType(Type.any) || !argument?.value)) return true;
-
-  const prop = prev || value;
+  const prop = prev || token;
   const param: IArgument.Argument = argument as IArgument.Argument;
 
-  if (!(param.pattern instanceof RegExp ? (
-    inPattern(param.pattern as RegExp, value)
-  ) : typeof param.pattern === 'object' ? (
-    inPattern(param.pattern?.[prop], value)
-  ) : Array.isArray(param.pattern) ? (
-    value >= param.pattern[0] && value <= param.pattern[1]
-  ) : (
-    param.value === value ||
-    !!param.value?.[prop] ||
-    inValues(param.value as Values[], value)
-  )) && (
-    param.strict === undefined || param.strict === true
-  )) return false;
+  let valid: boolean;
 
-  if (within === Within.Arguments) prev = value;
+  if (param?.pattern) {
+    if (param.pattern instanceof RegExp) {
+      valid = inPattern(param.pattern as RegExp, token);
+    } else if (typeof param.pattern === 'object') {
+      const pattern = param.pattern?.[prop];
+      if (Array.isArray(pattern)) {
+        valid = inRange(pattern[0], pattern[1], Number(token));
+        value = `${pattern[0]} and ${pattern[1]}`;
+      } else {
+        valid = inPattern(pattern, token);
+      }
+    } else if (Array.isArray(param.pattern)) {
+      valid = inRange(param.pattern[0], param.pattern[1], Number(token));
+      value = `${param.pattern[0]} and ${param.pattern[1]}`;
+    }
+  } else {
+    valid = (
+      param.value === token ||
+      !!param.value?.[prop] ||
+      inValues(param.value as Values[], token)
+    );
+  }
+
+  if (!valid && (param.strict === undefined || param.strict)) return false;
+  if (within === Within.Arguments) prev = token;
 
   return true;
 
@@ -419,9 +440,9 @@ export function NextParameter (): boolean {
  * reference will update and point to the property
  * value when a match occurs.
  */
-export function isProperty (value: string): boolean {
+export function isProperty (token: string): boolean {
 
-  const prop = object?.properties?.[value];
+  const prop = object?.properties?.[token];
 
   if (!prop) return false;
 
@@ -436,9 +457,9 @@ export function isProperty (value: string): boolean {
  * Conditional checks the local error state reference
  * with the provided Query error enum.
  */
-export function isError (value: QueryErrors) {
+export function isError (err: QueryErrors) {
 
-  return error === value;
+  return error === err;
 
 }
 
@@ -496,9 +517,9 @@ export function isType (type: Type): boolean {
  * Used to validate the whereabouts of the current tag or filter
  * argument query engine position.
  */
-export function isWithin (value: Within): boolean {
+export function isWithin (token: Within): boolean {
 
-  return within === value;
+  return within === token;
 
 }
 

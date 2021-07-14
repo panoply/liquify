@@ -51,14 +51,29 @@ export const isNull = (value: any): boolean => value === null;
 /**
  * Validates pattern match
  */
+export const inRange = (
+  start: number,
+  end: number,
+  value: number
+): boolean => (
+
+  (value >= start && value <= end)
+
+);
+
+/**
+ * Validates pattern match
+ */
 export const inPattern = (
   pattern: RegExp | string,
   value: string
 ): boolean => (
 
-  isString(pattern)
+  typeof pattern === 'string'
     ? new RegExp(pattern).test(value)
-    : isUndefined(pattern) ? false : (pattern as RegExp).test(value)
+    : pattern === undefined
+      ? false
+      : (pattern as RegExp).test(value)
 
 );
 

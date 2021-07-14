@@ -256,6 +256,15 @@ export const enum ParseError {
    */
   InvalidArgument,
 
+
+  /**
+   * Invalid Argument Number Range
+   *
+   * @example
+   * {{ tag | color_modify: 'red', 2000  }} // '2000' is invalid
+   */
+  InvalidNumberRange,
+
   /**
    * Invalid Iteration Type
    *

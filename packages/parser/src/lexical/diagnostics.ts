@@ -165,6 +165,11 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     message: 'Invalid argument expressed',
     data: { format: true }
   },
+  [ParseError.InvalidNumberRange]: {
+    severity: ErrorLevel.Error,
+    message: 'Invalid number range provided',
+    data: { format: true }
+  },
   [ParseError.InvalidDecimalPoint]: {
     severity: ErrorLevel.Error,
     message: 'Hanging decimal point on number',
