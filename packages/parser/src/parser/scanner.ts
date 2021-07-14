@@ -1,8 +1,7 @@
-import { spec, Type, Within } from '@liquify/liquid-language-specs';
+import { spec, Type, Within, QueryErrors } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
-import { isUndefined } from 'parser/utils';
 import * as s from 'parser/stream';
 import * as r from 'lexical/expressions';
 import * as c from 'lexical/characters';
@@ -570,6 +569,7 @@ function Scan (): number {
 
       // If cache holds a filter reference, we refer to it in the next scan
       if (cache === ScanState.FilterSeparator) {
+        cache = ScanCache.Reset;
         state = ScanState.FilterSeparator;
         return Scan();
       }
@@ -783,9 +783,10 @@ function Scan (): number {
         return Scan();
       }
 
-      // No filter argument was detected a
+      // If the first argument is not required we will check if any arguments
+      // are required, if all are optional we will pass back to Filter scan
       if (!spec.isRequired()) {
-        state = spec.NextArgument() ? ScanState.FilterArgument : ScanState.Filter;
+        state = spec.isOptional() ? ScanState.Filter : ScanState.FilterArgument;
         return Scan();
       }
 
@@ -901,12 +902,6 @@ function Scan (): number {
       // If we get here, we will have either a variable or reference
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
-        // Lets check if the value is an argument parameter
-        if (spec.isParameter(s.token)) {
-          state = ScanState.FilterParameter;
-          return Scan();
-        }
-
         // Supply the object to spec query engine, if value is not
         // a known object, no harm is done, but we will still run the check
         spec.SetObject(s.token);
@@ -916,6 +911,21 @@ function Scan (): number {
           cache = ScanState.FilterSeparator;
           state = ScanState.Object;
           return TokenType.ObjectTagName;
+        }
+
+        // Lets check if the value is an argument parameter
+        if (spec.isParameter(s.token)) {
+
+          state = ScanState.FilterParameter;
+
+          // Validate that the parameter is unique
+          // This is not a critial error, so we continue parsing the tag
+          if (spec.isError(QueryErrors.ParameterNotUnique)) {
+            error = ParseError.DuplicatedParameters;
+            return TokenType.ParseError;
+          }
+
+          return Scan();
         }
 
         // If we get here, we have a keyword or variable
@@ -945,7 +955,7 @@ function Scan (): number {
 
       // If we get here, lets check if another argument exists
       // so as to capture any optional arguments in the spec.
-      if (s.UnlessPrevCodeChar(c.COM) && spec.NextArgument()) return Scan();
+      if (!s.IsPrevCodeChar(c.COM) && spec.NextArgument()) return Scan();
 
       s.Cursor(); // Align the cursor with offset
 
@@ -960,17 +970,11 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.FilterSeparator:
 
-      // console.log(s.token, spec.argument, spec.isWithin(Within.Parameter));
-
-      // if (spec.isWithin(Within.Parameter)) {
-      // console.log(s.token, cache, ScanState.FilterSeparator);
-      // }
-
-      if (spec.NextParameter()) {
-        if (s.IfCodeChar(c.COM)) {
-          state = ScanState.FilterArgument;
-          return TokenType.Separator;
-        }
+      // Lets revert the parameter to the argument index
+      // We will check for comma and pass back to argument scan.
+      if (spec.NextParameter() && s.IfCodeChar(c.COM)) {
+        state = ScanState.FilterArgument;
+        return Scan();
       }
 
       // Move to the next argument in the spec
@@ -1009,6 +1013,14 @@ function Scan (): number {
         return TokenType.FilterEnd;
       }
 
+      // Parameter is unknown according to the spec
+      // This is not a critial error, so we continue parsing the tag
+      if (spec.isError(QueryErrors.ParameterUnknown)) {
+        error = ParseError.UnknownFilterArgumentParameter;
+        state = ScanState.FilterParameter;
+        return TokenType.ParseError;
+      }
+
       // We have invalid characters, eg: {{ tag | filter ^# }}
       error = ParseError.InvalidCharacter;
       state = ScanState.GotoTagEnd;
@@ -1019,21 +1031,14 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.FilterParameter:
 
-      // Validate that the parameter is unique
-      if (spec.isUnique(s.token)) {
-        error = ParseError.DuplicatedParameters;
-        state = ScanState.GotoTagEnd;
-        return TokenType.ParseError;
-      }
-
       // Parameters must contain a colon character
       if (s.IfCodeChar(c.COL, false)) {
+        cache = ScanState.FilterParameter;
         state = ScanState.FilterArgument;
         return Scan();
       }
 
       // Missing a colon separator, eg: {{ tag | filter: param^ }}
-      // error = ParseError.MissingColon;
       state = ScanState.GotoTagEnd;
       return Scan();
 
@@ -1256,6 +1261,9 @@ function Scan (): number {
       error = ParseError.MissingIterationIteree;
       return TokenType.ParseError;
 
+    /* -------------------------------------------- */
+    /* LIQUID ITERATION ITEREE                      */
+    /* -------------------------------------------- */
     case ScanState.IterationIteree:
 
       state = ScanState.IterationOperator;
@@ -1402,6 +1410,7 @@ function Scan (): number {
       // if(spec.cursor.tag.)
 
       break;
+
     /* -------------------------------------------- */
     /* GOTO TAG END                                 */
     /* -------------------------------------------- */
