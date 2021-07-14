@@ -9,12 +9,20 @@ import { isNumber, inPattern, inValues } from './utils';
 /**
  * Within Enums
  */
+export const enum QueryErrors {
+  ParameterNotUnique = 1,
+  ParameterUnknown
+}
+
+/**
+ * Within Enums
+ */
 export const enum Within {
   Tag = 1,
   Filter,
   Arguments,
   Parameter,
-  ParameterValue
+  ParameterValue,
 }
 
 /* -------------------------------------------- */
@@ -76,6 +84,11 @@ let index: number = NaN;
 let within: Within;
 
 /**
+ * Query Errors
+ */
+let error: QueryErrors;
+
+/**
  * The previous arguments value
  */
 let prev: string;
@@ -101,6 +114,7 @@ export function Reset (): void {
   object = undefined;
   filter = undefined;
   argument = undefined;
+  error = undefined;
 
   prev = undefined;
   index = 0;
@@ -133,25 +147,118 @@ export function GetVariation (): Variation {
  */
 export function GetArgument (type: Type): boolean {
 
-  let next: number = index;
+  const start: number = index;
+  const limit = cursor.arguments.length - 1;
 
   while ((argument.type !== type && argument?.required !== true)) {
-    argument = cursor.arguments[next++];
-  }
-
-  if (argument.type !== type) {
     argument = cursor.arguments[index];
-    return false;
+    if (index !== limit) index++; else break;
   }
 
-  index = next;
+  if (argument.type === type) return true;
 
-  return true;
+  index = start;
+  argument = cursor.arguments[start];
+  return false;
+
 };
 
 /* -------------------------------------------- */
 /* SETTERS                                      */
 /* -------------------------------------------- */
+
+/**
+ * Is Parameter
+ *
+ * Queries the current argument for a `parameter` type. When
+ * an argument does not have a `parameter` type, it attempts
+ * to find a parameter argument via the `GetArgument` function.
+ *
+ * The function will return a boolean value to inform upon a
+ * successful or unsuccessful match.
+ *
+ * ---
+ *
+ * **GET ARGUMENT**
+ *
+ * If an argument does equal type `parameter` it will attempt
+ * to match the parameter passed value to a property listed
+ * on the arguments `value` and if successful, the state reference
+ * `argument` variable is updated and points to the parameter.
+ *
+ * ---
+ *
+ * **VALUE AS TYPE**
+ *
+ * If a parameters `value` points a _enum_  (number) the state
+ * reference `argument` will remain pointing to the argument at index
+ * and a boolean `true` will be returned.
+ */
+export function isParameter (value: string) {
+
+  if (argument === undefined) return false;
+  if (argument.type !== Type.parameter && !GetArgument(Type.parameter)) {
+    return false;
+  }
+
+  if (isNumber(argument.value)) return true;
+
+  const param = argument.value?.[value];
+
+  if (!param) {
+    error = QueryErrors.ParameterUnknown;
+    return false;
+  }
+
+  const uniq = param?.unique;
+  if ((uniq === undefined || uniq === true) && unique.has(value)) {
+    error = QueryErrors.ParameterNotUnique;
+  }
+
+  unique.add(value);
+
+  argument = param;
+  within = Within.ParameterValue;
+
+  return true;
+}
+
+/**
+ * Is Value
+ *
+ * Validates an a argument value. This function will run
+ * several typeof checks to fingure out how a value should
+ * be validated, starting with patterns and working its way
+ * down to a specs `value` entries.
+ */
+export function isValue (value: string): boolean {
+
+  // console.log('inValue', index, value, argument);
+
+  if ((isType(Type.any) || !argument?.value)) return true;
+
+  const prop = prev || value;
+  const param: IArgument.Argument = argument as IArgument.Argument;
+
+  if (!(param.pattern instanceof RegExp ? (
+    inPattern(param.pattern as RegExp, value)
+  ) : typeof param.pattern === 'object' ? (
+    inPattern(param.pattern?.[prop], value)
+  ) : Array.isArray(param.pattern) ? (
+    value >= param.pattern[0] && value <= param.pattern[1]
+  ) : (
+    param.value === value ||
+    !!param.value?.[prop] ||
+    inValues(param.value as Values[], value)
+  )) && (
+    param.strict === undefined || param.strict === true
+  )) return false;
+
+  if (within === Within.Arguments) prev = value;
+
+  return true;
+
+};
 
 /**
  * Set Template
@@ -324,71 +431,15 @@ export function isProperty (value: string): boolean {
 }
 
 /**
- * Is Parameter
+ * Is Error
  *
- * Queries the current argument for a `parameter` type. When
- * an argument does not have a `parameter` type, it attempts
- * to find a parameter argument via the `GetArgument` function.
- *
- * The function will return a boolean value to inform upon a
- * successful or unsuccessful match.
- *
- * ---
- *
- * **GET ARGUMENT**
- *
- * If an argument does equal type `parameter` it will attempt
- * to match the parameter passed value to a property listed
- * on the arguments `value` and if successful, the state reference
- * `argument` variable is updated and points to the parameter.
- *
- * ---
- *
- * **VALUE AS TYPE**
- *
- * If a parameters `value` points a _enum_  (number) the state
- * reference `argument` will remain pointing to the argument at index
- * and a boolean `true` will be returned.
+ * Conditional checks the local error state reference
+ * with the provided Query error enum.
  */
-export function isParameter (value: string) {
+export function isError (value: QueryErrors) {
 
-  if (argument === undefined) return false;
-  if (argument.type !== Type.parameter && !GetArgument(Type.parameter)) {
-    return false;
-  }
+  return error === value;
 
-  if (isNumber(argument.value)) return true;
-
-  const param = argument.value?.[value];
-
-  if (!param) return false;
-
-  argument = param;
-  unique.add(value);
-
-  within = Within.ParameterValue;
-
-  return true;
-}
-
-/**
- * Is Unique
- *
- * Checks whether a parameter value is unqiue. Each time a parameter
- * value is interceptd via `isParameter()` it is saved to the
- * _unqiue_ state Set.
- *
- * Parameters are assumed to be unique by default, so if the `unqiue`
- * property is `undefined` or `true` and the no record exists in the
- * locale Set reference then `false` is returned.
- */
-export function isUnique (value: string) {
-
-  const prop = (argument as IArgument.Parameter)?.unique;
-
-  if (prop === undefined || prop === true) return !unique.has(value);
-
-  return false;
 }
 
 /**
@@ -468,36 +519,25 @@ export function isRequired () {
 }
 
 /**
- * Is Value
+ * Is Optional
  *
- * Validates an a argument value. This function will run
- * several typeof checks to fingure out how a value should
- * be validated, starting with patterns and working its way
- * down to a specs `value` entries.
+ * Checks the requirement for every argument. If an arguments
+ *  `required` value returns `true` then a boolean `false` will
+ * be returned indicating that arguments are not optional and at
+ * least 1 value is required. The function accepts a starting index,
+ * default to the current argument index location.
+ *
+ * Some tag/filter arguments might all be optional, whereas some
+ * might contain an optional starting arguments, but require arguments
+ * proceeding that.
  */
-export function isValue (value: string): boolean {
+export function isOptional (from: number = index) {
 
-  if ((isType(Type.any) || !argument?.value)) return true;
+  let size: number = cursor.arguments.length - from - 1;
 
-  const prop = prev || value;
-  const param: IArgument.Argument = argument as IArgument.Argument;
+  if (size === 0 || from === size) return true;
+  while (from < size && !cursor.arguments[from]?.required) from++;
 
-  if (!(param.pattern instanceof RegExp ? (
-    inPattern(param.pattern as RegExp, value)
-  ) : typeof param.pattern === 'object' ? (
-    inPattern(param.pattern?.[prop], value)
-  ) : Array.isArray(param.pattern) ? (
-    value >= param.pattern[0] && value <= param.pattern[1]
-  ) : (
-    param.value === value ||
-    !!param.value?.[prop] ||
-    inValues(param.value as Values[], value)
-  )) && (
-    param.strict === undefined || param.strict
-  )) return false;
+  return from === size;
 
-  if (within === Within.Arguments) prev = value;
-
-  return true;
-
-};
+}
