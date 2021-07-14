@@ -6,15 +6,34 @@ import { Instance as Chalk } from 'chalk';
 
 config();
 
-export const chalk = new Chalk({
-  level: 2
-});
+export function toToken (input) {
 
-/**
- * @param {string} input
- * @param {RegExp} match
- * @returns {string}
- */
+  const document = parser.parse(input);
+
+  return document.getText(document.diagnostics[0].range);
+
+}
+
+export const doTests = (errors) => fn => {
+
+  errors.forEach((input, index) => {
+
+    const token = toToken(Array.isArray(input) ? input[0] : input);
+
+    return fn({
+      title: 'Test Case: ' + index++,
+      input: Array.isArray(input) ? input[0] : input,
+      token,
+      match: Array.isArray(input) ? input[1] : input,
+      newline: index === errors.length ? '\n' : ''
+    });
+
+  });
+
+};
+
+export const chalk = new Chalk({ level: 2 });
+
 export function log (input, match, colour = 'yellow') {
 
   const regex = new RegExp(match, 'g');
@@ -40,7 +59,7 @@ export const server = {
   uri: 'test.liquid'
 };
 
-export const { parse, ast, scan, update } = new LiquidParser({
+export const parser = new LiquidParser({
   engine: 'shopify',
   license: process.env.MASTER_KEY,
   context: true,

@@ -1,5 +1,5 @@
 import test from 'ava';
-import * as c from './__utils__';
+import * as c from '../shared';
 
 let document;
 
