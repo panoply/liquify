@@ -305,6 +305,11 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     message: 'Extraneous whitespace detected',
     data: { format: true }
   },
+  [ParseError.UnknownFilterArgumentParameter]: {
+    severity: ErrorLevel.Warning,
+    message: 'Unknown filter argument parameter',
+    data: { format: true }
+  },
   [ParseError.UnknownProperty]: {
     severity: ErrorLevel.Warning,
     message: 'Unknown property value',
