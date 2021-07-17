@@ -145,6 +145,7 @@ export const enum ScanState {
   /* -------------------------------------------- */
 
   EmbeddedLanguage,
+  EmbeddedTagEnd,
 
   /* -------------------------------------------- */
   /* FRONTMATTER                                  */
