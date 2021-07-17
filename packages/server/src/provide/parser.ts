@@ -1,6 +1,7 @@
 // @ts-ignore
 
 import { LiquidParser, IEngine } from '@liquify/liquid-parser';
+import { Engine } from '@liquify/liquid-language-specs';
 
 /**
  * Liquid Parser

@@ -1,4 +1,4 @@
-import { IDescription, IReferences, IScopes, IArgument } from './common';
+import { IReferences, IScopes, IArgument } from './common';
 export { IArgument } from './common';
 
 /* TYPE EXPORT -------------------------------- */
@@ -14,7 +14,7 @@ export interface IFilter {
    *
    * @default undefined
    */
-  readonly description?: IDescription | string
+  readonly description?: string
 
   /**
    * URL reference to online documentation explaining this filter

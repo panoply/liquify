@@ -134,15 +134,6 @@ export type ITemplates =
  type Pattern = string | RegExp | [number, number]
 
 /* -------------------------------------------- */
-/* DESCRIPTION INTERFACE                        */
-/* -------------------------------------------- */
-
-export interface IDescription {
-  kind: 'markdown' | 'plaintext';
-  value: string;
-}
-
-/* -------------------------------------------- */
 /* REFRENCES INTERFACE                          */
 /* -------------------------------------------- */
 
@@ -174,7 +165,7 @@ export interface Values {
    * An optional desciption for the value to be shown
    * in hovers and completions.
    */
-  readonly description?: string | IDescription,
+  readonly description?: string,
 
   /**
    * A template scope id. when provided, values will only
@@ -202,7 +193,7 @@ export interface IParameter {
    * Description of argument which will be rendered in
    * completions, hovers or signatures.
    */
-  readonly description?: IDescription | string | undefined;
+  readonly description?: string | undefined;
 
   /**
    * Pattern
@@ -423,7 +414,7 @@ export namespace IArgument {
      * Description of argument which will be rendered in
      * completions, hovers or signatures of the Language Server.
      */
-    readonly description?: IDescription | string | undefined;
+    readonly description?: string | undefined;
 
     /**
      * Documentation reference to this argument

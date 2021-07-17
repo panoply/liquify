@@ -449,7 +449,10 @@ export function getPreviousCharacter (ASTNode, document, position, context) {
       kind: CompletionItemKind.Keyword,
       insertText: snippet,
       insertTextFormat: InsertTextFormat.Snippet,
-      documentation: description,
+      documentation: {
+        kind: 'markup',
+        value: description
+      },
       data: {
         snippet
       }

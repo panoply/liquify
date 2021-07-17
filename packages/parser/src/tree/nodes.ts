@@ -179,15 +179,8 @@ export class Node implements INode {
       if (offset > child.start && offset <= child.end) return child.getNodeAt(offset);
     }
 
-    return this.type !== NodeType.Root ? this : this.firstChild || this;
+    return this.type !== NodeType.Root ? this : this.children[node] || this;
 
   }
 
 };
-
-/**
- * ROOT
- *
- * Creates token nodes on the AST
- */
-export class Root extends Node { constructor () { super(NodeType.Root); } };

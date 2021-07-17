@@ -1,4 +1,4 @@
-import { IDescription, IReferences, IScopes } from './common';
+import { IReferences, IScopes } from './common';
 import { shopify } from './../data/export';
 import { BasicTypeRange } from './types';
 
@@ -13,7 +13,7 @@ export interface IProperties {
   /**
    * Description of thes property value used by this object
    */
-  readonly description?: IDescription | string;
+  readonly description?: string;
 
   /**
    * Point to an object in the spec this array contains
@@ -51,7 +51,7 @@ export interface IObject {
    * Description of this object
    *
    */
-  readonly description?: IDescription | string;
+  readonly description?: string;
 
   /**
    * Documentation References

@@ -14,34 +14,8 @@ const filters = `
 `;
 
 const text = `
+{{ article.published_at | time_tag: '%a, %b %d, %Y', ddddddd -}}
 
-{{ sort | sort   }}
-{{ append | append: 'foo' }}
-{% schema %}
-{
-  "foo": "bar",
-  "object": {
-    "array": [
-      {
-        "hello": "world"
-      }
-    ]
-  }
-}
-{% endschema %}
-
-{% schema %}
-{
-  "foo": "bar",
-  "object": {
-    "array": [
-      {
-        "hello": "world"
-      }
-    ]
-  }
-}
-{% endschema %}
 `;
 
 function Stack (ast) {
@@ -95,8 +69,8 @@ test('FullDocument Parse', t => {
 
   // console.log(ast.getNodeAt(10));
   const end = process.hrtime(start);
-  // console.log(Stack(ast));
-  console.log(ast);
+  console.log(Stack(ast));
+  // console.log(ast);
   // console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());
 

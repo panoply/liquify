@@ -95,3 +95,29 @@ export const inValues = (
   return false;
 
 };
+
+/* -------------------------------------------- */
+/* GENERATORS                                   */
+/* -------------------------------------------- */
+
+/**
+ * Looks for match within values
+ */
+export const documentation = (description: string, reference: { name: string, url: string }): {
+  kind: 'plaintext' | 'markdown',
+  value: string
+} => {
+
+  if (!description && !reference?.name) return { kind: 'plaintext', value: '' };
+
+  if (!reference?.name) return { kind: 'plaintext', value: '' };
+
+  const value = description +
+    '\n\n' +
+    '---' +
+    '[' + reference.name + ']' +
+    '(' + reference.url + ')';
+
+  return { kind: 'markdown', value };
+
+};

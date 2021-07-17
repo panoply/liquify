@@ -1,4 +1,4 @@
-import { spec, IEngine } from '@liquify/liquid-language-specs';
+import { Engine, IEngine } from '@liquify/liquid-language-specs';
 import { VersionedTextDocumentIdentifier, Range } from 'vscode-languageserver-types';
 import { parse } from 'parser/parse';
 import { create, update, get, remove, model } from 'tree/model';
@@ -20,7 +20,7 @@ export class LiquidParser {
 
   static engine (engine: IEngine) {
 
-    return spec.SetEngine(engine);
+    return Engine(engine);
 
   }
 
@@ -28,13 +28,7 @@ export class LiquidParser {
 
     Object.assign(Config, options);
 
-    spec.SetEngine(Config.engine);
-
-  }
-
-  get spec () {
-
-    return spec.GetVariation();
+    Engine(Config.engine);
 
   }
 
@@ -43,7 +37,7 @@ export class LiquidParser {
      */
   engine (engine: IEngine): void {
 
-    return spec.SetEngine(engine);
+    return Engine(engine);
 
   }
 

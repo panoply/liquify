@@ -1,10 +1,10 @@
-import * as Specification from '../data/export';
-import { IEngine, Variation, Values, IArgument, ITemplates } from '../types/common';
+import { Variation, Values, IArgument } from '../types/common';
 import { ITag } from '../types/tags';
 import { IFilter } from '../types/filters';
 import { IObject } from '../types/objects';
 import { Type } from '../types/types';
 import { isNumber, inPattern, inValues, inRange } from './utils';
+import { variation } from './data';
 
 /**
  * Within Enums
@@ -26,13 +26,8 @@ export const enum Within {
 }
 
 /* -------------------------------------------- */
-/* EXPORT                                       */
+/* EXPORT SCOPES                                */
 /* -------------------------------------------- */
-
-/**
- * The current variation engine name
- */
-export let engine: IEngine = IEngine.standard;
 
 /**
  * Tag Specification
@@ -60,23 +55,13 @@ export let argument: IArgument.Argument | IArgument.Parameter;
 export let value: string;
 
 /* -------------------------------------------- */
-/* LOCAL                                        */
+/* LOCAL SCOPES                                 */
 /* -------------------------------------------- */
 
 /**
  * Cursor represents either a filter or tag specification
  */
 let cursor: ITag | IFilter;
-
-/**
- * The current template (document) name
- */
-let template: ITemplates;
-
-/**
- * The current variation specification
- */
-let variation: Variation = Specification.standard;
 
 /**
  * The current argument index being walked
@@ -98,6 +83,10 @@ let error: QueryErrors;
  */
 let prev: string;
 
+/* -------------------------------------------- */
+/* LOCAL CONSTANTS                              */
+/* -------------------------------------------- */
+
 /**
  * The current active parameters supplied
  */
@@ -110,7 +99,7 @@ const unique: Set<string> = new Set();
 /**
  * Reset
  *
- * Resets all states. This si executed everytime we
+ * Resets all states. This is executed everytime we
  * encounter a new tag.
  */
 export function Reset (): void {
@@ -142,6 +131,7 @@ export function Reset (): void {
 export function GetVariation (): Variation {
 
   return variation;
+
 };
 
 /**
@@ -278,33 +268,6 @@ export function isValue (token: string): boolean {
   if (within === Within.Arguments) prev = token;
 
   return true;
-
-};
-
-/**
- * Set Template
- *
- * Sets the local `template` state reference vairable.
- * This is called for every new document we encounter.
- */
-export function SetTemplate (name: ITemplates): void {
-
-  if (template !== name) template = name;
-
-};
-
-/**
- * Set Engine
- *
- * Sets the Liquid `variation` and `engine` variable.
- * This will change what specification we reference.
- */
-export function SetEngine (name: IEngine): void {
-
-  if (variation.engine !== name) {
-    variation = Specification[name] as Variation;
-    engine = name;
-  }
 
 };
 
@@ -461,18 +424,6 @@ export function isError (err: QueryErrors) {
 
   return error === err;
 
-}
-
-/**
- * Is Template
- *
- * Validate the current template name against the local state
- * `template` reference variable This is a sugar shortcut
- * function called when parsing.
- */
-export function isTemplate (name: ITemplates): boolean {
-
-  return template === name;
 }
 
 /**

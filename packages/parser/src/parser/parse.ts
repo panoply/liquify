@@ -1,11 +1,11 @@
-import { spec, Type, IProperties } from '@liquify/liquid-language-specs';
+import { query as q, Type, IProperties } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
 import { NodeLanguage } from 'lexical/language';
 import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
-import { Root, Node, NodeType } from 'tree/nodes';
+import { Node, NodeType } from 'tree/nodes';
 import { Embed } from 'tree/embed';
 import * as Regexp from 'lexical/expressions';
 import * as s from 'parser/stream';
@@ -23,7 +23,7 @@ export function parse (document: IAST): IAST {
 
   /* NODE ROOT ---------------------------------- */
 
-  document.root = new Root();
+  document.root = new Node(NodeType.Root);
 
   /* NODE REFERENCES ---------------------------- */
 
@@ -156,7 +156,7 @@ export function parse (document: IAST): IAST {
       case TokenType.StartTagName:
 
         node.tag = s.token;
-        node.type = spec.tag.type;
+        node.type = q.tag.type;
         node.singular = false;
 
         if (node.type === Type.embedded) {
@@ -221,7 +221,7 @@ export function parse (document: IAST): IAST {
       case TokenType.SingularTagName:
 
         node.tag = s.token;
-        node.type = spec.tag.type;
+        node.type = q.tag.type;
 
         pair.delete(node);
 
@@ -276,7 +276,7 @@ export function parse (document: IAST): IAST {
 
       case TokenType.IterationArray:
 
-        // node.scope[scope] = spec.cursor.object?.object as string;
+        // node.scope[scope] = q.cursor.object?.object as string;
 
         if (node.parent.type === Type.iteration) {
         //  Object.assign(node.scope, node.parent.scope);
@@ -293,10 +293,10 @@ export function parse (document: IAST): IAST {
         if (node.parent.type === Type.iteration) {
           if (node.parent.scope?.[s.token]) {
             Object.assign(node.scope, node.parent.scope);
-            spec.SetObject(node.parent.scope[s.token]);
+            q.SetObject(node.parent.scope[s.token]);
           }
         } else {
-          spec.SetObject(s.token);
+          q.SetObject(s.token);
         }
 
         if (!isNaN(filter) && node.filters?.[filter]) {
@@ -310,20 +310,20 @@ export function parse (document: IAST): IAST {
         node.objects[object].push(s.token);
         node.objects[s.offset + 1] = object;
 
-        spec.isProperty(s.token);
+        q.isProperty(s.token);
 
         if (node.type === Type.iteration) {
-          node.scope[scope] = (spec.object as IProperties)?.object;
+          node.scope[scope] = (q.object as IProperties)?.object;
           if (typeof node.scope[scope] === 'string') {
-            spec.SetObject(node.scope[scope]);
+            q.SetObject(node.scope[scope]);
           }
         }
 
         if (typeof node.scope === 'number') {
-          if (!spec.isObjectType(node.scope as number)) {
+          if (!q.isObjectType(node.scope as number)) {
             document.report(Errors.RejectObject)();
           }
-        } else if (spec.SetObject(node.scope as string) && !spec.isProperty(s.token)) {
+        } else if (q.SetObject(node.scope as string) && !q.isProperty(s.token)) {
           document.report(Errors.UnknownProperty)();
         }
 

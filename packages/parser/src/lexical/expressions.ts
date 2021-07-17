@@ -118,24 +118,24 @@ export const DelimitersOpenTag = /^{%-?/;
 export const DelimitersOpenOutput = /^{{-?/;
 
 /**
- * `^%}`
+ * `^-?%}`
  *
  * ---
  *
  * Open delimiters for Liquid basic tags
  *
  */
-export const DelimitersCloseTag = /^%}/;
+export const DelimitersCloseTag = /^-?%}/;
 
 /**
- * `^}{2}`
+ * `^-?}}`
  *
  * ---
  *
  * Close delimiters for Liquid output tags.
  *
  */
-export const DelimitersCloseOutput = /^}}/;
+export const DelimitersCloseOutput = /^-?}}/;
 
 /**
  * `^[%}]}`

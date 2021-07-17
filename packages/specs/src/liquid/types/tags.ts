@@ -1,4 +1,4 @@
-import { IDescription, IReferences, IArgument, IParameter, TagScopes } from './common';
+import { IReferences, IArgument, IParameter, TagScopes } from './common';
 import { TagTypeRange } from './types';
 export { Type } from './types';
 
@@ -52,7 +52,7 @@ export interface ITag {
    *
    * @default undefined
    */
-  readonly description?: IDescription | string;
+  readonly description?: string;
 
   /**
    * A URL reference to the documentation pretaining to this tag

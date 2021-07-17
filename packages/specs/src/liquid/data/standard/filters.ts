@@ -103,10 +103,7 @@ Filters = {
     }
   },
   default: {
-    description: {
-      kind: 'markdown',
-      value: 'Allows you to specify a fallback in case a value doesn’t exist. default will show its value if the left side is `nil`, `false`, or `empty`'
-    },
+    description: 'Allows you to specify a fallback in case a value doesn’t exist. default will show its value if the left side is `nil`, `false`, or `empty`',
     snippet: "default: '$1' $0",
     arguments: [
       {
