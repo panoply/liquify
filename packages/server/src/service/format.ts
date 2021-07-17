@@ -100,13 +100,8 @@ export function Format (document: IAST, literal: TextDocument) {
    * Format HTML Embedded Tags - Applies an ignore attribute to HTML
    * embedded tags like `<style>` or `<script>` to prevent PrettyDiff
    * formatting its contents.
-   *
-   * @param {LSP.TextEdit[]} textEdit
-   * @param {String} newText
-   * @param {Parser.ASTNode} node
-   * @returns {LSP.TextEdit[]}
    */
-  const HTMLEmbeds = (textEdit, newText, node) => {
+  const HTMLEmbeds = (textEdit: TextEdit[], newText: string, node: INode) => {
 
     textEdit.push(
       {
@@ -151,29 +146,29 @@ export function Format (document: IAST, literal: TextDocument) {
     node: INode
   ): TextEdit[] => {
 
-    const startName = node.token[0].indexOf(node.name);
-    const closeName = node.token[1].indexOf(`end${node.name}`);
+    const startName = node.startToken.indexOf(node.tag);
+    const closeName = node.endToken.indexOf(`end${node.tag}`);
 
     textEdit.push(
       {
-        newText: `${node.name}__pdp`,
+        newText: `${node.tag}__pdp`,
         range: {
           start: literal.positionAt(
             node.offsets[0] + startName
           ),
           end: literal.positionAt(
-            node.offsets[0] + startName + node.name.length
+            node.offsets[0] + startName + node.tag.length
           )
         }
       },
       {
-        newText: `end${node.name}__pdp`,
+        newText: `end${node.tag}__pdp`,
         range: {
           start: literal.positionAt(
             node.offsets[2] + closeName
           ),
           end: literal.positionAt(
-            node.offsets[2] + closeName + node.name.length + 3
+            node.offsets[2] + closeName + node.tag.length + 3
           )
         }
       },
@@ -197,25 +192,14 @@ export function Format (document: IAST, literal: TextDocument) {
   /**
    * Embedded Regions - JavaScript, JSON, CSS and SCSS
    */
-  const embeds = (
-    nodes: INode[]
-  ): TextEdit[] => nodes.reduce((
-    textEdit,
-    node
-  ) => {
+  const embeds = (regions: INode[]): TextEdit[] => regions.reduce((textEdit, node) => {
 
     // If embedded region have parse issues, we will exclude
     // from formatting and prevent any defect formats.
-    if (
-      !node.content || document.errors.slice(document.lastNode.error).some(
-        ({ data }) => (
-          data?.index === node.index && !data?.capabilities?.doFormat
-        )
-      )
-    ) return textEdit;
+    if (!document.format) return textEdit;
 
-    const indent_level = indentation(node.offsets[0]);
-    const rules = languageRules[node.language];
+    const indent_level = indentation(node.start);
+    const rules = languageRules[node.languageId];
 
     // Set formatting rules
     // Apply `indent_level` when nested within elements
@@ -224,7 +208,7 @@ export function Format (document: IAST, literal: TextDocument) {
       defaultRules,
       rules,
       {
-        source: node.content,
+        source: node.innerContent,
         indent_level
       }
     );
@@ -240,11 +224,11 @@ export function Format (document: IAST, literal: TextDocument) {
     // Apply indentation to tag block
     const newText = '\n' + repeat(rules.indent_char, indent_level) + formats;
 
-    if (node.kind === NodeKind.HTML && !/\s*$/.test(node.content)) {
+    if (node.kind === NodeKind.HTML && !/\s*$/.test(node.innerContent)) {
       return HTMLEmbeds(textEdit, newText, node);
     }
 
-    if (node.language === NodeLanguage.scss || node.language === NodeLanguage.css) {
+    if (node.languageId === NodeLanguage.scss || node.languageId === NodeLanguage.css) {
       return LiquidEmbeds(textEdit, newText, node);
     }
 

@@ -66,15 +66,12 @@ export class LiquidService {
    */
   async doValidation (document: IAST): Promise<PublishDiagnosticsParams> {
 
-    /* const embeds = document.getEmbeds();
-
-    if (embeds) {
-      for (const node of embeds) {
-        if (!this.mode?.[node.language]) continue;
-        const diagnostics = await this.mode[node.language].doValidation(node);
-        if (diagnostics) document.errors.push(...diagnostics);
-      }
-    } */
+    for (const region of document.regions) {
+      if (!this.mode?.[region.languageId]) continue;
+      const mode = this.mode?.[region.languageId];
+      const errs = await mode.doValidation(region, document);
+      document.errors.push(...errs);
+    }
 
     return {
       uri: document.uri,
@@ -102,16 +99,15 @@ export class LiquidService {
 
     const literal = document.literal();
     const format = Format(document, literal);
-    const embeds = false; // document.getEmbeds();
 
-    if (embeds) {
+    if (document.regions.length > 0) {
 
-      const regions = format.embeds(embeds);
+      const regions = format.embeds(document.regions);
 
       if (regions.length > 0) {
         return [
           TextEdit.replace(
-            document.root.range(),
+            document.root.range,
             format.markup(TextDocument.applyEdits(literal, regions))
           )
         ];
