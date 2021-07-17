@@ -1,13 +1,11 @@
 import merge from 'lodash/merge';
 import isEmpty from 'lodash/isEmpty';
-import { INode, Position } from '@liquify/liquid-parser';
-
+import { IAST, INode, IEmbed, Position, TextDocument } from '@liquify/liquid-parser';
 import {
   Diagnostic,
   CompletionList,
   CompletionItem
 } from 'vscode-languageserver-protocol';
-
 import {
   getLanguageService,
   ClientCapabilities,
@@ -38,31 +36,38 @@ export class JSONService {
 
   }
 
-  public async doValidation (node: INode): Promise<Diagnostic[] | null> {
+  public async doValidation (
+    node: IEmbed & INode,
+    document: IAST
+  ): Promise<Diagnostic[] | null> {
 
-    const document = node.getDocument();
-
-    if (!document) return null;
-
-    const JSONDocument = this.service.parseJSONDocument(document);
-    const diagnostics = await this.service.doValidation(document, JSONDocument);
+    const JSONDocument = this.service.parseJSONDocument(node.textDocument);
+    const diagnostics = await this.service.doValidation(node.textDocument, JSONDocument);
 
     if (isEmpty(diagnostics)) return null;
 
-    return diagnostics.map(diagnostic => (
-      merge(diagnostic, {
-        range: {
-          start: { line: diagnostic.range.start.line + node.range.start.line },
-          end: { line: diagnostic.range.end.line + node.range.start.line }
-        },
-        data: {
-          index: node.index,
-          capabilities: {
-            doFormat: diagnostic.severity !== DiagnosticSeverity.Error
-          }
+    for (const diagnostic of diagnostics) {
+
+      if (diagnostic.severity === DiagnosticSeverity.Error) {
+        if (document.format) {
+          document.format = false;
         }
-      })
-    ));
+      }
+
+      Object.assign(diagnostic.range, {
+        start: {
+          line: diagnostic.range.start.line + node.range.start.line,
+          character: diagnostic.range.start.character
+        },
+        end: {
+          line: diagnostic.range.end.line + node.range.start.line,
+          character: diagnostic.range.end.character
+        }
+
+      });
+    }
+
+    return diagnostics;
 
   }
 
