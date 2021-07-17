@@ -1,35 +1,41 @@
-import { spec, Type as Types, IProperties } from '@liquify/liquid-language-specs';
+import { spec, Type, IProperties } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
 import { NodeLanguage } from 'lexical/language';
 import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
-import { INode, Type } from 'tree/nodes';
+import { Root, Node, NodeType } from 'tree/nodes';
+import { Embed } from 'tree/embed';
 import * as Regexp from 'lexical/expressions';
 import * as s from 'parser/stream';
 import * as scanner from 'parser/scanner';
+
+/* PAIR SETS ---------------------------------- */
+
+const pair: Set<Node> = new Set();
 
 /**
  * Liquid/HTML parser function which constructs
  * and tokenizes syntaxes to build an AST.
  */
 export function parse (document: IAST): IAST {
-  /* PAIR SETS ---------------------------------- */
-
-  const pair: Set<INode> = new Set();
 
   /* NODE ROOT ---------------------------------- */
 
-  document.root = new INode(Type.Root);
+  document.root = new Root();
 
-  /* STATE -------------------------------------- */
+  /* NODE REFERENCES ---------------------------- */
 
-  let liquid: INode = document.root;
-  let html: INode = liquid;
-  let node: INode;
-  let track: INode;
-  let scope: string | Types;
+  let liquid: Node = document.root;
+  let html: Node = liquid;
+  let node: Node | Embed;
+  let track: Node;
+
+  /* NODE INTERNALS ----------------------------- */
+
+  let embed: number = 0;
+  let scope: string | Type;
   let error: (range?: Range) => void;
   let token: number = scanner.scan();
   let attr: string | number;
@@ -41,8 +47,11 @@ export function parse (document: IAST): IAST {
   /* -------------------------------------------- */
 
   while (token !== TokenType.EOS) {
+
     switch (token) {
+
       case TokenType.ParseError:
+
         if (scanner.error === Errors.MissingCloseDelimiter) {
           track = undefined;
           node.offsets.length > 2 || node.offsets.push(s.offset);
@@ -50,29 +59,33 @@ export function parse (document: IAST): IAST {
           break;
         }
 
-        // Remove syntactic placement errors
-        document.report(scanner.error)();
+        document.report(scanner.error)(); // Remove syntactic placement errors
 
         break;
 
       case TokenType.HTMLStartTagOpen:
-        htmlNode(Type.Pair);
+
+        htmlNode(NodeType.Pair);
 
         break;
 
       case TokenType.HTMLStartTagClose:
-        closeNode(Type.Start);
+
+        closeNode(NodeType.Start);
         track = undefined;
 
         break;
       case TokenType.HTMLVoidTagOpen:
-        htmlNode(Type.Void);
+
+        htmlNode(NodeType.Void);
 
         break;
 
       case TokenType.HTMLVoidTagClose:
-        closeNode(Type.Void);
+
+        closeNode(NodeType.Void);
         track = undefined;
+
         break;
 
       case TokenType.HTMLEndTagOpen:
@@ -86,27 +99,30 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.HTMLEndTagClose:
-        closeNode(Type.Pair);
 
+        closeNode(NodeType.Pair);
         track = undefined;
 
         break;
 
       case TokenType.HTMLLiquidAttribute:
+
         // node = parent;
         node = liquid;
 
         break;
 
       case TokenType.HTMLAttributeName:
+
         attr = s.token;
         node.attributes[attr] = null;
 
-        if (attr === 'src') node.type = Types.import;
+        if (attr === 'src') node.type = Type.import;
 
         break;
 
       case TokenType.HTMLAttributeValue:
+
         if (Regexp.HTMLAttributeJS.test(s.token)) {
           node.languageId = NodeLanguage.javascript;
         } else if (Regexp.HTMLAttributeJSON.test(s.token)) {
@@ -114,7 +130,6 @@ export function parse (document: IAST): IAST {
         }
 
         node.attributes[attr as string] = s.token;
-
         attr = undefined;
 
         break;
@@ -124,37 +139,47 @@ export function parse (document: IAST): IAST {
       /* -------------------------------------------- */
       case TokenType.TagOpen:
 
-        liquidNode(Type.Pair);
+        liquidNode(NodeType.Pair);
 
         break;
 
       case TokenType.StartTagName:
 
         node.tag = s.token;
-        node.singular = false;
         node.type = spec.tag.type;
+        node.singular = false;
+
+        if (node.type === Type.embedded) {
+          node = new Embed(node);
+          node.parent.children.push(node);
+          liquid = node;
+        }
 
         pair.add(node);
 
         break;
 
       case TokenType.StartTagClose:
-        closeNode(Type.Start);
+
+        closeNode(NodeType.Start);
 
         break;
 
       case TokenType.OutputTagOpen:
 
-        liquidNode(Type.Void);
+        liquidNode(NodeType.Void);
 
-        node.type = Types.output;
+        node.type = Type.output;
 
         break;
 
       case TokenType.OutputTagName:
 
         node.tag = s.token;
-        node.scope = node.parent?.scope?.[node.tag];
+
+        if (node.parent.type === Type.iteration) {
+          node.scope = node.parent?.scope?.[node.tag];
+        }
 
         break;
 
@@ -163,7 +188,7 @@ export function parse (document: IAST): IAST {
         node.tag = s.token;
         object = s.offset;
 
-        if (node.parent.type === Types.iteration) {
+        if (node.parent.type === Type.iteration) {
           node.scope = node.parent.scope[s.token];
         }
 
@@ -179,7 +204,7 @@ export function parse (document: IAST): IAST {
 
       case TokenType.OutputTagClose:
 
-        closeNode(Type.Void);
+        closeNode(NodeType.Void);
 
         break;
 
@@ -193,11 +218,13 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.SingularTagClose:
-        closeNode(Type.Void);
+
+        closeNode(NodeType.Void);
 
         break;
 
       case TokenType.EndTagOpen:
+
         liquid = node = liquid;
 
         if (!startEnd(NodeKind.Liquid, liquid)) {
@@ -207,7 +234,20 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.EndTagClose:
-        closeNode(Type.Pair);
+
+        closeNode(NodeType.Pair);
+
+        break;
+
+      case TokenType.EmbeddedJSON:
+
+        node.languageId = NodeLanguage.json;
+
+        break;
+
+      case TokenType.EmbeddedCSS:
+
+        node.languageId = NodeLanguage.css;
 
         break;
 
@@ -228,7 +268,7 @@ export function parse (document: IAST): IAST {
 
         // node.scope[scope] = spec.cursor.object?.object as string;
 
-        if (node.parent.type === Types.iteration) {
+        if (node.parent.type === Type.iteration) {
         //  Object.assign(node.scope, node.parent.scope);
         }
 
@@ -240,7 +280,7 @@ export function parse (document: IAST): IAST {
 
         Object.assign(node.objects, { [s.offset]: [ s.token ] });
 
-        if (node.parent.type === Types.iteration) {
+        if (node.parent.type === Type.iteration) {
           if (node.parent.scope?.[s.token]) {
             Object.assign(node.scope, node.parent.scope);
             spec.SetObject(node.parent.scope[s.token]);
@@ -262,7 +302,7 @@ export function parse (document: IAST): IAST {
 
         spec.isProperty(s.token);
 
-        if (node.type === Types.iteration) {
+        if (node.type === Type.iteration) {
           node.scope[scope] = (spec.object as IProperties)?.object;
           if (typeof node.scope[scope] === 'string') {
             spec.SetObject(node.scope[scope]);
@@ -288,18 +328,21 @@ export function parse (document: IAST): IAST {
         break;
 
       case TokenType.FilterIdentifier:
+
         node.filters[filter].push(s.token);
         node.filters[s.offset + 1] = filter;
 
         break;
 
       case TokenType.FilterArgument:
+
         node.filters[filter].push(s.token);
         node.filters[s.offset + 1] = filter;
 
         break;
 
       case TokenType.FilterEnd:
+
         filter = NaN;
 
         break;
@@ -317,24 +360,27 @@ export function parse (document: IAST): IAST {
 
         break;
 
-      case TokenType.EmbeddedJSON:
-
-        node.languageId = NodeLanguage.json;
-
-        break;
     }
 
     token = scanner.scan();
+
   }
 
   /* NODE SYNTACTICS ---------------------------- */
 
-  if (pair.size > 0) {
-    for (const { range } of pair) document.report(Errors.MissingEndTag)(range);
-    pair.clear();
+  if (document.regions.length >= embed) {
+    document.regions.splice(embed);
   }
 
+  for (const { range } of pair) {
+    document.report(Errors.MissingEndTag)(range);
+  }
+
+  pair.clear();
+
   /* RETURN ------------------------------------- */
+
+  console.log(document);
 
   return document;
 
@@ -346,15 +392,15 @@ export function parse (document: IAST): IAST {
    * Creates a child node instance, this is called
    * each time we encounter a starting delimeters.
    */
-  function htmlNode (type: Type): void {
+  function htmlNode (type: NodeType): void {
 
-    if (track instanceof INode) pendingClose();
+    if (track instanceof Node) pendingClose();
 
-    node = new INode(type, scanner.begin, html, NodeKind.HTML);
+    node = new Node(type, scanner.begin, html, NodeKind.HTML);
     node.tag = s.token;
     html.children.push(node);
 
-    if (type === Type.Pair) {
+    if (type === NodeType.Pair) {
       html = node;
       pair.add(node);
     }
@@ -366,14 +412,15 @@ export function parse (document: IAST): IAST {
    * Creates a child node instance, this is called
    * each time we encounter a starting delimeters.
    */
-  function liquidNode (type: Type): void {
-    node = new INode(type, scanner.begin, liquid, NodeKind.Liquid);
+  function liquidNode (type: NodeType): void {
+
+    node = new Node(type, scanner.begin, liquid, NodeKind.Liquid);
 
     // Add this node child to the parent
     liquid.children.push(node);
 
     // parent = node;
-    if (type === Type.Pair) liquid = node;
+    if (type === NodeType.Pair) liquid = node;
 
   }
 
@@ -382,20 +429,19 @@ export function parse (document: IAST): IAST {
    * when a start/end parent node close tag is encountered.
    * It walks the AST to locate the parent node.
    */
-  function startEnd (kind: NodeKind | undefined, parent: INode): boolean {
-    while (!node.isSameNode(s.token, kind) && node.parent) {
-      node = node.parent;
-    }
+  function startEnd (kind: NodeKind | undefined, parent: Node): boolean {
+
+    while (!node.isSameNode(s.token, kind) && node.parent) node = node.parent;
 
     // Ensure the node is not root and matches the token
-    if (parent.type !== Type.Root && node.tag === s.token) {
+    if (parent.type !== NodeType.Root && node.tag === s.token) {
       node.offsets.push(scanner.begin);
       scope = undefined;
       return true;
     }
 
     // If we get here, we have invalid syntactic placement
-    node = new INode(Type.Pair, scanner.begin, parent, kind);
+    node = new Node(NodeType.Pair, scanner.begin, parent, kind);
     node.tag = s.token;
     parent.children.push(node);
     return false;
@@ -406,36 +452,41 @@ export function parse (document: IAST): IAST {
    * token. Called each time we have successfully
    * completed parsing a node or any type.
    */
-  function closeNode (type: Type): void {
+  function closeNode (type: NodeType): void {
+
     node.offsets.push(s.offset);
 
-    if (type === Type.Pair) {
+    if (type === NodeType.Pair) {
+
       // Syntactic pair match, remove from the set
       pair.delete(node);
 
       if (node.kind === NodeKind.HTML) html = node.parent;
       if (node.kind === NodeKind.Liquid) liquid = node.parent;
-      if (!error) return undefined;
+      if (node.type === Type.embedded) embed = (node as Embed).region(embed);
 
-      error(node.range);
-      error = undefined;
+      if (error) {
+        error(node.range);
+        error = undefined;
+      }
     }
   }
 
-  function pendingClose () {
+  function pendingClose (): void {
+
     let idx = track.children.length;
 
     if (idx === 0) {
+
       track.offsets.push(s.offset);
+
     } else {
+
       while (idx--) {
 
         const child = track.children[idx];
 
-        if (child.singular) {
-          track.offsets.push(child.end);
-          break;
-        } else if (child.offsets.length > 2) {
+        if (child.singular || child.offsets.length > 2) {
           track.offsets.push(child.end);
           break;
         }
