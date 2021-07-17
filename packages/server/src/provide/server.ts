@@ -2,7 +2,7 @@ import { InitializeParams, ServerCapabilities } from 'vscode-languageserver';
 import { LiquidParser } from '@liquify/liquid-parser';
 import { ILiquidrc } from 'types/settings';
 import omit from 'lodash/omit';
-import pick from 'lodash/pick';
+// import pick from 'lodash/pick';
 // import upperFirst from 'lodash/upperFirst';
 import { readFileSync, readdirSync, existsSync } from 'fs';
 import { basename, resolve, join, normalize } from 'path';

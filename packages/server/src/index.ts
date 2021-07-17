@@ -141,11 +141,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
     if (!document) return null;
 
     if (Server.provider.validateOnOpen) {
-      return connection.sendDiagnostics({
-        uri: document.uri,
-        version: document.version,
-        diagnostics: document.diagnostics
-      });
+      return Service.doValidation(document).then(connection.sendDiagnostics);
     }
 
   } catch (e) {
@@ -172,11 +168,7 @@ connection.onDidChangeTextDocument((textDocumentChanges) => {
 
     console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`);
 
-    return connection.sendDiagnostics({
-      uri: document.uri,
-      version: document.version,
-      diagnostics: document.diagnostics
-    });
+    return Service.doValidation(document).then(connection.sendDiagnostics);
 
   } catch (e) {
 

@@ -1,7 +1,7 @@
 import test from 'ava';
 import time from 'pretty-hrtime';
-import * as parser from './cases/__utils__';
-import Stringify from 'json-stringify-safe';
+import { parser } from './cases/shared';
+// import Stringify from 'json-stringify-safe';
 
 const filters = `
 {{ sort | sort }}
@@ -10,12 +10,38 @@ const filters = `
 {{ plus | plus: 10 }}
 {{ truncate | truncate: 220, 'xxx' }}
 {{ font_modify | font_modify: 'style', 'normal' }}
+{{ time_tag | time_tag: '%a, %b %d, %Y', datetime: '%Y-%m-%d', format: 'date' }}
 `;
 
 const text = `
 
-{{ product['id'] | asset_img_url: '200x',  scale: product.id, format: 'pjpg'  }}
+{{ sort | sort }}
+{{ append | append: 'foo' }}
+{% schema %}
+{
+  "foo": "bar",
+  "object": {
+    "array": [
+      {
+        "hello": "world"
+      }
+    ]
+  }
+}
+{% endschema %}
 
+{% schema %}
+{
+  "foo": "bar",
+  "object": {
+    "array": [
+      {
+        "hello": "world"
+      }
+    ]
+  }
+}
+{% endschema %}
 `;
 
 function Stack (ast) {
@@ -67,9 +93,10 @@ test('FullDocument Parse', t => {
     uri: 'test.liquid'
   });
 
+  // console.log(ast.getNodeAt(10));
   const end = process.hrtime(start);
-  console.log(Stack(ast));
-
+  // console.log(Stack(ast));
+  console.log(ast);
   // console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());
 
