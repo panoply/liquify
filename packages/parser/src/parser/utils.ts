@@ -1,4 +1,46 @@
-import { Range } from 'vscode-languageserver-textdocument';
+import { Range, TextDocument } from 'vscode-languageserver-textdocument';
+
+/* -------------------------------------------- */
+/* PARSER RELATER                               */
+/* -------------------------------------------- */
+
+/**
+ * Edits Offset
+ *
+ * The inner contents of embedded regions do not match the offset locations
+ * of the document they are contained within because embedded documents are
+ * virtual. This function will align those offsets within changes.
+ */
+export const alignChanges = (lineOffset: number) => (
+  change: {
+    range: Range,
+    text: string
+  }
+) => {
+
+  change.range.start.line -= lineOffset;
+  change.range.end.line -= lineOffset;
+
+  if (change.range.start.line < 0) change.range.start.line = 0;
+  if (change.range.end.line < 0) change.range.end.line = 0;
+
+  return change;
+
+};
+
+export const customChanges = (text: string, { lineCount }: TextDocument) => {
+
+  return [
+    {
+      text,
+      range: {
+        start: { character: 0, line: 0 },
+        end: { character: 0, line: lineCount }
+      }
+    }
+  ];
+
+};
 
 /* -------------------------------------------- */
 /* TYPEOF CHECKS                                */
