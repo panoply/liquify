@@ -65,6 +65,10 @@ let state: number = ScanState.CharSeq;
  */
 let pairs: number[] = [];
 
+/* -------------------------------------------- */
+/* EXPORT FUNCTION                              */
+/* -------------------------------------------- */
+
 /**
  * Runs document scan
  *
@@ -82,6 +86,10 @@ export function scan (start: number = 0): number {
   return state === ScanState.CharSeq ? CharSeq() : Scan();
 
 };
+
+/* -------------------------------------------- */
+/* LOCALE FUNCTIONS                             */
+/* -------------------------------------------- */
 
 /**
  * Character Sequencing
@@ -171,6 +179,12 @@ function HTMLSeq (): number {
 
 }
 
+/**
+ * Liquid Sequencing
+ *
+ * Handles Liquid Delimiters and dispatches to
+ * appropriate scanner.
+ */
 function LiquidSeq () {
 
   // Assert Start position of token
@@ -1430,10 +1444,14 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.EmbeddedLanguage:
 
-      state = ScanState.GotoTagEnd;
-
       if (spec.tag.language === 'json') {
+        state = ScanState.BeforeStartTagClose;
         return TokenType.EmbeddedJSON;
+      }
+
+      if (spec.tag.language === 'css') {
+        state = ScanState.BeforeStartTagClose;
+        return TokenType.EmbeddedCSS;
       }
 
       return Scan();
