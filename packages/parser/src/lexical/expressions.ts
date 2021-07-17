@@ -186,6 +186,7 @@ export const TagCloseClear = /^\s*?-?[%}]/;
  *
  */
 export const TagEnder = /^-?\s*?end/i;
+
 /**
  * `{%-?\s*?endcomment`
  *
@@ -194,8 +195,8 @@ export const TagEnder = /^-?\s*?end/i;
  * Captures a Liquid comment end tag
  *
  */
+export const CommentTagEnd = /{%-?\s*?endcomment\b/i;
 
-export const CommentTagEnd = /{%-?\s*?endcomment/i;
 /**
  * `{%-?\s*?endraw`
  *
@@ -204,7 +205,47 @@ export const CommentTagEnd = /{%-?\s*?endcomment/i;
  * Captures a Liquid raw end tag
  *
  */
-export const RawTagEnd = /{%-?\s*?endraw/i;
+export const RawTagEnd = /{%-?\s*?endraw\b/i;
+
+/**
+ * `{%-?\s*?endschema`
+ *
+ * ---
+ *
+ * Captures a Liquid raw end tag
+ *
+ */
+export const SchemaTagEnd = /{%-?\s*?endschema\b/i;
+
+/**
+ * `{%-?\s*?endstyle`
+ *
+ * ---
+ *
+ * Captures a Liquid raw end tag
+ *
+ */
+export const StyleTagEnd = /{%-?\s*?endstyle\b/i;
+
+/**
+ * `{%-?\s*?endstylesheet`
+ *
+ * ---
+ *
+ * Captures a Liquid raw end tag
+ *
+ */
+export const StylesheetTagEnd = /{%-?\s*?endstylesheet\b/i;
+
+/**
+ * `{%-?\s*?endjavascript`
+ *
+ * ---
+ *
+ * Captures a Liquid raw end tag
+ *
+ */
+export const JavascriptTagEnd = /{%-?\s*?endjavascript\b/i;
 
 /**
  * `^end`
