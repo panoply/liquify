@@ -15,7 +15,7 @@ const filters = `
 
 const text = `
 
-{{ sort | sort }}
+{{ sort | sort   }}
 {{ append | append: 'foo' }}
 {% schema %}
 {

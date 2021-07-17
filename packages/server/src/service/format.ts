@@ -194,10 +194,6 @@ export function Format (document: IAST, literal: TextDocument) {
    */
   const embeds = (regions: INode[]): TextEdit[] => regions.reduce((textEdit, node) => {
 
-    // If embedded region have parse issues, we will exclude
-    // from formatting and prevent any defect formats.
-    if (!document.format) return textEdit;
-
     const indent_level = indentation(node.start);
     const rules = languageRules[node.languageId];
 
@@ -244,7 +240,7 @@ export function Format (document: IAST, literal: TextDocument) {
 
     return textEdit;
 
-  }, []);
+  }, document.linting);
 
   /**
    * Liquid Formatting
@@ -262,7 +258,13 @@ export function Format (document: IAST, literal: TextDocument) {
    * @param {string} [source]
    * @returns {string}
    */
-  const markup = (source: string = literal.getText()): string => {
+  const markup = (source?: string): string => {
+
+    if (document.linting.length > 0) {
+      source = TextDocument.applyEdits(literal, document.linting);
+    } else {
+      source = literal.getText();
+    }
 
     // This patch fixes newline HTML attributes
     Object.assign(
@@ -282,7 +284,6 @@ export function Format (document: IAST, literal: TextDocument) {
       // Validations will handle missing pairs
       // We still echo Sparser log for additional context.
       if (prettydiff.sparser.parseerror.length > 0) {
-
         console.error(prettydiff.sparser.parseerror);
         return replacements(source);
       }

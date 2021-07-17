@@ -1,5 +1,6 @@
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 import { ParseError } from 'lexical/errors';
+import { TextEdit } from 'vscode-languageserver-types';
 // import { NodeLanguage } from 'lexical/language';
 // import { Config } from 'config';
 // import { NodeKind } from 'lexical/kind';
@@ -68,6 +69,11 @@ export class IAST {
   get diagnostics () { return this.errors; }
 
   /**
+   * The error diagnostics consumed by LSP
+   */
+  public selection: Range
+
+  /**
    * Line offsets for the document
    */
   private lines: number[] | undefined
@@ -114,6 +120,12 @@ export class IAST {
   public regions: Embed[] = [];
 
   /**
+   * Returns the node at the current cursor location or null
+   * if the cursor is not located within a node on the tree.
+   */
+  public linting: TextEdit[] = []
+
+  /**
    * Reference to the most recent document changes provided
    * via the language server.
    */
@@ -127,13 +139,27 @@ export class IAST {
 
     const diagnostic: IDiagnostic = Object.assign({}, Diagnostics[error]);
 
-    return (location?: Range | undefined) => {
+    if (error === ParseError.WarnWhitespace) {
 
-      if (!diagnostic.data.doFormat && this.format) this.format = false;
+      const range = this.getRange(s.offset - s.spaces);
+
+      diagnostic.range = range;
+
+      this.errors.push(diagnostic);
+      this.linting.push({ newText: ' ', range });
+
+    }
+
+    return (location?: Range | undefined) => {
 
       diagnostic.range = location === undefined
         ? this.getRange()
         : location;
+
+      if (!diagnostic.data.doFormat && this.format) {
+        this.format = false;
+        this.selection = diagnostic.range;
+      }
 
       this.errors.push(diagnostic);
 
@@ -305,9 +331,10 @@ export class IAST {
 
     this.cursor = NaN;
     this.version = version;
-    this.changes = edits;
     this.format = true;
-    this.errors = [];
+    this.changes.splice(0, this.changes.length, ...edits);
+    this.errors.splice(0);
+    this.linting.splice(0);
 
     /* -------------------------------------------- */
     /* CONTENT UPDATE                               */

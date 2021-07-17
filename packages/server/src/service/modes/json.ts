@@ -48,12 +48,6 @@ export class JSONService {
 
     for (const diagnostic of diagnostics) {
 
-      if (diagnostic.severity === DiagnosticSeverity.Error) {
-        if (document.format) {
-          document.format = false;
-        }
-      }
-
       Object.assign(diagnostic.range, {
         start: {
           line: diagnostic.range.start.line + node.range.start.line,
@@ -65,6 +59,13 @@ export class JSONService {
         }
 
       });
+
+      if (diagnostic.severity === DiagnosticSeverity.Error) {
+        if (document.format) {
+          document.format = false;
+          document.selection = diagnostic.range;
+        }
+      }
     }
 
     return diagnostics;

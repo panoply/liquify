@@ -63,6 +63,16 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      case TokenType.Whitespace:
+
+        if (node.kind === NodeKind.Liquid) {
+          if (s.spaces >= 2) {
+            document.report(Errors.WarnWhitespace);
+          }
+        }
+
+        break;
+
       case TokenType.HTMLStartTagOpen:
 
         htmlNode(NodeType.Pair);
@@ -324,6 +334,10 @@ export function parse (document: IAST): IAST {
         filter = s.offset + s.cursor;
 
         Object.assign(node.filters, { [filter]: [] });
+
+        if (scanner.error === Errors.MissingWhitespace) {
+          document.report(Errors.UnknownProperty);
+        }
 
         break;
 

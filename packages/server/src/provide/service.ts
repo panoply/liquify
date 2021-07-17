@@ -88,10 +88,6 @@ export class LiquidService {
 
     // Do not format empty documents
 
-    if (!document.format) {
-      return console.log('cannot format document until errors fixed');
-    }
-
     // const filename = basename(document.textDocument.uri)
     // if (settings.ignore.files.includes(filename)) return
 
@@ -114,7 +110,9 @@ export class LiquidService {
       }
     }
 
-    return [ TextEdit.replace(document.root.range, format.markup()) ];
+    return [
+      TextEdit.replace(document.root.range, format.markup())
+    ];
 
   }
 

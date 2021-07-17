@@ -7,7 +7,9 @@ import { mark, stop } from 'marky';
 import {
   DidChangeConfigurationNotification,
   TextDocumentSyncKind,
-  createConnection
+  createConnection,
+  ShowDocumentParams,
+  ShowMessageRequest
 } from 'vscode-languageserver/node';
 
 /**
@@ -234,6 +236,25 @@ connection.onDocumentRangeFormatting((
   const document = Parser.get(uri);
 
   if (!document) return null;
+
+  if (!document.format) {
+
+    return connection.window.showErrorMessage(
+      'Formatting cannot proceed due to an severe code error.',
+      {
+        title: 'Find and Fix'
+      }
+    ).then((value) => {
+
+      return connection.window.showDocument({
+        uri,
+        selection: document.selection,
+        takeFocus: true
+      });
+
+    });
+
+  }
 
   return Service.doFormat(document);
 

@@ -160,6 +160,11 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     message: 'Missing interation range seperator',
     data: { doFormat: false }
   },
+  [ParseError.MissingWhitespace]: {
+    severity: ErrorLevel.Error,
+    message: 'Missing whitespace between characters',
+    data: { doFormat: true }
+  },
   [ParseError.InvalidArgument]: {
     severity: ErrorLevel.Error,
     message: 'Invalid argument expressed',

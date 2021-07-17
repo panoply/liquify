@@ -186,6 +186,15 @@ export const enum ParseError {
   MissingIterationArray,
 
   /**
+   * Missing Whitespace
+   *
+   * @example
+   * {{- tag |filter:foo }} // | and foo require spacing
+   */
+  MissingWhitespace,
+
+
+  /**
    * Invalid Name
    *
    * @example
@@ -446,6 +455,7 @@ export const enum ParseError {
    * {{- foo ['    prop'] }}
    */
   WarnWhitespace,
+
 
   /**
    * Warn Extrenous Whitespace

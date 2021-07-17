@@ -54,7 +54,7 @@ export class LiquidParser {
       model.delete('raw');
     }
 
-    return parse(
+    return parse.bind(Config)(
       create(
         {
           uri: 'raw',
@@ -79,7 +79,7 @@ export class LiquidParser {
     }
   ): IAST {
 
-    return parse(create(textDocument));
+    return parse.bind(Config)(create(textDocument));
   }
 
   get (uri: string): IAST {
@@ -105,7 +105,7 @@ export class LiquidParser {
       }
   ): IAST {
 
-    return parse(
+    return parse.bind(Config)(
       update(
         textDocument,
         contentChanges
