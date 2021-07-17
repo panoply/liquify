@@ -1,36 +1,15 @@
-import inRange from 'lodash.inrange';
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
-import { NodeKind } from 'lexical/kind';
 import { ParseError } from 'lexical/errors';
-import { Config } from 'config';
-import { INode } from 'tree/nodes';
+// import { NodeLanguage } from 'lexical/language';
+// import { Config } from 'config';
+// import { NodeKind } from 'lexical/kind';
+// import inRange from 'lodash.inrange';
+import { Root, Node } from 'tree/nodes';
+import { Embed } from 'tree/embed';
 import { GetFormedRange } from 'parser/utils';
 import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
 import * as s from 'parser/stream';
-import { spec } from '@liquify/liquid-language-specs';
-
-export interface IScope {
-  /**
-   * Scope identifer name
-   */
-  tag: string;
-  /**
-   * Scope ref, use if the tag points to an object
-   */
-  ref?: string;
-  /**
-   * Scope ending point offset
-   */
-  type?: number;
-  /**
-   * Scope starting point offset
-   */
-  start?: number;
-  /**
-   * Scope ending point offset
-   */
-  end?: number;
-}
+// import { spec, Type } from '@liquify/liquid-language-specs';
 
 /**
  * Abstract Syntax Tree
@@ -81,7 +60,7 @@ export class IAST {
   /**
    * The abstract syntax tree.
    */
-  get nodes (): INode[] { return this.root.children; };
+  get nodes (): Node[] { return this.root.children; };
 
   /**
    * The error diagnostics consumed by LSP
@@ -120,18 +99,25 @@ export class IAST {
    * Returns the node at the current cursor location or null
    * if the cursor is not located within a node on the tree.
    */
-  public root: INode = null;
+  public root: Root = null;
 
   /**
    * Returns the node at the current cursor location or null
    * if the cursor is not located within a node on the tree.
    */
-  public node: INode;
+  public node: Node | Embed;
 
   /**
-   * Scope tracking
+   * List of embedded language regions contained within the
+   * document. Respects version control in virtual documents.
    */
-  public scope: IScope[] = []
+  public regions: Embed[] = [];
+
+  /**
+   * Reference to the most recent document changes provided
+   * via the language server.
+   */
+  public changes: Array<{ range: Range, text: string }> = [];
 
   /**
    * Error Reporter. Generates the diagnostics which are
@@ -143,7 +129,7 @@ export class IAST {
 
     return (location?: Range | undefined) => {
 
-      if (!diagnostic.data.format && this.format) this.format = false;
+      if (!diagnostic.data.doFormat && this.format) this.format = false;
 
       diagnostic.range = location === undefined
         ? this.getRange()
@@ -315,16 +301,12 @@ export class IAST {
    * wherein nodes are split at the change location and re-parsed from
    * a root/singular node position existing 2 levels up in the tree.
    */
-  public increment (
-    edits: {
-      range: Range,
-      text: string
-    }[],
-    version: number
-  ): string {
+  public increment (edits: { range: Range, text: string}[], version: number): string {
 
     this.cursor = NaN;
     this.version = version;
+    this.changes = edits;
+    this.format = true;
     this.errors = [];
 
     /* -------------------------------------------- */
@@ -384,10 +366,7 @@ export class IAST {
    * index position is used. So treat the `start` param as a backtrack
    * position.
    */
-  public getText (
-    location: Range | number | undefined,
-    endOffset?: number | undefined
-  ) {
+  public getText (location: Range | number | undefined, endOffset?: number | undefined) {
 
     if (typeof location === 'number') {
       return endOffset === undefined
@@ -411,7 +390,7 @@ export class IAST {
    * If successful, returns the Node and also updates the `node`
    * cursor property, unless false is passed as second parameter
    */
-  public getNodeAt (location: Position | number): INode {
+  public getNodeAt (location: Position | number): Node {
 
     const offset = typeof location === 'number'
       ? location
@@ -419,212 +398,6 @@ export class IAST {
 
     return this.root.getNodeAt(offset);
 
-  }
-
-  /**
-   * Attempts to find an embed type node returning first match
-   * found between the inner content start and end location.
-   * If successful, returns the Node and also updates the `node`
-   * cursor property.
-   */
-  public getEmbedAt (
-    position: Position | number,
-    updateNode: boolean = true
-  ) {
-    if (this.embeds.length === 0) return false;
-
-    const offset =
-      typeof position === 'number' ? position : this.offsetAt(position);
-
-    const index = this.embeds.findIndex((i) =>
-      inRange(offset, this.nodes[i].offsets[1], this.nodes[i].offsets[2]));
-
-    if (index < 0) return false;
-
-    if (updateNode) {
-      this.node = this.nodes[index];
-      return this.node;
-    }
-
-    return this.nodes[index];
-  }
-
-  public getScope (node = this.node) {
-
-    if (node?.parent === node.index && node?.root === node.parent) return false;
-
-    return this.nodes[node.parent];
-  }
-
-  /**
-   * Returns a parent node from the current
-   * node reference or from the passed in node.
-   * A parent node is the closest node of a decendents,
-   * essentially the one encapsulting it. This is
-   * different from a root node.
-   */
-  public getParentNode (node = this.node): INode | false {
-    return node.parent === node.index && node?.root === 0
-      ? false
-      : this.nodes[node.parent];
-  }
-
-  /**
-   * Accepts a list of indexes which point to nodes on the
-   * AST. This is used to (for example) return childNodes.
-   */
-  public getNodes (indexes: number[]): INode[] {
-    return indexes.map((n) => this.nodes[n]);
-  }
-
-  /**
-   * Returns all the comment type nodes found on the AST.
-   * We need a method for this as comments may sometimes
-   * contain rulesets or their contents used in features.
-   */
-  public getComments (): INode[] | false {
-    if (this.comments.length === 0) return false;
-
-    return this.comments.map((n) => this.nodes[n]);
-  }
-
-  /**
-   * Returns all the embed type nodes found on AST.
-   * Embeds are nodes that contain different languages
-   * within thier contents. You can optionally past an
-   * array list of languages to filter from results.
-   */
-  public getEmbeds (languages: string[] = undefined): INode[] | false {
-    if (this.embeds.length === 0) return false;
-
-    const embeds = this.embeds.map((n) => this.nodes[n]);
-
-    return languages
-      ? embeds.filter((n) => languages.includes(n.language))
-      : embeds;
-  }
-
-  public getAssociates () {
-    return [];
-  }
-
-  public getVariables () {
-    return null;
-  }
-
-  /* -------------------------------------------- */
-  /* WITHIN CHECKS                                */
-  /* -------------------------------------------- */
-
-  /**
-   * Check if position or offset location is within range.
-   * This method is a shortcut to the lodash `inRange`. It will convert
-   * a position if position is passed.
-   *
-   * The function will checks if `n` is between `start` and up to,
-   * but not including, `end`. If end is not specified, it's set to start
-   * with `start` then set to `0`. If `start` is greater than `end` the
-   * params are swapped to support negative ranges.
-   */
-  private within (
-    position: Position | number,
-    start: number,
-    end?: number
-  ): boolean {
-    return inRange(
-      typeof position === 'number'
-        ? position
-        : this.offsetAt(position),
-      start,
-      end
-    );
-  }
-
-  /**
-   * Check if the node is within scope. This is executed at the parse
-   * level and requires an expression `OR`.
-   */
-  public withinScope (node: INode, scope: RegExp): boolean {
-    const parentNode = this.getParentNode(node);
-    if (parentNode) return scope.test(parentNode.name);
-  }
-
-  /**
-   * Checks the passed in position of offset is within
-   * an end token tag. It will preface the `node` value
-   * assigned by either the previous document change or method event.
-   */
-  public withinEndToken (
-    position: Position | number,
-    node: INode = this.node
-  ): boolean {
-    if (!node || node.singular) return false;
-
-    return this.within(position, node.offsets[2], node.offsets[3]);
-  }
-
-  /**
-   * Checks the passed in position of offset is within
-   * a node between the start and end locations. It will
-   * preface the `node` value assigned by either the previous
-   * document change or method event.
-   */
-  public withinNode (
-    position: Position | number,
-    node: INode = this.node
-  ): boolean {
-    if (!node) return false;
-
-    return this.within(position, node.start, node.end);
-  }
-
-  /**
-   * Checks the passed in position of offset is within
-   * the body of a node, between ending start token and start of
-   * end token. It will preface the `node` value assigned
-   * by either the previous document change or method event.
-   */
-  public withinBody (
-    position: Position | number,
-    node: INode = this.node
-  ): boolean {
-    if (!node || node.singular) return false;
-    return this.within(position, node.offsets[1], node.offsets[2]);
-  }
-
-  /**
-   * Checks the passed in position of offset is within
-   * a start or singular based token. It will preface
-   * the `node` value assigned by either the previous
-   * document change or method event.
-   */
-  public withinToken (
-    position: Position | number,
-    node: INode = this.node
-  ): boolean {
-    if (!node) return false;
-    return this.within(position, node.offsets[0], node.offsets[1]);
-  }
-
-  /**
-   * Checks the passed in position of offset is within
-   * an embed type node. It shortcuts to the `withinNode` method
-   * but runs some addition checks. It will preface the `node`
-   * value assigned by either the previous document change or
-   * method event.
-   */
-  public withinEmbed (
-    position: Position | number,
-    node: INode = this.node
-  ): boolean {
-    if (!node || node.singular) return false;
-
-    return (
-      // node.type === NodeType.embedded &&
-      node.kind === NodeKind.Liquid &&
-      Config.engine === 'shopify' &&
-      this.within(position, node.start, node.end)
-    );
   }
 
 }
