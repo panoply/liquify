@@ -2,96 +2,46 @@
 
 import { Range } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
-import { NodeLanguage } from 'lexical/language';
-import { Types } from '@liquify/liquid-language-specs';
 import { document } from 'tree/model';
 import { findFirst } from 'parser/utils';
-import inRange from 'lodash.inrange';
+import { IScopes, NodeType, INode } from 'tree/typings';
+import { NodeLanguage } from 'lexical/language';
+import { Type } from 'types/export';
+export { NodeType, Token, IScopes } from 'tree/typings';
 
-export const enum Type {
-  Root,
-  Pair,
-  Void,
-  Start
-}
+// import inRange from 'lodash.inrange';
 
-export const enum Token {
-  Token = 1,
-  Start = 1,
-  Inner,
-  Ender,
-  Outer
-}
-
-export interface IScopes { [tag: string]: string | Types.Basic }
 /**
  * AST Node
  *
  * Creates token nodes on the AST
  */
-export class INode {
+export class Node implements INode {
 
-  public tag: string | undefined;;
-  public root: number;
-  public index: number;
-  public parent: INode
-  public children: INode[] = [];
   public kind: NodeKind = NodeKind.Liquid
   public offsets: [number?, number?, number?, number?] = [];
-  public singular: boolean;
-
-  /**
-   * Objects this tag contains. Each property contained on the
-   * object is an offset location, the value of each property will either
-   * be a string array or a number.
-   *
-   * When the value of the property is type number, is value will point to
-   * offset property which contains the string values. When property values
-   * are a string array, each items in that array is the property value
-   * expressed.
-   *
-   * ----
-   *
-   * Example:
-   *
-   * `{{ object.prop.foo | filter: bar.baz }}`
-   *
-   * ```javascript
-   * {
-   *   4:[ 'object', 'prop', 'foo' ],
-   *   11: 4,
-   *   16: 4,
-   *   30: ['bar', 'baz'],
-   *   34: 30
-   * }
-   * ```
-   *
-   * Notice here how the offsets point back to the property where
-   * the object began. The objects within Liquid tags are asserted
-   * in this manner as we want to walk the specifications in the fasted
-   * possible manner.
-   */
   public objects?: object;
   public attributes?: object;
   public filters?: object;
-  public type: Type | Types.Tag | Types.Basic
+  public type: Type | NodeType;
   public languageId?: NodeLanguage;
-  public scope: IScopes | string | number;
+  public scope: string | number | IScopes;
+  public tag: string;
+  public root: number;
+  public index: number;
+  public parent: Node;
+  public children: Node[] = [];
+  public singular: boolean;
+  public lastError: number;
 
-  constructor (
-    inode?: Type,
-    start?: number,
-    parent?: INode,
-    kind?: NodeKind
-  ) {
+  constructor (type?: NodeType, start?: number, parent?: Node, kind?: NodeKind) {
 
-    if (inode === Type.Root) {
+    if (type === NodeType.Root) {
 
+      this.type = NodeType.Root;
       this.offsets.push(0, document.size);
       this.children = [];
       this.scope = {};
-      this.type = inode;
-      this.tag = 'ROOT';
 
     } else {
 
@@ -105,13 +55,13 @@ export class INode {
 
       if (this.kind === NodeKind.HTML) {
         this.attributes = {};
-        this.type = inode;
+        this.type = type;
       } else {
         this.objects = {};
         this.filters = {};
       }
 
-      if (inode === Type.Pair) {
+      if (type === NodeType.Pair) {
         this.singular = false;
       }
     }
@@ -125,10 +75,31 @@ export class INode {
   }
 
   /**
+   * Returns the start token as a string
+   */
+  get startToken (): string {
+    return document.getText(this.offsets[0], this.offsets[1]);
+  }
+
+  /**
    * Returns the ending offset index of this node
    */
   get end (): number {
     return this.offsets[this.offsets.length - 1];
+  }
+
+  /**
+   * Returns the end token as a string
+   */
+  get endToken (): string {
+    return document.getText(this.offsets[2], this.offsets[3]);
+  }
+
+  /**
+   * Returns inner contents of the node as string
+   */
+  get innerContent (): string {
+    return document.getText(this.offsets[1], this.offsets[2]);
   }
 
   /**
@@ -143,7 +114,7 @@ export class INode {
    * If the previous node is the fist child of this parent then
    * `null` is returned.
    */
-  get prevSibling (): INode | null {
+  get prevSibling (): Node | null {
     return this.parent.children[this.index - 1];
   }
 
@@ -152,7 +123,7 @@ export class INode {
    * If the next node is the last child of this parent then
    * `null` is returned.
    */
-  get nextSibling (): INode | null {
+  get nextSibling (): Node | null {
     return this.parent.children?.[this.index + 1] || null;
   }
 
@@ -160,7 +131,7 @@ export class INode {
    * Returns the first child in this nodes tree. Returns `null`
    * if the node has no children or is a void/singular type.
    */
-  get firstChild (): INode | undefined {
+  get firstChild (): Node | undefined {
     return this.children?.[0] || null;
   }
 
@@ -168,7 +139,7 @@ export class INode {
    * Returns the last child in this nodes tree. Returns `null`
    * if the node has no children or is a void/singular type.
    */
-  get lastChild (): INode | undefined {
+  get lastChild (): Node | undefined {
     return this.children?.[this.children.length - 1] || null;
   }
 
@@ -193,32 +164,13 @@ export class INode {
   }
 
   /**
-   * Returns raw string content token of the node.
-   */
-  public getToken (offset: number = document.cursor): string {
-
-    if (inRange(offset, this.offsets[0], this.offsets[1])) {
-      return this.getToken(Token.Start);
-    }
-
-    if (inRange(offset, this.offsets[1], this.offsets[2])) {
-      return this.getToken(Token.Inner);
-    }
-
-    if (inRange(offset, this.offsets[2], this.offsets[3])) {
-      return this.getToken(Token.Ender);
-    }
-
-  }
-
-  /**
    * Returns node at the provided offset location.
    * Use the AST `getNodeAt()` method to convert from
    * a position to offset and return this method.
    *
    * - Lifted from vscode-html-languageservice
    */
-  public getNodeAt (offset: number): INode {
+  public getNodeAt (offset: number): Node {
 
     const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
 
@@ -227,8 +179,15 @@ export class INode {
       if (offset > child.start && offset <= child.end) return child.getNodeAt(offset);
     }
 
-    return this.type !== Type.Root ? this : this.firstChild || this;
+    return this.type !== NodeType.Root ? this : this.firstChild || this;
 
   }
 
 };
+
+/**
+ * ROOT
+ *
+ * Creates token nodes on the AST
+ */
+export class Root extends Node { constructor () { super(NodeType.Root); } };
