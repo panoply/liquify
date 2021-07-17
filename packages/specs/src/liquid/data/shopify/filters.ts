@@ -4,10 +4,7 @@ export let Filters: IFilters;
 
 Filters = {
   asset_img_url: {
-    description: {
-      kind: 'markdown',
-      value: 'Returns the asset URL of an image in the `/assets` folder of a theme. asset_img_url accepts an image size parameter.\n\nYou can specify only a `width` or only a `height` and Shopify will calculate the other dimension based on the original image size, keeping the original image\'s aspect ratio.'
-    },
+    description: 'Returns the asset URL of an image in the `/assets` folder of a theme. asset_img_url accepts an image size parameter.\n\nYou can specify only a `width` or only a `height` and Shopify will calculate the other dimension based on the original image size, keeping the original image\'s aspect ratio.',
     arguments: [
       {
         type: Type.string,

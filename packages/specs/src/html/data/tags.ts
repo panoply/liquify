@@ -1,9 +1,6 @@
 export default {
   html: {
-    description: {
-      kind: 'markdown',
-      value: 'The html element represents the root of an HTML document.'
-    },
+    description: 'The html element represents the root of an HTML document.',
     attributes: [
       {
         name: 'manifest',
@@ -21,49 +18,34 @@ export default {
         description: 'Specifies the XML Namespace of the document. Default value is `"http://www.w3.org/1999/xhtml"`. This is required in documents parsed with XML parsers, and optional in text/html documents.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/html'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/html'
+    }
   },
   head: {
-    description: {
-      kind: 'markdown',
-      value: 'The head element represents a collection of metadata for the Document.'
-    },
+    description: 'The head element represents a collection of metadata for the Document.',
     attributes: [
       {
         name: 'profile',
         description: 'The URIs of one or more metadata profiles, separated by white space.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/head'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/head'
+    }
   },
   title: {
-    description: {
-      kind: 'markdown',
-      value: "The title element represents the document's title or name. Authors should use titles that identify their documents even when they are used out of context, for example in a user's history or bookmarks, or in search results. The document's title is often different from its first heading, since the first heading does not have to stand alone when taken out of context."
-    },
+    description: "The title element represents the document's title or name. Authors should use titles that identify their documents even when they are used out of context, for example in a user's history or bookmarks, or in search results. The document's title is often different from its first heading, since the first heading does not have to stand alone when taken out of context.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/title'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/title'
+    }
   },
   base: {
-    description: {
-      kind: 'markdown',
-      value: 'The base element allows authors to specify the document base URL for the purposes of resolving relative URLs, and the name of the default browsing context for the purposes of following hyperlinks. The element does not represent any content beyond this information.'
-    },
+    description: 'The base element allows authors to specify the document base URL for the purposes of resolving relative URLs, and the name of the default browsing context for the purposes of following hyperlinks. The element does not represent any content beyond this information.',
     attributes: [
       {
         name: 'href',
@@ -80,18 +62,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/base'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/base'
+    }
   },
   link: {
-    description: {
-      kind: 'markdown',
-      value: 'The link element allows authors to link their document to other resources.'
-    },
+    description: 'The link element allows authors to link their document to other resources.',
     attributes: [
       {
         name: 'href',
@@ -168,18 +145,13 @@ export default {
         description: 'The `title` attribute has special semantics on the `<link>` element. When used on a `<link rel="stylesheet">` it defines a [preferred or an alternate stylesheet](https://developer.mozilla.org/en-US/docs/Web/CSS/Alternative_style_sheets). Incorrectly using it may [cause the stylesheet to be ignored](https://developer.mozilla.org/en-US/docs/Correctly_Using_Titles_With_External_Stylesheets).'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/link'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/link'
+    }
   },
   meta: {
-    description: {
-      kind: 'markdown',
-      value: 'The meta element represents various kinds of metadata that cannot be expressed using the title, base, link, style, and script elements.'
-    },
+    description: 'The meta element represents various kinds of metadata that cannot be expressed using the title, base, link, style, and script elements.',
     attributes: [
       {
         name: 'name',
@@ -214,18 +186,13 @@ export default {
         description: 'This attribute defines the scheme in which metadata is described. A scheme is a context leading to the correct interpretations of the [`content`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#attr-content) value, like a format.\n\n**Warning:** Do not use this value, as it is obsolete. There is no replacement as there was no real usage for it.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/meta'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/meta'
+    }
   },
   style: {
-    description: {
-      kind: 'markdown',
-      value: 'The style element allows authors to embed style information in their documents. The style element is one of several inputs to the styling processing model. The element does not represent content for the user.'
-    },
+    description: 'The style element allows authors to embed style information in their documents. The style element is one of several inputs to the styling processing model. The element does not represent content for the user.',
     attributes: [
       {
         name: 'media',
@@ -257,18 +224,13 @@ export default {
         description: 'This attribute specifies [alternative style sheet](https://developer.mozilla.org/en-US/docs/Web/CSS/Alternative_style_sheets) sets.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/style'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/style'
+    }
   },
   body: {
-    description: {
-      kind: 'markdown',
-      value: 'The body element represents the content of the document.'
-    },
+    description: 'The body element represents the content of the document.',
     attributes: [
       {
         name: 'onafterprint',
@@ -422,200 +384,125 @@ export default {
         description: "Color of text for visited hypertext links. _This method is non-conforming, use CSS [`color`](https://developer.mozilla.org/en-US/docs/Web/CSS/color \"The color CSS property sets the foreground color value of an element's text and text decorations, and sets the currentcolor value.\") property in conjunction with the [`:visited`](https://developer.mozilla.org/en-US/docs/Web/CSS/:visited \"The :visited CSS pseudo-class represents links that the user has already visited. For privacy reasons, the styles that can be modified using this selector are very limited.\") pseudo-class instead._"
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/body'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/body'
+    }
   },
   article: {
-    description: {
-      kind: 'markdown',
-      value: 'The article element represents a complete, or self-contained, composition in a document, page, application, or site and that is, in principle, independently distributable or reusable, e.g. in syndication. This could be a forum post, a magazine or newspaper article, a blog entry, a user-submitted comment, an interactive widget or gadget, or any other independent item of content. Each article should be identified, typically by including a heading (h1–h6 element) as a child of the article element.'
-    },
+    description: 'The article element represents a complete, or self-contained, composition in a document, page, application, or site and that is, in principle, independently distributable or reusable, e.g. in syndication. This could be a forum post, a magazine or newspaper article, a blog entry, a user-submitted comment, an interactive widget or gadget, or any other independent item of content. Each article should be identified, typically by including a heading (h1–h6 element) as a child of the article element.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/article'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/article'
+    }
   },
   section: {
-    description: {
-      kind: 'markdown',
-      value: 'The section element represents a generic section of a document or application. A section, in this context, is a thematic grouping of content. Each section should be identified, typically by including a heading ( h1- h6 element) as a child of the section element.'
-    },
+    description: 'The section element represents a generic section of a document or application. A section, in this context, is a thematic grouping of content. Each section should be identified, typically by including a heading ( h1- h6 element) as a child of the section element.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/section'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/section'
+    }
   },
   nav: {
-    description: {
-      kind: 'markdown',
-      value: 'The nav element represents a section of a page that links to other pages or to parts within the page: a section with navigation links.'
-    },
+    description: 'The nav element represents a section of a page that links to other pages or to parts within the page: a section with navigation links.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/nav'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/nav'
+    }
   },
   aside: {
-    description: {
-      kind: 'markdown',
-      value: 'The aside element represents a section of a page that consists of content that is tangentially related to the content around the aside element, and which could be considered separate from that content. Such sections are often represented as sidebars in printed typography.'
-    },
+    description: 'The aside element represents a section of a page that consists of content that is tangentially related to the content around the aside element, and which could be considered separate from that content. Such sections are often represented as sidebars in printed typography.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/aside'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/aside'
+    }
   },
   h1: {
-    description: {
-      kind: 'markdown',
-      value: 'The h1 element represents a section heading.'
-    },
+    description: 'The h1 element represents a section heading.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
+    }
   },
   h2: {
-    description: {
-      kind: 'markdown',
-      value: 'The h2 element represents a section heading.'
-    },
+    description: 'The h2 element represents a section heading.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
+    }
   },
   h3: {
-    description: {
-      kind: 'markdown',
-      value: 'The h3 element represents a section heading.'
-    },
+    description: 'The h3 element represents a section heading.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
+    }
   },
   h4: {
-    description: {
-      kind: 'markdown',
-      value: 'The h4 element represents a section heading.'
-    },
+    description: 'The h4 element represents a section heading.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
+    }
   },
   h5: {
-    description: {
-      kind: 'markdown',
-      value: 'The h5 element represents a section heading.'
-    },
+    description: 'The h5 element represents a section heading.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
+    }
   },
   h6: {
-    description: {
-      kind: 'markdown',
-      value: 'The h6 element represents a section heading.'
-    },
+    description: 'The h6 element represents a section heading.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/Heading_Elements'
+    }
   },
   header: {
-    description: {
-      kind: 'markdown',
-      value: 'The header element represents introductory content for its nearest ancestor sectioning content or sectioning root element. A header typically contains a group of introductory or navigational aids. When the nearest ancestor sectioning content or sectioning root element is the body element, then it applies to the whole page.'
-    },
+    description: 'The header element represents introductory content for its nearest ancestor sectioning content or sectioning root element. A header typically contains a group of introductory or navigational aids. When the nearest ancestor sectioning content or sectioning root element is the body element, then it applies to the whole page.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/header'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/header'
+    }
   },
   footer: {
-    description: {
-      kind: 'markdown',
-      value: 'The footer element represents a footer for its nearest ancestor sectioning content or sectioning root element. A footer typically contains information about its section such as who wrote it, links to related documents, copyright data, and the like.'
-    },
+    description: 'The footer element represents a footer for its nearest ancestor sectioning content or sectioning root element. A footer typically contains information about its section such as who wrote it, links to related documents, copyright data, and the like.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/footer'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/footer'
+    }
   },
   address: {
-    description: {
-      kind: 'markdown',
-      value: 'The address element represents the contact information for its nearest article or body element ancestor. If that is the body element, then the contact information applies to the document as a whole.'
-    },
+    description: 'The address element represents the contact information for its nearest article or body element ancestor. If that is the body element, then the contact information applies to the document as a whole.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/address'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/address'
+    }
   },
   p: {
-    description: {
-      kind: 'markdown',
-      value: 'The p element represents a paragraph.'
-    },
+    description: 'The p element represents a paragraph.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/p'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/p'
+    }
   },
   hr: {
-    description: {
-      kind: 'markdown',
-      value: 'The hr element represents a paragraph-level thematic break, e.g. a scene change in a story, or a transition to another topic within a section of a reference book.'
-    },
+    description: 'The hr element represents a paragraph-level thematic break, e.g. a scene change in a story, or a transition to another topic within a section of a reference book.',
     attributes: [
       {
         name: 'align',
@@ -638,18 +525,13 @@ export default {
         description: 'Sets the length of the rule on the page through a pixel or percentage value.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/hr'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/hr'
+    }
   },
   pre: {
-    description: {
-      kind: 'markdown',
-      value: 'The pre element represents a block of preformatted text, in which structure is represented by typographic conventions rather than by elements.'
-    },
+    description: 'The pre element represents a block of preformatted text, in which structure is represented by typographic conventions rather than by elements.',
     attributes: [
       {
         name: 'cols',
@@ -664,18 +546,13 @@ export default {
         description: 'Is a _hint_ indicating how the overflow must happen. In modern browser this hint is ignored and no visual effect results in its present; to achieve such an effect, use CSS [`white-space`](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space "The white-space CSS property sets how white space inside an element is handled.") instead.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/pre'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/pre'
+    }
   },
   blockquote: {
-    description: {
-      kind: 'markdown',
-      value: 'The blockquote element represents content that is quoted from another source, optionally with a citation which must be within a footer or cite element, and optionally with in-line changes such as annotations and abbreviations.'
-    },
+    description: 'The blockquote element represents content that is quoted from another source, optionally with a citation which must be within a footer or cite element, and optionally with in-line changes such as annotations and abbreviations.',
     attributes: [
       {
         name: 'cite',
@@ -685,18 +562,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/blockquote'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/blockquote'
+    }
   },
   ol: {
-    description: {
-      kind: 'markdown',
-      value: 'The ol element represents a list of items, where the items have been intentionally ordered, such that changing the order would change the meaning of the document.'
-    },
+    description: 'The ol element represents a list of items, where the items have been intentionally ordered, such that changing the order would change the meaning of the document.',
     attributes: [
       {
         name: 'reversed',
@@ -726,36 +598,26 @@ export default {
         description: "This Boolean attribute hints that the list should be rendered in a compact style. The interpretation of this attribute depends on the user agent and it doesn't work in all browsers.\n\n**Warning:** Do not use this attribute, as it has been deprecated: the [`<ol>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol \"The HTML <ol> element represents an ordered list of items, typically rendered as a numbered list.\") element should be styled using [CSS](https://developer.mozilla.org/en-US/docs/CSS). To give an effect similar to the `compact` attribute, the [CSS](https://developer.mozilla.org/en-US/docs/CSS) property [`line-height`](https://developer.mozilla.org/en-US/docs/Web/CSS/line-height \"The line-height CSS property sets the amount of space used for lines, such as in text. On block-level elements, it specifies the minimum height of line boxes within the element. On non-replaced inline elements, it specifies the height that is used to calculate line box height.\") can be used with a value of `80%`."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/ol'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/ol'
+    }
   },
   ul: {
-    description: {
-      kind: 'markdown',
-      value: 'The ul element represents a list of items, where the order of the items is not important — that is, where changing the order would not materially change the meaning of the document.'
-    },
+    description: 'The ul element represents a list of items, where the order of the items is not important — that is, where changing the order would not materially change the meaning of the document.',
     attributes: [
       {
         name: 'compact',
         description: "This Boolean attribute hints that the list should be rendered in a compact style. The interpretation of this attribute depends on the user agent and it doesn't work in all browsers.\n\n**Usage note: **Do not use this attribute, as it has been deprecated: the [`<ul>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul \"The HTML <ul> element represents an unordered list of items, typically rendered as a bulleted list.\") element should be styled using [CSS](https://developer.mozilla.org/en-US/docs/CSS). To give a similar effect as the `compact` attribute, the [CSS](https://developer.mozilla.org/en-US/docs/CSS) property [line-height](https://developer.mozilla.org/en-US/docs/CSS/line-height) can be used with a value of `80%`."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/ul'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/ul'
+    }
   },
   li: {
-    description: {
-      kind: 'markdown',
-      value: "The li element represents a list item. If its parent element is an ol, ul, or menu element, then the element is an item of the parent element's list, as defined for those elements. Otherwise, the list item has no defined list-related relationship to any other li element."
-    },
+    description: "The li element represents a list item. If its parent element is an ol, ul, or menu element, then the element is an item of the parent element's list, as defined for those elements. Otherwise, the list item has no defined list-related relationship to any other li element.",
     attributes: [
       {
         name: 'value',
@@ -769,114 +631,74 @@ export default {
         description: 'This character attribute indicates the numbering type:\n\n*   `a`: lowercase letters\n*   `A`: uppercase letters\n*   `i`: lowercase Roman numerals\n*   `I`: uppercase Roman numerals\n*   `1`: numbers\n\nThis type overrides the one used by its parent [`<ol>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol "The HTML <ol> element represents an ordered list of items, typically rendered as a numbered list.") element, if any.\n\n**Usage note:** This attribute has been deprecated: use the CSS [`list-style-type`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type "The list-style-type CSS property sets the marker (such as a disc, character, or custom counter style) of a list item element.") property instead.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/li'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/li'
+    }
   },
   dl: {
-    description: {
-      kind: 'markdown',
-      value: 'The dl element represents an association list consisting of zero or more name-value groups (a description list). A name-value group consists of one or more names (dt elements) followed by one or more values (dd elements), ignoring any nodes other than dt and dd elements. Within a single dl element, there should not be more than one dt element for each name.'
-    },
+    description: 'The dl element represents an association list consisting of zero or more name-value groups (a description list). A name-value group consists of one or more names (dt elements) followed by one or more values (dd elements), ignoring any nodes other than dt and dd elements. Within a single dl element, there should not be more than one dt element for each name.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dl'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dl'
+    }
   },
   dt: {
-    description: {
-      kind: 'markdown',
-      value: 'The dt element represents the term, or name, part of a term-description group in a description list (dl element).'
-    },
+    description: 'The dt element represents the term, or name, part of a term-description group in a description list (dl element).',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dt'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dt'
+    }
   },
   dd: {
-    description: {
-      kind: 'markdown',
-      value: 'The dd element represents the description, definition, or value, part of a term-description group in a description list (dl element).'
-    },
+    description: 'The dd element represents the description, definition, or value, part of a term-description group in a description list (dl element).',
     attributes: [
       {
         name: 'nowrap',
         description: 'If the value of this attribute is set to `yes`, the definition text will not wrap. The default value is `no`.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dd'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dd'
+    }
   },
   figure: {
-    description: {
-      kind: 'markdown',
-      value: 'The figure element represents some flow content, optionally with a caption, that is self-contained (like a complete sentence) and is typically referenced as a single unit from the main flow of the document.'
-    },
+    description: 'The figure element represents some flow content, optionally with a caption, that is self-contained (like a complete sentence) and is typically referenced as a single unit from the main flow of the document.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/figure'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/figure'
+    }
   },
   figcaption: {
-    description: {
-      kind: 'markdown',
-      value: "The figcaption element represents a caption or legend for the rest of the contents of the figcaption element's parent figure element, if any."
-    },
+    description: "The figcaption element represents a caption or legend for the rest of the contents of the figcaption element's parent figure element, if any.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/figcaption'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/figcaption'
+    }
   },
   main: {
-    description: {
-      kind: 'markdown',
-      value: 'The main element represents the main content of the body of a document or application. The main content area consists of content that is directly related to or expands upon the central topic of a document or central functionality of an application.'
-    },
+    description: 'The main element represents the main content of the body of a document or application. The main content area consists of content that is directly related to or expands upon the central topic of a document or central functionality of an application.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/main'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/main'
+    }
   },
   div: {
-    description: {
-      kind: 'markdown',
-      value: 'The div element has no special meaning at all. It represents its children. It can be used with the class, lang, and title attributes to mark up semantics common to a group of consecutive elements.'
-    },
+    description: 'The div element has no special meaning at all. It represents its children. It can be used with the class, lang, and title attributes to mark up semantics common to a group of consecutive elements.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/div'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/div'
+    }
   },
   a: {
-    description: {
-      kind: 'markdown',
-      value: 'If the a element has an href attribute, then it represents a hyperlink (a hypertext anchor) labeled by its contents.'
-    },
+    description: 'If the a element has an href attribute, then it represents a hyperlink (a hypertext anchor) labeled by its contents.',
     attributes: [
       {
         name: 'href',
@@ -932,83 +754,53 @@ export default {
         description: "Indicates which [referrer](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) to send when fetching the URL:\n\n*   `'no-referrer'` means the `Referer:` header will not be sent.\n*   `'no-referrer-when-downgrade'` means no `Referer:` header will be sent when navigating to an origin without HTTPS. This is the default behavior.\n*   `'origin'` means the referrer will be the [origin](https://developer.mozilla.org/en-US/docs/Glossary/Origin) of the page, not including information after the domain.\n*   `'origin-when-cross-origin'` meaning that navigations to other origins will be limited to the scheme, the host and the port, while navigations on the same origin will include the referrer's path.\n*   `'strict-origin-when-cross-origin'`\n*   `'unsafe-url'` means the referrer will include the origin and path, but not the fragment, password, or username. This is unsafe because it can leak data from secure URLs to insecure ones."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/a'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/a'
+    }
   },
   em: {
-    description: {
-      kind: 'markdown',
-      value: 'The em element represents stress emphasis of its contents.'
-    },
+    description: 'The em element represents stress emphasis of its contents.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/em'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/em'
+    }
   },
   strong: {
-    description: {
-      kind: 'markdown',
-      value: 'The strong element represents strong importance, seriousness, or urgency for its contents.'
-    },
+    description: 'The strong element represents strong importance, seriousness, or urgency for its contents.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/strong'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/strong'
+    }
   },
   small: {
-    description: {
-      kind: 'markdown',
-      value: 'The small element represents side comments such as small print.'
-    },
+    description: 'The small element represents side comments such as small print.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/small'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/small'
+    }
   },
   s: {
-    description: {
-      kind: 'markdown',
-      value: 'The s element represents contents that are no longer accurate or no longer relevant.'
-    },
+    description: 'The s element represents contents that are no longer accurate or no longer relevant.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/s'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/s'
+    }
   },
   cite: {
-    description: {
-      kind: 'markdown',
-      value: 'The cite element represents a reference to a creative work. It must include the title of the work or the name of the author(person, people or organization) or an URL reference, or a reference in abbreviated form as per the conventions used for the addition of citation metadata.'
-    },
+    description: 'The cite element represents a reference to a creative work. It must include the title of the work or the name of the author(person, people or organization) or an URL reference, or a reference in abbreviated form as per the conventions used for the addition of citation metadata.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/cite'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/cite'
+    }
   },
   q: {
-    description: {
-      kind: 'markdown',
-      value: 'The q element represents some phrasing content quoted from another source.'
-    },
+    description: 'The q element represents some phrasing content quoted from another source.',
     attributes: [
       {
         name: 'cite',
@@ -1018,96 +810,61 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/q'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/q'
+    }
   },
   dfn: {
-    description: {
-      kind: 'markdown',
-      value: 'The dfn element represents the defining instance of a term. The paragraph, description list group, or section that is the nearest ancestor of the dfn element must also contain the definition(s) for the term given by the dfn element.'
-    },
+    description: 'The dfn element represents the defining instance of a term. The paragraph, description list group, or section that is the nearest ancestor of the dfn element must also contain the definition(s) for the term given by the dfn element.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dfn'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dfn'
+    }
   },
   abbr: {
-    description: {
-      kind: 'markdown',
-      value: 'The abbr element represents an abbreviation or acronym, optionally with its expansion. The title attribute may be used to provide an expansion of the abbreviation. The attribute, if specified, must contain an expansion of the abbreviation, and nothing else.'
-    },
+    description: 'The abbr element represents an abbreviation or acronym, optionally with its expansion. The title attribute may be used to provide an expansion of the abbreviation. The attribute, if specified, must contain an expansion of the abbreviation, and nothing else.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/abbr'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/abbr'
+    }
   },
   ruby: {
-    description: {
-      kind: 'markdown',
-      value: 'The ruby element allows one or more spans of phrasing content to be marked with ruby annotations. Ruby annotations are short runs of text presented alongside base text, primarily used in East Asian typography as a guide for pronunciation or to include other annotations. In Japanese, this form of typography is also known as furigana. Ruby text can appear on either side, and sometimes both sides, of the base text, and it is possible to control its position using CSS. A more complete introduction to ruby can be found in the Use Cases & Exploratory Approaches for Ruby Markup document as well as in CSS Ruby Module Level 1. [RUBY-UC] [CSSRUBY]'
-    },
+    description: 'The ruby element allows one or more spans of phrasing content to be marked with ruby annotations. Ruby annotations are short runs of text presented alongside base text, primarily used in East Asian typography as a guide for pronunciation or to include other annotations. In Japanese, this form of typography is also known as furigana. Ruby text can appear on either side, and sometimes both sides, of the base text, and it is possible to control its position using CSS. A more complete introduction to ruby can be found in the Use Cases & Exploratory Approaches for Ruby Markup document as well as in CSS Ruby Module Level 1. [RUBY-UC] [CSSRUBY]',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/ruby'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/ruby'
+    }
   },
   rb: {
-    description: {
-      kind: 'markdown',
-      value: "The rb element marks the base text component of a ruby annotation. When it is the child of a ruby element, it doesn't represent anything itself, but its parent ruby element uses it as part of determining what it represents."
-    },
+    description: "The rb element marks the base text component of a ruby annotation. When it is the child of a ruby element, it doesn't represent anything itself, but its parent ruby element uses it as part of determining what it represents.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/rb'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/rb'
+    }
   },
   rt: {
-    description: {
-      kind: 'markdown',
-      value: "The rt element marks the ruby text component of a ruby annotation. When it is the child of a ruby element or of an rtc element that is itself the child of a ruby element, it doesn't represent anything itself, but its ancestor ruby element uses it as part of determining what it represents."
-    },
+    description: "The rt element marks the ruby text component of a ruby annotation. When it is the child of a ruby element or of an rtc element that is itself the child of a ruby element, it doesn't represent anything itself, but its ancestor ruby element uses it as part of determining what it represents.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/rt'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/rt'
+    }
   },
   rp: {
-    description: {
-      kind: 'markdown',
-      value: "The rp element is used to provide fallback text to be shown by user agents that don't support ruby annotations. One widespread convention is to provide parentheses around the ruby text component of a ruby annotation."
-    },
+    description: "The rp element is used to provide fallback text to be shown by user agents that don't support ruby annotations. One widespread convention is to provide parentheses around the ruby text component of a ruby annotation.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/rp'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/rp'
+    }
   },
   time: {
-    description: {
-      kind: 'markdown',
-      value: 'The time element represents its contents, along with a machine-readable form of those contents in the datetime attribute. The kind of content is limited to various kinds of dates, times, time-zone offsets, and durations, as described below.'
-    },
+    description: 'The time element represents its contents, along with a machine-readable form of those contents in the datetime attribute. The kind of content is limited to various kinds of dates, times, time-zone offsets, and durations, as described below.',
     attributes: [
       {
         name: 'datetime',
@@ -1117,223 +874,143 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/time'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/time'
+    }
   },
   code: {
-    description: {
-      kind: 'markdown',
-      value: 'The code element represents a fragment of computer code. This could be an XML element name, a file name, a computer program, or any other string that a computer would recognize.'
-    },
+    description: 'The code element represents a fragment of computer code. This could be an XML element name, a file name, a computer program, or any other string that a computer would recognize.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/code'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/code'
+    }
   },
   var: {
-    description: {
-      kind: 'markdown',
-      value: 'The var element represents a variable. This could be an actual variable in a mathematical expression or programming context, an identifier representing a constant, a symbol identifying a physical quantity, a function parameter, or just be a term used as a placeholder in prose.'
-    },
+    description: 'The var element represents a variable. This could be an actual variable in a mathematical expression or programming context, an identifier representing a constant, a symbol identifying a physical quantity, a function parameter, or just be a term used as a placeholder in prose.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/var'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/var'
+    }
   },
   samp: {
-    description: {
-      kind: 'markdown',
-      value: 'The samp element represents sample or quoted output from another program or computing system.'
-    },
+    description: 'The samp element represents sample or quoted output from another program or computing system.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/samp'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/samp'
+    }
   },
   kbd: {
-    description: {
-      kind: 'markdown',
-      value: 'The kbd element represents user input (typically keyboard input, although it may also be used to represent other input, such as voice commands).'
-    },
+    description: 'The kbd element represents user input (typically keyboard input, although it may also be used to represent other input, such as voice commands).',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/kbd'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/kbd'
+    }
   },
   sub: {
-    description: {
-      kind: 'markdown',
-      value: 'The sub element represents a subscript.'
-    },
+    description: 'The sub element represents a subscript.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/sub'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/sub'
+    }
   },
   sup: {
-    description: {
-      kind: 'markdown',
-      value: 'The sup element represents a superscript.'
-    },
+    description: 'The sup element represents a superscript.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/sup'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/sup'
+    }
   },
   i: {
-    description: {
-      kind: 'markdown',
-      value: 'The i element represents a span of text in an alternate voice or mood, or otherwise offset from the normal prose in a manner indicating a different quality of text, such as a taxonomic designation, a technical term, an idiomatic phrase from another language, transliteration, a thought, or a ship name in Western texts.'
-    },
+    description: 'The i element represents a span of text in an alternate voice or mood, or otherwise offset from the normal prose in a manner indicating a different quality of text, such as a taxonomic designation, a technical term, an idiomatic phrase from another language, transliteration, a thought, or a ship name in Western texts.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/i'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/i'
+    }
   },
   b: {
-    description: {
-      kind: 'markdown',
-      value: 'The b element represents a span of text to which attention is being drawn for utilitarian purposes without conveying any extra importance and with no implication of an alternate voice or mood, such as key words in a document abstract, product names in a review, actionable words in interactive text-driven software, or an article lede.'
-    },
+    description: 'The b element represents a span of text to which attention is being drawn for utilitarian purposes without conveying any extra importance and with no implication of an alternate voice or mood, such as key words in a document abstract, product names in a review, actionable words in interactive text-driven software, or an article lede.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/b'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/b'
+    }
   },
   u: {
-    description: {
-      kind: 'markdown',
-      value: 'The u element represents a span of text with an unarticulated, though explicitly rendered, non-textual annotation, such as labeling the text as being a proper name in Chinese text (a Chinese proper name mark), or labeling the text as being misspelt.'
-    },
+    description: 'The u element represents a span of text with an unarticulated, though explicitly rendered, non-textual annotation, such as labeling the text as being a proper name in Chinese text (a Chinese proper name mark), or labeling the text as being misspelt.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/u'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/u'
+    }
   },
   mark: {
-    description: {
-      kind: 'markdown',
-      value: "The mark element represents a run of text in one document marked or highlighted for reference purposes, due to its relevance in another context. When used in a quotation or other block of text referred to from the prose, it indicates a highlight that was not originally present but which has been added to bring the reader's attention to a part of the text that might not have been considered important by the original author when the block was originally written, but which is now under previously unexpected scrutiny. When used in the main prose of a document, it indicates a part of the document that has been highlighted due to its likely relevance to the user's current activity."
-    },
+    description: "The mark element represents a run of text in one document marked or highlighted for reference purposes, due to its relevance in another context. When used in a quotation or other block of text referred to from the prose, it indicates a highlight that was not originally present but which has been added to bring the reader's attention to a part of the text that might not have been considered important by the original author when the block was originally written, but which is now under previously unexpected scrutiny. When used in the main prose of a document, it indicates a part of the document that has been highlighted due to its likely relevance to the user's current activity.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/mark'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/mark'
+    }
   },
   bdi: {
-    description: {
-      kind: 'markdown',
-      value: 'The bdi element represents a span of text that is to be isolated from its surroundings for the purposes of bidirectional text formatting. [BIDI]'
-    },
+    description: 'The bdi element represents a span of text that is to be isolated from its surroundings for the purposes of bidirectional text formatting. [BIDI]',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/bdi'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/bdi'
+    }
   },
   bdo: {
-    description: {
-      kind: 'markdown',
-      value: 'The bdo element represents explicit text directionality formatting control for its children. It allows authors to override the Unicode bidirectional algorithm by explicitly specifying a direction override. [BIDI]'
-    },
+    description: 'The bdo element represents explicit text directionality formatting control for its children. It allows authors to override the Unicode bidirectional algorithm by explicitly specifying a direction override. [BIDI]',
     attributes: [
       {
         name: 'dir',
         description: "The direction in which text should be rendered in this element's contents. Possible values are:\n\n*   `ltr`: Indicates that the text should go in a left-to-right direction.\n*   `rtl`: Indicates that the text should go in a right-to-left direction."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/bdo'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/bdo'
+    }
   },
   span: {
-    description: {
-      kind: 'markdown',
-      value: "The span element doesn't mean anything on its own, but can be useful when used together with the global attributes, e.g. class, lang, or dir. It represents its children."
-    },
+    description: "The span element doesn't mean anything on its own, but can be useful when used together with the global attributes, e.g. class, lang, or dir. It represents its children.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/span'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/span'
+    }
   },
   br: {
-    description: {
-      kind: 'markdown',
-      value: 'The br element represents a line break.'
-    },
+    description: 'The br element represents a line break.',
     attributes: [
       {
         name: 'clear',
         description: 'Indicates where to begin the next line after the break.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/br'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/br'
+    }
   },
   wbr: {
-    description: {
-      kind: 'markdown',
-      value: 'The wbr element represents a line break opportunity.'
-    },
+    description: 'The wbr element represents a line break opportunity.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/wbr'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/wbr'
+    }
   },
   ins: {
-    description: {
-      kind: 'markdown',
-      value: 'The ins element represents an addition to the document.'
-    },
+    description: 'The ins element represents an addition to the document.',
     attributes: [
       {
         name: 'cite',
@@ -1344,18 +1021,13 @@ export default {
         description: 'This attribute indicates the time and date of the change and must be a valid date with an optional time string. If the value cannot be parsed as a date with an optional time string, the element does not have an associated time stamp. For the format of the string without a time, see [Format of a valid date string](https://developer.mozilla.org/en-US/docs/Web/HTML/Date_and_time_formats#Format_of_a_valid_date_string "Certain HTML elements use date and/or time values. The formats of the strings that specify these are described in this article.") in [Date and time formats used in HTML](https://developer.mozilla.org/en-US/docs/Web/HTML/Date_and_time_formats "Certain HTML elements use date and/or time values. The formats of the strings that specify these are described in this article."). The format of the string if it includes both date and time is covered in [Format of a valid local date and time string](https://developer.mozilla.org/en-US/docs/Web/HTML/Date_and_time_formats#Format_of_a_valid_local_date_and_time_string "Certain HTML elements use date and/or time values. The formats of the strings that specify these are described in this article.") in [Date and time formats used in HTML](https://developer.mozilla.org/en-US/docs/Web/HTML/Date_and_time_formats "Certain HTML elements use date and/or time values. The formats of the strings that specify these are described in this article.").'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/ins'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/ins'
+    }
   },
   del: {
-    description: {
-      kind: 'markdown',
-      value: 'The del element represents a removal from the document.'
-    },
+    description: 'The del element represents a removal from the document.',
     attributes: [
       {
         name: 'cite',
@@ -1372,31 +1044,21 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/del'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/del'
+    }
   },
   picture: {
-    description: {
-      kind: 'markdown',
-      value: 'The picture element is a container which provides multiple sources to its contained img element to allow authors to declaratively control or give hints to the user agent about which image resource to use, based on the screen pixel density, viewport size, image format, and other factors. It represents its children.'
-    },
+    description: 'The picture element is a container which provides multiple sources to its contained img element to allow authors to declaratively control or give hints to the user agent about which image resource to use, based on the screen pixel density, viewport size, image format, and other factors. It represents its children.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/picture'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/picture'
+    }
   },
   img: {
-    description: {
-      kind: 'markdown',
-      value: 'An img element represents an image.'
-    },
+    description: 'An img element represents an image.',
     attributes: [
       {
         name: 'alt',
@@ -1485,18 +1147,13 @@ export default {
         description: "A list of one or more strings separated by commas indicating a set of source sizes. Each source size consists of:\n\n1.  a media condition. This must be omitted for the last item.\n2.  a source size value.\n\nSource size values specify the intended display size of the image. User agents use the current source size to select one of the sources supplied by the `srcset` attribute, when those sources are described using width ('`w`') descriptors. The selected source size affects the intrinsic size of the image (the image’s display size if no CSS styling is applied). If the `srcset` attribute is absent, or contains no values with a width (`w`) descriptor, then the `sizes` attribute has no effect."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/img'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/img'
+    }
   },
   iframe: {
-    description: {
-      kind: 'markdown',
-      value: 'The iframe element represents a nested browsing context.'
-    },
+    description: 'The iframe element represents a nested browsing context.',
     attributes: [
       {
         name: 'src',
@@ -1578,18 +1235,13 @@ export default {
         description: "Indicates which [referrer](https://developer.mozilla.org/en-US/docs/Web/API/Document/referrer) to send when fetching the frame's resource:\n\n*   `no-referrer`: The [`Referer`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer \"The Referer request header contains the address of the previous web page from which a link to the currently requested page was followed. The Referer header allows servers to identify where people are visiting them from and may use that data for analytics, logging, or optimized caching, for example.\") header will not be sent.\n*   `no-referrer-when-downgrade` (default): The [`Referer`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer \"The Referer request header contains the address of the previous web page from which a link to the currently requested page was followed. The Referer header allows servers to identify where people are visiting them from and may use that data for analytics, logging, or optimized caching, for example.\") header will not be sent to [origin](https://developer.mozilla.org/en-US/docs/Glossary/origin \"origin: Web content's origin is defined by the scheme (protocol), host (domain), and port of the URL used to access it. Two objects have the same origin only when the scheme, host, and port all match.\")s without [TLS](https://developer.mozilla.org/en-US/docs/Glossary/TLS \"TLS: Transport Layer Security (TLS), previously known as Secure Sockets Layer (SSL), is a protocol used by applications to communicate securely across a network, preventing tampering with and eavesdropping on email, web browsing, messaging, and other protocols.\") ([HTTPS](https://developer.mozilla.org/en-US/docs/Glossary/HTTPS \"HTTPS: HTTPS (HTTP Secure) is an encrypted version of the HTTP protocol. It usually uses SSL or TLS to encrypt all communication between a client and a server. This secure connection allows clients to safely exchange sensitive data with a server, for example for banking activities or online shopping.\")).\n*   `origin`: The sent referrer will be limited to the origin of the referring page: its [scheme](https://developer.mozilla.org/en-US/docs/Archive/Mozilla/URIScheme), [host](https://developer.mozilla.org/en-US/docs/Glossary/host \"host: A host is a device connected to the Internet (or a local network). Some hosts called servers offer additional services like serving webpages or storing files and emails.\"), and [port](https://developer.mozilla.org/en-US/docs/Glossary/port \"port: For a computer connected to a network with an IP address, a port is a communication endpoint. Ports are designated by numbers, and below 1024 each port is associated by default with a specific protocol.\").\n*   `origin-when-cross-origin`: The referrer sent to other origins will be limited to the scheme, the host, and the port. Navigations on the same origin will still include the path.\n*   `same-origin`: A referrer will be sent for [same origin](https://developer.mozilla.org/en-US/docs/Glossary/Same-origin_policy \"same origin: The same-origin policy is a critical security mechanism that restricts how a document or script loaded from one origin can interact with a resource from another origin.\"), but cross-origin requests will contain no referrer information.\n*   `strict-origin`: Only send the origin of the document as the referrer when the protocol security level stays the same (HTTPS→HTTPS), but don't send it to a less secure destination (HTTPS→HTTP).\n*   `strict-origin-when-cross-origin`: Send a full URL when performing a same-origin request, only send the origin when the protocol security level stays the same (HTTPS→HTTPS), and send no header to a less secure destination (HTTPS→HTTP).\n*   `unsafe-url`: The referrer will include the origin _and_ the path (but not the [fragment](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/hash), [password](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/password), or [username](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/username)). **This value is unsafe**, because it leaks origins and paths from TLS-protected resources to insecure origins."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/iframe'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/iframe'
+    }
   },
   embed: {
-    description: {
-      kind: 'markdown',
-      value: 'The embed element provides an integration point for an external (typically non-HTML) application or interactive content.'
-    },
+    description: 'The embed element provides an integration point for an external (typically non-HTML) application or interactive content.',
     attributes: [
       {
         name: 'src',
@@ -1620,18 +1272,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/embed'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/embed'
+    }
   },
   object: {
-    description: {
-      kind: 'markdown',
-      value: 'The object element can represent an external resource, which, depending on the type of the resource, will either be treated as an image, as a nested browsing context, or as an external resource to be processed by a plugin.'
-    },
+    description: 'The object element can represent an external resource, which, depending on the type of the resource, will either be treated as an image, as a nested browsing context, or as an external resource to be processed by a plugin.',
     attributes: [
       {
         name: 'data',
@@ -1723,18 +1370,13 @@ export default {
         description: 'The position of the element in the tabbing navigation order for the current document.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/object'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/object'
+    }
   },
   param: {
-    description: {
-      kind: 'markdown',
-      value: 'The param element defines parameters for plugins invoked by object elements. It does not represent anything on its own.'
-    },
+    description: 'The param element defines parameters for plugins invoked by object elements. It does not represent anything on its own.',
     attributes: [
       {
         name: 'name',
@@ -1759,18 +1401,13 @@ export default {
         description: "Specifies the type of the `value` attribute. Possible values are:\n\n*   data: Default value. The value is passed to the object's implementation as a string.\n*   ref: The value is a URI to a resource where run-time values are stored.\n*   object: An ID of another [`<object>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object \"The HTML <object> element represents an external resource, which can be treated as an image, a nested browsing context, or a resource to be handled by a plugin.\") in the same document."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/param'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/param'
+    }
   },
   video: {
-    description: {
-      kind: 'markdown',
-      value: 'A video element is used for playing videos or movies, and audio files with captions.'
-    },
+    description: 'A video element is used for playing videos or movies, and audio files with captions.',
     attributes: [
       {
         name: 'src'
@@ -1816,18 +1453,13 @@ export default {
         name: 'height'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/video'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/video'
+    }
   },
   audio: {
-    description: {
-      kind: 'markdown',
-      value: 'An audio element represents a sound or audio stream.'
-    },
+    description: 'An audio element represents a sound or audio stream.',
     attributes: [
       {
         name: 'src',
@@ -1888,18 +1520,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/audio'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/audio'
+    }
   },
   source: {
-    description: {
-      kind: 'markdown',
-      value: 'The source element allows authors to specify multiple alternative media resources for media elements. It does not represent anything on its own.'
-    },
+    description: 'The source element allows authors to specify multiple alternative media resources for media elements. It does not represent anything on its own.',
     attributes: [
       {
         name: 'src',
@@ -1928,18 +1555,13 @@ export default {
         description: "[Media query](https://developer.mozilla.org/en-US/docs/CSS/Media_queries) of the resource's intended media; this should be used only in a [`<picture>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture \"The HTML <picture> element contains zero or more <source> elements and one <img> element to provide versions of an image for different display/device scenarios.\") element."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/source'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/source'
+    }
   },
   track: {
-    description: {
-      kind: 'markdown',
-      value: 'The track element allows authors to specify explicit external timed text tracks for media elements. It does not represent anything on its own.'
-    },
+    description: 'The track element allows authors to specify explicit external timed text tracks for media elements. It does not represent anything on its own.',
     attributes: [
       {
         name: 'default',
@@ -1979,18 +1601,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/track'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/track'
+    }
   },
   map: {
-    description: {
-      kind: 'markdown',
-      value: 'The map element, in conjunction with an img element and any area element descendants, defines an image map. The element represents its children.'
-    },
+    description: 'The map element, in conjunction with an img element and any area element descendants, defines an image map. The element represents its children.',
     attributes: [
       {
         name: 'name',
@@ -2000,18 +1617,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/map'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/map'
+    }
   },
   area: {
-    description: {
-      kind: 'markdown',
-      value: 'The area element represents either a hyperlink with some text and a corresponding area on an image map, or a dead area on an image map.'
-    },
+    description: 'The area element represents either a hyperlink with some text and a corresponding area on an image map, or a dead area on an image map.',
     attributes: [
       {
         name: 'alt'
@@ -2049,18 +1661,13 @@ export default {
         description: 'Specifies a keyboard navigation accelerator for the element. Pressing ALT or a similar key in association with the specified character selects the form control correlated with that key sequence. Page designers are forewarned to avoid key sequences already bound to browsers. This attribute is global since HTML5.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/area'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/area'
+    }
   },
   table: {
-    description: {
-      kind: 'markdown',
-      value: 'The table element represents data with more than one dimension, in the form of a table.'
-    },
+    description: 'The table element represents data with more than one dimension, in the form of a table.',
     attributes: [
       {
         name: 'border'
@@ -2070,36 +1677,26 @@ export default {
         description: 'This enumerated attribute indicates how the table must be aligned inside the containing document. It may have the following values:\n\n*   left: the table is displayed on the left side of the document;\n*   center: the table is displayed in the center of the document;\n*   right: the table is displayed on the right side of the document.\n\n**Usage Note**\n\n*   **Do not use this attribute**, as it has been deprecated. The [`<table>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table "The HTML <table> element represents tabular data — that is, information presented in a two-dimensional table comprised of rows and columns of cells containing data.") element should be styled using [CSS](https://developer.mozilla.org/en-US/docs/CSS). Set [`margin-left`](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-left "The margin-left CSS property sets the margin area on the left side of an element. A positive value places it farther from its neighbors, while a negative value places it closer.") and [`margin-right`](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-right "The margin-right CSS property sets the margin area on the right side of an element. A positive value places it farther from its neighbors, while a negative value places it closer.") to `auto` or [`margin`](https://developer.mozilla.org/en-US/docs/Web/CSS/margin "The margin CSS property sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right, margin-bottom, and margin-left.") to `0 auto` to achieve an effect that is similar to the align attribute.\n*   Prior to Firefox 4, Firefox also supported the `middle`, `absmiddle`, and `abscenter` values as synonyms of `center`, in quirks mode only.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/table'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/table'
+    }
   },
   caption: {
-    description: {
-      kind: 'markdown',
-      value: 'The caption element represents the title of the table that is its parent, if it has a parent and that is a table element.'
-    },
+    description: 'The caption element represents the title of the table that is its parent, if it has a parent and that is a table element.',
     attributes: [
       {
         name: 'align',
         description: "This enumerated attribute indicates how the caption must be aligned with respect to the table. It may have one of the following values:\n\n`left`\n\nThe caption is displayed to the left of the table.\n\n`top`\n\nThe caption is displayed above the table.\n\n`right`\n\nThe caption is displayed to the right of the table.\n\n`bottom`\n\nThe caption is displayed below the table.\n\n**Usage note:** Do not use this attribute, as it has been deprecated. The [`<caption>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption \"The HTML Table Caption element (<caption>) specifies the caption (or title) of a table, and if used is always the first child of a <table>.\") element should be styled using the [CSS](https://developer.mozilla.org/en-US/docs/CSS) properties [`caption-side`](https://developer.mozilla.org/en-US/docs/Web/CSS/caption-side \"The caption-side CSS property puts the content of a table's <caption> on the specified side. The values are relative to the writing-mode of the table.\") and [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align \"The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.\")."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/caption'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/caption'
+    }
   },
   colgroup: {
-    description: {
-      kind: 'markdown',
-      value: 'The colgroup element represents a group of one or more columns in the table that is its parent, if it has a parent and that is a table element.'
-    },
+    description: 'The colgroup element represents a group of one or more columns in the table that is its parent, if it has a parent and that is a table element.',
     attributes: [
       {
         name: 'span'
@@ -2109,18 +1706,13 @@ export default {
         description: "This enumerated attribute specifies how horizontal alignment of each column cell content will be handled. Possible values are:\n\n*   `left`, aligning the content to the left of the cell\n*   `center`, centering the content in the cell\n*   `right`, aligning the content to the right of the cell\n*   `justify`, inserting spaces into the textual content so that the content is justified in the cell\n*   `char`, aligning the textual content on a special character with a minimal offset, defined by the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col#attr-char) and [`charoff`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col#attr-charoff) attributes Unimplemented (see [bug 2212](https://bugzilla.mozilla.org/show_bug.cgi?id=2212 \"character alignment not implemented (align=char, charoff=, text-align:<string>)\")).\n\nIf this attribute is not set, the `left` value is assumed. The descendant [`<col>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col \"The HTML <col> element defines a column within a table and is used for defining common semantics on all common cells. It is generally found within a <colgroup> element.\") elements may override this value using their own [`align`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col#attr-align) attribute.\n\n**Note:** Do not use this attribute as it is obsolete (not supported) in the latest standard.\n\n*   To achieve the same effect as the `left`, `center`, `right` or `justify` values:\n    *   Do not try to set the [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align \"The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.\") property on a selector giving a [`<colgroup>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup \"The HTML <colgroup> element defines a group of columns within a table.\") element. Because [`<td>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td \"The HTML <td> element defines a cell of a table that contains data. It participates in the table model.\") elements are not descendant of the [`<colgroup>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup \"The HTML <colgroup> element defines a group of columns within a table.\") element, they won't inherit it.\n    *   If the table doesn't use a [`colspan`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td#attr-colspan) attribute, use one `td:nth-child(an+b)` CSS selector per column, where a is the total number of the columns in the table and b is the ordinal position of this column in the table. Only after this selector the [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align \"The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.\") property can be used.\n    *   If the table does use a [`colspan`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td#attr-colspan) attribute, the effect can be achieved by combining adequate CSS attribute selectors like `[colspan=n]`, though this is not trivial.\n*   To achieve the same effect as the `char` value, in CSS3, you can use the value of the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup#attr-char) as the value of the [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align \"The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.\") property Unimplemented."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/colgroup'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/colgroup'
+    }
   },
   col: {
-    description: {
-      kind: 'markdown',
-      value: 'If a col element has a parent and that is a colgroup element that itself has a parent that is a table element, then the col element represents one or more columns in the column group represented by that colgroup.'
-    },
+    description: 'If a col element has a parent and that is a colgroup element that itself has a parent that is a table element, then the col element represents one or more columns in the column group represented by that colgroup.',
     attributes: [
       {
         name: 'span'
@@ -2130,90 +1722,65 @@ export default {
         description: "This enumerated attribute specifies how horizontal alignment of each column cell content will be handled. Possible values are:\n\n*   `left`, aligning the content to the left of the cell\n*   `center`, centering the content in the cell\n*   `right`, aligning the content to the right of the cell\n*   `justify`, inserting spaces into the textual content so that the content is justified in the cell\n*   `char`, aligning the textual content on a special character with a minimal offset, defined by the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col#attr-char) and [`charoff`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col#attr-charoff) attributes Unimplemented (see [bug 2212](https://bugzilla.mozilla.org/show_bug.cgi?id=2212 \"character alignment not implemented (align=char, charoff=, text-align:<string>)\")).\n\nIf this attribute is not set, its value is inherited from the [`align`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup#attr-align) of the [`<colgroup>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup \"The HTML <colgroup> element defines a group of columns within a table.\") element this `<col>` element belongs too. If there are none, the `left` value is assumed.\n\n**Note:** Do not use this attribute as it is obsolete (not supported) in the latest standard.\n\n*   To achieve the same effect as the `left`, `center`, `right` or `justify` values:\n    *   Do not try to set the [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align \"The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.\") property on a selector giving a [`<col>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col \"The HTML <col> element defines a column within a table and is used for defining common semantics on all common cells. It is generally found within a <colgroup> element.\") element. Because [`<td>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td \"The HTML <td> element defines a cell of a table that contains data. It participates in the table model.\") elements are not descendant of the [`<col>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col \"The HTML <col> element defines a column within a table and is used for defining common semantics on all common cells. It is generally found within a <colgroup> element.\") element, they won't inherit it.\n    *   If the table doesn't use a [`colspan`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td#attr-colspan) attribute, use the `td:nth-child(an+b)` CSS selector. Set `a` to zero and `b` to the position of the column in the table, e.g. `td:nth-child(2) { text-align: right; }` to right-align the second column.\n    *   If the table does use a [`colspan`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td#attr-colspan) attribute, the effect can be achieved by combining adequate CSS attribute selectors like `[colspan=n]`, though this is not trivial.\n*   To achieve the same effect as the `char` value, in CSS3, you can use the value of the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col#attr-char) as the value of the [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align \"The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.\") property Unimplemented."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/col'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/col'
+    }
   },
   tbody: {
-    description: {
-      kind: 'markdown',
-      value: 'The tbody element represents a block of rows that consist of a body of data for the parent table element, if the tbody element has a parent and it is a table.'
-    },
+    description: 'The tbody element represents a block of rows that consist of a body of data for the parent table element, if the tbody element has a parent and it is a table.',
     attributes: [
       {
         name: 'align',
         description: 'This enumerated attribute specifies how horizontal alignment of each cell content will be handled. Possible values are:\n\n*   `left`, aligning the content to the left of the cell\n*   `center`, centering the content in the cell\n*   `right`, aligning the content to the right of the cell\n*   `justify`, inserting spaces into the textual content so that the content is justified in the cell\n*   `char`, aligning the textual content on a special character with a minimal offset, defined by the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody#attr-char) and [`charoff`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody#attr-charoff) attributes.\n\nIf this attribute is not set, the `left` value is assumed.\n\n**Note:** Do not use this attribute as it is obsolete (not supported) in the latest standard.\n\n*   To achieve the same effect as the `left`, `center`, `right` or `justify` values, use the CSS [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align "The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.") property on it.\n*   To achieve the same effect as the `char` value, in CSS3, you can use the value of the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody#attr-char) as the value of the [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align "The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.") property Unimplemented.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/tbody'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/tbody'
+    }
   },
   thead: {
-    description: {
-      kind: 'markdown',
-      value: 'The thead element represents the block of rows that consist of the column labels (headers) for the parent table element, if the thead element has a parent and it is a table.'
-    },
+    description: 'The thead element represents the block of rows that consist of the column labels (headers) for the parent table element, if the thead element has a parent and it is a table.',
     attributes: [
       {
         name: 'align',
         description: 'This enumerated attribute specifies how horizontal alignment of each cell content will be handled. Possible values are:\n\n*   `left`, aligning the content to the left of the cell\n*   `center`, centering the content in the cell\n*   `right`, aligning the content to the right of the cell\n*   `justify`, inserting spaces into the textual content so that the content is justified in the cell\n*   `char`, aligning the textual content on a special character with a minimal offset, defined by the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead#attr-char) and [`charoff`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead#attr-charoff) attributes Unimplemented (see [bug 2212](https://bugzilla.mozilla.org/show_bug.cgi?id=2212 "character alignment not implemented (align=char, charoff=, text-align:<string>)")).\n\nIf this attribute is not set, the `left` value is assumed.\n\n**Note:** Do not use this attribute as it is obsolete (not supported) in the latest standard.\n\n*   To achieve the same effect as the `left`, `center`, `right` or `justify` values, use the CSS [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align "The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.") property on it.\n*   To achieve the same effect as the `char` value, in CSS3, you can use the value of the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead#attr-char) as the value of the [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align "The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.") property Unimplemented.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/thead'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/thead'
+    }
   },
   tfoot: {
-    description: {
-      kind: 'markdown',
-      value: 'The tfoot element represents the block of rows that consist of the column summaries (footers) for the parent table element, if the tfoot element has a parent and it is a table.'
-    },
+    description: 'The tfoot element represents the block of rows that consist of the column summaries (footers) for the parent table element, if the tfoot element has a parent and it is a table.',
     attributes: [
       {
         name: 'align',
         description: 'This enumerated attribute specifies how horizontal alignment of each cell content will be handled. Possible values are:\n\n*   `left`, aligning the content to the left of the cell\n*   `center`, centering the content in the cell\n*   `right`, aligning the content to the right of the cell\n*   `justify`, inserting spaces into the textual content so that the content is justified in the cell\n*   `char`, aligning the textual content on a special character with a minimal offset, defined by the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody#attr-char) and [`charoff`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody#attr-charoff) attributes Unimplemented (see [bug 2212](https://bugzilla.mozilla.org/show_bug.cgi?id=2212 "character alignment not implemented (align=char, charoff=, text-align:<string>)")).\n\nIf this attribute is not set, the `left` value is assumed.\n\n**Note:** Do not use this attribute as it is obsolete (not supported) in the latest standard.\n\n*   To achieve the same effect as the `left`, `center`, `right` or `justify` values, use the CSS [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align "The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.") property on it.\n*   To achieve the same effect as the `char` value, in CSS3, you can use the value of the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tfoot#attr-char) as the value of the [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align "The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.") property Unimplemented.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/tfoot'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/tfoot'
+    }
   },
   tr: {
-    description: {
-      kind: 'markdown',
-      value: 'The tr element represents a row of cells in a table.'
-    },
+    description: 'The tr element represents a row of cells in a table.',
     attributes: [
       {
         name: 'align',
         description: "A [`DOMString`](https://developer.mozilla.org/en-US/docs/Web/API/DOMString \"DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String.\") which specifies how the cell's context should be aligned horizontally within the cells in the row; this is shorthand for using `align` on every cell in the row individually. Possible values are:\n\n`left`\n\nAlign the content of each cell at its left edge.\n\n`center`\n\nCenter the contents of each cell between their left and right edges.\n\n`right`\n\nAlign the content of each cell at its right edge.\n\n`justify`\n\nWiden whitespaces within the text of each cell so that the text fills the full width of each cell (full justification).\n\n`char`\n\nAlign each cell in the row on a specific character (such that each row in the column that is configured this way will horizontally align its cells on that character). This uses the [`char`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr#attr-char) and [`charoff`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr#attr-charoff) to establish the alignment character (typically \".\" or \",\" when aligning numerical data) and the number of characters that should follow the alignment character. This alignment type was never widely supported.\n\nIf no value is expressly set for `align`, the parent node's value is inherited.\n\nInstead of using the obsolete `align` attribute, you should instead use the CSS [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align \"The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.\") property to establish `left`, `center`, `right`, or `justify` alignment for the row's cells. To apply character-based alignment, set the CSS [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align \"The text-align CSS property sets the horizontal alignment of an inline or table-cell box. This means it works like vertical-align but in the horizontal direction.\") property to the alignment character (such as `\".\"` or `\",\"`)."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/tr'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/tr'
+    }
   },
   td: {
-    description: {
-      kind: 'markdown',
-      value: 'The td element represents a data cell in a table.'
-    },
+    description: 'The td element represents a data cell in a table.',
     attributes: [
       {
         name: 'colspan'
@@ -2241,18 +1808,13 @@ export default {
         description: "This attribute defines the background color of each cell in a column. It consists of a 6-digit hexadecimal code as defined in [sRGB](https://www.w3.org/Graphics/Color/sRGB) and is prefixed by '#'. This attribute may be used with one of sixteen predefined color strings:\n\n \n\n`black` = \"#000000\"\n\n \n\n`green` = \"#008000\"\n\n \n\n`silver` = \"#C0C0C0\"\n\n \n\n`lime` = \"#00FF00\"\n\n \n\n`gray` = \"#808080\"\n\n \n\n`olive` = \"#808000\"\n\n \n\n`white` = \"#FFFFFF\"\n\n \n\n`yellow` = \"#FFFF00\"\n\n \n\n`maroon` = \"#800000\"\n\n \n\n`navy` = \"#000080\"\n\n \n\n`red` = \"#FF0000\"\n\n \n\n`blue` = \"#0000FF\"\n\n \n\n`purple` = \"#800080\"\n\n \n\n`teal` = \"#008080\"\n\n \n\n`fuchsia` = \"#FF00FF\"\n\n \n\n`aqua` = \"#00FFFF\"\n\n**Note:** Do not use this attribute, as it is non-standard and only implemented in some versions of Microsoft Internet Explorer: The [`<td>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td \"The HTML <td> element defines a cell of a table that contains data. It participates in the table model.\") element should be styled using [CSS](https://developer.mozilla.org/en-US/docs/CSS). To create a similar effect use the [`background-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color \"The background-color CSS property sets the background color of an element.\") property in [CSS](https://developer.mozilla.org/en-US/docs/CSS) instead."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/td'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/td'
+    }
   },
   th: {
-    description: {
-      kind: 'markdown',
-      value: 'The th element represents a header cell in a table.'
-    },
+    description: 'The th element represents a header cell in a table.',
     attributes: [
       {
         name: 'colspan'
@@ -2290,18 +1852,13 @@ export default {
         description: "This attribute defines the background color of each cell in a column. It consists of a 6-digit hexadecimal code as defined in [sRGB](https://www.w3.org/Graphics/Color/sRGB) and is prefixed by '#'. This attribute may be used with one of sixteen predefined color strings:\n\n \n\n`black` = \"#000000\"\n\n \n\n`green` = \"#008000\"\n\n \n\n`silver` = \"#C0C0C0\"\n\n \n\n`lime` = \"#00FF00\"\n\n \n\n`gray` = \"#808080\"\n\n \n\n`olive` = \"#808000\"\n\n \n\n`white` = \"#FFFFFF\"\n\n \n\n`yellow` = \"#FFFF00\"\n\n \n\n`maroon` = \"#800000\"\n\n \n\n`navy` = \"#000080\"\n\n \n\n`red` = \"#FF0000\"\n\n \n\n`blue` = \"#0000FF\"\n\n \n\n`purple` = \"#800080\"\n\n \n\n`teal` = \"#008080\"\n\n \n\n`fuchsia` = \"#FF00FF\"\n\n \n\n`aqua` = \"#00FFFF\"\n\n**Note:** Do not use this attribute, as it is non-standard and only implemented in some versions of Microsoft Internet Explorer: The [`<th>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th \"The HTML <th> element defines a cell as header of a group of table cells. The exact nature of this group is defined by the scope and headers attributes.\") element should be styled using [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS). To create a similar effect use the [`background-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color \"The background-color CSS property sets the background color of an element.\") property in [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) instead."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/th'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/th'
+    }
   },
   form: {
-    description: {
-      kind: 'markdown',
-      value: 'The form element represents a collection of form-associated elements, some of which can represent editable values that can be submitted to a server for processing.'
-    },
+    description: 'The form element represents a collection of form-associated elements, some of which can represent editable values that can be submitted to a server for processing.',
     attributes: [
       {
         name: 'accept-charset',
@@ -2372,18 +1929,13 @@ export default {
         description: 'This is a nonstandard attribute used by iOS Safari Mobile which controls whether and how the text value for textual form control descendants should be automatically capitalized as it is entered/edited by the user. If the `autocapitalize` attribute is specified on an individual form control descendant, it trumps the form-wide `autocapitalize` setting. The non-deprecated values are available in iOS 5 and later. The default value is `sentences`. Possible values are:\n\n*   `none`: Completely disables automatic capitalization\n*   `sentences`: Automatically capitalize the first letter of sentences.\n*   `words`: Automatically capitalize the first letter of words.\n*   `characters`: Automatically capitalize all characters.\n*   `on`: Deprecated since iOS 5.\n*   `off`: Deprecated since iOS 5.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/form'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/form'
+    }
   },
   label: {
-    description: {
-      kind: 'markdown',
-      value: "The label element represents a caption in a user interface. The caption can be associated with a specific form control, known as the label element's labeled control, either using the for attribute, or by putting the form control inside the label element itself."
-    },
+    description: "The label element represents a caption in a user interface. The caption can be associated with a specific form control, known as the label element's labeled control, either using the for attribute, or by putting the form control inside the label element itself.",
     attributes: [
       {
         name: 'form',
@@ -2400,18 +1952,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/label'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/label'
+    }
   },
   input: {
-    description: {
-      kind: 'markdown',
-      value: 'The input element represents a typed data field, usually with a form control to allow the user to edit the data.'
-    },
+    description: 'The input element represents a typed data field, usually with a form control to allow the user to edit the data.',
     attributes: [
       {
         name: 'accept'
@@ -2522,18 +2069,13 @@ export default {
         name: 'width'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/input'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/input'
+    }
   },
   button: {
-    description: {
-      kind: 'markdown',
-      value: 'The button element represents a button labeled by its contents.'
-    },
+    description: 'The button element represents a button labeled by its contents.',
     attributes: [
       {
         name: 'autofocus',
@@ -2623,18 +2165,13 @@ export default {
         description: "The use of this attribute on a [`<button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button \"The HTML <button> element represents a clickable button, which can be used in forms or anywhere in a document that needs simple, standard button functionality.\") is nonstandard and Firefox-specific. By default, unlike other browsers, [Firefox persists the dynamic disabled state](https://stackoverflow.com/questions/5985839/bug-with-firefox-disabled-attribute-of-input-not-resetting-when-refreshing) of a [`<button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button \"The HTML <button> element represents a clickable button, which can be used in forms or anywhere in a document that needs simple, standard button functionality.\") across page loads. Setting the value of this attribute to `off` (i.e. `autocomplete=\"off\"`) disables this feature. See [bug 654072](https://bugzilla.mozilla.org/show_bug.cgi?id=654072 \"if disabled state is changed with javascript, the normal state doesn't return after refreshing the page\")."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/button'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/button'
+    }
   },
   select: {
-    description: {
-      kind: 'markdown',
-      value: 'The select element represents a control for selecting amongst a set of options.'
-    },
+    description: 'The select element represents a control for selecting amongst a set of options.',
     attributes: [
       {
         name: 'autocomplete',
@@ -2698,31 +2235,21 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/select'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/select'
+    }
   },
   datalist: {
-    description: {
-      kind: 'markdown',
-      value: 'The datalist element represents a set of option elements that represent predefined options for other controls. In the rendering, the datalist element represents nothing and it, along with its children, should be hidden.'
-    },
+    description: 'The datalist element represents a set of option elements that represent predefined options for other controls. In the rendering, the datalist element represents nothing and it, along with its children, should be hidden.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/datalist'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/datalist'
+    }
   },
   optgroup: {
-    description: {
-      kind: 'markdown',
-      value: 'The optgroup element represents a group of option elements with a common label.'
-    },
+    description: 'The optgroup element represents a group of option elements with a common label.',
     attributes: [
       {
         name: 'disabled',
@@ -2740,18 +2267,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/optgroup'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/optgroup'
+    }
   },
   option: {
-    description: {
-      kind: 'markdown',
-      value: 'The option element represents an option in a select element or as part of a list of suggestions in a datalist element.'
-    },
+    description: 'The option element represents an option in a select element or as part of a list of suggestions in a datalist element.',
     attributes: [
       {
         name: 'disabled',
@@ -2784,18 +2306,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/option'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/option'
+    }
   },
   textarea: {
-    description: {
-      kind: 'markdown',
-      value: "The textarea element represents a multiline plain text edit control for the element's raw value. The contents of the control represent the control's default value."
-    },
+    description: "The textarea element represents a multiline plain text edit control for the element's raw value. The contents of the control represent the control's default value.",
     attributes: [
       {
         name: 'autocomplete',
@@ -2910,18 +2427,13 @@ export default {
         description: "Specifies whether the `<textarea>` is subject to spell checking by the underlying browser/OS. the value can be:\n\n*   `true`: Indicates that the element needs to have its spelling and grammar checked.\n*   `default` : Indicates that the element is to act according to a default behavior, possibly based on the parent element's own `spellcheck` value.\n*   `false` : Indicates that the element should not be spell checked."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/textarea'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/textarea'
+    }
   },
   output: {
-    description: {
-      kind: 'markdown',
-      value: 'The output element represents the result of a calculation performed by the application, or the result of a user action.'
-    },
+    description: 'The output element represents the result of a calculation performed by the application, or the result of a user action.',
     attributes: [
       {
         name: 'for',
@@ -2945,18 +2457,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/output'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/output'
+    }
   },
   progress: {
-    description: {
-      kind: 'markdown',
-      value: 'The progress element represents the completion progress of a task. The progress is either indeterminate, indicating that progress is being made but that it is not clear how much more work remains to be done before the task is complete (e.g. because the task is waiting for a remote host to respond), or the progress is a number in the range zero to a maximum, giving the fraction of work that has so far been completed.'
-    },
+    description: 'The progress element represents the completion progress of a task. The progress is either indeterminate, indicating that progress is being made but that it is not clear how much more work remains to be done before the task is complete (e.g. because the task is waiting for a remote host to respond), or the progress is a number in the range zero to a maximum, giving the fraction of work that has so far been completed.',
     attributes: [
       {
         name: 'value',
@@ -2973,18 +2480,13 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/progress'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/progress'
+    }
   },
   meter: {
-    description: {
-      kind: 'markdown',
-      value: 'The meter element represents a scalar measurement within a known range, or a fractional value; for example disk usage, the relevance of a query result, or the fraction of a voting population to have selected a particular candidate.'
-    },
+    description: 'The meter element represents a scalar measurement within a known range, or a fractional value; for example disk usage, the relevance of a query result, or the fraction of a voting population to have selected a particular candidate.',
     attributes: [
       {
         name: 'value',
@@ -3033,18 +2535,13 @@ export default {
         description: 'This attribute associates the element with a `form` element that has ownership of the `meter` element. For example, a `meter` might be displaying a range corresponding to an `input` element of `type` _number_. This attribute is only used if the `meter` element is being used as a form-associated element; even then, it may be omitted if the element appears as a descendant of a `form` element.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/meter'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/meter'
+    }
   },
   fieldset: {
-    description: {
-      kind: 'markdown',
-      value: 'The fieldset element represents a set of form controls optionally grouped under a common name.'
-    },
+    description: 'The fieldset element represents a set of form controls optionally grouped under a common name.',
     attributes: [
       {
         name: 'disabled',
@@ -3069,31 +2566,21 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/fieldset'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/fieldset'
+    }
   },
   legend: {
-    description: {
-      kind: 'markdown',
-      value: "The legend element represents a caption for the rest of the contents of the legend element's parent fieldset element, if any."
-    },
+    description: "The legend element represents a caption for the rest of the contents of the legend element's parent fieldset element, if any.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/legend'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/legend'
+    }
   },
   details: {
-    description: {
-      kind: 'markdown',
-      value: 'The details element represents a disclosure widget from which the user can obtain additional information or controls.'
-    },
+    description: 'The details element represents a disclosure widget from which the user can obtain additional information or controls.',
     attributes: [
       {
         name: 'open',
@@ -3104,49 +2591,34 @@ export default {
         }
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/details'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/details'
+    }
   },
   summary: {
-    description: {
-      kind: 'markdown',
-      value: "The summary element represents a summary, caption, or legend for the rest of the contents of the summary element's parent details element, if any."
-    },
+    description: "The summary element represents a summary, caption, or legend for the rest of the contents of the summary element's parent details element, if any.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/summary'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/summary'
+    }
   },
   dialog: {
-    description: {
-      kind: 'markdown',
-      value: 'The dialog element represents a part of an application that a user interacts with to perform a task, for example a dialog box, inspector, or window.'
-    },
+    description: 'The dialog element represents a part of an application that a user interacts with to perform a task, for example a dialog box, inspector, or window.',
     attributes: [
       {
         name: 'open',
         description: "Indicates that the dialog is active and available for interaction. When the `open` attribute is not set, the dialog shouldn't be shown to the user."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dialog'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/dialog'
+    }
   },
   script: {
-    description: {
-      kind: 'markdown',
-      value: 'The script element allows authors to include dynamic script and data blocks in their documents. The element does not represent content for the user.'
-    },
+    description: 'The script element allows authors to include dynamic script and data blocks in their documents. The element does not represent content for the user.',
     attributes: [
       {
         name: 'src',
@@ -3213,44 +2685,29 @@ export default {
         description: 'Like the `textContent` attribute, this attribute sets the text content of the element. Unlike the `textContent` attribute, however, this attribute is evaluated as executable code after the node is inserted into the DOM.'
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/script'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/script'
+    }
   },
   noscript: {
-    description: {
-      kind: 'markdown',
-      value: "The noscript element represents nothing if scripting is enabled, and represents its children if scripting is disabled. It is used to present different markup to user agents that support scripting and those that don't support scripting, by affecting how the document is parsed."
-    },
+    description: "The noscript element represents nothing if scripting is enabled, and represents its children if scripting is disabled. It is used to present different markup to user agents that support scripting and those that don't support scripting, by affecting how the document is parsed.",
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/noscript'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/noscript'
+    }
   },
   template: {
-    description: {
-      kind: 'markdown',
-      value: 'The template element is used to declare fragments of HTML that can be cloned and inserted in the document by script.'
-    },
+    description: 'The template element is used to declare fragments of HTML that can be cloned and inserted in the document by script.',
     attributes: [],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/template'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/template'
+    }
   },
   canvas: {
-    description: {
-      kind: 'markdown',
-      value: 'The canvas element provides scripts with a resolution-dependent bitmap canvas, which can be used for rendering graphs, game graphics, art, or other visual images on the fly.'
-    },
+    description: 'The canvas element provides scripts with a resolution-dependent bitmap canvas, which can be used for rendering graphs, game graphics, art, or other visual images on the fly.',
     attributes: [
       {
         name: 'width',
@@ -3271,11 +2728,9 @@ export default {
         description: "Lets the canvas know whether or not translucency will be a factor. If the canvas knows there's no translucency, painting performance can be optimized. This is only supported by Mozilla-based browsers; use the standardized [`canvas.getContext('2d', { alpha: false })`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext \"The HTMLCanvasElement.getContext() method returns a drawing context on the canvas, or null if the context identifier is not supported.\") instead."
       }
     ],
-    references: [
-      {
-        name: 'MDN Reference',
-        url: 'https://developer.mozilla.org/docs/Web/HTML/Element/canvas'
-      }
-    ]
+    reference: {
+      name: 'MDN Reference',
+      url: 'https://developer.mozilla.org/docs/Web/HTML/Element/canvas'
+    }
   }
 };
