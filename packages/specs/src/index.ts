@@ -7,3 +7,5 @@ export { Type } from './liquid/types/types';
 export { IObject, IProperties } from './liquid/types/objects';
 export { ITag } from './liquid/types/tags';
 export { IFilter } from './liquid/types/filters';
+export { BasicTypeRange as BasicType } from './liquid/types/types';
+export { TagTypeRange as TagType } from './liquid/types/types';
