@@ -394,7 +394,7 @@ export function parse (document: IAST): IAST {
 
   /* RETURN ------------------------------------- */
 
-  console.log(document);
+  // console.log(document);
 
   return document;
 
