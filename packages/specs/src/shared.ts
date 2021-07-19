@@ -3,6 +3,7 @@
 /* LIQUID QUERIES ----------------------------- */
 
 export {
+  getLiquidCompletions,
   getArgument,
   setFilter,
   setObject,
@@ -17,12 +18,17 @@ export {
   isTagType,
   isType,
   isValue,
-  isWithin
+  isWithin,
+  nextArgument,
+  nextParameter,
+  prevArgument,
+  reset
 } from './liquid/controller/queries';
 
 /* HTML QUERIES ------------------------------- */
 
 export {
+  getHTMLCompletions,
   isVoid,
   provideAttrs,
   provideValues,

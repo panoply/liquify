@@ -51,7 +51,7 @@ export let value: string;
 /**
  * Completion Items
  */
-export let complete = setCompletions();
+export let complete = getLiquidCompletions();
 
 /* -------------------------------------------- */
 /* LOCAL SCOPES                                 */
@@ -336,7 +336,7 @@ export function setObject (name: string): boolean {
  * specification reference. Returns a closure getter combinator
  * with array lists for various tags, filters and objects.
  */
-export function setCompletions () {
+export function getLiquidCompletions () {
 
   /* -------------------------------------------- */
   /* TAG COMPLETIONS                              */

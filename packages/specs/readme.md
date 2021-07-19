@@ -28,6 +28,37 @@ The query engine is used by the parser. Each time a tag, object or filter is enc
 
 ```typescript
 
+import { state as $, query as q, html5, liquid } from '@liquify/liquid-language-specs';
+
+// LIQUID STATES
+
+$.liquid.argument
+$.liquid.filter
+$.liquid.object
+$.liquid.tag
+$.liquid.value
+
+// LIQUID DATA
+
+liquid.complete
+liquid.engine
+liquid.jekyll
+liquid.shopify
+liquid.standard
+
+// HTML STATES
+
+$.html.tag
+$.html.attribute
+$.html.value
+
+// HTML DATA
+
+html5.tags
+html5.attributes
+html5.values
+html5.complete
+
 // STATES
 
 spec.engine;
@@ -38,44 +69,53 @@ spec.argument;
 
 // GETTERS
 
-spec.GetVariation(): Variation
-spec.GetArgument(string): boolean
+q.getLiquidCompletions(): { tags: [], filters: [], objects: [] }
+q.getHTMLCompletions(): { tags: [], attributes: [] }
+q.getArgument(type: Type): boolean
 
 // SETTERS
 
-spec.SetEngine(string): void;
-spec.SetTemplate(string): void;
-spec.SetObject(string): boolean;
-spec.SetFilter(string): boolean;
-spec.SetTag(string): boolean;
-
-// NAVIGATORS
-
-spec.PrevArgument(): boolean;
-spec.NextArgument(): boolean;
-spec.NextParameter(): boolean;
+q.setEngine(engine: IEngine): void
+q.setFilter(token: string): boolean
+q.setObject(token: string): boolean
+q.setTag(token: string): boolean
 
 // VALIDATORS
 
-spec.isProperty(string): boolean;
-spec.isParameter(string): boolean;
-spec.isValue(string): boolean;
-spec.isUnique(string): boolean;
-spec.isWithin(number): boolean;
-spec.isTagType(number): boolean;
-spec.isObjectType(number): boolean;
-spec.isArgumentType(number): boolean;
-spec.isTemplate(string): boolean;
-spec.isRequired(): boolean;
+q.isError(err: QueryError): boolean
+q.isObjectType(type: number): boolean
+q.isOptional(from: number): boolean
+q.isParameter(token: string): boolean
+q.isProperty(token: string): boolean
+q.isRequired(): boolean
+q.isTagType(type: Type): boolean
+q.isType(type: Type): boolean
+q.isValue(token: string): boolean
+q.isVoid(token: string): boolean
+q.isWithin(token: Within): boolean
 
 // PROVIDERS
 
-spec.provideTags();
-spec.provideObjects();
-spec.provideFilters();
-spec.provideArguments();
-spec.provideParameters();
-spec.provideAttributes();
+q.provideAttrs(): attributes[]
+q.provideTags(): tags[]
+q.provideValues(): values[]
+
+// RESOLVERS
+
+q.resolveAttribute(item: CompletionItem): CompletionItem
+q.resolveTag(item: CompletionItem): CompletionItem
+q.resolveValue(item: CompletionItem): CompletionItem
+
+// NAVIGATORS
+
+q.nextArgument(): boolean
+q.nextParameter(): boolean
+q.prevArgument(): boolean
+
+// OTHER
+
+q.reset(): void
+
 ```
 
 # Documentation
