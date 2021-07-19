@@ -1,4 +1,26 @@
 /**
+ * `[^'"[\s\]{}|!:,.<=>-]*?$`
+ *
+ * ---
+ *
+ * Captures before boundary of words. Used by
+ * Liquid Language Server in hover capabilities.
+ *
+ */
+export const WordBoundaryBefore = /[^'"[\s\]{}|!:,.<=>]*?$/;
+
+/**
+ * `^[\n\r\f\v]`
+ *
+ * ---
+ *
+ * Captures after boundary of words. Used by
+ * Liquid Language Server in hover capabilities.
+ *
+ */
+export const WordBoundaryAfter = /['"[\s\]{}|!:,.<=>]/;
+
+/**
  * `^[\n\r\f\v]`
  *
  * ---
