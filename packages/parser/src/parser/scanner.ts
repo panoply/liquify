@@ -1,7 +1,15 @@
-import { query as q, Type, Within, QueryErrors } from '@liquify/liquid-language-specs';
+import {
+  Type,
+  Within,
+  QueryErrors,
+  state as $,
+  query as q
+} from '@liquify/liquid-language-specs';
+
 import { TokenType } from 'lexical/tokens';
 import { ScanState, ScanCache } from 'lexical/state';
 import { ParseError } from 'lexical/errors';
+
 import * as s from 'parser/stream';
 import * as r from 'lexical/expressions';
 import * as c from 'lexical/characters';
@@ -166,8 +174,9 @@ function HTMLSeq (): number {
 
     state = ScanState.HTMLAttributeName;
 
+    console.log(q.isVoid(s.token));
     // We record this token
-    token = s.TokenContains(r.HTMLVoidTags)
+    token = q.isVoid(s.token)
       ? TokenType.HTMLVoidTagOpen
       : TokenType.HTMLStartTagOpen;
 
@@ -419,7 +428,7 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
         // Match captured token with a cursor value
-        if (q.SetObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
+        if (q.setObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
           state = ScanState.Object;
           return TokenType.ObjectTagName;
         }
@@ -456,10 +465,10 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Lets update our specification cursor
-        q.SetTag(s.token);
+        q.setTag(s.token);
 
         // When no spec exists for the tag, this is an unknown tag
-        if (!q.tag) {
+        if (!$.liquid.tag) {
           state = ScanState.GotoTagEnd;
           return TokenType.Unknown;
         }
@@ -478,7 +487,7 @@ function Scan (): number {
         // Control type tags, eg: {% assign %} or {% capture %}
         if (q.isTagType(Type.variable)) {
           state = ScanState.VariableIdentifier;
-          return q.tag?.singular
+          return $.liquid.tag?.singular
             ? TokenType.SingularTagName
             : TokenType.StartTagName;
 
@@ -489,7 +498,7 @@ function Scan (): number {
         // Control type tags, eg: {% if %} or {% unless %}
         if (q.isTagType(Type.control)) {
           state = ScanState.Control;
-          return q.tag?.singular
+          return $.liquid.tag?.singular
             ? TokenType.SingularTagName
             : TokenType.StartTagName;
         }
@@ -507,7 +516,7 @@ function Scan (): number {
         // Iteration type tags, eg: {% for %}
         if (q.isTagType(Type.iteration)) {
           state = ScanState.Iteration;
-          return q.tag?.singular
+          return $.liquid.tag?.singular
             ? TokenType.SingularTagName
             : TokenType.StartTagName;
         }
@@ -755,7 +764,7 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlpha)) {
 
         // Next scan we will look for color operator, eg: {{ tag | filter^:}}
-        if (q.SetFilter(s.token)) {
+        if (q.setFilter(s.token)) {
           state = ScanState.FilterOperator;
           return TokenType.FilterIdentifier;
         }
@@ -780,7 +789,7 @@ function Scan (): number {
       if (s.IsCodeChar(c.COL)) {
 
         // If spec exists and arguments do not exist, throw an error
-        if (!q.argument) {
+        if (!$.liquid.argument) {
           error = ParseError.RejectFilterArguments;
           state = ScanState.Filter;
           return TokenType.ParseError;
@@ -794,7 +803,7 @@ function Scan (): number {
       }
 
       // Filter contains no arguments
-      if (!q.argument) {
+      if (!$.liquid.argument) {
         state = ScanState.Filter;
         return Scan();
       }
@@ -825,7 +834,7 @@ function Scan (): number {
 
           // Lets attempt to move to the next argument.
           // If last argument, we can exit the scan with parse error.
-          if (!q.NextArgument()) {
+          if (!q.nextArgument()) {
             error = ParseError.InvalidArgument;
             state = ScanState.ParseError;
             return TokenType.ParseError;
@@ -927,7 +936,7 @@ function Scan (): number {
 
         // Supply the object to spec query engine, if value is not
         // a known object, no harm is done, but we will still run the check
-        q.SetObject(s.token);
+        q.setObject(s.token);
 
         // Check to to see if we are dealing with an object
         if (s.IsRegExp(r.PropertyNotation)) {
@@ -978,7 +987,7 @@ function Scan (): number {
 
       // If we get here, lets check if another argument exists
       // so as to capture any optional arguments in the q.
-      if (!s.IsPrevCodeChar(c.COM) && q.NextArgument()) return Scan();
+      if (!s.IsPrevCodeChar(c.COM) && q.nextArgument()) return Scan();
 
       s.Cursor(); // Align the cursor with offset
 
@@ -995,13 +1004,13 @@ function Scan (): number {
 
       // Lets revert the parameter to the argument index
       // We will check for comma and pass back to argument scan.
-      if (q.NextParameter() && s.IfCodeChar(c.COM)) {
+      if (q.nextParameter() && s.IfCodeChar(c.COM)) {
         state = ScanState.FilterArgument;
         return Scan();
       }
 
       // Move to the next argument in the spec
-      if (q.NextArgument()) {
+      if (q.nextArgument()) {
 
         // We have a comma separator character, lets proceed
         if (s.IfCodeChar(c.COM)) {
@@ -1033,7 +1042,7 @@ function Scan (): number {
       // Ensure we have a clear closing path, eg: {{ tag | filter ^ }}
       if (s.IsRegExp(r.TagCloseClear)) {
 
-        state = q.tag
+        state = $.liquid.tag
           ? ScanState.BeforeSingularTagClose
           : ScanState.BeforeOutputTagClose;
 
@@ -1131,7 +1140,7 @@ function Scan (): number {
 
         // Lets consult the specification to see if we know about the value
         // If we know about the value, we will validate it accordingly
-        if (q.SetObject(s.token)) {
+        if (q.setObject(s.token)) {
 
           // We have set the specification, lets now determine
           // if the value contains object notation and proceed accordingly
@@ -1211,7 +1220,7 @@ function Scan (): number {
 
         // Assign tags accept filters, which mean its not a `capture``
         // Pass to the operator scan
-        if (q.tag?.filters) {
+        if ($.liquid.tag?.filters) {
           state = ScanState.VariableOperator;
           return TokenType.VariableKeyword;
         }
@@ -1342,7 +1351,7 @@ function Scan (): number {
         }
 
         // Check to to see if we are dealing with an object
-        if (q.SetObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
+        if (q.setObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
           cache = ScanState.IterationArray;
           state = ScanState.Object;
           return TokenType.Object;
@@ -1378,7 +1387,7 @@ function Scan (): number {
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
         // Check to to see if we are dealing with an object
-        if (q.SetObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
+        if (q.setObject(s.token) || s.IsRegExp(r.PropertyNotation)) {
 
           // Next call we will look for a property notation
           cache = ScanState.IterationRangeSeparators;
@@ -1449,12 +1458,12 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.EmbeddedLanguage:
 
-      if (q.tag.language === 'json') {
+      if ($.liquid.tag.language === 'json') {
         state = ScanState.BeforeStartTagClose;
         return TokenType.EmbeddedJSON;
       }
 
-      if (q.tag.language === 'css') {
+      if ($.liquid.tag.language === 'css') {
         state = ScanState.BeforeStartTagClose;
         return TokenType.EmbeddedCSS;
       }
