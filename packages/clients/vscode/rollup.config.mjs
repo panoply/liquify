@@ -22,14 +22,6 @@ export default Rollup(
         esModule: false,
         preferConst: true,
         banner: banner('PROPRIETARY')
-      },
-      {
-        format: 'es',
-        file: config.output.esm,
-        sourcemap: env.is('dev', 'inline'),
-        esModule: false,
-        preferConst: true,
-        banner: banner('PROPRIETARY')
       }
     ],
     external: [
