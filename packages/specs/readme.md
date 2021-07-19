@@ -24,48 +24,60 @@ pnpm i @liquify/language-specs
 
 ### Query Engine
 
-The query engine is used by the parser. Each time a tag, object or filter is encountered we query its specification and the scanner can act accordingly. The module has a single names export `spec` from which all methods can be accessed.
+The query engine is used by the parser. Each time a tag, object or filter is encountered we query its specification so the scanner or language server can act accordingly. The module exports variables which hold constantly changing state values.
+
+##### Data
+
+We can access the specifications via 2 exports, `html5` and `liquid` these both provide us direct access to the data objects. These are raw access references. Exports like `complete` provide us LSP completions.
 
 ```typescript
-
-import { state as $, query as q, html5, liquid } from '@liquify/liquid-language-specs';
-
-// LIQUID STATES
-
-$.liquid.argument
-$.liquid.filter
-$.liquid.object
-$.liquid.tag
-$.liquid.value
+import { html5, liquid } from "@liquify/liquid-language-specs";
 
 // LIQUID DATA
 
-liquid.complete
-liquid.engine
-liquid.jekyll
-liquid.shopify
-liquid.standard
-
-// HTML STATES
-
-$.html.tag
-$.html.attribute
-$.html.value
+liquid.engine;
+liquid.complete;
+liquid.jekyll;
+liquid.shopify;
+liquid.standard;
 
 // HTML DATA
 
-html5.tags
-html5.attributes
-html5.values
-html5.complete
+html5.tags;
+html5.attributes;
+html5.values;
+```
 
-// STATES
+##### State
 
-spec.engine;
-spec.tag;
-spec.filter;
-spec.object;
-spec.argument;
+The `state` export gives us a access to in-stream specification values.
+
+```typescript
+import { state as $ } from "@liquify/liquid-language-specs";
+
+// LIQUID STATES
+
+$.liquid.argument;
+$.liquid.filter;
+$.liquid.object;
+$.liquid.tag;
+$.liquid.value;
+
+// HTML STATES
+
+$.html.tag;
+$.html.attribute;
+$.html.value;
+```
+
+##### Queries
+
+The `query` export allows us to validate and navigate a through a spec record. These methods are used mostly within the Liquify parser.
+
+```typescript
+
+import { query as q } from '@liquify/liquid-language-specs';
+
 
 // GETTERS
 
