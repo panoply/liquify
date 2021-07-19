@@ -3,6 +3,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { document } from 'tree/model';
 import { NodeLanguage } from 'lexical/language';
 import { customChanges } from 'parser/utils';
+import inRange from 'lodash.inrange';
 
 // TODO
 //
@@ -13,7 +14,16 @@ import { customChanges } from 'parser/utils';
 
 export class Embed extends Node {
 
+  /**
+   * The index reference of the embedded region on `AST.regions[]`
+   */
   public regionIndex: number
+
+  /**
+   * The line offset number of the embedded region. This points to
+   * the start range line number and used to align features in LSP.
+   */
+  public regionOffset: number
   public languageId: Exclude<NodeLanguage, NodeLanguage.liquid | NodeLanguage.html>;
   public textDocument: TextDocument
 
@@ -36,22 +46,22 @@ export class Embed extends Node {
    */
   public region (index: number) {
 
-    const uri = `${index}-${this.tag}.${this.languageId}`;
     const region: Embed = document.regions?.[index];
 
     if (region) {
+
       if (
         region.regionIndex === index &&
         region.languageId === this.languageId &&
         region.tag === this.tag &&
         region.kind === this.kind
-      ) return this.update(region.textDocument, index); else {
-        document.regions.splice(index);
-      }
+      ) return this.update(region.textDocument, index);
+
+      document.regions.splice(index);
 
     }
 
-    return this.create(uri, index);
+    return this.create(index);
 
   };
 
@@ -62,13 +72,17 @@ export class Embed extends Node {
    * region TextDocument. The embed is stored on the AST `embedded` array
    * and a reference to its index is asserts on the node.
    */
-  private create (uri: string, index: number) {
+  private create (index: number) {
 
     this.regionIndex = index;
-    this.textDocument = TextDocument.create(uri, this.languageId, 1, this.innerContent);
-    document.regions.push(this);
+    this.regionOffset = this.range.start.line;
+    this.textDocument = TextDocument.create(
+      this.tag + '.' + this.languageId,
+      this.languageId, 1,
+      this.innerContent
+    );
 
-    return index + 1;
+    return document.regions.push(this);
   }
 
   /**
@@ -80,14 +94,24 @@ export class Embed extends Node {
    */
   private update (textDocument: TextDocument, index: number) {
 
-    const changes = customChanges(this.innerContent, textDocument);
-    const version = textDocument.version + 1;
-    this.textDocument = TextDocument.update(textDocument, changes, version);
     this.regionIndex = index;
+    this.regionOffset = this.range.start.line;
+
+    if (!inRange(document.cursor, this.offsets[1], this.offsets[2])) {
+      this.textDocument = textDocument;
+    } else {
+
+      // update the embedded region
+      this.textDocument = TextDocument.update(
+        textDocument,
+        customChanges(this.innerContent, textDocument),
+        textDocument.version + 1
+      );
+    }
+
     document.regions.splice(index, 1, this);
 
     return index + 1;
-
   }
 
 }
