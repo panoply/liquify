@@ -28,6 +28,24 @@ export const alignChanges = (lineOffset: number) => (
 
 };
 
+/**
+ * Edits Offset
+ *
+ * The inner contents of embedded regions do not match the offset locations
+ * of the document they are contained within because embedded documents are
+ * virtual. This function will align those offsets within changes.
+ */
+export const alignRange = (range: Range, lineOffset: number): Range => {
+
+  const newRange = Object.assign({}, range);
+
+  newRange.start.line -= lineOffset;
+  newRange.end.line -= lineOffset;
+
+  return newRange;
+
+};
+
 export const customChanges = (text: string, { lineCount }: TextDocument) => {
 
   return [
@@ -118,7 +136,7 @@ export function EmbeddedDocumentText (str: string, text: string) {
 export function findFirst<T> (array: T[], p: (x: T) => boolean): number {
 
   let low = 0;
-  let high = array?.length || 0;
+  let high = array.length;
 
   if (high === 0) return 0; // no children
 
