@@ -10,28 +10,47 @@ import filesize from 'rollup-plugin-filesize';
 import noderesolve from '@rollup/plugin-node-resolve';
 import beep from '@rollup/plugin-beep';
 import del from 'rollup-plugin-delete';
+import path from 'path';
 
 export default Rollup(
   {
     input: {
-      index: 'src/index.ts',
-      '@variations/standard': 'src/liquid/data/standard/export.ts',
-      '@variations/shopify': 'src/liquid/data/shopify/export.ts',
-      '@variations/jekyll': 'src/liquid/data/jekyll/export.ts'
+
+      /* MAIN SHARED ENTRY -------------------------- */
+
+      index: 'src/export.ts',
+
+      /* HTML SPECIFICATIONS ------------------------ */
+
+      '@html/attributes': 'src/html/data/html5/attributes.ts',
+      '@html/tags': 'src/html/data//html5/tags.ts',
+      '@html/values': 'src/html/data/html5/values.ts',
+
+      /* LIQUID VARIATION SPECIFICATIONS ------------ */
+
+      '@liquid/standard': 'src/liquid/data/standard/export.ts',
+      '@liquid/shopify': 'src/liquid/data/shopify/export.ts',
+      '@liquid/jekyll': 'src/liquid/data/jekyll/export.ts'
+
     },
+    preserveEntrySignatures: 'allow-extension',
     output: {
       format: 'cjs',
       dir: 'package',
       sourcemap: env.is('dev', 'inline'),
       banner: banner('PROPRIETARY'),
       preferConst: true,
-      esModule: false,
-      chunkFileNames: '[name].js'
+      esModule: false
     },
+    external: [
+      'vscode-languageserver',
+      'vscode-languageserver-types'
+    ],
     plugins: env.if('dev')(
       [
         alias({
           entries: {
+            utils: config.path('src/utils/'),
             html: config.path('src/html'),
             liquid: config.path('src/liquid')
           }
