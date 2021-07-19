@@ -30,6 +30,7 @@ export function create ({
   if (model.has(uri)) return model.get(uri);
 
   document = new IAST(uri, languageId, version, text);
+
   model.set(uri, document).get(uri);
 
   return document;
