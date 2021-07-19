@@ -3,7 +3,6 @@
 /* LIQUID QUERIES ----------------------------- */
 
 export {
-  getLiquidCompletions,
   getArgument,
   setFilter,
   setObject,
@@ -25,15 +24,23 @@ export {
   reset
 } from './liquid/controller/queries';
 
+export {
+
+  LiquidCompletions,
+  LiquidTagComplete,
+  LiquidTagResolve
+
+} from './liquid/controller/provide';
+
 /* HTML QUERIES ------------------------------- */
 
 export {
-  getHTMLCompletions,
   isVoid,
-  provideAttrs,
-  provideValues,
-  provideTags,
-  resolveAttribute,
-  resolveTag,
-  resolveValue
+  HTMLCompletions,
+  HTMLAttrsComplete,
+  HTMLAttrsResolve,
+  HTMLTagComplete,
+  HTMLTagResolve,
+  HTMLValueComplete,
+  HTMLValueResolve
 } from './html/controller/queries';
