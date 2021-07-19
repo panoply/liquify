@@ -21,7 +21,6 @@ const shopifyTags = Object.entries(data.shopify.tags).map((
     label,
     kind: CompletionItemKind.Keyword,
     deprecated,
-    in
     documentation: {
       kind: 'markdown',
       value: [
