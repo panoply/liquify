@@ -23,21 +23,27 @@
     "require": "./package/parser.js"
   },
   "eslintConfig": {
-    "extends": ["@liquify/eslint-config-ts"],
+    "extends": [
+      "@liquify/eslint-config-ts"
+    ],
     "rules": {
       "no-use-before-define": "off",
       "no-control-regex": "off"
     }
   },
   "ava": {
-    "require": ["esm"],
+    "require": [
+      "esm"
+    ],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": ["test/**/*.test.js"],
+    "files": [
+      "test/**/*.test.js"
+    ],
     "concurrency": 5
   },
   "dependencies": {
