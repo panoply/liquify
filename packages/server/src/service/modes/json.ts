@@ -1,10 +1,10 @@
-import merge from 'lodash/merge';
-import isEmpty from 'lodash/isEmpty';
-import { IAST, INode, IEmbed, Position, TextDocument } from '@liquify/liquid-parser';
+import { IAST, INode, IEmbed, Position } from '@liquify/liquid-parser';
 import {
   Diagnostic,
   CompletionList,
-  CompletionItem
+  CompletionItem,
+  InsertReplaceEdit,
+  Hover
 } from 'vscode-languageserver-protocol';
 import {
   getLanguageService,
@@ -21,51 +21,41 @@ export class JSONService {
 
   constructor (schema: object) {
 
-    this.service.configure(
-      {
-        validate: true,
-        schemas: [
-          {
-            uri: 'http://json-schema.org/draft-07/schema',
-            fileMatch: [ '*.json' ],
-            schema
-          }
-        ]
-      }
-    );
+    this.service.configure({
+      validate: true,
+      schemas: [
+        {
+          uri: 'http://json-schema.org/draft-07/schema',
+          fileMatch: [ '*.json' ],
+          schema
+        }
+      ]
+    });
 
   }
 
   public async doValidation (
-    node: IEmbed & INode,
-    document: IAST
+    document: IAST,
+    node: IEmbed & INode
   ): Promise<Diagnostic[] | null> {
 
     const JSONDocument = this.service.parseJSONDocument(node.textDocument);
     const diagnostics = await this.service.doValidation(node.textDocument, JSONDocument);
 
-    if (isEmpty(diagnostics)) return null;
+    if (!diagnostics) return null;
 
     for (const diagnostic of diagnostics) {
 
-      Object.assign(diagnostic.range, {
-        start: {
-          line: diagnostic.range.start.line + node.range.start.line,
-          character: diagnostic.range.start.character
-        },
-        end: {
-          line: diagnostic.range.end.line + node.range.start.line,
-          character: diagnostic.range.end.character
-        }
+      diagnostic.range.start.line += node.regionOffset;
+      diagnostic.range.end.line += node.regionOffset;
+      diagnostic.source = `Liquid ${node.tag} tag`;
 
-      });
-
-      if (diagnostic.severity === DiagnosticSeverity.Error) {
-        if (document.format) {
-          document.format = false;
-          document.selection = diagnostic.range;
-        }
+      if (diagnostic.severity !== DiagnosticSeverity.Error) continue;
+      if (document.format) {
+        document.format.enable = false;
+        document.format.error = diagnostic;
       }
+
     }
 
     return diagnostics;
@@ -76,64 +66,49 @@ export class JSONService {
    * JSON hover capabilities
    */
   public async doHover (
-    node: INode,
-    {
-      line,
-      character
-    }: Position
-  ) {
+    node: IEmbed & INode,
+    { line, character }: Position
+  ): Promise<Hover | null> {
 
-    const document = node.getDocument();
+    const JSONDocument = this.service.parseJSONDocument(node.textDocument);
+    const position = { character, line: line - node.regionOffset };
+    const location = await this.service.doHover(node.textDocument, position, JSONDocument);
 
-    if (!document) return null;
+    if (!location) return null;
 
-    const JSONDocument = this.service.parseJSONDocument(document);
-    const doHover = await this.service.doHover(
-      document,
-      { character, line: line - node.range.start.line },
-      JSONDocument
-    );
+    location.range.start.line = line;
+    location.range.end.line = line;
 
-    return merge(doHover, {
-      range: {
-        start: { line },
-        end: { line }
-      }
-    });
+    return location;
 
   }
 
   public async doComplete (
-    node: INode,
-    {
-      character,
-      line
-    }: Position
+    node: INode & IEmbed,
+    { character, line }: Position
 
   ): Promise<CompletionList | null> {
 
-    const document = node.getDocument();
+    const position = { character, line: line - node.range.start.line };
+    const JSONDocument = this.service.parseJSONDocument(node.textDocument);
+    const completion = await this.service.doComplete(node.textDocument, position, JSONDocument);
 
-    if (!document) return null;
+    for (const complete of completion.items) {
 
-    const JSONDocument = this.service.parseJSONDocument(document);
+      const textEdit = (complete.textEdit as InsertReplaceEdit);
 
-    const doComplete = await this.service.doComplete(
-      document
-      , { character, line: line - node.range.start.line }
-      , JSONDocument
-    );
+      if (textEdit?.insert) {
+        textEdit.insert.start.line = line;
+        textEdit.insert.end.line = line;
+      }
 
-    for (const { textEdit } of doComplete.items) {
-      merge(textEdit, {
-        range: {
-          start: { line },
-          end: { line }
-        }
-      });
+      if (textEdit?.replace) {
+        textEdit.replace.start.line = line;
+        textEdit.replace.end.line = line;
+      }
     }
 
-    return doComplete;
+    return completion;
 
   }
 
