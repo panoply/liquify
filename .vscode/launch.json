@@ -25,7 +25,7 @@
       "name": "Server",
       "type": "node",
       "request": "attach",
-      "port": 6080,
+      "port": 6009,
       "protocol": "inspector",
       "cwd": "${workspaceFolder}/packages/server/src/",
       "restart": true,
