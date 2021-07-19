@@ -14,7 +14,7 @@ const filters = `
 `;
 
 const text = `
-{{ article.published_at | time_tag: '%a, %b %d, %Y', ddddddd -}}
+ <input  />
 
 `;
 
@@ -67,11 +67,11 @@ test('FullDocument Parse', t => {
     uri: 'test.liquid'
   });
 
-  // console.log(ast.getNodeAt(10));
+  // console.log(ast.getTokenAt(60));
   const end = process.hrtime(start);
-  console.log(Stack(ast));
+  // console.log(Stack(ast));
   // console.log(ast);
-  // console.log(...ast.nodes);
+  console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());
 
   // console.log(ast.diagnostics.length);
