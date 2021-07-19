@@ -1,9 +1,7 @@
 import { InitializeParams, ServerCapabilities } from 'vscode-languageserver';
-import { LiquidParser } from '@liquify/liquid-parser';
+import { Parser } from './parser';
 import { ILiquidrc } from 'types/settings';
 import omit from 'lodash/omit';
-// import pick from 'lodash/pick';
-// import upperFirst from 'lodash/upperFirst';
 import { readFileSync, readdirSync, existsSync } from 'fs';
 import { basename, resolve, join, normalize } from 'path';
 import stripJSONC from 'strip-json-comments';
@@ -120,9 +118,7 @@ export class LiquidServer extends Config {
    */
   public setLiquidEngine (settings) {
 
-    LiquidParser.engine(settings.engine);
-
-    // this.engineLabel = `\n${upperFirst(Parser.spec.variant.engine)} Liquid`;
+    Parser.engine(settings.engine);
 
     return this.setFormatConfig(settings);
 
