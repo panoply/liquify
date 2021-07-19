@@ -1,5 +1,6 @@
-import * as Specification from '../data/export';
+import * as Spec from '../data/export';
 import { IHTMLTag, IHTMLValue, IHTMLTagAttributes } from '../types/markup';
+import { IHTMLCompletions, IHTMLProvideAttrs } from '../types/completions';
 import { HTMLToken } from '../types/enums';
 import { documentation, descriptive } from 'utils/generators';
 import {
@@ -29,7 +30,7 @@ export let value: keyof IHTMLValue;
 /**
  * Completion Items
  */
-export let complete = getHTMLCompletions();
+export let complete = HTMLCompletions();
 
 /* -------------------------------------------- */
 /* VALIDATORS                                   */
@@ -37,7 +38,7 @@ export let complete = getHTMLCompletions();
 
 export function isVoid (name: string) {
 
-  return Specification.tags?.[name].void;
+  return Spec.tags?.[name]?.void;
 
 }
 
@@ -45,7 +46,7 @@ export function isVoid (name: string) {
 /* FUNCTIONS                                    */
 /* -------------------------------------------- */
 
-export function provideTags () {
+export function HTMLTagComplete () {
 
   attribute = undefined;
   value = undefined;
@@ -54,21 +55,19 @@ export function provideTags () {
 
 }
 
-export function provideAttrs () {
+export function HTMLAttrsComplete (token: string): IHTMLProvideAttrs {
 
-  console.log(attribute);
+  if (attribute) return attribute;
 
-  if (!attribute) return complete.attributes;
-
-  return attribute;
+  return HTMLAttributes(Spec.tags[token].attributes).concat(complete.attributes);
 
 }
 
-export function provideValues (token: string = value) {
+export function HTMLValueComplete (token: string = value) {
 
-  if (!value || !Specification.values?.[token]) return false;
+  if (!value || !Spec.values?.[token]) return false;
 
-  return Specification.values[token].map(
+  return Spec.values[token].map(
     value => ({
       ...value,
       data: { token: HTMLToken.Value }
@@ -77,7 +76,7 @@ export function provideValues (token: string = value) {
 
 }
 
-export function resolveTag (item: CompletionItem) {
+export function HTMLTagResolve (item: CompletionItem) {
 
   attribute = item.data.attributes;
 
@@ -91,7 +90,7 @@ export function resolveTag (item: CompletionItem) {
 
 }
 
-export function resolveAttribute (item: CompletionItem) {
+export function HTMLAttrsResolve (item: CompletionItem) {
 
   if (!item.data.value) {
     value = undefined;
@@ -100,7 +99,7 @@ export function resolveAttribute (item: CompletionItem) {
     }
   } else {
     value = item.data.value;
-    item.insertText = `${item.label}=$0`;
+    item.insertText = `${item.label}="$1" $0`;
   }
 
   item.kind = CompletionItemKind.Property;
@@ -109,11 +108,34 @@ export function resolveAttribute (item: CompletionItem) {
   return item;
 }
 
-export function resolveValue (item: CompletionItem) {
+export function HTMLValueResolve (item: CompletionItem) {
 
   Object.assign(item, { kind: CompletionItemKind.Value });
 
   return item;
+
+}
+
+export function HTMLAttributes (attrs: IHTMLTagAttributes[]) {
+
+  if (!attrs) return complete.attributes;
+
+  return attrs.map(
+    (
+      {
+        name,
+        description,
+        value = false
+      }: IHTMLTagAttributes
+    ) => ({
+      label: name,
+      documentation: descriptive(description),
+      data: {
+        token: HTMLToken.Attribute,
+        value
+      }
+    })
+  );
 
 }
 
@@ -124,81 +146,13 @@ export function resolveValue (item: CompletionItem) {
  * specification reference. Returns a closure getter combinator
  * with array lists for various tags, filters and objects.
  */
-export function getHTMLCompletions (): {
-  tags: {
-    label: string,
-    documentation: {
-      kind: 'markdown' | 'plaintext',
-      value: string
-    },
-    data: {
-      token: HTMLToken,
-      void: boolean,
-      attributes:[] | {
-        label: string,
-        documentation: {
-          kind: 'markdown' | 'plaintext',
-          value: string
-        },
-        data: {
-          token: HTMLToken,
-          value: string | boolean
-        }
-      }[]
-    }
-  }[],
-  attributes: {
-    label: string,
-    documentation: {
-      kind: 'markdown' | 'plaintext',
-      value: string
-    },
-    data: {
-      token: HTMLToken,
-      value: string | boolean
-    }
-  }[]
-  } {
-
-  /* -------------------------------------------- */
-  /* TAG COMPLETIONS                              */
-  /* -------------------------------------------- */
-
-  const tags = Object.entries(Specification.tags).map(
-    ([
-      label,
-      spec
-    ]) => ({
-      label,
-      documentation: documentation(spec.description, spec.reference),
-      data: {
-        token: HTMLToken.Tag,
-        void: spec.void,
-        attributes: spec?.attributes.map(
-          (
-            {
-              name,
-              description,
-              value = false
-            }: IHTMLTagAttributes
-          ) => ({
-            label: name,
-            documentation: descriptive(description),
-            data: {
-              token: HTMLToken.Attribute,
-              value
-            }
-          })
-        ) || []
-      }
-    })
-  );
+export function HTMLCompletions (): IHTMLCompletions {
 
   /* -------------------------------------------- */
   /* ATTRIBUTE COMPLETIONS                        */
   /* -------------------------------------------- */
 
-  const attributes = Object.entries(Specification.attributes).map(
+  const attributes = Object.entries(Spec.attributes).map(
     ([
       label,
       {
@@ -216,6 +170,28 @@ export function getHTMLCompletions (): {
     })
   );
 
-  return { tags, attributes };
+  /* -------------------------------------------- */
+  /* TAG COMPLETIONS                              */
+  /* -------------------------------------------- */
+
+  const tags = Object.entries(Spec.tags).map(
+    ([
+      label,
+      spec
+    ]) => ({
+      label,
+      documentation: documentation(spec.description, spec.reference),
+      data: {
+        token: HTMLToken.Tag,
+        void: spec.void,
+        attributes: HTMLAttributes(spec?.attributes)
+      }
+    })
+  );
+
+  return {
+    tags,
+    attributes
+  };
 
 }
