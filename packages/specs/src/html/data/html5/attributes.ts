@@ -1,4 +1,8 @@
-export default {
+import { Attributes as IAttributes } from '../../types/markup';
+
+export let Attributes: IAttributes;
+
+Attributes = {
   accesskey: {
     description: 'Provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a space-separated list of characters. The browser should use the first one that exists on the computer keyboard layout.',
     reference: {
@@ -35,7 +39,7 @@ export default {
     }
   },
   dir: {
-    valueSet: 'd',
+    value: 'd',
     description: "An enumerated attribute indicating the directionality of the element's text. It can have the following values:\n\n*   `ltr`, which means _left to right_ and is to be used for languages that are written from the left to the right (like English);\n*   `rtl`, which means _right to left_ and is to be used for languages that are written from the right to the left (like Arabic);\n*   `auto`, which lets the user agent decide. It uses a basic algorithm as it parses the characters inside the element until it finds a character with a strong directionality, then it applies that directionality to the whole element.",
     reference: {
       name: 'MDN Reference',
@@ -43,7 +47,7 @@ export default {
     }
   },
   draggable: {
-    valueSet: 'b',
+    value: 'b',
     description: 'An enumerated attribute indicating whether the element can be dragged, using the [Drag and Drop API](/en-us/docs/DragDrop/Drag_and_Drop). It can have the following values:\n\n*   `true`, which indicates that the element may be dragged\n*   `false`, which indicates that the element may not be dragged.',
     reference: {
       name: 'MDN Reference',
@@ -61,7 +65,7 @@ export default {
     }
   },
   hidden: {
-    valueSet: 'v',
+    value: 'v',
     description: "A Boolean attribute indicates that the element is not yet, or is no longer, _relevant_. For example, it can be used to hide elements of the page that can't be used until the login process has been completed. The browser won't render such elements. This attribute must not be used to hide content that could legitimately be shown.",
     reference: {
       name: 'MDN Reference',
@@ -111,7 +115,7 @@ export default {
     }
   },
   itemscope: {
-    valueSet: 'v',
+    value: 'v',
     description: '`itemscope` (usually) works along with `[itemtype](/en-US/docs/Web/HTML/Global_attributes#attr-itemtype)` to specify that the HTML contained in a block is about a particular item. `itemscope` creates the Item and defines the scope of the `itemtype` associated with it. `itemtype` is a valid URL of a vocabulary (such as [schema.org](https://schema.org/)) that describes the item and its properties context.',
     reference: {
       name: 'MDN Reference',
@@ -140,7 +144,7 @@ export default {
     }
   },
   role: {
-    valueSet: 'roles'
+    value: 'roles'
   },
   slot: {
     description: "Assigns a slot in a [shadow DOM](/en-US/docs/Web/Web_Components/Shadow_DOM) shadow tree to an element: An element with a `slot` attribute is assigned to the slot created by the [`<slot>`](/en-US/docs/Web/HTML/Element/slot \"The HTML <slot> element—part of the Web Components technology suite—is a placeholder inside a web component that you can fill with your own markup, which lets you create separate DOM trees and present them together.\") element whose `[name](/en-US/docs/Web/HTML/Element/slot#attr-name)` attribute's value matches that `slot` attribute's value.",
@@ -150,7 +154,7 @@ export default {
     }
   },
   spellcheck: {
-    valueSet: 'b',
+    value: 'b',
     description: 'An enumerated attribute defines whether the element may be checked for spelling errors. It may have the following values:\n\n*   `true`, which indicates that the element should be, if possible, checked for spelling errors;\n*   `false`, which indicates that the element should not be checked for spelling errors.',
     reference: {
       name: 'MDN Reference',
@@ -179,7 +183,7 @@ export default {
     }
   },
   translate: {
-    valueSet: 'y',
+    value: 'y',
     description: "An enumerated attribute that is used to specify whether an element's attribute values and the values of its [`Text`](/en-US/docs/Web/API/Text \"The Text interface represents the textual content of Element or Attr. If an element has no markup within its content, it has a single child implementing Text that contains the element's text. However, if the element contains markup, it is parsed into information items and Text nodes that form its children.\") node children are to be translated when the page is localized, or whether to leave them unchanged. It can have the following values:\n\n*   empty string and `yes`, which indicates that the element will be translated.\n*   `no`, which indicates that the element will not be translated.",
     reference: {
       name: 'MDN Reference',
@@ -356,7 +360,7 @@ export default {
     }
   },
   'aria-atomic': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates whether [assistive technologies](https://www.w3.org/TR/wai-aria-1.1/#dfn-assistive-technology) will present all, or only parts of, the changed region based on the change notifications defined by the [`aria-relevant`](https://www.w3.org/TR/wai-aria-1.1/#aria-relevant) attribute.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -364,7 +368,7 @@ export default {
     }
   },
   'aria-autocomplete': {
-    valueSet: 'autocomplete',
+    value: 'autocomplete',
     description: "Indicates whether inputting text could trigger display of one or more predictions of the user's intended value for an input and specifies how predictions would be presented if they are made.",
     reference: {
       name: 'WAI-ARIA Reference',
@@ -372,7 +376,7 @@ export default {
     }
   },
   'aria-busy': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates an element is being modified and that assistive technologies _MAY_ want to wait until the modifications are complete before exposing them to the user.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -380,7 +384,7 @@ export default {
     }
   },
   'aria-checked': {
-    valueSet: 'tristate',
+    value: 'tristate',
     description: 'Indicates the current "checked" [state](https://www.w3.org/TR/wai-aria-1.1/#dfn-state) of checkboxes, radio buttons, and other [widgets](https://www.w3.org/TR/wai-aria-1.1/#dfn-widget). See related [`aria-pressed`](https://www.w3.org/TR/wai-aria-1.1/#aria-pressed) and [`aria-selected`](https://www.w3.org/TR/wai-aria-1.1/#aria-selected).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -416,7 +420,7 @@ export default {
     }
   },
   'aria-current': {
-    valueSet: 'current',
+    value: 'current',
     description: 'Indicates the [element](https://www.w3.org/TR/wai-aria-1.1/#dfn-element) that represents the current item within a container or set of related elements.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -437,7 +441,7 @@ export default {
     }
   },
   'aria-disabled': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates that the [element](https://www.w3.org/TR/wai-aria-1.1/#dfn-element) is [perceivable](https://www.w3.org/TR/wai-aria-1.1/#dfn-perceivable) but disabled, so it is not editable or otherwise [operable](https://www.w3.org/TR/wai-aria-1.1/#dfn-operable). See related [`aria-hidden`](https://www.w3.org/TR/wai-aria-1.1/#aria-hidden) and [`aria-readonly`](https://www.w3.org/TR/wai-aria-1.1/#aria-readonly).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -445,7 +449,7 @@ export default {
     }
   },
   'aria-dropeffect': {
-    valueSet: 'dropeffect',
+    value: 'dropeffect',
     description: '\\[Deprecated in ARIA 1.1\\] Indicates what functions can be performed when a dragged object is released on the drop target.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -460,7 +464,7 @@ export default {
     }
   },
   'aria-expanded': {
-    valueSet: 'u',
+    value: 'u',
     description: 'Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -475,7 +479,7 @@ export default {
     }
   },
   'aria-grabbed': {
-    valueSet: 'u',
+    value: 'u',
     description: "\\[Deprecated in ARIA 1.1\\] Indicates an element's \"grabbed\" [state](https://www.w3.org/TR/wai-aria-1.1/#dfn-state) in a drag-and-drop operation.",
     reference: {
       name: 'WAI-ARIA Reference',
@@ -483,7 +487,7 @@ export default {
     }
   },
   'aria-haspopup': {
-    valueSet: 'haspopup',
+    value: 'haspopup',
     description: 'Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an [element](https://www.w3.org/TR/wai-aria-1.1/#dfn-element).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -491,7 +495,7 @@ export default {
     }
   },
   'aria-hidden': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates whether the [element](https://www.w3.org/TR/wai-aria-1.1/#dfn-element) is exposed to an accessibility API. See related [`aria-disabled`](https://www.w3.org/TR/wai-aria-1.1/#aria-disabled).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -499,7 +503,7 @@ export default {
     }
   },
   'aria-invalid': {
-    valueSet: 'invalid',
+    value: 'invalid',
     description: 'Indicates the entered value does not conform to the format expected by the application. See related [`aria-errormessage`](https://www.w3.org/TR/wai-aria-1.1/#aria-errormessage).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -534,7 +538,7 @@ export default {
     }
   },
   'aria-live': {
-    valueSet: 'live',
+    value: 'live',
     description: 'Indicates that an [element](https://www.w3.org/TR/wai-aria-1.1/#dfn-element) will be updated, and describes the types of updates the [user agents](https://www.w3.org/TR/wai-aria-1.1/#dfn-user-agent), [assistive technologies](https://www.w3.org/TR/wai-aria-1.1/#dfn-assistive-technology), and user can expect from the [live region](https://www.w3.org/TR/wai-aria-1.1/#dfn-live-region).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -542,7 +546,7 @@ export default {
     }
   },
   'aria-modal': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates whether an [element](https://www.w3.org/TR/wai-aria-1.1/#dfn-element) is modal when displayed.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -550,7 +554,7 @@ export default {
     }
   },
   'aria-multiline': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates whether a text box accepts multiple lines of input or only a single line.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -558,7 +562,7 @@ export default {
     }
   },
   'aria-multiselectable': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates that the user may select more than one item from the current selectable descendants.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -566,7 +570,7 @@ export default {
     }
   },
   'aria-orientation': {
-    valueSet: 'orientation',
+    value: 'orientation',
     description: "Indicates whether the element's orientation is horizontal, vertical, or unknown/ambiguous.",
     reference: {
       name: 'WAI-ARIA Reference',
@@ -595,7 +599,7 @@ export default {
     }
   },
   'aria-pressed': {
-    valueSet: 'tristate',
+    value: 'tristate',
     description: 'Indicates the current "pressed" [state](https://www.w3.org/TR/wai-aria-1.1/#dfn-state) of toggle buttons. See related [`aria-checked`](https://www.w3.org/TR/wai-aria-1.1/#aria-checked) and [`aria-selected`](https://www.w3.org/TR/wai-aria-1.1/#aria-selected).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -603,7 +607,7 @@ export default {
     }
   },
   'aria-readonly': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates that the [element](https://www.w3.org/TR/wai-aria-1.1/#dfn-element) is not editable, but is otherwise [operable](https://www.w3.org/TR/wai-aria-1.1/#dfn-operable). See related [`aria-disabled`](https://www.w3.org/TR/wai-aria-1.1/#aria-disabled).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -611,7 +615,7 @@ export default {
     }
   },
   'aria-relevant': {
-    valueSet: 'relevant',
+    value: 'relevant',
     description: 'Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified. See related [`aria-atomic`](https://www.w3.org/TR/wai-aria-1.1/#aria-atomic).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -619,7 +623,7 @@ export default {
     }
   },
   'aria-required': {
-    valueSet: 'b',
+    value: 'b',
     description: 'Indicates that user input is required on the [element](https://www.w3.org/TR/wai-aria-1.1/#dfn-element) before a form may be submitted.',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -655,7 +659,7 @@ export default {
     }
   },
   'aria-selected': {
-    valueSet: 'u',
+    value: 'u',
     description: 'Indicates the current "selected" [state](https://www.w3.org/TR/wai-aria-1.1/#dfn-state) of various [widgets](https://www.w3.org/TR/wai-aria-1.1/#dfn-widget). See related [`aria-checked`](https://www.w3.org/TR/wai-aria-1.1/#aria-checked) and [`aria-pressed`](https://www.w3.org/TR/wai-aria-1.1/#aria-pressed).',
     reference: {
       name: 'WAI-ARIA Reference',
@@ -670,7 +674,7 @@ export default {
     }
   },
   'aria-sort': {
-    valueSet: 'sort',
+    value: 'sort',
     description: 'Indicates if items in a table or grid are sorted in ascending or descending order.',
     reference: {
       name: 'WAI-ARIA Reference',

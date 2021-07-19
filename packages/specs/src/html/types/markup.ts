@@ -1,39 +1,123 @@
-import { MarkupContent } from 'vscode-languageserver-types';
 
-export interface IReference {
+interface IReference {
+  /**
+   * Reference name of the documentation
+   */
   name: string;
+
+  /**
+   * the reference url linking to the documentation
+   */
   url: string;
 }
 
-export interface IValueData {
-  name: string;
-  description?: string | MarkupContent;
-  references?: IReference[];
+/* -------------------------------------------- */
+/* TAGS                                         */
+/* -------------------------------------------- */
+
+export interface IHTMLTagAttributes {
+
+  /**
+   * The name of attribute the tag accepts
+   */
+  name: string,
+
+  /**
+   * Description of the attribute value
+   */
+  description?: string
+
+  /**
+   * A reference to the value set the attribute
+   * accepts as a value.
+   */
+  value?: string | boolean
+
 }
 
-export interface IAttributeData {
-  name: string;
-  description?: string | MarkupContent;
-  valueSet?: string;
-  values?: IValueData[];
-  references?: IReference[];
+export interface IHTMLTag {
+  /**
+   * The description of the HTML tag
+   */
+  description?: string;
+
+  /**
+   * A list of valid attributes the tag accepts. If
+   * the attributes value is an empty array, it infers the
+   * tag accepts attributes contained in the Attributes export.
+   */
+  attributes: [] | IHTMLTagAttributes[];
+
+  /**
+   * Whether the tag is a void or pair type
+   */
+  void: boolean
+
+  /**
+   * URL and name reference to online documentation explaining the tag
+   *
+   * @default undefined
+   */
+  reference?: IReference
 }
 
-export interface ITagData {
-  name: string;
-  description?: string | MarkupContent;
-  attributes: IAttributeData[];
-  references?: IReference[];
+export interface Tags { [tag: string]: IHTMLTag }
+
+/* -------------------------------------------- */
+/* ATTRIBUTES                                   */
+/* -------------------------------------------- */
+
+export interface IHTMLAttribute {
+
+  /**
+   * The description of the attribute
+   */
+  description?: string;
+
+  /**
+   * Mapping to a value-set lists.
+   */
+  value?: string;
+
+  /**
+   * URL and name reference to online documentation explaining this attribute
+   *
+   * @default undefined
+   */
+  reference?: IReference
+
 }
 
-export interface IValueSet {
-  name: string;
-  values: IValueData[];
+export interface Attributes { [attribute: string]: IHTMLAttribute }
+
+/* -------------------------------------------- */
+/* VALUES                                       */
+/* -------------------------------------------- */
+
+export interface IHTMLValue {
+  /**
+   * The predefined value name for the value
+   */
+  label: string;
+
+  /**
+   * An optional description for this value
+   */
+  documentation?: {
+    kind: 'markdown' | 'plaintext',
+    value: string
+  }
 }
+
+export interface Values { [value: string]: IHTMLValue[] }
+
+/* -------------------------------------------- */
+/* SPECIFICATION                                */
+/* -------------------------------------------- */
 
 export interface IHTMLSpecs {
   version: 1 | 1.1;
-  tags?: ITagData[];
-  globalAttributes?: IAttributeData[];
-  valueSets?: IValueSet[];
+  tags?: Tags;
+  attributes?: Attributes;
+  values?: Values;
 }
