@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules/**", "package", "test"],
-  "include": ["src/index.ts", "src/**/*.ts"],
+  "include": ["src/export.ts", "src/**/*.ts"],
   "typeAcquisition": {
     "enable": true,
     "include": ["node"]
