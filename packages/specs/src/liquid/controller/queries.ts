@@ -48,11 +48,6 @@ export let argument: IArgument.Argument | IArgument.Parameter;
  */
 export let value: string;
 
-/**
- * Completion Items
- */
-export let complete = getLiquidCompletions();
-
 /* -------------------------------------------- */
 /* LOCAL SCOPES                                 */
 /* -------------------------------------------- */
@@ -328,84 +323,6 @@ export function setObject (name: string): boolean {
 
   return true;
 };
-
-/**
- * Completions
- *
- * Constructs LSP completion-ready lists from the current
- * specification reference. Returns a closure getter combinator
- * with array lists for various tags, filters and objects.
- */
-export function getLiquidCompletions () {
-
-  /* -------------------------------------------- */
-  /* TAG COMPLETIONS                              */
-  /* -------------------------------------------- */
-
-  const tags = Object.entries(variation.tags).map(
-    ([
-      label,
-      {
-        description,
-        reference,
-        deprecated = false,
-        singular = false,
-        snippet = null
-      }
-    ]) => ({
-      label,
-      deprecated,
-      documentation: documentation(description, reference),
-      data: {
-        snippet,
-        singular
-      }
-    })
-  );
-
-  /* -------------------------------------------- */
-  /* FILTER COMPLETIONS                           */
-  /* -------------------------------------------- */
-
-  const filters = Object.entries(variation.filters).map(
-    ([
-      label,
-      {
-        description,
-        reference,
-        deprecated = false
-      }
-    ]) => ({
-      label,
-      deprecated,
-      documentation: documentation(description, reference)
-    })
-  );
-
-  /* -------------------------------------------- */
-  /* OBJECT COMPLETIONS                           */
-  /* -------------------------------------------- */
-
-  const objects = variation?.objects ? Object.entries(variation.objects).map(
-    ([
-      label,
-      {
-        description,
-        reference,
-        deprecated = false,
-        singular = false
-      }
-    ]) => ({
-      label,
-      deprecated,
-      documentation: documentation(description, reference),
-      data: { singular }
-    })
-  ) : null;
-
-  return { tags, filters, objects };
-
-}
 
 /* -------------------------------------------- */
 /* NAVIGATORS                                   */
