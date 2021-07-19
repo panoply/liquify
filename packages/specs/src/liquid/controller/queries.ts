@@ -1,33 +1,27 @@
-import { Variation, Values, IArgument } from '../types/common';
+import * as Specification from '../data/export';
+import { Variation, Values, IArgument, IEngine } from '../types/common';
 import { ITag } from '../types/tags';
 import { IFilter } from '../types/filters';
 import { IObject } from '../types/objects';
 import { Type } from '../types/types';
-import { isNumber, inPattern, inValues, inRange } from './utils';
-import { variation } from './data';
-
-/**
- * Within Enums
- */
-export const enum QueryErrors {
-  ParameterNotUnique = 1,
-  ParameterUnknown
-}
-
-/**
- * Within Enums
- */
-export const enum Within {
-  Tag = 1,
-  Filter,
-  Arguments,
-  Parameter,
-  ParameterValue,
-}
+import { QueryErrors, Within } from '../types/enums';
+import { documentation } from 'utils/generators';
+import { isNumber } from 'utils/typeof';
+import { inPattern, inValues, inRange } from 'utils/finders';
 
 /* -------------------------------------------- */
 /* EXPORT SCOPES                                */
 /* -------------------------------------------- */
+
+/**
+ * Engine
+ */
+export let engine: IEngine = IEngine.standard;
+
+/**
+ * Variation Spec
+ */
+export let variation: Variation = Specification.standard;
 
 /**
  * Tag Specification
@@ -53,6 +47,11 @@ export let argument: IArgument.Argument | IArgument.Parameter;
  * Value reference
  */
 export let value: string;
+
+/**
+ * Completion Items
+ */
+export let complete = setCompletions();
 
 /* -------------------------------------------- */
 /* LOCAL SCOPES                                 */
@@ -102,7 +101,7 @@ const unique: Set<string> = new Set();
  * Resets all states. This is executed everytime we
  * encounter a new tag.
  */
-export function Reset (): void {
+export function reset (): void {
 
   tag = undefined;
   object = undefined;
@@ -122,26 +121,13 @@ export function Reset (): void {
 /* -------------------------------------------- */
 
 /**
- * Get Variation
- *
- * Returns the Liquid variation we are currently
- * querying. This is simply an export function which
- * returns localised state.
- */
-export function GetVariation (): Variation {
-
-  return variation;
-
-};
-
-/**
  * Get Argument
  *
  * Walks over _optional_ arugments contained on a tag
  * or filter until a `type` match is detected. If an
  * argument is `required` walk is cancelled.
  */
-export function GetArgument (type: Type): boolean {
+export function getArgument (type: Type): boolean {
 
   const start: number = index;
   const limit = cursor.arguments.length - 1;
@@ -193,7 +179,7 @@ export function GetArgument (type: Type): boolean {
 export function isParameter (token: string) {
 
   if (argument === undefined) return false;
-  if (argument.type !== Type.parameter && !GetArgument(Type.parameter)) {
+  if (argument.type !== Type.parameter && !getArgument(Type.parameter)) {
     return false;
   }
 
@@ -272,15 +258,30 @@ export function isValue (token: string): boolean {
 };
 
 /**
+ * Set Engine
+ *
+ * Sets the Liquid `variation` and `engine` variable.
+ * This will change what specification we reference.
+ */
+export function setEngine (name: IEngine): void {
+
+  if (engine !== name) {
+    engine = name;
+    variation = Specification[engine];
+  }
+
+};
+
+/**
  * Set Tag
  *
  * Finds a tag matching specification and updates the cursor.
  * States are changed when a match is successful. Returns a
  * boolean which signals a matched or unmatched tag.
  */
-export function SetTag (name: string): boolean {
+export function setTag (name: string): boolean {
 
-  Reset();
+  reset();
 
   if (!variation.tags?.[name]) return false;
 
@@ -298,7 +299,7 @@ export function SetTag (name: string): boolean {
  * States are changed when a match is successful. Returns a
  * boolean which signals a matched or unmatched filter.
  */
-export function SetFilter (name: string): boolean {
+export function setFilter (name: string): boolean {
 
   if (!variation.filters?.[name]) return false;
 
@@ -319,7 +320,7 @@ export function SetFilter (name: string): boolean {
  * contained in tags and filter, so the `cursor` is not
  * modified, instead the `object` state variable is updated.
  */
-export function SetObject (name: string): boolean {
+export function setObject (name: string): boolean {
 
   if (!variation.objects?.[name]) return false;
 
@@ -327,6 +328,84 @@ export function SetObject (name: string): boolean {
 
   return true;
 };
+
+/**
+ * Completions
+ *
+ * Constructs LSP completion-ready lists from the current
+ * specification reference. Returns a closure getter combinator
+ * with array lists for various tags, filters and objects.
+ */
+export function setCompletions () {
+
+  /* -------------------------------------------- */
+  /* TAG COMPLETIONS                              */
+  /* -------------------------------------------- */
+
+  const tags = Object.entries(variation.tags).map(
+    ([
+      label,
+      {
+        description,
+        reference,
+        deprecated = false,
+        singular = false,
+        snippet = null
+      }
+    ]) => ({
+      label,
+      deprecated,
+      documentation: documentation(description, reference),
+      data: {
+        snippet,
+        singular
+      }
+    })
+  );
+
+  /* -------------------------------------------- */
+  /* FILTER COMPLETIONS                           */
+  /* -------------------------------------------- */
+
+  const filters = Object.entries(variation.filters).map(
+    ([
+      label,
+      {
+        description,
+        reference,
+        deprecated = false
+      }
+    ]) => ({
+      label,
+      deprecated,
+      documentation: documentation(description, reference)
+    })
+  );
+
+  /* -------------------------------------------- */
+  /* OBJECT COMPLETIONS                           */
+  /* -------------------------------------------- */
+
+  const objects = variation?.objects ? Object.entries(variation.objects).map(
+    ([
+      label,
+      {
+        description,
+        reference,
+        deprecated = false,
+        singular = false
+      }
+    ]) => ({
+      label,
+      deprecated,
+      documentation: documentation(description, reference),
+      data: { singular }
+    })
+  ) : null;
+
+  return { tags, filters, objects };
+
+}
 
 /* -------------------------------------------- */
 /* NAVIGATORS                                   */
@@ -339,7 +418,7 @@ export function SetObject (name: string): boolean {
  * walking the index `2` (argument 3) calling this will
  * move the arugment reference states to index `1`.
  */
-export function PrevArgument (): boolean {
+export function prevArgument (): boolean {
 
   if (isNaN(index) || index === 0) return false;
 
@@ -361,7 +440,7 @@ export function PrevArgument (): boolean {
  * reference state variables. Returns a `boolean` which
  * indicates if we have reached the last argument or not.
  */
-export function NextArgument (): boolean {
+export function nextArgument (): boolean {
 
   if (index === cursor.arguments.length - 1) return false;
 
@@ -380,7 +459,7 @@ export function NextArgument (): boolean {
  * encounter a `parameter` type, the `argument` variable is
  * moved to its property value. This function reverts that.
  */
-export function NextParameter (): boolean {
+export function nextParameter (): boolean {
 
   if (isWithin(Within.ParameterValue)) {
     argument = cursor.arguments[index];
