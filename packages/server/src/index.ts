@@ -63,8 +63,7 @@ connection.onInitialize(initializeParams => (
         '/',
         '%',
         '|',
-        '{',
-        ' '
+        '{'
       ]
     },
     implementationProvider: true,
@@ -136,10 +135,6 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
     const document = Parser.scan(textDocument);
 
-    // console.log(document)
-
-    console.log(`PARSED IN ${stop('onDidOpenTextDocument').duration}`);
-
     if (!document) return null;
 
     if (Server.provider.validateOnOpen) {
@@ -147,7 +142,9 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
     }
 
   } catch (e) {
+
     console.log(e);
+
   }
 
 });
@@ -165,8 +162,6 @@ connection.onDidChangeTextDocument((textDocumentChanges) => {
     const document = Parser.update(textDocumentChanges);
 
     if (!document) return null;
-
-    // console.log('executed', document);
 
     console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`);
 
@@ -231,32 +226,35 @@ connection.onDocumentOnTypeFormatting((
 connection.onDocumentRangeFormatting((
   { textDocument: { uri } }
   , token
-) => !Server.provider.format || runSync(() => {
+) => !Server.provider.format || runAsync(async () => {
 
   const document = Parser.get(uri);
 
-  if (!document) return null;
+  console.log(document.ready);
+  if (!document || !document.ready) return token;
 
-  if (!document.format) {
+  if (!document.format.enable) {
 
-    return connection.window.showErrorMessage(
-      'Formatting cannot proceed due to an severe code error.',
-      {
-        title: 'Find and Fix'
-      }
-    ).then((value) => {
+    const { window } = connection;
+    const { message, range } = document.format.error;
 
-      return connection.window.showDocument({
+    const error = await window.showErrorMessage(message, {
+      title: 'Goto Error'
+    });
+
+    if (error) {
+      window.showDocument({
         uri,
-        selection: document.selection,
+        selection: range,
         takeFocus: true
       });
+    }
 
-    });
+    return token;
 
   }
 
-  return Service.doFormat(document);
+  return Service.doFormat(document, Server.formatting);
 
 }, null, `Error while computing range formatting for ${uri}`, token));
 
@@ -270,7 +268,6 @@ connection.onHover(
     , textDocument: { uri }
   }, token) => !Server.provider.hover || runAsync(async () => {
 
-    return null;
     const document = Parser.get(uri);
 
     if (!document) return null;
@@ -376,8 +373,6 @@ connection.onCompletion((
   }, token
 ) => !Server.provider.completion || runAsync(async () => {
 
-  return null;
-
   const document = Parser.get(uri);
 
   if (!document) return null;
@@ -394,8 +389,6 @@ connection.onCompletionResolve((
   item
   , token
 ) => runSync(() => {
-
-  return null;
 
   return Service.doCompleteResolve(item);
 
