@@ -1,4 +1,4 @@
-import { Engine, IEngine } from '@liquify/liquid-language-specs';
+import { query as q, IEngine } from '@liquify/liquid-language-specs';
 import { VersionedTextDocumentIdentifier, Range } from 'vscode-languageserver-types';
 import { parse } from 'parser/parse';
 import { create, update, get, remove, model } from 'tree/model';
@@ -7,28 +7,24 @@ import { Config, IConfig } from './config';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
-export * from '@liquify/liquid-language-specs';
 export { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 export { IAST } from './tree/ast';
 export { Node as INode } from './tree/nodes';
 export { Embed as IEmbed } from './tree/embed';
 export { NodeLanguage } from './lexical/language';
 export { NodeKind } from './lexical/kind';
+
+export * from '@liquify/liquid-language-specs';
+export * as Regexp from './lexical/expressions';
 export * as Characters from './lexical/characters';
 
 export class LiquidParser {
-
-  static engine (engine: IEngine) {
-
-    return Engine(engine);
-
-  }
 
   constructor (options: IConfig) {
 
     Object.assign(Config, options);
 
-    Engine(Config.engine);
+    q.setEngine(Config.engine);
 
   }
 
@@ -37,7 +33,7 @@ export class LiquidParser {
      */
   engine (engine: IEngine): void {
 
-    return Engine(engine);
+    return q.setEngine(engine);
 
   }
 
@@ -48,7 +44,7 @@ export class LiquidParser {
       model.delete('raw');
     }
 
-    return parse.bind(Config)(
+    return parse(
       create(
         {
           uri: 'raw',
@@ -73,7 +69,7 @@ export class LiquidParser {
     }
   ): IAST {
 
-    return parse.bind(Config)(create(textDocument));
+    return parse(create(textDocument));
   }
 
   get (uri: string): IAST {
@@ -99,7 +95,7 @@ export class LiquidParser {
       }
   ): IAST {
 
-    return parse.bind(Config)(
+    return parse(
       update(
         textDocument,
         contentChanges
