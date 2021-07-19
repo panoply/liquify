@@ -82,7 +82,7 @@ export function LiquidClient (_context: ExtensionContext): LanguageClient {
       module,
       transport: TransportKind.ipc,
       options: {
-        execArgv: [ '--nolazy', '--inspect=6080' ]
+        execArgv: [ '--nolazy', '--inspect=6009' ]
       }
     }
   };
