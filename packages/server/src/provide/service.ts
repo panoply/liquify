@@ -1,14 +1,24 @@
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { JSONService } from 'service/modes/json';
-import { Parser } from 'provide/parser';
-import { Format } from 'service/format';
-// import * as Completion from 'service/completions';
-import * as Hover from 'service/hovers';
-import upperFirst from 'lodash/upperFirst';
-import { Characters, Position, IAST, INode, NodeKind } from '@liquify/liquid-parser';
-import { Services } from 'types/server';
+import { Services, Formatting } from 'types/server';
 import store from '@liquify/schema-stores';
+import * as Format from 'service/format';
+import * as Hover from 'service/hovers';
+import * as Complete from 'service/completions';
 import {
+  Characters,
+  Position,
+  IAST,
+  INode,
+  Type,
+  NodeKind,
+  Tokens,
+  query as q,
+  state as $
+} from '@liquify/liquid-parser';
+
+import {
+  Connection,
   TextEdit,
   CompletionTriggerKind,
   PublishDiagnosticsParams,
@@ -16,7 +26,9 @@ import {
   SignatureHelpContext,
   SignatureHelp,
   CompletionItem,
-  CompletionContext
+  CompletionContext,
+  CompletionItemKind,
+  InsertTextFormat
 } from 'vscode-languageserver';
 
 /**
@@ -27,6 +39,8 @@ import {
  * was inspired in-part by the vscode language service modules.
  */
 export class LiquidService {
+
+  private cache: TextEdit[]
 
   private mode: {
     css: boolean
@@ -69,7 +83,7 @@ export class LiquidService {
     for (const region of document.regions) {
       if (!this.mode?.[region.languageId]) continue;
       const mode = this.mode?.[region.languageId];
-      const errs = await mode.doValidation(region, document);
+      const errs = await mode.doValidation(document, region);
       document.errors.push(...errs);
     }
 
@@ -84,7 +98,7 @@ export class LiquidService {
   /**
    * Formats
    */
-  doFormat (document: IAST) {
+  doFormat (document: IAST, rules: Formatting) {
 
     // Do not format empty documents
 
@@ -93,38 +107,14 @@ export class LiquidService {
 
     /* FORMATS ------------------------------------ */
 
-    const literal = document.literal();
-    const format = Format(document, literal);
-
-    if (document.regions.length > 0) {
-
-      const regions = format.embeds(document.regions);
-
-      if (regions.length > 0) {
-        return [
-          TextEdit.replace(
-            document.root.range,
-            format.markup(TextDocument.applyEdits(literal, regions))
-          )
-        ];
-      }
-    }
-
-    return [
-      TextEdit.replace(document.root.range, format.markup())
-    ];
+    return document.regions.length > 0
+      ? Format.regions(document, rules)
+      : Format.markup(document, rules);
 
   }
 
   /**
    * Format onType
-   *
-   * @param {Parser.AST} document
-   * @param {string} character
-   * @param {LSP.Position} position
-   * @param {LSP.FormattingOptions} options
-   * @returns
-   * @memberof LiquidService
    */
   doFormatOnType (
     document: IAST,
@@ -155,39 +145,15 @@ export class LiquidService {
    */
   async doHover (document: IAST, position: Position) {
 
-    const offset = document.offsetAt(position);
-    const node: INode = document.getNodeAt(offset, false);
+    const node: INode = document.getNodeAt(position);
 
-    if (node.kind === NodeKind.HTML) {
-      return this.mode.html.doHover(node.getDocument('.html'), position);
-    };
-
-    if (!node) {
-      return this.mode.html.doHover(document.literal(), position);
+    if (node.type === Type.embedded) {
+      if (this.mode?.[node.languageId]) {
+        return this.mode[node.languageId].doHover(node, position);
+      }
     }
 
-    if (document.withinEmbed(offset, node) && document.withinBody(offset, node)) {
-      if (this.mode?.[node.language]) return this.mode[node.language].doHover(node, position);
-    }
-
-    const name = Hover.getWordAtPosition(document, position, node);
-
-    const spec = (
-      Parser.spec.variant.tags?.[name]
-    ) || (
-      Parser.spec.variant.filters?.[name]
-    ) || (
-      Parser.spec.variant.objects?.[name]
-    );
-
-    if (!spec) return null;
-
-    const reference = `[${upperFirst(Parser.spec.variant.engine)} Reference](${spec.link})`;
-
-    return {
-      kind: 'markdown',
-      contents: `${spec.description}\n\n${reference}`
-    };
+    return Hover.doObjectHover(document, position);
 
   }
 
@@ -254,46 +220,61 @@ export class LiquidService {
     }: CompletionContext
   ) {
 
-    // Prevent Completions when double
-    if (triggerKind !== CompletionTriggerKind.TriggerCharacter) return null;
+    console.log('triggers');
 
-    const trigger = triggerCharacter.charCodeAt(0);
+    // Prevent Completions when double
+    // if (triggerKind !== CompletionTriggerKind.TriggerCharacter) return null;
+
+    const trigger = Object.is(
+      CompletionTriggerKind.TriggerCharacter,
+      triggerKind
+    ) ? triggerCharacter.charCodeAt(0) : false;
+
     const offset = document.offsetAt(position);
 
-    if (trigger === Characters.LAN) {
-      return this.mode.html.doComplete(document.literal('.html'), position);
+    if (!document.withinToken(offset) || !document.withinEndToken(offset)) {
+      switch (trigger) {
+        case Characters.LAN:
+
+          return q.HTMLTagComplete();
+
+        case Characters.PER:
+
+          this.cache = Complete.getTagsEdits(document, position, offset, trigger);
+
+          return q.LiquidTagComplete();
+      }
     }
 
-    console.log(trigger, trigger === Characters.DOT);
+    if (Object.is(document.node.kind, NodeKind.HTML)) {
+
+      if (document.withinToken(offset)) {
+        switch (trigger) {
+          case Characters.DQO:
+          case Characters.SQO: return q.HTMLValueComplete($.html.value);
+          default:
+            return q.HTMLAttrsComplete(document.node.tag);
+        }
+      } else if (document.isCodeChar(Characters.RAN, offset)) {
+
+        return q.HTMLAttrsComplete(document.node.tag);
+
+      }
+
+    }
 
     // We are not within a Liquid token, lets load available completions
-    if (!document.withinToken(offset)) {
-
-      // User has input % character, load tag completions
-      if (trigger === Characters.PER) {
-        return Completion.getTags(
-          document,
-          position,
-          offset,
-          trigger
-        );
-      }
-
-      // User has input { character, load output/object completions
-      if (trigger === Characters.LCB) {
-        return Completion.getOutputs(
-          document,
-          position,
-          offset,
-          trigger
-        );
-      }
-
-      // User has input whitespace, lets check previous character
-      if (trigger === Characters.WSP) {
-
-        // We will persist tag completions is previous character is %
-        /* if (Parser.isPrevCodeChar(Characters.PER, offset)) {
+    if (Object.is(document.node.kind, NodeKind.Liquid)) {
+      if (!document.withinToken(offset)) {
+        switch (trigger) {
+          case Characters.PER:
+          case Characters.LCB:
+            return q.LiquidTagComplete($.html.value);
+          default:
+            return q.HTMLAttrsComplete(document.node.tag);
+        }
+        // User has input % character, load tag completions
+        if (trigger === Characters.PER) {
           return Completion.getTags(
             document,
             position,
@@ -302,18 +283,41 @@ export class LiquidService {
           );
         }
 
-        // We will persist tag completions is previous character is %
-        if (Parser.isPrevCodeChar(Characters.LCB, offset)) {
+        // User has input { character, load output/object completions
+        if (trigger === Characters.LCB) {
           return Completion.getOutputs(
             document,
             position,
             offset,
             trigger
           );
-        } */
+        }
+
+        // User has input whitespace, lets check previous character
+        if (trigger === Characters.WSP) {
+
+          // We will persist tag completions is previous character is %
+          /* if (Parser.isPrevCodeChar(Characters.PER, offset)) {
+            return Completion.getTags(
+              document,
+              position,
+              offset,
+              trigger
+            );
+          }
+
+          // We will persist tag completions is previous character is %
+          if (Parser.isPrevCodeChar(Characters.LCB, offset)) {
+            return Completion.getOutputs(
+              document,
+              position,
+              offset,
+              trigger
+            );
+          } */
+        }
       }
     }
-
     console.log(trigger, trigger === Characters.DOT);
 
     if (trigger === Characters.DOT) {
@@ -356,6 +360,21 @@ export class LiquidService {
    * @memberof LiquidService
    */
   doCompleteResolve (completionItem: CompletionItem) {
+
+    switch (completionItem.data.token) {
+      case Tokens.HTMLTag:
+        return q.HTMLTagResolve(completionItem);
+      case Tokens.HTMLAttribute:
+        return q.HTMLAttrsResolve(completionItem);
+      case Tokens.HTMLValue:
+        return q.HTMLValueResolve(completionItem);
+      case Tokens.LiquidTag:
+        return q.LiquidTagResolve(completionItem, this.cache);
+    }
+
+    return completionItem;
+
+    if (completionItem.data.token) { return completionItem; }
 
     if (completionItem.data?.language) {
       return this.mode[completionItem.data.language].doResolve(completionItem);
