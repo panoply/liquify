@@ -4,8 +4,8 @@ import { TextEdit } from 'vscode-languageserver-types';
 // import { NodeLanguage } from 'lexical/language';
 // import { Config } from 'config';
 // import { NodeKind } from 'lexical/kind';
-// import inRange from 'lodash.inrange';
-import { Root, Node } from 'tree/nodes';
+import inRange from 'lodash.inrange';
+import { Node } from 'tree/nodes';
 import { Embed } from 'tree/embed';
 import { GetFormedRange } from 'parser/utils';
 import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
@@ -87,7 +87,10 @@ export class IAST {
   /**
    * Boolean value used to enable formatting
    */
-  public format: boolean = true
+  public format: { enable: boolean, error?: IDiagnostic } = {
+    enable: true,
+    error: undefined
+  }
 
   /**
    * List of parsing errors and validations
@@ -105,7 +108,13 @@ export class IAST {
    * Returns the node at the current cursor location or null
    * if the cursor is not located within a node on the tree.
    */
-  public root: Root = null;
+  public ready: boolean = false;
+
+  /**
+   * Returns the node at the current cursor location or null
+   * if the cursor is not located within a node on the tree.
+   */
+  public root: Node = null;
 
   /**
    * Returns the node at the current cursor location or null
@@ -156,9 +165,11 @@ export class IAST {
         ? this.getRange()
         : location;
 
-      if (!diagnostic.data.doFormat && this.format) {
-        this.format = false;
-        this.selection = diagnostic.range;
+      if (!diagnostic.data.doFormat) {
+        if (this.format.enable) {
+          this.format.enable = false;
+          this.format.error = diagnostic;
+        }
       }
 
       this.errors.push(diagnostic);
@@ -329,12 +340,14 @@ export class IAST {
    */
   public increment (edits: { range: Range, text: string}[], version: number): string {
 
+    this.ready = false;
     this.cursor = NaN;
     this.version = version;
-    this.format = true;
-    this.changes.splice(0, this.changes.length, ...edits);
-    this.errors.splice(0);
-    this.linting.splice(0);
+    this.format.enable = true;
+    this.format.error = undefined;
+    this.changes = edits;
+    this.errors = [];
+    this.linting = [];
 
     /* -------------------------------------------- */
     /* CONTENT UPDATE                               */
@@ -424,7 +437,88 @@ export class IAST {
       : this.offsetAt(location);
 
     return this.root.getNodeAt(offset);
+  }
 
+  public isCodeChar (code: number, offset: number): boolean {
+
+    return s.GetCodeChar(offset) === code;
+
+  }
+
+  public isPrevCodeChar (code: number, offset: number): boolean {
+
+    return s.GetCodeChar(offset - 1) === code;
+
+  }
+
+  /**
+   * Check if position or offset location is within range.
+   * This method is a shortcut to the lodash `inRange`. It will convert
+   * a position if position is passed.
+   *
+   * The function will checks if `n` is between `start` and up to,
+   * but not including, `end`. If end is not specified, it's set to start
+   * with `start` then set to `0`. If `start` is greater than `end` the
+   * params are swapped to support negative ranges.
+   */
+  private within (location: Position | number, start: number, end?: number): boolean {
+
+    const offset = typeof location === 'number'
+      ? location
+      : this.offsetAt(location);
+
+    return inRange(offset, start, end);
+  }
+
+  /**
+   * Checks the passed in position of offset is within
+   * an end token tag. It will preface the `node` value
+   * assigned by either the previous document change or method event.
+   */
+  public withinEndToken (location: Position | number, node: Node = this.node): boolean {
+
+    if (!node || node.singular) return false;
+
+    return this.within(location, node.offsets[2], node.offsets[3]);
+  }
+
+  /**
+   * Checks the passed in position of offset is within
+   * a node between the start and end locations. It will
+   * preface the `node` value assigned by either the previous
+   * document change or method event.
+   */
+  public withinNode (location: Position | number, node: Node = this.node): boolean {
+
+    if (!node) return false;
+
+    return this.within(location, node.start, node.end);
+  }
+
+  /**
+   * Checks the passed in position of offset is within
+   * the body of a node, between ending start token and start of
+   * end token. It will preface the `node` value assigned
+   * by either the previous document change or method event.
+   */
+  public withinContent (location: Position | number, node: Node = this.node): boolean {
+
+    if (!node || node.singular) return false;
+
+    return this.within(location, node.offsets[1], node.offsets[2]);
+  }
+
+  /**
+   * Checks the passed in position of offset is within
+   * a start or singular based token. It will preface
+   * the `node` value assigned by either the previous
+   * document change or method event.
+   */
+  public withinToken (location: Position | number, node: Node = this.node): boolean {
+
+    if (!node) return false;
+
+    return this.within(location, node.offsets[0], node.offsets[1]);
   }
 
 }
