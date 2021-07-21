@@ -7,10 +7,11 @@
   "contributors": ["Νίκος Σαβίδης", "Joseph Curtis"],
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
-  "main": "package/index.js",
-  "types": "package/@types/index.d.ts",
+  "main": "./package/index.js",
+  "types": "./package/@types/index.d.ts",
   "exports": {
-    "require": "./package/index.js"
+    "require": "./package/index.js",
+    "import": "./package/index.js"
   },
   "engines": {
     "pnpm": ">=4",
