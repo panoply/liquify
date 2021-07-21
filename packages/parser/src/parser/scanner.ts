@@ -4,6 +4,7 @@ import {
   QueryErrors,
   state as $,
   query as q
+
 } from '@liquify/liquid-language-specs';
 
 import { TokenType } from 'lexical/tokens';
@@ -172,9 +173,10 @@ function HTMLSeq (): number {
   // We are within a HTML start tag, eg: <^tag
   if (s.IfRegExp(r.HTMLTagName)) {
 
+    q.setHTMLTag(s.token);
+
     state = ScanState.HTMLAttributeName;
 
-    console.log(q.isVoid(s.token));
     // We record this token
     token = q.isVoid(s.token)
       ? TokenType.HTMLVoidTagOpen
@@ -271,8 +273,21 @@ function Scan (): number {
 
       // We have an attribute value on the tag, eg: `<script src^`
       if (s.IfRegExp(r.HTMLAttributeName)) {
+
         state = ScanState.HTMLAttributeOperator;
-        return TokenType.HTMLAttributeName;
+
+        if (q.isAttributeUniq(s.token)) {
+
+          if (q.isAttribute(s.token)) {
+            return TokenType.HTMLAttributeName;
+          }
+
+          error = ParseError.InvalidHTMLAttribute;
+          return TokenType.ParseError;
+        }
+
+        error = ParseError.DuplicatedHTMLAttributes;
+        return TokenType.ParseError;
       }
 
       // We have a Liquid attribute value, we parse the delimiters
@@ -332,11 +347,27 @@ function Scan (): number {
       if (s.IsRegExp(r.StringQuotations)) {
 
         // Skip the string, Liquid tags nested within will also be skipped
-        if (s.SkipQuotedString(true)) return TokenType.HTMLAttributeValue;
+        // We are seeking an incomplete string so we can validate
+        if (!s.SkipQuotedString(true)) {
 
-        // We have a missing quotation character, eg: "something
-        error = ParseError.MissingQuotation;
-        return TokenType.ParseError;
+          // We have a missing quotation character, eg: "something
+          error = ParseError.MissingQuotation;
+          return TokenType.ParseError;
+        }
+
+        // If we get here, string was successfully consumed, no errros
+        // Lets check if the attribute value is a liquid tag or text value
+        if (!s.TokenContains(r.DelimitersOpen, true)) {
+
+          // Attribute value is not a liquid tag, lets see if its accepted.
+          if (!q.isAttributeValue(s.token)) {
+            error = ParseError.InvalidHTMLAttributeValue;
+            return TokenType.ParseError;
+          }
+        }
+
+        return TokenType.HTMLAttributeValue;
+
       }
 
       return Scan();
