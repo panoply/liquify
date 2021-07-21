@@ -42,6 +42,12 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     data: { doFormat: false }
 
   },
+  [ParseError.DuplicatedHTMLAttributes]: {
+    severity: ErrorLevel.Warning,
+    message: 'Duplicate attributes defined. Tag attributes should be unique!',
+    source: 'Liquid HTML Parser',
+    data: { doFormat: true }
+  },
   [ParseError.DuplicatedParameters]: {
     severity: ErrorLevel.Error,
     message: 'Duplicate/repeating parameters. Parameters must be unique!',
@@ -66,6 +72,12 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     message: 'Parse error',
     source: 'Liquid Parser',
     data: { doFormat: false }
+  },
+  [ParseError.MissingHTMLAttributeValue]: {
+    severity: ErrorLevel.Warning,
+    message: 'Missing attribute value. This attribute requires a value!',
+    source: 'Liquid HTML Parser',
+    data: { doFormat: true }
   },
   [ParseError.MissingTagName]: {
     severity: ErrorLevel.Error,
@@ -187,6 +199,18 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     severity: ErrorLevel.Error,
     message: 'Missing whitespace between characters',
     source: 'Liquid Parser',
+    data: { doFormat: true }
+  },
+  [ParseError.InvalidHTMLAttribute]: {
+    severity: ErrorLevel.Warning,
+    message: 'Invalid attribute expressed. This attribute value belongs on a different tag.',
+    source: 'Liquid HTML Parser',
+    data: { doFormat: true }
+  },
+  [ParseError.InvalidHTMLAttributeValue]: {
+    severity: ErrorLevel.Warning,
+    message: 'Invalid attribute value. The value provided to this attribute is invalid',
+    source: 'Liquid HTML Parser',
     data: { doFormat: true }
   },
   [ParseError.InvalidArgument]: {
