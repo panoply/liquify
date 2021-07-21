@@ -1,14 +1,5 @@
-
-import * as Spec from 'html/data/export';
 import { IHTMLTag, IHTMLValue, IHTMLTagAttributes } from 'html/types/markup';
-import { IHTMLCompletions, IHTMLProvideAttrs } from 'html/types/completions';
-import { documentation, descriptive } from 'utils/generators';
-import { Tokens } from 'shared/types';
-import {
-  CompletionItemKind,
-  CompletionItem,
-  InsertTextFormat
-} from 'vscode-languageserver-types';
+import { html5 } from './provide';
 
 /* -------------------------------------------- */
 /* EXPORT SCOPES                                */
@@ -19,181 +10,157 @@ import {
  */
 export let tag: IHTMLTag;
 
+/* -------------------------------------------- */
+/* LOCAL SCOPES                                 */
+/* -------------------------------------------- */
+
 /**
  * Attribute Specification
  */
-export let attribute: IHTMLTagAttributes[];
+let attrs: string[];
 
 /**
  * Value Set Specification
  */
-export let value: keyof IHTMLValue;
+let values: IHTMLValue[];
 
 /**
- * Completion Items
+ * The current active attributes
  */
-export let complete = HTMLCompletions();
+const unique: Set<string> = new Set();
+
+/* -------------------------------------------- */
+/* SETTERS                                      */
+/* -------------------------------------------- */
+
+/**
+ * Set Tag
+ *
+ * Finds a HTML tag and updates the scope reference to it.
+ * If no tag is found in the spec, it's likely a custom
+ * HTML tag, this is allowed but that is handled at the
+ * scanner/parser level.
+ *
+ * When a tag is matched, we immeadiatly check if the tag
+ * accepts a list of pre-defined attributes, if they exists
+ * we create a key list of the accepted values which we will
+ * use to match attributes.
+ */
+export function setHTMLTag (name: string): boolean {
+
+  tag = undefined;
+  attrs = undefined;
+
+  unique.clear();
+
+  if (!html5.tags?.[name]) return false;
+
+  tag = html5.tags[name];
+
+  if (tag.attributes.length) {
+    attrs = tag.attributes.map((attr: IHTMLTagAttributes) => attr.name);
+  }
+
+  return true;
+
+}
 
 /* -------------------------------------------- */
 /* VALIDATORS                                   */
 /* -------------------------------------------- */
 
+/**
+ * Checks to see if the provided HTML tag is a void
+ * type tag, meaning it does not required an ender.
+ */
 export function isVoid (name: string) {
 
-  return Spec.tags?.[name]?.void;
-
-}
-
-/* -------------------------------------------- */
-/* FUNCTIONS                                    */
-/* -------------------------------------------- */
-
-export function HTMLTagComplete () {
-
-  attribute = undefined;
-  value = undefined;
-
-  return complete.tags;
-
-}
-
-export function HTMLAttrsComplete (token: string): IHTMLProvideAttrs {
-
-  if (attribute) return attribute;
-
-  return HTMLAttributes(Spec.tags[token].attributes).concat(complete.attributes);
-
-}
-
-export function HTMLValueComplete (token: string = value) {
-
-  if (!value || !Spec.values?.[token]) return false;
-
-  return Spec.values[token].map(
-    value => ({
-      ...value,
-      data: { token: Tokens.HTMLValue }
-    })
-  );
-
-}
-
-export function HTMLTagResolve (item: CompletionItem) {
-
-  attribute = item.data.attributes;
-
-  item.kind = CompletionItemKind.Property;
-  item.insertTextFormat = InsertTextFormat.Snippet;
-  item.insertText = item.data.void
-    ? `${item.label}$1 > $0`
-    : `${item.label}$1 > $0 </${item.label}>`;
-
-  return item;
-
-}
-
-export function HTMLAttrsResolve (item: CompletionItem) {
-
-  if (!item.data.value) {
-    value = undefined;
-    if (!/^data-/.test(item.label)) {
-      item.insertText = `${item.label}="$1" $0`;
-    }
-  } else {
-    value = item.data.value;
-    item.insertText = `${item.label}="$1" $0`;
-  }
-
-  item.kind = CompletionItemKind.Property;
-  item.insertTextFormat = InsertTextFormat.Snippet;
-
-  return item;
-}
-
-export function HTMLValueResolve (item: CompletionItem) {
-
-  Object.assign(item, { kind: CompletionItemKind.Value });
-
-  return item;
-
-}
-
-export function HTMLAttributes (attrs: IHTMLTagAttributes[]) {
-
-  if (!attrs) return complete.attributes;
-
-  return attrs.map(
-    (
-      {
-        name,
-        description,
-        value = false
-      }: IHTMLTagAttributes
-    ) => ({
-      label: name,
-      documentation: descriptive(description),
-      data: {
-        token: Tokens.HTMLAttribute,
-        value
-      }
-    })
-  );
+  return html5.tags?.[name]?.void;
 
 }
 
 /**
- * Completions
+ * Checks to see if the provided tag accepts a
+ * supplied attribute. If the tag contains attributes
+ * on its spec then the tag accepts a set of attributes
+ * which are unique to that tag, like (for example) the
+ * `<input>` tag which accepts attributes like `type=""`
  *
- * Constructs LSP completion-ready lists from the current
- * specification reference. Returns a closure getter combinator
- * with array lists for various tags, filters and objects.
+ * A local scope variable `attrs` generated in the setter,
+ * holds string list of values which contain accepted pre-defined
+ * attributes that we will check and from here determine if
+ * that attribute has a pre-determined set of values.
+ *
+ * If `attrs` is undefined then the tag accepts global attributes,
+ * so we will check the globals in the spec. When `attrs` is
+ * undefined or the value passed does not match any values in
+ * the list, we will proceed to the global attribute check.
+ *
+ * We allow `data-` attributes to pass
  */
-export function HTMLCompletions (): IHTMLCompletions {
+export function isAttribute (name: string): boolean {
 
-  /* -------------------------------------------- */
-  /* ATTRIBUTE COMPLETIONS                        */
-  /* -------------------------------------------- */
+  // reset values to ensure a fresh reference
+  values = undefined;
 
-  const attributes = Object.entries(Spec.attributes).map(
-    ([
-      label,
-      {
-        description,
-        reference,
-        value = false
-      }
-    ]) => ({
-      label,
-      documentation: documentation(description, reference),
-      data: {
-        token: Tokens.HTMLAttribute,
-        value
-      }
-    })
-  );
+  unique.add(name);
 
-  /* -------------------------------------------- */
-  /* TAG COMPLETIONS                              */
-  /* -------------------------------------------- */
+  // Allow `data-` attributes to pass
+  if (name.slice(0, 5) === 'data-') return true;
 
-  const tags = Object.entries(Spec.tags).map(
-    ([
-      label,
-      spec
-    ]) => ({
-      label,
-      documentation: documentation(spec.description, spec.reference),
-      data: {
-        token: Tokens.HTMLTag,
-        void: spec.void,
-        attributes: HTMLAttributes(spec?.attributes)
-      }
-    })
-  );
+  // check predefined attributes
+  if (attrs) {
+    const index = attrs.indexOf(name);
+    if (index > -1) {
+      values = html5.values[tag.attributes[index]?.value];
+      return true;
+    }
+  }
 
-  return {
-    tags,
-    attributes
-  };
+  // Check global attributes
+  if (!html5.attributes?.[name]) return false;
+
+  values = html5.values[html5.attributes[name]?.value];
+  return true;
+
+}
+
+/**
+ * Checks to see if the attribute already if it already
+ * exists on the tag. If a tag contains Liquid syntax, we
+ * will skip this check at scanner level after some validations.
+ */
+export function isAttributeUniq (name: string): boolean {
+
+  return !unique.has(name);
+
+}
+
+/**
+ * Validates an provided attribute value when a pre-defined
+ * value set exists for the provided attribute.
+ *
+ * @todo
+ * Because the specs value sets exists as an array,
+ * the values are walked this might be hurt perfomance
+ * and may be worth re-thinking in the future.
+ */
+export function isAttributeValue (value: string) {
+
+  // allow undefined values to pass
+  if (!values) return true;
+
+  return values.some(item => item.label === value);
+
+}
+
+/**
+ * Checks to see if a value is required on the attribute.
+ * When a tag attribute contains a pre-defined attribute
+ * set, it is inferred that a value is to be provided.
+ */
+export function isValueRequired (): boolean {
+
+  return attrs !== undefined;
 
 }
