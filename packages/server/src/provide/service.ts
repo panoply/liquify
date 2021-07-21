@@ -5,6 +5,7 @@ import store from '@liquify/schema-stores';
 import * as Format from 'service/format';
 import * as Hover from 'service/hovers';
 import * as Complete from 'service/completions';
+import * as Editing from 'service/editing';
 import {
   Characters,
   Position,
@@ -13,8 +14,10 @@ import {
   Type,
   NodeKind,
   Tokens,
+  provide as p,
   query as q,
   state as $
+
 } from '@liquify/liquid-parser';
 
 import {
@@ -28,7 +31,8 @@ import {
   CompletionItem,
   CompletionContext,
   CompletionItemKind,
-  InsertTextFormat
+  InsertTextFormat,
+  LinkedEditingRanges
 } from 'vscode-languageserver';
 
 /**
@@ -123,20 +127,36 @@ export class LiquidService {
     options: FormattingOptions
   ) {
 
-    switch (character.charCodeAt(0)) {
-      case Characters.PIP:
-      case Characters.COM:
-      case Characters.COL: return [
-        TextEdit.insert(position, String.fromCharCode(Characters.WSP))
-      ];
-      case Characters.PER: return [
-        TextEdit.replace({
-          start: position,
-          end: position
-        }, '%}')
-      ];
+    const node: INode = document.node;
 
+    console.log(character);
+
+    const start = node.endToken.indexOf(node.tag);
+    const end = node.endToken.lastIndexOf(node.tag);
+    const range = {
+      start: document.positionAt(node.offsets[2] + start),
+      end: document.positionAt(node.offsets[2] + end)
+    };
+
+    const text = document.getText(range);
+
+    return TextEdit.replace(range, text);
+
+  }
+
+  async doLinkedEditing (
+    document: IAST,
+    position: Position
+  ): Promise<LinkedEditingRanges> {
+
+    if (position.character > 0) {
+      const node: INode = document.getNodeAt(position);
+      if (node.kind === NodeKind.HTML) {
+        return Editing.getEditRanges(document, node);
+      }
     }
+
+    return null;
 
   }
 
@@ -220,6 +240,14 @@ export class LiquidService {
     }: CompletionContext
   ) {
 
+    if (document.node.type === Type.embedded) {
+      for (const region of document.regions) {
+        if (!this.mode?.[region.languageId]) continue;
+        const mode = this.mode?.[region.languageId];
+        return mode.doComplete(region, position);
+      }
+    }
+
     console.log('triggers');
 
     // Prevent Completions when double
@@ -236,31 +264,29 @@ export class LiquidService {
       switch (trigger) {
         case Characters.LAN:
 
-          return q.HTMLTagComplete();
+          return p.HTMLTagComplete();
 
         case Characters.PER:
 
           this.cache = Complete.getTagsEdits(document, position, offset, trigger);
 
-          return q.LiquidTagComplete();
+          return p.LiquidTagComplete();
       }
     }
 
     if (Object.is(document.node.kind, NodeKind.HTML)) {
-
       if (document.withinToken(offset)) {
         switch (trigger) {
           case Characters.DQO:
-          case Characters.SQO: return q.HTMLValueComplete($.html.value);
+          case Characters.SQO: return p.HTMLValueComplete($.html5.value);
           default:
-            return q.HTMLAttrsComplete(document.node.tag);
+            return p.HTMLAttrsComplete(document.node.tag);
         }
       } else if (document.isCodeChar(Characters.RAN, offset)) {
 
-        return q.HTMLAttrsComplete(document.node.tag);
+        return p.HTMLAttrsComplete(document.node.tag);
 
       }
-
     }
 
     // We are not within a Liquid token, lets load available completions
@@ -269,87 +295,21 @@ export class LiquidService {
         switch (trigger) {
           case Characters.PER:
           case Characters.LCB:
-            return q.LiquidTagComplete($.html.value);
+            return p.LiquidTagComplete();
           default:
-            return q.HTMLAttrsComplete(document.node.tag);
-        }
-        // User has input % character, load tag completions
-        if (trigger === Characters.PER) {
-          return Completion.getTags(
-            document,
-            position,
-            offset,
-            trigger
-          );
+            return p.HTMLAttrsComplete(document.node.tag);
         }
 
-        // User has input { character, load output/object completions
-        if (trigger === Characters.LCB) {
-          return Completion.getOutputs(
-            document,
-            position,
-            offset,
-            trigger
-          );
-        }
-
-        // User has input whitespace, lets check previous character
-        if (trigger === Characters.WSP) {
-
-          // We will persist tag completions is previous character is %
-          /* if (Parser.isPrevCodeChar(Characters.PER, offset)) {
-            return Completion.getTags(
-              document,
-              position,
-              offset,
-              trigger
-            );
-          }
-
-          // We will persist tag completions is previous character is %
-          if (Parser.isPrevCodeChar(Characters.LCB, offset)) {
-            return Completion.getOutputs(
-              document,
-              position,
-              offset,
-              trigger
-            );
-          } */
-        }
       }
     }
     console.log(trigger, trigger === Characters.DOT);
 
-    if (trigger === Characters.DOT) {
-      return Completion.getObjectCompletion(document, offset);
-    }
+    // if (trigger === Characters.DOT) {
+    // return Completion.getObjectCompletion(document, offset);
+    // }
 
     return null;
 
-    /* const node = document.getNodeAt(offset, false);
-    // We are within a token
-    if (document.withinToken(offset)) {
-      return Completion.inToken(document, offset, trigger);
-    }
-
-    // Embedded Documents
-    if (document.withinEmbed(offset)) {
-      return Completion.inEmbedded(document, mode, position);
-    }
-
-    // Lets check if we are within a Node existing on the AST
-    const ASTNode = document.getEmbedAt(offset) || document.getNodeAt(offset);
-
-    // We have context of this node on the AST
-    if (ASTNode) {
-      return document.isEmbed
-        ? Completion.inEmbedded(document, mode, position)
-        : Completion.inToken(document, offset, trigger);
-    }
-
-    // At this point, the completion is either a whitespace or delimiter
-    return Completion.findCompleteItems(document, offset, trigger);
-    */
   }
 
   /**
@@ -359,25 +319,20 @@ export class LiquidService {
    * @returns
    * @memberof LiquidService
    */
-  doCompleteResolve (completionItem: CompletionItem) {
+  doCompleteResolve (completionItem: CompletionItem): CompletionItem {
 
     switch (completionItem.data.token) {
       case Tokens.HTMLTag:
-        return q.HTMLTagResolve(completionItem);
+        return p.HTMLTagResolve(completionItem);
       case Tokens.HTMLAttribute:
-        return q.HTMLAttrsResolve(completionItem);
+        return p.HTMLAttrsResolve(completionItem);
       case Tokens.HTMLValue:
-        return q.HTMLValueResolve(completionItem);
+        return p.HTMLValueResolve(completionItem);
       case Tokens.LiquidTag:
-        return q.LiquidTagResolve(completionItem, this.cache);
-    }
+        return p.LiquidTagResolve(completionItem, this.cache);
+      case Tokens.LiquidEmbedded:
+        return this.mode[completionItem.data.languageId].doResolve(completionItem);
 
-    return completionItem;
-
-    if (completionItem.data.token) { return completionItem; }
-
-    if (completionItem.data?.language) {
-      return this.mode[completionItem.data.language].doResolve(completionItem);
     }
 
     return completionItem;
