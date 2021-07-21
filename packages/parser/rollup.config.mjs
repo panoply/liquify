@@ -22,7 +22,7 @@ export default Rollup(
       chunkFileNames: '[name].js'
     },
     external: [
-      // '@liquify/liquid-language-specs'
+      '@liquify/liquid-language-specs'
     ],
     plugins: env.if('dev')(
       [
