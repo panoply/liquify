@@ -4,6 +4,7 @@ import { Parser } from 'provide/parser';
 import { Server, Service } from 'export';
 import { runAsync, runSync } from 'utils/runners';
 import { mark, stop } from 'marky';
+import { INode } from '@liquify/liquid-parser';
 import {
   DidChangeConfigurationNotification,
   TextDocumentSyncKind,
@@ -35,9 +36,9 @@ connection.onInitialize(initializeParams => (
     documentOnTypeFormattingProvider: {
       firstTriggerCharacter: '}',
       moreTriggerCharacter: [
-
       ]
     },
+    renameProvider: true,
     documentRangeFormattingProvider: true,
     hoverProvider: true,
     documentLinkProvider: {
@@ -67,6 +68,7 @@ connection.onInitialize(initializeParams => (
       ]
     },
     implementationProvider: true,
+    linkedEditingRangeProvider: true,
     executeCommandProvider: {
       commands: [
         'liquid.liquidrc',
@@ -230,34 +232,32 @@ connection.onDocumentRangeFormatting((
 
   const document = Parser.get(uri);
 
-  console.log(document.ready);
-  if (!document || !document.ready) return token;
-
-  if (!document.format.enable) {
-
-    const { window } = connection;
-    const { message, range } = document.format.error;
-
-    const error = await window.showErrorMessage(message, {
-      title: 'Goto Error'
-    });
-
-    if (error) {
-      window.showDocument({
-        uri,
-        selection: range,
-        takeFocus: true
-      });
-    }
-
-    return token;
-
-  }
+  if (!document) return null;
+  if (!document.format.enable) return null;
 
   return Service.doFormat(document, Server.formatting);
 
 }, null, `Error while computing range formatting for ${uri}`, token));
 
+/* ---------------------------------------------------------------- */
+/* onLinkedEditingRange                                             */
+/* ---------------------------------------------------------------- */
+
+connection.languages.onLinkedEditingRange(
+  ({
+    position,
+    textDocument: { uri }
+
+  }, token) => runAsync(async () => {
+
+    const document = Parser.get(uri);
+
+    if (!document) return null;
+
+    return Service.doLinkedEditing(document, position);
+
+  }, null, `Error while computing synced regions for ${uri}`, token)
+);
 /* ---------------------------------------------------------------- */
 /* onHover                                                          */
 /* ---------------------------------------------------------------- */
