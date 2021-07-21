@@ -6,6 +6,22 @@
     "render": "ast/includes"
   },
   "validate": {
+    "html": {
+      "quotes": "double",
+      "syntactics": true,
+      "tag_name": "strict",
+      "tag_pairs": true,
+      "values": true,
+      "attributes": true,
+      "liquid": {
+        "output_attributes": true,
+        "output_values": true,
+        "control_values": true,
+        "control_attributes": true,
+        "iteration_attributes": false,
+        "iteration_values": false
+      }
+    },
     "tag": {
       "newline": true,
       "pair": true,
@@ -87,6 +103,21 @@
           "attr": "json_tes"
         }
       ]
+    }
+  },
+  "specs": {
+    "html": {
+      "tags": {},
+      "values": {},
+      "attributes": {}
+    },
+    "liquid": {
+      "objects": {
+        "foo": {
+          "type": "object",
+          "properties": [{}]
+        }
+      }
     }
   }
 }

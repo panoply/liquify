@@ -33,7 +33,12 @@ Each store can referenced via CDN in JSON files.
 | Shopify Sections      | `https://schema.liquify.dev/shopify/sections.json` |
 | Shopify Locales       | `https://schema.liquify.dev/shopify/locales.json`  |
 | Shopify Settings      | `https://schema.liquify.dev/shopify/settings.json` |
-| Jekyll Config         | `https://schema.liquify.dev/shopify/jekyll.json`   |
+| Jekyll Config         | `https://schema.liquify.dev/jekyll/config.json`    |
+| HTML Custom Data      | `https://schema.liquify.dev/html/custom-data.json` |
+
+## HTML Custom Data
+
+The schema stores for HTML Custom Data is lifted from the `vscode-html-languageservice` - You should consult that [documentation](https://github.com/microsoft/vscode-html-languageservice/blob/main/docs/customData.md) for providing the server with custom data.
 
 ## Author
 
