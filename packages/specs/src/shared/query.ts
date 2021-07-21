@@ -24,23 +24,15 @@ export {
   reset
 } from 'liquid/controller/queries';
 
-export {
-
-  LiquidCompletions,
-  LiquidTagComplete,
-  LiquidTagResolve
-
-} from 'liquid/controller/provide';
-
 /* HTML QUERIES ------------------------------- */
 
 export {
+
+  setHTMLTag,
   isVoid,
-  HTMLCompletions,
-  HTMLAttrsComplete,
-  HTMLAttrsResolve,
-  HTMLTagComplete,
-  HTMLTagResolve,
-  HTMLValueComplete,
-  HTMLValueResolve
+  isAttribute,
+  isAttributeUniq,
+  isAttributeValue,
+  isValueRequired
+
 } from 'html/controller/queries';
