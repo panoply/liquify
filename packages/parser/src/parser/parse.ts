@@ -53,6 +53,8 @@ export function parse (document: IAST): IAST {
 
       case TokenType.ParseError:
 
+        node.errors.push(document.errors.length);
+
         if (scanner.error === Errors.MissingCloseDelimiter) {
           track = undefined;
           node?.offsets?.length > 2 || node.offsets.push(s.offset);
