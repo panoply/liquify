@@ -18,7 +18,7 @@ import {
 /**
  * Completion Items
  */
-export let complete = LiquidCompletions();
+export let completions = LiquidCompletions();
 
 /* -------------------------------------------- */
 /* FUNCTIONS                                    */
@@ -26,7 +26,7 @@ export let complete = LiquidCompletions();
 
 export function LiquidTagComplete () {
 
-  return complete.tags;
+  return completions.tags;
 
 }
 
