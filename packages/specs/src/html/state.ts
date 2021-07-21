@@ -1,3 +1,4 @@
 /* eslint-disable object-curly-newline */
 
-export { tag, attribute, value } from './controller/queries';
+export { tag } from './controller/queries';
+export { value, attribute } from './controller/provide';
