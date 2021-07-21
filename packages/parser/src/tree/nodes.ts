@@ -7,6 +7,7 @@ import { findFirst } from 'parser/utils';
 import { IScopes, NodeType, INode } from 'tree/typings';
 import { NodeLanguage } from 'lexical/language';
 import { Type } from 'types/export';
+import inRange from 'lodash.inrange';
 export { NodeType, Token, IScopes } from 'tree/typings';
 
 // import inRange from 'lodash.inrange';
@@ -33,6 +34,7 @@ export class Node implements INode {
   public children: Node[] = [];
   public singular: boolean;
   public lastError: number;
+  public errors: number[] = []
 
   constructor (type?: NodeType, start?: number, parent?: Node, kind?: NodeKind) {
 
@@ -170,13 +172,52 @@ export class Node implements INode {
    *
    * - Lifted from vscode-html-languageservice
    */
+  public getTokenAt (offset: number): Node {
+
+    const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
+
+    if (node >= 0) {
+
+      const child = this.children[node];
+
+      if (inRange(offset, child.offsets[0], child.offsets[1])) {
+        return child.getTokenAt(offset);
+      }
+
+      if (child.offsets.length > 2) {
+        if (inRange(offset, child.offsets[2], child.offsets[3])) {
+          return child.getTokenAt(offset);
+        }
+      }
+
+      if (offset > child.offsets[1]) {
+        return !child.children.length && node === 1
+          ? this.children[0].getTokenAt(offset)
+          : child.getTokenAt(offset);
+      }
+
+    }
+
+    return this;
+
+  }
+
+  /**
+   * Returns node at the provided offset location.
+   * Use the AST `getNodeAt()` method to convert from
+   * a position to offset and return this method.
+   *
+   * - Lifted from vscode-html-languageservice
+   */
   public getNodeAt (offset: number): Node {
 
     const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
 
     if (node >= 0) {
       const child = this.children[node];
-      if (offset > child.start && offset <= child.end) return child.getNodeAt(offset);
+      if (offset > child.start && offset <= child.end) {
+        return child.getNodeAt(offset);
+      }
     }
 
     return this.type !== NodeType.Root ? this : this.children[node] || this;

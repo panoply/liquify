@@ -74,11 +74,6 @@ export default Rollup(
             ]
           }
         ),
-        commonjs(
-          {
-            requireReturnsDefault: 'namespace'
-          }
-        ),
         beep()
       ]
     )(
