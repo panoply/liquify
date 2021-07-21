@@ -143,9 +143,9 @@ export function TokenCodeChar (code: number, consume: boolean = true): boolean {
  *
  * **DOES NOT MODIFY**
  */
-export function TokenContains (regex: RegExp): boolean {
+export function TokenContains (regex: RegExp, trim: boolean = false): boolean {
 
-  return regex.test(token);
+  return regex.test(trim ? token.trim() : token);
 
 }
 
