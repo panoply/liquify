@@ -30,12 +30,28 @@ export const enum ParseError {
   ParsingError = 1,
 
   /**
+   * Duplicated HTML attributes on same tag
+   *
+   * @example
+   * <tag class="foo" class="bar"> // class is defined multiple times.
+   */
+  DuplicatedHTMLAttributes,
+
+  /**
    * Duplicated parameter values
    *
    * @example
    * {{- tag | filter: param: 'foo',  param: 'bar' -}} // param must be unqiue
    */
   DuplicatedParameters,
+
+  /**
+   * Missing HTML attribute value
+   *
+   * @example
+   * <div class=""> // class attribute is missing
+   */
+  MissingHTMLAttributeValue,
 
   /**
    * Tag name is missing
@@ -193,6 +209,21 @@ export const enum ParseError {
    */
   MissingWhitespace,
 
+  /**
+   * Invalid HTML Attribute
+   *
+   * @example
+   * <div type="text"> // type attributes belong on input tags
+   */
+  InvalidHTMLAttribute,
+
+  /**
+   * Invalid HTML Attribute Value
+   *
+   * @example
+   * <input type="foo"> // foo is incorrect
+   */
+  InvalidHTMLAttributeValue,
 
   /**
    * Invalid Name
