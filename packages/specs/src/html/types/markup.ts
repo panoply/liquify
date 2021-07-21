@@ -1,5 +1,6 @@
+import { IHTMLCompletions } from './completions';
 
-interface IReference {
+export interface IReference {
   /**
    * Reference name of the documentation
    */
@@ -31,7 +32,7 @@ export interface IHTMLTagAttributes {
    * A reference to the value set the attribute
    * accepts as a value.
    */
-  value?: string | boolean
+  value?: string
 
 }
 
@@ -116,8 +117,8 @@ export interface Values { [value: string]: IHTMLValue[] }
 /* -------------------------------------------- */
 
 export interface IHTMLSpecs {
-  version: 1 | 1.1;
   tags?: Tags;
   attributes?: Attributes;
   values?: Values;
+  completions?: IHTMLCompletions;
 }
