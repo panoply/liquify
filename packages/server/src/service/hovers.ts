@@ -31,6 +31,8 @@ export function doObjectHover (document: IAST, position: Position) {
   const node: INode = document.getNodeAt(offset);
   const character = offset - node.start;
 
+  if (node.errors.length) return false;
+
   let word: string;
 
   if (node.type !== 0) {
