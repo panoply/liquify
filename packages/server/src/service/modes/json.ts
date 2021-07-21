@@ -1,9 +1,9 @@
-import { IAST, INode, IEmbed, Position } from '@liquify/liquid-parser';
+import { IAST, INode, IEmbed, Position, Tokens } from '@liquify/liquid-parser';
 import {
+  TextEdit,
   Diagnostic,
   CompletionList,
   CompletionItem,
-  InsertReplaceEdit,
   Hover
 } from 'vscode-languageserver-protocol';
 import {
@@ -89,23 +89,17 @@ export class JSONService {
 
   ): Promise<CompletionList | null> {
 
-    const position = { character, line: line - node.range.start.line };
+    const position = { character, line: line - node.regionOffset };
     const JSONDocument = this.service.parseJSONDocument(node.textDocument);
     const completion = await this.service.doComplete(node.textDocument, position, JSONDocument);
 
     for (const complete of completion.items) {
-
-      const textEdit = (complete.textEdit as InsertReplaceEdit);
-
-      if (textEdit?.insert) {
-        textEdit.insert.start.line = line;
-        textEdit.insert.end.line = line;
-      }
-
-      if (textEdit?.replace) {
-        textEdit.replace.start.line = line;
-        textEdit.replace.end.line = line;
-      }
+      (complete.textEdit as TextEdit).range.start.line = line;
+      (complete.textEdit as TextEdit).range.end.line = line;
+      complete.data = {
+        token: Tokens.LiquidEmbedded,
+        languageId: node.languageId
+      };
     }
 
     return completion;
