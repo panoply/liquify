@@ -18,12 +18,12 @@ export default Rollup(
 
       /* MAIN SHARED ENTRY -------------------------- */
 
-      index: 'src/export.ts',
+      index: 'src/index.ts',
 
       /* HTML SPECIFICATIONS ------------------------ */
 
       '@html/attributes': 'src/html/data/html5/attributes.ts',
-      '@html/tags': 'src/html/data//html5/tags.ts',
+      '@html/tags': 'src/html/data/html5/tags.ts',
       '@html/values': 'src/html/data/html5/values.ts',
 
       /* LIQUID VARIATION SPECIFICATIONS ------------ */
@@ -50,9 +50,10 @@ export default Rollup(
       [
         alias({
           entries: {
+            html5: config.path('src/html'),
+            liquid: config.path('src/liquid'),
             utils: config.path('src/utils/'),
-            html: config.path('src/html'),
-            liquid: config.path('src/liquid')
+            shared: config.path('src/shared/')
           }
         }),
         del(

@@ -65,9 +65,9 @@ $.liquid.value;
 
 // HTML STATES
 
-$.html.tag;
-$.html.attribute;
-$.html.value;
+$.html5.tag;
+$.html5.attribute;
+$.html5.value;
 ```
 
 ##### Queries
@@ -106,17 +106,17 @@ q.isValue(token: string): boolean
 q.isVoid(token: string): boolean
 q.isWithin(token: Within): boolean
 
-// PROVIDERS
+// HTML COMPLETIONS (LSP RELATED)
 
-q.provideAttrs(): attributes[]
-q.provideTags(): tags[]
-q.provideValues(): values[]
+q.HTMLCompletions()
+q.HTMLAttrsComplete()
+q.HTMLAttrsResolve()
+q.HTMLTagComplete()
+q.HTMLTagResolve()
+q.HTMLValueComplete()
+q.HTMLValueComplete()
+q.HTMLValueResolve()
 
-// RESOLVERS
-
-q.resolveAttribute(item: CompletionItem): CompletionItem
-q.resolveTag(item: CompletionItem): CompletionItem
-q.resolveValue(item: CompletionItem): CompletionItem
 
 // NAVIGATORS
 

@@ -1,8 +1,9 @@
-import * as Spec from '../data/export';
-import { IHTMLTag, IHTMLValue, IHTMLTagAttributes } from '../types/markup';
-import { IHTMLCompletions, IHTMLProvideAttrs } from '../types/completions';
-import { HTMLToken } from '../types/enums';
+
+import * as Spec from 'html/data/export';
+import { IHTMLTag, IHTMLValue, IHTMLTagAttributes } from 'html/types/markup';
+import { IHTMLCompletions, IHTMLProvideAttrs } from 'html/types/completions';
 import { documentation, descriptive } from 'utils/generators';
+import { Tokens } from 'shared/types';
 import {
   CompletionItemKind,
   CompletionItem,
@@ -12,6 +13,7 @@ import {
 /* -------------------------------------------- */
 /* EXPORT SCOPES                                */
 /* -------------------------------------------- */
+
 /**
  * Tag Specification
  */
@@ -70,7 +72,7 @@ export function HTMLValueComplete (token: string = value) {
   return Spec.values[token].map(
     value => ({
       ...value,
-      data: { token: HTMLToken.Value }
+      data: { token: Tokens.HTMLValue }
     })
   );
 
@@ -131,7 +133,7 @@ export function HTMLAttributes (attrs: IHTMLTagAttributes[]) {
       label: name,
       documentation: descriptive(description),
       data: {
-        token: HTMLToken.Attribute,
+        token: Tokens.HTMLAttribute,
         value
       }
     })
@@ -164,7 +166,7 @@ export function HTMLCompletions (): IHTMLCompletions {
       label,
       documentation: documentation(description, reference),
       data: {
-        token: HTMLToken.Attribute,
+        token: Tokens.HTMLAttribute,
         value
       }
     })
@@ -182,7 +184,7 @@ export function HTMLCompletions (): IHTMLCompletions {
       label,
       documentation: documentation(spec.description, spec.reference),
       data: {
-        token: HTMLToken.Tag,
+        token: Tokens.HTMLTag,
         void: spec.void,
         attributes: HTMLAttributes(spec?.attributes)
       }

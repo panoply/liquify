@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules/**", "package", "test"],
-  "include": ["src/export.ts", "src/**/*.ts"],
+  "include": ["src/index.ts", "src/**/*.ts"],
   "typeAcquisition": {
     "enable": true,
     "include": ["node"]
@@ -33,6 +33,8 @@
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"],
+      "shared": ["./src/shared/*"],
+      "utils": ["./src/utils/*"],
       "html": ["./src/html/*"],
       "liquid": ["./src/liquid/*"]
     }

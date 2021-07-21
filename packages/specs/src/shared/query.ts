@@ -22,7 +22,7 @@ export {
   nextParameter,
   prevArgument,
   reset
-} from './liquid/controller/queries';
+} from 'liquid/controller/queries';
 
 export {
 
@@ -30,7 +30,7 @@ export {
   LiquidTagComplete,
   LiquidTagResolve
 
-} from './liquid/controller/provide';
+} from 'liquid/controller/provide';
 
 /* HTML QUERIES ------------------------------- */
 
@@ -43,4 +43,4 @@ export {
   HTMLTagResolve,
   HTMLValueComplete,
   HTMLValueResolve
-} from './html/controller/queries';
+} from 'html/controller/queries';

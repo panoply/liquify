@@ -1,6 +1,6 @@
-import { IEngine } from '../types/common';
-import { IProperties } from '../types/objects';
-import { Tokens } from '../../types';
+import { IEngine } from 'liquid/types/common';
+// import { IProperties } from 'liquid/types/objects';
+import { Tokens } from 'shared/types';
 import { documentation, descriptive } from 'utils/generators';
 import { engine, variation } from './queries';
 import {
