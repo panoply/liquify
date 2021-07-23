@@ -1,4 +1,4 @@
-import { IAST, INode, IEmbed, Position, Tokens } from '@liquify/liquid-parser';
+import { IAST, IEmbed, Position, Tokens } from '@liquify/liquid-parser';
 import {
   TextEdit,
   Diagnostic,
@@ -11,11 +11,12 @@ import {
   ClientCapabilities,
   DiagnosticSeverity,
   LanguageService
+  // LanguageSettings
 } from 'vscode-json-languageservice';
 
-export class JSONService {
+export class JSONLanguageService {
 
-  service: LanguageService = getLanguageService({
+  public service: LanguageService = getLanguageService({
     clientCapabilities: ClientCapabilities.LATEST
   })
 
@@ -34,10 +35,10 @@ export class JSONService {
 
   }
 
-  public async doValidation (
-    document: IAST,
-    node: IEmbed & INode
-  ): Promise<Diagnostic[] | null> {
+  /**
+   * JSON Validation
+   */
+  async doValidation (document: IAST, node: IEmbed): Promise<Diagnostic[]> {
 
     const JSONDocument = this.service.parseJSONDocument(node.textDocument);
     const diagnostics = await this.service.doValidation(node.textDocument, JSONDocument);
@@ -63,12 +64,9 @@ export class JSONService {
   }
 
   /**
-   * JSON hover capabilities
+   * JSON Hovers
    */
-  public async doHover (
-    node: IEmbed & INode,
-    { line, character }: Position
-  ): Promise<Hover | null> {
+  async doHover (node: IEmbed, { line, character }: Position): Promise<Hover> {
 
     const JSONDocument = this.service.parseJSONDocument(node.textDocument);
     const position = { character, line: line - node.regionOffset };
@@ -83,11 +81,10 @@ export class JSONService {
 
   }
 
-  public async doComplete (
-    node: INode & IEmbed,
-    { character, line }: Position
-
-  ): Promise<CompletionList | null> {
+  /**
+   * JSON Completions
+   */
+  async doComplete (node: IEmbed, { character, line }: Position): Promise<CompletionList> {
 
     const position = { character, line: line - node.regionOffset };
     const JSONDocument = this.service.parseJSONDocument(node.textDocument);
@@ -106,7 +103,10 @@ export class JSONService {
 
   }
 
-  public doResolve (completionItem: CompletionItem): Thenable<CompletionItem> {
+  /**
+   * JSON Completion Resolve
+   */
+  doResolve (completionItem: CompletionItem): Thenable<CompletionItem> {
 
     return this.service.doResolve(completionItem);
 
