@@ -1,7 +1,7 @@
 import { InitializeParams, ServerCapabilities } from 'vscode-languageserver';
 import { Parser } from './parser';
 import { ILiquidrc } from 'types/settings';
-import omit from 'lodash/omit';
+import { omit } from 'lodash';
 import { readFileSync, readdirSync, existsSync } from 'fs';
 import { basename, resolve, join, normalize } from 'path';
 import stripJSONC from 'strip-json-comments';
