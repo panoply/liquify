@@ -1,10 +1,8 @@
-// @ts-nocheck
 
 import { Parser } from 'provide/parser';
 import { Server, Service } from 'export';
 import { runAsync, runSync } from 'utils/runners';
 import { mark, stop } from 'marky';
-import { INode } from '@liquify/liquid-parser';
 import {
   DidChangeConfigurationNotification,
   TextDocumentSyncKind,
@@ -33,24 +31,18 @@ connection.onInitialize(initializeParams => (
         includeText: false
       }
     },
-    documentOnTypeFormattingProvider: {
-      firstTriggerCharacter: '}',
-      moreTriggerCharacter: [
-      ]
-    },
-    renameProvider: true,
     documentRangeFormattingProvider: true,
     hoverProvider: true,
-    documentLinkProvider: {
-      resolveProvider: true
-    },
+    // documentLinkProvider: {
+    //  resolveProvider: true
+    // },
     /* codeLensProvider: {
       workDoneProgress: true,
       resolveProvider: true
     }, */
     signatureHelpProvider: {
       triggerCharacters: [ ':', ',' ],
-      isRetrigger: true,
+      // isRetrigger: true,
       retriggerCharacters: [ ' ' ]
     },
     completionProvider: {
@@ -131,7 +123,7 @@ connection.onDidOpenTextDocument(({ textDocument }) => {
 
   // connection.console.log('onDidOpenTextDocument')
 
-  mark('onDidOpenTextDocument');
+  // mark('onDidOpenTextDocument');
 
   try {
 
@@ -198,75 +190,47 @@ connection.onDidChangeWatchedFiles(change => {
 
 });
 
-/* -------------------------------------------- */
-/* onDocumentOnTypeFormatting                   */
-/* -------------------------------------------- */
-
-connection.onDocumentOnTypeFormatting((
-  {
-    textDocument: { uri }
-    , ch
-    , position
-    , options
-  }
-  , token
-) => !Server.provider.formatOnType || runSync(() => {
-
-  return null;
-  const document = Parser.get(uri);
-
-  if (!document) return null;
-
-  return Service.doFormatOnType(document, ch, position, options);
-
-}, null, `Error while computing on type formatting for ${uri}`, token));
-
 /* ---------------------------------------------------------------- */
 /* onDocumentRangeFormatting                                        */
 /* ---------------------------------------------------------------- */
 
-connection.onDocumentRangeFormatting((
-  { textDocument: { uri } }
-  , token
-) => !Server.provider.format || runAsync(async () => {
+connection.onDocumentRangeFormatting(async ({ textDocument: { uri } }) => {
 
-  const document = Parser.get(uri);
-
-  if (!document) return null;
-  if (!document.format.enable) return null;
-
-  return Service.doFormat(document, Server.formatting);
-
-}, null, `Error while computing range formatting for ${uri}`, token));
-
-/* ---------------------------------------------------------------- */
-/* onLinkedEditingRange                                             */
-/* ---------------------------------------------------------------- */
-
-connection.languages.onLinkedEditingRange(
-  ({
-    position,
-    textDocument: { uri }
-
-  }, token) => runAsync(async () => {
+  if (Server.provider.format) {
 
     const document = Parser.get(uri);
 
     if (!document) return null;
 
-    return Service.doLinkedEditing(document, position);
+    return Service.doFormat(document, Server.formatting);
 
-  }, null, `Error while computing synced regions for ${uri}`, token)
-);
+  }
+
+});
+
+/* ---------------------------------------------------------------- */
+/* onLinkedEditingRange                                             */
+/* ---------------------------------------------------------------- */
+
+connection.languages.onLinkedEditingRange(async ({
+  position,
+  textDocument: { uri }
+}) => {
+
+  const document = Parser.get(uri);
+
+  if (!document) return null;
+
+  return Service.doLinkedEditing(document, position);
+
+});
 /* ---------------------------------------------------------------- */
 /* onHover                                                          */
 /* ---------------------------------------------------------------- */
 
-connection.onHover(
-  ({
-    position
-    , textDocument: { uri }
-  }, token) => !Server.provider.hover || runAsync(async () => {
+connection.onHover(async ({ position, textDocument: { uri } }) => {
+
+  if (Server.provider.hover) {
 
     const document = Parser.get(uri);
 
@@ -274,8 +238,9 @@ connection.onHover(
 
     return Service.doHover(document, position);
 
-  }, null, `Error while computing hover for ${uri}`, token)
-);
+  }
+
+});
 
 /* ---------------------------------------------------------------- */
 /* onSignatureHelp                                                  */
@@ -337,62 +302,37 @@ connection.onSignatureHelp(
 /* onDocumentLinks                                            */
 /* ---------------------------------------------------------------- */
 
-connection.onDocumentLinks((
-  { textDocument: { uri } }
-  , token
-) => runSync(() => {
-
-  return null;
-
-}, null, `Error while computing completion for ${uri}`, token));
-
 /* ---------------------------------------------------------------- */
 /* onDocumentLinkResolve                                            */
 /* ---------------------------------------------------------------- */
-
-connection.onDocumentLinkResolve((
-  item
-  , token
-) => runSync(() => {
-
-  return null;
-
-  // return item
-
-}, item, 'Error while resolving completion proposal', token));
 
 /* ---------------------------------------------------------------- */
 /* onCompletion                                                     */
 /* ---------------------------------------------------------------- */
 
-connection.onCompletion((
-  {
-    position
-    , textDocument: { uri }
-    , context
-  }, token
-) => !Server.provider.completion || runAsync(async () => {
+connection.onCompletion(async ({ textDocument: { uri }, position, context }) => {
 
-  const document = Parser.get(uri);
+  if (Server.provider.completion) {
 
-  if (!document) return null;
+    const document = Parser.get(uri);
 
-  return Service.doComplete(document, position, context);
+    if (!document) return null;
 
-}, null, `Error while computing completion for ${uri}`, token));
+    return Service.doComplete(document, position, context);
+
+  }
+
+});
 
 /* ---------------------------------------------------------------- */
 /* onCompletionResolve                                              */
 /* ---------------------------------------------------------------- */
 
-connection.onCompletionResolve((
-  item
-  , token
-) => runSync(() => {
+connection.onCompletionResolve((item) => {
 
   return Service.doCompleteResolve(item);
 
-}, item, 'Error while resolving completion proposal', token));
+});
 
 /* ---------------------------------------------------------------- */
 /* onExecuteCommand                                                 */

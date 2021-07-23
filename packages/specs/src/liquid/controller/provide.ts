@@ -1,8 +1,8 @@
-import { IEngine } from 'liquid/types/common';
+import { ICompletions } from 'liquid/types/data';
 // import { IProperties } from 'liquid/types/objects';
+import { descriptive } from 'utils/generators';
 import { Tokens } from 'shared/types';
-import { documentation, descriptive } from 'utils/generators';
-import { engine, variation } from './queries';
+import { completions, variation } from './queries';
 import {
   CompletionItemKind,
   CompletionItem,
@@ -12,21 +12,18 @@ import {
 } from 'vscode-languageserver-types';
 
 /* -------------------------------------------- */
-/* EXPORTED SCOPES                              */
-/* -------------------------------------------- */
-
-/**
- * Completion Items
- */
-export let completions = LiquidCompletions();
-
-/* -------------------------------------------- */
 /* FUNCTIONS                                    */
 /* -------------------------------------------- */
 
 export function LiquidTagComplete () {
 
   return completions.tags;
+
+}
+
+export function LiquidObjectComplete () {
+
+  return completions.objects;
 
 }
 
@@ -43,18 +40,25 @@ export function LiquidTagResolve (item: CompletionItem, edits?: TextEdit[]) {
 
 }
 
-export async function LiquidObjectComplete (
-  property: number,
-  objects: Array<{ [offset: number]: string | number }>,
-  offset: number
+export async function LiquidPropertyComplete (
+  objects: Array<{ [offset: number]: string | number }> | string,
+  offset?: number
 ) {
 
+  const { properties } = variation.objects[objects[offset - 1]];
+  const props = Object.entries(properties).map(CompleteProps);
+
+  return props;
+
+  return;
   if (Array.isArray(objects) && objects.length === 1) {
     const { properties } = variation.objects?.[objects[offset][0]];
     if (properties) return Object.entries(properties).map(CompleteProps);
   }
 
-  if (typeof property !== 'number') return [];
+  return;
+
+  // if (typeof property !== 'number') return [];
 
   return (function walk (prop, property) {
 
@@ -82,96 +86,10 @@ export function CompleteProps ([ label, { description, snippet = label } ]) {
     insertText: snippet,
     insertTextFormat: InsertTextFormat.Snippet,
     documentation: descriptive(description),
-    data: { snippet }
+    data: {
+      token: Tokens.LiquidProperty,
+      snippet
+    }
   };
-
-}
-
-/**
- * Completions
- *
- * Constructs LSP completion-ready lists from the current
- * specification reference. Returns a closure getter combinator
- * with array lists for various tags, filters and objects.
- */
-export function LiquidCompletions () {
-
-  /* -------------------------------------------- */
-  /* TAG COMPLETIONS                              */
-  /* -------------------------------------------- */
-
-  const tags = Object.entries(variation.tags).map(
-    ([
-      label,
-      {
-        description,
-        reference,
-        deprecated = false,
-        singular = false,
-        snippet = '$1',
-        parents = []
-      }
-    ]) => ({
-      label,
-      deprecated,
-      kind: CompletionItemKind.Keyword,
-      documentation: documentation(description, reference),
-      data: {
-        token: Tokens.LiquidTag,
-        snippet,
-        singular,
-        parents
-      }
-    })
-  );
-
-  /* -------------------------------------------- */
-  /* FILTER COMPLETIONS                           */
-  /* -------------------------------------------- */
-
-  const filters = Object.entries(variation.filters).map(
-    ([
-      label,
-      {
-        description,
-        reference,
-        deprecated = false
-      }
-    ]) => ({
-      label,
-      deprecated,
-      documentation: documentation(description, reference),
-      data: {
-        token: Tokens.LiquidFilter
-      }
-    })
-  );
-
-  if (Object.is(engine, IEngine.standard)) return { tags, filters, objects: [] };
-
-  /* -------------------------------------------- */
-  /* OBJECT COMPLETIONS                           */
-  /* -------------------------------------------- */
-
-  const objects = Object.entries(variation.objects).map(
-    ([
-      label,
-      {
-        description,
-        reference,
-        deprecated = false
-
-      }
-    ]) => ({
-      label,
-      deprecated,
-      documentation: documentation(description, reference),
-      data: {
-        token: Tokens.LiquidObject
-      }
-    })
-  );
-
-  return { tags, filters, objects };
 
 }

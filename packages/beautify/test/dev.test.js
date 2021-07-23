@@ -7,7 +7,12 @@ test('test', t => {
   <div>
     <div>
 
-<div id="name" data-attr>
+<div
+  id="name"
+  {% if foo %}
+  class="something"
+  {% endif %}
+  data-attr>
 
 </div></div>
 </div>

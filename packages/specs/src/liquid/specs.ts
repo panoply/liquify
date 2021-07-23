@@ -1,3 +1,2 @@
 export * from './data/export';
-export { engine, variation } from './controller/queries';
-export { completions } from './controller/provide';
+export { engine, variation, completions } from './controller/queries';

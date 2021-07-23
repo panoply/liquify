@@ -9,7 +9,6 @@ export interface Beautify {
   errors: string | null;
 }
 
-
 export function prettydiff(source: string, rules: Rules): Beautify {
 
   PrettyDiff.options = Object.assign(Markup.prettydiff, rules)

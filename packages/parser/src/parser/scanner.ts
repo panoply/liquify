@@ -1472,7 +1472,7 @@ function Scan (): number {
         return TokenType.ParseError;
       }
 
-      state = ScanState.GotoTagEnd;
+      state = ScanState.BeforeStartTagClose;
       return Scan();
 
     /* -------------------------------------------- */
@@ -1585,6 +1585,13 @@ function Scan (): number {
         }
 
         return TokenType.ParseError;
+      }
+
+      if (state === ScanState.TagClose) {
+        if (s.IfRegExp(r.DelimitersCloseOutput)) {
+          state = ScanState.CharSeq;
+          return TokenType.OutputTagClose;
+        }
       }
 
       // Tag is closed so we will consume, eg: }} or %}

@@ -1,20 +1,22 @@
-import { IEngine, Variation } from '../types/common';
+import { CompletionItemKind, MarkupContent } from 'vscode-languageserver-types';
+import { Tokens } from 'shared/types';
+import { TagScopes } from './common';
 
-export interface Entries {
-  label?: string,
-  deprecated?: boolean,
-  documentation?: {
-    kind: 'markdown' | 'plaintext',
-    value: string
-  },
-  data?: {
+export interface ICompletion {
+  label: string,
+  deprecated: boolean,
+  kind?: CompletionItemKind,
+  documentation: MarkupContent,
+  data: {
+    token: Tokens,
     snippet?: string,
-    singular?: boolean
+    singular?: boolean,
+    parents?: TagScopes
   }
 }
 
-export interface IProvide {
-  readonly tags: Entries[]
-  readonly filters: Entries[]
-  readonly objects: Entries[]
+export interface ICompletions {
+  tags: ICompletion[]
+  filters: ICompletion[]
+  objects?: ICompletion[]
 }

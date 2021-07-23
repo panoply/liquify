@@ -1,5 +1,6 @@
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { JSONService } from 'service/modes/json';
+// import { TextDocument } from 'vscode-languageserver-textdocument';
+import { JSONLanguageService } from 'service/modes/json';
+import { CSSLanguageService } from 'service/modes/css';
 import { Services, Formatting } from 'types/server';
 import store from '@liquify/schema-stores';
 import * as Format from 'service/format';
@@ -15,23 +16,24 @@ import {
   NodeKind,
   Tokens,
   provide as p,
-  query as q,
-  state as $
+  state as $,
+  liquid,
+  html5
 
 } from '@liquify/liquid-parser';
 
 import {
-  Connection,
+  // Connection,
   TextEdit,
   CompletionTriggerKind,
   PublishDiagnosticsParams,
-  FormattingOptions,
+  // FormattingOptions,
   SignatureHelpContext,
   SignatureHelp,
   CompletionItem,
   CompletionContext,
-  CompletionItemKind,
-  InsertTextFormat,
+  // CompletionItemKind,
+  //  InsertTextFormat,
   LinkedEditingRanges
 } from 'vscode-languageserver';
 
@@ -47,13 +49,11 @@ export class LiquidService {
   private cache: TextEdit[]
 
   private mode: {
-    css: boolean
-    scss: boolean
-    json: JSONService
+    css: CSSLanguageService,
+    json: JSONLanguageService,
   } = {
     json: undefined,
-    css: false,
-    scss: false
+    css: undefined
   }
 
   /**
@@ -68,11 +68,13 @@ export class LiquidService {
     // JSON Language Service
     if (support.json) {
       const schema = await store('shopify/sections');
-      this.mode.json = new JSONService(schema);
+      this.mode.json = new JSONLanguageService(schema);
     }
 
     // CSS Language Service
-    //  if (support.css) this.mode.css = new CSSService();
+    if (support.css) {
+      this.mode.css = new CSSLanguageService();
+    }
 
     // SCSS Language Service
     // if (support.scss) this.mode.scss = new SCSSService();
@@ -102,7 +104,7 @@ export class LiquidService {
   /**
    * Formats
    */
-  doFormat (document: IAST, rules: Formatting) {
+  async doFormat (document: IAST, rules: Formatting) {
 
     // Do not format empty documents
 
@@ -114,33 +116,6 @@ export class LiquidService {
     return document.regions.length > 0
       ? Format.regions(document, rules)
       : Format.markup(document, rules);
-
-  }
-
-  /**
-   * Format onType
-   */
-  doFormatOnType (
-    document: IAST,
-    character: string,
-    position: Position,
-    options: FormattingOptions
-  ) {
-
-    const node: INode = document.node;
-
-    console.log(character);
-
-    const start = node.endToken.indexOf(node.tag);
-    const end = node.endToken.lastIndexOf(node.tag);
-    const range = {
-      start: document.positionAt(node.offsets[2] + start),
-      end: document.positionAt(node.offsets[2] + end)
-    };
-
-    const text = document.getText(range);
-
-    return TextEdit.replace(range, text);
 
   }
 
@@ -241,10 +216,9 @@ export class LiquidService {
   ) {
 
     if (document.node.type === Type.embedded) {
-      for (const region of document.regions) {
-        if (!this.mode?.[region.languageId]) continue;
-        const mode = this.mode?.[region.languageId];
-        return mode.doComplete(region, position);
+      if (this.mode?.[document.node.languageId]) {
+        const mode = this.mode?.[document.node.languageId];
+        return mode.doComplete(document.node, position);
       }
     }
 
@@ -259,50 +233,72 @@ export class LiquidService {
     ) ? triggerCharacter.charCodeAt(0) : false;
 
     const offset = document.offsetAt(position);
+    const node: INode = document.node;
 
     if (!document.withinToken(offset) || !document.withinEndToken(offset)) {
       switch (trigger) {
         case Characters.LAN:
-
-          return p.HTMLTagComplete();
-
+          return html5.completions.tags;
         case Characters.PER:
-
           this.cache = Complete.getTagsEdits(document, position, offset, trigger);
-
-          return p.LiquidTagComplete();
+          return liquid.completions.tags;
       }
     }
 
-    if (Object.is(document.node.kind, NodeKind.HTML)) {
+    if (Object.is(node.kind, NodeKind.HTML)) {
       if (document.withinToken(offset)) {
         switch (trigger) {
+
           case Characters.DQO:
-          case Characters.SQO: return p.HTMLValueComplete($.html5.value);
+          case Characters.SQO:
+            return p.HTMLValueComplete($.html5.value);
+
           default:
-            return p.HTMLAttrsComplete(document.node.tag);
+            return p.HTMLAttrsComplete(node.tag);
         }
       } else if (document.isCodeChar(Characters.RAN, offset)) {
 
-        return p.HTMLAttrsComplete(document.node.tag);
+        return p.HTMLAttrsComplete(node.tag);
 
       }
     }
+
+    console.log(node);
 
     // We are not within a Liquid token, lets load available completions
-    if (Object.is(document.node.kind, NodeKind.Liquid)) {
+    if (Object.is(node.kind, NodeKind.Liquid)) {
+
       if (!document.withinToken(offset)) {
-        switch (trigger) {
-          case Characters.PER:
-          case Characters.LCB:
-            return p.LiquidTagComplete();
-          default:
-            return p.HTMLAttrsComplete(document.node.tag);
+        if (Object.is(trigger, Characters.PER)) {
+          return liquid.completions.tags;
+        }
+      }
+
+      if (document.withinToken(offset)) {
+
+        if (Object.is(trigger, Characters.PIP)) {
+          return liquid.completions.filters;
         }
 
+        if (document.isPrevCodeChar(Characters.PIP, offset)) {
+          return liquid.completions.filters;
+        }
+
+        if (Object.is(trigger, Characters.DOT)) {
+          if (node.scope) {
+            return p.LiquidPropertyComplete(node.scope[node.tag]);
+          } else {
+            return p.LiquidPropertyComplete(node.objects, offset);
+          }
+        }
+
+        return liquid.completions.objects;
+
       }
+
     }
-    console.log(trigger, trigger === Characters.DOT);
+
+    //    console.log(trigger, trigger === Characters.DOT);
 
     // if (trigger === Characters.DOT) {
     // return Completion.getObjectCompletion(document, offset);

@@ -1,13 +1,16 @@
 import * as Specification from '../data/export';
+import { ICompletions } from 'liquid/types/data';
 import { Variation, Values, IArgument, IEngine } from '../types/common';
 import { ITag } from '../types/tags';
 import { IFilter } from '../types/filters';
 import { IObject } from '../types/objects';
+import { Tokens } from 'shared/types';
 import { Type } from '../types/types';
 import { QueryErrors, Within } from '../types/enums';
 import { documentation } from 'utils/generators';
 import { isNumber } from 'utils/typeof';
 import { inPattern, inValues, inRange } from 'utils/finders';
+import { CompletionItemKind } from 'vscode-languageserver-types';
 
 /* -------------------------------------------- */
 /* EXPORT SCOPES                                */
@@ -22,6 +25,11 @@ export let engine: IEngine = IEngine.standard;
  * Variation Spec
  */
 export let variation: Variation = Specification.standard;
+
+/**
+ * Completion Items
+ */
+export let completions: ICompletions;
 
 /**
  * Tag Specification
@@ -253,6 +261,105 @@ export function isValue (token: string): boolean {
 };
 
 /**
+ * Completions
+ *
+ * Constructs LSP completion-ready lists from the current
+ * specification reference. Returns a closure getter combinator
+ * with array lists for various tags, filters and objects.
+ */
+export function setCompletions (): ICompletions {
+
+  /* -------------------------------------------- */
+  /* TAG COMPLETIONS                              */
+  /* -------------------------------------------- */
+
+  const tags = Object.entries(variation.tags).map(
+    ([
+      label,
+      {
+        description,
+        reference,
+        deprecated = false,
+        singular = false,
+        snippet = '$1',
+        parents = []
+      }
+    ]) => ({
+      label,
+      deprecated,
+      kind: CompletionItemKind.Keyword,
+      documentation: documentation(description, reference),
+      data: {
+        token: Tokens.LiquidTag,
+        snippet,
+        singular,
+        parents
+      }
+    })
+  );
+
+  /* -------------------------------------------- */
+  /* FILTER COMPLETIONS                           */
+  /* -------------------------------------------- */
+
+  const filters = Object.entries(variation.filters).map(
+    ([
+      label,
+      {
+        description,
+        reference,
+        deprecated = false
+      }
+    ]) => ({
+      label,
+      deprecated,
+      documentation: documentation(description, reference),
+      data: {
+        token: Tokens.LiquidFilter
+      }
+    })
+  );
+
+  if (Object.is(engine, IEngine.standard)) {
+    return {
+      tags,
+      filters,
+      objects: []
+    };
+
+  };
+
+  /* -------------------------------------------- */
+  /* OBJECT COMPLETIONS                           */
+  /* -------------------------------------------- */
+
+  const objects = Object.entries(variation.objects).map(
+    ([
+      label,
+      {
+        description,
+        reference,
+        deprecated = false
+      }
+    ]) => ({
+      label,
+      deprecated,
+      documentation: documentation(description, reference),
+      data: {
+        token: Tokens.LiquidObject
+      }
+    })
+  );
+
+  return {
+    tags,
+    filters,
+    objects
+  };
+
+}
+
+/**
  * Set Engine
  *
  * Sets the Liquid `variation` and `engine` variable.
@@ -263,6 +370,8 @@ export function setEngine (name: IEngine): void {
   if (engine !== name) {
     engine = name;
     variation = Specification[engine];
+    completions = setCompletions();
+
   }
 
 };

@@ -120,7 +120,7 @@ export class IAST {
    * Returns the node at the current cursor location or null
    * if the cursor is not located within a node on the tree.
    */
-  public node: Node | Embed;
+  public node: Node & Embed;
 
   /**
    * List of embedded language regions contained within the
@@ -393,8 +393,6 @@ export class IAST {
       if (isNaN(this.cursor)) this.cursor = startoffset;
 
     }
-
-    this.node = this.root.getNodeAt(this.cursor);
 
     return s.Create(this.content);
 

@@ -4,11 +4,18 @@
 
 export {
 
-  LiquidCompletions,
+  LiquidObjectComplete,
+  LiquidPropertyComplete,
   LiquidTagComplete,
   LiquidTagResolve
 
 } from 'liquid/controller/provide';
+
+export {
+
+  setCompletions
+
+} from 'liquid/controller/queries';
 
 /* HTML QUERIES ------------------------------- */
 

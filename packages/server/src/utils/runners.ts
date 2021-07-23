@@ -1,4 +1,4 @@
-import { ResponseError, ErrorCodes } from 'vscode-languageserver';
+import { ResponseError, CancellationToken, LSPErrorCodes } from 'vscode-languageserver';
 
 /**
  * @param {function} promise
@@ -6,30 +6,17 @@ import { ResponseError, ErrorCodes } from 'vscode-languageserver';
  */
 export const runPromise = null;
 
-/**
- * Format Errors
- *
- * @export
- * @param {string} output
- * @param {object} error
- * @returns
- */
-export const formatError = (
-  output: string,
-  error: object
-) => (error instanceof Error)
-  ? `${output}: ${error.message}\n${error.stack}`
-  : (typeof error === 'string')
-    ? `${output}: ${error}`
-    : `${output}: ${error.toString()}` || output;
-
-/**
- * Cancel Value (Response Error)
- */
-export const cancelValue = () => new ResponseError(
-  ErrorCodes.RequestCancelled,
-  'Request cancelled'
-);
+export function formatError (message: string, err: any): string {
+  if (err instanceof Error) {
+    const error = <Error>err;
+    return `${message}: ${error.message}\n${error.stack}`;
+  } else if (typeof err === 'string') {
+    return `${message}: ${err}`;
+  } else if (err) {
+    return `${message}: ${err.toString()}`;
+  }
+  return message;
+}
 
 /**
  * Asynchronous Runner
@@ -63,6 +50,9 @@ export const runAsync = (
 
 }));
 
+function cancelValue<E> () {
+  return new ResponseError<E>(LSPErrorCodes.RequestCancelled, 'Request cancelled');
+}
 /**
  * Synchronous Runner
  *

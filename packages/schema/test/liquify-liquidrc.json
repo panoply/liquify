@@ -106,16 +106,23 @@
     }
   },
   "specs": {
-    "html": {
-      "tags": {},
-      "values": {},
-      "attributes": {}
-    },
     "liquid": {
-      "objects": {
-        "foo": {
-          "type": "object",
-          "properties": [{}]
+      "tags": {
+        "marvelous": {
+          "type": "custom",
+          "description": "The greatest boxer to have ever lived!",
+          "arguments": [
+            {
+              "type": "string",
+              "value": "marvin",
+              "required": true
+            },
+            {
+              "type": "string",
+              "value": "hagler",
+              "required": false
+            }
+          ]
         }
       }
     }

@@ -1,9 +1,7 @@
-// @ts-ignore
-import prettydiff from 'prettydiff';
-import cloneDeep from 'lodash/cloneDeep';
+import * as format from '@liquify/beautify';
 import { Formatting } from 'types/server';
 import { NodeKind, INode, IEmbed, IAST, TextDocument } from '@liquify/liquid-parser';
-import { TextEdit } from 'vscode-languageserver-protocol';
+import { TextEdit } from 'vscode-languageserver';
 
 /**
  * Formatting Functions
@@ -25,11 +23,6 @@ import { TextEdit } from 'vscode-languageserver-protocol';
 /* -------------------------------------------- */
 /* LOCAL FUNCTIONS                              */
 /* -------------------------------------------- */
-
-/**
- * Default PrettyDiff Rules - Used to reset prettyDiff format rules
- */
-const defaultRules = cloneDeep(prettydiff.options);
 
 /**
  * Format Pre-Placements
@@ -186,16 +179,13 @@ function embedded (literal: TextDocument, { languageRules, editorRules }: Format
 
   return (textEdit: TextEdit[], node: INode & IEmbed) => {
 
-    prettydiff.options = Object.assign(defaultRules, languageRules[node.languageId]);
-    prettydiff.options.source = node.innerContent;
-
-    const format = '\n' + prettydiff();
+    const beautify = format.prettydiff(node.innerContent, languageRules[node.languageId]);
 
     // Check Sparser for errors
     // Validations will handle missing pairs
     // We still echo Sparser log for additional context.
-    if (prettydiff.sparser.parseerror.length > 0) {
-      console.error(prettydiff.sparser.parseerror);
+    if (beautify.errors) {
+      console.error(beautify.errors);
       return textEdit;
     }
 
@@ -204,11 +194,11 @@ function embedded (literal: TextDocument, { languageRules, editorRules }: Format
 
     if (!node.innerContent.trim()) {
       if (node.kind === NodeKind.HTML) {
-        return HTMLRegions(literal, textEdit, format, node);
+        return HTMLRegions(literal, textEdit, '\n' + beautify.source, node);
       }
     }
 
-    return LiquidRegions(literal, textEdit, format, node);
+    return LiquidRegions(literal, textEdit, '\n' + beautify.source, node);
 
   };
 
@@ -223,31 +213,14 @@ function embedded (literal: TextDocument, { languageRules, editorRules }: Format
  */
 function formatMarkup (source: string, { languageRules }: Formatting) {
 
-  // This patch fixes newline HTML attributes
-  prettydiff.options = Object.assign(defaultRules, languageRules.html);
-  prettydiff.options.source = preplacement(source);
+  const beautify = format.prettydiff(preplacement(source), languageRules.html);
 
-  try {
-
-    //  console.log(prettydiff.options);
-
-    const formats = prettydiff();
-
-    // Check Sparser for errors
-    // Validations will handle missing pairs
-    // We still echo Sparser log for additional context.
-    if (prettydiff.sparser.parseerror.length > 0) {
-      console.error(prettydiff.sparser.parseerror);
-      return replacements(source);
-    }
-
-    return replacements(formats);
-
-  } catch (e) {
-
+  if (beautify.errors) {
+    console.error(beautify.errors);
     return replacements(source);
-
   }
+
+  return replacements(beautify.source);
 
 }
 

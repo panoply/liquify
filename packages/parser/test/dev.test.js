@@ -14,7 +14,13 @@ const filters = `
 `;
 
 const text = `
- <input  />
+{% for value in article.id %}
+
+  VALUE IS STRING
+  VALUE IS NOT OBJECT SO REJECT
+  {{ value.title }}
+
+{% endfor %}
 
 `;
 
@@ -35,6 +41,7 @@ function Stack (ast) {
         type: child.type,
         end: child.end,
         scope: child.scope,
+        errors: child.errors,
         children: child.children.map(({ tag }) => tag),
         filters: child.filters || null,
         objects: child.objects || null,

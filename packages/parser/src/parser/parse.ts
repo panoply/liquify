@@ -27,8 +27,6 @@ export function parse (document: IAST): IAST {
 
   /* NODE REFERENCES ---------------------------- */
 
-  // let liquid: Node = document.root;
-  // let html: Node = liquid;
   let parent: Node = document.root;
   let node: Node | Embed;
   let track: Node;
@@ -410,7 +408,7 @@ export function parse (document: IAST): IAST {
 
   // console.log(document);
 
-  document.ready = true;
+  (document.node as Node) = document.getNodeAt(document.cursor);
 
   return document;
 

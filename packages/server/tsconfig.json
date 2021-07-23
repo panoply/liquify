@@ -4,7 +4,8 @@
     "src/index.ts",
     "src/**/*.ts",
     "src/**/**/*.ts",
-    "src/types/*"
+    "src/types/*",
+    "package/vendors/*"
   ],
   "typeAcquisition": {
     "enable": true,
@@ -22,6 +23,7 @@
     "removeComments": true,
     "lib": ["es2020"],
     "module": "ESNext",
+    "allowJs": true,
     "alwaysStrict": true,
     "allowUmdGlobalAccess": true,
     "experimentalDecorators": true,
@@ -37,6 +39,7 @@
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"],
+      "vendors": ["./package/vendors/*"],
       "types": ["./src/types/*"],
       "service": ["./src/service/*"],
       "provide": ["./src/provide/*"],

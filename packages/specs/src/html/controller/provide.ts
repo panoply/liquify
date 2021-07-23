@@ -62,8 +62,9 @@ export function HTMLTagComplete () {
 
 export function HTMLAttrsComplete (tag: string): IHTMLProvideAttrs {
 
-  if (attribute) return attribute;
+  if (attribute || attribute.length) return attribute;
 
+  console.log(tag);
   return HTMLTagAttrs(html5.tags[tag].attributes).concat(completions.attributes);
 
 }

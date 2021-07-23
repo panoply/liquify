@@ -16,6 +16,8 @@ packages:
   - "packages/clients/atom"
   - "!packages/clients/atom/package/*"
 
+  - "packages/beautify"
+
   - "packages/clients/vscode"
   - "!packages/clients/vscode/package/*"
 

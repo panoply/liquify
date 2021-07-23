@@ -138,11 +138,6 @@ export interface Providers {
 export interface Services {
 
   /**
-   * The HTML Language Service
-   */
-  html: boolean;
-
-  /**
    * The JSON Language Service
    */
   json: boolean;
@@ -152,7 +147,7 @@ export interface Services {
    *
    * **NOT YET AVAILABLE**
    */
-  css: false;
+  css: boolean;
 
   /**
    * The SCSS Language Service

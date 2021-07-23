@@ -58,7 +58,7 @@ export default Rollup(
         copy(
           {
             verbose: true,
-            copyOnce: env.watch,
+            // copyOnce: env.watch,
             targets: [
               {
                 cwd: process.cwd(),

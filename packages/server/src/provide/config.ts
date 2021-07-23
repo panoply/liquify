@@ -35,9 +35,8 @@ export class Config implements IServer.Config {
   }
 
   service: IServer.Services = {
-    html: true,
     json: true,
-    css: false,
+    css: true,
     scss: false,
     javascript: false
   }
@@ -64,6 +63,7 @@ export class Config implements IServer.Config {
         language_default: 'html',
         lexer: 'markup',
         new_line: true,
+        tag_merge: false,
         space_close: false,
         indent_size: 2,
         indent_level: 0,
@@ -78,7 +78,6 @@ export class Config implements IServer.Config {
         force_attribute: false,
         force_indent: false,
         quote_convert: 'none',
-        tag_merge: false,
         tag_sort: false,
         unformatted: false,
         indent_char: ' ',

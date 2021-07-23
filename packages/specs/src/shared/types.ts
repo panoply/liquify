@@ -6,6 +6,7 @@ export const enum Tokens {
   LiquidTag,
   LiquidOutput,
   LiquidObject,
+  LiquidProperty,
   LiquidFilter,
   LiquidParameter,
   LiquidArgument

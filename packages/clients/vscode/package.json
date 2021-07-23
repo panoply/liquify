@@ -182,21 +182,21 @@
       {
         "language": "liquid",
         "scopeName": "source.liquid",
-        "path": "./package/syntax/liquid.tmLanguage.json"
+        "path": "./syntax/liquid.tmLanguage.json"
       },
       {
         "language": "liquid-shopify",
         "scopeName": "source.liquid.shopify",
-        "path": "./package/syntax/liquid-shopify.tmLanguage.json"
+        "path": "./syntax/liquid-shopify.tmLanguage.json"
       },
       {
         "language": "liquid-jekyll",
         "scopeName": "source.liquid.jekyll",
-        "path": "./package/syntax/liquid-jekyll.tmLanguage.json"
+        "path": "./syntax/liquid-jekyll.tmLanguage.json"
       },
       {
         "scopeName": "source.liquid.frontmatter",
-        "path": "./package/syntax/frontmatter.json",
+        "path": "./syntax/injections/frontmatter.json",
         "injectTo": ["source.liquid.jekyll"],
         "embeddedLanguages": {
           "meta.embedded.block.frontmatter.liquid": "yaml"
@@ -204,7 +204,7 @@
       },
       {
         "scopeName": "markdown.liquid.codeblock",
-        "path": "./package/syntax/liquid-markdown.codeblock.json",
+        "path": "./syntax/injections/liquid-markdown.codeblock.json",
         "injectTo": ["text.html.markdown"],
         "embeddedLanguages": {
           "meta.embedded.block.liquid": "liquid"
@@ -214,11 +214,11 @@
         "language": "liquidspec",
         "scopeName": "source.liquid.specs",
         "injectTo": ["source.json"],
-        "path": "./package/syntax/liquify-specs.inject.json"
+        "path": "./syntax/injections/liquify-specs.inject.json"
       },
       {
         "scopeName": "source.liquid.embedded",
-        "path": "./package/syntax/embedded.inject.json",
+        "path": "./syntax/injections/embedded.inject.json",
         "injectTo": ["source.liquid.shopify"],
         "embeddedLanguages": {
           "meta.embedded.block.javascript.liquid": "javascript",
