@@ -269,6 +269,12 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      case TokenType.EmbeddedJavaScript:
+
+        node.languageId = NodeLanguage.javascript;
+
+        break;
+
       case TokenType.Iteration:
 
         node.scope = {};
