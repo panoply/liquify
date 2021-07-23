@@ -4,19 +4,24 @@ import { parse } from 'parser/parse';
 import { create, update, get, remove, model } from 'tree/model';
 import { IAST } from './tree/ast';
 import { Config, IConfig } from './config';
+import { Node } from './tree/nodes';
+import { Embed as IIEmbed } from './tree/embed';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
 export { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 export { IAST } from './tree/ast';
 export { Node as INode } from './tree/nodes';
-export { Embed as IEmbed } from './tree/embed';
 export { NodeLanguage } from './lexical/language';
 export { NodeKind } from './lexical/kind';
 
 export * from '@liquify/liquid-language-specs';
 export * as Regexp from './lexical/expressions';
 export * as Characters from './lexical/characters';
+
+/* EXPOSED EXPORT TYPES ----------------------- */
+
+export type IEmbed = Node & IIEmbed
 
 export class LiquidParser {
 
