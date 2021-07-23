@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "injectionSelector": "L:source.liquid.shopify -meta.embedded -comment",
+  "injectionSelector": "L:source.liquid.shopify -meta.*.liquid -meta.*.html",
   "scopeName": "source.liquid.embedded",
   "patterns": [
     {
@@ -23,7 +23,7 @@
     "schema": {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.schema.liquid",
-      "begin": "({%)\\s+(schema)\\s+(%})",
+      "begin": "({%)\\s*(schema)\\s*(%})",
       "beginCaptures": {
         "0": {
           "name": "meta.tag.metadata.json.start.liquid"
@@ -38,7 +38,7 @@
           "name": "punctuation.definition.tag.end.liquid"
         }
       },
-      "end": "({%)\\s+(endschema)\\s+(%})",
+      "end": "({%)\\s*(endschema)\\s*(%})",
       "endCaptures": {
         "0": {
           "name": "meta.tag.metadata.json.end.liquid"
@@ -62,7 +62,7 @@
     "style": {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.style.liquid",
-      "begin": "({%)\\s+(style)\\s+(%})",
+      "begin": "({%)\\s*(style)\\s*(%})",
       "beginCaptures": {
         "0": {
           "name": "meta.tag.metadata.style.start.liquid"
@@ -77,7 +77,7 @@
           "name": "punctuation.definition.tag.end.liquid"
         }
       },
-      "end": "({%)\\s+(endstyle)\\s+(%})",
+      "end": "({%)\\s*(endstyle)\\s*(%})",
       "endCaptures": {
         "0": {
           "name": "meta.tag.metadata.style.end.liquid"
@@ -101,7 +101,7 @@
     "stylesheet": {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.stylesheet.liquid",
-      "begin": "({%)\\s+(stylesheet)\\s+(%})",
+      "begin": "({%)\\s*(stylesheet)\\s*(%})",
       "beginCaptures": {
         "0": {
           "name": "meta.tag.metadata.stylesheet.scss.start.liquid"
@@ -116,7 +116,7 @@
           "name": "punctuation.definition.tag.end.liquid"
         }
       },
-      "end": "({%)\\s+(endstylesheet)\\s+(%})",
+      "end": "({%)\\s*(endstylesheet)\\s*(%})",
       "endCaptures": {
         "0": {
           "name": "meta.tag.metadata.stylesheet.end.liquid"
@@ -140,7 +140,7 @@
     "stylesheet-scss": {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.stylesheet.scss.liquid",
-      "begin": "({%)\\s+(stylesheet)\\s+('(scss)')\\s+(%})",
+      "begin": "({%)\\s*(stylesheet)\\s*('(scss)')\\s*(%})",
       "beginCaptures": {
         "0": {
           "name": "meta.tag.metadata.stylesheet.scss.start.liquid"
@@ -161,7 +161,7 @@
           "name": "punctuation.definition.tag.end.liquid"
         }
       },
-      "end": "({%)\\s+(endstylesheet)\\s+(%})",
+      "end": "({%)\\s*(endstylesheet)\\s*(%})",
       "endCaptures": {
         "0": {
           "name": "meta.tag.metadata.stylesheet.scss.end.liquid"
@@ -185,7 +185,7 @@
     "javascript": {
       "name": "meta.embedded.block.liquid",
       "contentName": "meta.embedded.block.javascript.liquid",
-      "begin": "({%)\\s+(javascript)\\s+(%})",
+      "begin": "({%)\\s*(javascript)\\s*(%})",
       "beginCaptures": {
         "0": {
           "name": "meta.tag.metadata.javascript.start.liquid"
@@ -200,7 +200,7 @@
           "name": "punctuation.definition.tag.end.liquid"
         }
       },
-      "end": "({%)\\s+(endjavascript)\\s+(%})",
+      "end": "({%)\\s*(endjavascript)\\s*(%})",
       "endCaptures": {
         "0": {
           "name": "meta.tag.metadata.javascript.end.liquid"
