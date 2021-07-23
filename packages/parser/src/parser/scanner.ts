@@ -1499,6 +1499,11 @@ function Scan (): number {
         return TokenType.EmbeddedCSS;
       }
 
+      if ($.liquid.tag.language === 'javascript') {
+        state = ScanState.BeforeStartTagClose;
+        return TokenType.EmbeddedJavaScript;
+      }
+
       return Scan();
 
     /* -------------------------------------------- */
