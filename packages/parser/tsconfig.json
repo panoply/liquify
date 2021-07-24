@@ -1,4 +1,5 @@
 {
+  "extends": "@liquify/tsconfig",
   "exclude": ["node_modules/**", "package", "test"],
   "include": ["src/**/*.ts"],
   "compilerOptions": {
