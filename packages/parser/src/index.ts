@@ -1,11 +1,16 @@
 import { query as q, IEngine } from '@liquify/liquid-language-specs';
-import { VersionedTextDocumentIdentifier, Range } from 'vscode-languageserver-types';
 import { parse } from 'parser/parse';
 import { create, update, get, remove, model } from 'tree/model';
 import { IAST } from './tree/ast';
 import { Config, IConfig } from './config';
 import { Node } from './tree/nodes';
 import { Embed as IIEmbed } from './tree/embed';
+import {
+  VersionedTextDocumentIdentifier,
+  Range,
+  DidChangeTextDocumentParams,
+  TextDocumentItem
+} from 'vscode-languageserver-types';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
@@ -65,14 +70,7 @@ export class LiquidParser {
    * Executes a full document scan. Call this method to create
    * a document reference and perform a full text scan.
    */
-  scan (
-    textDocument: {
-      uri: string,
-      languageId: string,
-      version: number,
-      text: string
-    }
-  ): IAST {
+  scan (textDocument: TextDocumentItem): IAST {
 
     return parse(create(textDocument));
   }
@@ -87,18 +85,7 @@ export class LiquidParser {
     return remove(uri);
   }
 
-  update (
-    {
-      textDocument,
-      contentChanges
-    }: {
-        textDocument: VersionedTextDocumentIdentifier,
-        contentChanges: {
-          range: Range,
-          text: string
-        }[]
-      }
-  ): IAST {
+  update ({ textDocument, contentChanges }: DidChangeTextDocumentParams): IAST {
 
     return parse(
       update(
