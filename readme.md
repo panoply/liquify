@@ -102,11 +102,11 @@ pnpm package           Package compression of bundles like pnpm pack
 --dry-run              Dry run the command
 ```
 
-<img src="https://raw.githubusercontent.com/panoply/liquify/next/assets/line.svg?token=ABVXCLDIDMNQ3NJPEQ73NTLAXPZLE" />
+<img src="https://raw.githubusercontent.com/panoply/liquify/build/assets/line.svg?token=ABVXCLEXKEVWIXMT4M2GCSLBAUC6A" />
 
 ##### CONTRIBUTORS
 
-Want to contribute? Shoot me an [email][mailto:n.savvidis@gmx.com].
+Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com).
 
 🥛 <small>[Νίκος Σαβίδης](mailto:n.savvidis@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@kaossissel-1DA1F2?logo=twitter&logoColor=fff" />
 <br>
