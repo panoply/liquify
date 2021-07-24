@@ -116,4 +116,6 @@ export interface IObject {
 
 /* REFERENCE ---------------------------------- */
 
+export interface Properties { [name: string]: IProperties; }
+
 export interface Objects { [name: string]: IObject; }
