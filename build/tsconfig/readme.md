@@ -7,7 +7,8 @@ Shareable TypeScript configuration consumed within the Liquify monorepo workspac
 [pnpm](https://pnpm.js.org/en/cli/install)
 
 ```cli
-pnpm i @liquify/eslint-config --save-dev
+pnpm add -D @liquify/tsconfig typescript
+
 ```
 
 ### Usage
