@@ -7,7 +7,6 @@ import { findFirst } from 'parser/utils';
 import { IScopes, NodeType, INode } from 'tree/typings';
 import { NodeLanguage } from 'lexical/language';
 import { Type } from 'types/export';
-import inRange from 'lodash.inrange';
 export { NodeType, Token, IScopes } from 'tree/typings';
 
 // import inRange from 'lodash.inrange';
