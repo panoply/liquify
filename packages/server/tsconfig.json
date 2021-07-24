@@ -1,47 +1,20 @@
 {
+  "extends": "@liquify/tsconfig",
   "exclude": ["node_modules/**", "package", "test"],
-  "include": [
-    "src/index.ts",
-    "src/**/*.ts",
-    "src/**/**/*.ts",
-    "src/types/*",
-    "package/vendors/*"
-  ],
-  "typeAcquisition": {
-    "enable": true,
-    "include": ["node"]
-  },
+  "include": ["src/**/**/*.ts"],
   "compilerOptions": {
-    "types": ["node"],
     "rootDir": "src",
-    "incremental": true,
     "typeRoots": ["node_modules/@types", "src/types/*"],
     "declaration": true,
     "declarationDir": "package/@types",
     "outDir": "package",
-    "target": "ES6",
-    "removeComments": true,
-    "lib": ["es2020"],
-    "module": "ESNext",
     "allowJs": true,
-    "alwaysStrict": true,
-    "allowUmdGlobalAccess": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "preserveSymlinks": true,
-    "skipDefaultLibCheck": false,
-    "moduleResolution": "node",
-    "noEmitOnError": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"],
       "vendors": ["./package/vendors/*"],
       "types": ["./src/types/*"],
-      "service": ["./src/service/*"],
+      "service": ["./src/provide/service/*"],
       "provide": ["./src/provide/*"],
       "modes": ["./src/modes/*"]
     }
