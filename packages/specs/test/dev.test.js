@@ -11,4 +11,5 @@ test('Get Completions\n', t => {
   t.log(liquid.completions.objects);
 
   t.pass();
+
 });
