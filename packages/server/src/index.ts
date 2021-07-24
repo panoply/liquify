@@ -119,52 +119,40 @@ connection.onDidChangeConfiguration(change => {
 /* ---------------------------------------------------------------- */
 /* onDidOpenTextDocument                                            */
 /* ---------------------------------------------------------------- */
-connection.onDidOpenTextDocument(({ textDocument }) => {
+connection.onDidOpenTextDocument(async ({ textDocument }) => {
 
-  // connection.console.log('onDidOpenTextDocument')
+  const document = Parser.scan(textDocument);
 
-  // mark('onDidOpenTextDocument');
+  if (!document) return null;
 
-  try {
+  const diagnostics = await Service.doValidation(document);
 
-    const document = Parser.scan(textDocument);
+  if (!diagnostics) return null;
 
-    if (!document) return null;
-
-    if (Server.provider.validateOnOpen) {
-      return Service.doValidation(document).then(connection.sendDiagnostics);
-    }
-
-  } catch (e) {
-
-    console.log(e);
-
-  }
+  connection.sendDiagnostics(diagnostics);
 
 });
+
 /* PARSER ------------------------------------- */
 /* ---------------------------------------------------------------- */
 /* onDidChangeTextDocument                                          */
 /* ---------------------------------------------------------------- */
 
-connection.onDidChangeTextDocument((textDocumentChanges) => {
+connection.onDidChangeTextDocument(async (textDocumentChanges) => {
 
   mark('onDidChangeTextDocument');
 
-  try {
+  const document = Parser.update(textDocumentChanges);
 
-    const document = Parser.update(textDocumentChanges);
+  if (!document) return null;
 
-    if (!document) return null;
+  console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`);
 
-    console.log(`PARSED IN ${stop('onDidChangeTextDocument').duration}`);
+  const diagnostics = await Service.doValidation(document);
 
-    return Service.doValidation(document).then(connection.sendDiagnostics);
+  if (!diagnostics) return null;
 
-  } catch (e) {
-
-    console.log(e);
-  }
+  connection.sendDiagnostics(diagnostics);
 
 });
 
@@ -212,10 +200,7 @@ connection.onDocumentRangeFormatting(async ({ textDocument: { uri } }) => {
 /* onLinkedEditingRange                                             */
 /* ---------------------------------------------------------------- */
 
-connection.languages.onLinkedEditingRange(async ({
-  position,
-  textDocument: { uri }
-}) => {
+connection.languages.onLinkedEditingRange(async ({ position, textDocument: { uri } }) => {
 
   const document = Parser.get(uri);
 
@@ -224,6 +209,7 @@ connection.languages.onLinkedEditingRange(async ({
   return Service.doLinkedEditing(document, position);
 
 });
+
 /* ---------------------------------------------------------------- */
 /* onHover                                                          */
 /* ---------------------------------------------------------------- */
@@ -239,6 +225,8 @@ connection.onHover(async ({ position, textDocument: { uri } }) => {
     return Service.doHover(document, position);
 
   }
+
+  return null;
 
 });
 
@@ -321,6 +309,8 @@ connection.onCompletion(async ({ textDocument: { uri }, position, context }) => 
     return Service.doComplete(document, position, context);
 
   }
+
+  return null;
 
 });
 
