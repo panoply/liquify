@@ -1,12 +1,12 @@
 // import { TextDocument } from 'vscode-languageserver-textdocument';
-import { JSONLanguageService } from 'service/modes/json';
-import { CSSLanguageService } from 'service/modes/css';
+import { JSONLanguageService } from 'provide/modes/json';
+import { CSSLanguageService } from 'provide/modes/css';
 import { Services, Formatting } from 'types/server';
 import store from '@liquify/schema-stores';
-import * as Format from 'service/format';
-import * as Hover from 'service/hovers';
-import * as Complete from 'service/completions';
-import * as Editing from 'service/editing';
+import * as Format from './service/format';
+import * as Hover from './service/hovers';
+import * as Complete from './service/completions';
+import * as Editing from './service/editing';
 import {
   Characters,
   Position,
