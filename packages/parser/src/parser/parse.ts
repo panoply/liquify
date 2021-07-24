@@ -320,7 +320,7 @@ export function parse (document: IAST): IAST {
       case TokenType.ObjectProperty:
 
         node.objects[object].push(s.token);
-        node.objects[s.offset + 1] = object;
+        node.objects[s.offset] = object;
 
         q.isProperty(s.token);
 
