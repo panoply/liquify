@@ -19,6 +19,8 @@ export interface IConfig {
   engine?: IEngine;
 
   /**
+   * **NOT YET AVAILABLE**
+   *
    * The license key to unlock specifications and
    * provide capabilities to Liquid variations.
    *
@@ -26,22 +28,10 @@ export interface IConfig {
    * at: [https://liquify.dev/license](https://liquify.dev/license).
    *
    * @default ''
+   * @deprecated
    */
   license?: string;
-  /**
-   * Whether or not run a contextual parse.
-   * A context parse will build an AST structure for
-   * each node. The structure provides a information
-   * for every character present within a tag.
-   *
-   * This defaults to `false` because it will decrease
-   * performance when using the parser in combination
-   * with LSP or when document changes execute frequently,
-   * as in `persist` type parses.
-   *
-   * @default false
-   */
-  context?: boolean;
+
   /**
    * Whether or not to parser HTML markup and include
    * tags in the generated AST.
@@ -49,6 +39,7 @@ export interface IConfig {
    * @default true
    */
   html?: boolean;
+
   /**
    * An LSP specific option which informs that we will
    * be persisting, ie: executing frequent parses like
@@ -61,6 +52,7 @@ export interface IConfig {
    * @default false
    */
   persist: boolean;
+
   /**
    * Whether or not frontmatter should be parsed and tracked.
    * When set to `true` frontmatter data is scoped.
@@ -68,6 +60,7 @@ export interface IConfig {
    * @default false
    */
   frontmatter?: false;
+
   /**
    * Whether or not keep track of whitespaces within tags.
    * Tracking whitespace will decrease performance.
@@ -79,6 +72,7 @@ export interface IConfig {
    * @default false
    */
   whitespace?: false;
+
   /**
    * Whether or not keep track of newlines within tags.
    *
@@ -89,6 +83,7 @@ export interface IConfig {
    * @default false
    */
   newlines?: false;
+
   /**
    * Whether or not to process unknown tags, filter or objects
    * encountered. If this option is set to `false` the parser
@@ -98,6 +93,7 @@ export interface IConfig {
    * @default true
    */
   strict?: boolean;
+
   /**
    * Whether or not to parse HTML comments. In Liquify, you can
    * optionally supply lint, formatting and validation rules
@@ -107,6 +103,7 @@ export interface IConfig {
    * @default true
    */
   comments?: boolean;
+
   /**
    * Whether or not to track variables. This is an LSP specific option,
    * which will keep a record of defined variables in a documents local
@@ -115,6 +112,7 @@ export interface IConfig {
    * @default true
    */
   variables?: boolean;
+
   /**
    * Linting rules the parser should validate against. The parser
    * validates while parsing. These rulesets are digested in the language
@@ -133,8 +131,7 @@ export interface IConfig {
  * should be parsed/skipped/included etc etc.
  */
 export const Config: IConfig = {
-  license: '$!5s3L<S1v>54vV1d!$_5|X~0C7083r^!9B9.31.@j4N*2o2|([m3d!nd32!8a0g3JVs])',
-  context: true,
+  license: '',
   persist: true,
   frontmatter: false,
   whitespace: false,
