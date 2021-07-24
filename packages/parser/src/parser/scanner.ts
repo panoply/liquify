@@ -1,6 +1,9 @@
 import {
   state as $,
-  query as q, Type, Within, QueryErrors
+  query as q,
+  Type,
+  Within,
+  QueryErrors
 } from '@liquify/liquid-language-specs';
 
 import { TokenType } from 'lexical/tokens';
@@ -86,7 +89,14 @@ export function scan (start: number = 0): number {
   if (start > 0) s.Jump(start);
 
   // End of Stream
-  if (s.size <= s.offset) return TokenType.EOS;
+  if (s.size <= s.offset) {
+
+    // Ensure we clear the query engine
+    q.reset();
+
+    return TokenType.EOS;
+
+  }
 
   return state === ScanState.CharSeq ? CharSeq() : Scan();
 
