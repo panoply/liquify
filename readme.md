@@ -3,7 +3,7 @@
 
 <img src="https://github.com/panoply/liquify/blob/next/assets/github-banner-center.gif?raw=true"  atl="Liquify Logo"  width="100%">
 
-# _LIQUIFY_
+# Liquify
 
 Language tooling for the [Liquid Template Language](#). Liquify provides IDE capabilities to developers working with Liquid and its multiple variations. Contained in this repository is various packages and modules used by the Liquify text editor extension/plugin available in [VSCode](https://code.visualstudio.com), [Sublime](#) and [Atom](#).
 
@@ -11,17 +11,17 @@ Language tooling for the [Liquid Template Language](#). Liquify provides IDE cap
 
 **Liquify operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licensed packages.**
 
-### _WHY_
+### Why
 
 The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi), Liquid is leveraged by SaaS services and open source projects like Jekyll, Eleventy and many others as safe and simple consumer facing language. Despite Liquid being actively maintained by Shopify and the foundation of its storefront theme development little effort has been made by the Shopify team and borderline neglect in providing modern IDE features for developers working in environments that use the language.
 
 Liquify was created to solve this issue, it aims to be the _crème de la crème_ and provide developers everything they require for Liquid in their workspace.
 
-### _PRICING / LICENSING_
+### Pricing / License
 
 Liquify is currently free to use in this alpha pre-release stage. A yearly licensing cost may _potentially_ be incurred for those who want features which pertain to the Shopify variation. There are no plans as of yet to implement this pay wall so it exists free to use with all features available to all users.
 
-### _CORE PACKAGES_
+### Core Packages
 
 These packages are considered the core modules of the project.
 
@@ -31,7 +31,7 @@ These packages are considered the core modules of the project.
 - [@liquify/specs](#)
 - [@liquify/schema](#)
 
-### _CLIENT PACKAGES_
+### Client Packages
 
 These packages are the text editor [LSP](https://microsoft.github.io/language-server-protocol/specifications/specification-current/) clients.
 
@@ -39,14 +39,14 @@ These packages are the text editor [LSP](https://microsoft.github.io/language-se
 - [@liquify/sublime](#)
 - [@liquify/atom](#)
 
-### _ROLLUP PLUGINS_
+### Rollup Plugins
 
 These packages are project specific [Rollup](https://rollupjs.org) plugins.
 
 - [@liquify/rollup-plugin-obfuscator](#)
 - [@liquify/rollup-plugin-utils](#)
 
-### _SHAREABLE CONFIGS_
+### Sharable Configs
 
 These packages are the sharable configurations.
 
@@ -57,7 +57,7 @@ These packages are the sharable configurations.
 
 **Some packages may operating under [MIT](https://mit-license.org/), [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#). Packages operating under [PROPRIETARY](#) consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types). Though code is public, please be aware of the licensing imposed upon each package.**
 
-# _SETUP_
+# Setup
 
 The project is a combination monorepo/multirepo that uses [pnpm](https://pnpm.js.org/) for dependency and workspace management. Development is intended to be conducted within the [vscode](https://code.visualstudio.com/) text editor. The development environment requires the following:
 
@@ -75,7 +75,7 @@ The project is a combination monorepo/multirepo that uses [pnpm](https://pnpm.js
 </p>
 </details>
 
-### _INSTALLATION_
+### Installation
 
 - Ensure [pnpm](https://pnpm.js.org/) is installed globally `npm i pnpm -g`
 - Clone this repository `git clone https://github.com/panoply/liquify.git`
@@ -86,7 +86,7 @@ The project will be complied and all packages will build. You can `cd` into any 
 
 > It is recommended to `cd` into the packages and conduct development from within the package opposed to using the global watch command.
 
-### _DEVELOPMENT_
+### Development
 
 All packages build using the powerful [Rollup](https://rollupjs.org) bundler. Each package contain a `rollup.config.mjs` file. Each contained package follows a standardized script execution pattern, so the same commands be called from both the workspace root or within a package.
 
@@ -104,7 +104,7 @@ pnpm package           Package compression of bundles like pnpm pack
 
 <img src="https://raw.githubusercontent.com/panoply/liquify/build/assets/line.svg?token=ABVXCLEXKEVWIXMT4M2GCSLBAUC6A" />
 
-##### _CONTRIBUTORS_
+##### CONTRIBUTORS
 
 Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com).
 
@@ -112,7 +112,7 @@ Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com).
 <br>
 🍔 <small>[Joseph Curtis](#)</small> <img align="right" src="https://img.shields.io/badge/-@jCurt-1DA1F2?logo=twitter&logoColor=fff" />
 
-##### _ACKNOWLEDGEMENTS_
+##### ACKNOWLEDGEMENTS
 
 Liquify took a considerable amount of time to build. Many sleepless nights and a lot of hours were poured into the project and not many were willing to take on the task. Thanks to all those who used to previous version of this extension and a special thanks to a couple of developers that frequent the [Shopify Developers](https://discord.com/channels/597504637167468564/597507881419407404) discord channel.
 
