@@ -10,7 +10,6 @@ import filesize from 'rollup-plugin-filesize';
 import noderesolve from '@rollup/plugin-node-resolve';
 import beep from '@rollup/plugin-beep';
 import del from 'rollup-plugin-delete';
-import path from 'path';
 
 export default Rollup(
   {
