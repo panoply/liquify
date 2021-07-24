@@ -20,17 +20,17 @@ export class Node implements INode {
 
   public kind: NodeKind = NodeKind.Liquid
   public offsets: [number?, number?, number?, number?] = [];
-  public objects?: object;
   public attributes?: object;
   public filters?: object;
   public type: Type | NodeType;
   public languageId?: NodeLanguage;
-  public scope: string | number | IScopes;
   public tag: string;
   public root: number;
   public index: number;
   public parent: Node;
   public children: Node[] = [];
+  public objects?: {}
+  public scope: {};
   public singular: boolean;
   public lastError: number;
   public errors: number[] = []
@@ -182,7 +182,7 @@ export class Node implements INode {
       }
     }
 
-    return this.type !== NodeType.Root ? this.children[node] : this;
+    return this;
 
   }
 
