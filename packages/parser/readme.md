@@ -228,9 +228,7 @@ pnpm test:cases --flags  Runs all test which exists within /cases directory
 
 [CC BY-NC-ND 4.0](#LICENSE)
 
-<img src="https://raw.githubusercontent.com/panoply/liquify/build/assets/line.svg?token=ABVXCLEXKEVWIXMT4M2GCSLBAUC6A" />
-
-##### Credits
+## Credits
 
 This parser is made possible through the open sourced works of Microsoft, specifically that of [VSCode](https://code.visualstudio.com/). Patterns and logic implemented in this module have been loosely based upon and adapted from the following projects:
 
