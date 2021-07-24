@@ -1,7 +1,5 @@
 /* eslint no-unused-vars: "off" */
 
-import { NodeKind } from 'lexical/kind';
-import { NodeLanguage } from 'lexical/language';
 import { Type } from '@liquify/liquid-language-specs';
 
 export const enum NodeType {
