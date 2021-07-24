@@ -1,5 +1,3 @@
-// @ts-ignore
-
 import { LiquidServer } from './provide/server';
 import { LiquidService } from './provide/service';
 
