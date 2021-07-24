@@ -18,6 +18,7 @@ export {
   isType,
   isValue,
   isWithin,
+  isAllowed,
   nextArgument,
   nextParameter,
   prevArgument,
