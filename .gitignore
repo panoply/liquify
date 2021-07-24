@@ -9,3 +9,4 @@ node_modules/
 pnpm-lock.yaml
 pnpm-debug.log
 tests
+tsconfig.tsbuildinfo

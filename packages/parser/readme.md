@@ -2,15 +2,15 @@
 
 # @liquify/parser
 
-An incremental parser/scanner for the Liquid Template Language. Developed for the [Liquify IDE](https://liquify.dev) text editor plugin to construct a detailed workable Abstract Syntax Tree. The parser is used in combination with the [Language Server Protocol](https://microsoft.github.io/language-server-protocol/) implementation.
+An incremental parser/scanner for the Liquid Template Language. Developed for use with the [Liquify IDE](https://liquify.dev) text editor plugin to construct a detailed workable Abstract Syntax Tree. The parser is used in combination with the [Language Server Protocol](https://microsoft.github.io/language-server-protocol/) implementation. The Liquify parser adopts the same pattern and its scanning approach is loosely based on the [vscode-html-languageservice](https://github.com/microsoft/vscode-html-languageservice) and borrows logic found within [vscode-languageserver-node](https://github.com/microsoft/vscode-languageserver-node) in order to interface text documents with the LSP.
 
 ###### IMPORTANT
 
-**This parser is used to construct and query an AST, not perform actions on parsed code. Use [liquidjs](https://github.com/harttle/liquidjs) by [Harttle](https://github.com/harttle) for Liquid engine support in JavaScript.**
+**This parser is used to construct and query an AST, it is not capable of performing actions on parsed code. Use [liquidjs](https://github.com/harttle/liquidjs) by [Harttle](https://github.com/harttle) for a Liquid rendering engine support with JavaScript.**
 
 ## Why?
 
-Facilitating modern IDE capabilities for the Liquid Template Language required a performant parser to construct a detailed representation of Liquid syntax contained in documents. The parser needed to work together with different languages like HTML and also be aware of embedded regions contained in markup a language while at the same time handle consistent changes.
+Facilitating modern IDE capabilities for the Liquid Template Language required a performant parser to construct a detailed representation of Liquid syntax contained in text documents. The parser needed to work together with different languages like HTML and also be aware of embedded regions contained in markup while at the same time handle consistent changes.
 
 ## Install
 
@@ -32,7 +32,6 @@ const Parser  = new LiquidParser(options: Options)
  * `onDocumentOpen` this must be executed first.
  */
 Parser.scan(textDocument: TextDocument): AST
-
 
 /**
  * Document update. In LSP this is called on document
@@ -218,8 +217,22 @@ Optionally, you can `cd` into this package from root and run `pnpm dev` (recomme
 
 Tests are provided using [AVA](https://github.com/avajs/ava) and can be found in the `/test` directory. When running `pnpm dev` and launching development, tests will run along side bundling.
 
-`pnpm test`
+```cli
+
+pnpm test **    --flags  Tests a file in watch mode
+pnpm test:cases --flags  Runs all test which exists within /cases directory
+
+```
 
 ## License
 
-[CC BY-NC-ND 4.0](#)
+[CC BY-NC-ND 4.0](#LICENSE)
+
+<img src="https://raw.githubusercontent.com/panoply/liquify/build/assets/line.svg?token=ABVXCLEXKEVWIXMT4M2GCSLBAUC6A" />
+
+##### Credits
+
+This parser is made possible through the open sourced works of Microsoft, specifically that of [VSCode](https://code.visualstudio.com/). Patterns and logic implemented in this module have been loosely based upon and adapted from the following projects:
+
+- [vscode-languageserver-node](https://github.com/microsoft/vscode-languageserver-node)
+- [vscode-html-languageservice](https://github.com/microsoft/vscode-html-languageservice)

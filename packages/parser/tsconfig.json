@@ -1,10 +1,6 @@
 {
   "exclude": ["node_modules/**", "package", "test"],
-  "include": ["src/index.ts", "src/**/*.ts", "src/types/*"],
-  "typeAcquisition": {
-    "enable": true,
-    "include": ["node"]
-  },
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
     "types": ["node"],
     "rootDir": "src",
@@ -13,23 +9,6 @@
     "declaration": true,
     "declarationDir": "package/@types",
     "outDir": "package",
-    "target": "ES6",
-    "removeComments": true,
-    "lib": ["es2020"],
-    "module": "ESNext",
-    "alwaysStrict": true,
-    "allowUmdGlobalAccess": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "preserveSymlinks": true,
-    "skipDefaultLibCheck": false,
-    "moduleResolution": "node",
-    "noEmitOnError": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "pretty": true,
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"],

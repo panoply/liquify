@@ -3,19 +3,17 @@
   "version": "0.1.1-beta.1",
   "description": "An incremental parser for the Liquid Templating Language",
   "scripts": {
-    "tsc": "tsc --project tsconfig.json --removeComments",
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
-    "rollup": "rollup -c",
-    "data": "node ./scripts/custom-data.js",
-    "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava test/dev.test.js --color --verbose --watch",
-    "tests": "ava ./test/cases/validate/*.test.js --color --verbose --watch",
-    "perf": "node -r esm test/perf/parsing.js"
+    "package": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava ./test/* --watch --verbose --color",
+    "test:cases": "ava ./test/cases/**/* --verbose --color"
   },
   "private": false,
-  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
-  "owner": "SISSEL SAAS",
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com"
+  },
   "license": "see LICENSE.txt",
   "main": "package/parser.js",
   "types": "./package/@types/index.d.ts",
@@ -23,27 +21,14 @@
     "require": "./package/parser.js"
   },
   "eslintConfig": {
-    "extends": [
-      "@liquify/eslint-config-ts"
-    ],
+    "extends": ["@liquify/eslint-config-ts"],
     "rules": {
       "no-use-before-define": "off",
       "no-control-regex": "off"
     }
   },
   "ava": {
-    "require": [
-      "esm"
-    ],
-    "babel": {
-      "testOptions": {
-        "babelrc": true,
-        "configFile": false
-      }
-    },
-    "files": [
-      "test/**/*.test.js"
-    ],
+    "require": ["esm"],
     "concurrency": 5
   },
   "dependencies": {
@@ -59,6 +44,7 @@
     "@ava/babel": "^2.0.0",
     "@liquify/eslint-config-ts": "workspace:^1.0.1",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+    "@liquify/tsconfig": "workspace:^1.0.0",
     "@rollup/plugin-alias": "^3.1.4",
     "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-commonjs": "^19.0.1",
@@ -67,20 +53,16 @@
     "@types/lodash.inrange": "^3.3.6",
     "ava": "^3.15.0",
     "chalk": "^4.1.1",
-    "dotenv": "^10.0.0",
     "esm": "^3.2.25",
     "json-stringify-safe": "^5.0.1",
     "pretty-hrtime": "^1.0.3",
     "rollup": "^2.53.3",
-    "rollup-plugin-consts": "^1.0.2",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-filesize": "^9.1.1",
     "rollup-plugin-typescript2": "^0.30.0",
-    "tslib": "^2.3.0",
     "typescript": "^4.3.5",
-    "vscode-languageserver-types": "^3.16.0",
-    "vscode-web-custom-data": "^0.3.4"
+    "vscode-languageserver-types": "^3.16.0"
   },
   "peerDependencies": {
     "rollup": "^2.51.1",

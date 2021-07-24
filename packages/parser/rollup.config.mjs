@@ -10,6 +10,7 @@ import noderesolve from '@rollup/plugin-node-resolve';
 import beep from '@rollup/plugin-beep';
 import del from 'rollup-plugin-delete';
 import copy from 'rollup-plugin-copy';
+
 export default Rollup(
   {
     input: 'src/index.ts',
