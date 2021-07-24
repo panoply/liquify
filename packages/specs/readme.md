@@ -1,14 +1,14 @@
 <img src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" align="left" />&nbsp;&nbsp;<img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
 
-# @liquify/language-specs
+# @liquify/specs
 
-This package is available on the npm registry for modules consumed by the [Liquify](https://liquify.dev) parser and text editor extension/plugin. The language specs provide capabilities to the Liquid Language Server and in addition the Liquify [Language Parser](#). That module extends upon the approach first introduced by the VS Code team, specifically that used by HTML language Service.
+This package is available on the npm registry for modules consumed by the [Liquify](https://liquify.dev) parser and text editor extension/plugin. The language specs provide capabilities to the Liquid Language Server and in addition the Liquify [Language Parser](#). This module extends upon the approach first introduced by the VS Code team, specifically that used in [HTML language Service](https://github.com/microsoft/vscode-html-languageservice).
 
 **Liquify is partially proprietary closed source software. The distributed code provided in this package is enigmatic and has been encrypted using an [aes-256-gcm](https://en.wikipedia.org/wiki/Galois/Counter_Mode) algorithm**
 
 ### Why?
 
-The [Liquify](#) parser treats HTML and Liquid as a single language. Providing LSP capabilities to both languages was extraneous when leaning upon the [vscode-html-languageservice](https://github.com/microsoft/vscode-html-languageservice) as a Liquid documents were being parsed by twice resulting in performance bottlenecks. The Liquify parser separates both Liquid and HTML in an non-conflicting manner and thus allows for HTML to be validated against in a similar manner as Liquid. Providing language features to both was far better facilitated using this single query engine module.
+The [Liquify](https://liquify.dev) parser treats HTML and Liquid as a single language. Providing language features for both HTML and Liquid is facilitated using this query engine module, in addition allows for users to extends and/or create custom variations and tags.
 
 # Usage
 
@@ -19,24 +19,26 @@ The module provides a query engine to interfaces with the HTML and Liquid specif
 The module is available on the public NPM registry:
 
 ```
-pnpm i @liquify/language-specs
+pnpm i @liquify/specs
 ```
 
 ### Query Engine
 
 The query engine is used by the parser. Each time a tag, object or filter is encountered we query its specification so the scanner or language server can act accordingly. The module exports variables which hold constantly changing state values.
 
+Read More about [queries](docs/06-queries.md)
+
 ##### Data
 
 We can access the specifications via 2 exports, `html5` and `liquid` these both provide us direct access to the data objects. These are raw access references. Exports like `complete` provide us LSP completions.
 
 ```typescript
-import { html5, liquid } from "@liquify/liquid-language-specs";
+import { html5, liquid } from "@liquify/specs";
 
 // LIQUID DATA
 
 liquid.engine;
-liquid.complete;
+liquid.completions;
 liquid.jekyll;
 liquid.shopify;
 liquid.standard;
@@ -132,13 +134,13 @@ q.reset(): void
 
 # Documentation
 
-In the context of the Liquid Language Server, variation specifications are just data references that describe Liquid syntax, not quite grammars but close enough. The specs exist to enable developers of any level to quickly compose contextual grammar and formal schemas that described tags, filters and objects used in a multitude of variations which extend upon the default [standard](https://shopify.github.io/liquid/) variation.
+In the context of the Liquid Language Server, these _specifications_ are just data references that describe Liquid and HTML syntax. These are not quite parsing grammars and despite the name, they are no official specifications. The specs exist to enable developers of any level to quickly compose schemas that extend upon Liquid [standard](https://shopify.github.io/liquid/) and described tags, filters and objects in different variations.
 
 1. [Tokens](docs/01-tokens.md)
 2. [Types](docs/02-types.md)
 3. [Arguments](docs/03-arguments.md)
 
-### Objects
+### Unsupported
 
 The specifications map Liquid objects in a hardcoded manner. When a Liquid variation provides objects on the consumer facing end (like those in the Shopify variation) the objects are provided to Liquify via manual data entry. This is both a very tedious and time consuming task.
 
@@ -161,7 +163,7 @@ _Not yet supported_
 
 # Contributing
 
-Contributions are welcome. If you stumble upon inconsistencies or inaccurate data, all files using by Liquify [Parser](#) and [Language Server](#) exist the within `/data` directories. Because Liquify is developed in a monorepo architecture, contributing requires forking from the root.
+Contributions are welcome. If you stumble upon inconsistencies or inaccurate data note that all files used by Liquify [Parser](#) and the [Liquid Language Server](#) exist the within `/data` directories. Contributing requires forking from the root of this project as Liquify is built atop of a monorepo workspace.
 
 Consult the root [readme](#) for more information:
 
