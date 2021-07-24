@@ -18,9 +18,59 @@ export const enum Token {
   Outer
 }
 
-export interface IScopes { [tag: string]: string | Type }
+export interface IScopes {
 
-export declare interface INode {
+  /**
+   * Tag scopes will either hold an object value, string value
+   * or be `undefined` and the information contained on the
+   * scope property different depending on the tag.
+   *
+   * When the value of scope is an object type we are dealing
+   * with a tag that holds a local set of scopes, this will typically
+   * be a `{% for %}` loop tag, wherein the iterator is assigned
+   * the value of an array of objects. The scope in such a case
+   * will hold reference to the iterators value
+   *
+   * ----
+   *
+   * Example:
+   *
+   * ```javascript
+   *
+   * {% for item in collection.products %}
+   *   {{ item.id }}
+   * {% endfor %}
+   *
+   * ```
+   *
+   * Where the iterator value of `item` represents the `product`
+   * object (in the specifications). The `for` nodes scope value
+   * would be:
+   *
+   * ```javascript
+   * { scope: { item: 'product' } }
+   * ```
+   *
+   * Everytime we intercept a output tag which had a tag name
+   * value of `item` will have a scope `string` value of:
+   *
+   * ```javascript
+   * { scope: 'product'
+   * ```
+   *
+   * ----
+   *
+   * In cases where we have nested `for` loops, the scope
+   * reference modified and applied accordingly. The algorithm
+   * might seem a tad unknown but it is designed this way so
+   * as to generate and validate in the most performant possible
+   * way ie: without doing too much heavy lifting.
+   */
+  scope: { [tag: string]: string | Type } | string | undefined
+
+}
+
+export interface IObjects {
 
   /**
    * Objects this tag contains. Each property contained on the
@@ -53,6 +103,8 @@ export declare interface INode {
    * in this manner as we want to walk the specifications in the fasted
    * possible manner.
    */
-  objects?: object;
+  objects?: { [offset: number]: string[] | number }
 
-}
+};
+
+export interface INode extends IScopes, IObjects { }
