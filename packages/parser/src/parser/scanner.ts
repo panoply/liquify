@@ -1,10 +1,6 @@
 import {
-  Type,
-  Within,
-  QueryErrors,
   state as $,
-  query as q
-
+  query as q, Type, Within, QueryErrors
 } from '@liquify/liquid-language-specs';
 
 import { TokenType } from 'lexical/tokens';

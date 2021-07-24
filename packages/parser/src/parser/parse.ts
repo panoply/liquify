@@ -394,13 +394,9 @@ export function parse (document: IAST): IAST {
 
   /* NODE SYNTACTICS ---------------------------- */
 
-  if (document.regions.length >= embed) {
-    document.regions.splice(embed);
-  }
+  if (document.regions.length >= embed) document.regions.splice(embed);
 
-  for (const { range } of pair) {
-    document.report(Errors.MissingEndTag)(range);
-  }
+  for (const { range } of pair) document.report(Errors.MissingEndTag)(range);
 
   pair.clear();
 

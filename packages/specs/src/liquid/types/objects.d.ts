@@ -1,5 +1,5 @@
 import { IReferences, IScopes } from './common';
-import { shopify } from './../data/export';
+import { shopify } from '../data/export';
 import { BasicTypeRange } from './types';
 
 /* EXPORT TYPE -------------------------------- */
