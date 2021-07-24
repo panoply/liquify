@@ -90,15 +90,16 @@ The project will be complied and all packages will build. You can `cd` into any 
 All packages build using the powerful [Rollup](https://rollupjs.org) bundler. Each package contain a `rollup.config.mjs` file. Each contained package follows a standardized script execution pattern, so the same commands be called from both the workspace root or within a package.
 
 ```cli
-pnpm dev               Watch input files/directories and rebuild on changes
-pnpm build  --flags    Build production/development bundles
-pnpm test   --flags    Execute and run a bunch of tests
-pnpm publish           Publish package to third party services, eg: npm registry
-pnpm package           Package compression of bundles like pnpm pack
--w, --watch            Watch input files/directories and rebuild on changes
--d, --dev              Development build and/or bundle
--p, --prod             Production build and/or bundle
---dry-run              Dry run the command
+pnpm dev                 Watch input files/directories and rebuild on changes
+pnpm build               Build production/development bundles
+pnpm test **    --flags  Tests a file in watch mode, use <pnpm test dev> in development
+pnpm test:cases --flags  Runs all test which exists within /cases directory
+pnpm publish             Publish package to third party services, eg: npm registry
+pnpm package             Package compression of bundles like pnpm pack
+-w, --watch              Watch input files/directories and rebuild on changes
+-d, --dev                Development build and/or bundle
+-p, --prod               Production build and/or bundle
+--dry-run                Dry run the command
 ```
 
 <img src="https://raw.githubusercontent.com/panoply/liquify/build/assets/line.svg?token=ABVXCLEXKEVWIXMT4M2GCSLBAUC6A" />
