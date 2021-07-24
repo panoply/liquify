@@ -5,14 +5,14 @@ import { NodeLanguage } from 'lexical/language';
 import { customChanges } from 'parser/utils';
 import inRange from 'lodash.inrange';
 
-// TODO
-//
-// CURRENT NEW VIRTUAL DOCUMENTS ARE RE-CREATED WHEN REGIONS
-// ARE REMOVED OR NEW REGIONS ARE CREATED - NEED TO WORK ON
-// THE ALGORITHM TO UPDATE THESE NODES IN AN INCREMENTAL MANNER
-// AND PREVENT RE-CREATION OCCURING
-
 export class Embed extends Node {
+
+  constructor ({ start, parent, kind, tag, type }: Node) {
+    super(NodeType.Embed, start, parent, kind);
+    this.tag = tag;
+    this.type = type;
+    this.parent.children.pop();
+  }
 
   /**
    * The index reference of the embedded region on `AST.regions[]`
@@ -24,18 +24,18 @@ export class Embed extends Node {
    * the start range line number and used to align features in LSP.
    */
   public regionOffset: number
+
+  /**
+   * Embedded Language ID. This value excludes `HTML` and `Liquid` and
+   * used to identify the language
+   */
   public languageId: Exclude<NodeLanguage, NodeLanguage.liquid | NodeLanguage.html>;
+
+  /**
+   * The TextDocument literal reference. This value is passed to Language
+   * service within LSP.
+   */
   public textDocument: TextDocument
-
-  constructor ({ start, parent, kind, tag, type }: Node) {
-
-    super(NodeType.Embed, start, parent, kind);
-
-    this.tag = tag;
-    this.type = type;
-    this.parent.children.pop();
-
-  }
 
   /**
    * Region
@@ -112,6 +112,7 @@ export class Embed extends Node {
     document.regions.splice(index, 1, this);
 
     return index + 1;
+
   }
 
 }
