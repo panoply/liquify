@@ -6,8 +6,8 @@
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "package": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava ./test/* --watch --verbose --color",
-    "test:cases": "ava ./test/cases/**/* --verbose --color"
+    "test": "ava test/* --watch --verbose",
+    "test:cases": "ava test/cases/**/* --verbose --color"
   },
   "private": false,
   "author": {
