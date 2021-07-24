@@ -119,5 +119,3 @@ Liquify took a considerable amount of time to build. Many sleepless nights and a
 - [Mansedan](#)
 - [Wolf Grey](#)
 - [Dave W](#)
-
-I would like to also thank the [Mithril.js](https://mithril.js.org/) community who for years have taught me so much about software engineering and JavaScript.
