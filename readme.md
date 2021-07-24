@@ -7,15 +7,14 @@
 
 Language tooling for the [Liquid Template Language](#). Liquify provides IDE capabilities to developers working with Liquid and its multiple variations. Contained in this repository is various packages and modules used by the Liquify text editor extension/plugin available in [VSCode](https://code.visualstudio.com), [Sublime](#) and [Atom](#).
 
-###### IMPORTANT
-
-**Liquify operates on a [Freemium](#) licensing model and distributes the codebase as a series of proprietary, closed and open source licensed packages.**
+- [Documentation](https://liquify.dev)
+- [VSCode](#)
 
 ### Why
 
-The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi), Liquid is leveraged by SaaS services and open source projects like Jekyll, Eleventy and many others as safe and simple consumer facing language. Despite Liquid being actively maintained by Shopify and the foundation of its storefront theme development little effort has been made by the Shopify team and borderline neglect in providing modern IDE features for developers working in environments that use the language.
+The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi), Liquid is leveraged by SaaS services and open source projects like Jekyll, Eleventy and many more. Despite Liquid being actively maintained by Shopify and the foundation of its storefront theme development, very little effort has been made by the Shopify team in providing modern IDE features for developers working in environments that use the language.
 
-Liquify was created to solve this issue, it aims to be the _crème de la crème_ and provide developers everything they require for Liquid in their workspace.
+Liquify was created to solve this issue and provide everything required when developing in a Liquid workspace. It aims to become to deliver powerful editor capabilities that enrich the programing experience and lives of developers.
 
 ### Pricing / License
 
@@ -23,7 +22,7 @@ Liquify is currently free to use in this alpha pre-release stage. A yearly licen
 
 ### Core Packages
 
-These packages are considered the core modules of the project.
+These packages are considered the _core_ modules of the project.
 
 - [@liquify/parser](#)
 - [@liquify/server](#)
