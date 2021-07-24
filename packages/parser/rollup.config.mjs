@@ -17,13 +17,14 @@ export default Rollup(
     output: {
       format: 'cjs',
       file: config.output.cjs,
-      sourcemap: env.is('dev', 'hidden'),
+      sourcemap: env.is('prod', 'hidden'),
       preferConst: true,
       esModule: false,
       chunkFileNames: '[name].js'
     },
     external: [
-      '@liquify/liquid-language-specs'
+      '@liquify/liquid-language-specs',
+      'vscode-languageserver-textdocument'
     ],
     plugins: env.if('dev')(
       [
@@ -71,7 +72,11 @@ export default Rollup(
         ),
         commonjs(
           {
-            requireReturnsDefault: 'namespace'
+            requireReturnsDefault: 'namespace',
+            extensions: [
+              '.ts',
+              '.js'
+            ]
           }
         ),
         beep()

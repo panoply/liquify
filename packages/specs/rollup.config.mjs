@@ -36,7 +36,7 @@ export default Rollup(
     output: {
       format: 'cjs',
       dir: 'package',
-      sourcemap: env.is('dev', 'inline'),
+      sourcemap: env.is('prod', 'hidden'),
       banner: banner('PROPRIETARY'),
       preferConst: true,
       esModule: false
@@ -79,7 +79,11 @@ export default Rollup(
         ),
         commonjs(
           {
-            requireReturnsDefault: 'namespace'
+            requireReturnsDefault: 'namespace',
+            extensions: [
+              '.ts',
+              '.js'
+            ]
           }
         ),
         beep()

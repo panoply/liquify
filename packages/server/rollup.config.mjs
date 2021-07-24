@@ -33,6 +33,7 @@ export default Rollup(
         'vscode-css-languageservice',
         'vscode-json-languageservice',
         'vscode-languageserver',
+        'vscode-languageserver/node',
         'vscode-languageserver-textdocument',
         'vscode-languageserver-types',
         'vscode-uri'
@@ -74,11 +75,12 @@ export default Rollup(
               ]
             }
           ),
-          commonjs(
-            {
-              preferBuiltins: true
-            }
-          ),
+          commonjs({
+            extensions: [
+              '.ts',
+              '.js'
+            ]
+          }),
           beep()
         ]
       )(
