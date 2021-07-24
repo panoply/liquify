@@ -19,13 +19,9 @@ export default Rollup(
 
       index: 'src/index.ts',
 
-      /* HTML SPECIFICATIONS ------------------------ */
-
       '@html/attributes': 'src/html/data/html5/attributes.ts',
       '@html/tags': 'src/html/data/html5/tags.ts',
       '@html/values': 'src/html/data/html5/values.ts',
-
-      /* LIQUID VARIATION SPECIFICATIONS ------------ */
 
       '@liquid/standard': 'src/liquid/data/standard/export.ts',
       '@liquid/shopify': 'src/liquid/data/shopify/export.ts',
@@ -36,7 +32,7 @@ export default Rollup(
     output: {
       format: 'cjs',
       dir: 'package',
-      sourcemap: env.is('prod', 'hidden'),
+      sourcemap: env.is('dev', 'inline'),
       banner: banner('PROPRIETARY'),
       preferConst: true,
       esModule: false
@@ -47,14 +43,7 @@ export default Rollup(
     ],
     plugins: env.if('dev')(
       [
-        alias({
-          entries: {
-            html5: config.path('src/html'),
-            liquid: config.path('src/liquid'),
-            utils: config.path('src/utils/'),
-            shared: config.path('src/shared/')
-          }
-        }),
+
         del(
           {
             verbose: true,
@@ -79,7 +68,6 @@ export default Rollup(
         ),
         commonjs(
           {
-            requireReturnsDefault: 'namespace',
             extensions: [
               '.ts',
               '.js'
