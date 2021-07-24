@@ -99,6 +99,7 @@ q.setTag(token: string): boolean
 q.isError(err: QueryError): boolean
 q.isObjectType(type: number): boolean
 q.isOptional(from: number): boolean
+q.isAllowed(prop: string): boolean
 q.isParameter(token: string): boolean
 q.isProperty(token: string): boolean
 q.isRequired(): boolean
