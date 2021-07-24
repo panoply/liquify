@@ -19,48 +19,39 @@
     "import": "./package/server.es.js"
   },
   "bundledDependencies": [
-    "vscode-json-languageservice",
     "vscode-css-languageservice",
-    "vscode-languageserver"
+    "vscode-json-languageservice",
+    "vscode-languageserver",
+    "vscode-languageserver-textdocument",
+    "vscode-languageserver-types",
+    "vscode-uri"
   ],
   "eslintConfig": {
-    "extends": [
-      "@liquify/eslint-config-ts"
-    ]
+    "extends": ["@liquify/eslint-config-ts"]
   },
   "ava": {
-    "require": [
-      "esm",
-      "@babel/register"
-    ],
+    "require": ["esm", "@babel/register"],
     "babel": {
       "testOptions": {
         "babelrc": true,
         "configFile": false
       }
     },
-    "files": [
-      "test/parsing/parser.js"
-    ],
+    "files": ["test/parsing/parser.js"],
     "concurrency": 5
   },
   "dependencies": {
     "@liquify/beautify": "workspace:^0.1.0",
-    "@liquify/cryptographer": "workspace:^0.1.0",
     "@liquify/liquid-language-specs": "workspace:^0.1.2",
     "@liquify/liquid-parser": "workspace:^0.1.1-beta.1",
     "@liquify/schema-stores": "workspace:^0.1.5",
-    "js-beautify": "^1.14.0",
     "lodash": "^4.17.21",
-    "prettydiff": "^101.2.6",
     "strip-json-comments": "^3.1.1",
     "vscode-css-languageservice": "^5.1.4",
     "vscode-emmet-helper": "^2.6.4",
-    "vscode-html-languageservice": "^4.0.7",
     "vscode-json-languageservice": "^4.1.6",
     "vscode-languageserver": "^7.0.0",
     "vscode-languageserver-textdocument": "^1.0.1",
-    "vscode-languageserver-types": "^3.16.0",
     "vscode-uri": "^3.0.2"
   },
   "repository": {
@@ -71,14 +62,12 @@
     "@liquify/eslint-config-ts": "workspace:^1.0.1",
     "@liquify/rollup-plugin-obfuscator": "workspace:^0.2.0",
     "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
-    "@rollup/plugin-alias": "^3.1.4",
+    "@liquify/tsconfig": "workspace:^1.0.0",
     "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-commonjs": "^19.0.1",
     "@rollup/plugin-node-resolve": "^13.0.2",
     "@rollup/plugin-replace": "^3.0.0",
     "@rollup/plugin-typescript": "^8.2.3",
-    "@rollup/plugin-virtual": "^2.0.3",
-    "@types/js-beautify": "^1.13.2",
     "@types/lodash": "^4.14.171",
     "ava": "^3.15.0",
     "dotenv": "^10.0.0",
@@ -90,10 +79,10 @@
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-filesize": "^9.1.1",
     "rollup-plugin-typescript2": "^0.30.0",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "vscode-languageserver-types": "^3.16.0"
   },
   "peerDependencies": {
-    "rollup": "^2.51.2",
-    "typescript": "^4.3.2"
+    "rollup": "^2.51.2"
   }
 }
