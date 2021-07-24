@@ -1,7 +1,7 @@
-import { ICompletions } from 'liquid/types/data';
+import { ICompletions } from '../types/data';
 // import { IProperties } from 'liquid/types/objects';
-import { descriptive } from 'utils/generators';
-import { Tokens } from 'shared/types';
+import { descriptive } from './../../utils/generators';
+import { Tokens } from '../../shared/types';
 import { completions, variation } from './queries';
 import {
   CompletionItemKind,

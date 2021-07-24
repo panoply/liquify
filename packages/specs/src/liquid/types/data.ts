@@ -1,5 +1,5 @@
 import { CompletionItemKind, MarkupContent } from 'vscode-languageserver-types';
-import { Tokens } from 'shared/types';
+import { Tokens } from '../../shared/types';
 import { TagScopes } from './common';
 
 export interface ICompletion {

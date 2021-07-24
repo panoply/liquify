@@ -1,4 +1,4 @@
-import { Tags as ITags, Type } from 'liquid/types/tags';
+import { Tags as ITags, Type } from '../../types/tags';
 
 export let Tags: ITags;
 

@@ -1,10 +1,10 @@
 import * as Specification from '../data/export';
 import { IHTMLValue, IHTMLTagAttributes, IHTMLSpecs } from '../types/markup';
 import { IHTMLProvideAttrs, IHTMLCompletions } from '../types/completions';
-import { HTMLDataVSCode } from '..//types/custom';
+import { HTMLDataVSCode } from '../types/custom';
 import { schema } from './schema';
-import { Tokens } from 'shared/types';
-import { documentation, descriptive } from 'utils/generators';
+import { Tokens } from './../../shared/types';
+import { documentation, descriptive } from '../../utils/generators';
 import {
   CompletionItemKind,
   CompletionItem,

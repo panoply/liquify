@@ -1,4 +1,4 @@
-import { Tokens } from 'shared/types';
+import { Tokens } from '../../shared/types';
 import { IHTMLTagAttributes } from './markup';
 import { MarkupContent } from 'vscode-languageserver-types';
 

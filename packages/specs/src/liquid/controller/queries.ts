@@ -1,15 +1,15 @@
 import * as Specification from '../data/export';
-import { ICompletions } from 'liquid/types/data';
+import { ICompletions } from '../types/data';
 import { Variation, Values, IArgument, IEngine } from '../types/common';
 import { ITag } from '../types/tags';
 import { IFilter } from '../types/filters';
 import { IObject } from '../types/objects';
-import { Tokens } from 'shared/types';
+import { Tokens } from './../../shared/types';
 import { Type } from '../types/types';
 import { QueryErrors, Within } from '../types/enums';
-import { documentation } from 'utils/generators';
-import { isNumber } from 'utils/typeof';
-import { inPattern, inValues, inRange } from 'utils/finders';
+import { documentation } from '../../utils/generators';
+import { isNumber } from '../../utils/typeof';
+import { inPattern, inValues, inRange } from './../../utils/finders';
 import { CompletionItemKind } from 'vscode-languageserver-types';
 
 /* -------------------------------------------- */

@@ -22,7 +22,7 @@ export {
   nextParameter,
   prevArgument,
   reset
-} from 'liquid/controller/queries';
+} from '../liquid/controller/queries';
 
 /* HTML QUERIES ------------------------------- */
 
@@ -35,4 +35,4 @@ export {
   isAttributeValue,
   isValueRequired
 
-} from 'html/controller/queries';
+} from '../html/controller/queries';

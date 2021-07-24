@@ -4,17 +4,10 @@
   "include": ["src/index.ts", "src/**/*.ts"],
   "compilerOptions": {
     "rootDir": "src",
-    "typeRoots": ["src/liquid/types/*", "src/html/types/*"],
+    "typeRoots": ["src/liquid/types/*"],
     "declaration": true,
     "declarationDir": "package/@types",
     "outDir": "package",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["./src/*"],
-      "shared": ["./src/shared/*"],
-      "utils": ["./src/utils/*"],
-      "html": ["./src/html/*"],
-      "liquid": ["./src/liquid/*"]
-    }
+    "baseUrl": "."
   }
 }
