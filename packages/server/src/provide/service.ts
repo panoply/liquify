@@ -8,7 +8,7 @@ import * as Hover from './service/hovers';
 import * as Complete from './service/completions';
 import * as Editing from './service/editing';
 import {
-  Characters,
+  Characters as Char,
   Position,
   IAST,
   INode,
@@ -16,6 +16,7 @@ import {
   NodeKind,
   Tokens,
   provide as p,
+  query as q,
   state as $,
   liquid,
   html5
@@ -84,7 +85,7 @@ export class LiquidService {
   /**
    * `doValidation`
    */
-  async doValidation (document: IAST): Promise<PublishDiagnosticsParams> {
+  async doValidation (document: IAST): Promise<PublishDiagnosticsParams | null> {
 
     for (const region of document.regions) {
       if (!this.mode?.[region.languageId]) continue;
@@ -92,6 +93,8 @@ export class LiquidService {
       const errs = await mode.doValidation(document, region);
       document.errors.push(...errs);
     }
+
+    if (!document.diagnostics.length) return null;
 
     return {
       uri: document.uri,
@@ -119,14 +122,15 @@ export class LiquidService {
 
   }
 
-  async doLinkedEditing (
-    document: IAST,
-    position: Position
-  ): Promise<LinkedEditingRanges> {
+  async doLinkedEditing (document: IAST, position: Position): Promise<LinkedEditingRanges> {
 
     if (position.character > 0) {
+
       const node: INode = document.getNodeAt(position);
-      if (node.kind === NodeKind.HTML) {
+
+      if (!node) return null;
+
+      if (!node.singular && node.kind === NodeKind.HTML) {
         return Editing.getEditRanges(document, node);
       }
     }
@@ -141,6 +145,8 @@ export class LiquidService {
   async doHover (document: IAST, position: Position) {
 
     const node: INode = document.getNodeAt(position);
+
+    if (!node) return null;
 
     if (node.type === Type.embedded) {
       if (this.mode?.[node.languageId]) {
@@ -206,26 +212,10 @@ export class LiquidService {
   /**
    * `doComplete`
    */
-  async doComplete (
-    document: IAST,
-    position: Position,
-    {
-      triggerCharacter,
-      triggerKind
-    }: CompletionContext
-  ) {
-
-    if (document.node.type === Type.embedded) {
-      if (this.mode?.[document.node.languageId]) {
-        const mode = this.mode?.[document.node.languageId];
-        return mode.doComplete(document.node, position);
-      }
-    }
-
-    console.log('triggers');
-
-    // Prevent Completions when double
-    // if (triggerKind !== CompletionTriggerKind.TriggerCharacter) return null;
+  async doComplete (document: IAST, position: Position, {
+    triggerCharacter,
+    triggerKind
+  }: CompletionContext) {
 
     const trigger = Object.is(
       CompletionTriggerKind.TriggerCharacter,
@@ -235,72 +225,115 @@ export class LiquidService {
     const offset = document.offsetAt(position);
     const node: INode = document.node;
 
-    if (!document.withinToken(offset) || !document.withinEndToken(offset)) {
-      switch (trigger) {
-        case Characters.LAN:
-          return html5.completions.tags;
-        case Characters.PER:
-          this.cache = Complete.getTagsEdits(document, position, offset, trigger);
-          return liquid.completions.tags;
+    // Outside of nodes, provide tag completions
+    if (!node && trigger) {
+
+      // HTML tag completions following left angle bracket, eg: <^
+      if (Object.is(trigger, Char.LAN)) {
+        return html5.completions.tags;
+      }
+
+      // Liquid tag completions following a percentage character, eg %^
+      if (Object.is(trigger, Char.PER)) {
+        this.cache = Complete.getTagsEdits(document, position, offset, trigger);
+        return liquid.completions.tags;
+      }
+
+      return null;
+
+    }
+
+    // Embedded Regions
+    if (Object.is(node.type, Type.embedded)) {
+
+      // Ensure we have language service
+      if (this.mode?.[node.languageId]) {
+
+        // Pass completions to language service
+        return this.mode[node.languageId].doComplete(node, position);
+
       }
     }
 
-    if (Object.is(node.kind, NodeKind.HTML)) {
-      if (document.withinToken(offset)) {
-        switch (trigger) {
+    // We are within a HTML node
+    // Ensure we are within a start token, eg: <tag ^>
+    if (Object.is(node.kind, NodeKind.HTML) && document.withinToken(offset)) {
 
-          case Characters.DQO:
-          case Characters.SQO:
-            return p.HTMLValueComplete($.html5.value);
-
-          default:
-            return p.HTMLAttrsComplete(node.tag);
-        }
-      } else if (document.isCodeChar(Characters.RAN, offset)) {
-
-        return p.HTMLAttrsComplete(node.tag);
-
-      }
-    }
-
-    console.log(node);
-
-    // We are not within a Liquid token, lets load available completions
-    if (Object.is(node.kind, NodeKind.Liquid)) {
-
-      if (!document.withinToken(offset)) {
-        if (Object.is(trigger, Characters.PER)) {
-          return liquid.completions.tags;
-        }
+      // Provide value completions if quotation, eg: <tag attr="^
+      if (Object.is(trigger, Char.DQO) || Object.is(trigger, Char.SQO)) {
+        return p.HTMLValueComplete($.html5.value);
       }
 
-      if (document.withinToken(offset)) {
+      // Provide attribute completions, eg: <tag attr^
+      // Only when no trigger character was passed
+      if (!trigger) return p.HTMLAttrsComplete(node.tag);
 
-        if (Object.is(trigger, Characters.PIP)) {
-          return liquid.completions.filters;
-        }
-
-        if (document.isPrevCodeChar(Characters.PIP, offset)) {
-          return liquid.completions.filters;
-        }
-
-        if (Object.is(trigger, Characters.DOT)) {
-          if (node.scope) {
-            return p.LiquidPropertyComplete(node.scope[node.tag]);
-          } else {
-            return p.LiquidPropertyComplete(node.objects, offset);
-          }
-        }
-
-        return liquid.completions.objects;
-
+      // Provide Liquid completions within attributes, eg: <tag %^
+      if (Object.is(trigger, Char.PER)) {
+        this.cache = Complete.getTagsEdits(document, position, offset, trigger);
+        return liquid.completions.tags;
       }
 
     }
 
-    //    console.log(trigger, trigger === Characters.DOT);
+    // We are within a Liquid node
+    if (Object.is(node.kind, NodeKind.Liquid) && document.withinToken(offset)) {
 
-    // if (trigger === Characters.DOT) {
+      // Dot character trigger, provided object properties
+      if (Object.is(trigger, Char.DOT)) {
+
+        // The property provider requires we pass the nodes objects
+        // scope value and offset so is can determine what to provide
+        return p.LiquidPropertyComplete(node.objects, node.scope, offset);
+      }
+
+      // If trigger is a quotation, lets figure out what to provide
+      if (Object.is(trigger, Char.DQO) || Object.is(trigger, Char.SQO)) {
+
+        // First lets check it its an object brackets notation, eg: object["^
+        if (document.isPrevCodeChar(Char.LOB, offset)) {
+          // If detected, lets provide properties
+          return p.LiquidPropertyComplete(node.objects, node.scope, offset);
+        }
+      }
+
+      // Provide value completions if single quotation, eg: <tag attr='^
+      if (Object.is(trigger, Char.SQO)) {
+        return p.HTMLValueComplete($.html5.value);
+      }
+
+      // Pipe character trigger, provide filters, eg: {{ tag |^ }}
+      // We will persist the completion if space was provided, eg: {{ tag | ^ }}
+      if (Object.is(trigger, Char.PIP) || document.isPrevCodeChar(Char.PIP, offset)) {
+
+        // Lets ensure the node accepts filters before providing
+        // Almost all output tags accept filters, lets proceed
+        if (Object.is(node.type, Type.output)) {
+
+          // Some output tags not not accept filters, lets query
+          // the specification and ensure we can provide them, when
+          // no specification exists for this output, we can provide
+          if (!q.setObject(node.tag)) return liquid.completions.filters;
+
+          // We have a spec reference, lets check if filters are ok
+          return q.isAllowed('filters') ? liquid.completions.filters : null;
+        }
+
+        // Some tags accept filters, like the assign tag, lets validate
+        // Lets first ensure we know about the tag
+        if (q.setTag(node.tag)) {
+          // Proceed accordingly, else cancel the completion
+          return q.isAllowed('filters') ? liquid.completions.filters : null;
+        }
+      }
+
+      return liquid.completions.objects;
+
+    }
+
+    //    console.log(trigger, trigger === Characters as Char.DOT);
+
+    // if (trigger === Characters as Char.DOT) {
     // return Completion.getObjectCompletion(document, offset);
     // }
 
