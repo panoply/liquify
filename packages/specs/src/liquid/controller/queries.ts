@@ -520,6 +520,21 @@ export function isProperty (token: string): boolean {
 }
 
 /**
+ * Is Allowed
+ *
+ * Checks the current cursor allows a value or some sort,
+ * like filters or trim dashes. By default, when a value is
+ * undefined on the specs, it is typically assumed to be `true`
+ * unless we a dealing with a `required` value, which this
+ * function does not validate for.
+ */
+export function isAllowed (prop: 'trims' | 'filters'): boolean {
+
+  return tag ? !!tag?.[prop] : object ? !!object?.[prop] : false;
+
+}
+
+/**
  * Is Error
  *
  * Conditional checks the local error state reference
