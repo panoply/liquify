@@ -1,7 +1,6 @@
 import { defineConfig as Rollup } from 'rollup';
 import { env, config } from '@liquify/rollup-plugin-utils';
 import ts from 'rollup-plugin-typescript2';
-import alias from '@rollup/plugin-alias';
 import typescript from 'typescript';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
@@ -19,13 +18,12 @@ export default Rollup(
       output: {
         format: 'cjs',
         file: config.output.cjs,
-        sourcemap: false,
+        sourcemap: env.is('dev', 'hidden'),
         preferConst: true,
         esModule: false,
         chunkFileNames: '[name].js'
       },
       external: [
-      // 'typescript',
         '@liquify/liquid-parser',
         '@liquify/liquid-language-specs',
         '@liquify/beautify',
@@ -36,9 +34,8 @@ export default Rollup(
         'vscode-json-languageservice',
         'vscode-languageserver',
         'vscode-languageserver-textdocument',
-        'vscode-uri',
-        'fs',
-        'path'
+        'vscode-languageserver-types',
+        'vscode-uri'
       ],
       plugins: env.if('dev')(
         [
@@ -77,7 +74,11 @@ export default Rollup(
               ]
             }
           ),
-          commonjs(),
+          commonjs(
+            {
+              preferBuiltins: true
+            }
+          ),
           beep()
         ]
       )(
@@ -99,6 +100,5 @@ export default Rollup(
         ]
       )
     }
-
   ]
 );

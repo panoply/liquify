@@ -17,7 +17,7 @@ export default Rollup(
     output: {
       format: 'cjs',
       file: config.output.cjs,
-      sourcemap: env.is('dev', 'inline'),
+      sourcemap: env.is('dev', 'hidden'),
       preferConst: true,
       esModule: false,
       chunkFileNames: '[name].js'
