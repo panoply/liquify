@@ -1011,79 +1011,152 @@ export default (function parse_init() {
           a = a + 1;
         } while (a < config.end);
         output = build.join("");
+
         if (regIgnore.test(output) === true) {
+
           let termination = "\n";
           a = a + 1;
+
           do {
+
             build.push(config.chars[a]);
             a = a + 1;
-          } while (a < config.end && (config.chars[a - 1] !== "d" || (config.chars[a - 1] === "d" && build.slice(build.length - 16).join("") !== "parse-ignore-end")));
+
+          } while (
+            a < config.end && (
+              config.chars[a - 1] !== "d" || (
+                config.chars[a - 1] === "d" &&
+                build.slice(build.length - 16).join("") !== "parse-ignore-end"
+              )
+            )
+          );
+
           b = a;
           terml = config.opening.length - 1;
           term = config.opening.charAt(terml);
+
           do {
-            if (config.opening === "/*" && config.chars[b - 1] === "/" && (config.chars[b] === "*" || config.chars[b] === "/")) {
+
+            if (
+              config.opening === "/*" &&
+              config.chars[b - 1] === "/" && (
+                config.chars[b] === "*" ||
+                config.chars[b] === "/"
+              )
+            ) {
               break; // for script
             }
-            if (config.opening !== "/*" && config.chars[b] === term && config.chars.slice(b - terml, b + 1).join("") === config.opening) {
+
+            if (
+              config.opening !== "/*" &&
+              config.chars[b] === term &&
+              config.chars.slice(b - terml, b + 1).join("") === config.opening
+            ) {
               break; // for markup
             }
+
             b = b - 1;
+
           } while (b > config.start);
+
+
           if (config.opening === "/*" && config.chars[b] === "*") {
             termination = "\u002a/";
           } else if (config.opening !== "/*") {
             termination = config.terminator;
           }
+
           terml = termination.length - 1;
           term = termination.charAt(terml);
+
           if (termination !== "\n" || config.chars[a] !== "\n") {
+
             do {
+
               build.push(config.chars[a]);
-              if (termination === "\n" && config.chars[a + 1] === "\n") {
+
+              if (termination === "\n" && config.chars[a + 1] === "\n")  break;
+              if (
+                config.chars[a] === term &&
+                config.chars.slice(a - terml, a + 1).join("") === termination
+              ) {
                 break;
               }
-              if (config.chars[a] === term && config.chars.slice(a - terml, a + 1).join("") === termination) {
-                break;
-              }
+
               a = a + 1;
+
             } while (a < config.end);
+
           }
-          if (config.chars[a] === "\n") {
-            a = a - 1;
-          }
+
+          if (config.chars[a] === "\n") a = a - 1;
+
           output = build.join("").replace(/\s+$/, "");
+
+
+          return [ output, a ];
+
+        }
+
+
+        if (
+          a === config.end ||  wrap < 1 || (
+            output.length <= wrap &&
+            output.indexOf("\n") < 0
+          ) ||  sparser.options.preserve_comment === true || (
+            config.opening === "/*" &&
+            output.indexOf("\n") > 0 &&
+            output.replace("\n", "").indexOf("\n") > 0 && (
+              /\n(?!(\s*\*))/).test(output) === false
+            )
+          ) {
+
           return [output, a];
         }
-        if (a === config.end || wrap < 1 || (output.length <= wrap && output.indexOf("\n") < 0) || sparser.options.preserve_comment === true || (config.opening === "/*" && output.indexOf("\n") > 0 && output.replace("\n", "").indexOf("\n") > 0 && (/\n(?!(\s*\*))/).test(output) === false)) {
-          return [output, a];
-        }
+
         b = config.start;
-        if (b > 0 && config.chars[b - 1] !== "\n" && (/\s/).test(config.chars[b - 1]) === true) {
+
+        if (
+          b > 0 &&
+          config.chars[b - 1] !== "\n" &&
+          (/\s/).test(config.chars[b - 1]) === true
+        ) {
+
           do {
             b = b - 1;
-          } while (b > 0 && config.chars[b - 1] !== "\n" && (/\s/).test(config.chars[b - 1]) === true);
+          } while (
+            b > 0 &&
+            config.chars[b - 1] !== "\n" &&
+            (/\s/).test(config.chars[b - 1]
+            ) === true
+          );
         }
+
         space = config.chars.slice(b, config.start).join("");
         spaceLine = new RegExp(`\n${space}`, "g");
         lines = output.replace(/\r\n/g, "\n").replace(spaceLine, "\n").split("\n");
         len = lines.length;
         lines[0] = lines[0].replace(regStart, "");
         lines[len - 1] = lines[len - 1].replace(regEnd, "");
-        if (len < 2) {
-          lines = lines[0].split(" ");
-        }
+
+        if (len < 2)   lines = lines[0].split(" ");
+
+
         if (lines[0] === "") {
           lines[0] = config.opening;
         } else {
           lines.splice(0, 0, config.opening);
         }
+
         len = lines.length;
         b = 0;
+
         do {
-          bline = (b < len - 1) ?
-            lines[b + 1].replace(/^\s+/, "") :
-            "";
+
+          bline = (b < len - 1)
+            ?  lines[b + 1].replace(/^\s+/, "")
+            :  "";
+
           if ((/^\s+$/).test(lines[b]) === true || lines[b] === "") {
             emptyLines();
           } else if (lines[b].slice(0, 4) === "    ") {
@@ -1159,29 +1232,75 @@ export default (function parse_init() {
                   lines[b + 1] = `${lines[b].slice(c + 1)} ${lines[b + 1]}`;
                 }
               }
-              if (emptyLine === false && bulletLine === false && numberLine === false && bigLine === false) {
+
+              if (
+                emptyLine === false &&
+                bulletLine === false &&
+                numberLine === false &&
+                bigLine === false
+              ) {
                 lines[b] = lines[b].slice(0, c);
               }
-            } else if (lines[b + 1] !== undefined && ((lines[b].length + bline.indexOf(" ") > wrap && bline.indexOf(" ") > 0) || (lines[b].length + bline.length > wrap && bline.indexOf(" ") < 0))) {
+
+            } else if (
+              lines[b + 1] !== undefined && (
+                (
+                  lines[b].length + bline.indexOf(" ") > wrap &&
+                  bline.indexOf(" ") > 0
+                ) || (
+                  lines[b].length + bline.length > wrap &&
+                  bline.indexOf(" ") < 0
+                )
+              )
+            ) {
+
               second.push(lines[b]);
               b = b + 1;
-            } else if (lines[b + 1] !== undefined && (/^\s+$/).test(lines[b + 1]) === false && lines[b + 1] !== "" && lines[b + 1].slice(0, 4) !== "    " && (/^\s*(\*|-|(\d+\.))\s/).test(lines[b + 1]) === false) {
+
+            } else if (
+              lines[b + 1] !== undefined &&
+              (/^\s+$/).test(lines[b + 1]) === false &&
+              lines[b + 1] !== "" &&
+              lines[b + 1].slice(0, 4) !== "    " &&
+              (/^\s*(\*|-|(\d+\.))\s/).test(lines[b + 1]) === false
+            ) {
               lines[b + 1] = `${lines[b]} ${lines[b + 1]}`;
               emptyLine = true;
             }
+
             if (bigLine === false && bulletLine === false && numberLine === false) {
+
               if (emptyLine === true) {
+
                 emptyLine = false;
+
               } else if ((/^\s*(\*|-|(\d+\.))\s*$/).test(lines[b]) === false) {
-                if (b < len - 1 && lines[b + 1] !== "" && (/^\s+$/).test(lines[b]) === false && lines[b + 1].slice(0, 4) !== "    " && (/^\s*(\*|-|(\d+\.))\s/).test(lines[b + 1]) === false) {
+
+                if (
+                  b < len - 1 &&
+                  lines[b + 1] !== "" &&
+                  (/^\s+$/).test(lines[b]) === false &&
+                  lines[b + 1].slice(0, 4) !== "    " &&
+                  (/^\s*(\*|-|(\d+\.))\s/).test(lines[b + 1]) === false
+
+                ) {
+
                   lines[b] = `${lines[b]} ${lines[b + 1]}`;
                   lines.splice(b + 1, 1);
                   len = len - 1;
                   b = b - 1;
+
                 } else {
-                  if (config.opening === "/*" && lines[b].indexOf("/*") !== 0) {
+
+                  if (
+                    config.opening === "/*" &&
+                    lines[b].indexOf("/*") !== 0
+                  ) {
+
                     second.push(`   ${lines[b].replace(/^\s+/, "").replace(/\s+$/, "").replace(/\s+/g, " ")}`);
+
                   } else {
+
                     second.push(`${lines[b].replace(/^\s+/, "").replace(/\s+$/, "").replace(/\s+/g, " ")}`);
                   }
                 }
@@ -1191,49 +1310,76 @@ export default (function parse_init() {
             bulletLine = false;
             numberLine = false;
           }
+
           b = b + 1;
+
         } while (b < len);
+
         if (second.length > 0) {
+
           if (second[second.length - 1].length > wrap - (config.terminator.length + 1)) {
             second.push(config.terminator);
           } else {
             second[second.length - 1] = `${second[second.length - 1]} ${config.terminator}`;
           }
+
           output = second.join(lf);
+
         } else {
           lines[lines.length - 1] = lines[lines.length - 1] + config.terminator;
           output = lines.join(lf);
         }
+
         return [output, a];
+
       },
       // parsing line comments and simultaneously applying word wrap
       wrapCommentLine: function parse_wrapCommentLine(config) {
+
         let a = config.start,
           b = 0,
           output = "",
           build = [];
+
         const wrap = sparser.options.wrap,
           recurse = function parse_wrapCommentLine_recurse() {
+
             let line = "";
+
             do {
+
               b = b + 1;
-              if (config.chars[b + 1] === "\n") {
-                return;
-              }
+
+              if (config.chars[b + 1] === "\n")   return;
+
             } while (b < config.end && (/\s/).test(config.chars[b]) === true);
+
             if (config.chars[b] + config.chars[b + 1] === "//") {
+
               build = [];
+
               do {
                 build.push(config.chars[b]);
                 b = b + 1;
-              } while (b < config.end && config.chars[b] !== "\n");
+              } while (
+                b < config.end &&
+                config.chars[b] !== "\n"
+              );
+
               line = build.join("");
-              if ((/^\/\/ (\*|-|(\d+\.))/).test(line) === false && line.slice(0, 6) !== "//    " && (/^\/\/\s*$/).test(line) === false) {
+
+              if (
+                (/^\/\/ (\*|-|(\d+\.))/).test(line) === false &&
+                line.slice(0, 6) !== "//    " &&
+                (/^\/\/\s*$/).test(line) === false
+              ) {
                 output = `${output} ${line.replace(/(^\/\/\s*)/, "").replace(/\s+$/, "")}`;
                 a = b - 1;
                 parse_wrapCommentLine_recurse();
               }
+
             }
+
           },
           wordWrap = function parse_wrapCommentLine_wordWrap() {
             let c = 0,
@@ -1301,44 +1447,88 @@ export default (function parse_init() {
           a = a - 1;
         }
         output = build.join("").replace(/\s+$/, "");
+
         if ((/^(\/\/\s*parse-ignore\u002dstart)/).test(output) === true) {
           let termination = "\n";
           a = a + 1;
           do {
             build.push(config.chars[a]);
             a = a + 1;
-          } while (a < config.end && (config.chars[a - 1] !== "d" || (config.chars[a - 1] === "d" && build.slice(build.length - 16).join("") !== "parse-ignore-end")));
+          } while (
+            a < config.end && (
+              config.chars[a - 1] !== "d" || (
+                config.chars[a - 1] === "d" &&
+                build.slice(build.length - 16).join("") !== "parse-ignore-end"
+              )
+            )
+          );
+
           b = a;
-          do {} while (b > config.start && config.chars[b - 1] === "/" && (config.chars[b] === "*" || config.chars[b] === "/"));
+
+          do {} while (
+            b > config.start &&
+            config.chars[b - 1] === "/" && (
+              config.chars[b] === "*" ||
+              config.chars[b] === "/"
+            )
+          );
+
+
           if (config.chars[b] === "*") {
             termination = "\u002a/";
           }
+
           if (termination !== "\n" || config.chars[a] !== "\n") {
+
             do {
               build.push(config.chars[a]);
               if (termination === "\n" && config.chars[a + 1] === "\n") {
                 break;
               }
               a = a + 1;
-            } while (a < config.end && (termination === "\n" || (termination === "\u002a/" && (config.chars[a - 1] !== "*" || config.chars[a] !== "/"))));
+            } while (
+              a < config.end && (
+                termination === "\n" || (
+                  termination === "\u002a/" && (
+                    config.chars[a - 1] !== "*" ||
+                    config.chars[a] !== "/"
+                  )
+                )
+              )
+            );
           }
-          if (config.chars[a] === "\n") {
-            a = a - 1;
-          }
+
+          if (config.chars[a] === "\n") a = a - 1;
+
           output = build.join("").replace(/\s+$/, "");
+
           return [output, a];
         }
-        if (output === "//" || output.slice(0, 6) === "//    " || sparser.options.preserve_comment === true) {
+        if (
+          output === "//" ||
+          output.slice(0, 6) === "//    " ||
+          sparser.options.preserve_comment === true
+        ) {
           return [output, a];
         }
+
         output = output.replace(/(\/\/\s*)/, "// ");
-        if (wrap < 1 || (a === config.end - 1 && parse.data.begin[parse.count] < 1)) {
+
+        if (
+          wrap < 1 || (
+            a === config.end - 1 &&
+            parse.data.begin[parse.count] < 1
+          )
+        ) {
           return [output, a];
         }
+
         b = a + 1;
         recurse();
         wordWrap();
+
         return [output, a];
+
       }
     },
     sparser = {
@@ -1940,203 +2130,6 @@ export default (function parse_init() {
       } else {
         if (prettydiff[modeValue][options.lexer] === undefined && ((options.mode !== "diff" && options.language === "text") || options.language !== "text")) {
           result = `Error: Library prettydiff.${modeValue}.${options.lexer} does not exist.`;
-        } else if (options.mode === "diff") {
-          let diffoutput;
-          if (options.diff_format === "json") {
-            options.complete_document = false;
-          }
-          if (options.language === "text") {
-            diffoutput = prettydiff.api.diffview(options);
-            result = diffoutput[0];
-          } else {
-            const ind = options.indent;
-            if (options.diff_rendered_html === true) {
-              const lexers = {
-                  del: 0,
-                  insert: 0,
-                  replace: 0
-                },
-                typeIgnore = [
-                  "attribute",
-                  "cdata",
-                  "comment",
-                  "conditional",
-                  "ignore",
-                  "jsx_attribute_end",
-                  "jsx_attribute_start",
-                  "script",
-                  "sgml",
-                  "style",
-                  "xml"
-                ],
-                tab = function mode_diffhtmlTab(indentation) {
-                  const tabout = (options.crlf === true) ?
-                    ["\r\n"] :
-                    ["\n"];
-                  let a = 0,
-                    b = options.indent_size * indentation;
-                  if (b > 1) {
-                    do {
-                      tabout.push(options.indent_char);
-                      a = a + 1;
-                    } while (a < b);
-                  } else {
-                    tabout.push(options.indent_char);
-                    tabout.push(options.indent_char);
-                  }
-                  return tabout.join("");
-                },
-                css = [
-                  `${tab(2)}<style type="text/css">`,
-                  "#prettydiff_summary{background:#eef8ff;border:2px solid #069}",
-                  ".prettydiff_rendered{border-style:solid;border-width:2px;display:inline-block}",
-                  ".prettydiff_delete{background:#ffd8d8;border-color:#c44}",
-                  ".prettydiff_insert{background:#d8ffd8;border-color:#090}",
-                  ".prettydiff_replace{background:#fec;border-color:#a86}"
-                ],
-                insert = function mode_insert() {
-                  const inject = [`<span class="prettydiff_rendered prettydiff_insert">`];
-                  if (json[a + 1][0] === "+") {
-                    do {
-                      inject.push(json[a][1]);
-                      count[1] = count[1] + 1;
-                      a = a + 1;
-                    } while (json[a + 1][0] === "+");
-                  }
-                  inject.push(json[a][1]);
-                  inject.push("</span>");
-                  options.parsed.token[count[0]] = `${inject.join("")} ${options.parsed.token[count[0]]}`;
-                  lexers.insert = lexers.insert + 1;
-                },
-                del = function mode_del() {
-                  const symb = json[a][0],
-                    change = (symb === "-") ?
-                    "delete" :
-                    "replace";
-                  options.parsed.token[count[0]] = `<span class="prettydiff_rendered prettydiff_${change}">${options.parsed.token[count[0]]}`;
-                  if (json[a + 1][0] === symb) {
-                    do {
-                      count[0] = count[0] + 1;
-                      if (change === "replace") {
-                        count[1] = count[1] + 1;
-                      }
-                      a = a + 1;
-                    } while (json[a + 1][0] === symb);
-                  }
-                  options.parsed.token[count[0]] = `${options.parsed.token[count[0]]}</span>`;
-                  if (change === "delete") {
-                    lexers.del = lexers.del + 1;
-                  } else {
-                    lexers.replace = lexers.replace + 1;
-                  }
-                },
-                summary = function mode_summary() {
-                  const keys = Object.keys(lexers),
-                    len = keys.length,
-                    output = [],
-                    lex = [];
-                  let a = 0,
-                    lextest = false;
-                  output.push(`<div id="prettydiff_summary"><h1>Pretty Diff - Summary</h1>`);
-                  output.push("<p>This is the count of identified differences starting with visual differences colored in the document first.</p><ul>");
-                  output.push(`<li>Deletions - <strong>${lexers.del}</strong></li>`);
-                  output.push(`<li>Insertions - <strong>${lexers.insert}</strong></li>`);
-                  output.push(`<li>Replacements - <strong>${lexers.replace}</strong></li>`);
-                  output.push("</ul>");
-                  if (len > 3) {
-                    lexers.del = 0;
-                    lexers.insert = 0;
-                    lexers.replace = 0;
-                    lex.push("<hr/><p>This list of differences is not visible in the rendered HTML.</p><ul>");
-                    do {
-                      if (lexers[keys[a]] > 0) {
-                        lextest = true;
-                        lex.push(`<li>${keys[a]} - ${lexers[keys[a]]}</li>`);
-                      }
-                      a = a + 1;
-                    } while (a < len);
-                    lex.push("</ul>");
-                  }
-                  if (lextest === true) {
-                    output.push(lex.join(""));
-                  }
-                  output.push("</div>");
-                  options.parsed.token[body] = `${options.parsed.token[body]} ${output.join("")}`;
-                };
-              let diff_parsed, json, a = 0,
-                count = [0, 0],
-                len = 0,
-                body = 0,
-                head = false;
-              options.diff_format = "json";
-              options.parsed = prettydiff.sparser.parser();
-              options.source = options.parsed.token;
-              prettydiff.start = 0;
-              prettydiff.end = 0;
-              options.indent_level = ind;
-              prettydiff.sparser.options.source = options.diff;
-              diff_parsed = prettydiff.sparser.parser();
-              options.diff = diff_parsed.token;
-              diffoutput = prettydiff.api.diffview(options);
-              json = JSON.parse(diffoutput[0]).diff;
-              len = json.length;
-              do {
-                if (head === false && options.parsed.types[count[0]] === "start" && options.parsed.lexer[count[0]] === "markup" && json[a][1].toLowerCase().indexOf("<head") === 0) {
-                  options.parsed.token[count[0]] = `${options.parsed.token[count[0]] + css.join(tab(3)) + tab(2)}</style>${tab(0)}`;
-                  head = true;
-                } else if (body < 1 && options.parsed.types[count[0]] === "start" && options.parsed.lexer[count[0]] === "markup" && options.parsed.token[count[0]].toLowerCase().indexOf("<body") === 0) {
-                  body = count[0];
-                }
-                if (json[a][0] === "=") {
-                  count[0] = count[0] + 1;
-                  count[1] = count[1] + 1;
-                } else if (body > 1 &&
-                  options.parsed.lexer[count[0]] === "markup" &&
-                  options.parsed.token[count[0]].indexOf(`<span class="prettydiff_`) !== 0 &&
-                  ((json[a][0] === "+" && typeIgnore.indexOf(diff_parsed.types[count[1]]) < 0) || (json[a][0] !== "+" && typeIgnore.indexOf(options.parsed.types[count[0]]) < 0))) {
-                  if (json[a][0] === "+") {
-                    insert();
-                  } else {
-                    del();
-                  }
-                } else {
-                  if (json[a][0] === "-") {
-                    count[0] = count[0] + 1;
-                  } else if (json[a][0] === "+") {
-                    count[1] = count[1] + 1;
-                  } else {
-                    count[0] = count[0] + 1;
-                    count[1] = count[1] + 1;
-                  }
-                  if (lexers[options.parsed.lexer[count[0]]] === undefined) {
-                    lexers[options.parsed.lexer[count[0]]] = 1;
-                  } else {
-                    lexers[options.parsed.lexer[count[0]]] = lexers[options.parsed.lexer[count[0]]] + 1;
-                  }
-                }
-                a = a + 1;
-              } while (a < len);
-              summary();
-              result = prettydiff.beautify.markup(options);
-            } else {
-              options.parsed = prettydiff.sparser.parser();
-              options.source = prettydiff.beautify[options.lexer](options);
-              prettydiff.start = 0;
-              prettydiff.end = 0;
-              options.indent_level = ind;
-              // diff text formatting
-              prettydiff.sparser.options.source = options.diff;
-              options.parsed = prettydiff.sparser.parser();
-              options.diff = prettydiff.beautify[options.lexer](options);
-              // comparison
-              diffoutput = prettydiff.api.diffview(options);
-              result = diffoutput[0];
-            }
-          }
-          if (diffmeta !== undefined) {
-            diffmeta.differences = diffoutput[1];
-            diffmeta.lines = diffoutput[2];
-          }
         } else {
           options.parsed = prettydiff.sparser.parser();
           result = prettydiff[modeValue][options.lexer](options);
@@ -3447,14 +3440,33 @@ export default (function parse_init() {
                         name = quote.slice(3);
                       }
                     }
+
+                    // HOTFIX
+                    // Prevent whitespace removals of output tag values
                     if (open === "{{") {
                       quote = quote
-                        .replace(/^(\{\{\s+)/, "{{")
-                        .replace(/(\s+\}\})$/, "}}");
+                        .replace(/^({{\s+)/, "{{ ")
+                        .replace(/(\s+}})$/, " }}");
                     }
-                    if (ltype === "item" && data.types[parse.count - 1] === "colon" && (data.types[parse.count - 2] === "property" || data.types[parse.count - 2] === "variable")) {
+
+                    // HOTFIX
+                    // Allow trim style output delimeters
+                    if (open === "{{-") {
+                      quote = quote
+                        .replace(/^({{-\s+)/, "{{")
+                        .replace(/(\s+-}})$/, "}}");
+                    }
+                    if (
+                      ltype === "item" &&
+                      data.types[parse.count - 1] === "colon" && (
+                        data.types[parse.count - 2] === "property" ||
+                        data.types[parse.count - 2] === "variable"
+                      )
+                    ) {
+
                       ltype = "value";
                       data.types[parse.count] = "value";
+
                       if (Number.isNaN(Number(data.token[parse.count])) === true && data.token[parse.count].charAt(data.token[parse.count].length - 1) !== ")") {
                         data.token[parse.count] = data.token[parse.count] + quote;
                       } else {
@@ -3462,8 +3474,11 @@ export default (function parse_init() {
                       }
                       return;
                     }
+
                     ltoke = quote;
+
                     if (open === "{%") {
+
                       const templateNames = [
                         "autoescape",
                         "block",
@@ -3484,7 +3499,9 @@ export default (function parse_init() {
                         "unless",
                         "verbatim"
                       ];
+
                       let namesLen = templateNames.length - 1;
+
                       name = name.slice(0, name.indexOf(" "));
                       if (name.indexOf("(") > 0) {
                         name = name.slice(0, name.indexOf("("));
@@ -3527,22 +3544,7 @@ export default (function parse_init() {
                         return;
                       }
                     }
-                    if ((/\{\s*\?>$/).test(ltoke) === true) {
-                      if ((/^<\?(=|(php))\s*\}\s*else/).test(ltoke) === true) {
-                        exit("template_else");
-                        return;
-                      }
-                      exit("template_start");
-                      return;
-                    }
-                    if ((/^<\?(=|(php))\s*\}/).test(ltoke) === true) {
-                      if ((/^<\?(=|(php))\s*\}\s*else/).test(ltoke) === true) {
-                        exit("template_else");
-                        return;
-                      }
-                      exit("template_end");
-                      return;
-                    }
+
                     exit("template");
                     return;
                   }
@@ -3561,6 +3563,7 @@ export default (function parse_init() {
             } while (a < len);
           }
         },
+
         //finds comments including those JS looking '//' comments
         comment = function lexer_style_comment(line) {
           let comm = (line === true) ?
@@ -6563,7 +6566,7 @@ export default (function parse_init() {
           name = (space < 0) ?
             name.slice(1, el.length - 1) :
             name.slice(1, space);
-          if (html === "html" || options.language === "coldfusion") {
+          if (html === "html") {
             name = name.toLowerCase();
           }
           name = name.replace(/(\}\})$/, "");
@@ -6680,186 +6683,6 @@ export default (function parse_init() {
               token: "",
               types: ""
             },
-            //cftags is a list of supported coldfusion tags
-            // * required - means must have a separate matching end tag
-            // * optional - means the tag could have a separate end tag, but is probably a
-            // singleton
-            // * prohibited - means there is no corresponding end tag
-            cftags = {
-              "cfNTauthenticate": "optional",
-              "cfabort": "prohibited",
-              "cfajaximport": "optional",
-              "cfajaxproxy": "optional",
-              "cfapplet": "prohibited",
-              "cfapplication": "prohibited",
-              "cfargument": "prohibited",
-              "cfassociate": "prohibited",
-              "cfauthenticate": "prohibited",
-              "cfbreak": "prohibited",
-              "cfcache": "optional",
-              "cfcalendar": "optional",
-              "cfcase": "required",
-              "cfcatch": "required",
-              "cfchart": "optional",
-              "cfchartdata": "prohibited",
-              "cfchartseries": "optional",
-              "cfclient": "required",
-              "cfclientsettings": "optional",
-              "cfcol": "prohibited",
-              "cfcollection": "prohibited",
-              "cfcomponent": "required",
-              "cfcontent": "optional",
-              "cfcontinue": "prohibited",
-              "cfcookie": "prohibited",
-              "cfdbinfo": "prohibited",
-              "cfdefaultcase": "required",
-              "cfdirectory": "prohibited",
-              "cfdiv": "optional",
-              "cfdocument": "optional",
-              "cfdocumentitem": "optional",
-              "cfdocumentsection": "optional",
-              "cfdump": "optional",
-              "cfelse": "prohibited",
-              "cfelseif": "prohibited",
-              "cferror": "prohibited",
-              "cfexchangecalendar": "optional",
-              "cfexchangeconnection": "optional",
-              "cfexchangecontact": "optional",
-              "cfexchangeconversation": "optional",
-              "cfexchangefilter": "optional",
-              "cfexchangefolder": "optional",
-              "cfexchangemail": "optional",
-              "cfexchangetask": "optional",
-              "cfexecute": "required",
-              "cfexit": "prohibited",
-              "cffeed": "prohibited",
-              "cffile": "optional",
-              "cffileupload": "optional",
-              "cffinally": "required",
-              "cfflush": "prohibited",
-              "cfform": "required",
-              "cfformgroup": "required",
-              "cfformitem": "optional",
-              "cfforward": "prohibited",
-              "cfftp": "prohibited",
-              "cffunction": "required",
-              "cfgraph": "required",
-              "cfgraphdata": "prohibited",
-              "cfgrid": "required",
-              "cfgridcolumn": "optional",
-              "cfgridrow": "optional",
-              "cfgridupdate": "optional",
-              "cfheader": "prohibited",
-              "cfhtmlbody": "optional",
-              "cfhtmlhead": "optional",
-              "cfhtmltopdf": "optional",
-              "cfhtmltopdfitem": "optional",
-              "cfhttp": "optional",
-              "cfhttpparam": "prohibited",
-              "cfif": "required",
-              "cfimage": "prohibited",
-              "cfimap": "prohibited",
-              "cfimapfilter": "optional",
-              "cfimport": "prohibited",
-              "cfinclude": "prohibited",
-              "cfindex": "prohibited",
-              "cfinput": "prohibited",
-              "cfinsert": "prohibited",
-              "cfinterface": "required",
-              "cfinvoke": "optional",
-              "cfinvokeargument": "prohibited",
-              "cflayout": "optional",
-              "cflayoutarea": "optional",
-              "cfldap": "prohibited",
-              "cflocation": "prohibited",
-              "cflock": "required",
-              "cflog": "prohibited",
-              "cflogic": "required",
-              "cfloginuser": "prohibited",
-              "cflogout": "prohibited",
-              "cfloop": "required",
-              "cfmail": "required",
-              "cfmailparam": "prohibited",
-              "cfmailpart": "required",
-              "cfmap": "optional",
-              "cfmapitem": "optional",
-              "cfmediaplayer": "optional",
-              "cfmenu": "required",
-              "cfmenuitem": "optional",
-              "cfmessagebox": "optional",
-              "cfmodule": "optional",
-              "cfoauth": "optional",
-              "cfobject": "prohibited",
-              "cfobjectcache": "prohibited",
-              "cfoutput": "required",
-              "cfpageencoding": "optional",
-              "cfparam": "prohibited",
-              "cfpdf": "optional",
-              "cfpdfform": "optional",
-              "cfpdfformparam": "optional",
-              "cfpdfparam": "prohibited",
-              "cfpdfsubform": "required",
-              "cfpod": "optional",
-              "cfpop": "prohibited",
-              "cfpresentation": "required",
-              "cfpresentationslide": "optional",
-              "cfpresenter": "optional",
-              "cfprint": "optional",
-              "cfprocessingdirective": "optional",
-              "cfprocparam": "prohibited",
-              "cfprocresult": "prohibited",
-              "cfprogressbar": "optional",
-              "cfproperty": "prohibited",
-              "cfquery": "required",
-              "cfqueryparam": "prohibited",
-              "cfregistry": "prohibited",
-              "cfreport": "optional",
-              "cfreportparam": "optional",
-              "cfrethrow": "prohibited",
-              "cfretry": "prohibited",
-              "cfreturn": "prohibited",
-              "cfsavecontent": "required",
-              "cfschedule": "prohibited",
-              "cfscript": "required",
-              "cfsearch": "prohibited",
-              "cfselect": "required",
-              "cfservlet": "prohibited",
-              "cfservletparam": "prohibited",
-              "cfset": "prohibited",
-              "cfsetting": "optional",
-              "cfsharepoint": "optional",
-              "cfsilent": "required",
-              "cfsleep": "prohibited",
-              "cfslider": "prohibited",
-              "cfspreadsheet": "optional",
-              "cfsprydataset": "optional",
-              "cfstatic": "required",
-              "cfstopwatch": "required",
-              "cfstoredproc": "optional",
-              "cfswitch": "required",
-              "cftable": "required",
-              "cftextarea": "optional",
-              "cfthread": "optional",
-              "cfthrow": "prohibited",
-              "cftimer": "required",
-              "cftooltip": "required",
-              "cftrace": "optional",
-              "cftransaction": "required",
-              "cftree": "required",
-              "cftreeitem": "optional",
-              "cftry": "required",
-              "cfupdate": "prohibited",
-              "cfvideo": "prohibited",
-              "cfvideoplayer": "optional",
-              "cfwddx": "prohibited",
-              "cfwebsocket": "optional",
-              "cfwhile": "required",
-              "cfwindow": "optional",
-              "cfx_": "prohibited",
-              "cfxml": "required",
-              "cfzip": "optional",
-              "cfzipparam": "prohibited"
-            },
             //attribute name
             arname = function lexer_markup_tag_name(x) {
               const eq = x.indexOf("=");
@@ -6952,8 +6775,6 @@ export default (function parse_init() {
                   ) {
                     record.types = "template_attribute";
                   } else if (sample.charAt(0) === "<") {
-                    record.types = "template_attribute";
-                  } else if (sample === "[%") {
                     record.types = "template_attribute";
                   } else {
                     record.token = token;
@@ -7067,8 +6888,6 @@ export default (function parse_init() {
                     }
                     convertQ();
                     store = [];
-                  } else if (ltype === "sgml") {
-                    store.push(attstore[ind][0]);
                   } else if (
                     eq < 0 &&
                     attstore[ind][0].indexOf("=") < 0
@@ -7081,19 +6900,9 @@ export default (function parse_init() {
                     if (
                       html === "html" &&
                       "[{(".indexOf(attstore[ind][0].charAt(0)) < 0 &&
-                      attstore[ind][0].charAt(0) !== "#" &&
-                      /^\*?ng[A-Z]/.test(attstore[ind][0]) === false
+                      attstore[ind][0].charAt(0) !== "#"
                     ) {
                       record.token = attstore[ind][0].toLowerCase();
-                    } else if (
-                      options.language === "xml" ||
-                      options.language === "coldfusion"
-                    ) {
-                      if (options.lexer_options.markup.quote_convert === "single") {
-                        record.token = `${attstore[ind][0]}='${attstore[ind][0]}'`;
-                      } else {
-                        record.token = `${attstore[ind][0]}="${attstore[ind][0]}"`;
-                      }
                     } else {
                       record.token = attstore[ind][0];
                     }
@@ -7161,8 +6970,6 @@ export default (function parse_init() {
             } else if (end === "---") {
               ltype = "comment";
               start = "---";
-            } else if (end === ")" && options.language === "vapor") {
-              ltype = "template";
             } else if (b[a] === "<") {
               if (b[a + 1] === "/") {
                 if (b[a + 2] === "#") {
@@ -7176,10 +6983,6 @@ export default (function parse_init() {
                   if (b[a + 4] === "#") {
                     end = "-->";
                     ltype = "template";
-                  } else if (b[a + 4] === "-" && (/<cf[a-z]/i).test(source) === true) {
-                    end = "--->";
-                    ltype = "comment";
-                    start = "<!---";
                   } else {
                     end = "-->";
                     ltype = "comment";
@@ -7205,18 +7008,7 @@ export default (function parse_init() {
                 }
               } else if (b[a + 1] === "%") {
                 preserve = true;
-                if (b[a + 2] === "-" && b[a + 3] === "-") {
-                  end = "--%>";
-                  ltype = "comment";
-                  start = "<%--";
-                } else if (b[a + 2] === "#") {
-                  end = "%>";
-                  ltype = "comment";
-                  start = "<%#";
-                } else {
-                  end = "%>";
-                  ltype = "template";
-                }
+
               } else if ((b[a + 1] === "p" || b[a + 1] === "P") && (b[a + 2] === "r" || b[a + 2] === "R") && (b[a + 3] === "e" || b[a + 3] === "E") && (b[a + 4] === ">" || (/\s/).test(b[a + 4]) === true)) {
                 end = "</pre>";
                 preserve = true;
@@ -7263,36 +7055,7 @@ export default (function parse_init() {
                 parse.structure.push(["script", parse.count]);
                 return;
               }
-              if (options.language === "dustjs") {
-                if (b[a + 1] === ":" && b[a + 2] === "e" && b[a + 3] === "l" && b[a + 4] === "s" && b[a + 5] === "e" && b[a + 6] === "}") {
-                  a = a + 6;
-                  earlyexit = true;
-                  record.token = "{:else}";
-                  record.types = "template_else";
-                  recordPush(data, record, "else");
-                  return;
-                }
-                if (b[a + 1] === "!") {
-                  end = "!}";
-                  ltype = "comment";
-                  start = "{!";
-                } else if (b[a + 1] === "/") {
-                  end = "}";
-                  ltype = "template_end";
-                } else if (b[a + 1] === "~") {
-                  end = "}";
-                  ltype = "singleton";
-                } else if (b[a + 1] === ">") {
-                  end = "/}";
-                  ltype = "singleton";
-                } else if (b[a + 1] === "#" || b[a + 1] === "?" || b[a + 1] === "^" || b[a + 1] === "@" || b[a + 1] === "<" || b[a + 1] === "+") {
-                  end = "}";
-                  ltype = "template_start";
-                } else {
-                  end = "}";
-                  ltype = "template";
-                }
-              } else if (b[a + 1] === "{") {
+               if (b[a + 1] === "{") {
                 if (b[a + 2] === "{") {
                   end = "}}}";
                   ltype = "template";
@@ -7315,61 +7078,16 @@ export default (function parse_init() {
               } else if (b[a + 1] === "%") {
                 end = "%}";
                 ltype = "template";
-              } else if (b[a + 1] === "#") {
-                end = "#}";
-                ltype = "comment";
-                start = "{#";
               } else {
                 end = b[a + 1] + "}";
                 ltype = "template";
               }
-              if (b[a + 1] === "@" && b[a + 2] === "}" && b[a + 3] === "e" && b[a + 4] === "l" && b[a + 5] === "s" && b[a + 6] === "e" && b[a + 7] === "{" && b[a + 8] === "@" && b[a + 9] === "}") {
-                a = a + 9;
-                earlyexit = true;
-                record.token = "{@}else{@}";
-                record.types = "template_else";
-                recordPush(data, record, "else");
-                return;
-              }
-            } else if (b[a] === "[" && b[a + 1] === "%") {
-              end = "%]";
-              ltype = "template";
-            } else if (b[a] === "#" && options.language === "apacheVelocity") {
-              if (b[a + 1] === "*") {
-                end = "*#";
-                ltype = "comment";
-                start = "#*";
-              } else if (b[a + 1] === "[" && b[a + 2] === "[") {
-                end = "]]#";
-                ltype = "comment";
-                start = "#[[";
-              } else if (b[a + 1] === "#") {
-                end = "\n";
-                ltype = "comment";
-                start = "##";
-              } else if (b[a + 1] === "e" && b[a + 2] === "l" && b[a + 3] === "s" && b[a + 4] === "e" && (/\s/).test(b[a + 5]) === true) {
-                end = "\n";
-                ltype = "template_else";
-              } else if (b[a + 1] === "i" && b[a + 2] === "f") {
-                end = "\n";
-                ltype = "template_start";
-              } else if (b[a + 1] === "f" && b[a + 2] === "o" && b[a + 3] === "r" && b[a + 4] === "e" && b[a + 5] === "a" && b[a + 6] === "c" && b[a + 7] === "h") {
-                end = "\n";
-                ltype = "template_start";
-              } else if (b[a + 1] === "e" && b[a + 2] === "n" && b[a + 3] === "d") {
-                end = "\n";
-                ltype = "template_end";
-              } else {
-                end = "\n";
-                ltype = "template";
-              }
-            } else if (b[a] === "$" && options.language === "apacheVelocity") {
-              end = "\n";
-              ltype = "template";
             }
+
             if (options.lexer_options.markup.unformatted === true) {
               preserve = true;
             }
+
           }());
           if (earlyexit === true) {
             return;
@@ -7388,7 +7106,12 @@ export default (function parse_init() {
             });
             element = comm[0];
             a = comm[1];
-            if (element.replace(start, "").replace(/(^\s*)/, "").indexOf("parse-ignore-start") === 0) {
+            if (
+              element
+              .replace(start, "")
+              .replace(/(^\s*)/, "")
+              .indexOf("parse-ignore-start") === 0
+            ) {
               record.token = element;
               record.types = "ignore";
               recordPush(data, record, "");
@@ -7447,7 +7170,7 @@ export default (function parse_init() {
                     jsxcount = 0;
                   }
                 }
-                if (atty.slice(0, 3) === "<%=" || atty.slice(0, 2) === "{%") {
+                if (atty.slice(0, 2) === "{%") {
                   nosort = true;
                 }
                 atty = atty
@@ -7478,9 +7201,7 @@ export default (function parse_init() {
                   // if an attribute follows an attribute ending with `=` then adjoin it to the
                   // last attribute
                   attstore[attstore.length - 1][0] = attstore[attstore.length - 1][0] + atty;
-                } else if (options.language === "coldfusion" && attstore.length > 0 && (("+-\u002a/(^").indexOf(atty) > -1 || ("+-\u002a/(^").indexOf(attstore[attstore.length - 1][0].charAt(attstore[attstore.length - 1][0].length - 1)) > -1)) {
-                  attstore[attstore.length - 1][0] = `${attstore[attstore.length - 1][0]} ${atty}`;
-                } else if (atty !== "" && atty !== " ") {
+                }  else if (atty !== "" && atty !== " ") {
                   attstore.push([atty, lines]);
                 }
                 if (attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=\u201c") > 0) {
@@ -7496,10 +7217,6 @@ export default (function parse_init() {
             do {
               if (b[a] === "\n") {
                 lines = lines + 1;
-                if (options.language === "apacheVelocity" && lex[0] === "#") {
-                  a = a - 1;
-                  break;
-                }
                 parse.lineNumber = parse.lineNumber + 1;
               }
               if (preserve === true || (((/\s/).test(b[a]) === false && quote !== "}") || quote === "}")) {
@@ -7614,7 +7331,15 @@ export default (function parse_init() {
                         } else {
                           attribute.push(b[a]);
                         }
-                        if ((b[a] === "<" || b[a] === ">") && (quote === "" || quote === ">") && options.language !== "jsx") {
+
+                        if ((
+                          b[a] === "<" ||
+                          b[a] === ">") && (
+                            quote === "" ||
+                            quote === ">"
+                          ) && options.language !== "jsx"
+                        ) {
+
                           if (quote === "" && b[a] === "<") {
                             quote = ">";
                             braccount = 1;
@@ -7627,14 +7352,11 @@ export default (function parse_init() {
                                 // the following detects if a coldfusion tag is embedded within another markup
                                 // tag
                                 tname = tagName(attribute.join(""));
-                                if (cftags[tname] === "required") {
-                                  quote = "</" + tname + ">";
-                                } else {
-                                  quote = "";
-                                  igcount = 0;
-                                  attributeLexer(false);
-                                  break;
-                                }
+                                quote = "";
+                                igcount = 0;
+                                attributeLexer(false);
+                                break;
+
                               }
                             }
                           }
@@ -7653,12 +7375,30 @@ export default (function parse_init() {
                             }
                             break;
                           }
-                          if ((/^=?("|')?((\{(\{|%|#|@|:|\/|\?|\^|<|\+|~|=))|(\[%)|<)/).test(b[a] + b[a + 1] + b[a + 2] + b[a + 3]) === true) {
+
+                          // HOTFIX
+
+                          // When options is unformatter=true liquid attributes
+                          // were being replaced in an incorrect manner, essentially,
+                          // wreaking total fucking havoc. If preserve is set to false,
+                          // then this control condition can pass, this code base is absolute
+                          // chaos, so I have little clue what this condition does, but it seems
+                          // to fix this issue and actually preserve attributes.
+
+                          if (
+                            preserve === false &&
+                            (/^=?("|')?((\{(\{|%|#|@|:|\/|\?|\^|<|\+|~|=))|(\[%)|<)/).test(
+                              b[a] + b[a + 1] + b[a + 2] + b[a + 3]
+                            ) === true) {
+
                             attribute.pop();
+
                             if (b[a] !== "=" && attribute.length > 0) {
                               attributeLexer(false);
                             }
+
                             quote = "";
+
                             do {
                               attribute.push(b[a]);
                               if (b[a] === dustatt[dustatt.length - 1]) {
@@ -7687,6 +7427,7 @@ export default (function parse_init() {
                               }
                               a = a + 1;
                             } while (a < c);
+
                           } else if (b[a] === "{" && b[a - 1] === "=" && options.language !== "jsx") {
                             quote = "}";
                           } else if (b[a] === "\"" || b[a] === "'") {
@@ -7868,23 +7609,6 @@ export default (function parse_init() {
                       } else {
                         quote = "}}";
                       }
-                    } else if (options.language === "dustjs") {
-                      if (attribute.length < 1 && (attstore.length < 1 || (/\s/).test(b[a - 1]) === true)) {
-                        lex.pop();
-                        do {
-                          if (b[a] === "\n") {
-                            lines = lines + 1;
-                          }
-                          attribute.push(b[a]);
-                          a = a + 1;
-                        } while (a < c && b[a] !== "}");
-                        attribute.push("}");
-                        attstore.push([attribute.join(""), lines]);
-                        attribute = [];
-                        lines = 1;
-                      } else {
-                        quote = "}";
-                      }
                     } else {
                       quote = b[a + 1] + "}";
                       if (attribute.length < 1 && (attstore.length < 1 || (/\s/).test(b[a - 1]) === true)) {
@@ -8015,82 +7739,54 @@ export default (function parse_init() {
             } else if (html === "" && tname === "html") {
               html = "html";
             }
-            if (element.replace(start, "").replace(/^\s+/, "").indexOf("parse-ignore-start") === 0) {
+            if (
+              element.replace(start, "")
+              .replace(/^\s+/, "")
+              .indexOf("parse-ignore-start") === 0
+            ) {
+
               a = a + 1;
+
               do {
+
                 lex.push(b[a]);
-                if (b[a] === "d" && lex.slice(lex.length - 16).join("") === "parse-ignore-end") {
+
+                if (
+                  b[a] === "d" &&
+                  lex.slice(lex.length - 16).join("") === "parse-ignore-end"
+                ) {
                   break;
                 }
+
                 a = a + 1;
+
               } while (a < c);
+
+
               do {
                 lex.push(b[a]);
-                if (b[a] === end.charAt(end.length - 1) && b.slice(a - (end.length - 1), a + 1).join("") === end) {
+                if (
+                  b[a] === end.charAt(end.length - 1) &&
+                  b.slice(a - (end.length - 1), a + 1).join("") === end
+                ) {
                   break;
                 }
+
                 a = a + 1;
+
               } while (a < c);
+
               record.token = lex.join("");
               record.types = "ignore";
               recordPush(data, record, "");
+              console.log(record, data, lex)
               return;
             }
           }
           record.token = element;
           record.types = ltype;
           tname = tagName(element);
-          // Twig language allows {% block %} elements to be singleton or start.  You don't
-          // know until you encounter a {% endblock %} tag
-          if (tname === "endblock" && element.slice(0, 2) === "{%") {
-            const endName = element.replace(/\{%\s*endblock\s+/, "").replace(/\s*%\}/, "");
-            let aa = parse.count,
-              bb = parse.count,
-              startName = "";
-            do {
-              if (data.types[aa].indexOf("end") > 0) {
-                aa = data.begin[aa];
-                if (aa < 0) {
-                  break;
-                }
-              } else if ((/\{%\s*block/).test(data.token[aa]) === true) {
-                if (endName === "") {
-                  break;
-                }
-                startName = data.token[aa].replace(/\{%\s*block\s+/, "").split(/\s+/)[0].replace(/\s+/, "");
-                if (endName === startName) {
-                  break;
-                }
-              }
-              aa = aa - 1;
-            } while (aa > -1);
-            count.start = count.start + 1;
-            data.types[aa] = "template_start";
-            data.ender[aa] = parse.count + 1;
-            record.begin = aa;
-            record.stack = "block";
-            record.token = element;
-            record.types = "template_end";
-            if (aa > -1) {
-              do {
-                if (data.types[bb].indexOf("end") > 0) {
-                  bb = data.begin[bb];
-                  data.begin[bb] = aa;
-                  data.stack[bb] = "block";
-                } else if (data.begin[bb] < aa) {
-                  data.begin[bb] = aa;
-                  if (data.types[bb].indexOf("start") < 0) {
-                    data.ender[bb] = parse.count + 1;
-                  }
-                  data.stack[bb] = "block";
-                }
-                bb = bb - 1;
-              } while (bb > aa);
-            }
-            parse.structure.push(["block", aa]);
-            recordPush(data, record, "");
-            return;
-          }
+
           if (preserve === false && options.language !== "jsx") {
             element = element.replace(/\s+/g, " ");
           }
@@ -8162,13 +7858,8 @@ export default (function parse_init() {
             } else if (tname === "else") {
               ltype = "template_else";
             }
-          } else if (element.slice(0, 2) === "<%" && element.slice(element.length - 2) === "%>") {
-            if ((/^(<%\s+end\s+-?%>)$/).test(element) === true) {
-              ltype = "template_end";
-            } else if (((/\sdo\s/).test(element) === true && (/\s-?%>$/).test(element) === true) || (/^(<%(%|-|=)?\s*if)/).test(element) === true) {
-              ltype = "template_start";
-            }
           }
+
           record.types = ltype;
           //update a flag for subatomic parsing in SGML tags
           if (end !== "]>" && sgmlflag > 0 && element.charAt(element.length - 1) !== "[" && (element.slice(element.length - 2) === "]>" || (/^(<!((doctype)|(notation))\s)/i).test(element) === true)) {
@@ -8177,8 +7868,7 @@ export default (function parse_init() {
           // cheat identifies HTML singleton elements as singletons even if formatted as
           // start tags, such as <br> (which is really <br/>)
           cheat = (function lexer_markup_tag_cheat() {
-            let cfval = "",
-              struc = [];
+
             const ender = (/(\/>)$/),
               htmlsings = {
                 area: "singleton",
@@ -8217,11 +7907,7 @@ export default (function parse_init() {
                       }
                     }
                     if (bb === 0 && data.token[aa].toLowerCase().indexOf(vname) === 1) {
-                      if (cftags[tname] === undefined) {
-                        data.types[aa] = "start";
-                      } else {
-                        data.types[aa] = "template_start";
-                      }
+                      data.types[aa] = "start";
                       count.start = count.start + 1;
                       data.token[aa] = data
                         .token[aa]
@@ -8237,36 +7923,46 @@ export default (function parse_init() {
                 if (htmlblocks[name] === undefined) {
                   return false;
                 }
-                if (name === item) {
-                  return true;
-                }
-                if (name === "dd" && item === "dt") {
-                  return true;
-                }
-                if (name === "dt" && item === "dd") {
-                  return true;
-                }
-                if (name === "td" && item === "th") {
-                  return true;
-                }
-                if (name === "th" && item === "td") {
-                  return true;
-                }
-                if (name === "colgroup" && (item === "tbody" || item === "tfoot" || item === "thead" || item === "tr")) {
-                  return true;
-                }
-                if (name === "tbody" && (item === "colgroup" || item === "tfoot" || item === "thead")) {
-                  return true;
-                }
-                if (name === "tfoot" && (item === "colgroup" || item === "tbody" || item === "thead")) {
-                  return true;
-                }
-                if (name === "thead" && (item === "colgroup" || item === "tbody" || item === "tfoot")) {
-                  return true;
-                }
-                if (name === "tr" && item === "colgroup") {
-                  return true;
-                }
+                if (name === item)  return true;
+                if (name === "dd" && item === "dt") return true;
+                if (name === "dt" && item === "dd") return true;
+                if (name === "td" && item === "th")  return true;
+                if (name === "th" && item === "td")  return true;
+                if (
+                  name === "colgroup" && (
+                    item === "tbody" ||
+                    item === "tfoot" ||
+                    item === "thead" ||
+                    item === "tr"
+                  )
+                ) return true;
+
+                if (
+                  name === "tbody" && (
+                    item === "colgroup" ||
+                    item === "tfoot" ||
+                    item === "thead"
+                  )
+                ) return true;
+
+                if (
+                  name === "tfoot" && (
+                    item === "colgroup" ||
+                    item === "tbody" ||
+                    item === "thead"
+                  )
+                ) return true;
+
+                if (
+                  name === "thead" && (
+                    item === "colgroup" ||
+                    item === "tbody" ||
+                    item === "tfoot"
+                  )
+                ) return true;
+
+                if (name === "tr" && item === "colgroup") return true;
+
                 return false;
               },
               addHtmlEnd = function(count) {
@@ -8291,85 +7987,70 @@ export default (function parse_init() {
                 data.lines[parse.count - 1] = 0;
               };
             //determine if the current end tag is actually part of an HTML singleton
-            if (ltype === "end" && tname.slice(0, 3) !== "/cf") {
+            if (ltype === "end") {
               const lastToken = data.token[parse.count];
               if (data.types[parse.count - 1] === "singleton" && lastToken.charAt(lastToken.length - 2) !== "/" && "/" + tagName(lastToken) === tname) {
                 data.types[parse.count - 1] = "start";
-              } else if (tname !== "/span" &&
+              } else if (
+                tname !== "/span" &&
                 tname !== "/div" &&
                 tname !== "/script" &&
-                options.lexer_options.markup.tag_merge === true &&
-                (html !== "html" || (html === "html" && tname !== "/li"))) {
-                if (tname === "/" + tagName(data.token[parse.count]) && data.types[parse.count] === "start") {
+                options.lexer_options.markup.tag_merge === true && (
+                  html !== "html" || (
+                    html === "html" &&
+                    tname !== "/li"
+                  )
+                )
+              ) {
+
+                if (
+                  tname === "/" + tagName(data.token[parse.count]) &&
+                  data.types[parse.count] === "start"
+                ) {
                   parse.structure.pop();
-                  data.token[parse.count] = data
-                    .token[parse.count]
-                    .replace(/>$/, "/>");
+                  data.token[parse.count] = data.token[parse.count].replace(/>$/, "/>");
                   data.types[parse.count] = "singleton";
                   singleton = true;
                   count.start = count.start - 1;
                   return false;
                 }
-                if (tname === "/" + tagName(data.token[data.begin[parse.count]]) && data.types[parse.count].indexOf("attribute") > -1 && data.types[data.begin[parse.count]] === "start") {
+
+                if (
+                  tname === "/" + tagName(data.token[data.begin[parse.count]]) &&
+                  data.types[parse.count].indexOf("attribute") > -1 &&
+                  data.types[data.begin[parse.count]] === "start"
+                ) {
+
                   parse.structure.pop();
                   data.token[data.begin[parse.count]] = data
                     .token[data.begin[parse.count]]
                     .replace(/>$/, "/>");
+
                   data.types[data.begin[parse.count]] = "singleton";
                   singleton = true;
                   count.start = count.start - 1;
+
                   return false;
                 }
               }
             }
-            //renames the types value for the following two template tags
-            if (tname === "/#assign" || tname === "/#global") {
-              let dd = parse.count - 1,
-                tcount = 1;
-              if (dd > -1) {
-                do {
-                  if (data.types[dd] === "start" || data.types[dd] === "template_start") {
-                    tcount = tcount - 1;
-                  } else if (data.types[dd] === "end" || data.types[dd] === "template_end") {
-                    tcount = tcount + 1;
-                  }
-                  if (tcount === 1) {
-                    if ((data.token[dd].indexOf("<#assign") === 0 && tname === "/#assign") || (data.token[dd].indexOf("<#global") === 0 && tname === "/#global")) {
-                      data.types[dd] = "template_start";
-                      count.start = count.start + 1;
-                      return false;
-                    }
-                  }
-                  if (tcount === 0) {
-                    return false;
-                  }
-                  dd = dd - 1;
-                } while (dd > -1);
-              }
-              return false;
-            }
-            //determines if custom coldfusion tags are singletons
-            cfval = cftags[tname];
-            if (data.types[parse.count] === "end" && tname.slice(0, 3) === "/cf" && cfval !== undefined) {
-              if (tname === "/cftransaction") {
-                cftransaction = false;
-              }
-              if (cfval !== undefined) {
-                data.types[parse.count] = "template_end";
-              }
-              if ((cfval === "optional" || cfval === "prohibited") && tname !== "/cftransaction") {
-                return fixsingleton();
-              }
-              return false;
-            }
 
             if (html === "html") {
+
               // html gets tag names in lowercase, if you want to preserve case sensitivity
               // beautify as XML
-              if (element.charAt(0) === "<" && element.charAt(1) !== "!" && element.charAt(1) !== "?" && (parse.count < 0 || data.types[parse.count].indexOf("template") < 0) && cftags[tname] === undefined && tname.slice(0, 3) !== "cf_") {
+              if (
+                element.charAt(0) === "<" &&
+                element.charAt(1) !== "!" &&
+                element.charAt(1) !== "?" && (
+                  parse.count < 0 ||
+                  data.types[parse.count].indexOf("template") < 0
+                )
+              ) {
                 element = element.toLowerCase();
               }
-              if (htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && peertest(tname.slice(1), parse.structure[parse.structure.length - 2][0]) === true) {
+              if (
+                htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && peertest(tname.slice(1), parse.structure[parse.structure.length - 2][0]) === true) {
                 // looks for HTML tags missing an ending pair when encountering an ending tag for a parent node
                 addHtmlEnd(0);
               } else if (parse.structure.length > 3 &&
@@ -8419,21 +8100,9 @@ export default (function parse_init() {
             attributeRecord();
             return;
           }
-          //tags with the following names are singletons
-          if (tname.charAt(0) === "#" && data.types[parse.count] === "start" && (tname === "#assign" || tname === "#break" || tname === "#case" || tname === "#default" || tname === "#fallback" || tname === "#flush" || tname === "#ftl" || tname === "#global" || tname === "#import" || tname === "#include" || tname === "#local" || tname === "#t" || tname === "#lt" || tname === "#rt" || tname === "#nested" || tname === "#nt" || tname === "#recover" || tname === "#recurse" || tname === "#return" || tname === "#sep" || tname === "#setting" || tname === "#stop" || tname === "#visit")) {
-            simple = true;
-          }
-          //correction for dustjs tags to template singleton types
-          if (options.language === "dustjs" && data.types[parse.count] === "template_start") {
-            const first = element.charAt(1),
-              ending = element.slice(element.length - 2);
-            if ((ending === "/}" || ending.charAt(0) === first) && (first === "#" || first === "?" || first === "^" || first === "@" || first === "<" || first === "+")) {
-              data.types[parse.count] = "template";
-            }
-          }
           // determine if the markup tag potentially contains code interpreted by a
           // different lexer
-          if ((tname === "script" || tname === "style" || tname === "cfscript") && element.slice(element.length - 2) !== "/>") {
+          if ((tname === "script" || tname === "style") && element.slice(element.length - 2) !== "/>") {
             //get the attribute value for "type"
             let len = attstore.length - 1,
               attValue = "",
@@ -8452,13 +8121,32 @@ export default (function parse_init() {
               } while (len > -1);
             }
             //ext is flag to send information between the tag lexer and the content lexer
-            if (tname === "script" && (attValue === "" || attValue === "text/javascript" || attValue === "babel" || attValue === "module" || attValue === "application/javascript" || attValue === "application/x-javascript" || attValue === "text/ecmascript" || attValue === "application/ecmascript" || attValue === "text/jsx" || attValue === "application/jsx" || attValue === "text/cjs")) {
+            if (
+              tname === "script" && (
+                attValue === "" ||
+                attValue === "text/javascript" ||
+                attValue === "babel" ||
+                attValue === "module" ||
+                attValue === "application/javascript" ||
+                attValue === "application/x-javascript" ||
+                attValue === "text/ecmascript" ||
+                attValue === "application/ecmascript" ||
+                attValue === "text/jsx" ||
+                attValue === "application/jsx" ||
+                attValue === "text/cjs"
+                )
+              ) {
               ext = true;
-            } else if (tname === "style" && options.language !== "jsx" && (attValue === "" || attValue === "text/css")) {
-              ext = true;
-            } else if (tname === "cfscript") {
+            } else if (
+              tname === "style" &&
+              options.language !== "jsx" && (
+                attValue === "" ||
+                attValue === "text/css"
+              )
+            ) {
               ext = true;
             }
+
             if (ext === true) {
               len = a + 1;
               if (len < c) {
@@ -8501,52 +8189,87 @@ export default (function parse_init() {
           }
           // additional logic is required to find the end of a tag with the attribute
           // data-parse-ignore
-          if (simple === true && preserve === false && ignoreme && end === ">" && element.slice(element.length - 2) !== "/>") {
+          if (
+            simple === true &&
+            preserve === false &&
+            ignoreme &&
+            end === ">" &&
+            element.slice(element.length - 2) !== "/>"
+          ) {
+
             let tags = [],
               atstring = [];
+
             if (cheat === true) {
               ltype = "singleton";
             } else {
+
               attstore.forEach(function lexer_markup_tag_atstore(value) {
                 atstring.push(value[0]);
               });
+
               preserve = true;
               ltype = "ignore";
+
               a = a + 1;
+
               if (a < c) {
+
                 let delim = "",
                   ee = 0,
                   ff = 0,
                   endtag = false;
+
                 do {
-                  if (b[a] === "\n") {
-                    parse.lineNumber = parse.lineNumber + 1;
-                  }
+
+                  if (b[a] === "\n") parse.lineNumber = parse.lineNumber + 1;
+
                   tags.push(b[a]);
+
                   if (delim === "") {
+
                     if (b[a] === "\"") {
+
                       delim = "\"";
                     } else if (b[a] === "'") {
+
                       delim = "'";
-                    } else if (tags[0] !== "{" && b[a] === "{" && (options.language === "dustjs" || b[a + 1] === "{" || b[a + 1] === "%" || b[a + 1] === "@" || b[a + 1] === "#")) {
+
+                    } else if (
+                      tags[0] !== "{" &&
+                      b[a] === "{" && (
+                        options.language === "dustjs" ||
+                        b[a + 1] === "{" ||
+                        b[a + 1] === "%" ||
+                        b[a + 1] === "@" ||
+                        b[a + 1] === "#"
+                      )
+                    ) {
+
                       if (b[a + 1] === "{") {
+
                         if (b[a + 2] === "{") {
                           delim = "}}}";
                         } else {
                           delim = "}}";
                         }
-                      } else if (options.language === "dustjs") {
-                        delim = "}";
+
                       } else {
+
                         delim = b[a + 1] + "}";
+
                       }
+
                     } else if (b[a] === "<" && simple === true) {
+
                       if (b[a + 1] === "/") {
                         endtag = true;
                       } else {
                         endtag = false;
                       }
+
                     } else if (b[a] === lastchar && b[a - 1] !== "/") {
+
                       if (endtag === true) {
                         igcount = igcount - 1;
                         if (igcount < 0) {
@@ -8556,6 +8279,7 @@ export default (function parse_init() {
                         igcount = igcount + 1;
                       }
                     }
+
                   } else if (b[a] === delim.charAt(delim.length - 1)) {
                     ff = 0;
                     ee = delim.length - 1;
@@ -8580,8 +8304,10 @@ export default (function parse_init() {
             element = element.replace(">", ` ${atstring.join(" ")}>`);
             record.token = element;
             record.types = "content-ignore";
+            console.log(record, data)
             attstore = [];
           }
+
           // some template tags can be evaluated as a block start/end based on syntax
           // alone
           if (record.types.indexOf("template") > -1) {
@@ -8606,55 +8332,69 @@ export default (function parse_init() {
                 "unless",
                 "verbatim"
               ];
-              if ((tname === "case" || tname === "default") && (parse.structure[parse.structure.length - 1][0] === "switch" || parse.structure[parse.structure.length - 1][0] === "case")) {
+              if (
+                (
+                  tname === "case" ||
+                  tname === "default"
+                ) && (
+                  parse.structure[parse.structure.length - 1][0] === "switch" ||
+                  parse.structure[parse.structure.length - 1][0] === "case"
+                )
+              ) {
                 record.types = "template_else";
-              } else if (tname === "else" || tname === "elseif" || tname === "when" || tname === "elif" || tname === "elsif") {
+              } else if (
+                tname === "else" ||
+                tname === "elseif" ||
+                tname === "when" ||
+                tname === "elif" ||
+                tname === "elsif"
+              ) {
                 record.types = "template_else";
               } else {
+
                 let namelen = names.length - 1;
+
                 do {
                   if (tname === names[namelen]) {
                     record.types = "template_start";
                     break;
                   }
+
                   if (tname === "end" + names[namelen]) {
                     record.types = "template_end";
                     break;
                   }
+
                   namelen = namelen - 1;
+
                 } while (namelen > -1);
+
               }
-            } else if (element.slice(0, 2) === "<%" && options.language === "silverstripe") {
-              if (tname === "if" || tname === "loop" || tname === "with" || tname === "control" || tname === "cached" || tname === "uncached") {
-                record.types = "template_start";
-              } else if (tname === "else" || tname === "else_if") {
-                record.types = "template_else";
-              } else if (tname === "end_if" || tname === "end_loop" || tname === "end_with" || tname === "end_control" || tname === "end_cached" || tname === "end_uncached") {
+
+            } else if (
+              element.slice(0, 2) === "{{" &&
+              element.charAt(3) !== "{"
+            ) {
+
+              if ((/^(\{\{\s*-?\s*end\s*-?\s*\}\})$/).test(element)) {
                 record.types = "template_end";
-              }
-            } else if (element.slice(0, 2) === "{{" && element.charAt(3) !== "{") {
-              if ((/^(\{\{\s*-?\s*end\s*-?\s*\}\})$/).test(element) === true) {
-                record.types = "template_end";
-              } else if (tname === "define" || tname === "form" || tname === "if" || tname === "range" || tname === "with") {
+              } else if (
+                tname === "define" ||
+                tname === "form" ||
+                tname === "if" ||
+                tname === "range" ||
+                tname === "with"
+              ) {
                 record.types = "template_start";
               }
+
             } else if (record.types === "template") {
               if (element.indexOf("else") > 2) {
                 record.types = "template_else";
-              } else if ((/^(<%\s*\})/).test(element) === true || (/^(\[%\s*\})/).test(element) === true || (/^(\{@\s*\})/).test(element) === true) {
-                record.types = "template_end";
-              } else if ((/(\{\s*%>)$/).test(element) === true || (/(\{\s*%\])$/).test(element) === true || (/(\{\s*@\})$/).test(element) === true) {
-                record.types = "template_start";
-              } else if ((/\{\s*\?>$/).test(element) === true) {
-                record.types = "template_start";
-              } else if ((/^<\?(=|(php))\s*\}/).test(element) === true) {
-                record.types = "template_end";
               }
             }
             if (record.types === "template_start" || record.types === "template_else") {
-              if ((/^<\?(=|(php))\s*/).test(element) === true) {
-                tname = element;
-              } else if (tname === "" || tname === "@" || tname === "#" || tname === "%") {
+             if (tname === "" || tname === "%") {
                 tname = tname + element.slice(1).replace(tname, "").replace(/^\s+/, "");
                 tname = tname.slice(0, tname.indexOf("(")).replace(/\s+/, "");
               }
@@ -8772,7 +8512,13 @@ export default (function parse_init() {
             }
           }
           //sorts child elements
-          if (options.lexer_options.markup.tag_sort === true && data.types[parse.count] === "end" && data.types[parse.count - 1] !== "start" && tname !== "/script" && tname !== "/style" && tname !== "/cfscript") {
+          if (
+            options.lexer_options.markup.tag_sort === true &&
+            data.types[parse.count] === "end" &&
+            data.types[parse.count - 1] !== "start" &&
+            tname !== "/script" &&
+            tname !== "/style"
+          ) {
             let bb = 0,
               d = 0,
               startStore = 0,
@@ -9025,6 +8771,7 @@ export default (function parse_init() {
                       break;
                     }
                   }
+
                   //style requires use of the style lexer
                   if (name === "style") {
                     if (a === c - 8) {
@@ -9092,37 +8839,52 @@ export default (function parse_init() {
                 break;
               }
               //general content processing
-              if (ext === false && lex.length > 0 && ((b[a] === "<" && b[a + 1] !== "=" && (/\s|\d/).test(b[a + 1]) === false) || (b[a] === "[" && b[a + 1] === "%") || (b[a] === "{" && (options.language === "jsx" || options.language === "dustjs" || b[a + 1] === "{" || b[a + 1] === "%" || b[a + 1] === "@" || b[a + 1] === "#")))) {
-                //dustjs template handling
-                if (options.language === "dustjs" && b[a] === "{" && b[a + 1] === ":" && b[a + 2] === "e" && b[a + 3] === "l" && b[a + 4] === "s" && b[a + 5] === "e" && b[a + 6] === "}") {
-                  a = a + 6;
-                  ltoke = lex.join("");
-                  if (options.lexer_options.markup.parse_space === false) {
-                    ltoke = ltoke.replace(/\s+$/, "");
-                  }
-                  liner = 0;
-                  record.token = ltoke;
-                  recordPush(data, record, "");
-                  record.token = "{:else}";
-                  record.types = "template_else";
-                  recordPush(data, record, "");
-                  break;
-                }
+              if (
+                ext === false &&
+                lex.length > 0 && (
+                  (
+                    b[a] === "<" &&
+                    b[a + 1] !== "=" &&
+                    !(/\s|\d/).test(b[a + 1])
+                  ) || (
+                    b[a] === "[" &&
+                    b[a + 1] === "%"
+                  ) || (
+                    b[a] === "{" && (
+                      options.language === "jsx" ||
+                      b[a + 1] === "{" ||
+                      b[a + 1] === "%"
+                    )
+                  )
+                )
+              ) {
+
                 //regular content
                 a = a - 1;
-                if (options.lexer_options.markup.parse_space === true || parse.structure[parse.structure.length - 1][0] === "comment") {
+
+                if (
+                  options.lexer_options.markup.parse_space === true ||
+                  parse.structure[parse.structure.length - 1][0] === "comment"
+                ) {
                   ltoke = lex.join("");
                 } else {
                   ltoke = lex.join("").replace(/\s+$/, "");
                 }
+
                 ltoke = bracketSpace(ltoke);
                 liner = 0;
                 record.token = ltoke;
-                if (options.wrap > 0 && options.lexer_options.markup.preserve_text !== true) {
+
+                if (
+                  options.wrap > 0 &&
+                  options.lexer_options.markup.preserve_text !== true
+                ) {
+
                   let aa = options.wrap,
                     len = ltoke.length,
                     startSpace = "",
                     endSpace = "";
+
                   const wrap = options.wrap,
                     store = [],
                     wrapper = function beautify_markup_apply_content_wrapper() {
@@ -9152,6 +8914,7 @@ export default (function parse_init() {
                         aa = wrap;
                       }
                     };
+
                   // HTML anchor lists do not get wrapping unless the content itself exceeds the wrapping limit
                   if (data.token[data.begin[parse.count]] === "<a>" &&
                     data.token[data.begin[data.begin[parse.count]]] === "<li>" &&
@@ -9251,12 +9014,17 @@ export default (function parse_init() {
       }
       if (options.language === "html") {
         html = "html";
-      } else if (options.language === "xml" || options.language === "sgml") {
-        html = "xml";
       }
+
       do {
         if ((/\s/).test(b[a]) === true) {
-          if (options.lexer_options.markup.parse_space === true || (data.types[parse.count] === "template_start" && parse.structure[parse.structure.length - 1][0] === "comment")) {
+
+          if (
+            options.lexer_options.markup.parse_space === true || (
+              data.types[parse.count] === "template_start" &&
+              parse.structure[parse.structure.length - 1][0] === "comment"
+            )
+          ) {
             content();
           } else {
             a = parse.spacer({
@@ -9271,38 +9039,36 @@ export default (function parse_init() {
           tag("");
         } else if (b[a] === "[" && b[a + 1] === "%") {
           tag("%]");
-        } else if (b[a] === "{" && (options.language === "jsx" || options.language === "dustjs" || b[a + 1] === "{" || b[a + 1] === "%" || b[a + 1] === "@" || b[a + 1] === "#")) {
+        } else if (
+          b[a] === "{" && (
+            options.language === "jsx" ||
+            b[a + 1] === "{" ||
+            b[a + 1] === "%"
+          )
+        ) {
           tag("");
         } else if (b[a] === "]" && sgmlflag > 0) {
           tag("]>");
-        } else if (options.language === "vapor") {
-          if (b[a] === "#") {
-            tag(")");
-          } else if (b[a] === "{" && data.token[parse.count].charAt(0) === "#") {
-            vaporStart();
-          } else if (b[a] === "}") {
-            vaporEnd();
-          } else {
-            content();
-          }
-        } else if (options.language === "jekyll" && b[a] === "-" && b[a + 1] === "-" && b[a + 2] === "-") {
+        } else if (
+          options.language === "jekyll" &&
+          b[a] === "-" &&
+          b[a + 1] === "-" &&
+          b[a + 2] === "-"
+        ) {
           tag("---");
-        } else if (options.language === "apacheVelocity" && (/\d/).test(b[a + 1]) === false && (/\s/).test(b[a + 1]) === false) {
-          if (b[a] === "#" && ((/\w/).test(b[a + 1]) === true || b[a + 1] === "*" || b[a + 1] === "#" || (b[a + 1] === "[" && b[a + 2] === "["))) {
-            tag("");
-          } else if (b[a] === "$" && b[a + 1] !== "$" && b[a + 1] !== "=" && b[a + 1] !== "[") {
-            tag("");
-          } else {
-            content();
-          }
         } else {
           content();
         }
         a = a + 1;
       } while (a < c);
-      if (data.token[parse.count].charAt(0) !== "/" && htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block") {
+
+      if (
+        data.token[parse.count].charAt(0) !== "/" &&
+        htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block"
+      ) {
         fixHtmlEnd(data.token[parse.count], true);
       }
+
       if (count.end !== count.start && sparser.parseerror === "") {
         if (count.end > count.start) {
           let x = count.end - count.start,
@@ -9312,9 +9078,7 @@ export default (function parse_init() {
           sparser.parseerror = `${x} more end type${plural} than start types.`;
         } else {
           let x = count.start - count.end,
-            plural = (x === 1) ?
-            "" :
-            "s";
+            plural = (x === 1) ? "" : "s";
           sparser.parseerror = `${x} more start type${plural} than end types.`;
         }
       }
@@ -9440,48 +9204,116 @@ export default (function parse_init() {
         } while (a > 0);
         a = prettydiff.start;
       }
+
       //beautification loop
       do {
-        if (data.types[a + 1] === "end" || data.types[a + 1] === "template_end" || data.types[a + 1] === "template_else") {
+        if (
+          data.types[a + 1] === "end" ||
+          data.types[a + 1] === "template_end" ||
+          data.types[a + 1] === "template_else"
+        ) {
           indent = indent - 1;
         }
-        if (data.types[a] === "template" && data.lines[a] > 0) {
+
+        if (
+          data.types[a] === "template" &&
+          data.lines[a] > 0
+        ) {
+
           build.push(data.token[a]);
-          nl(indent);
+
+          // HOTFIX
+          //
+          // Fixes semicolon newlines from occuring when output tag is used as a property
+          // value within classes, eg:
+          // .class { color: {{ foo}}; }
+          if(data.types[a - 2] !== 'property' && data.types[a - 1] !== 'colon') nl(indent);
+
         } else if (data.types[a] === "template_else") {
+
           build.push(data.token[a]);
           indent = indent + 1;
           nl(indent);
-        } else if (data.types[a] === "start" || data.types[a] === "template_start") {
+
+        } else if (
+          data.types[a] === "start" ||
+          data.types[a] === "template_start"
+        ) {
+
           indent = indent + 1;
           build.push(data.token[a]);
-          if (data.types[a + 1] !== "end" && data.types[a + 1] !== "template_end" && (options.compressed_css === false || (options.compressed_css === true && data.types[a + 1] === "selector"))) {
+
+          if (
+            data.types[a + 1] !== "end" &&
+            data.types[a + 1] !== "template_end" && (
+              options.compressed_css === false || (
+                options.compressed_css === true &&
+                data.types[a + 1] === "selector"
+              )
+            )
+          ) {
+
             nl(indent);
           }
-        } else if ((data.token[a] === ";" && (options.compressed_css === false || (options.compressed_css === true && data.types[a + 1] === "selector"))) || data.types[a] === "end" || data.types[a] === "template_end" || data.types[a] === "comment") {
+
+        } else if ((
+          data.token[a] === ";" && (
+            options.compressed_css === false || (
+              options.compressed_css === true &&
+                data.types[a + 1] === "selector"
+              )
+            )
+          ) ||
+          data.types[a] === "end" ||
+          data.types[a] === "template_end" ||
+          data.types[a] === "comment"
+        ) {
+
+
           build.push(data.token[a]);
+
           if (data.types[a + 1] === "value") {
+
             if (data.lines[a + 1] === 1) {
               build.push(" ");
             } else if (data.lines[a + 1] > 1) {
               nl(indent);
             }
+
           } else if (data.types[a + 1] !== "separator") {
-            if (data.types[a + 1] !== "comment" || (data.types[a + 1] === "comment" && data.lines[a + 1] > 1)) {
+
+            if (
+              data.types[a + 1] !== "comment" || (
+                data.types[a + 1] === "comment" &&
+                data.lines[a + 1] > 1
+              )
+            ) {
+
               nl(indent);
+
             } else {
+
               build.push(" ");
+
             }
           }
+
         } else if (data.token[a] === ":") {
+
           build.push(data.token[a]);
-          if (options.compressed_css === false) {
-            build.push(" ");
-          }
+
+          if (options.compressed_css === false)  build.push(" ");
+
         } else if (data.types[a] === "selector") {
-          if (options.css_insert_lines === true && data.types[a - 1] === "end" && data.lines[a] < 3) {
+
+          if (
+            options.css_insert_lines === true &&
+            data.types[a - 1] === "end" &&
+            data.lines[a] < 3
+          ) {
             build.push(lf);
           }
+
           if (data.token[a].indexOf("when(") > 0) {
             when = data.token[a].split("when(");
             build.push(when[0].replace(/\s+$/, ""));
@@ -9490,6 +9322,7 @@ export default (function parse_init() {
           } else {
             build.push(data.token[a]);
           }
+
           if (data.types[a + 1] === "start") {
             if (options.braces === true) {
               nl(indent);
@@ -9497,30 +9330,69 @@ export default (function parse_init() {
               build.push(" ");
             }
           }
+
         } else if (data.token[a] === ",") {
+
           build.push(data.token[a]);
           if (data.types[a + 1] === "selector" || data.types[a + 1] === "property") {
             nl(indent);
           } else if (options.compressed_css === false) {
             build.push(" ");
           }
-        } else if (data.stack[a] === "map" && data.token[a + 1] === ")" && a - data.begin[a] > 5) {
+
+        } else if (
+          data.stack[a] === "map" &&
+          data.token[a + 1] === ")" &&
+          a - data.begin[a] > 5
+        ) {
+
           build.push(data.token[a]);
           nl(indent);
+
         } else if (data.token[a] === "x;") {
+
           nl(indent);
-        } else if ((data.types[a] === "variable" || data.types[a] === "function") && options.css_insert_lines === true && data.types[a - 1] === "end" && data.lines[a] < 3) {
+
+        } else if (
+          (
+            data.types[a] === "variable" ||
+            data.types[a] === "function"
+          ) &&
+          options.css_insert_lines === true &&
+          data.types[a - 1] === "end" &&
+          data.lines[a] < 3
+        ) {
           build.push(lf);
           build.push(data.token[a]);
-        } else if (data.token[a] !== ";" || (data.token[a] === ";" && (options.compressed_css === false || (options.compressed_css === true && data.token[a + 1] !== "}")))) {
+
+        } else if (
+
+          data.token[a] !== ";" || (
+            data.token[a] === ";" && (
+              options.compressed_css === false || (
+                options.compressed_css === true &&
+                data.token[a + 1] !== "}"
+              )
+            )
+          )
+        ) {
+
+
           build.push(data.token[a]);
+
         }
+
         a = a + 1;
       } while (a < len);
+
       prettydiff.iterator = len - 1;
+
       return build.join("");
+
     };
+
     prettydiff.beautify.style = style;
+
   }());
   (function options_init() {
     const optionDef = {
@@ -10655,10 +10527,12 @@ export default (function parse_init() {
                   } while (bb < ilen);
                   data.token[index] = item.join("");
                 };
+
               let y = a,
                 len = data.token[parent].length + 1,
                 plural = false,
                 lev = (function beautify_markup_levels_attribute_level() {
+
                   if (data.types[a].indexOf("start") > 0) {
                     let x = a;
                     do {
@@ -10699,33 +10573,16 @@ export default (function parse_init() {
               if (lev < 1) {
                 lev = 1;
               }
+
               // first, set levels and determine if there are template attributes
               do {
+
                 count = count + data.token[a].length + 1;
+
                 if (data.types[a].indexOf("attribute") > 0) {
 
-                  if (data.types[a] === "template_attribute") {
 
-                    // align liquid attribute pairs
-                    // when we have an end tag, we will keep them on the same line
-                    if(/{%-?\s*end/.test(data.token[a])) {
-
-                      level[a - 1] = -10;
-
-                    } else if (/{%-?\s*/.test(data.token[a])) {
-
-                      level.push(-10);
-
-                    } else {
-
-                      if(options.force_attribute === false) {
-                        level.push(-10);
-                      } else {
-                        level.push(lev);
-                      }
-                    }
-
-                  } else if (data.types[a] === "comment_attribute") {
+                   if (data.types[a] === "comment_attribute") {
                     level.push(lev);
                   } else if (data.types[a].indexOf("start") > 0) {
                     attStart = true;
@@ -10756,36 +10613,249 @@ export default (function parse_init() {
                   } else {
                     level.push(lev);
                   }
+
                   earlyexit = true;
+
                 } else if (data.types[a] === "attribute") {
 
                   len = len + data.token[a].length + 1;
+
+
+                  //const outputDelim = /{{-?\s*/
+
+                   // start delim
+                  const startDelim = /{%-?\s*/
+
+                  // end delim
+                  const endDelim = /{%-?\s*end/
+
+                  // any delim
+                  const anyDelim = /{%-?\s*(?:end)?/
+
+
+                  // HOT FIX
+                  // align liquid attribute pairs
+                  // when we have an end tag, we will keep them on the same line
                   if (options.unformatted === true) {
+
                     level.push(-10);
+
                   } else if (
-                    options.force_attribute === true ||
-                    attStart === true || (
-                      a < c - 1 && data.types[a + 1] !== "template_attribute" &&
-                      data.types[a + 1].indexOf("attribute") > 0
-                    )
+
+                    //
+                    // This will satisfy an {% else %} tag block,
+                    // ensuring newlines when multiple attrs detected, eg:
+                    //
+                    // <div {% if x %} id="foo" class="bar" {% else %} attr {% endif %}
+
+                    startDelim.test(data.token[a])
+
                   ) {
 
                     level.push(lev);
 
+
+                    let ia = a
+                    let ca = 0
+
+                    // We will keep walking until we hit
+                    // start tag liquid attribute, forcing newlines
+                    // on all contained attributes.
+                    while (ia-- && data.types[ia] === 'attribute') {
+
+                      if (endDelim.test(data.token[ia])) {
+                        ca = 0
+                        break;
+                      }
+
+                      if (startDelim.test(data.token[ia])) {
+                        if (ca === 1) ca = 0
+                        break
+                      }
+
+                      if (!anyDelim.test(data.token[ia])) ca++
+
+                    }
+
+                    if(ca > 0) {
+
+                      ia = a
+
+                      while (ia--) {
+
+                        if(ca === 0) break;
+
+                        level[ia - 1] = lev
+                        console.log(data.token[ia])
+
+                        ca--
+
+                      }
+
+                    }
+
+                    // If a liquid tag has been expressed as an
+                    // attribute value outside of the quotation
+                    // characters, we will always enforce alignments
+                    // and prevent forced attributes
+                   if(/={%\s*/.test(data.token[a - 1])) {
+                     level[a - 1] = -10
+                     level.push(-10)
+                   }
+
+
+                  } else if (
+
+                    // We has a HTML attribute, we will force this
+                    // to newline as long as it is not contained
+                    // within Liquid pairs
+                    //
+                    // <div {% if x %} id="foo" {% endif %} class="bar"
+                    //
+                    // Where class="bar" will be forced onto newline
+                    //
+                    data.types[a] === 'attribute' &&
+                    data.types[a - 1] === 'attribute' && (
+                      (
+                        anyDelim.test(data.token[a]) === false &&
+                        anyDelim.test(data.token[a - 1]) === false
+                      ) || (
+                        endDelim.test(data.token[a - 1]) === true
+                      )
+                    )
+                  ) {
+
+                    level[a - 1] = lev
+                    level.push(lev)
+
+                  } else if(
+
+                    // We have multiple attributes nested within
+                    // a tag pair, when more than 1 html attribute
+                    // we apply force ammendment, eg:
+                    //
+                    // <div {% if x %} id="foo" class="bar" {% endif %}
+                    //
+                    // We are currently within a {% end %} tag, so
+                    // we will check 2 levels up, if the both levels
+                    // are HTML attributes, we apply the force.
+
+                    data.types[a] === 'attribute' &&
+                    data.types[a - 1] === 'attribute' &&
+                    data.types[a - 2] === 'attribute' &&
+                    anyDelim.test(data.token[a - 1]) === false &&
+                    anyDelim.test(data.token[a - 2]) === false && (
+                      endDelim.test(data.token[a]) === true
+                    )
+                  ) {
+
+                    let ia = a
+
+                    // We will keep walking until we hit
+                    // start tag liquid attribute, forcing newlines
+                    // on all contained attributes.
+                    while (ia-- && data.types[ia] === 'attribute') {
+                      if(startDelim.test(data.token[ia])) {
+                        level[ia] = lev
+                        break
+                      }
+                    }
+
+                    level.push(lev);
+
+                  } else if (
+
+                    // We have a single HTML attribute nested
+                    // within a tag pair, when such is detected
+                    // we allow and enforce inline attributes
+                    //
+                    // <div {% if x %} id="foo" {% endif %}
+                    //
+                    // We are currently within a {% end %} tag, so
+                    // we will check 1 levels up and it should return
+                    // a liquid tag
+                    data.types[a] === 'attribute' &&
+                    data.types[a - 1] === 'attribute' &&
+                    data.types[a - 2] === 'attribute' &&
+                    startDelim.test(data.token[a - 2]) === true &&
+                    anyDelim.test(data.token[a - 1]) === false &&
+                    endDelim.test(data.token[a]) === true
+                  ) {
+
+                    level[a - 1] = -10;
+                    level.push(-10)
+
+                  } else if (
+                    options.force_attribute === true ||
+                    attStart === true || (
+                      a < c - 1 &&
+                      data.types[a + 1] !== "template_attribute" &&
+                      data.types[a + 1].indexOf("attribute") > 0
+                    )
+                  ) {
+
+
+                    // HTML attribute within a Liquid tag contained in attribute
+                    // It must be the 2nd attribute.
+                    // eg: <div {% if foo %} data-attr="bar"
+                    if(
+                      (
+                        data.types[a] === 'attribute' &&
+                        data.types[a - 1] === 'attribute' &&
+                        startDelim.test(data.token[a - 1]) === true
+                      )
+                    ) {
+
+                      // Move the Liquid attribute inline
+                      level[a - 1] = -10
+
+                      // Move the html attribute inline
+                      level.push(-10);
+
+                    } else {
+
+                      level.push(lev);
+
+                    }
+
                   } else {
+
                     level.push(-10);
+
                   }
+
+
                 } else if (data.begin[a] < parent + 1) {
+
                   break;
+
                 }
+
                 a = a + 1;
+
               } while (a < c);
+
               a = a - 1;
-              if (level[a - 1] > 0 && data.types[a].indexOf("end") > 0 && data.types[a].indexOf("attribute") > 0 && data.types[parent] !== "singleton" && plural === true) {
+
+              if (
+                level[a - 1] > 0 &&
+                data.types[a].indexOf("end") > 0 &&
+                data.types[a].indexOf("attribute") > 0 &&
+                data.types[parent] !== "singleton" &&
+                plural === true
+              ) {
+
                 level[a - 1] = level[a - 1] - 1;
+
               }
+
               if (level[a] !== -20) {
-                if (options.language === "jsx" && data.types[parent].indexOf("start") > -1 && data.types[a + 1] === "script_start") {
+
+                if (
+                  options.language === "jsx" &&
+                  data.types[parent].indexOf("start") > -1 &&
+                  data.types[a + 1] === "script_start"
+                ) {
                   level[a] = lev;
                 } else {
                   level[a] = level[parent];
@@ -10813,19 +10883,26 @@ export default (function parse_init() {
               } else {
                 level[parent] = -10;
               }
-              if (earlyexit === true || options.unformatted === true || data.token[parent] === "<%xml%>" || data.token[parent] === "<?xml?>") {
-                count = 0;
-                return;
-              }
+
               y = a;
+
               // second, ensure tag contains more than one attribute
+
               if (y > parent + 1) {
+
                 // finally, indent attributes if tag length exceeds the wrap limit
                 if (options.space_close === false) {
                   len = len - 1;
                 }
-                if (len > options.wrap && options.wrap > 0 && options.force_attribute === false) {
+
+                if (
+                  len > options.wrap &&
+                  options.wrap > 0 &&
+                  options.force_attribute === false
+                ) {
+
                   count = data.token[a].length;
+
                   do {
                     if (data.token[y].length > options.wrap && (/\s/).test(data.token[y]) === true) {
                       wrap(y);
@@ -10833,8 +10910,10 @@ export default (function parse_init() {
                     y = y - 1;
                     level[y] = lev;
                   } while (y > parent);
+
                 }
               } else if (
+
                 data.types[a] === "attribute"  &&
                 options.wrap > 0 &&
                 data.token[a].length > options.wrap &&
@@ -10842,6 +10921,7 @@ export default (function parse_init() {
               ) {
                 wrap(a);
               }
+
             };
           let a = prettydiff.start,
             comstart = -1,
