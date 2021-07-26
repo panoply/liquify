@@ -431,3 +431,5 @@ export namespace IArgument {
   }
 
 }
+
+export type Arguments = IArgument.Argument | IArgument.Parameter

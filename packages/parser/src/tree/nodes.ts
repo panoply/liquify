@@ -1,6 +1,6 @@
 /* eslint no-unused-vars: "off" */
 
-import { Range } from 'vscode-languageserver-textdocument';
+import { Range, Position } from 'vscode-languageserver-textdocument';
 import { NodeKind } from 'lexical/kind';
 import { document } from 'tree/model';
 import { findFirst } from 'parser/utils';
@@ -145,6 +145,21 @@ export class Node implements INode {
   }
 
   /**
+   * Returns the last word from the current cursor position.
+   * If no word is found, returns
+   */
+  get lastWord (): string {
+
+    const token = this.startToken.slice(2, document.cursor - this.start);
+    const match = /\w+?(?=\s*?[^\w]*?$)/.exec(token);
+
+    if (!match) return null;
+
+    return match[0];
+
+  }
+
+  /**
    * Validates a node tag and kind. This is used by the parser
    * to detect parent nodes.
    */
@@ -182,7 +197,7 @@ export class Node implements INode {
       }
     }
 
-    return this;
+    return this.type === NodeType.Root ? null : this;
 
   }
 

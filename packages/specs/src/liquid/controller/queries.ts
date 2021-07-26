@@ -4,13 +4,12 @@ import { Variation, Values, IArgument, IEngine } from '../types/common';
 import { ITag } from '../types/tags';
 import { IFilter } from '../types/filters';
 import { IObject } from '../types/objects';
-import { Tokens } from './../../shared/types';
 import { Type } from '../types/types';
 import { QueryErrors, Within } from '../types/enums';
-import { documentation } from '../../utils/generators';
+import { documentation, filterCompletions, signatures } from '../../utils/generators';
 import { isNumber } from '../../utils/typeof';
 import { inPattern, inValues, inRange } from './../../utils/finders';
-import { CompletionItemKind } from 'vscode-languageserver-types';
+import { CompletionItemKind, SignatureInformation } from 'vscode-languageserver-types';
 
 /* -------------------------------------------- */
 /* EXPORT SCOPES                                */
@@ -290,7 +289,6 @@ export function setCompletions (): ICompletions {
       kind: CompletionItemKind.Keyword,
       documentation: documentation(description, reference),
       data: {
-        token: Tokens.LiquidTag,
         snippet,
         singular,
         parents
@@ -302,23 +300,7 @@ export function setCompletions (): ICompletions {
   /* FILTER COMPLETIONS                           */
   /* -------------------------------------------- */
 
-  const filters = Object.entries(variation.filters).map(
-    ([
-      label,
-      {
-        description,
-        reference,
-        deprecated = false
-      }
-    ]) => ({
-      label,
-      deprecated,
-      documentation: documentation(description, reference),
-      data: {
-        token: Tokens.LiquidFilter
-      }
-    })
-  );
+  const filters = Object.entries(variation.filters).map(filterCompletions);
 
   if (Object.is(engine, IEngine.standard)) {
     return {
@@ -345,9 +327,7 @@ export function setCompletions (): ICompletions {
       label,
       deprecated,
       documentation: documentation(description, reference),
-      data: {
-        token: Tokens.LiquidObject
-      }
+      data: { }
     })
   );
 
@@ -358,6 +338,10 @@ export function setCompletions (): ICompletions {
   };
 
 }
+
+/* -------------------------------------------- */
+/* FUNCTIONS                                    */
+/* -------------------------------------------- */
 
 /**
  * Set Engine
@@ -371,6 +355,8 @@ export function setEngine (name: IEngine): void {
     engine = name;
     variation = Specification[engine];
     completions = setCompletions();
+
+    // Object.values(signatures.filters).forEach(i => console.log(...i));
 
   }
 
@@ -530,7 +516,7 @@ export function isProperty (token: string): boolean {
  */
 export function isAllowed (prop: 'trims' | 'filters'): boolean {
 
-  return tag ? !!tag?.[prop] : object ? !!object?.[prop] : false;
+  return tag ? tag?.[prop] ?? true : object ? object?.[prop] ?? true : false;
 
 }
 

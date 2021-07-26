@@ -1,5 +1,4 @@
 import { join } from 'path';
-import { existsSync } from 'fs';
 import { workspace, commands, Uri, ExtensionContext } from 'vscode';
 import {
   LanguageClient,
@@ -15,45 +14,8 @@ import {
  */
 function getReleaseNotes () {
 
-  const uri = Uri.file(join(__dirname, './release', 'v2.4.0.md'));
+  const uri = Uri.file(join(__dirname, './release', 'v1.0.0-beta.1md'));
   commands.executeCommand('markdown.showPreview', uri);
-}
-
-/**
- * Workspace Root
- *
- * Returns the absolute path to current workspace root
- */
-function getWorkspaceRoot (document = undefined) {
-
-  const { workspaceFolders } = workspace;
-
-  if (!workspace.workspaceFolders || workspaceFolders.length === 0) return;
-  if (!document) return workspaceFolders[0].uri.fsPath;
-
-  const folder = workspace.getWorkspaceFolder(document.uri);
-
-  if (!folder) return;
-
-  return folder.uri.fsPath;
-
-}
-
-/**
- * Get liquidrc path
- *
- * Returns the `.liquidrc.json` file path.
- */
-function getLiquidrcPath (): string | false {
-
-  const root = getWorkspaceRoot();
-  const file = join(root, '.liquidrc.json');
-  const exist = existsSync(file);
-
-  if (!exist) return false;
-
-  return file;
-
 }
 
 export function LiquidClient (_context: ExtensionContext): LanguageClient {
@@ -116,7 +78,15 @@ export function LiquidClient (_context: ExtensionContext): LanguageClient {
       }
     ],
     synchronize: {
-      fileEvents: workspace.createFileSystemWatcher('**/.liquidrc.json'),
+      fileEvents: [
+        // workspace.createFileSystemWatcher('**/.env'),
+        workspace.createFileSystemWatcher('**/.liquidr{c,c.js,c.yaml,c.yml,c.json}')
+        // workspace.createFileSystemWatcher('**/.editorconfig'),
+        // workspace.createFileSystemWatcher('**/.jsbeautifyr{c,c.js,c.yaml,c.yml,c.json}'),
+        // workspace.createFileSystemWatcher('**/.prettier{c,c.js,c.yaml,c.yml,c.json}'),
+        // workspace.createFileSystemWatcher('**/.prettierignore'),
+        // workspace.createFileSystemWatcher('**/package.json')
+      ],
       configurationSection: [
 
         /**
@@ -129,22 +99,37 @@ export function LiquidClient (_context: ExtensionContext): LanguageClient {
          */
         'editor.tabSize',
         'editor.wordWrapColumn',
+        'editor.formatOnSave',
+        'editor.formatOnType',
+        'editor.defaultFormatter',
+
+        /**
+         * VSCode Language Specific Options
+         */
+        '[json].defaultFormatter',
+        '[javascript].defaultFormatter',
+        '[css].defaultFormatter',
 
         /**
          * VSCode Language format settings
          */
         'html.format',
         'json.format',
-        'javascript.format'
+        'javascript.format',
+
+        /**
+         * JSBeautify format settings
+         */
+        'beautify',
+
+        /**
+         * Prettier format settings
+         */
+        'prettier'
 
       ]
     },
     initializationOptions: {
-
-      /**
-       * Runtime configuration `.liquidrc` file path
-       */
-      rcfile: getLiquidrcPath(),
 
       /**
        * Embedded Languages
@@ -156,10 +141,9 @@ export function LiquidClient (_context: ExtensionContext): LanguageClient {
        */
       service: {
         json: true,
-        html: true,
         css: true,
-        javascript: true, // NOT YET IMPLEMENTED
-        scss: false // NOT YET IMPLEMENTED
+        scss: false, // NOT YET IMPLEMENTED
+        javascript: false // NOT YET IMPLEMENTED
       }
 
     }

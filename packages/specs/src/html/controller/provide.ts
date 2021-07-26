@@ -88,8 +88,8 @@ export function HTMLTagResolve (item: CompletionItem) {
   item.kind = CompletionItemKind.Property;
   item.insertTextFormat = InsertTextFormat.Snippet;
   item.insertText = item.data.void
-    ? `${item.label} $1> $0`
-    : `${item.label} $1> $0 </${item.label}>`;
+    ? `${item.label} $1 $0`
+    : `${item.label} $1> $0 </${item.label}`;
 
   return item;
 
@@ -149,7 +149,6 @@ export function HTMLCompletions () {
       label,
       documentation: documentation(spec.description, spec.reference),
       data: {
-        token: Tokens.HTMLTag,
         void: spec.void,
         attributes: HTMLTagAttrs(spec?.attributes)
       }
@@ -171,10 +170,7 @@ export function HTMLCompletions () {
     ]) => ({
       label,
       documentation: documentation(description, reference),
-      data: {
-        token: Tokens.HTMLAttribute,
-        value
-      }
+      data: { value }
     })
   );
 

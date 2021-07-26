@@ -1,6 +1,8 @@
 import { Values } from '../liquid/types/common';
 import { isString } from './typeof';
 
+export const { is } = Object;
+
 /**
  * Validates pattern match
  */

@@ -14,11 +14,6 @@ import { MarkupContent } from 'vscode-languageserver-types';
 export interface IHTMLCompletionData {
 
   /**
-   * The Token enum reference
-   */
-  token: Tokens,
-
-  /**
    * Returns the value set reference or when no value boolean `false`
    */
   value: string | boolean
@@ -58,11 +53,6 @@ export type IHTMLCompletionAttrs = Array<{
  * The data is used when a completion item resolves.
  */
 export interface IHTMLCompletionTagData {
-
-  /**
-   * The Token enum reference
-   */
-  token: Tokens,
 
   /**
    * Whether the tag is a void type tag or not

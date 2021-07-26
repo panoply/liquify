@@ -19,10 +19,9 @@ const connection = createConnection();
 /* ---------------------------------------------------------------- */
 /* onInitialize                                                     */
 /* ---------------------------------------------------------------- */
+connection.onInitialize(initializeParams => {
 
-connection.onInitialize(initializeParams => (
-
-  Server.capabilities(initializeParams, {
+  return Server.capabilities(initializeParams, {
     textDocumentSync: {
       openClose: true,
       change: TextDocumentSyncKind.Incremental,
@@ -41,9 +40,12 @@ connection.onInitialize(initializeParams => (
       resolveProvider: true
     }, */
     signatureHelpProvider: {
-      triggerCharacters: [ ':', ',' ],
-      // isRetrigger: true,
-      retriggerCharacters: [ ' ' ]
+      triggerCharacters: [
+        '%',
+        ':',
+        ',',
+        '('
+      ]
     },
     completionProvider: {
       resolveProvider: true,
@@ -76,9 +78,9 @@ connection.onInitialize(initializeParams => (
         'liquid.updateWizard'
       ]
     }
-  })
+  });
 
-));
+});
 
 /* ---------------------------------------------------------------- */
 /* onInitialized                                                    */
@@ -112,7 +114,7 @@ connection.onDidChangeConfiguration(change => {
 
   Server.configure('onDidChangeConfiguration', change.settings);
 
-  // documents.forEach(Service.doValidation)
+  // return Parser.reparse();
 
 });
 
@@ -190,7 +192,15 @@ connection.onDocumentRangeFormatting(async ({ textDocument: { uri } }) => {
 
     if (!document) return null;
 
-    return Service.doFormat(document, Server.formatting);
+    try {
+
+      return Service.doFormat(document, Server.formatting);
+
+    } catch (error) {
+
+      connection.console.error(error);
+
+    }
 
   }
 
@@ -234,23 +244,21 @@ connection.onHover(async ({ position, textDocument: { uri } }) => {
 /* onSignatureHelp                                                  */
 /* ---------------------------------------------------------------- */
 
-connection.onSignatureHelp(
-  ({
-    position
-    , textDocument: { uri }
-    , context
-  }, token) => runAsync(async () => {
+connection.onSignatureHelp(async ({ textDocument: { uri }, position, context }) => {
 
-    return null;
+  if (Server.provider.completion) {
 
     const document = Parser.get(uri);
 
     if (!document) return null;
 
-    return Service.doSignature(document, position, context);
+    return Service.doSignature(document.node, context);
 
-  }, null, `Error while computing hover for ${uri}`, token)
-);
+  }
+
+  return null;
+
+});
 
 /* ---------------------------------------------------------------- */
 /* onCodeLens                                                       */

@@ -75,6 +75,22 @@ export class LiquidParser {
     return parse(create(textDocument));
   }
 
+  reparse (uri?: string): void {
+
+    if (uri) {
+      if (model.has(uri)) {
+        parse(model.get(uri));
+      }
+    } else {
+      return model.forEach(document => {
+        document.errors = [];
+        document.linting = [];
+        return parse(document);
+      });
+    }
+
+  }
+
   get (uri: string): IAST {
 
     return get(uri);

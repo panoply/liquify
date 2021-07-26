@@ -1,30 +1,31 @@
-import { IAST, Position, Characters } from '@liquify/liquid-parser';
-import { TextEdit } from 'vscode-languageserver';
+import { TextEdit, CompletionItem } from 'vscode-languageserver';
+import {
+  Position,
+  Characters as c
+} from '@liquify/liquid-parser';
 
 /* -------------------------------------------- */
-/* LOCAL CONSTANTS                              */
+/* LOCAL SCOPES                                 */
 /* -------------------------------------------- */
 
-const LCB = '{';
+export let textEdits: TextEdit[];
 
 /* -------------------------------------------- */
 /* EXPORT FUNCTIONS                             */
 /* -------------------------------------------- */
 
-export function getTagsEdits (
-  document: IAST,
-  position: Position,
-  offset: number,
-  trigger: number
-): TextEdit[] {
+export function TagEdits (position: Position, trigger: number): TextEdit[] {
 
-  const additionalTextEdits = [];
+  position.character -= trigger === c.WSP ? 3 : 1;
 
-  if (!document.isPrevCodeChar(Characters.LCB, offset)) {
-    position.character -= trigger === Characters.WSP ? 3 : 1;
-    return [ TextEdit.insert(position, LCB) ];
-  }
+  return [ TextEdit.insert(position, String.fromCharCode(c.LCB)) ];
 
-  return additionalTextEdits;
+}
+
+export function OutputEdits (position: Position, trigger: number): TextEdit[] {
+
+  position.character -= trigger === c.WSP ? 3 : 1;
+
+  return [ TextEdit.insert(position, String.fromCharCode(c.LCB)) ];
 
 }

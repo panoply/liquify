@@ -14,7 +14,7 @@ import { inRange } from 'lodash';
 /**
  * Returns the word in range
  */
-function getWord (string: string, offset: number): string | null {
+export function getWord (string: string, offset: number): string | null {
 
   const before = string.slice(0, offset + 1).search(Regexp.WordBoundaryBefore);
   const after = string.slice(offset).search(Regexp.WordBoundaryAfter);

@@ -4,10 +4,10 @@
 
 export {
 
-  LiquidObjectComplete,
   LiquidPropertyComplete,
-  LiquidTagComplete,
-  LiquidTagResolve
+  LiquidTagResolve,
+  LiquidOutputResolve,
+  LiquidFilterResolve
 
 } from '../liquid/controller/provide';
 

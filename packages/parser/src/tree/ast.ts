@@ -1,6 +1,6 @@
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
 import { ParseError } from 'lexical/errors';
-import { TextEdit } from 'vscode-languageserver-types';
+import { TextEdit, TextDocumentItem } from 'vscode-languageserver-types';
 // import { NodeLanguage } from 'lexical/language';
 // import { Config } from 'config';
 // import { NodeKind } from 'lexical/kind';
@@ -103,12 +103,6 @@ export class IAST {
    * exist on the tree
    */
   public variables: object = Object.create(null);
-
-  /**
-   * Returns the node at the current cursor location or null
-   * if the cursor is not located within a node on the tree.
-   */
-  public ready: boolean = false;
 
   /**
    * Returns the node at the current cursor location or null
@@ -340,7 +334,6 @@ export class IAST {
    */
   public increment (edits: { range: Range, text: string}[], version: number): string {
 
-    this.ready = false;
     this.cursor = NaN;
     this.version = version;
     this.format.enable = true;

@@ -4,6 +4,52 @@ import { IFormatting, FormattingEditorConfigs } from './formatting';
 /* SERVER                                                           */
 /* ---------------------------------------------------------------- */
 
+export type ConfigRCFiles = (
+  | '.env'
+  | '.liquidrc'
+  | '.liquidrc.js'
+  | '.liquidrc.yaml'
+  | '.liquidrc.yml'
+  | '.liquidrc.json'
+  | '.prettierrc'
+  | '.prettierrc.js'
+  | '.prettierrc.yaml'
+  | '.prettierrc.yml'
+  | '.prettierrc.json'
+  | '.prettierignore'
+  | '.jsbeautifyrc'
+  | '.jsbeautifyrc.js'
+  | '.jsbeautifyrc.yaml'
+  | '.jsbeautifyrc.yml'
+  | '.jsbeautifyrc.json'
+  | '.editorconfig'
+)
+
+export type RCProps = (
+  | 'env'
+  | 'liquidrc'
+  | 'prettierrc'
+  | 'prettierignore'
+  | 'jsbeautifyrc'
+  | 'editorconfig'
+)
+
+export interface RCFileConfig {
+  filename: ConfigRCFiles,
+  path: string,
+  language: 'js' | 'yaml' | 'json' | 'raw'
+  config: object
+}
+
+export interface IRCFiles {
+  liquidrc?: RCFileConfig
+  env?: RCFileConfig
+  prettierrc?: RCFileConfig
+  prettierignore?: RCFileConfig
+  jsbeautifyrc?: RCFileConfig
+  editorconfig?: RCFileConfig
+}
+
 /**
  * Client Initialization Options
  *
@@ -171,9 +217,9 @@ export interface Services {
 export class Config {
 
   /**
-   * The `.liquidrc` file location
+   * The `.rc` files location
    */
-  rcfile: string
+  rcfile: IRCFiles
 
   /**
    * The rootURI path of workspace

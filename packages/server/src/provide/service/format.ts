@@ -1,7 +1,9 @@
 import * as format from '@liquify/beautify';
 import { Formatting } from 'types/server';
+import { is } from 'utils/common';
 import { NodeKind, INode, IEmbed, IAST, TextDocument } from '@liquify/liquid-parser';
 import { TextEdit } from 'vscode-languageserver';
+import indentString from 'indent-string';
 
 /**
  * Formatting Functions
@@ -36,7 +38,7 @@ function preplacement (editText: string): string {
   return editText
 
     // Reset HTML Liquid string attributes
-    .replace(/="(\{[{%]-?)/g, '=" $1')
+    .replace(/=(["'])(\{[{%]-?)/g, '=$1 $2')
 
     // Enforce comments to use trims
     .replace(/({%-?)\s*(\b(?:end)?comment\s*)(-?%})/g, '{%- $2 -%}');
@@ -54,13 +56,31 @@ function replacements (newText: string): string {
   return newText
 
     // Patches Liquid Quotation alignments
-    .replace(/="\s*(\{[{%]-?)/g, '="$1')
+    .replace(/=(["'])\s*(\{[{%]-?)/g, '=$1$2')
 
     // Ignores Embedded HTML language regions
-    .replace(/\s*data-prettydiff-ignore>/g, '>\n')
+    .replace(/<!--parse-ignore-start-->/g, '')
+    .replace(/\/\*parse-ignore-start\*\//g, '')
+    .replace(/\/\*parse-ignore-end\*\//g, '')
+    .replace(/<!--parse-ignore-end-->/g, '');
 
-    // Patches embedded Liquid language regions
-    .replace(/_pdp/g, '');
+};
+
+/**
+ * Indentation Levels
+ *
+ * Used for embedded blocks of code that are nested or child
+ * nodes contained within HTML elements which must adhere to an
+ * indentation level
+ */
+function indentation (literal: TextDocument, offset: number, tabSize: number) {
+
+  const align = offset - literal.offsetAt({
+    line: literal.positionAt(offset).line,
+    character: 0
+  });
+
+  return (align / tabSize) * tabSize;
 
 };
 
@@ -75,30 +95,23 @@ function HTMLRegions (
   literal: TextDocument,
   textEdit: TextEdit[],
   newText: string,
-  { offsets }: INode
+  { offsets, range: { start, end } }: INode
 ): TextEdit[] {
 
+  const open = literal.positionAt(offsets[1]);
+  const close = literal.positionAt(offsets[2]);
+
   textEdit.push(
-    {
-      newText: 'data-prettydiff-ignore>',
-      range: {
-        start: literal.positionAt(offsets[1] - 1),
-        end: literal.positionAt(offsets[1])
-      }
-    },
-    {
-      newText,
-      range: {
-        start: literal.positionAt(offsets[3] + 1),
-        end: literal.positionAt(offsets[2])
-      }
-    }
+    // { newText: '\n/*parse-ignore-start*/\n', range: { start: open, end: open } },
+    // { newText: '\n/*parse-ignore-end*/\n', range: { start: close, end: close } },
+    { newText: '\n', range: { start, end: start } },
+    { newText: '\n', range: { start: end, end } },
+    { newText, range: { start: open, end: close } }
   );
 
   return textEdit;
 
 };
-
 /**
  * Liquid Regions
  *
@@ -111,13 +124,11 @@ function LiquidRegions (
   literal: TextDocument,
   textEdit: TextEdit[],
   newText: string,
-  { tag, startToken, endToken, offsets, range: { start, end } }: INode
+  { offsets, range: { start, end } }: INode
 ): TextEdit[] {
 
-  const startName = startToken.indexOf(tag);
-  const closeName = endToken.indexOf(`end${tag}`);
-  const startPos = literal.positionAt(offsets[0] + startName);
-  const closePos = literal.positionAt(offsets[2] + closeName);
+  const open = literal.positionAt(offsets[1]);
+  const close = literal.positionAt(offsets[2]);
 
   textEdit.push(
 
@@ -125,42 +136,10 @@ function LiquidRegions (
 
     { newText: '\n', range: { start, end: start } },
     { newText: '\n', range: { start: end, end } },
-
-    /* START TAG NAME ----------------------------- */
-
-    {
-      newText: `${tag}_pdp`,
-      range: {
-        start: startPos,
-        end: {
-          line: startPos.line,
-          character: startPos.character + tag.length
-        }
-      }
-    },
-
-    /* END TAG NAME ------------------------------- */
-
-    {
-      newText: `end${tag}_pdp`,
-      range: {
-        start: closePos,
-        end: {
-          line: closePos.line,
-          character: closePos.character + tag.length + 3
-        }
-      }
-    },
-
-    /* INNER CONTENTS ----------------------------- */
-
-    {
-      newText,
-      range: {
-        start: literal.positionAt(offsets[1]),
-        end: literal.positionAt(offsets[2])
-      }
-    }
+    { newText: '\n', range: { start: open, end: open } },
+    { newText: '\n<!--parse-ignore-start-->\n', range: { start, end: start } },
+    { newText: '<!--parse-ignore-end-->', range: { start: end, end } },
+    { newText, range: { start: open, end: close } }
   );
 
   return textEdit;
@@ -179,7 +158,13 @@ function embedded (literal: TextDocument, { languageRules, editorRules }: Format
 
   return (textEdit: TextEdit[], node: INode & IEmbed) => {
 
-    const beautify = format.prettydiff(node.innerContent, languageRules[node.languageId]);
+    const rules = languageRules[node.languageId];
+
+    rules.indent_level = is(node.parent.type, 0)
+      ? 0
+      : indentation(literal, node.start, editorRules.tabSize);
+
+    const beautify = format.prettydiff(node.innerContent, rules);
 
     // Check Sparser for errors
     // Validations will handle missing pairs
@@ -190,15 +175,9 @@ function embedded (literal: TextDocument, { languageRules, editorRules }: Format
     }
 
     // Apply indentation to tag block
-    // const newText = '\n' + repeat(rules.indent_char, editorRules.tabSize) + format;
-
-    if (!node.innerContent.trim()) {
-      if (node.kind === NodeKind.HTML) {
-        return HTMLRegions(literal, textEdit, '\n' + beautify.source, node);
-      }
-    }
-
-    return LiquidRegions(literal, textEdit, '\n' + beautify.source, node);
+    return is(node.kind, NodeKind.HTML)
+      ? HTMLRegions(literal, textEdit, beautify.source, node)
+      : LiquidRegions(literal, textEdit, beautify.source, node);
 
   };
 
@@ -212,6 +191,8 @@ function embedded (literal: TextDocument, { languageRules, editorRules }: Format
  * this function as does the `regions()` function.
  */
 function formatMarkup (source: string, { languageRules }: Formatting) {
+
+  // console.log(source);
 
   const beautify = format.prettydiff(preplacement(source), languageRules.html);
 

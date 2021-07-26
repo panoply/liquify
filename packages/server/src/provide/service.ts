@@ -1,4 +1,5 @@
 // import { TextDocument } from 'vscode-languageserver-textdocument';
+import { is } from 'utils/common';
 import { JSONLanguageService } from 'provide/modes/json';
 import { CSSLanguageService } from 'provide/modes/css';
 import { Services, Formatting } from 'types/server';
@@ -29,6 +30,8 @@ import {
   CompletionTriggerKind,
   PublishDiagnosticsParams,
   // FormattingOptions,
+  SignatureHelpParams,
+  SignatureHelpTriggerKind,
   SignatureHelpContext,
   SignatureHelp,
   CompletionItem,
@@ -47,7 +50,9 @@ import {
  */
 export class LiquidService {
 
-  private cache: TextEdit[]
+  private edits: TextEdit[]
+  private token: number = NaN
+  private signature: number = 0
 
   private mode: {
     css: CSSLanguageService,
@@ -161,52 +166,33 @@ export class LiquidService {
   /**
    * `doSignature`
    */
-  doSignature (
-    document: IAST,
-    position: Position,
-    ctx: SignatureHelpContext
-  ):SignatureHelp {
+  async doSignature (node: INode, context: SignatureHelpContext): Promise<SignatureHelp> {
 
-    return null;
-    /*
-    if (!document.withinToken(position)) return null;
+    if (is(node.type, Type.embedded)) return null;
 
-    const context = document.getNodeContext(position);
+    const { lastWord } = node;
 
-    if (!context) return null;
+    if (is(context.triggerCharacter, Char.COL)) {
+
+      if (is(context.triggerKind, SignatureHelpTriggerKind.Invoked)) {
+        context.activeSignatureHelp.activeSignature = 0;
+        context.activeSignatureHelp.activeParameter = 1;
+        context.activeSignatureHelp.signatures = liquid.signatures.filters[lastWord];
+      }
+
+      if (context.isRetrigger) {
+        context.activeSignatureHelp.activeParameter++;
+      }
+    }
 
     console.log(context);
 
     return {
+      activeParameter: 0,
       activeSignature: 0,
-      activeParameter: null,
-      signatures: [
-        {
-          label: '{% if condition == comparison %}',
-          documentation: 'The for loop',
-          activeParameter: context.length - 1,
-          parameters: [
-            {
-              label: 'if',
-              documentation: 'The tag name'
-            },
-            {
-              label: 'condition',
-              documentation: 'The iteree variable'
-            },
-            {
-              label: '==',
-              documentation: 'The operator'
-            },
-            {
-              label: 'comparison',
-              documentation: 'the array'
-            }
-          ]
-        }
+      signatures: liquid.signatures.filters[lastWord]
+    };
 
-      ]
-    }; */
   }
 
   /**
@@ -217,10 +203,9 @@ export class LiquidService {
     triggerKind
   }: CompletionContext) {
 
-    const trigger = Object.is(
-      CompletionTriggerKind.TriggerCharacter,
-      triggerKind
-    ) ? triggerCharacter.charCodeAt(0) : false;
+    const trigger = is(CompletionTriggerKind.TriggerCharacter, triggerKind)
+      ? triggerCharacter.charCodeAt(0)
+      : false;
 
     const offset = document.offsetAt(position);
     const node: INode = document.node;
@@ -229,113 +214,149 @@ export class LiquidService {
     if (!node && trigger) {
 
       // HTML tag completions following left angle bracket, eg: <^
-      if (Object.is(trigger, Char.LAN)) {
+      if (is(trigger, Char.LAN)) {
+        this.token = Tokens.HTMLTag;
         return html5.completions.tags;
       }
 
       // Liquid tag completions following a percentage character, eg %^
-      if (Object.is(trigger, Char.PER)) {
-        this.cache = Complete.getTagsEdits(document, position, offset, trigger);
-        return liquid.completions.tags;
+      if (is(trigger, Char.PER)) {
+        if (!document.isPrevCodeChar(Char.LCB, offset)) {
+          this.token = Tokens.LiquidTag;
+          this.edits = Complete.TagEdits(position, trigger);
+          return liquid.completions.tags;
+        }
       }
 
-      return null;
+      // Liquid tag completions following a percentage character, eg %^
+      if (is(trigger, Char.LCB)) {
+        if (document.isPrevCodeChar(Char.LCB, offset)) {
+          this.token = Tokens.LiquidOutput;
+          this.edits = Complete.OutputEdits(position, trigger);
+          return liquid.completions.objects;
+        }
+      }
+
+      if (!node) return null;
 
     }
 
-    // Embedded Regions
-    if (Object.is(node.type, Type.embedded)) {
+    if (document.withinContent(offset)) {
+      // Embedded Regions
+      if (is(node.type, Type.embedded)) {
 
-      // Ensure we have language service
-      if (this.mode?.[node.languageId]) {
-
-        // Pass completions to language service
-        return this.mode[node.languageId].doComplete(node, position);
-
+        // Ensure we have language service
+        if (this.mode?.[node.languageId]) {
+          this.token = Tokens.LiquidEmbedded;
+          return this.mode[node.languageId].doComplete(node, position);
+        }
       }
     }
+
+    if (!document.withinToken(offset)) return null;
 
     // We are within a HTML node
     // Ensure we are within a start token, eg: <tag ^>
-    if (Object.is(node.kind, NodeKind.HTML) && document.withinToken(offset)) {
+    if (is(node.kind, NodeKind.HTML)) {
 
       // Provide value completions if quotation, eg: <tag attr="^
-      if (Object.is(trigger, Char.DQO) || Object.is(trigger, Char.SQO)) {
+      if (is(trigger, Char.DQO) || is(trigger, Char.SQO)) {
+        this.token = Tokens.HTMLValue;
         return p.HTMLValueComplete($.html5.value);
       }
 
       // Provide attribute completions, eg: <tag attr^
       // Only when no trigger character was passed
-      if (!trigger) return p.HTMLAttrsComplete(node.tag);
+      if (!trigger) {
+        this.token = Tokens.HTMLAttribute;
+        return p.HTMLAttrsComplete(node.tag);
+      }
 
       // Provide Liquid completions within attributes, eg: <tag %^
-      if (Object.is(trigger, Char.PER)) {
-        this.cache = Complete.getTagsEdits(document, position, offset, trigger);
-        return liquid.completions.tags;
+      if (is(trigger, Char.PER)) {
+        if (!document.isPrevCodeChar(Char.LCB, offset)) {
+          this.token = Tokens.LiquidTag;
+          this.edits = Complete.TagEdits(position, trigger);
+          return liquid.completions.tags;
+        }
       }
 
     }
 
     // We are within a Liquid node
-    if (Object.is(node.kind, NodeKind.Liquid) && document.withinToken(offset)) {
+    if (is(node.kind, NodeKind.Liquid)) {
 
       // Dot character trigger, provided object properties
-      if (Object.is(trigger, Char.DOT)) {
+      if (is(trigger, Char.DOT)) {
 
         // The property provider requires we pass the nodes objects
         // scope value and offset so is can determine what to provide
+        this.token = Tokens.LiquidProperty;
         return p.LiquidPropertyComplete(node.objects, node.scope, offset);
       }
 
       // If trigger is a quotation, lets figure out what to provide
-      if (Object.is(trigger, Char.DQO) || Object.is(trigger, Char.SQO)) {
+      if (is(trigger, Char.DQO) || is(trigger, Char.SQO)) {
 
         // First lets check it its an object brackets notation, eg: object["^
         if (document.isPrevCodeChar(Char.LOB, offset)) {
+
           // If detected, lets provide properties
+          this.token = Tokens.LiquidProperty;
           return p.LiquidPropertyComplete(node.objects, node.scope, offset);
         }
       }
 
       // Provide value completions if single quotation, eg: <tag attr='^
-      if (Object.is(trigger, Char.SQO)) {
+      if (is(trigger, Char.SQO)) {
+
+        this.token = Tokens.HTMLValue;
+
         return p.HTMLValueComplete($.html5.value);
       }
 
       // Pipe character trigger, provide filters, eg: {{ tag |^ }}
       // We will persist the completion if space was provided, eg: {{ tag | ^ }}
-      if (Object.is(trigger, Char.PIP) || document.isPrevCodeChar(Char.PIP, offset)) {
+      if (is(trigger, Char.PIP) || document.isPrevCodeChar(Char.PIP, offset)) {
 
         // Lets ensure the node accepts filters before providing
         // Almost all output tags accept filters, lets proceed
-        if (Object.is(node.type, Type.output)) {
+        if (is(node.type, Type.output)) {
 
           // Some output tags not not accept filters, lets query
           // the specification and ensure we can provide them, when
           // no specification exists for this output, we can provide
-          if (!q.setObject(node.tag)) return liquid.completions.filters;
+          if (!q.setObject(node.tag)) {
+            this.token = Tokens.LiquidFilter;
+            return liquid.completions.filters;
+          }
 
-          // We have a spec reference, lets check if filters are ok
-          return q.isAllowed('filters') ? liquid.completions.filters : null;
+          // Proceed accordingly, else cancel the completion
+          if (q.isAllowed('filters')) {
+            this.token = Tokens.LiquidFilter;
+            return liquid.completions.filters;
+          }
+
+          return null;
         }
 
         // Some tags accept filters, like the assign tag, lets validate
         // Lets first ensure we know about the tag
         if (q.setTag(node.tag)) {
+
           // Proceed accordingly, else cancel the completion
-          return q.isAllowed('filters') ? liquid.completions.filters : null;
+          if (q.isAllowed('filters')) {
+            this.token = Tokens.LiquidFilter;
+            return liquid.completions.filters;
+          }
+
+          return null;
         }
       }
 
       return liquid.completions.objects;
 
     }
-
-    //    console.log(trigger, trigger === Characters as Char.DOT);
-
-    // if (trigger === Characters as Char.DOT) {
-    // return Completion.getObjectCompletion(document, offset);
-    // }
 
     return null;
 
@@ -350,17 +371,23 @@ export class LiquidService {
    */
   doCompleteResolve (completionItem: CompletionItem): CompletionItem {
 
-    switch (completionItem.data.token) {
+    switch (this.token) {
       case Tokens.HTMLTag:
         return p.HTMLTagResolve(completionItem);
       case Tokens.HTMLAttribute:
         return p.HTMLAttrsResolve(completionItem);
       case Tokens.HTMLValue:
         return p.HTMLValueResolve(completionItem);
+      case Tokens.LiquidFilter:
+        return p.LiquidFilterResolve(completionItem);
       case Tokens.LiquidTag:
-        return p.LiquidTagResolve(completionItem, this.cache);
+        return p.LiquidTagResolve(completionItem, this.edits);
+      case Tokens.LiquidOutput:
+        return p.LiquidOutputResolve(completionItem, this.edits);
       case Tokens.LiquidEmbedded:
         return this.mode[completionItem.data.languageId].doResolve(completionItem);
+      case Tokens.LiquidProperty:
+        return completionItem;
 
     }
 

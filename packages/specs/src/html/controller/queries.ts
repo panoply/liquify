@@ -1,5 +1,6 @@
 import { IHTMLTag, IHTMLValue, IHTMLTagAttributes } from './../types/markup';
 import { html5 } from './provide';
+import { is } from '../../utils/finders';
 
 /* -------------------------------------------- */
 /* EXPORT SCOPES                                */
@@ -68,6 +69,35 @@ export function setHTMLTag (name: string): boolean {
 /* -------------------------------------------- */
 /* VALIDATORS                                   */
 /* -------------------------------------------- */
+
+/**
+ * Checks to see if the provided HTML tag is an
+ * embedded type tag, eg: <style> or <script>
+ */
+export function isEmbedded (name: string): 'css' | 'javascript' | false {
+
+  return is(name, 'script') ? 'javascript' : is(name, 'style') ? 'css' : false;
+
+}
+
+/**
+ * Checks the the attribute language of an embedded
+ * tag,
+ */
+export function isLanguage (attribute: string) {
+
+  switch (attribute) {
+    case 'module':
+    case 'text/javascript':
+    case 'text/ecmascript':
+    case 'text/babel':
+    case 'application/javascript':
+    case 'application/ecmascript': return 'javascript';
+    case 'application/json':
+    case 'application/ld+json': return 'json';
+  }
+
+}
 
 /**
  * Checks to see if the provided HTML tag is a void

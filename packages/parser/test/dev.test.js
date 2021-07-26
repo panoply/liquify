@@ -4,28 +4,13 @@ import { parser } from './cases/shared';
 // import Stringify from 'json-stringify-safe';
 
 const text = `
-<footer>
-  <nav
-    id="footers"
-    aria-activedescendant="foo"
-    aria-autocomplete="both"
-    aria-colcount="false">
+<script>
+const foo
+</script>
 
-    <ul>
-      <li>
-        {% if alphabet == 2%}
-          {{ product. | replace: 'sss', 'd' | append: 'd' | font_modify: 'style', 'normal' }}
-        {% endif %}
-      </li>
-      <li>
-        {{ def }}
-      </li>
-      <li>
-        {{ ghi }}
-      </li>
-    </ul>
-  </nav>
-</footer>
+<style>
+.class { color: red; }
+</style>
 
 `;
 
@@ -81,9 +66,9 @@ test('FullDocument Parse', t => {
 
   // console.log(ast.getTokenAt(60));
   const end = process.hrtime(start);
-  console.log(Stack(ast));
+  // console.log(Stack(ast));
   // console.log(ast);
-  // console.log(...ast.nodes);
+  console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());
 
   // console.log(ast.diagnostics.length);

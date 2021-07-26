@@ -654,16 +654,8 @@ function Scan (): number {
 
       // Gets property value on object, eg: "prop" in "object.prop"
       if (s.IfRegExp(r.PropertyValue)) {
-
         state = ScanState.Object;
-
         return TokenType.ObjectProperty;
-        // Validate the property against the specification
-        // if (q.propofObject(s.token)) return TokenType.ObjectProperty;
-
-        // When we get here the spec has no knowledge of the object
-        // error = ParseError.UnknownProperty;
-        // return TokenType.ParseError;
       }
 
       // Check if an extra dot character was expressed, eg: {{ object.. }}
@@ -1503,6 +1495,11 @@ function Scan (): number {
       if ($.liquid.tag.language === 'css') {
         state = ScanState.BeforeStartTagClose;
         return TokenType.EmbeddedCSS;
+      }
+
+      if ($.liquid.tag.language === 'scss') {
+        state = ScanState.BeforeStartTagClose;
+        return TokenType.EmbeddedSCSS;
       }
 
       if ($.liquid.tag.language === 'javascript') {

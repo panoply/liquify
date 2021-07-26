@@ -2,7 +2,8 @@ import * as IServer from 'types/server';
 
 export class Config implements IServer.Config {
 
-  rcfile: undefined
+  rcfile: IServer.IRCFiles = {}
+
   rootUri: undefined
   paths: {}
 

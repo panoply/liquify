@@ -6597,98 +6597,7 @@ export default (function parse_init() {
             } while (htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && ((end === true && parse.structure.length > 1) || (end === false && `/${parse.structure[parse.structure.length - 1][0]}` !== tname)));
           }
         },
-        // A fix for Vapor Leaf end structure parsing
-        vaporEnd = function lexer_markup_vaporEnd() {
-          const liner = parse.linesSpace,
-            rec = {
-              begin: parse.structure[parse.structure.length - 1][1],
-              ender: -1,
-              lexer: "markup",
-              lines: liner,
-              stack: parse.structure[parse.structure.length - 1][0],
-              token: "}",
-              types: "template_end"
-            };
-          let aa = a + 1;
-          if ((/\s/).test(b[aa]) === true) {
-            aa = parse.spacer({
-              array: b,
-              end: c,
-              index: aa
-            }) + 1;
-          }
-          if (b[aa] === "e" && b[aa + 1] === "l" && b[aa + 2] === "s" && b[aa + 3] === "e") {
-            if (b[aa + 4] === "{") {
-              rec.token = "} else {";
-              rec.types = "template_else";
-              recordPush(data, rec, "else");
-              a = aa;
-              return;
-            }
-            if ((/\s/).test(b[aa + 4]) === true) {
-              aa = parse.spacer({
-                array: b,
-                end: c,
-                index: aa + 4
-              }) + 1;
-              if (b[aa] === "{") {
-                rec.token = "} else {";
-                rec.types = "template_else";
-                recordPush(data, rec, "else");
-                a = aa;
-                return;
-              }
-              if (b[aa] === "i" && b[aa + 1] === "f") {
-                aa = aa + 2;
-                if ((/\s/).test(b[aa]) === true) {
-                  aa = parse.spacer({
-                    array: b,
-                    end: c,
-                    index: aa
-                  }) + 1;
-                }
-                if (b[aa] === "(") {
-                  let paren = 0;
-                  do {
-                    if (b[aa] === "(") {
-                      paren = paren + 1;
-                    } else if (b[aa] === ")") {
-                      paren = paren - 1;
-                      if (paren < 1) {
-                        aa = aa + 1;
-                        break;
-                      }
-                    }
-                    aa = aa + 1;
-                  } while (aa < c);
-                  if ((/\s/).test(b[aa]) === true) {
-                    aa = parse.spacer({
-                      array: b,
-                      end: c,
-                      index: aa
-                    }) + 1;
-                  }
-                  if (b[aa] === "{") {
-                    rec.token = b.slice(a, aa + 1).join("");
-                    rec.types = "template_else";
-                    recordPush(data, rec, "else");
-                    a = aa;
-                    return;
-                  }
-                }
-              }
-            }
-          }
-          recordPush(data, rec, "");
-          parse.linesSpace = liner;
-        },
-        // A fix for Vapor Leaf start structure parsing
-        vaporStart = function lexer_markup_vaporStart() {
-          const rec = parse.pop(data);
-          rec.token = `${rec.token} {`;
-          rec.types = "template_start";
-          recordPush(data, rec, rec.token.slice(0, rec.token.indexOf("(")));
-        },
+
         //parses tags, attributes, and template elements
         tag = function lexer_markup_tag(end) {
           // markup is two smaller lexers that work together: tag - evaluates markup and
@@ -6967,19 +6876,23 @@ export default (function parse_init() {
                 sq = 0,
                 slice = "",
                 name = "",
-                cft = cftags[tname
-                  .toLowerCase()
-                  .replace(/\/$/, "")],
                 store = [],
                 len = attstore.length;
-              const qc = (options.lexer_options.markup.quote_convert === undefined) ?
-                "none" :
-                options.lexer_options.markup.quote_convert,
+              const qc =
+                  options.lexer_options.markup.quote_convert === undefined
+                    ? "none"
+                    : options.lexer_options.markup.quote_convert,
                 begin = parse.count,
                 stack = tname.replace(/\/$/, ""),
                 syntax = "<{\"'=/",
                 convertQ = function lexer_markup_tag_attributeRecord_convertQ() {
-                  if (ignoreme === true || qc === "none" || record.types !== "attribute" || (qc === "single" && record.token.indexOf("\"") < 0) || (qc === "double" && record.token.indexOf("'") < 0)) {
+                  if (
+                    ignoreme === true ||
+                    qc === "none" ||
+                    record.types !== "attribute" ||
+                    (qc === "single" && record.token.indexOf('"') < 0) ||
+                    (qc === "double" && record.token.indexOf("'") < 0)
+                  ) {
                     recordPush(data, record, "");
                   } else {
                     let ee = 0,
@@ -6987,18 +6900,26 @@ export default (function parse_init() {
                     const chars = record.token.split(""),
                       eq = record.token.indexOf("="),
                       len = chars.length - 1;
-                    if (chars[eq + 1] !== "\"" && qc === "single" && chars[chars.length - 1] !== "\"") {
+                    if (
+                      chars[eq + 1] !== '"' &&
+                      qc === "single" &&
+                      chars[chars.length - 1] !== '"'
+                    ) {
                       recordPush(data, record, "");
-                    } else if (chars[eq + 1] !== "'" && qc === "double" && chars[chars.length - 1] !== "'") {
+                    } else if (
+                      chars[eq + 1] !== "'" &&
+                      qc === "double" &&
+                      chars[chars.length - 1] !== "'"
+                    ) {
                       recordPush(data, record, "");
                     } else {
                       ee = eq + 2;
                       if (qc === "double") {
-                        if (record.token.slice(eq + 2, len).indexOf("\"") > -1) {
+                        if (record.token.slice(eq + 2, len).indexOf('"') > -1) {
                           inner = true;
                         }
-                        chars[eq + 1] = "\"";
-                        chars[chars.length - 1] = "\"";
+                        chars[eq + 1] = '"';
+                        chars[chars.length - 1] = '"';
                       } else {
                         if (record.token.slice(eq + 2, len).indexOf("'") > -1) {
                           inner = true;
@@ -7009,8 +6930,8 @@ export default (function parse_init() {
                       if (inner === true) {
                         do {
                           if (chars[ee] === "'" && qc === "single") {
-                            chars[ee] = "\"";
-                          } else if (chars[ee] === "\"" && qc === "double") {
+                            chars[ee] = '"';
+                          } else if (chars[ee] === '"' && qc === "double") {
                             chars[ee] = "'";
                           }
                           ee = ee + 1;
@@ -7021,8 +6942,14 @@ export default (function parse_init() {
                     }
                   }
                 },
-                templateAtt = function lexer_markup_tag_attributeRecord_templateAtt(sample, token) {
-                  if (sample.charAt(0) === "{" && "{%#@:/?^<+~=".indexOf(sample.charAt(1)) > -1) {
+                templateAtt = function lexer_markup_tag_attributeRecord_templateAtt(
+                  sample,
+                  token
+                ) {
+                  if (
+                    sample.charAt(0) === "{" &&
+                    "{%#@:/?^<+~=".indexOf(sample.charAt(1)) > -1
+                  ) {
                     record.types = "template_attribute";
                   } else if (sample.charAt(0) === "<") {
                     record.types = "template_attribute";
@@ -7051,7 +6978,10 @@ export default (function parse_init() {
               if (dq < eq) {
                 do {
                   name = attstore[dq - 1][0];
-                  if (name.charAt(name.length - 1) === "=" && attstore[dq][0].indexOf("=") < 0) {
+                  if (
+                    name.charAt(name.length - 1) === "=" &&
+                    attstore[dq][0].indexOf("=") < 0
+                  ) {
                     attstore[dq - 1][0] = name + attstore[dq][0];
                     attstore.splice(dq, 1);
                     eq = eq - 1;
@@ -7061,7 +6991,16 @@ export default (function parse_init() {
                 } while (dq < eq);
               }
               // sort the attributes
-              if ((options.lexer_options.markup.attribute_sort === true || options.lexer_options.markup.tag_sort === true) && jscom === false && options.language !== "jsx" && nosort === false && tname !== "cfif" && tname !== "cfelseif" && tname !== "cfset") {
+              if (
+                (options.lexer_options.markup.attribute_sort === true ||
+                  options.lexer_options.markup.tag_sort === true) &&
+                jscom === false &&
+                options.language !== "jsx" &&
+                nosort === false &&
+                tname !== "cfif" &&
+                tname !== "cfelseif" &&
+                tname !== "cfset"
+              ) {
                 // if making use of the 'attribute_sort_list` option
                 if (asl > 0) {
                   const tempstore = [];
@@ -7091,10 +7030,7 @@ export default (function parse_init() {
                   attstore = parse.safeSort(attstore, "", false);
                 }
               }
-              // preparation for a coldfusion edge case
-              if (tname.slice(0, 3).toLowerCase() === "cf_") {
-                cft = "required";
-              }
+
               record.begin = begin;
               record.stack = stack;
               record.types = "attribute";
@@ -7107,9 +7043,12 @@ export default (function parse_init() {
                   attstore[ind][0] = attstore[ind][0].replace(/\s+$/, "");
                   record.lines = attstore[ind][1];
                   eq = attstore[ind][0].indexOf("=");
-                  dq = attstore[ind][0].indexOf("\"");
+                  dq = attstore[ind][0].indexOf('"');
                   sq = attstore[ind][0].indexOf("'");
-                  if ((/^\/(\/|\*)/).test(attstore[ind][0]) === true && options.language === "jsx") {
+                  if (
+                    /^\/(\/|\*)/.test(attstore[ind][0]) === true &&
+                    options.language === "jsx"
+                  ) {
                     record.types = "comment_attribute";
                     record.token = attstore[ind][0];
                     convertQ();
@@ -7117,7 +7056,11 @@ export default (function parse_init() {
                     // put certain attributes together for coldfusion
                     record.token = store.join(" ");
                     convertQ();
-                    if (attstore[ind][0].indexOf("=") > 0 && attstore[ind][0].indexOf("//") < 0 && attstore[ind][0].charAt(0) !== ";") {
+                    if (
+                      attstore[ind][0].indexOf("=") > 0 &&
+                      attstore[ind][0].indexOf("//") < 0 &&
+                      attstore[ind][0].charAt(0) !== ";"
+                    ) {
                       record.token = attstore[ind][0].replace(/\s$/, "");
                     } else {
                       record.token = attstore[ind][0];
@@ -7126,18 +7069,26 @@ export default (function parse_init() {
                     store = [];
                   } else if (ltype === "sgml") {
                     store.push(attstore[ind][0]);
-                  } else if (cft !== undefined && eq < 0 && attstore[ind][0].indexOf("=") < 0) {
+                  } else if (
+                    eq < 0 &&
+                    attstore[ind][0].indexOf("=") < 0
+                  ) {
                     // put certain attributes together for coldfusion
                     store.push(attstore[ind][0]);
-                  } else if ((cft !== undefined && eq < 0) || (dq > 0 && dq < eq) || (sq > 0 && sq < eq) || syntax.indexOf(attstore[ind][0].charAt(0)) > -1) {
-                    // tags stored as attributes of other tags
-                    templateAtt(attstore[ind][0].replace(/^("|')/, "").slice(0, 2), attstore[ind][0].replace(/\s$/, ""));
-                  } else if (eq < 0 && cft === undefined) {
+                  }  else if (eq < 0) {
                     // in most markup languages an attribute without an expressed value has its name
                     // as its string value
-                    if (html === "html" && "[{(".indexOf(attstore[ind][0].charAt(0)) < 0 && attstore[ind][0].charAt(0) !== "#" && (/^\*?ng[A-Z]/).test(attstore[ind][0]) === false) {
+                    if (
+                      html === "html" &&
+                      "[{(".indexOf(attstore[ind][0].charAt(0)) < 0 &&
+                      attstore[ind][0].charAt(0) !== "#" &&
+                      /^\*?ng[A-Z]/.test(attstore[ind][0]) === false
+                    ) {
                       record.token = attstore[ind][0].toLowerCase();
-                    } else if (options.language === "xml" || options.language === "coldfusion") {
+                    } else if (
+                      options.language === "xml" ||
+                      options.language === "coldfusion"
+                    ) {
                       if (options.lexer_options.markup.quote_convert === "single") {
                         record.token = `${attstore[ind][0]}='${attstore[ind][0]}'`;
                       } else {
@@ -7150,22 +7101,20 @@ export default (function parse_init() {
                   } else {
                     // separates out the attribute name from its value
                     slice = attstore[ind][0].slice(eq + 1);
-                    if (syntax.indexOf(slice.charAt(0)) < 0 && cft === undefined) {
-                      slice = "\"" + slice + "\"";
+                    if (syntax.indexOf(slice.charAt(0)) < 0) {
+                      slice = '"' + slice + '"';
                     }
                     name = attstore[ind][0].slice(0, eq);
-                    if (html === "html" && "[{(".indexOf(name.charAt(0)) < 0 && cft === undefined && (/^\*?ng[A-Z]/).test(attstore[ind][0]) === false) {
-                      name = name.toLowerCase();
-                    }
-                    if (options.language === "jsx" && (/^(\s*\{)/).test(slice) === true) {
+
+                    if (options.language === "jsx" && /^(\s*\{)/.test(slice) === true) {
                       record.token = name + "={";
                       record.types = "jsx_attribute_start";
                       recordPush(data, record, "jsx_attribute");
                       sparser.lexers.script(slice.slice(1, slice.length - 1));
                       record.begin = parse.count;
-                      if ((/\s\}$/).test(slice) === true) {
+                      if (/\s\}$/.test(slice) === true) {
                         slice = slice.slice(0, slice.length - 1);
-                        slice = (/\s+$/).exec(slice)[0];
+                        slice = /\s+$/.exec(slice)[0];
                         if (slice.indexOf("\n") < 0) {
                           record.lines = 1;
                         } else {
@@ -7184,7 +7133,10 @@ export default (function parse_init() {
                       record.stack = stack;
                     } else {
                       name = name + "=" + slice;
-                      templateAtt(slice.replace(/^("|')/, "").slice(0, 2), name.replace(/(\s+)$/, ""));
+                      templateAtt(
+                        slice.replace(/^("|')/, "").slice(0, 2),
+                        name.replace(/(\s+)$/, "")
+                      );
                     }
                   }
                   ind = ind + 1;
@@ -8139,12 +8091,6 @@ export default (function parse_init() {
             recordPush(data, record, "");
             return;
           }
-          if ((/^(\/?cf)/i).test(tname) === true) {
-            tname = tname
-              .toLowerCase()
-              .replace(/\/$/, "")
-              .replace(/^\//, "");
-          }
           if (preserve === false && options.language !== "jsx") {
             element = element.replace(/\s+/g, " ");
           }
@@ -8416,90 +8362,7 @@ export default (function parse_init() {
               }
               return false;
             }
-            //processes all other coldfusion tags
-            if (tname.slice(0, 2) === "cf") {
-              if (tname === "cfelse" || tname === "cfelseif") {
-                record.token = element;
-                record.types = "template_else";
-                recordPush(data, record, tname);
-                singleton = true;
-                return false;
-              }
-              if (tname === "cftransaction" && cftransaction === true) {
-                if (element.charAt(1) === "/") {
-                  record.types = "template_end";
-                } else {
-                  cfval = "prohibited";
-                }
-              } else {
-                cfval = cftags[tname];
-              }
-              if (tname === "cfscript" && element.indexOf("</cfscript") !== 0) {
-                ext = true;
-              }
-              if (cfval === "optional" || cfval === "prohibited" || tname.slice(0, 3) === "cf_") {
-                if (options.correct === true && ender.test(element) === false) {
-                  element = element.slice(0, element.length - 1) + "/>";
-                }
-                record.token = element.replace(/\s+/, " ");
-                record.types = "template";
-                // The following madness is required because cfmodule may be a singleton or a block.
-                // You don't know until you encounter the end tag
-                if (tname === "cfmodule" && element.charAt(1) === "/") {
-                  let ss = parse.count,
-                    tt = 1;
-                  do {
-                    if (data.token[ss].toLowerCase() === "<cfmodule>") {
-                      tt = tt - 1;
-                      if (tt < 1) {
-                        break;
-                      }
-                    } else if (data.token[ss].toLowerCase() === "</cfmodule>") {
-                      tt = tt + 1;
-                    }
-                    ss = ss - 1;
-                  } while (ss > -1);
-                  data.types[ss] = "template_start";
-                  count.start = count.start + 1;
-                  tt = Math.min(ss + 1, parse.count);
-                  struc = [
-                    ["cfmodule", ss]
-                  ];
-                  ss = parse.count + 1;
-                  do {
-                    data.begin[tt] = struc[struc.length - 1][1];
-                    data.stack[tt] = struc[struc.length - 1][0];
-                    if (data.types[tt] === "end" || data.types[tt].indexOf("_end") > 0) {
-                      if (struc.length > 1) {
-                        struc.pop();
-                      }
-                    } else if (data.types[tt] === "start" || data.types[tt].indexOf("_start") > 0) {
-                      struc.push([tagName(data.token[tt]), tt]);
-                    }
-                    tt = tt + 1;
-                  } while (tt < ss);
-                  parse.structure.push(struc[0]);
-                  record.begin = struc[0][1];
-                  record.stack = "cfmodule";
-                  record.types = "template_end";
-                }
-                recordPush(data, record, "");
-                singleton = true;
-                return false;
-              }
-              if (cfval === "required" && tname !== "cfquery") {
-                if (tname === "cftransaction" && cftransaction === false) {
-                  cftransaction = true;
-                }
-                record.token = element;
-                record.types = (ltype === "end") ?
-                  "template_end" :
-                  "template_start";
-                recordPush(data, record, tname);
-                singleton = true;
-              }
-              return false;
-            }
+
             if (html === "html") {
               // html gets tag names in lowercase, if you want to preserve case sensitivity
               // beautify as XML
@@ -8540,10 +8403,7 @@ export default (function parse_init() {
                 record.types = "end";
                 data.lines[parse.count - 1] = 0;
               }
-              // generalized corrections for the handling of singleton tags
-              if (data.types[parse.count] === "end" && htmlsings[tname.slice(1)] === "singleton" && element.toLowerCase().indexOf("/cftransaction") !== 1) {
-                return fixsingleton();
-              }
+
               //inserts a trailing slash into singleton tags if they do not already have it
               if (htmlsings[tname] === "singleton") {
                 if (options.correct === true && ender.test(element) === false) {
@@ -9137,15 +8997,7 @@ export default (function parse_init() {
                     .slice(a, a + 10)
                     .join("")
                     .toLowerCase();
-                  //cfscript requires use of the script lexer
-                  if (name === "cfscript" && end === "</cfscript") {
-                    a = a - 1;
-                    if (lex.length < 1) {
-                      break;
-                    }
-                    sparser.lexers.script(lex.join("").replace(/^(\s+)/, "").replace(/(\s+)$/, ""));
-                    break;
-                  }
+
                   //script requires use of the script lexer
                   if (name === "script") {
                     if (a === c - 9) {
@@ -9217,9 +9069,6 @@ export default (function parse_init() {
                     .slice(a + 1, a + 11)
                     .join("")
                     .toLowerCase();
-                  if (name === "cfscript" && end === "</cfscript") {
-                    quote = "";
-                  }
                   end = end.slice(0, end.length - 2);
                   if (name === "script" && end === "</script") {
                     quote = "";

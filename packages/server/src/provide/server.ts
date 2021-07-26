@@ -1,4 +1,5 @@
-import { InitializeParams, ServerCapabilities } from 'vscode-languageserver';
+import { InitializeParams, ServerCapabilities, WorkspaceFolder } from 'vscode-languageserver';
+import { Utils, URI } from 'vscode-uri';
 import { Parser } from './parser';
 import { ILiquidrc } from 'types/settings';
 import { omit } from 'lodash';
@@ -11,9 +12,9 @@ export class LiquidServer extends Config {
 
   public capabilities (
     {
+      workspaceFolders,
       initializationOptions: {
-        service = null,
-        rcfile = null
+        service = null
       },
       capabilities: {
         textDocument,
@@ -31,8 +32,10 @@ export class LiquidServer extends Config {
 
     /* CONFIG ------------------------------------- */
 
-    this.rcfile = rcfile;
+    this.getConfigFiles(workspaceFolders);
     this.service = { ...this.service, ...service };
+
+    console.log(this.rcfile);
 
     /* CONFIG CAPABILITIES ------------------------ */
 
@@ -55,6 +58,57 @@ export class LiquidServer extends Config {
     }
 
     return { capabilities };
+
+  }
+
+  private getConfigFiles (workspaceFolders: WorkspaceFolder[]) {
+
+    const filenames = [
+      '.env',
+      '.liquidrc',
+      '.liquidrc.js',
+      '.liquidrc.yaml',
+      '.liquidrc.yml',
+      '.liquidrc.json',
+      '.prettierrc',
+      '.prettierrc.js',
+      '.prettierrc.yaml',
+      '.prettierrc.yml',
+      '.prettierrc.json',
+      '.prettierignore',
+      '.jsbeautifyrc',
+      '.jsbeautifyrc.js',
+      '.jsbeautifyrc.yaml',
+      '.jsbeautifyrc.yml',
+      '.jsbeautifyrc.json',
+      '.editorconfig'
+    ];
+
+    for (let i = 0; i < workspaceFolders.length; i++) {
+
+      const { uri } = workspaceFolders[i];
+
+      for (const filename of filenames) {
+
+        const path = join(uri.slice(6), filename);
+
+        if (existsSync(path)) {
+
+          const match = filename.slice(1).match(/([a-z]+)(?:\.\b(js|json|yml|yaml)\b)?/);
+
+          if (match === null) continue;
+
+          const prop = match[1];
+
+          if (typeof this.rcfile[prop] !== 'object') this.rcfile[prop] = {};
+
+          this.rcfile[prop].path = path;
+          this.rcfile[prop].filename = filename;
+          this.rcfile[prop].language = match[2] ?? 'raw';
+
+        }
+      }
+    }
 
   }
 
@@ -148,7 +202,7 @@ export class LiquidServer extends Config {
    */
   public setUserSettings () {
 
-    const settings = this.parseLiquidrc(this.rcfile);
+    const settings = this.parseLiquidrc(this.rcfile.liquidrc.path);
 
     return this.setLiquidEngine(settings);
 
@@ -193,7 +247,7 @@ export class LiquidServer extends Config {
             }
           ]
         }
-      ) => basename(this.rcfile) !== basename(uri)
+      ) => basename(this.rcfile.liquidrc.path) !== basename(uri)
         ? null
         : this.setUserSettings()
 

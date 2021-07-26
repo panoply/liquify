@@ -14,13 +14,19 @@ export function prettydiff(source: string, rules: Rules): Beautify {
   PrettyDiff.options = Object.assign(Markup.prettydiff, rules)
   PrettyDiff.options.source = source
 
-  const format: Beautify = { source: PrettyDiff(), errors: null }
+  try {
+    const format: Beautify = { source: PrettyDiff(), errors: null }
 
-  if (PrettyDiff.sparser.parseerror.length > 0) {
-    format.errors = PrettyDiff.sparser.parseerror
+    if (PrettyDiff.sparser.parseerror.length > 0) {
+      format.errors = PrettyDiff.sparser.parseerror
+      return format
+    }
+
     return format
-  }
 
-  return format
+  } catch (error) {
+
+    throw error
+  }
 
 }

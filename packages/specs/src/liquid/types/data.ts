@@ -1,18 +1,17 @@
 import { CompletionItemKind, MarkupContent } from 'vscode-languageserver-types';
-import { Tokens } from '../../shared/types';
-import { TagScopes } from './common';
-import { BasicTypeRange, Type } from './types';
+import { TagScopes, IArgument } from './common';
+import { Type } from './types';
 
 export interface ICompletion {
   label: string,
-  deprecated: boolean,
+  deprecated?: boolean,
   kind?: CompletionItemKind,
-  documentation: MarkupContent,
-  data: {
-    token: Tokens,
+  documentation?:string | MarkupContent,
+  data?: {
     snippet?: string,
     singular?: boolean,
-    parents?: TagScopes
+    parents?: TagScopes,
+    arguments?: Array<IArgument.Argument | IArgument.Parameter>
   }
 }
 
@@ -31,4 +30,4 @@ export const TypeNames = {
   [Type.string]: 'string',
   [Type.array]: 'array',
   [Type.data]: 'data'
-};
+} as const;

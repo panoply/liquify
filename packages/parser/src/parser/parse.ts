@@ -139,10 +139,8 @@ export function parse (document: IAST): IAST {
 
       case TokenType.HTMLAttributeValue:
 
-        if (Regexp.HTMLAttributeJS.test(s.token)) {
-          node.languageId = NodeLanguage.javascript;
-        } else if (Regexp.HTMLAttributeJSON.test(s.token)) {
-          node.languageId = NodeLanguage.json;
+        if (node.type === Type.embedded) {
+          node.languageId = q.isLanguage(s.token) as NodeLanguage;
         }
 
         node.attributes[attr as string] = s.token;
@@ -325,10 +323,17 @@ export function parse (document: IAST): IAST {
         q.isProperty(s.token);
 
         if (node.type === Type.iteration) {
+
           node.scope[scope] = ($.liquid.object as IProperties)?.object;
+
+          if (!q.isObjectType(Type.array)) {
+            document.report(Errors.InvalidIterationType)();
+          }
+
           if (typeof node.scope[scope] === 'string') {
             q.setObject(node.scope[scope]);
           }
+
         }
 
         if (typeof node.scope === 'number') {
@@ -425,8 +430,19 @@ export function parse (document: IAST): IAST {
     parent.children.push(node);
 
     if (type === NodeType.Pair) {
+
+      const languageId = q.isEmbedded(node.tag);
+
+      if (languageId) {
+        node = new Embed(node);
+        node.type = Type.embedded;
+        node.languageId = languageId as NodeLanguage;
+        node.parent.children.push(node);
+      }
+
       parent = node;
       pair.add(node);
+
     }
 
     track = node;

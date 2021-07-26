@@ -34,6 +34,8 @@ export {
   isAttribute,
   isAttributeUniq,
   isAttributeValue,
-  isValueRequired
+  isValueRequired,
+  isEmbedded,
+  isLanguage
 
 } from '../html/controller/queries';

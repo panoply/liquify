@@ -1,31 +1,66 @@
 import { ICompletions, TypeNames } from '../types/data';
 import { Properties } from '../types/objects';
+import { Arguments, IArgument, IParameter } from '../types/common';
 import { Type } from '../types/types';
-import { Entries, PickByValue } from '../types/utils';
-import { descriptive } from './../../utils/generators';
+import { descriptive, signatures } from './../../utils/generators';
 import { Tokens } from '../../shared/types';
 import { completions, variation } from './queries';
 import {
   CompletionItemKind,
   CompletionItem,
   InsertTextFormat,
-  TextEdit
-
+  TextEdit,
+  SignatureInformation
 } from 'vscode-languageserver-types';
 
 /* -------------------------------------------- */
 /* FUNCTIONS                                    */
 /* -------------------------------------------- */
 
-export function LiquidTagComplete () {
+/**
+ * Set Completion Items
+ *
+ * Sets the completion items that are passed to the completion resolver.
+ * Extracts necessary values from the passed in specification record.
+ */
+export function ProvideProps ([
+  label,
+  {
+    description,
+    type,
+    snippet = label
+  }
+]) {
 
-  return completions.tags;
+  return {
+    label,
+    kind: CompletionItemKind.Property,
+    insertText: snippet,
+    detail: TypeNames[type],
+    insertTextFormat: InsertTextFormat.Snippet,
+    documentation: descriptive(description),
+    data: { snippet }
+  };
 
 }
 
-export function LiquidObjectComplete () {
+export function LiquidFilterResolve (item: CompletionItem) {
 
-  return completions.objects;
+  item.kind = CompletionItemKind.Value;
+  item.insertTextFormat = InsertTextFormat.Snippet;
+  item.insertText = `${item.data.snippet}`;
+
+  return item;
+
+}
+export function LiquidOutputResolve (item: CompletionItem, edits?: TextEdit[]) {
+
+  item.kind = CompletionItemKind.Value;
+  item.additionalTextEdits = edits;
+  item.insertTextFormat = InsertTextFormat.Snippet;
+  item.insertText = ` ${item.label} }}`;
+
+  return item;
 
 }
 
@@ -86,35 +121,5 @@ export async function LiquidPropertyComplete (
       : object ? Object.entries(object).map(ProvideProps) : null;
 
   }(props.slice(1), variation.objects[props[0]].properties));
-
-}
-
-/**
- * Set Completion Items
- *
- * Sets the completion items that are passed to the completion resolver.
- * Extracts necessary values from the passed in specification record.
- */
-export function ProvideProps ([
-  label,
-  {
-    description,
-    type,
-    snippet = label
-  }
-]) {
-
-  return {
-    label,
-    kind: CompletionItemKind.Property,
-    insertText: snippet,
-    detail: TypeNames[type],
-    insertTextFormat: InsertTextFormat.Snippet,
-    documentation: descriptive(description),
-    data: {
-      token: Tokens.LiquidProperty,
-      snippet
-    }
-  };
 
 }

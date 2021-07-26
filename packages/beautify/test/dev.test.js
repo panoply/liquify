@@ -16,6 +16,22 @@ test('test', t => {
 
 </div></div>
 </div>
+
+<script>
+  {
+  "blocks": [
+    {
+      "limit": 0
+    }
+  ]
+}
+</script>
+
+<style data-prettydiff-ignore>
+  .class {
+  color: red;
+}
+</style>
   `, {
     new_line: true,
     space_close: false,
@@ -39,7 +55,7 @@ test('test', t => {
     wrap: 0
   })
 
-  console.log(beautify.source)
+  // console.log(beautify.source)
 
   t.pass()
 })
