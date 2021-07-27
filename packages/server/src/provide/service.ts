@@ -210,6 +210,14 @@ export class LiquidService {
     const offset = document.offsetAt(position);
     const node: INode = document.node;
 
+    console.log('completion', document.withinContent(offset), node.type);
+
+    // Ensure we have language service
+    if (this.mode?.[node.embeddedId]) {
+      this.token = Tokens.LiquidEmbedded;
+      return this.mode[node.embeddedId].doComplete(node, position);
+    }
+
     // Outside of nodes, provide tag completions
     if (!node && trigger) {
 
@@ -239,18 +247,6 @@ export class LiquidService {
 
       if (!node) return null;
 
-    }
-
-    if (document.withinContent(offset)) {
-      // Embedded Regions
-      if (is(node.type, Type.embedded)) {
-
-        // Ensure we have language service
-        if (this.mode?.[node.languageId]) {
-          this.token = Tokens.LiquidEmbedded;
-          return this.mode[node.languageId].doComplete(node, position);
-        }
-      }
     }
 
     if (!document.withinToken(offset)) return null;

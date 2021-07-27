@@ -1,9 +1,11 @@
 import { Node, NodeType } from 'tree/nodes';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { TextEdit } from 'vscode-languageserver';
 import { document } from 'tree/model';
 import { NodeLanguage } from 'lexical/language';
 import { customChanges } from 'parser/utils';
 import inRange from 'lodash.inrange';
+import { TextDocumentContentChangeEvent } from 'vscode-languageserver-protocol';
 
 export class Embed extends Node {
 
@@ -13,6 +15,8 @@ export class Embed extends Node {
     this.type = type;
     this.parent.children.pop();
   }
+
+  public regionLiteral: TextDocument
 
   /**
    * The index reference of the embedded region on `AST.regions[]`
@@ -44,7 +48,7 @@ export class Embed extends Node {
    * region TextDocument. The embed is stored on the AST `embedded` array
    * and a reference to its index is asserts on the node.
    */
-  public region (index: number) {
+  public region (index: number, literal: TextDocument) {
 
     const region: Embed = document.regions?.[index];
 
@@ -55,15 +59,23 @@ export class Embed extends Node {
         region.languageId === this.languageId &&
         region.tag === this.tag &&
         region.kind === this.kind
-      ) return this.update(region.textDocument, index);
+      ) return this.update(region.textDocument, index, literal);
 
       document.regions.splice(index);
 
     }
 
-    return this.create(index);
+    return this.create(index, literal);
 
   };
+
+  public compatible () {
+
+    console.log(this.textDocument);
+
+    return this.textDocument;
+
+  }
 
   /**
    * Create
@@ -72,15 +84,20 @@ export class Embed extends Node {
    * region TextDocument. The embed is stored on the AST `embedded` array
    * and a reference to its index is asserts on the node.
    */
-  private create (index: number) {
+  private create (index: number, literal: TextDocument) {
 
     this.regionIndex = index;
     this.regionOffset = this.range.start.line;
     this.textDocument = TextDocument.create(
       this.tag + '.' + this.languageId,
       this.languageId, 1,
-      this.innerContent
+      literal.getText({
+        start: literal.positionAt(this.offsets[1]),
+        end: literal.positionAt(this.offsets[2])
+      })
     );
+
+    this.regionLiteral = this.textDocument;
 
     return document.regions.push(this);
   }
@@ -92,7 +109,7 @@ export class Embed extends Node {
    * of the embeds will remain untouched, retaining a their versions
    * unless adjustments are detected within the nodes.
    */
-  private update (textDocument: TextDocument, index: number) {
+  private update (textDocument: TextDocument, index: number, literal: TextDocument) {
 
     this.regionIndex = index;
     this.regionOffset = this.range.start.line;
@@ -104,7 +121,12 @@ export class Embed extends Node {
       // update the embedded region
       this.textDocument = TextDocument.update(
         textDocument,
-        customChanges(this.innerContent, textDocument),
+        customChanges(
+          literal.getText({
+            start: literal.positionAt(this.offsets[1]),
+            end: literal.positionAt(this.offsets[2])
+          }), textDocument
+        ),
         textDocument.version + 1
       );
     }

@@ -7,7 +7,9 @@ export const enum NodeType {
   Pair,
   Void,
   Start,
-  Embed
+  Embed,
+  Output,
+  Singular
 }
 
 export const enum Token {

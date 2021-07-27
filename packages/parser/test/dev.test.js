@@ -4,14 +4,57 @@ import { parser } from './cases/shared';
 // import Stringify from 'json-stringify-safe';
 
 const text = `
-<script>
-const foo
-</script>
 
-<style>
-.class { color: red; }
-</style>
+<div>
 
+  <div>
+
+    <style>
+      .class {
+        width: auto;
+      }
+
+      .class {
+        width: auto;
+        background: {{ something.prop }};
+        font-size: {{ something.prop }};
+      }
+
+      {% if condition %}
+        div > .some > .class {
+          width: 100px;
+          background: {{ something.prop }};
+          font-size: 120px;
+        }
+      {% endif %}
+
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      main {
+        height: 100vh;
+      }
+
+      h1 {
+        font-weight: {{ something.prop | filter: 'foo' }};
+        font-size: {{ something.prop | filter: 'foo' }};
+        line-height: 4.2rem;
+      }
+
+      p {
+        font-weight: 400;
+        color: rgb(211, 211, 211);
+        font-size: 1.1rem;
+        font-family: {{ something.prop | filter: 'foo' }};
+      }
+    </style>
+
+  </div>
+
+</div>
 `;
 
 function Stack (ast) {
@@ -32,6 +75,9 @@ function Stack (ast) {
         end: child.end,
         scope: child.scope,
         errors: child.errors,
+        embeddedId: child.embeddedId,
+        languageId: child.languageId,
+        literal: child.regionLiteral,
         children: child.children.map(({ tag }) => tag),
         filters: child.filters || null,
         objects: child.objects || null,
@@ -41,6 +87,8 @@ function Stack (ast) {
           end: child.parent.end,
           index: child.parent.index,
           root: child.parent.root,
+          embeddedId: child.parent.embeddedId,
+          languageId: child.parent.languageId,
           children: child.parent.children.length
         }
 
@@ -66,9 +114,9 @@ test('FullDocument Parse', t => {
 
   // console.log(ast.getTokenAt(60));
   const end = process.hrtime(start);
-  // console.log(Stack(ast));
+  console.log(Stack(ast));
   // console.log(ast);
-  console.log(...ast.nodes);
+  // console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());
 
   // console.log(ast.diagnostics.length);

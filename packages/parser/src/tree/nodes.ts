@@ -24,6 +24,7 @@ export class Node implements INode {
   public filters?: object;
   public type: Type | NodeType;
   public languageId?: NodeLanguage;
+  public embeddedId?: NodeLanguage;
   public tag: string;
   public root: number;
   public index: number;

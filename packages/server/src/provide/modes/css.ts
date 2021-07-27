@@ -1,37 +1,48 @@
-import { IAST, INode, IEmbed, Position, Tokens } from '@liquify/liquid-parser';
-import { TextEdit, Diagnostic, CompletionList, Hover } from 'vscode-languageserver-protocol';
+import { IAST, IEmbed, Tokens, Position } from '@liquify/liquid-parser';
+import {
+  TextEdit,
+  Diagnostic,
+  CompletionList,
+  Hover
+} from 'vscode-languageserver-protocol';
 import {
   getCSSLanguageService,
   DiagnosticSeverity,
   LanguageService
+
 } from 'vscode-css-languageservice';
 
 export class CSSLanguageService {
 
   public service: LanguageService = getCSSLanguageService();
 
+  init () {
+
+  }
+
   /**
    * CSS Validation
    */
-  doValidation (document: IAST, node: IEmbed & INode): Diagnostic[] | null {
+  doValidation (document: IAST, node: IEmbed): Diagnostic[] | null {
 
     const CSSDocument = this.service.parseStylesheet(node.textDocument);
     const diagnostics = this.service.doValidation(node.textDocument, CSSDocument);
 
     if (!diagnostics) return null;
 
-    for (const diagnostic of diagnostics) {
+    diagnostics.forEach(diagnostic => {
 
       diagnostic.range.start.line += node.regionOffset;
       diagnostic.range.end.line += node.regionOffset;
       diagnostic.source = `Liquid ${node.tag} tag`;
 
-      if (diagnostic.severity !== DiagnosticSeverity.Error) continue;
+      if (diagnostic.severity !== DiagnosticSeverity.Error) return;
       if (document.format) {
         document.format.enable = false;
         document.format.error = diagnostic;
       }
-    }
+
+    });
 
     return diagnostics;
 
@@ -40,7 +51,7 @@ export class CSSLanguageService {
   /**
    * CSS Hovers
    */
-  doHover (node: IEmbed & INode, { line, character }: Position): Hover {
+  doHover (node: IEmbed, { line, character }: Position): Hover {
 
     const CSSDocument = this.service.parseStylesheet(node.textDocument);
     const position = { character, line: line - node.regionOffset };
@@ -58,7 +69,7 @@ export class CSSLanguageService {
   /**
    * CSS Completions
    */
-  doComplete (node: IEmbed & INode, { character, line }: Position): CompletionList {
+  doComplete (node: IEmbed, { character, line }: Position): CompletionList {
 
     const position = { character, line: line - node.regionOffset };
     const CSSDocument = this.service.parseStylesheet(node.textDocument);
