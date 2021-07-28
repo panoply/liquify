@@ -42,6 +42,29 @@ PrettyDiff had some minor issues when working with Liquid and HTML markup langua
 Various additions were added to the parsing and beautification process within PrettyDiff. Specifically that which related to the formatting of Liquid and Markup (HTML).
 
 - Added new logic to Liquid tags used in HTML attributes
+- Single line expressions
+
+When tags are expressed on a single line and their contents contains no spaces then that alignment is respected and tags are not indented. For example:
+
+```js
+
+// This will not indent and formatting will respect its structure
+{% if x %}will_not_indent{% endif %}
+
+// This will be indented as the content contains a whitespace
+{% if x %}will indent{% endif %}
+
+```
+
+In the 2nd example the formatter will place the start token `{% if b %}`, the `will indent` text content and the `{% endif %}` token all onto newlines, resulting in this:
+
+```js
+{% if x %}
+  will indent
+{% endif %}
+```
+
+PrettyDiff would indent the `{% endif %}` token but respect the `{% if b %}` expression. This update gives an optional manner into how we indent tags without needing to express a rule for such.
 
 #### Removals
 

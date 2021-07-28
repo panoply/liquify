@@ -6886,7 +6886,7 @@ export default (function parse_init() {
         // other delimeter template languages. Instead we only want Liquid
         // delimiters. The previous expression match was ^((\{)((%-?)|\{-?)=?\s*)
         // but we instead just use the new one below:
-        const reg = (/^\{[{%]-?\s*/);
+        const reg = (/^((\{|<)((%-?)|\{-?)=?\s*)/);
 
         if (typeof el !== "string") return "";
 
@@ -8294,33 +8294,6 @@ export default (function parse_init() {
               progress: "singleton",
               source: "singleton",
               wbr: "singleton"
-            },
-            fixsingleton = function lexer_markup_tag_cheat_fixsingleton() {
-              let aa = parse.count,
-                bb = 0;
-              const vname = tname.slice(1);
-              if (aa > -1) {
-                do {
-                  if (data.types[aa] === "end") {
-                    bb = bb + 1;
-                  } else if (data.types[aa] === "start") {
-                    bb = bb - 1;
-                    if (bb < 0) {
-                      return false;
-                    }
-                  }
-                  if (bb === 0 && data.token[aa].toLowerCase().indexOf(vname) === 1) {
-                    data.types[aa] = "start";
-                    count.start = count.start + 1;
-                    data.token[aa] = data
-                      .token[aa]
-                      .replace(/(\s*\/>)$/, ">");
-                    return false;
-                  }
-                  aa = aa - 1;
-                } while (aa > -1);
-              }
-              return false;
             },
             peertest = function lexer_markup_tag_cheat_peertest(name, item) {
               if (htmlblocks[name] === undefined) {
@@ -10867,7 +10840,10 @@ export default (function parse_init() {
               externalIndex[skip] = a;
               level.push(indent - 1);
               next = nextIndex();
-              if (data.lexer[next] === lexer && data.stack[a].indexOf("attribute") < 0 && (data.types[next] === "end" || data.types[next] === "template_end")) {
+              if (
+                data.lexer[next] === lexer &&
+                data.stack[a].indexOf("attribute") < 0 &&
+                (data.types[next] === "end" || data.types[next] === "template_end")) {
                 indent = indent - 1;
               }
             },
@@ -10917,6 +10893,7 @@ export default (function parse_init() {
                     if (data.types[parent] === "singleton") {
                       return indent + 2;
                     }
+
                     return indent + 1;
                   }
                   if (data.types[parent] === "singleton") {
@@ -10998,200 +10975,26 @@ export default (function parse_init() {
                   // any delim
                   const anyDelim = /{%-?\s*(?:end)?/
 
+                  len = len + data.token[a].length + 1;
 
-                  // HOT FIX
-                  // align liquid attribute pairs
-                  // when we have an end tag, we will keep them on the same line
                   if (options.unformatted === true) {
-
-                    level.push(-10);
-
-                  } else if (
-
-                    //
-                    // This will satisfy an {% else %} tag block,
-                    // ensuring newlines when multiple attrs detected, eg:
-                    //
-                    // <div {% if x %} id="foo" class="bar" {% else %} attr {% endif %}
-
-                    startDelim.test(data.token[a])
-
-                  ) {
-
-                    level.push(lev);
-
-
-                    let ia = a
-                    let ca = 0
-
-                    // We will keep walking until we hit
-                    // start tag liquid attribute, forcing newlines
-                    // on all contained attributes.
-                    while (ia-- && data.types[ia] === 'attribute') {
-
-                      if (endDelim.test(data.token[ia])) {
-                        ca = 0
-                        break;
-                      }
-
-                      if (startDelim.test(data.token[ia])) {
-                        if (ca === 1) ca = 0
-                        break
-                      }
-
-                      if (!anyDelim.test(data.token[ia])) ca++
-
-                    }
-
-                    if(ca > 0) {
-
-                      ia = a
-
-                      while (ia--) {
-
-                        if(ca === 0) break;
-
-                        level[ia - 1] = lev
-                        ca--
-                      }
-
-                    }
-
-                    // If a liquid tag has been expressed as an
-                    // attribute value outside of the quotation
-                    // characters, we will always enforce alignments
-                    // and prevent forced attributes
-                   if(/={%\s*/.test(data.token[a - 1])) {
-                     level[a - 1] = -10
-                     level.push(-10)
-                   }
-
-
-                  } else if (
-
-                    // We has a HTML attribute, we will force this
-                    // to newline as long as it is not contained
-                    // within Liquid pairs
-                    //
-                    // <div {% if x %} id="foo" {% endif %} class="bar"
-                    //
-                    // Where class="bar" will be forced onto newline
-                    //
-                    data.types[a] === 'attribute' &&
-                    data.types[a - 1] === 'attribute' && (
-                      (
-                        anyDelim.test(data.token[a]) === false &&
-                        anyDelim.test(data.token[a - 1]) === false
-                      ) || (
-                        endDelim.test(data.token[a - 1]) === true
-                      )
-                    )
-                  ) {
-
-                    level[a - 1] = lev
-                    level.push(lev)
-
-                  } else if(
-
-                    // We have multiple attributes nested within
-                    // a tag pair, when more than 1 html attribute
-                    // we apply force ammendment, eg:
-                    //
-                    // <div {% if x %} id="foo" class="bar" {% endif %}
-                    //
-                    // We are currently within a {% end %} tag, so
-                    // we will check 2 levels up, if the both levels
-                    // are HTML attributes, we apply the force.
-
-                    data.types[a] === 'attribute' &&
-                    data.types[a - 1] === 'attribute' &&
-                    data.types[a - 2] === 'attribute' &&
-                    anyDelim.test(data.token[a - 1]) === false &&
-                    anyDelim.test(data.token[a - 2]) === false && (
-                      endDelim.test(data.token[a]) === true
-                    )
-                  ) {
-
-                    let ia = a
-
-                    // We will keep walking until we hit
-                    // start tag liquid attribute, forcing newlines
-                    // on all contained attributes.
-                    while (ia-- && data.types[ia] === 'attribute') {
-                      if(startDelim.test(data.token[ia])) {
-                        level[ia] = lev
-                        break
-                      }
-                    }
-
-                    level.push(lev);
-
-                  } else if (
-
-                    // We have a single HTML attribute nested
-                    // within a tag pair, when such is detected
-                    // we allow and enforce inline attributes
-                    //
-                    // <div {% if x %} id="foo" {% endif %}
-                    //
-                    // We are currently within a {% end %} tag, so
-                    // we will check 1 levels up and it should return
-                    // a liquid tag
-                    data.types[a] === 'attribute' &&
-                    data.types[a - 1] === 'attribute' &&
-                    data.types[a - 2] === 'attribute' &&
-                    startDelim.test(data.token[a - 2]) === true &&
-                    anyDelim.test(data.token[a - 1]) === false &&
-                    endDelim.test(data.token[a]) === true
-                  ) {
-
-                    level[a - 1] = -10;
-                    level.push(-10)
-
-                  } else if (
-                    options.force_attribute === true ||
-                    attStart === true || (
-                      a < c - 1 &&
-                      data.types[a + 1] !== "template_attribute" &&
-                      data.types[a + 1].indexOf("attribute") > 0
-                    )
-                  ) {
-
-
-                    // HTML attribute within a Liquid tag contained in attribute
-                    // It must be the 2nd attribute.
-                    // eg: <div {% if foo %} data-attr="bar"
-                    if(
-                      (
-                        data.types[a] === 'attribute' &&
-                        data.types[a - 1] === 'attribute' &&
-                        startDelim.test(data.token[a - 1]) === true
-                      )
-                    ) {
-
-                      // Move the Liquid attribute inline
-                      level[a - 1] = -10
-
-                      // Move the html attribute inline
                       level.push(-10);
-
-                    } else {
-
-                      level.push(lev);
-
-                    }
-
-                  } else {
-
-                    level.push(-10);
-
                   }
-
+                  else if (
+                    options.force_attribute === true ||
+                    attStart === true || (a < c - 1 &&
+                      data.types[a + 1] !== "template_attribute" &&
+                      data.types[a + 1].indexOf("attribute") > 0)
+                  ) {
+                    level.push(lev);
+                  }
+                  else {
+                    level.push(-10);
+                  }
 
                 } else if (data.begin[a] < parent + 1) {
 
                   break;
-
                 }
 
                 a = a + 1;
@@ -11224,27 +11027,21 @@ export default (function parse_init() {
                   level[a] = level[parent];
                 }
               }
+
               if (options.force_attribute === true) {
-
-                // only force attributes when more than 1 exists or
-                // it exceeds wrap
-                if (
-                  data.types[a - 1].indexOf("start") > -1 || (
-                  len < options.wrap &&
-                  options.wrap < 0
-                )) {
-
-                  level[parent] = -10;
-
-                } else {
-
-                  count = 0;
-                  level[parent] = lev;
-                  level[a] = lev;
-
-                }
-              } else {
+                count = 0;
+                level[parent] = lev;
+              }
+              else {
                 level[parent] = -10;
+              }
+
+              if (earlyexit === true ||
+                options.unformatted === true ||
+                data.token[parent] === "<%xml%>" ||
+                data.token[parent] === "<?xml?>") {
+                count = 0;
+                return;
               }
 
               y = a;
@@ -11290,97 +11087,233 @@ export default (function parse_init() {
             comstart = -1,
             next = 0,
             count = 0,
-            indent = (isNaN(options.indent_level) === true) ?
-            0 :
-            Number(options.indent_level);
+            indent = (isNaN(options.indent_level) === true) ? 0 : Number(options.indent_level);
+
           // data.lines -> space before token
           // level -> space after token
           do {
+
             if (data.lexer[a] === lexer) {
+
               if (data.token[a].toLowerCase().indexOf("<!doctype") === 0) {
                 level[a - 1] = indent;
               }
+
               if (data.types[a].indexOf("attribute") > -1) {
+
                 attribute();
+
               } else if (data.types[a] === "comment") {
+
                 if (comstart < 0) {
                   comstart = a;
                 }
-                if (data.types[a + 1] !== "comment" || (a > 0 && data.types[a - 1].indexOf("end") > -1)) {
+
+                if (
+                  data.types[a + 1] !== "comment" || (
+                    a > 0 && data.types[a - 1].indexOf("end") > -1
+                  )
+                ) {
                   comment();
                 }
+
               } else if (data.types[a] !== "comment") {
+
                 next = nextIndex();
-                if (data.types[next] === "end" || data.types[next] === "template_end") {
-                  indent = indent - 1;
-                  if (data.types[next] === "template_end" && data.types[data.begin[next] + 1] === "template_else") {
+
+                if (
+                  data.types[next] === "end" ||
+                  data.types[next] === "template_end"
+                ) {
+
+
+                  // HOTFIX
+                  // When tags are expressed on a single line
+                  // and the content of those tags contain no whitespace
+                  // then the single line expression is respected.
+                  if(
+                    data.types[next] === 'template_end' &&
+                    data.lines[next] === data.lines[a] &&
+                    data.types[a] === 'content' && (
+                      data.types[a - 1] !== 'template_else' ||
+                      data.types[a - 1] !== 'template_start' ||
+                      data.types[a - 1] !== 'content'
+                    )
+                  ) {
+
+                    level.push(-20);
                     indent = indent - 1;
-                  }
-                  if (data.token[a] === "</ol>" || data.token[a] === "</ul>") {
-                    anchorList();
+
+                  } else {
+
+                    indent = indent - 1;
+
+                    if (
+                      data.types[next] === "template_end" &&
+                      data.types[data.begin[next] + 1] === "template_else"
+                    ) {
+                      indent = indent - 1;
+                    }
+
+                    if (data.token[a] === "</ol>" || data.token[a] === "</ul>") {
+                      anchorList();
+                    }
+
                   }
                 }
+
                 if (data.types[a] === "script_end" && data.types[a + 1] === "end") {
+
                   if (data.lines[a + 1] < 1) {
                     level.push(-20);
                   } else {
                     level.push(-10);
                   }
-                } else if ((options.force_indent === false || (options.force_indent === true && data.types[next] === "script_start")) && (data.types[a] === "content" || data.types[a] === "singleton" || data.types[a] === "template")) {
+
+                } else if ((
+                  options.force_indent === false || (
+                    options.force_indent === true &&
+                    data.types[next] === "script_start"
+                  )
+                ) && (
+                  data.types[a] === "content" ||
+                  data.types[a] === "singleton" ||
+                  data.types[a] === "template"
+                )) {
+
                   count = count + data.token[a].length;
+
                   if (data.lines[next] > 0 && data.types[next] === "script_start") {
+
                     level.push(-10);
-                  } else if (options.wrap > 0 && (data.types[a].indexOf("template") < 0 || (next < c && data.types[a].indexOf("template") > -1 && data.types[next].indexOf("template") < 0))) {
+
+                  } else if (
+                    options.wrap > 0 && (
+                      data.types[a].indexOf("template") < 0 || (
+                        next < c &&
+                        data.types[a].indexOf("template") > -1 &&
+                        data.types[next].indexOf("template") < 0
+                      )
+                    )
+                  ) {
+
                     content();
-                  } else if (next < c && (data.types[next].indexOf("end") > -1 || data.types[next].indexOf("start") > -1) && (data.lines[next] > 0 || data.types[next].indexOf("template_") > -1)) {
+
+                  } else if (
+                    next < c && (
+                      data.types[next].indexOf("end") > -1 ||
+                      data.types[next].indexOf("start") > -1
+                    ) && (
+                      data.lines[next] > 0 ||
+                      data.types[next].indexOf("template_"
+                    ) > -1)
+
+                  ) {
+
                     level.push(indent);
+
                   } else if (data.lines[next] === 0) {
+
                     level.push(-20);
+
                   } else {
+
                     level.push(indent);
+
                   }
+
                 } else if (data.types[a] === "start" || data.types[a] === "template_start") {
+
                   indent = indent + 1;
-                  if (data.types[a] === "template_start" && data.types[a + 1] === "template_else") {
+
+                  if (
+                    data.types[a] === "template_start" &&
+                    data.types[a + 1] === "template_else"
+                  ) {
                     indent = indent + 1;
                   }
+
                   if (options.language === "jsx" && data.token[a + 1] === "{") {
+
                     if (data.lines[a + 1] === 0) {
                       level.push(-20);
                     } else {
                       level.push(-10);
                     }
+
                   } else if (data.types[a] === "start" && data.types[next] === "end") {
+
                     level.push(-20);
+
                   } else if (data.types[a] === "start" && data.types[next] === "script_start") {
+
                     level.push(-10);
+
                   } else if (options.force_indent === true) {
+
                     level.push(indent);
-                  } else if (data.types[a] === "template_start" && data.types[next] === "template_end") {
+
+                  } else if (
+                    data.types[a] === "template_start" &&
+                    data.types[next] === "template_end"
+                  ) {
+
+                    // NOTE FOR NIK
+                    // ENSURES SINGLE LINE WHEN EMPTY TAGS
                     level.push(-20);
-                  } else if (data.lines[next] === 0 && (data.types[next] === "content" || data.types[next] === "singleton" || (data.types[a] === "start" && data.types[next] === "template"))) {
+
+                  } else if (
+                    data.lines[next] === 0 && (
+                      data.types[next] === "content" ||
+                      data.types[next] === "singleton" || (
+                        data.types[a] === "start" &&
+                        data.types[next] === "template"
+                      )
+                    )
+                  ) {
                     level.push(-20);
                   } else {
                     level.push(indent);
                   }
-                } else if (options.force_indent === false && data.lines[next] === 0 && (data.types[next] === "content" || data.types[next] === "singleton")) {
+                } else if (
+                  options.force_indent === false &&
+                  data.lines[next] === 0 && (
+                    data.types[next] === "content" ||
+                    data.types[next] === "singleton"
+                  )
+                ) {
+
                   level.push(-20);
+
                 } else if (data.types[a + 2] === "script_end") {
+
                   level.push(-20);
+
                 } else if (data.types[a] === "template_else") {
+
                   if (data.types[next] === "template_end") {
                     level[a - 1] = indent + 1;
                   } else {
                     level[a - 1] = indent - 1;
                   }
+
                   level.push(indent);
+
                 } else {
+
                   level.push(indent);
                 }
               }
-              if (data.types[a] !== "content" && data.types[a] !== "singleton" && data.types[a] !== "template" && data.types[a] !== "attribute") {
+
+              if (
+                data.types[a] !== "content" &&
+                data.types[a] !== "singleton" &&
+                data.types[a] !== "template" &&
+                data.types[a] !== "attribute"
+              ) {
                 count = 0;
               }
+
             } else {
               count = 0;
               external();
