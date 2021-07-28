@@ -4,7 +4,7 @@
   "files.exclude": {
     "**/node_modules": true,
     "**/package/node_modules": false,
-    //"**/package": true,
+    "**/package": true,
     "**/versions": true,
     "**/.git": true,
     "**/.svn": true,
@@ -21,7 +21,7 @@
   },
   "editor.semanticHighlighting.enabled": false,
   "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.formatOnType": true,
   "editor.wordWrap": "wordWrapColumn",
   "editor.wordWrapColumn": 96,

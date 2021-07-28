@@ -2,230 +2,131 @@
 
 
 export default (function parse_init() {
-  const parser = function parse_parser() {
-      const langstore = [sparser.options.language, sparser.options.lexer];
-      parse.count = -1;
-      parse.data = {
-        begin: [],
-        ender: [],
-        lexer: [],
-        lines: [],
-        stack: [],
-        token: [],
-        types: []
-      };
-      parse.datanames = [
-        "begin",
-        "ender",
-        "lexer",
-        "lines",
-        "stack",
-        "token",
-        "types"
-      ];
-      parse.linesSpace = 0;
-      parse.lineNumber = 1;
-      parse.structure = [
-        ["global", -1]
-      ];
-      parse.structure.pop = function parse_structure_pop() {
-        const len = parse.structure.length - 1,
-          arr = parse.structure[len];
-        if (len > 0) {
-          parse
-            .structure
-            .splice(len, 1);
+
+  function parser() {
+
+    const langstore = [ sparser.options.language, sparser.options.lexer ];
+
+    parse.count = -1;
+    parse.linesSpace = 0;
+    parse.lineNumber = 1;
+
+    parse.data = {
+      begin: [],
+      ender: [],
+      lexer: [],
+      lines: [],
+      stack: [],
+      token: [],
+      types: []
+    };
+
+    parse.datanames = [
+      "begin",
+      "ender",
+      "lexer",
+      "lines",
+      "stack",
+      "token",
+      "types"
+    ];
+
+    parse.structure = [
+      [
+        "global",
+        -1
+      ]
+    ];
+
+    parse.structure.pop = () => {
+      const len = parse.structure.length - 1;
+      const arr = parse.structure[len];
+      if (len > 0)  parse.structure.splice(len, 1);
+      return arr;
+    };
+
+
+    if (sparser.options.language === "auto" || sparser.options.lexer === "auto") {
+      let lang = sparser.libs.language.auto(sparser.options.source, "javascript");
+      if (sparser.options.language === "auto") sparser.options.language = lang[0];
+      if (sparser.options.lexer === "auto") sparser.options.lexer = lang[1];
+    }
+
+    if (typeof sparser.lexers[sparser.options.lexer] === "function") {
+
+      // reset references data if sparser is used on multiple files
+      parse.references = [[]];
+
+      sparser.parseerror = "";
+      sparser.options.lexer_options = sparser.options.lexer_options || {};
+
+      Object.keys(sparser.lexers).forEach(
+        value => {
+          sparser.options.lexer_options[value] = sparser.options.lexer_options[value] || {};
         }
-        return arr;
-      };
-      if (sparser.options.language === "auto" || sparser.options.lexer === "auto") {
-        let lang = sparser.libs.language.auto(sparser.options.source, "javascript");
-        if (sparser.options.language === "auto") {
-          sparser.options.language = lang[0];
-        }
-        if (sparser.options.lexer === "auto") {
-          sparser.options.lexer = lang[1];
-        }
-      }
-      if (typeof sparser.lexers[sparser.options.lexer] === "function") {
-        sparser.parseerror = "";
-        // reset references data if sparser is used on multiple files
-        parse.references = [
-          []
-        ];
-        sparser.options.lexer_options = (sparser.options.lexer_options || {});
-        Object.keys(sparser.lexers).forEach(function parse_lexers(value) {
-          sparser.options.lexer_options[value] = (sparser.options.lexer_options[value] || {});
-        });
-        // This line parses the code using a lexer file
-        sparser.lexers[sparser.options.lexer](`${sparser.options.source} `);
-        // restore language and lexer values
-      } else {
-        sparser.parseerror = `Specified lexer, ${sparser.options.lexer}, is not a function.`;
-      }
-      // validate that all the data arrays are the same length
-      (function parser_checkLengths() {
-        let a = 0,
-          b = 0;
-        const keys = Object.keys(parse.data),
-          c = keys.length;
+      );
+
+      // This line parses the code using a lexer file
+      sparser.lexers[sparser.options.lexer](`${sparser.options.source} `);
+
+
+    } else {
+
+      // restore language and lexer values
+      sparser.parseerror = `Specified lexer, ${sparser.options.lexer}, is not a function.`;
+
+    }
+
+    // validate that all the data arrays are the same length
+    (function parser_checkLengths() {
+
+      let a = 0;
+      let b = 0;
+
+      const keys = Object.keys(parse.data);
+      const  c = keys.length;
+
+      do {
+
+        b = a + 1;
+
         do {
-          b = a + 1;
-          do {
-            if (parse.data[keys[a]].length !== parse.data[keys[b]].length) {
-              sparser.parseerror = `"${keys[a]}" array is of different length than "${keys[b]}"`;
-              break;
-            }
-            b = b + 1;
-          } while (b < c);
-          a = a + 1;
-        } while (a < c - 1);
-      }());
-      // fix begin values.  They must be reconsidered after reordering from object sort
-      if (parse.data.begin.length > 0 && (sparser.options.lexer_options[sparser.options.lexer].object_sort === true || sparser.options.lexer_options.markup.tag_sort === true)) {
-        parse.sortCorrection(0, parse.count + 1);
-      }
-      if (sparser.options.format === "csv") {
-        let a = 0;
-        const d = parse.data,
-          data = ["index,begin,ender,lexer,lines,stack,token,types"],
-          len = parse.count + 1;
-        do {
-          data.push([
-            a,
-            d.begin[a],
-            d.ender[a],
-            `"${d.lexer[a].replace(/"/g, "\"\"")}"`,
-            d.lines[a],
-            `"${d.stack[a].replace(/"/g, "\"\"")}"`,
-            `"${d.token[a].replace(/"/g, "\"\"")}"`,
-            `"${d.types[a].replace(/"/g, "\"\"")}"`
-          ].join(","));
-          a = a + 1;
-        } while (a < len);
-        return data.join("\r\n");
-      }
-      if (sparser.options.format === "markdown") {
-        let a = 0,
-          b = 0,
-          strlen = 0,
-          row = [],
-          heading = "",
-          line = "",
-          str = "",
-          begin = 0;
-        const data = [],
-          names = parse.datanames,
-          longest = [1, 5, 5, 5, 5, 5, 5, 5],
-          len = parse.count + 1;
-        // first gather the string length of each data item
-        longest[0] = String(parse.count).length;
-        if (longest[0] < 5) {
-          longest[0] = 5;
-        }
-        do {
-          begin = String(parse.data.begin[a]).length;
-          if (begin > longest[1]) {
-            longest[1] = begin;
+
+          if (parse.data[keys[a]].length !== parse.data[keys[b]].length) {
+            sparser.parseerror = `"${keys[a]}" array is of different length than "${keys[b]}"`;
+            break;
           }
-          begin = String(parse.data.ender[a]).length;
-          if (begin > longest[2]) {
-            longest[2] = begin;
-          }
-          if (parse.data.lexer[a].length > longest[3]) {
-            longest[3] = parse.data.lexer[a].length;
-          }
-          begin = String(parse.data.lines[a]).length;
-          if (begin > longest[4]) {
-            longest[4] = begin;
-          }
-          if (parse.data.stack[a].length > longest[5]) {
-            longest[5] = parse.data.stack[a].length;
-          }
-          if (parse.data.token[a].length > longest[6]) {
-            longest[6] = parse.data.token[a].length;
-          }
-          if (parse.data.types[a].length > longest[7]) {
-            longest[7] = parse.data.types[a].length;
-          }
-          a = a + 1;
-        } while (a < len);
-        names.splice(0, 0, "index");
-        // second create the heading
-        a = 0;
-        do {
-          row.push(parse.datanames[a]);
-          if (longest[a] > 5) {
-            b = 5;
-            do {
-              row.push(" ");
-              b = b + 1;
-            } while (b < longest[a]);
-          }
-          row.push("|");
-          a = a + 1;
-        } while (a < 8);
-        row.pop();
-        heading = row.join("");
-        row = [];
-        // third create the line of dashes
-        a = 0;
-        do {
-          b = 0;
-          do {
-            row.push("-");
-            b = b + 1;
-          } while (b < longest[a]);
-          row.push("|");
-          a = a + 1;
-        } while (a < 8);
-        row.pop();
-        line = row.join("");
-        row = [];
-        // fourth create each data record
-        a = 0;
-        do {
-          if (a % 100 === 0) {
-            data.push(heading);
-            data.push(line);
-          }
-          str = String(a);
-          row.push(str);
-          b = str.length;
-          if (b < longest[0]) {
-            do {
-              row.push(" ");
-              b = b + 1;
-            } while (b < longest[0]);
-          }
-          row.push("|");
-          b = 1;
-          do {
-            str = String(parse.data[parse.datanames[b]][a]);
-            row.push(str);
-            strlen = str.length;
-            if (strlen < longest[b]) {
-              do {
-                row.push(" ");
-                strlen = strlen + 1;
-              } while (strlen < longest[b]);
-            }
-            row.push("|");
-            b = b + 1;
-          } while (b < 8);
-          row.pop();
-          data.push(row.join(""));
-          row = [];
-          a = a + 1;
-        } while (a < len);
-        return data.join("\r\n");
-      }
-      if (sparser.options.format === "minimal") {
-        let a = 0;
-        const data = [],
-          len = parse.count + 1;
-        do {
-          data.push([
+
+          b = b + 1;
+
+        } while (b < c);
+
+        a = a + 1;
+
+      } while (a < c - 1);
+
+    }());
+
+
+    // Fix begin values.
+    // They must be reconsidered after reordering from object sort
+    if (
+        parse.data.begin.length > 0 && (
+        sparser.options.lexer_options[sparser.options.lexer].object_sort === true ||
+        sparser.options.lexer_options.markup.tag_sort === true
+      )
+    ) parse.sortCorrection(0, parse.count + 1);
+
+    if (sparser.options.format === "minimal") {
+
+      let a = 0;
+      const data = [];
+      const len = parse.count + 1;
+
+      do {
+
+        data.push(
+          [
             parse.data.begin[a],
             parse.data.ender[a],
             parse.data.lexer[a],
@@ -233,17 +134,26 @@ export default (function parse_init() {
             parse.data.stack[a],
             parse.data.token[a],
             parse.data.types[a]
-          ]);
-          a = a + 1;
-        } while (a < len);
-        return data;
-      }
-      if (sparser.options.format === "objects") {
-        let a = 0;
-        const data = [],
-          len = parse.count + 1;
-        do {
-          data.push({
+          ]
+        );
+
+        a = a + 1;
+
+      } while (a < len);
+
+      return data;
+    }
+
+    if (sparser.options.format === "objects") {
+
+      let a = 0;
+      const data = [];
+      const  len = parse.count + 1;
+
+      do {
+
+        data.push(
+            {
             begin: parse.data.begin[a],
             ender: parse.data.ender[a],
             lexer: parse.data.lexer[a],
@@ -251,41 +161,188 @@ export default (function parse_init() {
             stack: parse.data.stack[a],
             token: parse.data.token[a],
             types: parse.data.types[a]
-          });
-          a = a + 1;
-        } while (a < len);
-        return data;
-      }
-      if (sparser.options.format === "testprep") {
-        let a = 0;
-        const data = [],
-          len = parse.count + 1;
-        if (sparser.parseerror !== "") {
-          return sparser.parseerror;
-        }
-        do {
-          data.push(JSON.stringify({
-            begin: parse.data.begin[a],
-            ender: parse.data.ender[a],
-            lexer: parse.data.lexer[a],
-            lines: parse.data.lines[a],
-            stack: parse.data.stack[a],
-            token: parse.data.token[a],
-            types: parse.data.types[a]
-          }));
-          a = a + 1;
-        } while (a < len);
-        return `[\n${data.join(",\n")}\n]`;
-      }
-      sparser.options.language = langstore[0];
-      sparser.options.lexer = langstore[1];
-      return parse.data;
+          }
+        );
+
+        a = a + 1;
+
+      } while (a < len);
+
+      return data;
+    }
+
+    if (sparser.options.format === "testprep") {
+
+      let a = 0;
+      const data = [];
+      const len = parse.count + 1;
+
+      if (sparser.parseerror !== "") return sparser.parseerror;
+
+      do {
+
+        data.push(
+          JSON.stringify(
+            {
+              begin: parse.data.begin[a],
+              ender: parse.data.ender[a],
+              lexer: parse.data.lexer[a],
+              lines: parse.data.lines[a],
+              stack: parse.data.stack[a],
+              token: parse.data.token[a],
+              types: parse.data.types[a]
+            }
+          )
+        );
+
+        a = a + 1;
+
+      } while (a < len);
+
+      return `[\n${data.join(",\n")}\n]`;
+    }
+
+    sparser.options.language = langstore[0];
+    sparser.options.lexer = langstore[1];
+
+    return parse.data;
+
+  }
+
+  const parse = {
+
+    // Stores the final index location of the data arrays
+    count: -1,
+
+    // Stores the various data arrays of the parse table
+    data: {
+      begin: [],
+      ender: [],
+      lexer: [],
+      lines: [],
+      stack: [],
+      token: [],
+      types: []
     },
-    parse = {
-      // stores the final index location of the data arrays
-      count: -1,
-      // stores the various data arrays of the parse table
-      data: {
+
+    // Stores the name of the data arrays.  This is used for internal automation
+    datanames: [
+      "begin",
+      "ender",
+      "lexer",
+      "lines",
+      "stack",
+      "token",
+      "types"
+    ],
+
+    // Stores the current line number from the input string for logging parse errors
+    lineNumber: 1,
+
+    // Stores the 'lines' value before the next token
+    linesSpace: 0,
+
+    // Stores the declared variable names for the script lexer.  This must be stored outside the script lexer since some languages recursive use of the script lexer
+    references: [[]],
+
+    // Stores the stack and begin values by stacking depth
+    structure: [["global", -1]],
+
+    // An extension of Array.prototype.concat
+    // to work across the data structure.
+    // This is an expensive operation.
+    concat (data, array) {
+      for (const v of parse.datanames) data[v] = data[v].concat(array[v]);
+      if (data === parse.data) parse.count = data.token.length - 1;
+    },
+
+    // The function that sorts object properties
+    object_sort (data) {
+
+      let cc = parse.count
+      let dd = parse.structure[parse.structure.length - 1][1];
+      let ee = 0;
+      let ff = 0;
+      let gg = 0;
+      let behind = 0;
+      let commaTest = true;
+      let front = 0;
+      let keyend = 0;
+      let keylen = 0;
+      let global = (
+        data.lexer[cc] === "style" &&
+        parse.structure[parse.structure.length - 1][0] === "global"
+      );
+
+      const keys = [];
+      const length = parse.count;
+      const begin = dd;
+      const style = data.lexer[cc] === "style";
+      const delim = style === true ? [";", "separator"] : [",", "separator"];
+      const lines = parse.linesSpace;
+      const stack = global === true
+        ? "global"
+        : parse.structure[parse.structure.length - 1][0];
+
+      function sort(x, y) {
+
+        let xx = x[0];
+        let yy = y[0];
+
+        if (data.types[xx] === "comment") {
+          do {
+            xx = xx + 1;
+          } while (xx < length && (data.types[xx] === "comment"));
+          if (data.token[xx] === undefined) {
+            return 1;
+          }
+        }
+
+        if (data.types[yy] === "comment") {
+          do {
+            yy = yy + 1;
+          } while (yy < length && (data.types[yy] === "comment"));
+          if (data.token[yy] === undefined) {
+            return 1;
+          }
+        }
+
+        if (style === true) {
+
+          // JavaScript's standard array sort uses implementation specific algorithms.
+          // This simple numeric trick forces conformance.
+          if (
+            data.token[xx].indexOf("@import") === 0 ||
+            data.token[yy].indexOf("@import") === 0
+          ) return xx < yy ? -1 : 1;
+
+          if (data.types[xx] !== data.types[yy]) {
+
+            if (data.types[xx] === "function") return 1;
+            if (data.types[xx] === "variable") return -1;
+            if (data.types[xx] === "selector") return 1;
+
+            if (
+              data.types[xx] === "property" &&
+              data.types[yy] !== "variable"
+            ) return -1;
+
+            if (
+              data.types[xx] === "mixin" &&
+              data.types[yy] !== "property" &&
+              data.types[yy] !== "variable"
+            ) return -1;
+          }
+
+        }
+
+        if (data.token[xx].toLowerCase() > data.token[yy].toLowerCase()) return 1;
+
+        return -1;
+
+      }
+
+      const store = {
         begin: [],
         ender: [],
         lexer: [],
@@ -293,206 +350,172 @@ export default (function parse_init() {
         stack: [],
         token: [],
         types: []
-      },
-      // stores the name of the data arrays.  This is used for internal automation
-      datanames: ["begin", "ender", "lexer", "lines", "stack", "token", "types"],
-      // stores the current line number from the input string for logging parse errors
-      lineNumber: 1,
-      // stores the 'lines' value before the next token
-      linesSpace: 0,
-      // stores the declared variable names for the script lexer.  This must be stored outside the script lexer since some languages recursive use of the script lexer
-      references: [
-        []
-      ],
-      // stores the stack and begin values by stacking depth
-      structure: [
-        ["global", -1]
-      ],
-      // an extension of Array.prototype.concat to work across the data structure.  This is an expensive operation.
-      concat: function parse_concat(data, array) {
-        parse
-          .datanames
-          .forEach(function parse_concat_datanames(value) {
-            data[value] = data[value].concat(array[value]);
-          });
-        if (data === parse.data) {
-          parse.count = data.token.length - 1;
+      };
+
+      behind = cc;
+
+      do {
+
+        if (
+          data.begin[cc] === dd || (
+            global === true &&
+            cc < behind &&
+            data.token[cc] === "}" &&
+            data.begin[data.begin[cc]] === -1
+          )
+        ) {
+
+          if (data.types[cc].indexOf("template") > -1) return;
+
+          if (
+            data.token[cc] === delim[0] || (
+              style === true &&
+              data.token[cc] === "}" &&
+              data.token[cc + 1] !== ";"
+            )
+          ) {
+
+            commaTest = true;
+            front = cc + 1;
+
+          } else if (
+            style === true &&
+            data.token[cc - 1] === "}"
+          ) {
+
+            commaTest = true;
+            front = cc;
+          }
+
+          if (front === 0 && data.types[0] === "comment") {
+
+            // keep top comments at the top
+            do { front = front + 1; } while (data.types[front] === "comment");
+
+          } else if (data.types[front] === "comment" && data.lines[front] < 2) {
+
+            // If a comment follows code on the same line then
+            // keep the comment next to the code it follows
+            front = front + 1;
+          }
+
+          if (
+            commaTest === true && (
+              data.token[cc] === delim[0] || (
+                style === true &&
+                data.token[cc - 1] === "}"
+              )
+            ) && front <= behind
+          ) {
+
+            if (style === true && "};".indexOf(data.token[behind]) < 0) {
+              behind = behind + 1;
+            } else if (style === false && data.token[behind] !== ",") {
+              behind = behind + 1;
+            }
+
+            keys.push([front, behind]);
+
+            if (style === true && data.token[front] === "}") {
+              behind = front;
+            } else {
+              behind = front - 1;
+            }
+
+          }
         }
-      },
-      // the function that sorts object properties
-      object_sort: function parse_objectSort(data) {
-        let cc = parse.count,
-          global = (data.lexer[cc] === "style" && parse.structure[parse.structure.length - 1][0] === "global"),
-          dd = parse.structure[parse.structure.length - 1][1],
-          ee = 0,
-          ff = 0,
-          gg = 0,
-          behind = 0,
-          commaTest = true,
-          front = 0,
-          keyend = 0,
-          keylen = 0;
-        const keys = [],
-          length = parse.count,
-          begin = dd,
-          stack = (global === true) ?
-          "global" :
-          parse.structure[parse.structure.length - 1][0],
-          style = (data.lexer[cc] === "style"),
-          delim = (style === true) ?
-          [";", "separator"] :
-          [",", "separator"],
-          lines = parse.linesSpace,
-          sort = function parse_objectSort_sort(x, y) {
-            let xx = x[0],
-              yy = y[0];
-            if (data.types[xx] === "comment") {
-              do {
-                xx = xx + 1;
-              } while (xx < length && (data.types[xx] === "comment"));
-              if (data.token[xx] === undefined) {
-                return 1;
-              }
-            }
-            if (data.types[yy] === "comment") {
-              do {
-                yy = yy + 1;
-              } while (yy < length && (data.types[yy] === "comment"));
-              if (data.token[yy] === undefined) {
-                return 1;
-              }
-            }
+
+        cc = cc - 1;
+
+      } while (cc > dd);
+
+      if (keys.length > 0 && keys[keys.length - 1][0] > cc + 1) {
+
+        ee = keys[keys.length - 1][0] - 1;
+
+        if (data.types[ee] === "comment" && data.lines[ee] > 1) {
+          do { ee = ee - 1; } while (ee > 0 && data.types[ee] === "comment");
+          keys[keys.length - 1][0] = ee + 1;
+        }
+
+        if (data.types[cc + 1] === "comment" && cc === -1) {
+          do { cc = cc + 1; } while (data.types[cc + 1] === "comment");
+        }
+
+        keys.push([ cc + 1,  ee ]);
+      }
+
+      if (keys.length > 1) {
+
+        if (
+          style === true ||
+          data.token[cc - 1] === "=" ||
+          data.token[cc - 1] === ":" ||
+          data.token[cc - 1] === "(" ||
+          data.token[cc - 1] === "[" ||
+          data.token[cc - 1] === "," ||
+          data.types[cc - 1] === "word" ||
+          cc === 0
+        ) {
+
+          keys.sort(sort);
+          keylen = keys.length;
+          commaTest = false;
+          dd = 0;
+
+          do {
+
+            keyend = keys[dd][1];
+
             if (style === true) {
-              if (data.token[xx].indexOf("@import") === 0 || data.token[yy].indexOf("@import") === 0) {
-                // JavaScript's standard array sort uses implementation specific algorithms.
-                // This simple numeric trick forces conformance.
-                if (xx < yy) {
-                  return -1;
-                }
-                return 1;
-              }
-              if (data.types[xx] !== data.types[yy]) {
-                if (data.types[xx] === "function") {
-                  return 1;
-                }
-                if (data.types[xx] === "variable") {
-                  return -1;
-                }
-                if (data.types[xx] === "selector") {
-                  return 1;
-                }
-                if (data.types[xx] === "property" && data.types[yy] !== "variable") {
-                  return -1;
-                }
-                if (data.types[xx] === "mixin" && data.types[yy] !== "property" && data.types[yy] !== "variable") {
-                  return -1;
-                }
-              }
-            }
-            if (data.token[xx].toLowerCase() > data.token[yy].toLowerCase()) {
-              return 1;
-            }
-            return -1;
-          },
-          store = {
-            begin: [],
-            ender: [],
-            lexer: [],
-            lines: [],
-            stack: [],
-            token: [],
-            types: []
-          };
-        behind = cc;
-        do {
-          if (data.begin[cc] === dd || (global === true && cc < behind && data.token[cc] === "}" && data.begin[data.begin[cc]] === -1)) {
-            if (data.types[cc].indexOf("template") > -1) {
-              return;
-            }
-            if (data.token[cc] === delim[0] || (style === true && data.token[cc] === "}" && data.token[cc + 1] !== ";")) {
-              commaTest = true;
-              front = cc + 1;
-            } else if (style === true && data.token[cc - 1] === "}") {
-              commaTest = true;
-              front = cc;
-            }
-            if (front === 0 && data.types[0] === "comment") {
-              // keep top comments at the top
-              do {
-                front = front + 1;
-              } while (data.types[front] === "comment");
-            } else if (data.types[front] === "comment" && data.lines[front] < 2) {
-              // if a comment follows code on the same line then keep the comment next to the code it follows
-              front = front + 1;
-            }
-            if (commaTest === true && (data.token[cc] === delim[0] || (style === true && data.token[cc - 1] === "}")) && front <= behind) {
-              if (style === true && "};".indexOf(data.token[behind]) < 0) {
-                behind = behind + 1;
-              } else if (style === false && data.token[behind] !== ",") {
-                behind = behind + 1;
-              }
-              keys.push([front, behind]);
-              if (style === true && data.token[front] === "}") {
-                behind = front;
-              } else {
-                behind = front - 1;
-              }
-            }
-          }
-          cc = cc - 1;
-        } while (cc > dd);
-        if (keys.length > 0 && keys[keys.length - 1][0] > cc + 1) {
-          ee = keys[keys.length - 1][0] - 1;
-          if (data.types[ee] === "comment" && data.lines[ee] > 1) {
-            do {
-              ee = ee - 1;
-            } while (ee > 0 && data.types[ee] === "comment");
-            keys[keys.length - 1][0] = ee + 1;
-          }
-          if (data.types[cc + 1] === "comment" && cc === -1) {
-            do {
-              cc = cc + 1;
-            } while (data.types[cc + 1] === "comment");
-          }
-          keys.push([
-            cc + 1,
-            ee
-          ]);
-        }
-        if (keys.length > 1) {
-          if (style === true || data.token[cc - 1] === "=" || data.token[cc - 1] === ":" || data.token[cc - 1] === "(" || data.token[cc - 1] === "[" || data.token[cc - 1] === "," || data.types[cc - 1] === "word" || cc === 0) {
-            keys.sort(sort);
-            keylen = keys.length;
-            commaTest = false;
-            dd = 0;
-            do {
-              keyend = keys[dd][1];
-              if (style === true) {
-                gg = keyend;
-                if (data.types[gg] === "comment") {
-                  gg = gg - 1;
-                }
-                if (data.token[gg] === "}") {
-                  keyend = keyend + 1;
-                  delim[0] = "}";
-                  delim[1] = "end";
-                } else {
-                  delim[0] = ";";
-                  delim[1] = "separator";
-                }
-              }
-              ee = keys[dd][0];
-              if (style === true && data.types[keyend - 1] !== "end" && data.types[keyend] === "comment" && data.types[keyend + 1] !== "comment" && dd < keylen - 1) {
-                // missing a terminal comment causes many problems
+              gg = keyend;
+
+              if (data.types[gg] === "comment") gg = gg - 1;
+              if (data.token[gg] === "}") {
                 keyend = keyend + 1;
+                delim[0] = "}";
+                delim[1] = "end";
+              } else {
+                delim[0] = ";";
+                delim[1] = "separator";
               }
-              if (ee < keyend) {
-                do {
-                  if (style === false && dd === keylen - 1 && ee === keyend - 2 && data.token[ee] === "," && data.lexer[ee] === "script" && data.types[ee + 1] === "comment") {
-                    // do not include terminal commas that are followed by a comment
-                    ff = ff + 1;
-                  } else {
-                    parse.push(store, {
+            }
+
+            ee = keys[dd][0];
+
+            if (
+              style === true &&
+              data.types[keyend - 1] !== "end" &&
+              data.types[keyend] === "comment" &&
+              data.types[keyend + 1] !== "comment" &&
+              dd < keylen - 1
+            ) {
+
+              // missing a terminal comment causes many problems
+              keyend = keyend + 1;
+            }
+
+            if (ee < keyend) {
+
+              do {
+
+                if (
+                  style === false &&
+                  dd === keylen - 1 &&
+                  ee === keyend - 2 &&
+                  data.token[ee] === "," &&
+                  data.lexer[ee] === "script" &&
+                  data.types[ee + 1] === "comment"
+                ) {
+
+                  // Do not include terminal commas that are followed by a comment
+                  ff = ff + 1;
+
+                } else {
+
+                  parse.push(
+                    store,
+                    {
                       begin: data.begin[ee],
                       ender: data.begin[ee],
                       lexer: data.lexer[ee],
@@ -500,28 +523,56 @@ export default (function parse_init() {
                       stack: data.stack[ee],
                       token: data.token[ee],
                       types: data.types[ee]
-                    }, "");
-                    ff = ff + 1;
-                  }
-                  //remove extra commas
-                  if (data.token[ee] === delim[0] && (style === true || data.begin[ee] === data.begin[keys[dd][0]])) {
-                    commaTest = true;
-                  } else if (data.token[ee] !== delim[0] && data.types[ee] !== "comment") {
-                    commaTest = false;
-                  }
-                  ee = ee + 1;
-                } while (ee < keyend);
-              }
-              // injecting the list delimiter
-              if (commaTest === false && store.token[store.token.length - 1] !== "x;" && (style === true || dd < keylen - 1)) {
-                ee = store.types.length - 1;
-                if (store.types[ee] === "comment") {
-                  do {
-                    ee = ee - 1;
-                  } while (ee > 0 && (store.types[ee] === "comment"));
+                    },
+                    ""
+                  );
+
+                  ff = ff + 1;
                 }
+
+                //Remove extra commas
+                if (
+                  data.token[ee] === delim[0] && (
+                    style === true ||
+                    data.begin[ee] === data.begin[keys[dd][0]]
+                  )
+                ) {
+
+                  commaTest = true;
+
+                } else if (
+                  data.token[ee] !== delim[0] &&
+                  data.types[ee] !== "comment"
+                ) {
+
+                  commaTest = false;
+                }
+
                 ee = ee + 1;
-                parse.splice({
+
+              } while (ee < keyend);
+
+            }
+
+            // Injecting the list delimiter
+            if (
+              commaTest === false &&
+              store.token[store.token.length - 1] !== "x;" && (
+                style === true ||
+                dd < keylen - 1
+              )
+            ) {
+
+              ee = store.types.length - 1;
+
+              if (store.types[ee] === "comment") {
+                do { ee = ee - 1; } while (ee > 0 && (store.types[ee] === "comment"));
+              }
+
+              ee = ee + 1;
+
+              parse.splice(
+                {
                   data: store,
                   howmany: 0,
                   index: ee,
@@ -534,1640 +585,1858 @@ export default (function parse_init() {
                     token: delim[0],
                     types: delim[1]
                   }
-                });
-                ff = ff + 1;
-              }
-              dd = dd + 1;
-            } while (dd < keylen);
-            parse.splice({
+                }
+              );
+
+              ff = ff + 1;
+
+            }
+
+            dd = dd + 1;
+
+          } while (dd < keylen);
+
+          parse.splice(
+            {
               data: data,
               howmany: ff,
               index: cc + 1
-            });
-            parse.linesSpace = lines;
-            parse.concat(data, store);
-            return;
-          }
-        }
-        return;
-      },
-      // an extension of Array.prototype.pop to work across the data structure
-      pop: function parse_pop(data) {
-        const output = {
-          begin: data.begin.pop(),
-          ender: data.ender.pop(),
-          lexer: data.lexer.pop(),
-          lines: data.lines.pop(),
-          stack: data.stack.pop(),
-          token: data.token.pop(),
-          types: data.types.pop()
-        };
-        if (data === parse.data) {
-          parse.count = parse.count - 1;
-        }
-        return output;
-      },
-      // an extension of Array.prototype.push to work across the data structure
-      push: function parse_push(data, record, structure) {
-        const ender = function parse_push_ender() {
-          let a = parse.count;
-          const begin = data.begin[a];
-          if ((data.lexer[a] === "markup" && sparser.options.lexer_options.markup.tag_sort === true) ||
-            ((data.lexer[a] === "script" || data.lexer[a] === "style") && sparser.options.lexer_options[data.lexer[a]].object_sort === true)) {
-            // sorting can result in a token whose begin value is greater than either
-            // its current index or the index of the end token, which results in an endless loop
-            //
-            // these end values are addressed at the end of the "parser" function with parse.sortCorrection
-            return;
-          }
-          do {
-            if (data.begin[a] === begin || (data.begin[data.begin[a]] === begin && data.types[a].indexOf("attribute") > -1 && data.types[a].indexOf("attribute_end") < 0)) {
-              data.ender[a] = parse.count;
-            } else {
-              a = data.begin[a];
             }
-            a = a - 1;
-          } while (a > begin);
-          if (a > -1) {
-            data.ender[a] = parse.count;
-          }
-        };
-        parse
-          .datanames
-          .forEach(function parse_push_datanames(value) {
-            data[value].push(record[value]);
-          });
-        if (data === parse.data) {
-          parse.count = parse.count + 1;
-          parse.linesSpace = 0;
-          if (record.lexer !== "style") {
-            if (structure.replace(/(\{|\}|@|<|>|%|#|)/g, "") === "") {
-              if (record.types === "else") {
-                structure = "else";
-              } else {
-                structure = record.token;
-              }
-            } else if ((/^<\?(=|(php))/).test(structure) === false) {
-              structure = structure.replace(/(\{|\}|@|<|>|%|#|)\s*/g, "");
-            }
-          }
-          if (record.types === "start" || record.types.indexOf("_start") > 0) {
-            parse.structure.push([structure, parse.count]);
-          } else if (record.types === "end" || record.types.indexOf("_end") > 0) {
-            // this big condition fixes language specific else blocks that are children of start/end blocks not associated with the if/else chain
-            let case_ender = 0;
-            if (parse.structure.length > 2 &&
-              (data.types[parse.structure[parse.structure.length - 1][1]] === "else" || data.types[parse.structure[parse.structure.length - 1][1]].indexOf("_else") > 0) &&
-              (data.types[parse.structure[parse.structure.length - 2][1]] === "start" || data.types[parse.structure[parse.structure.length - 2][1]].indexOf("_start") > 0) &&
-              (data.types[parse.structure[parse.structure.length - 2][1] + 1] === "else" || data.types[parse.structure[parse.structure.length - 2][1] + 1].indexOf("_else") > 0)) {
-              parse.structure.pop();
-              data.begin[parse.count] = parse.structure[parse.structure.length - 1][1];
-              data.stack[parse.count] = parse.structure[parse.structure.length - 1][0];
-              data.ender[parse.count - 1] = parse.count;
-              case_ender = data.ender[data.begin[parse.count] + 1];
-            }
-            ender();
-            if (case_ender > 0) {
-              data.ender[data.begin[parse.count] + 1] = case_ender;
-            }
-            parse.structure.pop();
-          } else if (record.types === "else" || record.types.indexOf("_else") > 0) {
-            if (structure === "") {
-              structure = "else";
-            }
-            if (parse.count > 0 && (data.types[parse.count - 1] === "start" || data.types[parse.count - 1].indexOf("_start") > 0)) {
-              parse.structure.push([structure, parse.count]);
-            } else {
-              ender();
-              if (structure === "") {
-                parse.structure[parse.structure.length - 1] = ["else", parse.count];
-              } else {
-                parse.structure[parse.structure.length - 1] = [structure, parse.count];
-              }
-            }
-          }
-        }
-      },
-      // a custom sort tool that is a bit more intelligent and multidimensional than Array.prototype.sort
-      safeSort: function parse_safeSort(array, operation, recursive) {
-        let extref = function parse_safeSort_extref(item) {
-          //worthless function for backwards compatibility with older versions of V8 node.
-          return item;
-        };
-        const arTest = function parse_safeSort_arTest(item) {
-            if (Array.isArray(item) === true) {
-              return true;
-            }
-            return false;
-          },
-          normal = function parse_safeSort_normal(item) {
-            let storeb = item;
-            const done = [item[0]],
-              child = function safeSort_normal_child() {
-                let a = 0;
-                const len = storeb.length;
-                if (a < len) {
-                  do {
-                    if (arTest(storeb[a]) === true) {
-                      storeb[a] = parse_safeSort_normal(storeb[a]);
-                    }
-                    a = a + 1;
-                  } while (a < len);
-                }
-              },
-              recurse = function parse_safeSort_normal_recurse(x) {
-                let a = 0;
-                const storea = [],
-                  len = storeb.length;
-                if (a < len) {
-                  do {
-                    if (storeb[a] !== x) {
-                      storea.push(storeb[a]);
-                    }
-                    a = a + 1;
-                  } while (a < len);
-                }
-                storeb = storea;
-                if (storea.length > 0) {
-                  done.push(storea[0]);
-                  extref(storea[0]);
-                } else {
-                  if (recursive === true) {
-                    child();
-                  }
-                  item = storeb;
-                }
-              };
-            extref = recurse;
-            recurse(array[0]);
-            return item;
-          },
-          descend = function parse_safeSort_descend(item) {
-            let c = 0;
-            const len = item.length,
-              storeb = item,
-              child = function parse_safeSort_descend_child() {
-                let a = 0;
-                const lenc = storeb.length;
-                if (a < lenc) {
-                  do {
-                    if (arTest(storeb[a]) === true) {
-                      storeb[a] = parse_safeSort_descend(storeb[a]);
-                    }
-                    a = a + 1;
-                  } while (a < lenc);
-                }
-              },
-              recurse = function parse_safeSort_descend_recurse(value) {
-                let a = c,
-                  b = 0,
-                  d = 0,
-                  e = 0,
-                  ind = [],
-                  key = storeb[c],
-                  tstore = "";
-                const tkey = typeof key;
-                if (a < len) {
-                  do {
-                    tstore = typeof storeb[a];
-                    if (storeb[a] > key || (tstore > tkey)) {
-                      key = storeb[a];
-                      ind = [a];
-                    } else if (storeb[a] === key) {
-                      ind.push(a);
-                    }
-                    a = a + 1;
-                  } while (a < len);
-                }
-                d = ind.length;
-                a = c;
-                b = d + c;
-                if (a < b) {
-                  do {
-                    storeb[ind[e]] = storeb[a];
-                    storeb[a] = key;
-                    e = e + 1;
-                    a = a + 1;
-                  } while (a < b);
-                }
-                c = c + d;
-                if (c < len) {
-                  extref("");
-                } else {
-                  if (recursive === true) {
-                    child();
-                  }
-                  item = storeb;
-                }
-                return value;
-              };
-            extref = recurse;
-            recurse("");
-            return item;
-          },
-          ascend = function parse_safeSort_ascend(item) {
-            let c = 0;
-            const len = item.length,
-              storeb = item,
-              child = function parse_safeSort_ascend_child() {
-                let a = 0;
-                const lenc = storeb.length;
-                if (a < lenc) {
-                  do {
-                    if (arTest(storeb[a]) === true) {
-                      storeb[a] = parse_safeSort_ascend(storeb[a]);
-                    }
-                    a = a + 1;
-                  } while (a < lenc);
-                }
-              },
-              recurse = function parse_safeSort_ascend_recurse(value) {
-                let a = c,
-                  b = 0,
-                  d = 0,
-                  e = 0,
-                  ind = [],
-                  key = storeb[c],
-                  tstore = "";
-                const tkey = typeof key;
-                if (a < len) {
-                  do {
-                    tstore = typeof storeb[a];
-                    if (storeb[a] < key || tstore < tkey) {
-                      key = storeb[a];
-                      ind = [a];
-                    } else if (storeb[a] === key) {
-                      ind.push(a);
-                    }
-                    a = a + 1;
-                  } while (a < len);
-                }
-                d = ind.length;
-                a = c;
-                b = d + c;
-                if (a < b) {
-                  do {
-                    storeb[ind[e]] = storeb[a];
-                    storeb[a] = key;
-                    e = e + 1;
-                    a = a + 1;
-                  } while (a < b);
-                }
-                c = c + d;
-                if (c < len) {
-                  extref("");
-                } else {
-                  if (recursive === true) {
-                    child();
-                  }
-                  item = storeb;
-                }
-                return value;
-              };
-            extref = recurse;
-            recurse("");
-            return item;
-          };
-        if (arTest(array) === false) {
-          return array;
-        }
-        if (operation === "normal") {
-          return normal(array);
-        }
-        if (operation === "descend") {
-          return descend(array);
-        }
-        return ascend(array);
-      },
-      // this functionality provides corrections to the "begin" and "ender" values after use of object_sort
-      sortCorrection: function parse_sortCorrection(start, end) {
-        let a = start,
-          endslen = -1;
-        const data = parse.data,
-          ends = [],
-          structure = (parse.structure.length < 2) ?
-          [-1] :
-          [parse.structure[parse.structure.length - 2][1]];
-        // this first loop solves for the begin values
-        do {
-          if (a > 0 &&
-            data.types[a].indexOf("attribute") > -1 &&
-            data.types[a].indexOf("end") < 0 &&
-            data.types[a - 1].indexOf("start") < 0 &&
-            data.types[a - 1].indexOf("attribute") < 0 &&
-            data.lexer[a] === "markup") {
-            structure.push(a - 1);
-          }
-          if (a > 0 &&
-            data.types[a - 1].indexOf("attribute") > -1 &&
-            data.types[a].indexOf("attribute") < 0 &&
-            data.lexer[structure[structure.length - 1]] === "markup" &&
-            data.types[structure[structure.length - 1]].indexOf("start") < 0) {
-            structure.pop();
-          }
-          if (data.begin[a] !== structure[structure.length - 1]) {
-            if (structure.length > 0) {
-              data.begin[a] = structure[structure.length - 1];
-            } else {
-              data.begin[a] = -1;
-            }
-          }
-          if (data.types[a].indexOf("else") > -1) {
-            if (structure.length > 0) {
-              structure[structure.length - 1] = a;
-            } else {
-              structure.push(a);
-            }
-          }
-          if (data.types[a].indexOf("end") > -1) {
-            structure.pop();
-          }
-          if (data.types[a].indexOf("start") > -1) {
-            structure.push(a);
-          }
-          a = a + 1;
-        } while (a < end);
-        // and now for the ender values
-        a = end;
-        do {
-          a = a - 1;
-          if (data.types[a].indexOf("end") > -1) {
-            ends.push(a);
-            endslen = endslen + 1;
-          }
-          if (endslen > -1) {
-            data.ender[a] = ends[endslen];
-          } else {
-            data.ender[a] = -1;
-          }
-          if (data.types[a].indexOf("start") > -1) {
-            ends.pop();
-            endslen = endslen - 1;
-          }
-        } while (a > start);
-      },
-      // a simple tool to take note of whitespace between tokens
-      spacer: function parse_spacer(args) {
-        // * array - the characters to scan
-        // * index - the index to start scanning from
-        // * end   - the length of the array, to break the loop
-        parse.linesSpace = 1;
-        do {
-          if (args.array[args.index] === "\n") {
-            parse.linesSpace = parse.linesSpace + 1;
-            parse.lineNumber = parse.lineNumber + 1;
-          }
-          if ((/\s/).test(args.array[args.index + 1]) === false) {
-            break;
-          }
-          args.index = args.index + 1;
-        } while (args.index < args.end);
-        return args.index;
-      },
-      // an extension of Array.prototype.splice to work across the data structure
-      splice: function parse_splice(spliceData) {
-        const finalItem = [parse.data.begin[parse.count], parse.data.token[parse.count]];
-        // * data    - The data object to alter
-        // * howmany - How many indexes to remove
-        // * index   - The index where to start
-        // * record  - A new record to insert
-        if (spliceData.record !== undefined && spliceData.record.token !== "") {
-          parse
-            .datanames
-            .forEach(function parse_splice_datanames(value) {
-              spliceData
-                .data[value]
-                .splice(spliceData.index, spliceData.howmany, spliceData.record[value]);
-            });
-          if (spliceData.data === parse.data) {
-            parse.count = (parse.count - spliceData.howmany) + 1;
-            if (finalItem[0] !== parse.data.begin[parse.count] || finalItem[1] !== parse.data.token[parse.count]) {
-              parse.linesSpace = 0;
-            }
-          }
-          return;
-        }
-        parse
-          .datanames
-          .forEach(function parse_splice_datanames(value) {
-            spliceData
-              .data[value]
-              .splice(spliceData.index, spliceData.howmany);
-          });
-        if (spliceData.data === parse.data) {
-          parse.count = parse.count - spliceData.howmany;
-          parse.linesSpace = 0;
-        }
-      },
-      // parsing block comments and simultaneously applying word wrap
-      wrapCommentBlock: function parse_wrapCommentBlock(config) {
-        let a = config.start,
-          b = 0,
-          c = 0,
-          d = 0,
-          len = 0,
-          lines = [],
-          space = "",
-          bline = "",
-          spaceLine, emptyLine = false,
-          bulletLine = false,
-          numberLine = false,
-          bigLine = false,
-          output = "",
-          terml = config.terminator.length - 1,
-          term = config.terminator.charAt(terml),
-          twrap = 0;
-        const build = [],
-          second = [],
-          lf = (sparser.options.crlf === true) ?
-          "\r\n" :
-          "\n",
-          sanitize = function parse_wrapCommentBlock_sanitize(input) {
-            return `\\${input}`;
-          },
-          regEsc = (/(\/|\\|\||\*|\[|\]|\{|\})/g),
-          regEnd = new RegExp(`\\s*${config.terminator.replace(regEsc, sanitize)}$`),
-          regIgnore = new RegExp(`^(${config.opening.replace(regEsc, sanitize)}\\s*parse-ignore-start)`),
-          regStart = new RegExp(`(${config.opening.replace(regEsc, sanitize)}\\s*)`),
-          wrap = sparser.options.wrap,
-          emptyLines = function parse_wrapCommentBlock_emptyLines() {
-            if ((/^\s+$/).test(lines[b + 1]) === true || lines[b + 1] === "") {
-              do {
-                b = b + 1;
-              } while (b < len && ((/^\s+$/).test(lines[b + 1]) === true || lines[b + 1] === ""));
-            }
-            if (b < len - 1) {
-              second.push("");
-            }
-          };
-        do {
-          build.push(config.chars[a]);
-          if (config.chars[a] === "\n") {
-            parse.lineNumber = parse.lineNumber + 1;
-          }
-          if (config.chars[a] === term && config.chars.slice(a - terml, a + 1).join("") === config.terminator) {
-            break;
-          }
-          a = a + 1;
-        } while (a < config.end);
-        output = build.join("");
-
-        if (regIgnore.test(output) === true) {
-
-          let termination = "\n";
-          a = a + 1;
-
-          do {
-
-            build.push(config.chars[a]);
-            a = a + 1;
-
-          } while (
-            a < config.end && (
-              config.chars[a - 1] !== "d" || (
-                config.chars[a - 1] === "d" &&
-                build.slice(build.length - 16).join("") !== "parse-ignore-end"
-              )
-            )
           );
 
-          b = a;
-          terml = config.opening.length - 1;
-          term = config.opening.charAt(terml);
+          parse.linesSpace = lines;
+          parse.concat(data, store);
 
-          do {
+          return;
+        }
+      }
 
-            if (
-              config.opening === "/*" &&
-              config.chars[b - 1] === "/" && (
-                config.chars[b] === "*" ||
-                config.chars[b] === "/"
-              )
-            ) {
-              break; // for script
-            }
+      return;
+    },
 
-            if (
-              config.opening !== "/*" &&
-              config.chars[b] === term &&
-              config.chars.slice(b - terml, b + 1).join("") === config.opening
-            ) {
-              break; // for markup
-            }
+    // An extension of Array.prototype.pop to work
+    // across the data structure
+    pop(data) {
 
-            b = b - 1;
+      const output = {
+        begin: data.begin.pop(),
+        ender: data.ender.pop(),
+        lexer: data.lexer.pop(),
+        lines: data.lines.pop(),
+        stack: data.stack.pop(),
+        token: data.token.pop(),
+        types: data.types.pop()
+      };
 
-          } while (b > config.start);
+      if (data === parse.data) parse.count = parse.count - 1;
+      return output;
+    },
 
+    // An extension of Array.prototype.push to work
+    // across the data structure
+    push (data, record, structure) {
 
-          if (config.opening === "/*" && config.chars[b] === "*") {
-            termination = "\u002a/";
-          } else if (config.opening !== "/*") {
-            termination = config.terminator;
+      function ender() {
+
+        let a = parse.count;
+
+        const begin = data.begin[a];
+
+        if (
+          (
+            data.lexer[a] === "markup" &&
+            sparser.options.lexer_options.markup.tag_sort === true
+          ) || (
+            (
+              data.lexer[a] === "script" ||
+              data.lexer[a] === "style"
+            ) && sparser.options.lexer_options[data.lexer[a]].object_sort === true
+          )
+        ) {
+
+          // Sorting can result in a token whose begin value is greater than either
+          // Its current index or the index of the end token, which results in
+          // an endless loop. These end values are addressed at the end of
+          // the "parser" function with parse.sortCorrection
+          return;
+        }
+
+        do {
+
+          if (
+            data.begin[a] === begin || (
+              data.begin[data.begin[a]] === begin &&
+              data.types[a].indexOf("attribute") > -1 &&
+              data.types[a].indexOf("attribute_end") < 0
+            )
+          ) {
+
+            data.ender[a] = parse.count;
+          } else {
+
+            a = data.begin[a];
           }
 
-          terml = termination.length - 1;
-          term = termination.charAt(terml);
+          a = a - 1;
 
-          if (termination !== "\n" || config.chars[a] !== "\n") {
+        } while (a > begin);
+
+        if (a > -1) data.ender[a] = parse.count;
+      };
+
+      // parse_push_datanames
+      parse.datanames.forEach(value => { data[value].push(record[value]); });
+
+      if (data === parse.data) {
+
+        parse.count = parse.count + 1;
+        parse.linesSpace = 0;
+
+        if (record.lexer !== "style") {
+          if (structure.replace(/(\{|\}|@|<|>|%|#|)/g, "") === "") {
+            structure = record.types === "else" ? "else" :  structure = record.token;
+          }
+        }
+
+        if (record.types === "start" || record.types.indexOf("_start") > 0) {
+
+          parse.structure.push([structure, parse.count]);
+
+        } else if (record.types === "end" || record.types.indexOf("_end") > 0) {
+
+          // This big condition fixes language specific else blocks that
+          // are children of start/end blocks not associated with
+          // the if/else chain
+
+          let case_ender = 0;
+
+          if (parse.structure.length > 2 && (
+            data.types[parse.structure[parse.structure.length - 1][1]] === "else" ||
+            data.types[parse.structure[parse.structure.length - 1][1]].indexOf("_else") > 0
+          ) && (
+            data.types[parse.structure[parse.structure.length - 2][1]] === "start" ||
+            data.types[parse.structure[parse.structure.length - 2][1]].indexOf("_start") > 0
+          ) && (
+            data.types[parse.structure[parse.structure.length - 2][1] + 1] === "else" ||
+            data.types[parse.structure[parse.structure.length - 2][1] + 1].indexOf("_else") > 0
+          )) {
+
+            parse.structure.pop();
+            data.begin[parse.count] = parse.structure[parse.structure.length - 1][1];
+            data.stack[parse.count] = parse.structure[parse.structure.length - 1][0];
+            data.ender[parse.count - 1] = parse.count;
+            case_ender = data.ender[data.begin[parse.count] + 1];
+          }
+
+          ender();
+
+          if (case_ender > 0) data.ender[data.begin[parse.count] + 1] = case_ender;
+
+          parse.structure.pop();
+
+        } else if (
+          record.types === "else" ||
+          record.types.indexOf("_else") > 0
+        ) {
+
+          if (structure === "") structure = "else";
+          if (
+            parse.count > 0 && (
+              data.types[parse.count - 1] === "start" ||
+              data.types[parse.count - 1].indexOf("_start") > 0
+            )
+          ) {
+
+            parse.structure.push([structure, parse.count]);
+          } else {
+
+            ender();
+
+            if (structure === "") {
+              parse.structure[parse.structure.length - 1] = ["else", parse.count];
+            } else {
+              parse.structure[parse.structure.length - 1] = [structure, parse.count];
+            }
+
+          }
+        }
+      }
+    },
+
+    // A custom sort tool that is a bit more intelligent and
+    // multidimensional than Array.prototype.sort
+    safeSort(array, operation, recursive) {
+
+      // parse_safeSort_extref
+      // worthless function for backwards compatibility with older versions of V8 node.
+      let extref = item => item;
+
+      // parse_safeSort_arTest
+      const arTest = (item) => Array.isArray(item) === true ? true : false;
+
+      // parse_safeSort_normal
+      const normal = function parse_safeSort_normal(item) {
+
+        let storeb = item;
+        const done = [item[0]];
+
+        // safeSort_normal_child
+        function child() {
+          let a = 0;
+          const len = storeb.length;
+          if (a < len) {
+            do {
+              if (arTest(storeb[a]) === true) {
+                storeb[a] = parse_safeSort_normal(storeb[a]);
+              }
+              a = a + 1;
+            } while (a < len);
+          }
+        };
+
+        // parse_safeSort_normal_recurse
+        function recurse(x) {
+
+          let a = 0;
+
+          const storea = [];
+          const len = storeb.length;
+
+          if (a < len) {
 
             do {
 
-              build.push(config.chars[a]);
+              if (storeb[a] !== x) storea.push(storeb[a]);
+              a = a + 1;
 
-              if (termination === "\n" && config.chars[a + 1] === "\n")  break;
-              if (
-                config.chars[a] === term &&
-                config.chars.slice(a - terml, a + 1).join("") === termination
-              ) {
-                break;
+            } while (a < len);
+          }
+
+          storeb = storea;
+
+          if (storea.length > 0) {
+            done.push(storea[0]);
+            extref(storea[0]);
+          } else {
+            if (recursive === true) child();
+            item = storeb;
+          }
+        };
+
+        extref = recurse;
+        recurse(array[0]);
+
+        return item;
+      }
+
+      const descend = function parse_safeSort_descend(item) {
+
+        let c = 0;
+        const len = item.length;
+        const storeb = item;
+
+        const child = function parse_safeSort_descend_child() {
+          let a = 0;
+          const lenc = storeb.length;
+
+          if (a < lenc) {
+            do {
+              if (arTest(storeb[a])) storeb[a] = parse_safeSort_descend(storeb[a]);
+              a = a + 1;
+            } while (a < lenc);
+          }
+        };
+
+        const recurse = function parse_safeSort_descend_recurse(value) {
+
+          let a = c;
+          let b = 0;
+          let d = 0;
+          let e = 0;
+          let ind = [];
+          let key = storeb[c];
+          let tstore = "";
+
+          const tkey = typeof key;
+
+          if (a < len) {
+
+            do {
+              tstore = typeof storeb[a];
+
+              if (storeb[a] > key || (tstore > tkey)) {
+                key = storeb[a];
+                ind = [a];
+              } else if (storeb[a] === key) {
+                ind.push(a);
               }
 
               a = a + 1;
 
-            } while (a < config.end);
-
+            } while (a < len);
           }
 
-          if (config.chars[a] === "\n") a = a - 1;
+          d = ind.length;
+          a = c;
+          b = d + c;
 
-          output = build.join("").replace(/\s+$/, "");
+          if (a < b) {
 
+            do {
+              storeb[ind[e]] = storeb[a];
+              storeb[a] = key;
+              e = e + 1;
+              a = a + 1;
+            } while (a < b);
+          }
 
-          return [ output, a ];
+          c = c + d;
 
+          if (c < len) {
+            extref("");
+          } else {
+            if (recursive === true) child();
+            item = storeb;
+          }
+
+          return value;
+        };
+
+        extref = recurse;
+        recurse("");
+        return item;
+
+      };
+
+      const ascend = function parse_safeSort_ascend(item) {
+
+        let c = 0;
+        const len = item.length;
+        const storeb = item;
+
+        const child = function parse_safeSort_ascend_child() {
+          let a = 0;
+          const lenc = storeb.length;
+          if (a < lenc) {
+            do {
+              if (arTest(storeb[a]) === true) {
+                storeb[a] = parse_safeSort_ascend(storeb[a]);
+              }
+              a = a + 1;
+            } while (a < lenc);
+          }
         }
 
+        const recurse = function parse_safeSort_ascend_recurse(value) {
 
-        if (
-          a === config.end ||  wrap < 1 || (
-            output.length <= wrap &&
-            output.indexOf("\n") < 0
-          ) ||  sparser.options.preserve_comment === true || (
-            config.opening === "/*" &&
-            output.indexOf("\n") > 0 &&
-            output.replace("\n", "").indexOf("\n") > 0 && (
-              /\n(?!(\s*\*))/).test(output) === false
-            )
-          ) {
+          let a = c;
+          let b = 0;
+          let d = 0;
+          let e = 0;
+          let ind = [];
+          let key = storeb[c];
+          let tstore = "";
 
-          return [output, a];
+          const tkey = typeof key;
+
+          if (a < len) {
+
+            do {
+
+              tstore = typeof storeb[a];
+
+              if (storeb[a] < key || tstore < tkey) {
+                key = storeb[a];
+                ind = [a];
+              } else if (storeb[a] === key) {
+                ind.push(a);
+              }
+
+              a = a + 1;
+
+            } while (a < len);
+          }
+
+          d = ind.length;
+          a = c;
+          b = d + c;
+
+          if (a < b) {
+            do {
+              storeb[ind[e]] = storeb[a];
+              storeb[a] = key;
+              e = e + 1;
+              a = a + 1;
+            } while (a < b);
+          }
+
+          c = c + d;
+
+          if (c < len) {
+            extref("");
+          } else {
+            if (recursive === true)  child();
+            item = storeb;
+          }
+
+          return value;
+        };
+
+        extref = recurse;
+        recurse("");
+
+        return item;
+
+      };
+
+      if (arTest(array) === false) return array;
+      if (operation === "normal")  return normal(array);
+      if (operation === "descend") return descend(array);
+
+      return ascend(array);
+
+    },
+
+    // This functionality provides corrections to the
+    // "begin" and "ender" values after use of object_sort
+    sortCorrection (start, end) {
+
+      let a = start;
+      let endslen = -1;
+
+      const data = parse.data;
+      const ends = [];
+      const structure = (parse.structure.length < 2)
+        ? [ -1 ]
+        : [ parse.structure[parse.structure.length - 2][1] ];
+
+      // This first loop solves for the begin values
+      do {
+
+        if (a > 0 &&
+          data.types[a].indexOf("attribute") > -1 &&
+          data.types[a].indexOf("end") < 0 &&
+          data.types[a - 1].indexOf("start") < 0 &&
+          data.types[a - 1].indexOf("attribute") < 0 &&
+          data.lexer[a] === "markup") {
+          structure.push(a - 1);
         }
 
-        b = config.start;
+        if (a > 0 &&
+          data.types[a - 1].indexOf("attribute") > -1 &&
+          data.types[a].indexOf("attribute") < 0 &&
+          data.lexer[structure[structure.length - 1]] === "markup" &&
+          data.types[structure[structure.length - 1]].indexOf("start") < 0) {
+          structure.pop();
+        }
 
-        if (
-          b > 0 &&
-          config.chars[b - 1] !== "\n" &&
-          (/\s/).test(config.chars[b - 1]) === true
-        ) {
+        if (data.begin[a] !== structure[structure.length - 1]) {
+          if (structure.length > 0) {
+            data.begin[a] = structure[structure.length - 1];
+          } else {
+            data.begin[a] = -1;
+          }
+        }
 
-          do {
-            b = b - 1;
-          } while (
-            b > 0 &&
-            config.chars[b - 1] !== "\n" &&
-            (/\s/).test(config.chars[b - 1]
-            ) === true
+        if (data.types[a].indexOf("else") > -1) {
+          if (structure.length > 0) {
+            structure[structure.length - 1] = a;
+          } else {
+            structure.push(a);
+          }
+        }
+
+        if (data.types[a].indexOf("end") > -1) structure.pop();
+        if (data.types[a].indexOf("start") > -1)  structure.push(a);
+
+        a = a + 1;
+
+      } while (a < end);
+
+
+      // Now for the ender values
+      a = end;
+
+      do {
+
+        a = a - 1;
+
+        if (data.types[a].indexOf("end") > -1) {
+          ends.push(a);
+          endslen = endslen + 1;
+        }
+
+        data.ender[a] =endslen > -1 ? ends[endslen] :  -1;
+
+        if (data.types[a].indexOf("start") > -1) {
+          ends.pop();
+          endslen = endslen - 1;
+        }
+
+      } while (a > start);
+    },
+
+    // A simple tool to take note of whitespace between tokens
+    // parse_spacer
+    spacer(args) {
+
+      // * array - the characters to scan
+      // * index - the index to start scanning from
+      // * end   - the length of the array, to break the loop
+      parse.linesSpace = 1;
+
+      do {
+        if (args.array[args.index] === "\n") {
+          parse.linesSpace = parse.linesSpace + 1;
+          parse.lineNumber = parse.lineNumber + 1;
+        }
+
+        if ((/\s/).test(args.array[args.index + 1]) === false) break;
+
+        args.index = args.index + 1;
+
+      } while (args.index < args.end);
+
+      return args.index;
+
+    },
+
+    // An extension of Array.prototype.splice to work across
+    // the data structure
+    splice (spliceData) {
+
+      const finalItem = [
+        parse.data.begin[parse.count],
+        parse.data.token[parse.count]
+      ];
+
+      // * data    - The data object to alter
+      // * howmany - How many indexes to remove
+      // * index   - The index where to start
+      // * record  - A new record to insert
+      if (spliceData.record !== undefined && spliceData.record.token !== "") {
+
+        // parse_splice_datanames
+        parse.datanames.forEach((value) => {
+          spliceData.data[value].splice(
+            spliceData.index,
+            spliceData.howmany,
+            spliceData.record[value]
           );
+        });
+
+        if (spliceData.data === parse.data) {
+
+          parse.count = (parse.count - spliceData.howmany) + 1;
+
+          if (
+            finalItem[0] !== parse.data.begin[parse.count] ||
+            finalItem[1] !== parse.data.token[parse.count]
+          ) {
+            parse.linesSpace = 0;
+          }
         }
 
-        space = config.chars.slice(b, config.start).join("");
-        spaceLine = new RegExp(`\n${space}`, "g");
-        lines = output.replace(/\r\n/g, "\n").replace(spaceLine, "\n").split("\n");
-        len = lines.length;
-        lines[0] = lines[0].replace(regStart, "");
-        lines[len - 1] = lines[len - 1].replace(regEnd, "");
+        return;
+      }
 
-        if (len < 2)   lines = lines[0].split(" ");
+      // parse_splice_datanames
+      parse.datanames.forEach((value) => {
+        spliceData.data[value].splice(
+          spliceData.index,
+          spliceData.howmany
+        );
+      });
 
+      if (spliceData.data === parse.data) {
+        parse.count = parse.count - spliceData.howmany;
+        parse.linesSpace = 0;
+      }
 
-        if (lines[0] === "") {
-          lines[0] = config.opening;
-        } else {
-          lines.splice(0, 0, config.opening);
+    },
+
+    // Parsing block comments and simultaneously applying word wrap
+    // parse_wrapCommentBlock
+    wrapCommentBlock(config) {
+
+      let a = config.start;
+      let b = 0;
+      let c = 0;
+      let d = 0;
+      let len = 0;
+      let lines = [];
+      let space = "";
+      let bline = "";
+      let spaceLine, emptyLine = false;
+      let bulletLine = false;
+      let numberLine = false;
+      let bigLine = false;
+      let output = "";
+      let terml = config.terminator.length - 1;
+      let term = config.terminator.charAt(terml);
+      let  twrap = 0;
+
+      const sanitize = input => `\\${input}`;
+      const build = [];
+      const second = [];
+      const lf = (sparser.options.crlf === true) ? "\r\n" : "\n";
+      const regEsc = (/(\/|\\|\||\*|\[|\]|\{|\})/g);
+
+      const regEnd = new RegExp(
+        `\\s*${config.terminator.replace(regEsc, sanitize)}$`
+      );
+
+      const regIgnore = new RegExp(
+        `^(${config.opening.replace(regEsc, sanitize)}\\s*parse-ignore-start)`
+      );
+
+      const regStart = new RegExp(
+        `(${config.opening.replace(regEsc, sanitize)}\\s*)`
+      );
+
+      const wrap = sparser.options.wrap;
+
+      // parse_wrapCommentBlock_emptyLines
+      function emptyLines() {
+
+        if (/^\s+$/.test(lines[b + 1]) === true || lines[b + 1] === "") {
+          do {
+            b = b + 1;
+          } while (b < len && (/^\s+$/.test(lines[b + 1]) || lines[b + 1] === ""));
         }
 
-        len = lines.length;
-        b = 0;
+        if (b < len - 1)  second.push("");
+
+      };
+
+      do {
+
+        build.push(config.chars[a]);
+
+        if (config.chars[a] === "\n") parse.lineNumber = parse.lineNumber + 1;
+
+        if (
+          config.chars[a] === term &&
+          config.chars.slice(a - terml, a + 1).join("") === config.terminator
+        ) break;
+
+        a = a + 1;
+
+      } while (a < config.end);
+
+      output = build.join("");
+
+      if (regIgnore.test(output) === true) {
+
+        let termination = "\n";
+        a = a + 1;
 
         do {
 
-          bline = (b < len - 1)
-            ?  lines[b + 1].replace(/^\s+/, "")
-            :  "";
-
-          if ((/^\s+$/).test(lines[b]) === true || lines[b] === "") {
-            emptyLines();
-          } else if (lines[b].slice(0, 4) === "    ") {
-            second.push(lines[b]);
-          } else if (lines[b].replace(/^\s+/, "").length > wrap && lines[b].replace(/^\s+/, "").indexOf(" ") > wrap) {
-            lines[b] = lines[b].replace(/^\s+/, "");
-            c = lines[b].indexOf(" ");
-            second.push(lines[b].slice(0, c));
-            lines[b] = lines[b].slice(c + 1);
-            b = b - 1;
-          } else {
-            if (config.opening === "/*" && lines[b].indexOf("/*") !== 0) {
-              lines[b] = `   ${lines[b].replace(/^\s+/, "").replace(/\s+$/, "").replace(/\s+/g, " ")}`;
-            } else {
-              lines[b] = `${lines[b].replace(/^\s+/, "").replace(/\s+$/, "").replace(/\s+/g, " ")}`;
-            }
-            twrap = (b < 1) ?
-              wrap - (config.opening.length + 1) :
-              wrap;
-            c = lines[b].length;
-            d = lines[b].replace(/^\s+/, "").indexOf(" ");
-            if (c > twrap && d > 0 && d < twrap) {
-              c = twrap;
-              do {
-                c = c - 1;
-                if ((/\s/).test(lines[b].charAt(c)) === true && c <= wrap) {
-                  break;
-                }
-              } while (c > 0);
-              if (lines[b].slice(0, 4) !== "    " && (/^\s*(\*|-)\s/).test(lines[b]) === true && (/^\s*(\*|-)\s/).test(lines[b + 1]) === false) {
-                lines.splice(b + 1, 0, "* ");
-              }
-              if (lines[b].slice(0, 4) !== "    " && (/^\s*\d+\.\s/).test(lines[b]) === true && (/^\s*\d+\.\s/).test(lines[b + 1]) === false) {
-                lines.splice(b + 1, 0, "1. ");
-              }
-              if (c < 4) {
-                second.push(lines[b]);
-                bigLine = true;
-              } else if (b === len - 1) {
-                second.push(lines[b].slice(0, c));
-                lines[b] = lines[b].slice(c + 1);
-                bigLine = true;
-                b = b - 1;
-              } else if ((/^\s+$/).test(lines[b + 1]) === true || lines[b + 1] === "") {
-                second.push(lines[b].slice(0, c));
-                lines[b] = lines[b].slice(c + 1);
-                emptyLine = true;
-                b = b - 1;
-              } else if (lines[b + 1].slice(0, 4) !== "    " && (/^\s*(\*|-)\s/).test(lines[b + 1]) === true) {
-                second.push(lines[b].slice(0, c));
-                lines[b] = lines[b].slice(c + 1);
-                bulletLine = true;
-                b = b - 1;
-              } else if (lines[b + 1].slice(0, 4) !== "    " && (/^\s*\d+\.\s/).test(lines[b + 1]) === true) {
-                second.push(lines[b].slice(0, c));
-                lines[b] = lines[b].slice(c + 1);
-                numberLine = true;
-                b = b - 1;
-              } else if (lines[b + 1].slice(0, 4) === "    ") {
-                second.push(lines[b].slice(0, c));
-                lines[b] = lines[b].slice(c + 1);
-                bigLine = true;
-                b = b - 1;
-              } else if (c + bline.length > wrap && bline.indexOf(" ") < 0) {
-                second.push(lines[b].slice(0, c));
-                lines[b] = lines[b].slice(c + 1);
-                bigLine = true;
-                b = b - 1;
-              } else if (lines[b].replace(/^\s+/, "").indexOf(" ") < wrap) {
-                if (lines[b].length > wrap) {
-                  lines[b + 1] = lines[b].slice(c + 1) + lf + lines[b + 1];
-                } else {
-                  lines[b + 1] = `${lines[b].slice(c + 1)} ${lines[b + 1]}`;
-                }
-              }
-
-              if (
-                emptyLine === false &&
-                bulletLine === false &&
-                numberLine === false &&
-                bigLine === false
-              ) {
-                lines[b] = lines[b].slice(0, c);
-              }
-
-            } else if (
-              lines[b + 1] !== undefined && (
-                (
-                  lines[b].length + bline.indexOf(" ") > wrap &&
-                  bline.indexOf(" ") > 0
-                ) || (
-                  lines[b].length + bline.length > wrap &&
-                  bline.indexOf(" ") < 0
-                )
-              )
-            ) {
-
-              second.push(lines[b]);
-              b = b + 1;
-
-            } else if (
-              lines[b + 1] !== undefined &&
-              (/^\s+$/).test(lines[b + 1]) === false &&
-              lines[b + 1] !== "" &&
-              lines[b + 1].slice(0, 4) !== "    " &&
-              (/^\s*(\*|-|(\d+\.))\s/).test(lines[b + 1]) === false
-            ) {
-              lines[b + 1] = `${lines[b]} ${lines[b + 1]}`;
-              emptyLine = true;
-            }
-
-            if (bigLine === false && bulletLine === false && numberLine === false) {
-
-              if (emptyLine === true) {
-
-                emptyLine = false;
-
-              } else if ((/^\s*(\*|-|(\d+\.))\s*$/).test(lines[b]) === false) {
-
-                if (
-                  b < len - 1 &&
-                  lines[b + 1] !== "" &&
-                  (/^\s+$/).test(lines[b]) === false &&
-                  lines[b + 1].slice(0, 4) !== "    " &&
-                  (/^\s*(\*|-|(\d+\.))\s/).test(lines[b + 1]) === false
-
-                ) {
-
-                  lines[b] = `${lines[b]} ${lines[b + 1]}`;
-                  lines.splice(b + 1, 1);
-                  len = len - 1;
-                  b = b - 1;
-
-                } else {
-
-                  if (
-                    config.opening === "/*" &&
-                    lines[b].indexOf("/*") !== 0
-                  ) {
-
-                    second.push(`   ${lines[b].replace(/^\s+/, "").replace(/\s+$/, "").replace(/\s+/g, " ")}`);
-
-                  } else {
-
-                    second.push(`${lines[b].replace(/^\s+/, "").replace(/\s+$/, "").replace(/\s+/g, " ")}`);
-                  }
-                }
-              }
-            }
-            bigLine = false;
-            bulletLine = false;
-            numberLine = false;
-          }
-
-          b = b + 1;
-
-        } while (b < len);
-
-        if (second.length > 0) {
-
-          if (second[second.length - 1].length > wrap - (config.terminator.length + 1)) {
-            second.push(config.terminator);
-          } else {
-            second[second.length - 1] = `${second[second.length - 1]} ${config.terminator}`;
-          }
-
-          output = second.join(lf);
-
-        } else {
-          lines[lines.length - 1] = lines[lines.length - 1] + config.terminator;
-          output = lines.join(lf);
-        }
-
-        return [output, a];
-
-      },
-      // parsing line comments and simultaneously applying word wrap
-      wrapCommentLine: function parse_wrapCommentLine(config) {
-
-        let a = config.start,
-          b = 0,
-          output = "",
-          build = [];
-
-        const wrap = sparser.options.wrap,
-          recurse = function parse_wrapCommentLine_recurse() {
-
-            let line = "";
-
-            do {
-
-              b = b + 1;
-
-              if (config.chars[b + 1] === "\n")   return;
-
-            } while (b < config.end && (/\s/).test(config.chars[b]) === true);
-
-            if (config.chars[b] + config.chars[b + 1] === "//") {
-
-              build = [];
-
-              do {
-                build.push(config.chars[b]);
-                b = b + 1;
-              } while (
-                b < config.end &&
-                config.chars[b] !== "\n"
-              );
-
-              line = build.join("");
-
-              if (
-                (/^\/\/ (\*|-|(\d+\.))/).test(line) === false &&
-                line.slice(0, 6) !== "//    " &&
-                (/^\/\/\s*$/).test(line) === false
-              ) {
-                output = `${output} ${line.replace(/(^\/\/\s*)/, "").replace(/\s+$/, "")}`;
-                a = b - 1;
-                parse_wrapCommentLine_recurse();
-              }
-
-            }
-
-          },
-          wordWrap = function parse_wrapCommentLine_wordWrap() {
-            let c = 0,
-              d = 0;
-            const lines = [],
-              record = (parse.count > -1) ?
-              {
-                begin: parse.structure[parse.structure.length - 1][1],
-                ender: -1,
-                lexer: config.lexer,
-                lines: parse.linesSpace,
-                stack: parse.structure[parse.structure.length - 1][0],
-                token: parse.data.token[parse.count],
-                types: "comment"
-              } :
-              {
-                begin: -1,
-                ender: -1,
-                lexer: config.lexer,
-                lines: parse.linesSpace,
-                stack: "global",
-                token: "",
-                types: "comment"
-              };
-            output = output.replace(/\s+/g, " ").replace(/\s+$/, "");
-            d = output.length;
-            if (wrap > d) {
-              return;
-            }
-            do {
-              c = wrap;
-              if (output.charAt(c) !== " ") {
-                do {
-                  c = c - 1;
-                } while (c > 0 && output.charAt(c) !== " ");
-                if (c < 3) {
-                  c = wrap;
-                  do {
-                    c = c + 1;
-                  } while (c < d - 1 && output.charAt(c) !== " ");
-                }
-              }
-              lines.push(output.slice(0, c));
-              output = `// ${output.slice(c).replace(/^\s+/, "")}`;
-              d = output.length;
-            } while (wrap < d);
-            c = 0;
-            d = lines.length;
-            do {
-              record.token = lines[c];
-              parse.push(parse.data, record, "");
-              record.lines = 2;
-              parse.linesSpace = 2;
-              c = c + 1;
-            } while (c < d);
-          };
-        do {
           build.push(config.chars[a]);
           a = a + 1;
-        } while (a < config.end && config.chars[a] !== "\n");
-        if (a === config.end) {
-          // necessary because the wrapping logic expects line termination
-          config.chars.push("\n");
-        } else {
-          a = a - 1;
-        }
-        output = build.join("").replace(/\s+$/, "");
 
-        if ((/^(\/\/\s*parse-ignore\u002dstart)/).test(output) === true) {
-          let termination = "\n";
-          a = a + 1;
-          do {
-            build.push(config.chars[a]);
-            a = a + 1;
-          } while (
-            a < config.end && (
-              config.chars[a - 1] !== "d" || (
-                config.chars[a - 1] === "d" &&
-                build.slice(build.length - 16).join("") !== "parse-ignore-end"
-              )
-            )
-          );
+        } while (a < config.end && (
+          config.chars[a - 1] !== "d" || (
+            config.chars[a - 1] === "d" &&
+            build.slice(build.length - 16).join("") !== "parse-ignore-end"
+          )
+        ));
 
-          b = a;
+        b = a;
+        terml = config.opening.length - 1;
+        term = config.opening.charAt(terml);
 
-          do {} while (
-            b > config.start &&
+        do {
+
+          if (
+            config.opening === "/*" &&
             config.chars[b - 1] === "/" && (
               config.chars[b] === "*" ||
               config.chars[b] === "/"
             )
-          );
+          ) break; // for script
+
+          if (
+            config.opening !== "/*" &&
+            config.chars[b] === term &&
+            config.chars.slice(b - terml, b + 1).join("") === config.opening
+          ) break; // for markup
+
+          b = b - 1;
+
+        } while (b > config.start);
 
 
-          if (config.chars[b] === "*") {
-            termination = "\u002a/";
-          }
-
-          if (termination !== "\n" || config.chars[a] !== "\n") {
-
-            do {
-              build.push(config.chars[a]);
-              if (termination === "\n" && config.chars[a + 1] === "\n") {
-                break;
-              }
-              a = a + 1;
-            } while (
-              a < config.end && (
-                termination === "\n" || (
-                  termination === "\u002a/" && (
-                    config.chars[a - 1] !== "*" ||
-                    config.chars[a] !== "/"
-                  )
-                )
-              )
-            );
-          }
-
-          if (config.chars[a] === "\n") a = a - 1;
-
-          output = build.join("").replace(/\s+$/, "");
-
-          return [output, a];
-        }
-        if (
-          output === "//" ||
-          output.slice(0, 6) === "//    " ||
-          sparser.options.preserve_comment === true
-        ) {
-          return [output, a];
+        if (config.opening === "/*" && config.chars[b] === "*") {
+          termination = "\u002a/";
+        } else if (config.opening !== "/*") {
+          termination = config.terminator;
         }
 
-        output = output.replace(/(\/\/\s*)/, "// ");
+        terml = termination.length - 1;
+        term = termination.charAt(terml);
 
-        if (
-          wrap < 1 || (
-            a === config.end - 1 &&
-            parse.data.begin[parse.count] < 1
-          )
-        ) {
-          return [output, a];
-        }
+        if (termination !== "\n" || config.chars[a] !== "\n") {
 
-        b = a + 1;
-        recurse();
-        wordWrap();
-
-        return [output, a];
-
-      }
-    },
-    sparser = {
-      lexers: {},
-      libs: {},
-      options: {
-        "lexer_options": {
-          "markup": {
-            "attribute_sort": false,
-            "attribute_sort_list": "",
-            "parse_space": false,
-            "preserve_text": false,
-            "quote_convert": "none",
-            "tag_merge": false,
-            "tag_sort": false,
-            "unformatted": false
-          },
-          "script": {
-            "end_comma": "none",
-            "object_sort": false,
-            "quote_convert": "none",
-            "variable_list": "none"
-          },
-          "style": {
-            "no_lead_zero": false,
-            "object_sort": false,
-            "quote_convert": "none"
-          }
-        },
-        "correct": false,
-        "crlf": false,
-        "format": "arrays",
-        "language": "auto",
-        "lexer": "auto",
-        "preserve_comment": false,
-        "source": "",
-        "wrap": 0
-      },
-      parse: parse,
-      parser: parser,
-      parseerror: "",
-      version: {
-        date: "18 Aug 2019",
-        number: "1.4.12"
-      }
-    },
-    prettydiff = function mode(diffmeta) {
-      const pdcomment = function mode_pdcomment() {
-          const ops = prettydiff.sparser.options;
-          let sindex = options.source.search(/((\/(\*|\/))|<!--*)\s*prettydiff\.com/),
-            dindex = options.diff.search(/((\/(\*|\/))|<!--*)\s*prettydiff\.com/),
-            a = 0,
-            b = 0,
-            keys, def, len;
-          // parses the prettydiff settings comment
-          //
-          // - Source Priorities:
-          // * the prettydiff comment is only accepted if it occurs before non-comments (near the top)
-          // * options.source is the priority material for reading the comment
-          // * the prettydiff comment will be processed from options.diff only if it present there, missing from options.source, and options.mode is diff
-          //
-          // - Examples:
-          //    /*prettydiff.com width:80 preserve:4*/
-          //    /* prettydiff.com width:80 preserve:4 */
-          //    /*prettydiff.com width=80 preserve=4 */
-          //    // prettydiff.com width=80 preserve:4
-          //    <!-- prettydiff.com width:80 preserve=4 -->
-          //    <!--prettydiff.com width:40 preserve:2-->
-          //
-          // - Parsing Considerations:
-          // * there may be any amount of space at the start or end of the comment
-          // * "prettydiff.com" must exist at the start of the comment
-          // * comment must exist prior to non-comment tokens (near top of code)
-          // * parameters are name value pairs separated by white space
-          // * the delimiter separating name and value is either ":" or "=" characters
-          if ((sindex > -1 && (sindex === 0 || "\"':".indexOf(options.source.charAt(sindex - 1)) < 0)) || (options.mode === "diff" && dindex > -1 && (dindex === 0 || "\"':".indexOf(options.diff.charAt(dindex - 1)) < 0))) {
-            let pdcom = sindex,
-              a = (pdcom > -1) ?
-              pdcom :
-              dindex,
-              b = 0,
-              quote = "",
-              item = "",
-              lang = "",
-              lex = "",
-              valkey = [],
-              op = [];
-            const ops = [],
-              source = (pdcom > -1) ?
-              options.source :
-              options.diff,
-              len = source.length,
-              comment = (source.charAt(a) === "<") ?
-              "<!--" :
-              (source.charAt(a + 1) === "/") ?
-              "//" :
-              "/\u002a",
-              esc = function mode_pdcomment_esc() {
-                if (source.charAt(a - 1) !== "\\") {
-                  return false;
-                }
-                let x = a;
-                do {
-                  x = x - 1;
-                } while (x > 0 && source.charAt(x) === "\\");
-                if ((a - x) % 2 === 0) {
-                  return true;
-                }
-                return false;
-              };
-            do {
-              if (source.slice(a - 3, a) === "com") {
-                break;
-              }
-              a = a + 1;
-            } while (a < len);
-            do {
-              if (esc() === false) {
-                if (quote === "") {
-                  if (source.charAt(a) === "\"") {
-                    quote = "\"";
-                    if (ops.length > 0 && (ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === ":" || ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === "=")) {
-                      b = a;
-                    }
-                  } else if (source.charAt(a) === "'") {
-                    quote = "'";
-                    if (ops.length > 0 && (ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === ":" || ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === "=")) {
-                      b = a;
-                    }
-                  } else if (source.charAt(a) === "`") {
-                    quote = "`";
-                    if (ops.length > 0 && (ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === ":" || ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === "=")) {
-                      b = a;
-                    }
-                  } else if ((/\s/).test(source.charAt(a)) === false && b === 0) {
-                    b = a;
-                  } else if (source.charAt(a) === "," || ((/\s/).test(source.charAt(a)) === true && b > 0)) {
-                    item = source.slice(b, a);
-                    if (ops.length > 0) {
-                      if (ops.length > 0 && (item === ":" || item === "=") && ops[ops.length - 1].indexOf("=") < 0 && ops[ops.length - 1].indexOf(":") < 0) {
-                        // for cases where white space is between option name and assignment operator
-                        ops[ops.length - 1] = ops[ops.length - 1] + item;
-                        b = a;
-                      } else if (ops.length > 0 && (ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === ":" || ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === "=")) {
-                        // for cases where white space is between assignment operator and value
-                        ops[ops.length - 1] = ops[ops.length - 1] + item;
-                        b = 0;
-                      } else {
-                        ops.push(item);
-                        b = 0;
-                      }
-                    } else {
-                      ops.push(item);
-                      b = 0;
-                    }
-                  }
-                  if (comment === "<!--" && source.slice(a - 2, a + 1) === "-->") {
-                    break;
-                  }
-                  if (comment === "//" && source.charAt(a) === "\n") {
-                    break;
-                  }
-                  if (comment === "/\u002a" && source.slice(a - 1, a + 1) === "\u002a/") {
-                    break;
-                  }
-                } else if (source.charAt(a) === quote && quote !== "${") {
-                  quote = "";
-                } else if (quote === "`" && source.slice(a, a + 2) === "${") {
-                  quote = "${";
-                } else if (quote === "${" && source.charAt(a) === "}") {
-                  quote = "`";
-                }
-              }
-              a = a + 1;
-            } while (a < len);
-            if (b > 0) {
-              quote = source.slice(b, a + 1);
-              if (comment === "<!--") {
-                quote = quote.replace(/\s*-+>$/, "");
-              } else if (comment === "//") {
-                quote = quote.replace(/\s+$/, "");
-              } else {
-                quote = quote.replace(/\s*\u002a\/$/, "");
-              }
-              ops.push(quote);
-            }
-            a = ops.length;
-            if (a > 0) {
-              do {
-                a = a - 1;
-                if (ops[a].indexOf("=") > 0 && ops[a].indexOf(":") > 0) {
-                  if (ops[a].indexOf("=") < ops[a].indexOf(":")) {
-                    op = [ops[a].slice(0, ops[a].indexOf("=")), ops[a].slice(ops[a].indexOf("=") + 1)];
-                  }
-                } else if (ops[a].indexOf("=") > 0) {
-                  op = [ops[a].slice(0, ops[a].indexOf("=")), ops[a].slice(ops[a].indexOf("=") + 1)];
-                } else if (ops[a].indexOf(":") > 0) {
-                  op = [ops[a].slice(0, ops[a].indexOf(":")), ops[a].slice(ops[a].indexOf(":") + 1)];
-                } else if (prettydiff.api.optionDef[ops[a]] !== undefined && prettydiff.api.optionDef[ops[a]].type === "boolean") {
-                  options[ops[a]] = true;
-                }
-                if (op.length === 2 && prettydiff.api.optionDef[op[0]] !== undefined) {
-                  if ((op[1].charAt(0) === "\"" || op[1].charAt(0) === "'" || op[1].charAt(0) === "`") && op[1].charAt(op[1].length - 1) === op[1].charAt(0)) {
-                    op[1] = op[1].slice(1, op[1].length - 1);
-                  }
-                  if (prettydiff.api.optionDef[op[0]].type === "number" && isNaN(Number(op[1])) === false) {
-                    options[op[0]] = Number(op[1]);
-                  } else if (prettydiff.api.optionDef[op[0]].type === "boolean") {
-                    if (op[1] === "true") {
-                      options[op[0]] = true;
-                    } else if (op[1] === "false") {
-                      options[op[0]] = false;
-                    }
-                  } else {
-                    if (prettydiff.api.optionDef[op[0]].values !== undefined) {
-                      valkey = Object.keys(prettydiff.api.optionDef[op[0]].values);
-                      b = valkey.length;
-                      do {
-                        b = b - 1;
-                        if (valkey[b] === op[1]) {
-                          options[op[0]] = op[1];
-                          break;
-                        }
-                      } while (b > 0);
-                    } else {
-                      if (op[0] === "language") {
-                        lang = op[1];
-                      } else if (op[0] === "lexer") {
-                        lex = op[1];
-                      }
-                      options[op[0]] = op[1];
-                    }
-                  }
-                }
-              } while (a > 0);
-              if (lex === "" && lang !== "") {
-                lex = prettydiff.api.language.setlexer(lang);
-              }
-            }
-          }
-          if (options.mode === "diff") {
-            modeValue = "beautify";
-          }
-          if (options.mode === "minify" && options.minify_wrap === false) {
-            options.wrap = -1;
-          }
-          if (options.lexer === "script") {
-            let styleguide = {
-                airbnb: function mode_pdcomment_styleairbnb() {
-                  options.brace_padding = true;
-                  options.correct = true;
-                  options.lexerOptions.script.end_comma = "always";
-                  options.indent_char = " ";
-                  options.indent_size = 2;
-                  options.preserve = 1;
-                  options.quote_convert = "single";
-                  options.variable_list = "each";
-                  options.wrap = 80;
-                },
-                crockford: function mode_pdcomment_stylecrockford() {
-                  options.brace_padding = false;
-                  options.correct = true;
-                  options.else_line = false;
-                  options.lexerOptions.script.end_comma = "never";
-                  options.indent_char = " ";
-                  options.indent_size = 4;
-                  options.no_case_indent = true;
-                  options.space = true;
-                  options.variable_list = "each";
-                  options.vertical = false;
-                },
-                google: function mode_pdcomment_stylegoogle() {
-                  options.correct = true;
-                  options.indent_char = " ";
-                  options.indent_size = 4;
-                  options.preserve = 1;
-                  options.quote_convert = "single";
-                  options.vertical = false;
-                  options.wrap = -1;
-                },
-                jquery: function mode_pdcomment_stylejquery() {
-                  options.brace_padding = true;
-                  options.correct = true;
-                  options.indent_char = "\u0009";
-                  options.indent_size = 1;
-                  options.quote_convert = "double";
-                  options.variable_list = "each";
-                  options.wrap = 80;
-                },
-                jslint: function mode_pdcomment_stylejslint() {
-                  options.brace_padding = false;
-                  options.correct = true;
-                  options.else_line = false;
-                  options.lexerOptions.script.end_comma = "never";
-                  options.indent_char = " ";
-                  options.indent_size = 4;
-                  options.no_case_indent = true;
-                  options.space = true;
-                  options.variable_list = "each";
-                  options.vertical = false;
-                },
-                mrdoobs: function mode_pdcomment_stylemrdoobs() {
-                  options.brace_line = true;
-                  options.brace_padding = true;
-                  options.correct = true;
-                  options.indent_char = "\u0009";
-                  options.indent_size = 1;
-                  options.vertical = false;
-                },
-                mediawiki: function mode_pdcomment_stylemediawiki() {
-                  options.brace_padding = true;
-                  options.correct = true;
-                  options.indent_char = "\u0009";
-                  options.indent_size = 1;
-                  options.preserve = 1;
-                  options.quote_convert = "single";
-                  options.space = false;
-                  options.wrap = 80;
-                },
-                meteor: function mode_pdcomment_stylemeteor() {
-                  options.correct = true;
-                  options.indent_char = " ";
-                  options.indent_size = 2;
-                  options.wrap = 80;
-                },
-                semistandard: function mode_pdcomment_stylessemistandard() {
-                  options.brace_line = false;
-                  options.brace_padding = false;
-                  options.braces = false;
-                  options.correct = true;
-                  options.end_comma = "never";
-                  options.indent_char = " ";
-                  options.indent_size = 2;
-                  options.new_line = false;
-                  options.no_semicolon = false;
-                  options.preserve = 1;
-                  options.quote_convert = "single";
-                  options.space = true;
-                  options.ternary_line = false;
-                  options.variable_list = "each";
-                  options.vertical = false;
-                  options.wrap = 0;
-                },
-                standard: function mode_pdcomment_stylestandard() {
-                  options.brace_line = false;
-                  options.brace_padding = false;
-                  options.braces = false;
-                  options.correct = true;
-                  options.end_comma = "never";
-                  options.indent_char = " ";
-                  options.indent_size = 2;
-                  options.new_line = false;
-                  options.no_semicolon = true;
-                  options.preserve = 1;
-                  options.quote_convert = "single";
-                  options.space = true;
-                  options.ternary_line = false;
-                  options.variable_list = "each";
-                  options.vertical = false;
-                  options.wrap = 0;
-                },
-                yandex: function mode_pdcomment_styleyandex() {
-                  options.brace_padding = false;
-                  options.correct = true;
-                  options.quote_convert = "single";
-                  options.variable_list = "each";
-                  options.vertical = false;
-                }
-              },
-              brace_style = {
-                collapse: function mode_pdcomment_collapse() {
-                  options.brace_line = false;
-                  options.brace_padding = false;
-                  options.braces = false;
-                  options.format_object = "indent";
-                  options.never_flatten = true;
-                },
-                "collapse-preserve-inline": function mode_pdcomment_collapseInline() {
-                  options.brace_line = false;
-                  options.brace_padding = true;
-                  options.braces = false;
-                  options.format_object = "inline";
-                  options.never_flatten = false;
-                },
-                expand: function mode_pdcomment_expand() {
-                  options.brace_line = false;
-                  options.brace_padding = false;
-                  options.braces = true;
-                  options.format_object = "indent";
-                  options.never_flatten = true;
-                }
-              };
-            if (styleguide[options.styleguide] !== undefined) {
-              styleguide[options.styleguide]();
-            }
-            if (brace_style[options.brace_style] !== undefined) {
-              brace_style[options.brace_style]();
-            }
-            if (options.language === "json") {
-              options.wrap = 0;
-            } else if (options.language === "titanium") {
-              options.correct = false;
-            }
-            if (options.language !== "javascript" && options.language !== "typescript" && options.language !== "jsx") {
-              options.jsscope = "none";
-            }
-          }
-          if (options.lexer !== "markup" || options.language === "text") {
-            options.diff_rendered_html = false;
-          } else if (options.api === "node" && options.read_method !== "file") {
-            options.diff_rendered_html = false;
-          }
-          def = prettydiff.sparser.libs.optionDef;
-          keys = Object.keys(def);
-          len = keys.length;
           do {
-            if (options[keys[a]] !== undefined) {
-              if (def[keys[a]].lexer[0] === "all") {
-                ops[keys[a]] = options[keys[a]];
+
+            build.push(config.chars[a]);
+
+            if (termination === "\n" && config.chars[a + 1] === "\n")  break;
+            if (
+              config.chars[a] === term &&
+              config.chars.slice(a - terml, a + 1).join("") === termination
+            ) break;
+
+            a = a + 1;
+
+          } while (a < config.end);
+
+        }
+
+        if (config.chars[a] === "\n") a = a - 1;
+
+        output = build.join("").replace(/\s+$/, "");
+        return [ output, a ];
+      }
+
+
+      if (
+        a === config.end ||
+        wrap < 1 || (
+          output.length <= wrap &&
+          output.indexOf("\n") < 0
+        ) ||
+        sparser.options.preserve_comment === true || (
+          config.opening === "/*" &&
+          output.indexOf("\n") > 0 &&
+          output.replace("\n", "").indexOf("\n") > 0 &&
+          (/\n(?!(\s*\*))/).test(output) === false
+        )
+      ) {
+        return [output, a];
+      }
+
+      b = config.start;
+
+      if (b > 0 && config.chars[b - 1] !== "\n" && (/\s/).test(config.chars[b - 1])) {
+        do {
+          b = b - 1;
+        } while (
+          b > 0 &&
+          config.chars[b - 1] !== "\n" &&
+          (/\s/).test(config.chars[b - 1]
+          ) === true
+        );
+      }
+
+      space = config.chars.slice(b, config.start).join("");
+      spaceLine = new RegExp(`\n${space}`, "g");
+      lines = output.replace(/\r\n/g, "\n").replace(spaceLine, "\n").split("\n");
+      len = lines.length;
+      lines[0] = lines[0].replace(regStart, "");
+      lines[len - 1] = lines[len - 1].replace(regEnd, "");
+
+      if (len < 2)   lines = lines[0].split(" ");
+
+      if (lines[0] === "") {
+        lines[0] = config.opening;
+      } else {
+        lines.splice(0, 0, config.opening);
+      }
+
+      len = lines.length;
+      b = 0;
+
+      do {
+
+        bline = (b < len - 1) ?  lines[b + 1].replace(/^\s+/, "") :  "";
+
+        if ((/^\s+$/).test(lines[b]) === true || lines[b] === "") {
+
+          emptyLines();
+
+        } else if (lines[b].slice(0, 4) === "    ") {
+
+          second.push(lines[b]);
+
+        } else if (
+          lines[b].replace(/^\s+/, "").length > wrap &&
+          lines[b].replace(/^\s+/, "").indexOf(" ") > wrap
+        ) {
+
+          lines[b] = lines[b].replace(/^\s+/, "");
+          c = lines[b].indexOf(" ");
+          second.push(lines[b].slice(0, c));
+          lines[b] = lines[b].slice(c + 1);
+          b = b - 1;
+
+        } else {
+
+          lines[b] = (
+            config.opening === "/*" &&
+            lines[b].indexOf("/*") !== 0
+          ) ? `   ${
+            lines[b]
+            .replace(/^\s+/, "")
+            .replace(/\s+$/, "")
+            .replace(/\s+/g, " ")
+          }` : `${
+            lines[b]
+            .replace(/^\s+/, "")
+            .replace(/\s+$/, "")
+            .replace(/\s+/g, " ")
+          }`;
+
+          twrap = (b < 1) ? wrap - (config.opening.length + 1) : wrap;
+          c = lines[b].length;
+          d = lines[b].replace(/^\s+/, "").indexOf(" ");
+
+          if (c > twrap && d > 0 && d < twrap) {
+
+            c = twrap;
+
+            do {
+              c = c - 1;
+              if ((/\s/).test(lines[b].charAt(c)) && c <= wrap) break;
+            } while (c > 0);
+
+            if (
+              lines[b].slice(0, 4) !== "    " &&
+              (/^\s*(\*|-)\s/).test(lines[b]) === true &&
+              (/^\s*(\*|-)\s/).test(lines[b + 1]) === false
+            ) {
+
+              lines.splice(b + 1, 0, "* ");
+            }
+
+            if (
+              lines[b].slice(0, 4) !== "    " &&
+              (/^\s*\d+\.\s/).test(lines[b]) === true &&
+              (/^\s*\d+\.\s/).test(lines[b + 1]) === false) {
+
+              lines.splice(b + 1, 0, "1. ");
+            }
+
+            if (c < 4) {
+
+              second.push(lines[b]);
+              bigLine = true;
+
+            } else if (b === len - 1) {
+
+              second.push(lines[b].slice(0, c));
+              lines[b] = lines[b].slice(c + 1);
+              bigLine = true;
+              b = b - 1;
+
+            } else if (
+              (/^\s+$/).test(lines[b + 1]) === true ||
+              lines[b + 1] === ""
+            ) {
+
+              second.push(lines[b].slice(0, c));
+              lines[b] = lines[b].slice(c + 1);
+              emptyLine = true;
+              b = b - 1;
+
+            } else if (
+              lines[b + 1].slice(0, 4) !== "    " &&
+              (/^\s*(\*|-)\s/).test(lines[b + 1]) === true
+            ) {
+
+              second.push(lines[b].slice(0, c));
+              lines[b] = lines[b].slice(c + 1);
+              bulletLine = true;
+              b = b - 1;
+
+            } else if (
+              lines[b + 1].slice(0, 4) !== "    " &&
+              (/^\s*\d+\.\s/).test(lines[b + 1]) === true
+            ) {
+
+              second.push(lines[b].slice(0, c));
+              lines[b] = lines[b].slice(c + 1);
+              numberLine = true;
+              b = b - 1;
+
+            } else if (lines[b + 1].slice(0, 4) === "    ") {
+
+              second.push(lines[b].slice(0, c));
+              lines[b] = lines[b].slice(c + 1);
+              bigLine = true;
+              b = b - 1;
+
+            } else if (c + bline.length > wrap && bline.indexOf(" ") < 0) {
+
+              second.push(lines[b].slice(0, c));
+              lines[b] = lines[b].slice(c + 1);
+              bigLine = true;
+              b = b - 1;
+
+            } else if (lines[b].replace(/^\s+/, "").indexOf(" ") < wrap) {
+              lines[b + 1] = lines[b].length > wrap
+                ? lines[b].slice(c + 1) + lf + lines[b + 1]
+                : `${lines[b].slice(c + 1)} ${lines[b + 1]}`;
+
+            }
+
+            if (
+              emptyLine === false &&
+              bulletLine === false &&
+              numberLine === false &&
+              bigLine === false
+            ) {
+              lines[b] = lines[b].slice(0, c);
+            }
+
+          } else if (
+            lines[b + 1] !== undefined && (
+              (
+                lines[b].length + bline.indexOf(" ") > wrap &&
+                bline.indexOf(" ") > 0
+              ) || (
+                lines[b].length + bline.length > wrap &&
+                bline.indexOf(" ") < 0
+              )
+            )
+          ) {
+
+            second.push(lines[b]);
+            b = b + 1;
+
+          } else if (
+            lines[b + 1] !== undefined &&
+            (/^\s+$/).test(lines[b + 1]) === false &&
+            lines[b + 1] !== "" &&
+            lines[b + 1].slice(0, 4) !== "    " &&
+            (/^\s*(\*|-|(\d+\.))\s/).test(lines[b + 1]) === false
+          ) {
+            lines[b + 1] = `${lines[b]} ${lines[b + 1]}`;
+            emptyLine = true;
+          }
+
+          if (bigLine === false && bulletLine === false && numberLine === false) {
+
+            if (emptyLine === true) {
+
+              emptyLine = false;
+
+            } else if ((/^\s*(\*|-|(\d+\.))\s*$/).test(lines[b]) === false) {
+
+              if (
+                b < len - 1 &&
+                lines[b + 1] !== "" &&
+                (/^\s+$/).test(lines[b]) === false &&
+                lines[b + 1].slice(0, 4) !== "    " &&
+                (/^\s*(\*|-|(\d+\.))\s/).test(lines[b + 1]) === false
+
+              ) {
+
+                lines[b] = `${lines[b]} ${lines[b + 1]}`;
+                lines.splice(b + 1, 1);
+                len = len - 1;
+                b = b - 1;
+
               } else {
-                b = def[keys[a]].lexer.length;
-                do {
-                  b = b - 1;
-                  if (keys[a] !== "parse_space" || (options.mode === "parse" && keys[a] === "parse_space" && options[keys[a]] === true)) {
-                    ops.lexer_options[def[keys[a]].lexer[b]][keys[a]] = options[keys[a]];
-                  }
-                } while (b > 0);
+                if (config.opening === "/*" && lines[b].indexOf("/*") !== 0) {
+                  second.push(`   ${
+                    lines[b]
+                    .replace(/^\s+/, "")
+                    .replace(/\s+$/, "")
+                    .replace(/\s+/g, " ")
+                  }`);
+                } else {
+                  second.push(`${
+                    lines[b]
+                    .replace(/^\s+/, "")
+                    .replace(/\s+$/, "")
+                    .replace(/\s+/g, " ")
+                  }`);
+                }
               }
             }
+          }
+
+          bigLine = false;
+          bulletLine = false;
+          numberLine = false;
+        }
+
+        b = b + 1;
+
+      } while (b < len);
+
+      if (second.length > 0) {
+
+        if (second[second.length - 1].length > wrap - (config.terminator.length + 1)) {
+          second.push(config.terminator);
+        } else {
+          second[second.length - 1] = `${second[second.length - 1]} ${config.terminator}`;
+        }
+
+        output = second.join(lf);
+
+      } else {
+        lines[lines.length - 1] = lines[lines.length - 1] + config.terminator;
+        output = lines.join(lf);
+      }
+
+      return [output, a];
+
+    },
+
+    // Parsing line comments and simultaneously applying word wrap
+    // parse_wrapCommentLine
+    wrapCommentLine (config) {
+
+      let a = config.start;
+      let b = 0;
+      let output = "";
+      let build = [];
+
+      const wrap = sparser.options.wrap;
+
+      const recurse = function parse_wrapCommentLine_recurse() {
+
+        let line = "";
+
+        do {
+
+          b = b + 1;
+
+          if (config.chars[b + 1] === "\n")   return;
+
+        } while (b < config.end && (/\s/).test(config.chars[b]) === true);
+
+        if (config.chars[b] + config.chars[b + 1] === "//") {
+
+          build = [];
+
+          do {
+            build.push(config.chars[b]);
+            b = b + 1;
+          } while (b < config.end && config.chars[b] !== "\n");
+
+          line = build.join("");
+
+          if (
+            (/^\/\/ (\*|-|(\d+\.))/).test(line) === false &&
+            line.slice(0, 6) !== "//    " &&
+            (/^\/\/\s*$/).test(line) === false
+          ) {
+            output = `${output} ${line.replace(/(^\/\/\s*)/, "").replace(/\s+$/, "")}`;
+            a = b - 1;
+            parse_wrapCommentLine_recurse();
+          }
+        }
+
+      };
+
+      const wordWrap = function parse_wrapCommentLine_wordWrap() {
+
+        let c = 0;
+        let d = 0;
+
+        const lines = [];
+        const record = (parse.count > -1) ? {
+          begin: parse.structure[parse.structure.length - 1][1],
+          ender: -1,
+          lexer: config.lexer,
+          lines: parse.linesSpace,
+          stack: parse.structure[parse.structure.length - 1][0],
+          token: parse.data.token[parse.count],
+          types: "comment"
+        } : {
+          begin: -1,
+          ender: -1,
+          lexer: config.lexer,
+          lines: parse.linesSpace,
+          stack: "global",
+          token: "",
+          types: "comment"
+        };
+
+        output = output.replace(/\s+/g, " ").replace(/\s+$/, "");
+        d = output.length;
+
+        if (wrap > d)  return;
+
+        do {
+          c = wrap;
+
+          if (output.charAt(c) !== " ") {
+            do { c = c - 1; } while (c > 0 && output.charAt(c) !== " ");
+            if (c < 3) {
+              c = wrap;
+              do { c = c + 1; } while (c < d - 1 && output.charAt(c) !== " ");
+            }
+          }
+
+          lines.push(output.slice(0, c));
+          output = `// ${output.slice(c).replace(/^\s+/, "")}`;
+          d = output.length;
+
+        } while (wrap < d);
+
+        c = 0;
+        d = lines.length;
+
+        do {
+          record.token = lines[c];
+          parse.push(parse.data, record, "");
+          record.lines = 2;
+          parse.linesSpace = 2;
+          c = c + 1;
+        } while (c < d);
+
+      };
+
+      do {
+        build.push(config.chars[a]);
+        a = a + 1;
+      } while (a < config.end && config.chars[a] !== "\n");
+
+      if (a === config.end) {
+
+        // Necessary because the wrapping logic expects line termination
+        config.chars.push("\n");
+
+      } else {
+        a = a - 1;
+      }
+
+      output = build.join("").replace(/\s+$/, "");
+
+      if ((/^(\/\/\s*parse-ignore\u002dstart)/).test(output) === true) {
+        let termination = "\n";
+        a = a + 1;
+
+        do {
+          build.push(config.chars[a]);
+          a = a + 1;
+        } while (a < config.end && (
+          config.chars[a - 1] !== "d" || (
+            config.chars[a - 1] === "d" &&
+            build.slice(build.length - 16).join("") !== "parse-ignore-end"
+          )
+        ));
+
+        b = a;
+
+        do {} while (b > config.start && config.chars[b - 1] === "/" && (
+          config.chars[b] === "*" ||
+          config.chars[b] === "/"
+        ));
+
+
+        if (config.chars[b] === "*") termination = "\u002a/";
+        if (termination !== "\n" || config.chars[a] !== "\n") {
+
+          do {
+            build.push(config.chars[a]);
+            if (termination === "\n" && config.chars[a + 1] === "\n") break;
             a = a + 1;
-          } while (a < len);
+          } while ( a < config.end && (
+            termination === "\n" || (
+              termination === "\u002a/" && (
+                config.chars[a - 1] !== "*" ||
+                config.chars[a] !== "/"
+              )
+            )
+          ));
+
+        }
+
+        if (config.chars[a] === "\n") a = a - 1;
+        output = build.join("").replace(/\s+$/, "");
+        return [output, a];
+      }
+
+      if (
+        output === "//" ||
+        output.slice(0, 6) === "//    " ||
+        sparser.options.preserve_comment === true
+      ) {
+        return [output, a];
+      }
+
+      output = output.replace(/(\/\/\s*)/, "// ");
+
+      if (wrap < 1 || (a === config.end - 1 && parse.data.begin[parse.count] < 1)) {
+        return [output, a];
+      }
+
+      b = a + 1;
+      recurse();
+      wordWrap();
+
+      return [output, a];
+    }
+
+  };
+
+  const sparser = {
+    lexers: {},
+    libs: {},
+    options: {
+      "lexer_options": {
+        "markup": {
+          "attribute_sort": false,
+          "attribute_sort_list": "",
+          "parse_space": false,
+          "preserve_text": false,
+          "quote_convert": "none",
+          "tag_merge": false,
+          "tag_sort": false,
+          "unformatted": false
         },
-        options = prettydiff.options,
-        lf = (options.crlf === true) ?
-        "\r\n" :
-        "\n";
-      let modeValue = options.mode,
-        result = "";
-      if (options.api === "node" && (options.read_method === "directory" || options.read_method === "subdirectory")) {
-        if (options.mode === "parse" && options.parse_format === "table") {
-          return "Error: option parse_format with value 'table' is not available with read_method directory or subdirectory.";
+        "script": {
+          "end_comma": "none",
+          "object_sort": false,
+          "quote_convert": "none",
+          "variable_list": "none"
+        },
+        "style": {
+          "no_lead_zero": false,
+          "object_sort": false,
+          "quote_convert": "none"
         }
-      }
-      if (options.language === "text" && options.mode !== "diff") {
-        options.language = "auto";
-      }
-      if (options.lexer === "text" && options.mode !== "diff") {
-        options.lexer = "auto";
-      }
-      if (options.language === "text" || options.lexer === "text") {
-        options.language = "text";
-        options.language_name = "Plain Text";
-        options.lexer = "text";
-      } else if (options.language === "auto" || options.lexer === "auto") {
-        const def = (options.language_default === "" || options.language_default === null || options.language_default === undefined) ?
-          "javascript" :
-          options.language_default;
-        let lang = prettydiff.api.language.auto(options.source, def);
-        if (lang[0] === "text") {
-          if (options.mode === "diff") {
-            lang[2] = "Plain Text";
-          } else {
-            lang = ["javascript", "script", "JavaScript"];
-          }
-        } else if (lang[0] === "csv") {
-          lang[2] = "CSV";
-        }
-        if (options.language === "auto") {
-          options.language = lang[0];
-          options.language_name = lang[2];
-        }
-        if (options.lexer === "auto") {
-          options.lexer = lang[1];
-        }
-      }
-      pdcomment();
-      if (options.mode === "parse") {
-        const parse_format = (options.parse_format === "htmltable") ?
-          "table" :
-          options.parse_format,
-          api = (options.parse_format === "htmltable") ?
-          "dom" :
-          options.api;
-        options.parsed = prettydiff.sparser.parser();
-        if (parse_format === "table") {
-          if (api === "dom") {
-            const parsLen = options.parsed.token.length,
-              keys = Object.keys(options.parsed),
-              keylen = keys.length,
-              headingString = (function mode_parseHeading() {
-                const hout = ["<tr><th>index</th>"];
-                let b = 0;
-                do {
-                  if (keys[b] !== "token") {
-                    hout.push(`<th>${keys[b]}</th>`);
-                  }
-                  b = b + 1;
-                } while (b < keylen);
-                hout.push("<th>token</th></tr>");
-                return hout.join("");
-              }()),
-              row = function mode_parseRow() {
-                const hout = ["<tr>"];
-                let b = 0;
-                hout.push(`<td>${a}</td>`);
-                do {
-                  if (keys[b] !== "token") {
-                    hout.push(`<td>${options.parsed[keys[b]][a].toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</td>`);
-                  }
-                  b = b + 1;
-                } while (b < keylen);
-                hout.push(`<td>${options.parsed.token[a].replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</td></tr>`);
-                return hout.join("");
-              },
-              parsOut = [];
-            parsOut.push(`<p><strong>${parsLen}</strong> total parsed tokens</p>`);
-            parsOut.push("<table><thead>");
-            parsOut.push(headingString);
-            parsOut.push("</thead><tbody>");
-            let a = 0;
-            do {
-              if (a % 100 === 0 && a > 0) {
-                parsOut.push(headingString);
-              }
-              parsOut.push(row());
-              a = a + 1;
-            } while (a < parsLen);
-            parsOut.push("</tbody></table>");
-            result = parsOut.join("");
-          } else {
-            let a = 0,
-              str = [];
-            const outputArrays = options.parsed,
-              nodeText = {
-                angry: "\u001b[1m\u001b[31m",
-                blue: "\u001b[34m",
-                bold: "\u001b[1m",
-                cyan: "\u001b[36m",
-                green: "\u001b[32m",
-                nocolor: "\u001b[39m",
-                none: "\u001b[0m",
-                purple: "\u001b[35m",
-                red: "\u001b[31m",
-                underline: "\u001b[4m",
-                yellow: "\u001b[33m"
-              },
-              output = [],
-              b = outputArrays.token.length,
-              pad = function mode_parsePad(x, y) {
-                const cc = x
-                  .toString()
-                  .replace(/\s/g, " ");
-                let dd = y - cc.length;
-                str.push(cc);
-                if (dd > 0) {
-                  do {
-                    str.push(" ");
-                    dd = dd - 1;
-                  } while (dd > 0);
+      },
+      "correct": false,
+      "crlf": false,
+      "format": "arrays",
+      "language": "auto",
+      "lexer": "auto",
+      "preserve_comment": false,
+      "source": "",
+      "wrap": 0
+    },
+    parse: parse,
+    parser: parser,
+    parseerror: "",
+    version: {
+      date: "18 Aug 2019",
+      number: "1.4.12"
+    }
+  };
+
+  const prettydiff = function mode(diffmeta) {
+
+    const pdcomment = function mode_pdcomment() {
+
+      const ops = prettydiff.sparser.options;
+
+      let sindex = options.source.search(/((\/(\*|\/))|<!--*)\s*prettydiff\.com/);
+      let dindex = options.diff.search(/((\/(\*|\/))|<!--*)\s*prettydiff\.com/);
+      let a = 0;
+      let b = 0;
+      let keys
+        , def
+        , len;
+
+
+      // Parses the prettydiff settings comment
+      //
+      // - Source Priorities:
+      //
+      // * The prettydiff comment is only accepted if it  occurs before non-comments (near top)
+      // * The options.source is the priority material for reading the comment
+      // * The prettydiff comment will be processed from options.diff only if it present there, // missing from options.source, and options.mode is diff
+      //
+      // - Examples:
+      //
+      //  /*prettydiff.com width:80 preserve:4*/
+      //  /* prettydiff.com width:80 preserve:4 */
+      //  /*prettydiff.com width=80 preserve=4 */
+      //  // prettydiff.com width=80 preserve:4
+      //  <!-- prettydiff.com width:80 preserve=4 -->
+      //  <!--prettydiff.com width:40 preserve:2-->
+      //
+      // - Parsing Considerations:
+      //
+      // * there may be any amount of space at the start or end of the comment
+      // * "prettydiff.com" must exist at the start of the comment
+      // * comment must exist prior to non-comment tokens (near top of code)
+      // * parameters are name value pairs separated by white space
+      // * the delimiter separating name and value is either ":" or "=" characters
+
+      if ((
+        sindex > -1 && (
+          sindex === 0 ||
+          "\"':".indexOf(options.source.charAt(sindex - 1)) < 0)
+          ) || (
+            options.mode === "diff" &&
+            dindex > -1 && (
+              dindex === 0 ||
+              "\"':".indexOf(options.diff.charAt(dindex - 1)
+            ) < 0
+          )
+        )
+      ) {
+
+        let pdcom = sindex;
+        let a = (pdcom > -1) ? pdcom : dindex;
+        let b = 0;
+        let quote = "";
+        let item = "";
+        let lang = "";
+        let lex = "";
+        let valkey = [];
+        let op = [];
+
+        const ops = [];
+        const source = (pdcom > -1) ? options.source : options.diff;
+        const len = source.length;
+        const comment = (source.charAt(a) === "<")
+          ? "<!--"
+          : (source.charAt(a + 1) === "/")
+            ? "//"
+            : "/\u002a";
+
+        // mode_pdcomment_esc
+        function esc() {
+
+          if (source.charAt(a - 1) !== "\\") return false;
+
+          let x = a;
+
+          do { x = x - 1; } while (x > 0 && source.charAt(x) === "\\");
+
+          return (a - x) % 2 === 0 ? true : false;
+        };
+
+        do {
+
+          if (source.slice(a - 3, a) === "com") break;
+          a = a + 1;
+
+        } while (a < len);
+
+        do {
+
+          if (esc() === false) {
+            if (quote === "") {
+              if (source.charAt(a) === "\"") {
+
+                quote = "\"";
+
+                if (ops.length > 0 && (
+                  ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === ":" ||
+                  ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === "="
+                )) {
+                  b = a;
                 }
-                str.push(" | ");
-              },
-              heading = "index | begin | ender | lexer  | lines | stack       | types       | token",
-              bar = "------|-------|-------|--------|-------|-------------|-------------|------";
-            output.push("");
-            output.push(heading);
-            output.push(bar);
-            do {
-              if (a % 100 === 0 && a > 0) {
-                output.push("");
-                output.push(heading);
-                output.push(bar);
+
+              } else if (source.charAt(a) === "'") {
+
+                quote = "'";
+
+                if (
+                  ops.length > 0 && (
+                    ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === ":" ||
+                    ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === "="
+                  )
+                ) b = a;
+
+              } else if (source.charAt(a) === "`") {
+
+                quote = "`";
+
+                if (
+
+                  ops.length > 0 && (
+                    ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === ":" ||
+                    ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === "="
+                  )
+
+                ) b = a;
+
+              } else if ((/\s/).test(source.charAt(a)) === false && b === 0) {
+
+                b = a;
+
+              } else if (
+                source.charAt(a) === "," || (
+                  (/\s/).test(source.charAt(a)) === true && b > 0)
+              ) {
+
+                item = source.slice(b, a);
+
+                if (ops.length > 0) {
+
+                  if (
+                    ops.length > 0 && (
+                      item === ":" ||
+                      item === "="
+                    ) &&
+                    ops[ops.length - 1].indexOf("=") < 0 &&
+                    ops[ops.length - 1].indexOf(":") < 0
+                  ) {
+
+                    // For cases where white space is between option name and
+                    // assignment operator
+                    ops[ops.length - 1] = ops[ops.length - 1] + item;
+                    b = a;
+
+                  } else if (
+                    ops.length > 0 && (
+                      ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === ":" ||
+                      ops[ops.length - 1].charAt(ops[ops.length - 1].length - 1) === "="
+                  )) {
+
+                    // For cases where white space is between assignment
+                    // operator and value
+                    ops[ops.length - 1] = ops[ops.length - 1] + item;
+                    b = 0;
+
+                  } else {
+
+                    ops.push(item);
+                    b = 0;
+                  }
+
+                } else {
+                  ops.push(item);
+                  b = 0;
+                }
               }
-              str = [];
-              if (outputArrays.lexer[a] === "markup") {
-                str.push(nodeText.red);
-              } else if (outputArrays.lexer[a] === "script") {
-                str.push(nodeText.green);
-              } else if (outputArrays.lexer[a] === "style") {
-                str.push(nodeText.yellow);
+
+              if (comment === "<!--" && source.slice(a - 2, a + 1) === "-->")  break;
+              if (comment === "//" && source.charAt(a) === "\n") break;
+              if (comment === "/\u002a" && source.slice(a - 1, a + 1) === "\u002a/") {
+                break;
               }
-              pad(a.toString(), 5);
-              pad(outputArrays.begin[a].toString(), 5);
-              pad(outputArrays.ender[a].toString(), 5);
-              pad(outputArrays.lexer[a].toString(), 5);
-              pad(outputArrays.lines[a].toString(), 5);
-              pad(outputArrays.stack[a].toString(), 11);
-              pad(outputArrays.types[a].toString(), 11);
-              str.push(outputArrays.token[a].replace(/\s/g, " "));
-              str.push(nodeText.none);
-              output.push(str.join(""));
-              a = a + 1;
-            } while (a < b);
-            result = output.join(lf);
+
+            } else if (source.charAt(a) === quote && quote !== "${") {
+              quote = "";
+            } else if (quote === "`" && source.slice(a, a + 2) === "${") {
+              quote = "${";
+            } else if (quote === "${" && source.charAt(a) === "}") {
+              quote = "`";
+            }
           }
-        } else {
-          result = JSON.stringify(options.parsed);
+
+          a = a + 1;
+
+        } while (a < len);
+
+        if (b > 0) {
+
+          quote = source.slice(b, a + 1);
+
+          if (comment === "<!--") quote = quote.replace(/\s*-+>$/, "");
+          else if (comment === "//") quote = quote.replace(/\s+$/, "");
+          else quote = quote.replace(/\s*\u002a\/$/, "");
+
+          ops.push(quote);
         }
-      } else {
-        if (prettydiff[modeValue][options.lexer] === undefined && ((options.mode !== "diff" && options.language === "text") || options.language !== "text")) {
-          result = `Error: Library prettydiff.${modeValue}.${options.lexer} does not exist.`;
-        } else {
-          options.parsed = prettydiff.sparser.parser();
-          result = prettydiff[modeValue][options.lexer](options);
+
+        a = ops.length;
+
+        if (a > 0) {
+
+          do {
+
+            a = a - 1;
+
+            if (ops[a].indexOf("=") > 0 && ops[a].indexOf(":") > 0) {
+
+              if (ops[a].indexOf("=") < ops[a].indexOf(":")) {
+                op = [
+                  ops[a].slice(0, ops[a].indexOf("=")),
+                  ops[a].slice(ops[a].indexOf("=") + 1)
+                ];
+              }
+
+            } else if (ops[a].indexOf("=") > 0) {
+
+              op = [
+                ops[a].slice(0, ops[a].indexOf("=")),
+                ops[a].slice(ops[a].indexOf("=") + 1)
+              ];
+
+            } else if (ops[a].indexOf(":") > 0) {
+
+              op = [
+                ops[a].slice(0, ops[a].indexOf(":")),
+                ops[a].slice(ops[a].indexOf(":") + 1)
+              ];
+
+            } else if (
+              prettydiff.api.optionDef[ops[a]] !== undefined &&
+              prettydiff.api.optionDef[ops[a]].type === "boolean"
+            ) {
+              options[ops[a]] = true;
+            }
+
+            if (op.length === 2 && prettydiff.api.optionDef[op[0]] !== undefined) {
+              if (
+                (
+                  op[1].charAt(0) === "\"" ||
+                  op[1].charAt(0) === "'" ||
+                  op[1].charAt(0) === "`"
+
+                ) && op[1].charAt(op[1].length - 1) === op[1].charAt(0)
+              ) {
+                op[1] = op[1].slice(1, op[1].length - 1);
+              }
+
+              if (
+                prettydiff.api.optionDef[op[0]].type === "number" &&
+                isNaN(Number(op[1])) === false
+              ) {
+
+                options[op[0]] = Number(op[1]);
+
+              } else if (prettydiff.api.optionDef[op[0]].type === "boolean") {
+
+                if (op[1] === "true") {
+                  options[op[0]] = true;
+                } else if (op[1] === "false") {
+                  options[op[0]] = false;
+                }
+
+              } else {
+                if (prettydiff.api.optionDef[op[0]].values !== undefined) {
+
+                  valkey = Object.keys(prettydiff.api.optionDef[op[0]].values);
+                  b = valkey.length;
+
+                  do {
+
+                    b = b - 1;
+
+                    if (valkey[b] === op[1]) {
+                      options[op[0]] = op[1];
+                      break;
+                    }
+
+                  } while (b > 0);
+
+                } else {
+
+                  if (op[0] === "language") {
+                    lang = op[1];
+                  } else if (op[0] === "lexer") {
+                    lex = op[1];
+                  }
+
+                  options[op[0]] = op[1];
+
+                }
+              }
+            }
+          } while (a > 0);
+
+          if (lex === "" && lang !== "") lex = prettydiff.api.language.setlexer(lang);
+
         }
       }
-      if (options.new_line === true) {
-        result = result.replace(/\s*$/, lf);
-      } else {
-        result = result.replace(/\s+$/, "");
-      }
-      if (options.complete_document === true && options.jsscope !== "report") {
-        let finalFile = prettydiff.api.finalFile;
-        finalFile.order[7] = options.color;
-        finalFile.order[10] = result;
-        if (options.crlf === true) {
-          finalFile.order[12] = "\r\n";
-          finalFile.order[15] = "\r\n";
+
+      if (options.mode === "diff")  modeValue = "beautify";
+
+      if (options.lexer === "script") {
+
+        let styleguide = {
+          airbnb() {
+            options.brace_padding = true;
+            options.correct = true;
+            options.lexerOptions.script.end_comma = "always";
+            options.indent_char = " ";
+            options.indent_size = 2;
+            options.preserve = 1;
+            options.quote_convert = "single";
+            options.variable_list = "each";
+            options.wrap = 80;
+          },
+          crockford() {
+            options.brace_padding = false;
+            options.correct = true;
+            options.else_line = false;
+            options.lexerOptions.script.end_comma = "never";
+            options.indent_char = " ";
+            options.indent_size = 4;
+            options.no_case_indent = true;
+            options.space = true;
+            options.variable_list = "each";
+            options.vertical = false;
+          },
+          google() {
+            options.correct = true;
+            options.indent_char = " ";
+            options.indent_size = 4;
+            options.preserve = 1;
+            options.quote_convert = "single";
+            options.vertical = false;
+            options.wrap = -1;
+          },
+          jquery() {
+            options.brace_padding = true;
+            options.correct = true;
+            options.indent_char = "\u0009";
+            options.indent_size = 1;
+            options.quote_convert = "double";
+            options.variable_list = "each";
+            options.wrap = 80;
+          },
+          jslint() {
+            options.brace_padding = false;
+            options.correct = true;
+            options.else_line = false;
+            options.lexerOptions.script.end_comma = "never";
+            options.indent_char = " ";
+            options.indent_size = 4;
+            options.no_case_indent = true;
+            options.space = true;
+            options.variable_list = "each";
+            options.vertical = false;
+          },
+          mrdoobs() {
+            options.brace_line = true;
+            options.brace_padding = true;
+            options.correct = true;
+            options.indent_char = "\u0009";
+            options.indent_size = 1;
+            options.vertical = false;
+          },
+          mediawiki() {
+            options.brace_padding = true;
+            options.correct = true;
+            options.indent_char = "\u0009";
+            options.indent_size = 1;
+            options.preserve = 1;
+            options.quote_convert = "single";
+            options.space = false;
+            options.wrap = 80;
+          },
+          meteor() {
+            options.correct = true;
+            options.indent_char = " ";
+            options.indent_size = 2;
+            options.wrap = 80;
+          },
+          semistandard() {
+            options.brace_line = false;
+            options.brace_padding = false;
+            options.braces = false;
+            options.correct = true;
+            options.end_comma = "never";
+            options.indent_char = " ";
+            options.indent_size = 2;
+            options.new_line = false;
+            options.no_semicolon = false;
+            options.preserve = 1;
+            options.quote_convert = "single";
+            options.space = true;
+            options.ternary_line = false;
+            options.variable_list = "each";
+            options.vertical = false;
+            options.wrap = 0;
+          },
+          standard() {
+            options.brace_line = false;
+            options.brace_padding = false;
+            options.braces = false;
+            options.correct = true;
+            options.end_comma = "never";
+            options.indent_char = " ";
+            options.indent_size = 2;
+            options.new_line = false;
+            options.no_semicolon = true;
+            options.preserve = 1;
+            options.quote_convert = "single";
+            options.space = true;
+            options.ternary_line = false;
+            options.variable_list = "each";
+            options.vertical = false;
+            options.wrap = 0;
+          },
+          yandex() {
+            options.brace_padding = false;
+            options.correct = true;
+            options.quote_convert = "single";
+            options.variable_list = "each";
+            options.vertical = false;
+          }
         }
+
+        let brace_style = {
+          collapse() {
+            options.brace_line = false;
+            options.brace_padding = false;
+            options.braces = false;
+            options.format_object = "indent";
+            options.never_flatten = true;
+          },
+          "collapse-preserve-inline": function() {
+            options.brace_line = false;
+            options.brace_padding = true;
+            options.braces = false;
+            options.format_object = "inline";
+            options.never_flatten = false;
+          },
+          expand() {
+            options.brace_line = false;
+            options.brace_padding = false;
+            options.braces = true;
+            options.format_object = "indent";
+            options.never_flatten = true;
+          }
+        };
+
+        if (styleguide[options.styleguide] !== undefined) {
+          styleguide[options.styleguide]();
+        }
+
+        if (brace_style[options.brace_style] !== undefined) {
+          brace_style[options.brace_style]();
+        }
+
+        if (options.language === "json") options.wrap = 0;
+
+
+      }
+
+      if (
+        options.lexer !== "markup" ||
+        options.language === "text"
+      ) {
+        options.diff_rendered_html = false;
+      } else if (options.api === "node") {
+        options.diff_rendered_html = false;
+      }
+
+      def = prettydiff.sparser.libs.optionDef;
+      keys = Object.keys(def);
+      len = keys.length;
+
+      do {
+        if (options[keys[a]] !== undefined) {
+
+          if (def[keys[a]].lexer[0] === "all") {
+            ops[keys[a]] = options[keys[a]];
+          } else {
+
+            b = def[keys[a]].lexer.length;
+
+            do {
+
+              b = b - 1;
+
+              if (
+                keys[a] !== "parse_space" || (
+                  options.mode === "parse" &&
+                  keys[a] === "parse_space" &&
+                  options[keys[a]] === true
+                )
+              ) {
+                ops.lexer_options[def[keys[a]].lexer[b]][keys[a]] = options[keys[a]];
+              }
+
+            } while (b > 0);
+          }
+        }
+
+        a = a + 1;
+
+      } while (a < len);
+    }
+
+    const options = prettydiff.options;
+    const lf = (options.crlf === true) ? "\r\n" : "\n";
+
+    let modeValue = options.mode;
+    let result = "";
+
+    if (options.language === "text" && options.mode !== "diff") {
+      options.language = "auto";
+    }
+
+    if (options.lexer === "text" && options.mode !== "diff") {
+      options.lexer = "auto";
+    }
+
+    if (options.language === "text" || options.lexer === "text") {
+      options.language = "text";
+      options.language_name = "Plain Text";
+      options.lexer = "text";
+    } else if (options.language === "auto" || options.lexer === "auto") {
+
+      const def = (
+        options.language_default === "" ||
+        options.language_default === null ||
+        options.language_default === undefined
+      ) ? "javascript" : options.language_default;
+
+      let lang = prettydiff.api.language.auto(options.source, def);
+
+      if (lang[0] === "text") {
+
         if (options.mode === "diff") {
-          finalFile.order[13] = finalFile.script.diff;
-        } else if (options.mode === "beautify" && options.language === "javascript" && options.jsscope !== "none") {
-          finalFile.order[13] = finalFile.script.beautify;
+          lang[2] = "Plain Text";
         } else {
-          finalFile.order[13] = finalFile.script.minimal;
+          lang = ["javascript", "script", "JavaScript"];
         }
-        // escape changes characters that result in xml wellformedness errors
-        prettydiff.end = 0;
-        prettydiff.start = 0;
-        return finalFile.order.join("");
+
       }
-      prettydiff.end = 0;
-      prettydiff.start = 0;
-      return result;
-    };
+
+      if (options.language === "auto") {
+        options.language = lang[0];
+        options.language_name = lang[2];
+      }
+
+      if (options.lexer === "auto") {
+        options.lexer = lang[1];
+      }
+    }
+
+    pdcomment();
+
+    if (options.mode === "parse") {
+
+      const parse_format = options.parse_format
+      const api = options.api;
+
+      options.parsed = prettydiff.sparser.parser();
+
+      result = JSON.stringify(options.parsed);
+
+    } else {
+
+      if (
+        prettydiff[modeValue][options.lexer] === undefined && (
+          (options.mode !== "diff" && options.language === "text") ||
+          options.language !== "text"
+        )
+      ) {
+        result = `Error: Library prettydiff.${modeValue}.${options.lexer} does not exist.`;
+      } else {
+
+        options.parsed = prettydiff.sparser.parser();
+        result = prettydiff[modeValue][options.lexer](options);
+
+      }
+    }
+
+
+    result = options.new_line === true
+      ? result.replace(/\s*$/, lf)
+      : result.replace(/\s+$/, "");
+
+    prettydiff.end = 0;
+    prettydiff.start = 0;
+
+    return result;
+  };
+
+
   prettydiff.api = {};
   prettydiff.beautify = {};
   prettydiff.end = 0;
   prettydiff.iterator = 0;
+
   prettydiff.meta = {
     error: "",
     lang: ["", "", ""],
@@ -2177,7 +2446,7 @@ export default (function parse_init() {
     difftotal: 0,
     difflines: 0
   };
-  prettydiff.minify = {};
+
   prettydiff.options = {
     "attribute_sort": false,
     "attribute_sort_list": "",
@@ -2186,12 +2455,10 @@ export default (function parse_init() {
     "brace_style": "none",
     "braces": false,
     "case_space": false,
-    "color": "white",
     "comment_line": false,
     "comments": false,
     "complete_document": false,
     "compressed_css": false,
-    "conditional": false,
     "config": "",
     "content": false,
     "correct": false,
@@ -2217,15 +2484,12 @@ export default (function parse_init() {
     "indent_char": " ",
     "indent_level": 0,
     "indent_size": 4,
-    "jsscope": "none",
     "language": "auto",
     "language_default": "text",
     "language_name": "JavaScript",
     "lexer": "auto",
     "list_options": false,
     "method_chain": 3,
-    "minify_keep_comments": false,
-    "minify_wrap": false,
     "mode": "diff",
     "never_flatten": false,
     "new_line": false,
@@ -2254,7 +2518,6 @@ export default (function parse_init() {
     "tag_merge": false,
     "tag_sort": false,
     "ternary_line": false,
-    "top_comments": false,
     "unformatted": false,
     "variable_list": "none",
     "version": false,
@@ -2262,8 +2525,10 @@ export default (function parse_init() {
     "wrap": 0,
     "lexerOptions": {}
   };
+
   prettydiff.scopes = [];
   prettydiff.start = 0;
+
   (function options_init() {
 
     const optionDef = {
@@ -2316,7 +2581,6 @@ export default (function parse_init() {
         values: {
           "arrays": "The output format is an object of arrays such that the same index of all the arrays represents one data record, for example: {begin:[],ender:[],lexer:[],lines[],stack:[],token:[],types:[]}.",
           "csv": "The output format is comma separated value format.",
-          "markdown": "Generates the output in a markdown table.",
           "minimal": "The output format is an array of arrays which is structurally similar to the objects format but without key names, for example: [[-1,-1,\"script\",0,\"global\",\"const\",\"word\"]].",
           "objects": "The output format is an array of objects such that each array index is one data record, for example: [{begin:-1,ender:-1,lexer:\"script\",lines:0,stack:\"global\",token:\"const\",types:\"word\"}]."
         }
@@ -2432,45 +2696,31 @@ export default (function parse_init() {
     };
     sparser.libs.optionDef = optionDef;
   }());
+
   (function language_init() {
 
     const language = {
-      setlexer: function language_setlexer(input) {
+
+      setlexer (input) {
+
         const langmap = {
           c_cpp: "script",
-          coldfusion: "markup",
-          csharp: "script",
           css: "style",
-          csv: "csv",
-          dustjs: "markup",
-          ejs: "markup",
           go: "markup",
           handlebars: "markup",
           html: "markup",
-          html_ruby: "markup",
-          java: "script",
           javascript: "script",
           json: "script",
           jsp: "markup",
           jsx: "script",
           less: "style",
-          markdown: "markdown",
           markup: "markup",
-          php: "script",
-          phphtml: "markup",
           qml: "style",
           scss: "style",
-          silverstripe: "markup",
           "styled-jsx": "script",
           "styled-components": "script",
-          swig: "markup",
           text: "text",
-          titanium: "script",
-          tss: "script",
-          twig: "markup",
           typescript: "script",
-          vapor: "markup",
-          velocity: "markup",
           xhtml: "markup",
           xml: "markup"
         };
@@ -2485,321 +2735,354 @@ export default (function parse_init() {
         }
         return langmap[input];
       },
-      nameproper: function language_nameproper(input) {
+
+      nameproper (input) {
+
         const langmap = {
-          c_cpp: "C++ (Not yet supported)",
-          coldfusion: "ColdFusion",
-          csharp: "C#",
-          dustjs: "Dust.js",
-          ejs: "EJS Template",
-          elm: "Elm Template",
           go: "Go Lang Template",
           handlebars: "Handlebars Template",
-          html_ruby: "ERB (Ruby) Template",
-          java: "Java",
           javascript: "JavaScript",
           jsp: "JSTL (JSP)",
           jsx: "React JSX",
           liquid: "Liquid Template",
-          markdown: "markdown",
           markup: "markup",
-          phphtml: "HTML/PHP",
           scss: "SCSS",
-          silverstripe: "SilverStripe",
           text: "Plain Text",
-          titanium: "Titanium Stylesheets",
-          tss: "Titanium Stylesheets",
-          twig: "HTML TWIG Template",
           typescript: "TypeScript",
-          vapor: "Vapor Leaf",
-          velocity: "Apache Velocity",
-          volt: "Volt Template"
         };
+
         if (typeof input !== "string" || langmap[input] === undefined) {
           return input.toUpperCase();
         }
+
         return langmap[input];
       },
+
       // * [0] = language value
       // * [1] = lexer value
       // * [2] = pretty formatting for text output to user
-      auto: function language_auto(sample, defaultLang) {
-        let b = [],
-          c = 0;
-        const vartest = ((/(((var)|(let)|(const)|(function)|(import))\s+(\w|\$)+[a-zA-Z0-9]*)/).test(sample) === true && (/@import/).test(sample) === false),
-          finalstatic = (/((((final)|(public)|(private))\s+static)|(static\s+void))/).test(sample),
-          output = function language_auto_output(langname) {
-            if (langname === "unknown") {
-              return [defaultLang, language.setlexer(defaultLang), "unknown"];
-            }
-            if (langname === "xhtml" || langname === "markup") {
-              return ["xml", language.setlexer("xml"), "XHTML"];
-            }
-            if (langname === "tss") {
-              return ["tss", language.setlexer("tss"), "Titanium Stylesheets"];
-            }
-            if (langname === "phphtml") {
-              return ["php", language.setlexer(langname), language.nameproper(langname)];
-            }
-            return [langname, language.setlexer(langname), language.nameproper(langname)];
-          },
-          cssA = function language_auto_cssA() {
-            if ((/\n\s*#+\s+/).test(sample) === true || (/^#+\s+/).test(sample) === true) {
-              return output("markdown");
-            }
-            if ((/\$[a-zA-Z]/).test(sample) === true || (/\{\s*(\w|\.|\$|#)+\s*\{/).test(sample) === true) {
-              return output("scss");
-            }
-            if ((/@[a-zA-Z]/).test(sample) === true || (/\{\s*(\w|\.|@|#)+\s*\{/).test(sample) === true) {
-              return output("less");
-            }
-            return output("css");
-          },
-          notmarkup = function language_auto_notmarkup() {
-            let d = 1,
-              join = "",
-              flaga = false,
-              flagb = false;
-            const publicprivate = (/((public)|(private))\s+(static\s+)?(((v|V)oid)|(class)|(final))/).test(sample),
-              javascriptA = function language_auto_notmarkup_javascriptA() {
-                if (sample.indexOf("(") > -1 || sample.indexOf("=") > -1 || (sample.indexOf(";") > -1 && sample.indexOf("{") > -1)) {
-                  if (vartest === false && ((/\n\s+#region\s/).test(sample) === true || (/\[\w+:/).test(sample) === true)) {
-                    return output("csharp");
-                  }
-                  if (finalstatic === true || (/\w<\w+(,\s+\w+)*>/).test(sample) === true) {
-                    if ((/:\s*((number)|(string))/).test(sample) === false && (finalstatic === true || publicprivate === true)) {
-                      return output("java");
-                    }
-                    return output("typescript");
-                  }
-                  if ((/final\s+static/).test(sample) === true) {
-                    return output("java");
-                  }
-                  if ((/<\/\w+>/).test(sample) === true && (/<\w+((\s+\w)|>)/).test(sample) === true) {
-                    return output("jsx");
-                  }
-                  if ((/((var)|(let)|(const))\s+\w+\s*:/).test(sample) === true || (/=\s*<\w+/).test(sample) === true) {
-                    return output("typescript");
-                  }
-                  return output("javascript");
-                }
-                return output("unknown");
-              },
-              cssOrJavaScript = function language_auto_notmarkup_cssOrJavaScript() {
-                if ((/:\s*((number)|(string))/).test(sample) === true && (/((public)|(private))\s+/).test(sample) === true) {
-                  return output("typescript");
-                }
-                if ((/import\s+java(\.|(fx))/).test(sample) === true || (/((public)|(private))\s+static\s+/).test(sample) === true) {
-                  return output("java");
-                }
-                if ((/\sclass\s+\w/).test(sample) === false && (/<[a-zA-Z]/).test(sample) === true && (/<\/[a-zA-Z]/).test(sample) === true && ((/\s?\{%/).test(sample) === true || (/\{(\{|#)(?!(\{|#|=))/).test(sample) === true)) {
-                  return output("twig");
-                }
-                if ((/^(\s*(\$|@))/).test(sample) === false && (/(\};?\s*)$/).test(sample) === true) {
-                  if ((/export\s+default\s+\{/).test(sample) === true || (/(\?|:)\s*(\{|\[)/).test(sample) === true || (/(\{|\s|;)render\s*\(\)\s*\{/).test(sample) === true || (/^(\s*return;?\s*\{)/).test(sample) === true) {
-                    return output("javascript");
-                  }
-                }
-                if ((/\{\{#/).test(sample) === true && (/\{\{\//).test(sample) === true && (/<\w/).test(sample) === true) {
-                  return output("handlebars");
-                }
-                if ((/\{\s*(\w|\.|@|#)+\s*\{/).test(sample) === true) {
-                  return output("less");
-                }
-                if ((/\$(\w|-)/).test(sample) === true) {
-                  return output("scss");
-                }
-                if ((/(;|\{|:)\s*@\w/).test(sample) === true) {
-                  return output("less");
-                }
-                if ((/class\s+\w+\s+\{/).test(sample) === true) {
-                  return output("java");
-                }
-                return output("css");
-              };
-            if (d < c) {
-              do {
-                if (flaga === false) {
-                  if (b[d] === "*" && b[d - 1] === "/") {
-                    b[d - 1] = "";
-                    flaga = true;
-                  } else if (flagb === false && b[d] === "f" && d < c - 6 && b[d + 1] === "i" && b[d + 2] === "l" && b[d + 3] === "t" && b[d + 4] === "e" && b[d + 5] === "r" && b[d + 6] === ":") {
-                    flagb = true;
-                  }
-                } else if (flaga === true && b[d] === "*" && d !== c - 1 && b[d + 1] === "/") {
-                  flaga = false;
-                  b[d] = "";
-                  b[d + 1] = "";
-                } else if (flagb === true && b[d] === ";") {
-                  flagb = false;
-                  b[d] = "";
-                }
-                if (flaga === true || flagb === true) {
-                  b[d] = "";
-                }
-                d = d + 1;
-              } while (d < c);
-            }
-            join = b.join("");
-            if ((/\s\/\//).test(sample) === false && (/\/\/\s/).test(sample) === false && (/^(\s*(\{|\[)(?!%))/).test(sample) === true && (/((\]|\})\s*)$/).test(sample) && sample.indexOf(",") !== -1) {
-              return output("json");
-            }
-            if ((/((\}?(\(\))?\)*;?\s*)|([a-z0-9]("|')?\)*);?(\s*\})*)$/i).test(sample) === true && (vartest === true || publicprivate === true || (/console\.log\(/).test(sample) === true || (/export\s+default\s+class\s+/).test(sample) === true || (/document\.get/).test(sample) === true || (/((=|(\$\())\s*function)|(\s*function\s+(\w*\s+)?\()/).test(sample) === true || sample.indexOf("{") === -1 || (/^(\s*if\s+\()/).test(sample) === true)) {
-              return javascriptA();
-            }
-            // * u007b === {
-            // * u0024 === $
-            // * u002e === .
-            if (sample.indexOf("{") > -1 && ((/^(\s*[\u007b\u0024\u002e#@a-z0-9])/i).test(sample) === true || (/^(\s*\/(\*|\/))/).test(sample) === true || (/^(\s*\*\s*\{)/).test(sample) === true) && (/^(\s*if\s*\()/).test(sample) === false && (/=\s*(\{|\[|\()/).test(join) === false && (((/(\+|-|=|\?)=/).test(join) === false || (/\/\/\s*=+/).test(join) === true) || ((/=+('|")?\)/).test(sample) === true && (/;\s*base64/).test(sample) === true)) && (/function(\s+\w+)*\s*\(/).test(join) === false) {
-              if ((/\s*#((include)|(define)|(endif))\s+/).test(sample)) {
-                return output("c_cpp");
+      auto (sample, defaultLang) {
+
+        let b = [];
+        let c = 0;
+
+        const vartest = (
+          (
+            /(((var)|(let)|(const)|(function)|(import))\s+(\w|\$)+[a-zA-Z0-9]*)/
+          ).test(sample) === true && (/@import/).test(sample) === false
+        );
+
+
+        const finalstatic = (
+          /((((final)|(public)|(private))\s+static)|(static\s+void))/)
+        .test(sample);
+
+        // language_auto_output
+        function output(langname) {
+
+          if (langname === "unknown") {
+            return [defaultLang, language.setlexer(defaultLang), "unknown"];
+          }
+          if (langname === "xhtml" || langname === "markup") {
+            return ["xml", language.setlexer("xml"), "XHTML"];
+          }
+          return [langname, language.setlexer(langname), language.nameproper(langname)];
+        }
+
+        // language_auto_cssA
+        function cssA() {
+
+          if (
+            (/\$[a-zA-Z]/).test(sample) === true ||
+            (/\{\s*(\w|\.|\$|#)+\s*\{/).test(sample) === true
+          ) return output("scss");
+
+          if (
+            (/@[a-zA-Z]/).test(sample) === true ||
+            (/\{\s*(\w|\.|@|#)+\s*\{/).test(sample) === true
+          ) return output("less");
+
+          return output("css");
+        }
+
+        // language_auto_notmarkup
+        function notmarkup() {
+
+          let d = 1;
+          let join = "";
+          let flaga = false;
+          let flagb = false;
+
+          const publicprivate = (
+            /((public)|(private))\s+(static\s+)?(((v|V)oid)|(class)|(final))/
+          ).test(sample);
+
+          // language_auto_notmarkup_javascriptA
+          function javascriptA() {
+
+            if (
+              sample.indexOf("(") > -1 ||
+              sample.indexOf("=") > -1 || (
+                sample.indexOf(";") > -1 &&
+                sample.indexOf("{") > -1
+              )
+            ) {
+
+              if (finalstatic === true || (/\w<\w+(,\s+\w+)*>/).test(sample) === true) {
+                return output("typescript");
               }
-              return cssOrJavaScript();
+
+              if (
+                (/<\/\w+>/).test(sample) === true &&
+                (/<\w+((\s+\w)|>)/).test(sample) === true) return output("jsx");
+
+              if (
+                (/((var)|(let)|(const))\s+\w+\s*:/).test(sample) === true ||
+                (/=\s*<\w+/).test(sample) === true) return output("typescript");
+
+
+              return output("javascript");
             }
-            if ((/"\s*:\s*\{/).test(sample) === true) {
-              return output("tss");
-            }
-            if (sample.indexOf("{%") > -1) {
-              return output("twig");
-            }
+
             return output("unknown");
-          },
-          markup = function language_auto_markup() {
-            const html = function language_auto_markup_html() {
-              if ((/<%\s*\}/).test(sample) === true) {
-                return output("ejs");
-              }
-              if ((/<%\s+end_((if)|(with)|(loop)|(control)|(cached)|(uncached))/).test(sample) === true) {
-                return output("silverstripe");
-              }
-              if ((/<%\s*end/).test(sample) === true) {
-                return output("html_ruby");
-              }
-              if ((/\{\{(#|\/|\{)/).test(sample) === true) {
-                return output("handlebars");
-              }
-              if ((/\{\{end\}\}/).test(sample) === true) {
-                //place holder for Go lang templates
-                return output("html");
-              }
-              if ((/\s?\{%/).test(sample) === true && (/\{(\{|#)(?!(\{|#|=))/).test(sample) === true) {
-                return output("twig");
-              }
-              if ((/<\?/).test(sample) === true) {
-                if ((/^\s*<\?/).test(sample) === true && (/\?>\s*$/).test(sample) === true) {
-                  return output("php");
-                }
-                return output("phphtml");
-              }
-              if ((/<jsp:include\s/).test(sample) === true || (/<c:((set)|(if))\s/).test(sample) === true) {
-                return output("jsp");
-              }
-              if ((/\{(#|\?|\^|@|<|\+|~)/).test(sample) === true && (/\{\//).test(sample) === true && sample.indexOf("<![CDATA[") < 0) {
-                return output("dustjs");
-              }
-              if ((/#((if)|(for)|(set))?\(/).test(sample) === true) {
-                return output("vapor");
-              }
-              return output("html");
-            };
-            if ((/<cfset\s/i).test(sample) === true || (/<cfif\s/i).test(sample) === true) {
-              return output("coldfusion");
+          }
+
+
+          // language_auto_notmarkup_cssOrJavaScript
+          function cssOrJavaScript() {
+
+            if (
+              (/:\s*((number)|(string))/).test(sample) === true &&
+              (/((public)|(private))\s+/).test(sample) === true
+            ) return output("typescript");
+
+            if (
+              (/^(\s*(\$|@))/).test(sample) === false &&
+              (/(\};?\s*)$/).test(sample) === true) {
+              if (
+                (/export\s+default\s+\{/).test(sample) === true ||
+                (/(\?|:)\s*(\{|\[)/).test(sample) === true ||
+                (/(\{|\s|;)render\s*\(\)\s*\{/).test(sample) === true ||
+                (/^(\s*return;?\s*\{)/).test(sample) === true
+              ) return output("javascript");
             }
-            if ((/^(\s*<!doctype\s+html>)/i).test(sample) === true ||
-              (/^(\s*<html)/i).test(sample) === true ||
-              ((/<form\s/i).test(sample) === true &&
-                (/<label\s/i).test(sample) === true &&
-                (/<input\s/i).test(sample) === true) ||
-              (/<((img)|(IMG))(\s+\w+=("|')?\S+("|')?)*\s+src\s*=/).test(sample) === true ||
-              ((/^(\s*<!DOCTYPE\s+((html)|(HTML))\s+PUBLIC\s+)/).test(sample) === true &&
-                (/XHTML\s+1\.1/).test(sample) === false &&
-                (/XHTML\s+1\.0\s+(S|s)((trict)|(TRICT))/).test(sample) === false)) {
-              return html();
-            }
-            if ((/<jsp:include\s/).test(sample) === true || (/<c:((set)|(if))\s/).test(sample) === true) {
-              return output("jsp");
-            }
-            if ((/<%\s*\}/).test(sample) === true) {
-              return output("ejs");
-            }
-            if ((/<%\s+end_((if)|(with)|(loop)|(control)|(cached)|(uncached))/).test(sample) === true) {
-              return output("silverstripe");
-            }
-            if ((/<%\s*end/).test(sample) === true) {
-              return output("html_ruby");
-            }
-            if ((/\{\{(#|\/|\{)/).test(sample) === true) {
-              return output("handlebars");
-            }
-            if ((/\{\{end\}\}/).test(sample) === true) {
-              //place holder for Go lang templates
-              return output("xml");
-            }
-            if ((/\s?\{%/).test(sample) === true && (/\{\{(?!(\{|#|=))/).test(sample) === true) {
-              return output("twig");
-            }
-            if ((/<\?(?!(xml))/).test(sample) === true) {
-              if ((/^\s*<\?/).test(sample) === true && (/\?>\s*$/).test(sample) === true) {
-                return output("php");
-              }
-              return output("phphtml");
-            }
-            if ((/\{(#|\?|\^|@|<|\+|~)/).test(sample) === true && (/\{\//).test(sample) === true) {
-              return output("dustjs");
-            }
-            if ((/<jsp:include\s/).test(sample) === true || (/<c:((set)|(if))\s/).test(sample) === true) {
-              return output("jsp");
-            }
-            if ((/#((if)|(for)|(set))?\(/).test(sample) === true) {
-              return output("vapor");
-            }
-            return output("xml");
+
+            if (
+              (/\{\{#/).test(sample) === true &&
+              (/\{\{\//).test(sample) === true &&
+              (/<\w/).test(sample) === true
+            ) return output("handlebars");
+
+            if ((/\{\s*(\w|\.|@|#)+\s*\{/).test(sample) === true) return output("less");
+            if ((/\$(\w|-)/).test(sample) === true) return output("scss");
+            if ((/(;|\{|:)\s*@\w/).test(sample) === true) return output("less");
+
+            return output("css");
+
           };
+
+          if (d < c) {
+
+            do {
+
+              if (flaga === false) {
+
+                if (b[d] === "*" && b[d - 1] === "/") {
+
+                  b[d - 1] = "";
+                  flaga = true;
+
+                } else if (
+                  flagb === false &&
+                  b[d] === "f" &&
+                  d < c - 6 &&
+                  b[d + 1] === "i" &&
+                  b[d + 2] === "l" &&
+                  b[d + 3] === "t" &&
+                  b[d + 4] === "e" &&
+                  b[d + 5] === "r" &&
+                  b[d + 6] === ":"
+                ) {
+                  flagb = true;
+                }
+
+              } else if (
+                flaga === true &&
+                b[d] === "*" &&
+                d !== c - 1 &&
+                b[d + 1] === "/"
+              ) {
+
+                flaga = false;
+                b[d] = "";
+                b[d + 1] = "";
+
+              } else if (flagb === true && b[d] === ";") {
+
+                flagb = false;
+                b[d] = "";
+
+              }
+
+              if (flaga === true || flagb === true) b[d] = "";
+
+              d = d + 1;
+
+            } while (d < c);
+
+          }
+
+          join = b.join("");
+
+          if (
+            (/\s\/\//).test(sample) === false &&
+            (/\/\/\s/).test(sample) === false &&
+            (/^(\s*(\{|\[)(?!%))/).test(sample) === true &&
+            (/((\]|\})\s*)$/).test(sample) &&
+            sample.indexOf(",") !== -1
+          ) return output("json");
+
+          if (
+            (/((\}?(\(\))?\)*;?\s*)|([a-z0-9]("|')?\)*);?(\s*\})*)$/i).test(sample) === true && (
+              vartest === true ||
+              publicprivate === true ||
+              (/console\.log\(/).test(sample) === true ||
+              (/export\s+default\s+class\s+/).test(sample) === true ||
+              (/document\.get/).test(sample) === true ||
+              (/((=|(\$\())\s*function)|(\s*function\s+(\w*\s+)?\()/).test(sample) === true || sample.indexOf("{") === -1 ||
+              (/^(\s*if\s+\()/).test(sample) === true
+            )
+          ) return javascriptA();
+
+          // * u007b === {
+          // * u0024 === $
+          // * u002e === .
+          if (sample.indexOf("{") > -1 && (
+            (/^(\s*[\u007b\u0024\u002e#@a-z0-9])/i).test(sample) === true ||
+            (/^(\s*\/(\*|\/))/).test(sample) === true ||
+            (/^(\s*\*\s*\{)/).test(sample) === true) &&
+            (/^(\s*if\s*\()/).test(sample) === false &&
+            (/=\s*(\{|\[|\()/).test(join) === false && (
+              ((/(\+|-|=|\?)=/).test(join) === false ||
+              (/\/\/\s*=+/).test(join) === true) || (
+                (/=+('|")?\)/).test(sample) === true &&
+                (/;\s*base64/).test(sample) === true
+              )
+            ) && (/function(\s+\w+)*\s*\(/).test(join) === false
+          ) return cssOrJavaScript();
+
+          return output("unknown");
+        }
+
+
+        // language_auto_markup
+        function markup() {
+
+          function html() {
+            if ((/\{\{(#|\/|\{)/).test(sample) === true) return output("handlebars");
+            return output("html");
+          };
+
+          if (
+            (/^(\s*<!doctype\s+html>)/i).test(sample) === true ||
+            (/^(\s*<html)/i).test(sample) === true || (
+              (/<form\s/i).test(sample) === true &&
+              (/<label\s/i).test(sample) === true &&
+              (/<input\s/i).test(sample) === true) ||
+            (/<((img)|(IMG))(\s+\w+=("|')?\S+("|')?)*\s+src\s*=/).test(sample) === true || (
+              (/^(\s*<!DOCTYPE\s+((html)|(HTML))\s+PUBLIC\s+)/).test(sample) === true &&
+              (/XHTML\s+1\.1/).test(sample) === false &&
+              (/XHTML\s+1\.0\s+(S|s)((trict)|(TRICT))/).test(sample) === false)
+          ) return html();
+
+          if (
+            (/<jsp:include\s/).test(sample) === true ||
+            (/<c:((set)|(if))\s/).test(sample) === true
+          )  return output("jsp");
+
+          if ((/\{\{(#|\/|\{)/).test(sample) === true) return output("handlebars");
+
+          if (
+            (/<jsp:include\s/).test(sample) === true ||
+            (/<c:((set)|(if))\s/).test(sample) === true
+          ) return output("jsp");
+
+          return output("xml");
+
+        };
+
         if (sample === null || sample.replace(/\s+/g, "") === "") {
           return output("unknown");
         }
-        if (((/\n\s*#{1,6}\s+/).test(sample) === true || ((/\n\s*(\*|-|(\d+\.))\s/).test(sample) === true) && (/\/\*/).test(sample) === false) &&
-          ((/\[( |x|X)\]/).test(sample) === true || (/\s\*\*?\S\D/).test(sample) === true || (/\n\s*```/).test(sample) === true || ((/-+\|(-+\|)+/).test(sample) === true && (/<!--/).test(sample) === false))) {
-          return output("markdown");
-        }
+
         if ((/^(\s*<!DOCTYPE\s+html>)/i).test(sample) === true) {
           return markup();
         }
+
         if ((/^\s*@((charset)|(import)|(include)|(keyframes)|(media)|(namespace)|(page))/).test(sample) === true) {
           return cssA();
         }
-        if (finalstatic === false &&
+
+        if (
+          finalstatic === false &&
           (/=(>|=|-|\+|\*)/).test(sample) === false &&
           (/^(\s*((if)|(for)|(function))\s*\()/).test(sample) === false &&
           (/(\s|;|\})((if)|(for)|(function\s*\w*))\s*\(/).test(sample) === false &&
-          vartest === false && (/return\s*\w*\s*(;|\})/).test(sample) === false &&
-          (sample === undefined ||
-            (/^(\s*#(?!(!\/)))/).test(sample) === true ||
-            ((/\n\s*(\.|@)\w+(\(|(\s*:))/).test(sample) === true && (/>\s*<\w/).test(sample) === false))) {
-          return cssA();
-        }
-        b = sample
-          .replace(/\[[a-zA-Z][\w-]*=("|')?[a-zA-Z][\w-]*("|')?\]/g, "")
-          .split("");
+          vartest === false &&
+          (/return\s*\w*\s*(;|\})/).test(sample) === false && (
+            sample === undefined ||
+            (/^(\s*#(?!(!\/)))/).test(sample) === true || (
+              (/\n\s*(\.|@)\w+(\(|(\s*:))/).test(sample) === true &&
+              (/>\s*<\w/).test(sample) === false
+            )
+          )
+        ) return cssA();
+
+
+        b = sample.replace(/\[[a-zA-Z][\w-]*=("|')?[a-zA-Z][\w-]*("|')?\]/g, "").split("");
         c = b.length;
-        if ((/^(\s*(\{|<)(%|#|\{))/).test(sample) === true) {
-          return markup();
+
+        if ((/^(\s*(\{|<)(%|#|\{))/).test(sample) === true) return markup();
+
+        if (
+          (
+            (/^([\s\w-]*<)/).test(sample) === false &&
+            (/(>[\s\w-]*)$/).test(sample) === false
+          ) || finalstatic === true
+        ) return notmarkup();
+
+        if (
+          (
+            (
+              (/(>[\w\s:]*)?<(\/|!|#)?[\w\s:\-[]+/).test(sample) === true || (
+                (/^\s*</).test(sample) === true &&
+                (/<\/\w+(\w|\d)+>\s*$/).test(sample) === true
+              ) || (/^(\s*<\?xml)/).test(sample) === true
+            ) && (
+              (/^([\s\w]*<)/).test(sample) === true ||
+              (/(>[\s\w]*)$/).test(sample) === true
+            )
+          ) || (
+            (/^(\s*<s((cript)|(tyle)))/i).test(sample) === true &&
+            (/(<\/s((cript)|(tyle))>\s*)$/i).test(sample) === true
+          )
+        ) {
+          return (
+            (/^([\s\w]*<)/).test(sample) === false ||
+            (/(>[\s\w]*)$/).test(sample) === false
+          ) ? markup() : notmarkup();
         }
-        if (((/^([\s\w-]*<)/).test(sample) === false && (/(>[\s\w-]*)$/).test(sample) === false) || finalstatic === true) {
-          return notmarkup();
-        }
-        if ((((/(>[\w\s:]*)?<(\/|!|#)?[\w\s:\-[]+/).test(sample) === true || ((/^\s*</).test(sample) === true && (/<\/\w+(\w|\d)+>\s*$/).test(sample) === true) || (/^(\s*<\?xml)/).test(sample) === true) && ((/^([\s\w]*<)/).test(sample) === true || (/(>[\s\w]*)$/).test(sample) === true)) || ((/^(\s*<s((cript)|(tyle)))/i).test(sample) === true && (/(<\/s((cript)|(tyle))>\s*)$/i).test(sample) === true)) {
-          if ((/^([\s\w]*<)/).test(sample) === false || (/(>[\s\w]*)$/).test(sample) === false) {
-            return notmarkup();
-          }
-          return markup();
-        }
+
         return output("unknown");
       }
+
     };
+
     sparser.libs.language = language;
     prettydiff.api.language = language;
+
   }());
+
   (function style_init() {
 
     const style = function lexer_style(source) {
@@ -3427,16 +3710,22 @@ export default (function parse_init() {
                     if (endlen === quote.length) {
                       endlen = endlen - end.length;
                     }
+
                     if (open === "{%") {
+
                       if (quote.indexOf("{%-") === 0) {
                         quote = quote
                           .replace(/^(\{%-\s*)/, "{%- ")
-                          .replace(/(\s*-%\})$/, " -%}");
+                          .replace(/(\s*-%\})$/, " -%}")
+                          .replace(/(\s*%\})$/, " %}");
+
                         name = quote.slice(4);
                       } else {
                         quote = quote
                           .replace(/^(\{%\s*)/, "{% ")
-                          .replace(/(\s*%\})$/, " %}");
+                          .replace(/(\s*%\})$/, " %}")
+                          .replace(/(\s*-%\})$/, " -%}");
+
                         name = quote.slice(3);
                       }
                     }
@@ -3445,17 +3734,12 @@ export default (function parse_init() {
                     // Prevent whitespace removals of output tag values
                     if (open === "{{") {
                       quote = quote
-                        .replace(/^({{\s+)/, "{{ ")
-                        .replace(/(\s+}})$/, " }}");
+                        .replace(/^(\{\{\s*)/, "{{ ")
+                        .replace(/^(\{\{-\s*)/, "{{- ")
+                        .replace(/(\s*-\}\})$/, " -}}")
+                        .replace(/(\s*\}\})$/, " }}");
                     }
 
-                    // HOTFIX
-                    // Allow trim style output delimeters
-                    if (open === "{{-") {
-                      quote = quote
-                        .replace(/^({{-\s+)/, "{{")
-                        .replace(/(\s+-}})$/, "}}");
-                    }
                     if (
                       ltype === "item" &&
                       data.types[parse.count - 1] === "colon" && (
@@ -3506,7 +3790,13 @@ export default (function parse_init() {
                       if (name.indexOf("(") > 0) {
                         name = name.slice(0, name.indexOf("("));
                       }
-                      if (name === "else" || name === "elseif" || name === "when" || name === "elif") {
+                      if (
+                        name === "else" ||
+                        name === "elseif" ||
+                        name === "when" ||
+                        name === "elif" ||
+                        name === "elsif"
+                      ) {
                         exit("template_else");
                         return;
                       }
@@ -3525,21 +3815,37 @@ export default (function parse_init() {
                         } while (namesLen > -1);
                       }
                     } else if (open === "{{") {
-                      let group = quote.slice(2),
-                        ending = group.length,
-                        begin = 0;
+
+                      let group = quote.slice(2);
+                      let ending = group.length;
+                      let begin = 0;
+
                       do {
                         begin = begin + 1;
-                      } while (begin < ending && (/\s/).test(group.charAt(begin)) === false && group.charAt(start) !== "(");
+                      } while (
+                        begin < ending && (/\s/).test(group.charAt(begin)) === false &&
+                        group.charAt(start) !== "("
+                      );
+
                       group = group.slice(0, begin);
+
                       if (group.charAt(group.length - 2) === "}") {
                         group = group.slice(0, group.length - 2);
                       }
+
                       if (group === "end") {
                         exit("template_end");
                         return;
                       }
-                      if (group === "block" || group === "define" || group === "form" || group === "if" || group === "range" || group === "with") {
+
+                      if (
+                        group === "block" ||
+                        group === "define" ||
+                        group === "form" ||
+                        group === "if" ||
+                        group === "range" ||
+                        group === "with"
+                      ) {
                         exit("template_start");
                         return;
                       }
@@ -3795,12 +4101,6 @@ export default (function parse_init() {
           comment(false);
         } else if (b[a] === "/" && b[a + 1] === "/") {
           comment(true);
-        } else if (b[a] === "<" && b[a + 1] === "?" && b[a + 2] === "p" && b[a + 3] === "h" && b[a + 4] === "p") {
-          //php
-          template("<?php", "?>");
-        } else if (b[a] === "<" && b[a + 1] === "?" && b[a + 2] === "=") {
-          //php
-          template("<?=", "?>");
         } else if (b[a] === "<" && b[a + 1] === "%") {
           //asp
           template("<%", "%>");
@@ -3904,6 +4204,7 @@ export default (function parse_init() {
     };
     sparser.lexers.style = style;
   }());
+
   (function script_init() {
 
     const script = function lexer_script(source) {
@@ -3958,9 +4259,8 @@ export default (function parse_init() {
           if (ltype === "start" || ltype === "type_start") {
             return;
           }
-          if (options.language === "json" || options.language === "java" || options.language === "csharp") {
-            return;
-          }
+          if (options.language === "json") return;
+
           if (options.language === "json" || record.token === ";" || record.token === "," || next === "{" || record.stack === "class" || record.stack === "map" || record.stack === "attribute" || clist === "initializer" || data.types[record.begin - 1] === "generic") {
             return;
           }
@@ -4596,17 +4896,7 @@ export default (function parse_init() {
                   }
                 }
               } else if ((/\{\s*\?>$/).test(ltoke) === true) {
-                if ((/^<\?(=|(php))\s*\}\s*else/).test(ltoke) === true) {
-                  ltype = "template_else";
-                } else {
-                  ltype = "template_start";
-                }
-              } else if ((/^<\?(=|(php))\s*\}/).test(ltoke) === true) {
-                if ((/^<\?(=|(php))\s*\}\s*else/).test(ltoke) === true) {
-                  ltype = "template_else";
-                } else {
-                  ltype = "template_end";
-                }
+                ltype = "template_start";
               } else {
                 ltype = type;
               }
@@ -4663,17 +4953,7 @@ export default (function parse_init() {
                 build.push(c[ee]);
               } else if (ee > start) {
                 ext = true;
-                if (c[ee] === "<" && c[ee + 1] === "?" && c[ee + 2] === "p" && c[ee + 3] === "h" && c[ee + 4] === "p" && c[ee + 5] !== starting) {
-                  finish();
-                  // php
-                  lexer_script_general("<?php", "?>", "template");
-                  cleanUp();
-                } else if (c[ee] === "<" && c[ee + 1] === "?" && c[ee + 2] === "=" && c[ee + 3] !== starting) {
-                  finish();
-                  // php
-                  lexer_script_general("<?=", "?>", "template");
-                  cleanUp();
-                } else if (c[ee] === "<" && c[ee + 1] === "%" && c[ee + 2] !== starting) {
+                if (c[ee] === "<" && c[ee + 1] === "%" && c[ee + 2] !== starting) {
                   finish();
                   // asp
                   lexer_script_general("<%", "%>", "template");
@@ -4798,7 +5078,6 @@ export default (function parse_init() {
               priorToken === "void" ||
               priorToken === "." ||
               data.stack[parse.count] === "arguments" ||
-              ((options.language === "csharp" || options.language === "java") && priorToken === "public" || priorToken === "private" || priorToken === "final" || priorToken === "static") ||
               (ltype === "type" && priorToken === "type") ||
               (ltype === "reference" && (priorType === "operator" || priorToken === "function" || priorToken === "class" || priorToken === "new")) ||
               (ltype === "type" && priorType === "operator") ||
@@ -5724,8 +6003,6 @@ export default (function parse_init() {
                   break;
                 }
               } while (aa > data.begin[parse.count]);
-            } else if ((options.language === "java" || options.language === "csharp") && data.types[parse.count - 1] === "reference" && data.token[parse.count - 2] === "]") {
-              stack = "array";
             } else {
               stack = "object";
             }
@@ -5738,11 +6015,7 @@ export default (function parse_init() {
               }
             }
           } else if (ltoke === "[") {
-            if ((/\s/).test(c[a - 1]) === true && (data.types[aa] === "word" || data.types[aa] === "reference") && wordx !== "return" && options.language !== "twig") {
-              stack = "notation";
-            } else {
-              stack = "array";
-            }
+            stack = "array";
           } else if (ltoke === "(" || ltoke === "x(") {
             if (wordx === "function" || data.token[aa - 1] === "function" || data.token[aa - 1] === "function*" || data.token[aa - 2] === "function") {
               stack = "arguments";
@@ -5783,6 +6056,7 @@ export default (function parse_init() {
           }
           return output.join("");
         },
+
         // determines tag names for {% %} based template tags and returns a type
         tname = function lexer_script_tname(x) {
           let sn = 2,
@@ -5810,47 +6084,84 @@ export default (function parse_init() {
               "unless",
               "verbatim"
             ];
-          if (x.charAt(2) === "-") {
-            sn = sn + 1;
-          }
+
+          if (x.charAt(2) === "-") sn = sn + 1;
+
           if ((/\s/).test(x.charAt(sn)) === true) {
-            do {
-              sn = sn + 1;
-            } while ((/\s/).test(x.charAt(sn)) === true && sn < len);
+            do { sn = sn + 1; } while ((/\s/).test(x.charAt(sn)) === true && sn < len);
           }
+
           en = sn;
+
           do {
             en = en + 1;
           } while ((/\s/).test(x.charAt(en)) === false && x.charAt(en) !== "(" && en < len);
-          if (en === len) {
-            en = x.length - 2;
-          }
+
+          if (en === len)  en = x.length - 2;
+
           name = x.slice(sn, en);
-          if (name === "else" || (st === "{%" && (name === "elseif" || name === "when" || name === "elif"))) {
-            return ["template_else", `template_${name}`];
+
+          if (
+            name === "else" || (
+              st === "{%" && (
+                name === "elseif" ||
+                name === "when" ||
+                name === "elif" ||
+                name === "elsif"
+              )
+            )
+          ) {
+            return [
+              "template_else",
+              `template_${name}`
+            ];
           }
+
           if (st === "{{") {
-            if (name === "end") {
-              return ["template_end", ""];
+
+            if (name === "end") return ["template_end", ""];
+
+            if (
+              (name === "block" && (/\{%\s*\w/).test(source) === false) ||
+              name === "define" ||
+              name === "form" ||
+              name === "if" ||
+              name === "range" ||
+              name === "with"
+            ) {
+              return [
+                "template_start",
+                `template_${name}`
+              ];
             }
-            if ((name === "block" && (/\{%\s*\w/).test(source) === false) || name === "define" || name === "form" || name === "if" || name === "range" || name === "with") {
-              return ["template_start", `template_${name}`];
-            }
+
             return ["template", ""];
           }
+
           en = namelist.length - 1;
+
           if (en > -1) {
             do {
-              if (name === namelist[en] && (name !== "block" || (/\{%\s*\w/).test(source) === false)) {
+              if (
+                name === namelist[en] && (
+                  name !== "block" ||
+                  (/\{%\s*\w/).test(source) === false
+                )
+              ) {
+
                 return ["template_start", `template_${name}`];
               }
-              if (name === "end" + namelist[en]) {
-                return ["template_end", ""];
-              }
+
+              if (name === "end" + namelist[en]) return ["template_end", ""];
               en = en - 1;
+
             } while (en > -1);
           }
-          return ["template", ""];
+
+          return [
+            "template",
+            ""
+          ];
         },
         // remove "vart" object data
         vartpop = function lexer_script_vartpop() {
@@ -6055,8 +6366,6 @@ export default (function parse_init() {
               } else {
                 ltype = "word";
               }
-            } else if ((options.language === "java" || options.language === "csharp") && output === "static") {
-              ltype = "word";
             } else if ((parse.structure[parse.structure.length - 1][0] === "object" ||
                 parse.structure[parse.structure.length - 1][0] === "class" ||
                 parse.structure[parse.structure.length - 1][0] === "data_type") && (data.token[parse.count] === "{" ||
@@ -6069,10 +6378,6 @@ export default (function parse_init() {
               }
             } else if (datatype[datatype.length - 1] === true || ((options.language === "typescript" || options.language === "flow") && tokel === "type")) {
               ltype = "type";
-            } else if ((options.language === "java" || options.language === "csharp") && (tokel === "public" || tokel === "private" || tokel === "static" || tokel === "final")) {
-              ltype = "reference";
-            } else if ((options.language === "java" || options.language === "csharp") && ltoke !== "var" && (ltype === "end" || ltype === "word") && nextitem.charAt(0) === "=" && nextitem.charAt(1) !== "=") {
-              ltype = "reference";
             } else if (references.length > 0 && (tokel === "function" || tokel === "class" || tokel === "const" || tokel === "let" || tokel === "var" || tokel === "new" || tokel === "void")) {
               ltype = "reference";
               references[references.length - 1].push(output);
@@ -6220,8 +6525,15 @@ export default (function parse_init() {
               recordPush("else");
             }
           }
-          if ((output === "for" || output === "if" || output === "switch" || output === "catch") && options.language !== "twig" && data.token[parse.count - 1] !== ".") {
+          if ((
+            output === "for" ||
+            output === "if" ||
+            output === "switch" ||
+            output === "catch"
+          ) && data.token[parse.count - 1] !== ".") {
+
             nextitem = nextchar(1, true);
+
             if (nextitem !== "(") {
               paren = parse.count;
               if (options.correct === true) {
@@ -6246,17 +6558,11 @@ export default (function parse_init() {
             asi(false);
             lengthb = parse.count;
           }
-        } else if (c[a] === "<" && c[a + 1] === "?" && c[a + 2] === "p" && c[a + 3] === "h" && c[a + 4] === "p") {
-          // php
-          general("<?php", "?>", "template");
-        } else if (c[a] === "<" && c[a + 1] === "?" && c[a + 2] === "=") {
-          // php
-          general("<?=", "?>", "template");
         } else if (c[a] === "<" && c[a + 1] === "%") {
           // asp
           general("<%", "%>", "template");
         } else if (c[a] === "{" && c[a + 1] === "%") {
-          // twig
+          // Originally labled as twig, but instead we reference as Liquid
           general("{%", "%}", "template");
         } else if (c[a] === "{" && c[a + 1] === "{" && c[a + 2] === "{") {
           // mustache
@@ -6479,2531 +6785,2657 @@ export default (function parse_init() {
     };
     sparser.lexers.script = script;
   }());
+
   (function markup_init() {
 
-    const markup = function lexer_markup(source) {
-      let a = 0,
-        sgmlflag = 0,
-        html = "",
-        cftransaction = false,
-        ext = false;
-      const parse = sparser.parse,
-        data = parse.data,
-        count = {
-          end: 0,
-          index: -1,
-          start: 0
-        },
-        options = sparser.options,
-        b = source.split(""),
-        c = b.length,
-        htmlblocks = {
-          body: "block",
-          colgroup: "block",
-          dd: "block",
-          dt: "block",
-          head: "block",
-          html: "block",
-          li: "block",
-          option: "block",
-          p: "block",
-          tbody: "block",
-          td: "block",
-          tfoot: "block",
-          th: "block",
-          thead: "block",
-          tr: "block",
-        },
-        attribute_sort_list = (typeof options.lexer_options.markup.attribute_sort_list === "string" && options.lexer_options.markup.attribute_sort_list !== "") ?
-        options.lexer_options.markup.attribute_sort_list.split(",") :
-        [],
-        asl = attribute_sort_list.length,
+    function markup(source) {
+
+      let a = 0;
+      let sgmlflag = 0;
+      let html = "";
+      let ext = false;
+
+      const parse = sparser.parse;
+      const data = parse.data;
+      const count = {
+        end: 0,
+        index: -1,
+        start: 0
+      }
+
+      const options = sparser.options;
+      const b = source.split("");
+      const c = b.length;
+      const htmlblocks = {
+        body: "block",
+        colgroup: "block",
+        dd: "block",
+        dt: "block",
+        head: "block",
+        html: "block",
+        li: "block",
+        option: "block",
+        p: "block",
+        tbody: "block",
+        td: "block",
+        tfoot: "block",
+        th: "block",
+        thead: "block",
+        tr: "block",
+      }
+
+      const attribute_sort_list = (
+        typeof options.lexer_options.markup.attribute_sort_list === "string" &&
+        options.lexer_options.markup.attribute_sort_list !== ""
+      ) ? options.lexer_options.markup.attribute_sort_list.split(",") : [];
+
+      const asl = attribute_sort_list.length
+
         //pads certain template tag delimiters with a space
-        bracketSpace = function lexer_markup_bracketSpace(input) {
-          if (options.language !== "html" && options.language !== "xml" && options.language !== "sgml" && options.language !== "jsx") {
-            const spaceStart = function lexer_markup_tag_spaceStart(start) {
-                return start.replace(/\s*$/, " ");
-              },
-              spaceEnd = function lexer_markup_tag_spaceStart(end) {
-                return end.replace(/^\s*/, " ");
-              };
-            if ((/\{(=|#|\/|(%>)|(%\]))/).test(input) === true || (/\}%(>|\])/).test(input) === true) {
-              return input;
-            }
-            input = input.replace(/\{((\{+)|%-?)\s*/g, spaceStart);
-            input = input.replace(/\s*((\}\}+)|(-?%\}))/g, spaceEnd);
+        // lexer_markup_bracketSpace
+      function bracketSpace(input) {
+        if (
+          options.language !== "html" &&
+          options.language !== "xml" &&
+          options.language !== "jsx"
+        ) {
+          const spaceStart = function lexer_markup_tag_spaceStart(start) {
+              return start.replace(/\s*$/, " ");
+            },
+            spaceEnd = function lexer_markup_tag_spaceStart(end) {
+              return end.replace(/^\s*/, " ");
+            };
+          if ((/\{(=|#|\/|(%>)|(%\]))/).test(input) === true || (/\}%(>|\])/).test(input) === true) {
             return input;
           }
+          input = input.replace(/\{((\{+)|%-?)\s*/g, spaceStart);
+          input = input.replace(/\s*((\}\}+)|(-?%\}))/g, spaceEnd);
           return input;
-        },
-        // pushes a record into the parse table
-        recordPush = function lexer_markup_recordPush(target, record, structure) {
-          if (target === data) {
-            if (record.types.indexOf("end") > -1) {
-              count.end = count.end + 1;
-            } else if (record.types.indexOf("start") > -1) {
-              count.start = count.start + 1;
-            }
-          }
-          if (options.lexer_options.markup.parse_space === true) {
-            record.lines = 0;
-          }
-          parse.push(target, record, structure);
-        },
-        // Find the lowercase tag name of the provided token.
-        tagName = function lexer_markup_tagName(el) {
-          let space = 0,
-            name = "";
-          const reg = (/^((\{|<)((%-?)|\{-?)=?\s*)/);
-          if (typeof el !== "string") {
-            return "";
-          }
-          space = el
-            .replace(reg, "%")
-            .replace(/\s+/, " ")
-            .indexOf(" ");
-          name = el.replace(reg, " ");
-          name = (space < 0) ?
-            name.slice(1, el.length - 1) :
-            name.slice(1, space);
-          if (html === "html") {
-            name = name.toLowerCase();
-          }
-          name = name.replace(/(\}\})$/, "");
-          if (name.indexOf("(") > 0) {
-            name = name.slice(0, name.indexOf("("));
-          }
-          if (name === "?xml?") {
-            return "xml";
-          }
-          return name;
-        },
-        // A fix for HTML missing end tags
-        fixHtmlEnd = function lexer_markup_fixHtmlEnd(element, end) {
-          const tname = tagName(element),
-            record = {
-              begin: parse.structure[parse.structure.length - 1][1],
-              ender: -1,
-              lexer: "markup",
-              lines: (data.lines[parse.count] > 0) ? 1 : 0,
-              stack: parse.structure[parse.structure.length - 1][0],
-              token: `</${parse.structure[parse.structure.length - 1][0]}>`,
-              types: "end"
-            };
-          recordPush(data, record, "");
-          if (htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && ((end === true && parse.structure.length > 1) || (end === false && `/${parse.structure[parse.structure.length - 1][0]}` !== tname))) {
-            do {
-              record.begin = parse.structure[parse.structure.length - 1][1];
-              record.stack = parse.structure[parse.structure.length - 1][0];
-              record.token = `</${parse.structure[parse.structure.length - 1][0]}>`;
-              recordPush(data, record, "");
-            } while (htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && ((end === true && parse.structure.length > 1) || (end === false && `/${parse.structure[parse.structure.length - 1][0]}` !== tname)));
-          }
-        },
+        }
+        return input;
+      };
 
-        //parses tags, attributes, and template elements
-        tag = function lexer_markup_tag(end) {
-          // markup is two smaller lexers that work together: tag - evaluates markup and
-          // template tags content - evaluates text content and code for external lexers
-          //
-          //type definitions:
-          // * start      end     type
-          // * <![CDATA[   ]]>    cdata
-          // * <!--       -->     comment
-          // * <#--       -->     comment
-          // * <%--       --%>    comment
-          // * {!         !}      comment
-          // * <!--[if    -->     conditional
-          // * text       text    content
-          // * </         >       end
-          // * <pre       </pre>  ignore (html only)
-          // * text       text    script
-          // * <!         >       sgml
-          // * <          />      singleton
-          // * <          >       start
-          // * text       text    style
-          // * <!--#      -->     template
-          // * <%         %>      template
-          // * {{{        }}}     template
-          // * {{         }}      template
-          // * {%         %}      template
-          // * [%         %]      template
-          // * {@         @}      template
-          // * {#         #}      template
-          // * {#         /}      template
-          // * {?         /}      template
-          // * {^         /}      template
-          // * {@         /}      template
-          // * {<         /}      template
-          // * {+         /}      template
-          // * {~         }       template
-          // * <?         ?>      template
-          // * {:else}            template_else
-          // * <#else     >       template_else
-          // * {@}else{@}         template_else
-          // * <%}else{%>         template_else
-          // * {{         }}      template_end
-          // * <%\s*}     %>      template_end
-          // * [%\s*}     %]      template_end
-          // * {@\s*}     @}      template_end
-          // * {          }       template_end
-          // * {{#        }}      template_start
-          // * <%         {\s*%>  template_start
-          // * [%         {\s*%]  template_start
-          // * {@         {\s*@}  template_start
-          // * {#         }       template_start
-          // * {?         }       template_start
-          // * {^         }       template_start
-          // * {@         }       template_start
-          // * {<         }       template_start
-          // * {+         }       template_start
-          // * <?xml      ?>      xml
-          let igcount = 0,
-            element = "",
-            lastchar = "",
-            ltype = "",
-            tname = "",
-            start = "",
-            cheat = false,
-            earlyexit = false,
-            ignoreme = false,
-            jscom = false,
-            nosort = false,
-            preserve = false,
-            simple = false,
-            singleton = false,
-            attstore = [],
-            comm = ["", 0];
-          const record = {
-              begin: parse.structure[parse.structure.length - 1][1],
-              ender: -1,
-              lexer: "markup",
-              lines: parse.linesSpace,
-              stack: parse.structure[parse.structure.length - 1][0],
-              token: "",
-              types: ""
-            },
-            //attribute name
-            arname = function lexer_markup_tag_name(x) {
-              const eq = x.indexOf("=");
-              if (eq > 0 && ((eq < x.indexOf("\"") && x.indexOf("\"") > 0) || (eq < x.indexOf("'") && x.indexOf("'") > 0))) {
-                return [x.slice(0, eq), x.slice(eq + 1)];
-              }
-              return [x, ""];
-            },
-            // attribute parser
-            attributeRecord = function lexer_markup_tag_attributeRecord() {
-              let ind = 0,
-                eq = 0,
-                dq = 0,
-                sq = 0,
-                slice = "",
-                name = "",
-                store = [],
-                len = attstore.length;
-              const qc =
-                  options.lexer_options.markup.quote_convert === undefined
-                    ? "none"
-                    : options.lexer_options.markup.quote_convert,
-                begin = parse.count,
-                stack = tname.replace(/\/$/, ""),
-                syntax = "<{\"'=/",
-                convertQ = function lexer_markup_tag_attributeRecord_convertQ() {
-                  if (
-                    ignoreme === true ||
-                    qc === "none" ||
-                    record.types !== "attribute" ||
-                    (qc === "single" && record.token.indexOf('"') < 0) ||
-                    (qc === "double" && record.token.indexOf("'") < 0)
-                  ) {
-                    recordPush(data, record, "");
-                  } else {
-                    let ee = 0,
-                      inner = false;
-                    const chars = record.token.split(""),
-                      eq = record.token.indexOf("="),
-                      len = chars.length - 1;
-                    if (
-                      chars[eq + 1] !== '"' &&
-                      qc === "single" &&
-                      chars[chars.length - 1] !== '"'
-                    ) {
-                      recordPush(data, record, "");
-                    } else if (
-                      chars[eq + 1] !== "'" &&
-                      qc === "double" &&
-                      chars[chars.length - 1] !== "'"
-                    ) {
-                      recordPush(data, record, "");
-                    } else {
-                      ee = eq + 2;
-                      if (qc === "double") {
-                        if (record.token.slice(eq + 2, len).indexOf('"') > -1) {
-                          inner = true;
-                        }
-                        chars[eq + 1] = '"';
-                        chars[chars.length - 1] = '"';
-                      } else {
-                        if (record.token.slice(eq + 2, len).indexOf("'") > -1) {
-                          inner = true;
-                        }
-                        chars[eq + 1] = "'";
-                        chars[chars.length - 1] = "'";
-                      }
-                      if (inner === true) {
-                        do {
-                          if (chars[ee] === "'" && qc === "single") {
-                            chars[ee] = '"';
-                          } else if (chars[ee] === '"' && qc === "double") {
-                            chars[ee] = "'";
-                          }
-                          ee = ee + 1;
-                        } while (ee < len);
-                      }
-                      record.token = chars.join("");
-                      recordPush(data, record, "");
-                    }
-                  }
-                },
-                templateAtt = function lexer_markup_tag_attributeRecord_templateAtt(
-                  sample,
-                  token
-                ) {
-                  if (
-                    sample.charAt(0) === "{" &&
-                    "{%#@:/?^<+~=".indexOf(sample.charAt(1)) > -1
-                  ) {
-                    record.types = "template_attribute";
-                  } else if (sample.charAt(0) === "<") {
-                    record.types = "template_attribute";
-                  } else {
-                    record.token = token;
-                    convertQ();
-                    return;
-                  }
-                  record.token = token;
-                  convertQ();
-                  record.types = "attribute";
-                };
-              if (attstore.length < 1) {
-                return;
-              }
-              // fix for singleton tags, since "/" at the end of the tag is not an attribute
-              if (attstore[attstore.length - 1][0] === "/") {
-                attstore.pop();
-                element = element.replace(/>$/, "/>");
-              }
-              // reconnects attribute names to their respective values if separated on "="
-              eq = attstore.length;
-              dq = 1;
-              if (dq < eq) {
-                do {
-                  name = attstore[dq - 1][0];
-                  if (
-                    name.charAt(name.length - 1) === "=" &&
-                    attstore[dq][0].indexOf("=") < 0
-                  ) {
-                    attstore[dq - 1][0] = name + attstore[dq][0];
-                    attstore.splice(dq, 1);
-                    eq = eq - 1;
-                    dq = dq - 1;
-                  }
-                  dq = dq + 1;
-                } while (dq < eq);
-              }
-              // sort the attributes
+      // pushes a record into the parse table
+      // lexer_markup_recordPush
+      function recordPush(target, record, structure) {
+
+        if (target === data) {
+          if (record.types.indexOf("end") > -1) {
+            count.end = count.end + 1;
+          } else if (record.types.indexOf("start") > -1) {
+            count.start = count.start + 1;
+          }
+        }
+
+        if (options.lexer_options.markup.parse_space === true) record.lines = 0;
+
+        parse.push(target, record, structure);
+
+      };
+
+      // Find the lowercase tag name of the provided token.
+      // lexer_markup_tagName
+      function tagName(el) {
+
+        let space = 0;
+        let name = "";
+
+        // HOT FIX
+        //
+        // We eliminate the possibility of Ruby ERB to be matched or
+        // other delimeter template languages. Instead we only want Liquid
+        // delimiters. The previous expression match was ^((\{)((%-?)|\{-?)=?\s*)
+        // but we instead just use the new one below:
+        const reg = (/^\{[{%]-?\s*/);
+
+        if (typeof el !== "string") return "";
+
+        space = el.replace(reg, "%").replace(/\s+/, " ").indexOf(" ");
+        name = el.replace(reg, " ");
+        name = (space < 0) ? name.slice(1, el.length - 1) : name.slice(1, space);
+
+        if (html === "html") name = name.toLowerCase();
+
+        // HOT FIX
+        // Liquid delimiters that did not contain a space were failing
+        // to have their name matched and instead ignore by the beautificiation
+        // process, for example:
+        //
+        // {{tag}} would match
+        // {{tag-}} would not match
+        // {% entag%} would not match
+        // {%else%} would not match
+        //
+        // We have fixed this accordingly, everything works now.
+        name = name.replace(/-?[%}]\}$/, "");
+
+        if (name.indexOf("(") > 0) name = name.slice(0, name.indexOf("("));
+
+        if (name === "?xml?") return "xml";
+
+        //console.log(name)
+
+        return name;
+      };
+
+
+      // A fix for HTML missing end tags
+      // lexer_markup_fixHtmlEnd
+      function fixHtmlEnd(element, end) {
+
+        const tname = tagName(element);
+        const record = {
+          begin: parse.structure[parse.structure.length - 1][1],
+          ender: -1,
+          lexer: "markup",
+          lines: (data.lines[parse.count] > 0) ? 1 : 0,
+          stack: parse.structure[parse.structure.length - 1][0],
+          token: `</${parse.structure[parse.structure.length - 1][0]}>`,
+          types: "end"
+        };
+
+        recordPush(data, record, "");
+
+        if (
+          htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && (
+            (end === true && parse.structure.length > 1) ||
+            (end === false && `/${parse.structure[parse.structure.length - 1][0]}` !== tname)
+          )
+        ) {
+
+          do {
+            record.begin = parse.structure[parse.structure.length - 1][1];
+            record.stack = parse.structure[parse.structure.length - 1][0];
+            record.token = `</${parse.structure[parse.structure.length - 1][0]}>`;
+            recordPush(data, record, "");
+          } while (
+            htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && (
+              (end === true && parse.structure.length > 1) ||
+              (end === false && `/${parse.structure[parse.structure.length - 1][0]}` !== tname)
+            )
+          );
+        }
+
+      };
+
+      //parses tags, attributes, and template elements
+      function tag(end) {
+
+        // Markup is two smaller lexers that work together:
+        // tag - evaluates markup and
+        // template tags content - evaluates text content and code for external lexers
+        //
+        // type definitions:
+        //
+        // * start      end     type
+        // * <![CDATA[   ]]>    cdata
+        // * <!--       -->     comment
+        // * <#--       -->     comment
+        // * <%--       --%>    comment
+        // * {!         !}      comment
+        // * <!--[if    -->     conditional
+        // * text       text    content
+        // * </         >       end
+        // * <pre       </pre>  ignore (html only)
+        // * text       text    script
+        // * <!         >       sgml
+        // * <          />      singleton
+        // * <          >       start
+        // * text       text    style
+        // * <!--#      -->     template
+        // * <%         %>      template
+        // * {{{        }}}     template
+        // * {{         }}      template
+        // * {%         %}      template
+        // * [%         %]      template
+        // * {@         @}      template
+        // * {#         #}      template
+        // * {#         /}      template
+        // * {?         /}      template
+        // * {^         /}      template
+        // * {@         /}      template
+        // * {<         /}      template
+        // * {+         /}      template
+        // * {~         }       template
+        // * <?         ?>      template
+        // * {:else}            template_else
+        // * <#else     >       template_else
+        // * {@}else{@}         template_else
+        // * <%}else{%>         template_else
+        // * {{         }}      template_end
+        // * <%\s*}     %>      template_end
+        // * [%\s*}     %]      template_end
+        // * {@\s*}     @}      template_end
+        // * {          }       template_end
+        // * {{#        }}      template_start
+        // * <%         {\s*%>  template_start
+        // * [%         {\s*%]  template_start
+        // * {@         {\s*@}  template_start
+        // * {#         }       template_start
+        // * {?         }       template_start
+        // * {^         }       template_start
+        // * {@         }       template_start
+        // * {<         }       template_start
+        // * {+         }       template_start
+        // * <?xml      ?>      xml
+
+        let igcount = 0;
+        let element = "";
+        let lastchar = "";
+        let ltype = "";
+        let tname = "";
+        let start = "";
+        let cheat = false;
+        let earlyexit = false;
+        let ignoreme = false;
+        let jscom = false;
+        let nosort = false;
+        let preserve = false;
+        let simple = false;
+        let singleton = false;
+        let attstore = [];
+        let comm = ["", 0];
+
+        const record = {
+          begin: parse.structure[parse.structure.length - 1][1],
+          ender: -1,
+          lexer: "markup",
+          lines: parse.linesSpace,
+          stack: parse.structure[parse.structure.length - 1][0],
+          token: "",
+          types: ""
+        }
+
+        // attribute name
+        // lexer_markup_tag_arname
+        function arname(x) {
+
+          const eq = x.indexOf("=");
+
+          if (
+            eq > 0 && (
+              (eq < x.indexOf("\"") && x.indexOf("\"") > 0) ||
+              (eq < x.indexOf("'") && x.indexOf("'") > 0)
+            )
+          ) {
+            return [x.slice(0, eq), x.slice(eq + 1)];
+          }
+
+          return [x, ""];
+        };
+
+        // attribute parser
+        // lexer_markup_tag_attributeRecord
+        function attributeRecord() {
+          let ind = 0,
+            eq = 0,
+            dq = 0,
+            sq = 0,
+            slice = "",
+            name = "",
+            store = [],
+            len = attstore.length;
+
+          const qc =
+              options.lexer_options.markup.quote_convert === undefined
+                ? "none"
+                : options.lexer_options.markup.quote_convert,
+            begin = parse.count,
+            stack = tname.replace(/\/$/, ""),
+            syntax = "<{\"'=/",
+            convertQ = function lexer_markup_tag_attributeRecord_convertQ() {
               if (
-                (options.lexer_options.markup.attribute_sort === true ||
-                  options.lexer_options.markup.tag_sort === true) &&
-                jscom === false &&
-                options.language !== "jsx" &&
-                nosort === false &&
-                tname !== "cfif" &&
-                tname !== "cfelseif" &&
-                tname !== "cfset"
+                ignoreme === true ||
+                qc === "none" ||
+                record.types !== "attribute" ||
+                (qc === "single" && record.token.indexOf('"') < 0) ||
+                (qc === "double" && record.token.indexOf("'") < 0)
               ) {
-                // if making use of the 'attribute_sort_list` option
-                if (asl > 0) {
-                  const tempstore = [];
-                  dq = 0;
-                  eq = 0;
-                  len = attstore.length;
-                  // loop through the attribute_sort_list looking for attribute name matches
-                  do {
-                    // loop through the attstore
-                    eq = 0;
-                    do {
-                      name = attstore[eq][0].split("=")[0];
-                      if (attribute_sort_list[dq] === name) {
-                        tempstore.push(attstore[eq]);
-                        attstore.splice(eq, 1);
-                        len = len - 1;
-                        break;
-                      }
-                      eq = eq + 1;
-                    } while (eq < len);
-                    dq = dq + 1;
-                  } while (dq < asl);
-                  attstore = parse.safeSort(attstore, "", false);
-                  attstore = tempstore.concat(attstore);
-                  len = attstore.length;
-                } else {
-                  attstore = parse.safeSort(attstore, "", false);
-                }
-              }
-
-              record.begin = begin;
-              record.stack = stack;
-              record.types = "attribute";
-              store = [];
-              if (ind < len) {
-                do {
-                  if (attstore[ind] === undefined) {
-                    break;
-                  }
-                  attstore[ind][0] = attstore[ind][0].replace(/\s+$/, "");
-                  record.lines = attstore[ind][1];
-                  eq = attstore[ind][0].indexOf("=");
-                  dq = attstore[ind][0].indexOf('"');
-                  sq = attstore[ind][0].indexOf("'");
-                  if (
-                    /^\/(\/|\*)/.test(attstore[ind][0]) === true &&
-                    options.language === "jsx"
-                  ) {
-                    record.types = "comment_attribute";
-                    record.token = attstore[ind][0];
-                    convertQ();
-                  } else if (eq > -1 && store.length > 0) {
-                    // put certain attributes together for coldfusion
-                    record.token = store.join(" ");
-                    convertQ();
-                    if (
-                      attstore[ind][0].indexOf("=") > 0 &&
-                      attstore[ind][0].indexOf("//") < 0 &&
-                      attstore[ind][0].charAt(0) !== ";"
-                    ) {
-                      record.token = attstore[ind][0].replace(/\s$/, "");
-                    } else {
-                      record.token = attstore[ind][0];
-                    }
-                    convertQ();
-                    store = [];
-                  } else if (
-                    eq < 0 &&
-                    attstore[ind][0].indexOf("=") < 0
-                  ) {
-                    // put certain attributes together for coldfusion
-                    store.push(attstore[ind][0]);
-                  }  else if (eq < 0) {
-                    // in most markup languages an attribute without an expressed value has its name
-                    // as its string value
-                    if (
-                      html === "html" &&
-                      "[{(".indexOf(attstore[ind][0].charAt(0)) < 0 &&
-                      attstore[ind][0].charAt(0) !== "#"
-                    ) {
-                      record.token = attstore[ind][0].toLowerCase();
-                    } else {
-                      record.token = attstore[ind][0];
-                    }
-                    convertQ();
-                  } else {
-                    // separates out the attribute name from its value
-                    slice = attstore[ind][0].slice(eq + 1);
-                    if (syntax.indexOf(slice.charAt(0)) < 0) {
-                      slice = '"' + slice + '"';
-                    }
-                    name = attstore[ind][0].slice(0, eq);
-
-                    if (options.language === "jsx" && /^(\s*\{)/.test(slice) === true) {
-                      record.token = name + "={";
-                      record.types = "jsx_attribute_start";
-                      recordPush(data, record, "jsx_attribute");
-                      sparser.lexers.script(slice.slice(1, slice.length - 1));
-                      record.begin = parse.count;
-                      if (/\s\}$/.test(slice) === true) {
-                        slice = slice.slice(0, slice.length - 1);
-                        slice = /\s+$/.exec(slice)[0];
-                        if (slice.indexOf("\n") < 0) {
-                          record.lines = 1;
-                        } else {
-                          record.lines = slice.split("\n").length;
-                        }
-                      } else {
-                        record.lines = 0;
-                      }
-                      record.begin = parse.structure[parse.structure.length - 1][1];
-                      record.stack = parse.structure[parse.structure.length - 1][0];
-                      record.token = "}";
-                      record.types = "jsx_attribute_end";
-                      convertQ();
-                      record.types = "attribute";
-                      record.begin = begin;
-                      record.stack = stack;
-                    } else {
-                      name = name + "=" + slice;
-                      templateAtt(
-                        slice.replace(/^("|')/, "").slice(0, 2),
-                        name.replace(/(\s+)$/, "")
-                      );
-                    }
-                  }
-                  ind = ind + 1;
-                } while (ind < len);
-              }
-              if (store.length > 0) {
-                record.token = store.join(" ");
-                convertQ();
-              }
-            };
-          ext = false;
-          // this complex series of conditions determines an elements delimiters look to
-          // the types being pushed to quickly reason about the logic no type is pushed
-          // for start tags or singleton tags just yet some types set the `preserve` flag,
-          // which means to preserve internal white space The `nopush` flag is set when
-          // parsed tags are to be ignored and forgotten
-          (function lexer_markup_tag_types() {
-            if (end === "]>") {
-              end = ">";
-              sgmlflag = sgmlflag - 1;
-              ltype = "end";
-            } else if (end === "---") {
-              ltype = "comment";
-              start = "---";
-            } else if (b[a] === "<") {
-              if (b[a + 1] === "/") {
-                if (b[a + 2] === "#") {
-                  ltype = "template_end";
-                } else {
-                  ltype = "end";
-                }
-                end = ">";
-              } else if (b[a + 1] === "!") {
-                if (b[a + 2] === "-" && b[a + 3] === "-") {
-                  if (b[a + 4] === "#") {
-                    end = "-->";
-                    ltype = "template";
-                  } else {
-                    end = "-->";
-                    ltype = "comment";
-                    start = "<!--";
-                  }
-                } else if (b[a + 2] === "[" && b[a + 3] === "C" && b[a + 4] === "D" && b[a + 5] === "A" && b[a + 6] === "T" && b[a + 7] === "A" && b[a + 8] === "[") {
-                  end = "]]>";
-                  ltype = "cdata";
-                  preserve = true;
-                } else {
-                  end = ">";
-                  sgmlflag = sgmlflag + 1;
-                  ltype = "sgml";
-                }
-              } else if (b[a + 1] === "?") {
-                end = "?>";
-                if (b[a + 2] === "x" && b[a + 3] === "m" && b[a + 4] === "l") {
-                  ltype = "xml";
-                  simple = true;
-                } else {
-                  preserve = true;
-                  ltype = "template";
-                }
-              } else if (b[a + 1] === "%") {
-                preserve = true;
-
-              } else if ((b[a + 1] === "p" || b[a + 1] === "P") && (b[a + 2] === "r" || b[a + 2] === "R") && (b[a + 3] === "e" || b[a + 3] === "E") && (b[a + 4] === ">" || (/\s/).test(b[a + 4]) === true)) {
-                end = "</pre>";
-                preserve = true;
-                ltype = "ignore";
-              } else if ((b[a + 1] === "x" || b[a + 1] === "X") && (b[a + 2] === "m" || b[a + 2] === "M") && (b[a + 3] === "l" || b[a + 3] === "L") && b[a + 4] === ":" && (b[a + 5] === "t" || b[a + 5] === "T") && (b[a + 6] === "e" || b[a + 6] === "E") && (b[a + 7] === "x" || b[a + 7] === "X") && (b[a + 8] === "t" || b[a + 8] === "T") && (b[a + 9] === ">" || (/\s/).test(b[a + 9]) === true)) {
-                end = "</xsl:text>";
-                preserve = true;
-                ltype = "ignore";
-              } else if ((b[a + 1] === "c" || b[a + 1] === "C") && (b[a + 2] === "f" || b[a + 2] === "F") && (b[a + 3] === "q" || b[a + 3] === "Q") && (b[a + 4] === "u" || b[a + 4] === "U") && (b[a + 5] === "e" || b[a + 5] === "E") && (b[a + 6] === "r" || b[a + 6] === "R") && (b[a + 7] === "y" || b[a + 7] === "Y") && (b[a + 8] === ">" || (/\s/).test(b[a + 8]) === true)) {
-                end = "</" + b.slice(a + 1, a + 8).join("") + ">";
-                preserve = true;
-                ltype = "content_preserve";
-              } else if (b[a + 1] === "<") {
-                if (b[a + 2] === "<") {
-                  end = ">>>";
-                } else {
-                  end = ">>";
-                }
-                ltype = "template";
-              } else if (b[a + 1] === "#") {
-                if (b[a + 2] === "e" && b[a + 3] === "l" && b[a + 4] === "s" && b[a + 5] === "e") {
-                  end = ">";
-                  ltype = "template_else";
-                } else if (b[a + 2] === "-" && b[a + 3] === "-") {
-                  end = "-->";
-                  ltype = "comment";
-                  start = "<#--";
-                } else {
-                  end = ">";
-                  ltype = "template_start";
-                }
-              } else {
-                simple = true;
-                end = ">";
-              }
-            } else if (b[a] === "{") {
-              preserve = true;
-              if (options.language === "jsx") {
-                ext = true;
-                earlyexit = true;
-                record.token = "{";
-                record.types = "script_start";
                 recordPush(data, record, "");
-                parse.structure.push(["script", parse.count]);
+              } else {
+                let ee = 0,
+                  inner = false;
+                const chars = record.token.split(""),
+                  eq = record.token.indexOf("="),
+                  len = chars.length - 1;
+                if (
+                  chars[eq + 1] !== '"' &&
+                  qc === "single" &&
+                  chars[chars.length - 1] !== '"'
+                ) {
+                  recordPush(data, record, "");
+                } else if (
+                  chars[eq + 1] !== "'" &&
+                  qc === "double" &&
+                  chars[chars.length - 1] !== "'"
+                ) {
+                  recordPush(data, record, "");
+                } else {
+                  ee = eq + 2;
+                  if (qc === "double") {
+                    if (record.token.slice(eq + 2, len).indexOf('"') > -1) {
+                      inner = true;
+                    }
+                    chars[eq + 1] = '"';
+                    chars[chars.length - 1] = '"';
+                  } else {
+                    if (record.token.slice(eq + 2, len).indexOf("'") > -1) {
+                      inner = true;
+                    }
+                    chars[eq + 1] = "'";
+                    chars[chars.length - 1] = "'";
+                  }
+                  if (inner === true) {
+                    do {
+                      if (chars[ee] === "'" && qc === "single") {
+                        chars[ee] = '"';
+                      } else if (chars[ee] === '"' && qc === "double") {
+                        chars[ee] = "'";
+                      }
+                      ee = ee + 1;
+                    } while (ee < len);
+                  }
+                  record.token = chars.join("");
+                  recordPush(data, record, "");
+                }
+              }
+            },
+            templateAtt = function lexer_markup_tag_attributeRecord_templateAtt(
+              sample,
+              token
+            ) {
+              if (
+                sample.charAt(0) === "{" &&
+                "{%#@:/?^<+~=".indexOf(sample.charAt(1)) > -1
+              ) {
+                record.types = "template_attribute";
+              } else if (sample.charAt(0) === "<") {
+                record.types = "template_attribute";
+              } else {
+                record.token = token;
+                convertQ();
                 return;
               }
-               if (b[a + 1] === "{") {
-                if (b[a + 2] === "{") {
-                  end = "}}}";
-                  ltype = "template";
-                } else if (b[a + 2] === "#") {
-                  end = "}}";
-                  ltype = "template_start";
-                } else if (b[a + 2] === "/") {
-                  end = "}}";
-                  ltype = "template_end";
-                } else if (b[a + 2] === "e" && b[a + 3] === "n" && b[a + 4] === "d") {
-                  end = "}}";
-                  ltype = "template_end";
-                } else if (b[a + 2] === "e" && b[a + 3] === "l" && b[a + 4] === "s" && b[a + 5] === "e") {
-                  end = "}}";
-                  ltype = "template_else";
-                } else {
-                  end = "}}";
-                  ltype = "template";
-                }
-              } else if (b[a + 1] === "%") {
-                end = "%}";
-                ltype = "template";
-              } else {
-                end = b[a + 1] + "}";
-                ltype = "template";
-              }
-            }
-
-            if (options.lexer_options.markup.unformatted === true) {
-              preserve = true;
-            }
-
-          }());
-          if (earlyexit === true) {
+              record.token = token;
+              convertQ();
+              record.types = "attribute";
+            };
+          if (attstore.length < 1) {
             return;
           }
-          // This is the real tag lexer. Everything that follows is attribute handling and
-          // edge cases
-          lastchar = end.charAt(end.length - 1);
-          if (ltype === "comment" && b[a] === "<") {
-            comm = parse.wrapCommentBlock({
-              chars: b,
-              end: c,
-              lexer: "markup",
-              opening: start,
-              start: a,
-              terminator: end
-            });
-            element = comm[0];
-            a = comm[1];
-            if (
-              element
-              .replace(start, "")
-              .replace(/(^\s*)/, "")
-              .indexOf("parse-ignore-start") === 0
-            ) {
-              record.token = element;
-              record.types = "ignore";
-              recordPush(data, record, "");
-              return;
-            }
-          } else if (a < c) {
-            let bcount = 0,
-              braccount = 0,
-              jsxcount = 0,
-              e = 0,
-              f = 0,
-              parncount = 0,
-              lines = 1,
-              quote = "",
-              jsxquote = "",
-              stest = false,
-              quotetest = false,
-              dustatt = [],
-              attribute = [];
-            const lex = [],
-              //finds slash escape sequences
-              slashy = function lexer_markup_tag_slashy() {
-                let x = a;
-                do {
-                  x = x - 1;
-                } while (b[x] === "\\");
-                x = a - x;
-                if (x % 2 === 1) {
-                  return false;
-                }
-                return true;
-              },
-              // attribute lexer
-              attributeLexer = function lexer_markup_tag_attributeLexer(quotes) {
-                let atty = "",
-                  name, aa = 0,
-                  bb = 0;
-                if (quotes === true) {
-                  atty = attribute.join("");
-                  name = arname(atty);
-                  if (name[0] === "data-parse-ignore" || name[0] === "data-prettydiff-ignore") {
-                    ignoreme = true;
-                  }
-                  quote = "";
-                } else {
-                  atty = attribute
-                    .join("");
-                  if (options.language !== "jsx" || (options.language === "jsx" && atty.charAt(atty.length - 1) !== "}")) {
-                    atty = atty.replace(/\s+/g, " ");
-                  }
-                  name = arname(atty);
-                  if (name[0] === "data-parse-ignore" || name[0] === "data-prettydiff-ignore") {
-                    ignoreme = true;
-                  }
-                  if (options.language === "jsx" && attribute[0] === "{" && attribute[attribute.length - 1] === "}") {
-                    jsxcount = 0;
-                  }
-                }
-                if (atty.slice(0, 2) === "{%") {
-                  nosort = true;
-                }
-                atty = atty
-                  .replace(/^\u0020/, "")
-                  .replace(/\u0020$/, "");
-                attribute = atty
-                  .replace(/\r\n/g, "\n")
-                  .split("\n");
-                bb = attribute.length;
-                if (aa < bb) {
-                  do {
-                    attribute[aa] = attribute[aa].replace(/(\s+)$/, "");
-                    aa = aa + 1;
-                  } while (aa < bb);
-                }
-                if (options.crlf === true) {
-                  atty = attribute.join("\r\n");
-                } else {
-                  atty = attribute.join("\n");
-                }
-                atty = bracketSpace(atty);
-                if (atty === "=") {
-                  attstore[attstore.length - 1][0] = `${attstore[attstore.length - 1][0]}=`;
-                } else if (atty.charAt(0) === "=" && attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=") < 0) {
-                  //if an attribute starts with a `=` then adjoin it to the last attribute
-                  attstore[attstore.length - 1][0] = attstore[attstore.length - 1][0] + atty;
-                } else if (atty.charAt(0) !== "=" && attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=") === attstore[attstore.length - 1][0].length - 1) {
-                  // if an attribute follows an attribute ending with `=` then adjoin it to the
-                  // last attribute
-                  attstore[attstore.length - 1][0] = attstore[attstore.length - 1][0] + atty;
-                }  else if (atty !== "" && atty !== " ") {
-                  attstore.push([atty, lines]);
-                }
-                if (attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=\u201c") > 0) {
-                  sparser.parseerror = `Quote looking character (\u201c, &#x201c) used instead of actual quotes on line number ${parse.lineNumber}`;
-                } else if (attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=\u201d") > 0) {
-                  sparser.parseerror = `Quote looking character (\u201d, &#x201d) used instead of actual quotes on line number ${parse.lineNumber}`;
-                }
-                attribute = [];
-                lines = (b[a] === "\n") ?
-                  2 :
-                  1;
-              };
+          // fix for singleton tags, since "/" at the end of the tag is not an attribute
+          if (attstore[attstore.length - 1][0] === "/") {
+            attstore.pop();
+            element = element.replace(/>$/, "/>");
+          }
+          // reconnects attribute names to their respective values if separated on "="
+          eq = attstore.length;
+          dq = 1;
+          if (dq < eq) {
             do {
-              if (b[a] === "\n") {
-                lines = lines + 1;
-                parse.lineNumber = parse.lineNumber + 1;
+              name = attstore[dq - 1][0];
+              if (
+                name.charAt(name.length - 1) === "=" &&
+                attstore[dq][0].indexOf("=") < 0
+              ) {
+                attstore[dq - 1][0] = name + attstore[dq][0];
+                attstore.splice(dq, 1);
+                eq = eq - 1;
+                dq = dq - 1;
               }
-              if (preserve === true || (((/\s/).test(b[a]) === false && quote !== "}") || quote === "}")) {
-                lex.push(b[a]);
-                if (lex[0] === "<" && lex[1] === ">" && end === ">") {
-                  record.token = "<>";
-                  record.types = "start";
-                  recordPush(data, record, "(empty)");
-                  return;
-                }
-                if (lex[0] === "<" && lex[1] === "/" && lex[2] === ">" && end === ">") {
-                  record.token = "</>";
-                  record.types = "end";
-                  recordPush(data, record, "");
-                  return;
-                }
-              }
-              if (ltype === "cdata" && b[a] === ">" && b[a - 1] === "]" && b[a - 2] !== "]") {
-                sparser.parseerror = `CDATA tag ${lex.join("")} is not properly terminated with ]]>`;
-                break;
-              }
-              if (ltype === "comment") {
-                quote = "";
-                //comments must ignore fancy encapsulations and attribute parsing
-                if (b[a] === lastchar && lex.length > end.length + 1) {
-                  //if current character matches the last character of the tag ending sequence
-                  f = lex.length;
-                  e = end.length - 1;
-                  if (e > -1) {
-                    do {
-                      f = f - 1;
-                      if (lex[f] !== end.charAt(e)) {
-                        break;
-                      }
-                      e = e - 1;
-                    } while (e > -1);
-                  }
-                  if (e < 0) {
-                    if (end === "endcomment") {
-                      f = f - 1;
-                      if ((/\s/).test(lex[f]) === true) {
-                        do {
-                          f = f - 1;
-                        } while (f > 0 && (/\s/).test(lex[f]) === true);
-                      }
-                      if (lex[f - 2] === "{" && lex[f - 1] === "%" && lex[f] === "-") {
-                        end = "-%}";
-                        lastchar = "}";
-                      } else if (lex[f - 1] === "{" && lex[f] === "%") {
-                        end = "%}";
-                        lastchar = "}";
-                      }
-                    } else {
-                      break;
-                    }
-                  }
-                }
-              } else {
-                if (quote === "") {
-                  if (lex[0] + lex[1] === "<!" && ltype !== "cdata") {
-                    if (b[a] === "[") {
-                      if (b[a + 1] === "<") {
-                        ltype = "start";
-                        break;
-                      }
-                      if ((/\s/).test(b[a + 1]) === true) {
-                        do {
-                          a = a + 1;
-                          if (b[a] === "\n") {
-                            lines = lines + 1;
-                          }
-                        } while (a < c - 1 && (/\s/).test(b[a + 1]) === true);
-                      }
-                      if (b[a + 1] === "<") {
-                        ltype = "start";
-                        break;
-                      }
-                    }
-                    if (b[a] !== ">" && b[a + 1] === "<") {
-                      sparser.parseerror = `SGML tag ${lex.join("")} is missing termination with '[' or '>'.`;
-                      break;
-                    }
-                  }
-                  if (options.language === "jsx") {
-                    if (b[a] === "{") {
-                      jsxcount = jsxcount + 1;
-                    } else if (b[a] === "}") {
-                      jsxcount = jsxcount - 1;
-                    }
-                  }
-                  if (data.types[parse.count] === "sgml" && b[a] === "[" && lex.length > 4) {
-                    data.types[parse.count] = "template_start";
-                    count.start = count.start + 1;
+              dq = dq + 1;
+            } while (dq < eq);
+          }
+          // sort the attributes
+          if (
+            (options.lexer_options.markup.attribute_sort === true ||
+              options.lexer_options.markup.tag_sort === true) &&
+            jscom === false &&
+            options.language !== "jsx" &&
+            nosort === false
+          ) {
+            // if making use of the 'attribute_sort_list` option
+            if (asl > 0) {
+              const tempstore = [];
+              dq = 0;
+              eq = 0;
+              len = attstore.length;
+              // loop through the attribute_sort_list looking for attribute name matches
+              do {
+                // loop through the attstore
+                eq = 0;
+                do {
+                  name = attstore[eq][0].split("=")[0];
+                  if (attribute_sort_list[dq] === name) {
+                    tempstore.push(attstore[eq]);
+                    attstore.splice(eq, 1);
+                    len = len - 1;
                     break;
                   }
-                  if (b[a] === "<" && options.language !== "coldfusion" && preserve === false && lex.length > 1 && end !== ">>" && end !== ">>>" && simple === true) {
-                    sparser.parseerror = `Parse error on line ${parse.lineNumber} on element: ${lex.join("")}`;
+                  eq = eq + 1;
+                } while (eq < len);
+                dq = dq + 1;
+              } while (dq < asl);
+              attstore = parse.safeSort(attstore, "", false);
+              attstore = tempstore.concat(attstore);
+              len = attstore.length;
+            } else {
+              attstore = parse.safeSort(attstore, "", false);
+            }
+          }
+
+          record.begin = begin;
+          record.stack = stack;
+          record.types = "attribute";
+          store = [];
+          if (ind < len) {
+            do {
+              if (attstore[ind] === undefined) {
+                break;
+              }
+              attstore[ind][0] = attstore[ind][0].replace(/\s+$/, "");
+              record.lines = attstore[ind][1];
+              eq = attstore[ind][0].indexOf("=");
+              dq = attstore[ind][0].indexOf('"');
+              sq = attstore[ind][0].indexOf("'");
+              if (
+                /^\/(\/|\*)/.test(attstore[ind][0]) === true &&
+                options.language === "jsx"
+              ) {
+                record.types = "comment_attribute";
+                record.token = attstore[ind][0];
+                convertQ();
+              } else if (eq < 0) {
+                // in most markup languages an attribute without an expressed value has its name
+                // as its string value
+                if (
+                  html === "html" &&
+                  "[{(".indexOf(attstore[ind][0].charAt(0)) < 0 &&
+                  attstore[ind][0].charAt(0) !== "#"
+                ) {
+                  record.token = attstore[ind][0].toLowerCase();
+                } else {
+                  record.token = attstore[ind][0];
+                }
+                convertQ();
+              } else {
+                // separates out the attribute name from its value
+                slice = attstore[ind][0].slice(eq + 1);
+                if (syntax.indexOf(slice.charAt(0)) < 0) {
+                  slice = '"' + slice + '"';
+                }
+                name = attstore[ind][0].slice(0, eq);
+
+                if (options.language === "jsx" && /^(\s*\{)/.test(slice) === true) {
+                  record.token = name + "={";
+                  record.types = "jsx_attribute_start";
+                  recordPush(data, record, "jsx_attribute");
+                  sparser.lexers.script(slice.slice(1, slice.length - 1));
+                  record.begin = parse.count;
+                  if (/\s\}$/.test(slice) === true) {
+                    slice = slice.slice(0, slice.length - 1);
+                    slice = /\s+$/.exec(slice)[0];
+                    if (slice.indexOf("\n") < 0) {
+                      record.lines = 1;
+                    } else {
+                      record.lines = slice.split("\n").length;
+                    }
+                  } else {
+                    record.lines = 0;
                   }
-                  if (stest === true && (/\s/).test(b[a]) === false && b[a] !== lastchar) {
-                    //attribute start
-                    stest = false;
-                    quote = jsxquote;
-                    igcount = 0;
-                    lex.pop();
-                    if (a < c) {
-                      do {
-                        if (b[a] === "\n") {
-                          parse.lineNumber = parse.lineNumber + 1;
-                        }
-                        if (options.lexer_options.markup.unformatted === true) {
-                          lex.push(b[a]);
-                        } else {
-                          attribute.push(b[a]);
-                        }
+                  record.begin = parse.structure[parse.structure.length - 1][1];
+                  record.stack = parse.structure[parse.structure.length - 1][0];
+                  record.token = "}";
+                  record.types = "jsx_attribute_end";
+                  convertQ();
+                  record.types = "attribute";
+                  record.begin = begin;
+                  record.stack = stack;
+                } else {
+                  name = name + "=" + slice;
+                  templateAtt(
+                    slice.replace(/^("|')/, "").slice(0, 2),
+                    name.replace(/(\s+)$/, "")
+                  );
+                }
+              }
+              ind = ind + 1;
+            } while (ind < len);
+          }
+          if (store.length > 0) {
+            record.token = store.join(" ");
+            convertQ();
+          }
+        };
 
-                        if ((
-                          b[a] === "<" ||
-                          b[a] === ">") && (
-                            quote === "" ||
-                            quote === ">"
-                          ) && options.language !== "jsx"
-                        ) {
+        ext = false;
 
-                          if (quote === "" && b[a] === "<") {
-                            quote = ">";
-                            braccount = 1;
-                          } else if (quote === ">") {
-                            if (b[a] === "<") {
-                              braccount = braccount + 1;
-                            } else if (b[a] === ">") {
-                              braccount = braccount - 1;
-                              if (braccount === 0) {
-                                // the following detects if a coldfusion tag is embedded within another markup
-                                // tag
-                                tname = tagName(attribute.join(""));
-                                quote = "";
-                                igcount = 0;
-                                attributeLexer(false);
-                                break;
+        // This complex series of conditions determines an elements delimiters look to
+        // the types being pushed to quickly reason about the logic no type is pushed
+        // for start tags or singleton tags just yet some types set the `preserve` flag,
+        // which means to preserve internal white space The `nopush` flag is set when
+        // parsed tags are to be ignored and forgotten
+        (function lexer_markup_tag_types() {
 
-                              }
-                            }
-                          }
-                        } else if (quote === "") {
-                          if (b[a + 1] === lastchar) {
-                            //if at end of tag
-                            if (attribute[attribute.length - 1] === "/" || (attribute[attribute.length - 1] === "?" && ltype === "xml")) {
-                              attribute.pop();
-                              if (preserve === true) {
-                                lex.pop();
-                              }
-                              a = a - 1;
-                            }
-                            if (attribute.length > 0) {
-                              attributeLexer(false);
-                            }
-                            break;
-                          }
+          if (end === "]>") {
 
-                          // HOTFIX
+            end = ">";
+            sgmlflag = sgmlflag - 1;
+            ltype = "end";
 
-                          // When options is unformatter=true liquid attributes
-                          // were being replaced in an incorrect manner, essentially,
-                          // wreaking total fucking havoc. If preserve is set to false,
-                          // then this control condition can pass, this code base is absolute
-                          // chaos, so I have little clue what this condition does, but it seems
-                          // to fix this issue and actually preserve attributes.
+          } else if (end === "---") {
 
-                          if (
-                            preserve === false &&
-                            (/^=?("|')?((\{(\{|%|#|@|:|\/|\?|\^|<|\+|~|=))|(\[%)|<)/).test(
-                              b[a] + b[a + 1] + b[a + 2] + b[a + 3]
-                            ) === true) {
+            ltype = "comment";
+            start = "---";
 
-                            attribute.pop();
+          } else if (b[a] === "<") {
 
-                            if (b[a] !== "=" && attribute.length > 0) {
-                              attributeLexer(false);
-                            }
+            if (b[a + 1] === "/") {
+              if (b[a + 2] === "#") {
+                ltype = "template_end";
+              } else {
+                ltype = "end";
+              }
+              end = ">";
 
-                            quote = "";
+            } else if (b[a + 1] === "!") {
+              if (b[a + 2] === "-" && b[a + 3] === "-") {
+                if (b[a + 4] === "#") {
+                  end = "-->";
+                  ltype = "template";
+                } else {
+                  end = "-->";
+                  ltype = "comment";
+                  start = "<!--";
+                }
+              } else if (b[a + 2] === "[" && b[a + 3] === "C" && b[a + 4] === "D" && b[a + 5] === "A" && b[a + 6] === "T" && b[a + 7] === "A" && b[a + 8] === "[") {
+                end = "]]>";
+                ltype = "cdata";
+                preserve = true;
+              } else {
+                end = ">";
+                sgmlflag = sgmlflag + 1;
+                ltype = "sgml";
+              }
+            } else if (b[a + 1] === "?") {
+              end = "?>";
+              if (b[a + 2] === "x" && b[a + 3] === "m" && b[a + 4] === "l") {
+                ltype = "xml";
+                simple = true;
+              } else {
+                preserve = true;
+                ltype = "template";
+              }
+            } else if (b[a + 1] === "%") {
+              preserve = true;
 
-                            do {
-                              attribute.push(b[a]);
-                              if (b[a] === dustatt[dustatt.length - 1]) {
-                                dustatt.pop();
-                                if (b[a] === "}" && b[a + 1] === "}") {
-                                  attribute.push("}");
-                                  a = a + 1;
-                                  if (b[a + 1] === "}") {
-                                    attribute.push("}");
-                                    a = a + 1;
-                                  }
-                                }
-                                if (dustatt.length < 1) {
-                                  attributeLexer(false);
-                                  b[a] = " ";
-                                  break;
-                                }
-                              } else if ((b[a] === "\"" || b[a] === "'") && dustatt[dustatt.length - 1] !== "\"" && dustatt[dustatt.length - 1] !== "'") {
-                                dustatt.push(b[a]);
-                              } else if (b[a] === "{" && "{%#@:/?^<+~=".indexOf(b[a + 1]) && dustatt[dustatt.length - 1] !== "}") {
-                                dustatt.push("}");
-                              } else if (b[a] === "<" && dustatt[dustatt.length - 1] !== ">") {
-                                dustatt.push(">");
-                              } else if (b[a] === "[" && b[a + 1] === ":" && dustatt[dustatt.length - 1] !== "]") {
-                                dustatt.push("]");
-                              }
-                              a = a + 1;
-                            } while (a < c);
+            } else if ((b[a + 1] === "p" || b[a + 1] === "P") && (b[a + 2] === "r" || b[a + 2] === "R") && (b[a + 3] === "e" || b[a + 3] === "E") && (b[a + 4] === ">" || (/\s/).test(b[a + 4]) === true)) {
+              end = "</pre>";
+              preserve = true;
+              ltype = "ignore";
+            } else if ((b[a + 1] === "x" || b[a + 1] === "X") && (b[a + 2] === "m" || b[a + 2] === "M") && (b[a + 3] === "l" || b[a + 3] === "L") && b[a + 4] === ":" && (b[a + 5] === "t" || b[a + 5] === "T") && (b[a + 6] === "e" || b[a + 6] === "E") && (b[a + 7] === "x" || b[a + 7] === "X") && (b[a + 8] === "t" || b[a + 8] === "T") && (b[a + 9] === ">" || (/\s/).test(b[a + 9]) === true)) {
+              end = "</xsl:text>";
+              preserve = true;
+              ltype = "ignore";
+            } else if ((b[a + 1] === "c" || b[a + 1] === "C") && (b[a + 2] === "f" || b[a + 2] === "F") && (b[a + 3] === "q" || b[a + 3] === "Q") && (b[a + 4] === "u" || b[a + 4] === "U") && (b[a + 5] === "e" || b[a + 5] === "E") && (b[a + 6] === "r" || b[a + 6] === "R") && (b[a + 7] === "y" || b[a + 7] === "Y") && (b[a + 8] === ">" || (/\s/).test(b[a + 8]) === true)) {
+              end = "</" + b.slice(a + 1, a + 8).join("") + ">";
+              preserve = true;
+              ltype = "content_preserve";
+            } else if (b[a + 1] === "<") {
+              if (b[a + 2] === "<") {
+                end = ">>>";
+              } else {
+                end = ">>";
+              }
+              ltype = "template";
+            } else {
+              simple = true;
+              end = ">";
+            }
+          } else if (b[a] === "{") {
+            preserve = true;
+            if (options.language === "jsx") {
+              ext = true;
+              earlyexit = true;
+              record.token = "{";
+              record.types = "script_start";
+              recordPush(data, record, "");
+              parse.structure.push(["script", parse.count]);
+              return;
+            }
+              if (b[a + 1] === "{") {
+              if (b[a + 2] === "{") {
+                end = "}}}";
+                ltype = "template";
+              } else if (b[a + 2] === "#") {
+                end = "}}";
+                ltype = "template_start";
+              } else if (b[a + 2] === "/") {
+                end = "}}";
+                ltype = "template_end";
+              } else if (b[a + 2] === "e" && b[a + 3] === "n" && b[a + 4] === "d") {
+                end = "}}";
+                ltype = "template_end";
+              } else if (b[a + 2] === "e" && b[a + 3] === "l" && b[a + 4] === "s" && b[a + 5] === "e") {
+                end = "}}";
+                ltype = "template_else";
+              } else {
+                end = "}}";
+                ltype = "template";
+              }
+            } else if (b[a + 1] === "%") {
+              end = "%}";
+              ltype = "template";
+            } else {
+              end = b[a + 1] + "}";
+              ltype = "template";
+            }
+          }
 
-                          } else if (b[a] === "{" && b[a - 1] === "=" && options.language !== "jsx") {
-                            quote = "}";
-                          } else if (b[a] === "\"" || b[a] === "'") {
-                            quote = b[a];
-                            if (b[a - 1] === "=" &&
-                              (b[a + 1] === "<" ||
-                                (b[a + 1] === "{" && b[a + 2] === "%") ||
-                                ((/\s/).test(b[a + 1]) === true && b[a - 1] !== "="))) {
-                              igcount = a;
-                            }
-                          } else if (b[a] === "(") {
-                            quote = ")";
-                            parncount = 1;
-                          } else if (options.language === "jsx") {
-                            //jsx variable attribute
-                            if ((b[a - 1] === "=" || (/\s/).test(b[a - 1]) === true) && b[a] === "{") {
-                              quote = "}";
-                              bcount = 1;
-                            } else if (b[a] === "/") {
-                              //jsx comments
-                              if (b[a + 1] === "*") {
-                                quote = "\u002a/";
-                              } else if (b[a + 1] === "/") {
-                                quote = "\n";
-                              }
-                            }
-                          } else if (lex[0] !== "{" && b[a] === "{" && (b[a + 1] === "{" || b[a + 1] === "%" || b[a + 1] === "@" || b[a + 1] === "#")) {
-                            //opening embedded template expression
-                            if (b[a + 1] === "{") {
-                              if (b[a + 2] === "{") {
-                                quote = "}}}";
-                              } else {
-                                quote = "}}";
-                              }
-                            } else {
-                              quote = b[a + 1] + "}";
-                            }
-                          }
-                          if ((/\s/).test(b[a]) === true && quote === "") {
-                            // testing for a run of spaces between an attribute's = and a quoted value.
-                            // Unquoted values separated by space are separate attributes
-                            if (attribute[attribute.length - 2] === "=") {
-                              e = a + 1;
-                              if (e < c) {
-                                do {
-                                  if ((/\s/).test(b[e]) === false) {
-                                    if (b[e] === "\"" || b[e] === "'") {
-                                      a = e - 1;
-                                      quotetest = true;
-                                      attribute.pop();
-                                    }
-                                    break;
-                                  }
-                                  e = e + 1;
-                                } while (e < c);
-                              }
-                            }
-                            if (quotetest === true) {
-                              quotetest = false;
-                            } else if (jsxcount === 0 || (jsxcount === 1 && attribute[0] === "{")) {
-                              //if there is an unquoted space attribute is complete
-                              attribute.pop();
-                              attributeLexer(false);
-                              stest = true;
-                              break;
-                            }
-                          }
-                        } else if (b[a] === "(" && quote === ")") {
-                          parncount = parncount + 1;
-                        } else if (b[a] === ")" && quote === ")") {
-                          parncount = parncount - 1;
-                          if (parncount === 0) {
-                            quote = "";
-                            if (b[a + 1] === end.charAt(0)) {
-                              attributeLexer(false);
-                              break;
-                            }
-                          }
-                        } else if (options.language === "jsx" && (quote === "}" || (quote === "\n" && b[a] === "\n") || (quote === "\u002a/" && b[a - 1] === "*" && b[a] === "/"))) {
-                          //jsx attributes
-                          if (quote === "}") {
-                            if (b[a] === "{") {
-                              bcount = bcount + 1;
-                            } else if (b[a] === quote) {
-                              bcount = bcount - 1;
-                              if (bcount === 0) {
-                                jsxcount = 0;
-                                quote = "";
-                                element = attribute.join("");
-                                if (options.lexer_options.markup.unformatted === false) {
-                                  if (options.language === "jsx") {
-                                    if ((/^(\s*)$/).test(element) === false) {
-                                      attstore.push([element, lines]);
-                                    }
-                                  } else {
-                                    element = element.replace(/\s+/g, " ");
-                                    if (element !== " ") {
-                                      attstore.push([element, lines]);
-                                    }
-                                  }
-                                }
-                                attribute = [];
-                                lines = 1;
-                                break;
-                              }
-                            }
-                          } else {
-                            jsxquote = "";
-                            jscom = true;
-                            element = attribute.join("");
-                            if (element !== " ") {
-                              attstore.push([element, lines]);
-                            }
-                            attribute = [];
-                            lines = (quote === "\n") ?
-                              2 :
-                              1;
-                            quote = "";
-                            break;
-                          }
-                        } else if (b[a] === "{" && b[a + 1] === "%" && b[igcount - 1] === "=" && (quote === "\"" || quote === "'")) {
-                          quote = quote + "{%";
-                          igcount = 0;
-                        } else if (b[a - 1] === "%" && b[a] === "}" && (quote === "\"{%" || quote === "'{%")) {
-                          quote = quote.charAt(0);
-                          igcount = 0;
-                        } else if (b[a] === "<" && end === ">" && b[igcount - 1] === "=" && (quote === "\"" || quote === "'")) {
-                          quote = quote + "<";
-                          igcount = 0;
-                        } else if (b[a] === ">" && (quote === "\"<" || quote === "'<")) {
-                          quote = quote.charAt(0);
-                          igcount = 0;
-                        } else if (igcount === 0 && quote !== ">" && (quote.length < 2 || (quote.charAt(0) !== "\"" && quote.charAt(0) !== "'"))) {
-                          //terminate attribute at the conclusion of a quote pair
-                          f = 0;
-                          if (lex.length > 1) {
-                            tname = lex[1] + lex[2];
-                            tname = tname.toLowerCase();
-                          }
-                          // in coldfusion quotes are escaped in a string with double the characters:
-                          // "cat"" and dog"
-                          if (tname === "cf" && b[a] === b[a + 1] && (b[a] === "\"" || b[a] === "'")) {
-                            attribute.push(b[a + 1]);
-                            a = a + 1;
-                          } else {
-                            e = quote.length - 1;
-                            if (e > -1) {
-                              do {
-                                if (b[a - f] !== quote.charAt(e)) {
-                                  break;
-                                }
-                                f = f + 1;
-                                e = e - 1;
-                              } while (e > -1);
-                            }
-                            if (e < 0) {
-                              attributeLexer(true);
-                              if (b[a + 1] === lastchar) {
-                                break;
-                              }
-                            }
-                          }
-                        } else if (igcount > 0 && (/\s/).test(b[a]) === false) {
-                          igcount = 0;
-                        }
-                        a = a + 1;
-                      } while (a < c);
-                    }
-                  } else if (end !== "%>" && end !== "\n" && (b[a] === "\"" || b[a] === "'")) {
-                    //opening quote
-                    quote = b[a];
-                  } else if (ltype !== "comment" && end !== "\n" && b[a] === "<" && b[a + 1] === "!" && b[a + 2] === "-" && b[a + 3] === "-" && b[a + 4] !== "#" && data.types[parse.count] !== "conditional") {
-                    quote = "-->";
-                  } else if (b[a] === "{" && lex[0] !== "{" && end !== "\n" && end !== "%>" && end !== "%]" && (options.language === "dustjs" || b[a + 1] === "{" || b[a + 1] === "%" || b[a + 1] === "@" || b[a + 1] === "#")) {
-                    //opening embedded template expression
-                    if (b[a + 1] === "{") {
-                      if (b[a + 2] === "{") {
-                        quote = "}}}";
-                      } else {
-                        quote = "}}";
-                      }
-                    } else {
-                      quote = b[a + 1] + "}";
-                      if (attribute.length < 1 && (attstore.length < 1 || (/\s/).test(b[a - 1]) === true)) {
-                        lex.pop();
-                        do {
-                          if (b[a] === "\n") {
-                            lines = lines + 1;
-                          }
-                          attribute.push(b[a]);
-                          a = a + 1;
-                        } while (a < c && b[a - 1] + b[a] !== quote);
-                        attribute.push("}");
-                        attstore.push([attribute.join(""), lines]);
-                        attribute = [];
-                        lines = 1;
-                        quote = "";
-                      }
-                    }
-                    if (quote === end) {
-                      quote = "";
-                    }
-                  } else if ((simple === true || ltype === "sgml") && end !== "\n" && (/\s/).test(b[a]) === true && b[a - 1] !== "<") {
-                    //identify a space in a regular start or singleton tag
-                    if (ltype === "sgml") {
-                      lex.push(" ");
-                    } else {
-                      stest = true;
-                    }
-                  } else if (simple === true && options.language === "jsx" && b[a] === "/" && (b[a + 1] === "*" || b[a + 1] === "/")) {
-                    //jsx comment immediately following tag name
-                    stest = true;
-                    lex[lex.length - 1] = " ";
-                    attribute.push(b[a]);
-                    if (b[a + 1] === "*") {
-                      jsxquote = "\u002a/";
-                    } else {
-                      jsxquote = "\n";
-                    }
-                  } else if ((b[a] === lastchar || (end === "\n" && b[a + 1] === "<")) && (lex.length > end.length + 1 || lex[0] === "]") && (options.language !== "jsx" || jsxcount === 0)) {
-                    if (end === "\n") {
-                      if ((/\s/).test(lex[lex.length - 1]) === true) {
-                        do {
-                          lex.pop();
-                          a = a - 1;
-                        } while ((/\s/).test(lex[lex.length - 1]) === true);
-                      }
+          if (options.lexer_options.markup.unformatted === true) {
+            preserve = true;
+          }
+
+        }());
+
+        if (earlyexit === true) {
+          return;
+        }
+        // This is the real tag lexer. Everything that follows is attribute handling and
+        // edge cases
+        lastchar = end.charAt(end.length - 1);
+        if (ltype === "comment" && b[a] === "<") {
+          comm = parse.wrapCommentBlock({
+            chars: b,
+            end: c,
+            lexer: "markup",
+            opening: start,
+            start: a,
+            terminator: end
+          });
+          element = comm[0];
+          a = comm[1];
+          if (
+            element
+            .replace(start, "")
+            .replace(/(^\s*)/, "")
+            .indexOf("parse-ignore-start") === 0
+          ) {
+            record.token = element;
+            record.types = "ignore";
+            recordPush(data, record, "");
+            return;
+          }
+        } else if (a < c) {
+          let bcount = 0,
+            braccount = 0,
+            jsxcount = 0,
+            e = 0,
+            f = 0,
+            parncount = 0,
+            lines = 1,
+            quote = "",
+            jsxquote = "",
+            stest = false,
+            quotetest = false,
+            dustatt = [],
+            attribute = [];
+          const lex = [],
+            //finds slash escape sequences
+            slashy = function lexer_markup_tag_slashy() {
+              let x = a;
+              do {
+                x = x - 1;
+              } while (b[x] === "\\");
+              x = a - x;
+              if (x % 2 === 1) {
+                return false;
+              }
+              return true;
+            },
+            // attribute lexer
+            attributeLexer = function lexer_markup_tag_attributeLexer(quotes) {
+              let atty = "",
+                name, aa = 0,
+                bb = 0;
+              if (quotes === true) {
+                atty = attribute.join("");
+                name = arname(atty);
+                if (name[0] === "data-parse-ignore" || name[0] === "data-prettydiff-ignore") {
+                  ignoreme = true;
+                }
+                quote = "";
+              } else {
+                atty = attribute
+                  .join("");
+                if (options.language !== "jsx" || (options.language === "jsx" && atty.charAt(atty.length - 1) !== "}")) {
+                  atty = atty.replace(/\s+/g, " ");
+                }
+                name = arname(atty);
+                if (name[0] === "data-parse-ignore" || name[0] === "data-prettydiff-ignore") {
+                  ignoreme = true;
+                }
+                if (options.language === "jsx" && attribute[0] === "{" && attribute[attribute.length - 1] === "}") {
+                  jsxcount = 0;
+                }
+              }
+              if (atty.slice(0, 2) === "{%") {
+                nosort = true;
+              }
+              atty = atty
+                .replace(/^\u0020/, "")
+                .replace(/\u0020$/, "");
+              attribute = atty
+                .replace(/\r\n/g, "\n")
+                .split("\n");
+              bb = attribute.length;
+              if (aa < bb) {
+                do {
+                  attribute[aa] = attribute[aa].replace(/(\s+)$/, "");
+                  aa = aa + 1;
+                } while (aa < bb);
+              }
+              if (options.crlf === true) {
+                atty = attribute.join("\r\n");
+              } else {
+                atty = attribute.join("\n");
+              }
+              atty = bracketSpace(atty);
+              if (atty === "=") {
+                attstore[attstore.length - 1][0] = `${attstore[attstore.length - 1][0]}=`;
+              } else if (atty.charAt(0) === "=" && attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=") < 0) {
+                //if an attribute starts with a `=` then adjoin it to the last attribute
+                attstore[attstore.length - 1][0] = attstore[attstore.length - 1][0] + atty;
+              } else if (atty.charAt(0) !== "=" && attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=") === attstore[attstore.length - 1][0].length - 1) {
+                // if an attribute follows an attribute ending with `=` then adjoin it to the
+                // last attribute
+                attstore[attstore.length - 1][0] = attstore[attstore.length - 1][0] + atty;
+              }  else if (atty !== "" && atty !== " ") {
+                attstore.push([atty, lines]);
+              }
+              if (attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=\u201c") > 0) {
+                sparser.parseerror = `Quote looking character (\u201c, &#x201c) used instead of actual quotes on line number ${parse.lineNumber}`;
+              } else if (attstore.length > 0 && attstore[attstore.length - 1][0].indexOf("=\u201d") > 0) {
+                sparser.parseerror = `Quote looking character (\u201d, &#x201d) used instead of actual quotes on line number ${parse.lineNumber}`;
+              }
+              attribute = [];
+              lines = (b[a] === "\n") ?
+                2 :
+                1;
+            };
+          do {
+            if (b[a] === "\n") {
+              lines = lines + 1;
+              parse.lineNumber = parse.lineNumber + 1;
+            }
+            if (preserve === true || (((/\s/).test(b[a]) === false && quote !== "}") || quote === "}")) {
+              lex.push(b[a]);
+              if (lex[0] === "<" && lex[1] === ">" && end === ">") {
+                record.token = "<>";
+                record.types = "start";
+                recordPush(data, record, "(empty)");
+                return;
+              }
+              if (lex[0] === "<" && lex[1] === "/" && lex[2] === ">" && end === ">") {
+                record.token = "</>";
+                record.types = "end";
+                recordPush(data, record, "");
+                return;
+              }
+            }
+            if (ltype === "cdata" && b[a] === ">" && b[a - 1] === "]" && b[a - 2] !== "]") {
+              sparser.parseerror = `CDATA tag ${lex.join("")} is not properly terminated with ]]>`;
+              break;
+            }
+            if (ltype === "comment") {
+              quote = "";
+
+              //comments must ignore fancy encapsulations and attribute parsing
+              if (b[a] === lastchar && lex.length > end.length + 1) {
+
+                //if current character matches the last character of the tag ending sequence
+                f = lex.length;
+                e = end.length - 1;
+
+                if (e > -1) {
+                  do {
+                    f = f - 1;
+                    if (lex[f] !== end.charAt(e)) {
                       break;
                     }
-                    if (lex[0] === "{" && lex[1] === "%" && lex.join("").replace(/\s+/g, "") === "{%comment%}") {
-                      end = "endcomment";
-                      lastchar = "t";
-                      preserve = true;
-                      ltype = "comment";
-                    } else if (lex[0] === "{" && lex[1] === "%" && lex[2] === "-" && lex.join("").replace(/\s+/g, "") === "{%-comment-%}") {
-                      end = "endcomment";
-                      lastchar = "t";
-                      preserve = true;
-                      ltype = "comment";
-                    } else {
-                      //if current character matches the last character of the tag ending sequence
-                      f = lex.length;
-                      e = end.length - 1;
-                      if (e > -1) {
-                        do {
-                          f = f - 1;
-                          if (lex[f] !== end.charAt(e)) {
-                            break;
-                          }
-                          e = e - 1;
-                        } while (e > -1);
-                      }
-                      if (e < 0) {
-                        break;
-                      }
+                    e = e - 1;
+                  } while (e > -1);
+                }
+
+                if (e < 0) {
+                  if (end === "endcomment") {
+
+                    f = f - 1;
+
+                    if ((/\s/).test(lex[f]) === true) {
+                      do { f = f - 1; } while (f > 0 && (/\s/).test(lex[f]) === true);
+                    }
+
+                    if (lex[f - 2] === "{" && lex[f - 1] === "%") {
+                      end = "%}";
+                      lastchar = "}";
+                    }
+
+                  } else {
+                    break;
+                  }
+                }
+              }
+            } else {
+              if (quote === "") {
+                if (lex[0] + lex[1] === "<!" && ltype !== "cdata") {
+                  if (b[a] === "[") {
+                    if (b[a + 1] === "<") {
+                      ltype = "start";
+                      break;
+                    }
+                    if ((/\s/).test(b[a + 1]) === true) {
+                      do {
+                        a = a + 1;
+                        if (b[a] === "\n") {
+                          lines = lines + 1;
+                        }
+                      } while (a < c - 1 && (/\s/).test(b[a + 1]) === true);
+                    }
+                    if (b[a + 1] === "<") {
+                      ltype = "start";
+                      break;
                     }
                   }
-                } else if (b[a] === quote.charAt(quote.length - 1) && ((options.language === "jsx" && end === "}" && (b[a - 1] !== "\\" || slashy() === false)) || options.language !== "jsx" || end !== "}")) {
-                  //find the closing quote or embedded template expression
-                  f = 0;
-                  if (lex.length > 1) {
-                    tname = lex[1] + lex[2];
-                    tname = tname.toLowerCase();
+                  if (b[a] !== ">" && b[a + 1] === "<") {
+                    sparser.parseerror = `SGML tag ${lex.join("")} is missing termination with '[' or '>'.`;
+                    break;
                   }
-                  // in coldfusion quotes are escaped in a string with double the characters:
-                  // "cat"" and dog"
-                  if (tname === "cf" && b[a] === b[a + 1] && (b[a] === "\"" || b[a] === "'")) {
-                    attribute.push(b[a + 1]);
-                    a = a + 1;
-                  } else {
-                    e = quote.length - 1;
-                    if (e > -1) {
-                      do {
-                        if (b[a - f] !== quote.charAt(e)) {
+                }
+                if (options.language === "jsx") {
+                  if (b[a] === "{") {
+                    jsxcount = jsxcount + 1;
+                  } else if (b[a] === "}") {
+                    jsxcount = jsxcount - 1;
+                  }
+                }
+                if (data.types[parse.count] === "sgml" && b[a] === "[" && lex.length > 4) {
+                  data.types[parse.count] = "template_start";
+                  count.start = count.start + 1;
+                  break;
+                }
+                if (
+                  b[a] === "<" &&
+                  preserve === false &&
+                  lex.length > 1 &&
+                  end !== ">>" &&
+                  end !== ">>>" &&
+                  simple === true
+                ) {
+                  sparser.parseerror = `Parse error on line ${parse.lineNumber} on element: ${lex.join("")}`;
+                }
+
+                if (stest === true && (/\s/).test(b[a]) === false && b[a] !== lastchar) {
+                  //attribute start
+                  stest = false;
+                  quote = jsxquote;
+                  igcount = 0;
+                  lex.pop();
+                  if (a < c) {
+                    do {
+                      if (b[a] === "\n") {
+                        parse.lineNumber = parse.lineNumber + 1;
+                      }
+                      if (options.lexer_options.markup.unformatted === true) {
+                        lex.push(b[a]);
+                      } else {
+                        attribute.push(b[a]);
+                      }
+
+                      if ((
+                        b[a] === "<" ||
+                        b[a] === ">") && (
+                          quote === "" ||
+                          quote === ">"
+                        ) && options.language !== "jsx"
+                      ) {
+
+                        if (quote === "" && b[a] === "<") {
+                          quote = ">";
+                          braccount = 1;
+                        } else if (quote === ">") {
+                          if (b[a] === "<") {
+                            braccount = braccount + 1;
+                          } else if (b[a] === ">") {
+                            braccount = braccount - 1;
+                          }
+                        }
+                      } else if (quote === "") {
+                        if (b[a + 1] === lastchar) {
+                          //if at end of tag
+                          if (attribute[attribute.length - 1] === "/" || (attribute[attribute.length - 1] === "?" && ltype === "xml")) {
+                            attribute.pop();
+                            if (preserve === true) {
+                              lex.pop();
+                            }
+                            a = a - 1;
+                          }
+                          if (attribute.length > 0) {
+                            attributeLexer(false);
+                          }
                           break;
                         }
-                        f = f + 1;
+
+                        // HOTFIX
+
+                        // When options is unformatter=true liquid attributes
+                        // were being replaced in an incorrect manner, essentially,
+                        // wreaking total fucking havoc. If preserve is set to false,
+                        // then this control condition can pass, this code base is absolute
+                        // chaos, so I have little clue what this condition does, but it seems
+                        // to fix this issue and actually preserve attributes.
+
+                        if (
+                          preserve === false &&
+                          (/^=?("|')?((\{(\{|%|#|@|:|\/|\?|\^|<|\+|~|=))|(\[%)|<)/).test(
+                            b[a] + b[a + 1] + b[a + 2] + b[a + 3]
+                          ) === true) {
+
+                          attribute.pop();
+
+                          if (b[a] !== "=" && attribute.length > 0) {
+                            attributeLexer(false);
+                          }
+
+                          quote = "";
+
+                          do {
+                            attribute.push(b[a]);
+                            if (b[a] === dustatt[dustatt.length - 1]) {
+                              dustatt.pop();
+                              if (b[a] === "}" && b[a + 1] === "}") {
+                                attribute.push("}");
+                                a = a + 1;
+                                if (b[a + 1] === "}") {
+                                  attribute.push("}");
+                                  a = a + 1;
+                                }
+                              }
+                              if (dustatt.length < 1) {
+                                attributeLexer(false);
+                                b[a] = " ";
+                                break;
+                              }
+                            } else if ((b[a] === "\"" || b[a] === "'") && dustatt[dustatt.length - 1] !== "\"" && dustatt[dustatt.length - 1] !== "'") {
+                              dustatt.push(b[a]);
+                            } else if (b[a] === "{" && "{%#@:/?^<+~=".indexOf(b[a + 1]) && dustatt[dustatt.length - 1] !== "}") {
+                              dustatt.push("}");
+                            } else if (b[a] === "<" && dustatt[dustatt.length - 1] !== ">") {
+                              dustatt.push(">");
+                            } else if (b[a] === "[" && b[a + 1] === ":" && dustatt[dustatt.length - 1] !== "]") {
+                              dustatt.push("]");
+                            }
+                            a = a + 1;
+                          } while (a < c);
+
+                        } else if (b[a] === "{" && b[a - 1] === "=" && options.language !== "jsx") {
+                          quote = "}";
+                        } else if (b[a] === "\"" || b[a] === "'") {
+                          quote = b[a];
+                          if (b[a - 1] === "=" &&
+                            (b[a + 1] === "<" ||
+                              (b[a + 1] === "{" && b[a + 2] === "%") ||
+                              ((/\s/).test(b[a + 1]) === true && b[a - 1] !== "="))) {
+                            igcount = a;
+                          }
+                        } else if (b[a] === "(") {
+                          quote = ")";
+                          parncount = 1;
+                        } else if (options.language === "jsx") {
+                          //jsx variable attribute
+                          if ((b[a - 1] === "=" || (/\s/).test(b[a - 1]) === true) && b[a] === "{") {
+                            quote = "}";
+                            bcount = 1;
+                          } else if (b[a] === "/") {
+                            //jsx comments
+                            if (b[a + 1] === "*") {
+                              quote = "\u002a/";
+                            } else if (b[a + 1] === "/") {
+                              quote = "\n";
+                            }
+                          }
+                        } else if (lex[0] !== "{" && b[a] === "{" && (b[a + 1] === "{" || b[a + 1] === "%" || b[a + 1] === "@" || b[a + 1] === "#")) {
+                          //opening embedded template expression
+                          if (b[a + 1] === "{") {
+                            if (b[a + 2] === "{") {
+                              quote = "}}}";
+                            } else {
+                              quote = "}}";
+                            }
+                          } else {
+                            quote = b[a + 1] + "}";
+                          }
+                        }
+                        if ((/\s/).test(b[a]) === true && quote === "") {
+                          // testing for a run of spaces between an attribute's = and a quoted value.
+                          // Unquoted values separated by space are separate attributes
+                          if (attribute[attribute.length - 2] === "=") {
+                            e = a + 1;
+                            if (e < c) {
+                              do {
+                                if ((/\s/).test(b[e]) === false) {
+                                  if (b[e] === "\"" || b[e] === "'") {
+                                    a = e - 1;
+                                    quotetest = true;
+                                    attribute.pop();
+                                  }
+                                  break;
+                                }
+                                e = e + 1;
+                              } while (e < c);
+                            }
+                          }
+                          if (quotetest === true) {
+                            quotetest = false;
+                          } else if (jsxcount === 0 || (jsxcount === 1 && attribute[0] === "{")) {
+                            //if there is an unquoted space attribute is complete
+                            attribute.pop();
+                            attributeLexer(false);
+                            stest = true;
+                            break;
+                          }
+                        }
+                      } else if (b[a] === "(" && quote === ")") {
+                        parncount = parncount + 1;
+                      } else if (b[a] === ")" && quote === ")") {
+                        parncount = parncount - 1;
+                        if (parncount === 0) {
+                          quote = "";
+                          if (b[a + 1] === end.charAt(0)) {
+                            attributeLexer(false);
+                            break;
+                          }
+                        }
+                      } else if (options.language === "jsx" && (quote === "}" || (quote === "\n" && b[a] === "\n") || (quote === "\u002a/" && b[a - 1] === "*" && b[a] === "/"))) {
+                        //jsx attributes
+                        if (quote === "}") {
+                          if (b[a] === "{") {
+                            bcount = bcount + 1;
+                          } else if (b[a] === quote) {
+                            bcount = bcount - 1;
+                            if (bcount === 0) {
+                              jsxcount = 0;
+                              quote = "";
+                              element = attribute.join("");
+                              if (options.lexer_options.markup.unformatted === false) {
+                                if (options.language === "jsx") {
+                                  if ((/^(\s*)$/).test(element) === false) {
+                                    attstore.push([element, lines]);
+                                  }
+                                } else {
+                                  element = element.replace(/\s+/g, " ");
+                                  if (element !== " ") {
+                                    attstore.push([element, lines]);
+                                  }
+                                }
+                              }
+                              attribute = [];
+                              lines = 1;
+                              break;
+                            }
+                          }
+                        } else {
+                          jsxquote = "";
+                          jscom = true;
+                          element = attribute.join("");
+                          if (element !== " ") {
+                            attstore.push([element, lines]);
+                          }
+                          attribute = [];
+                          lines = (quote === "\n") ?
+                            2 :
+                            1;
+                          quote = "";
+                          break;
+                        }
+                      } else if (b[a] === "{" && b[a + 1] === "%" && b[igcount - 1] === "=" && (quote === "\"" || quote === "'")) {
+                        quote = quote + "{%";
+                        igcount = 0;
+                      } else if (b[a - 1] === "%" && b[a] === "}" && (quote === "\"{%" || quote === "'{%")) {
+                        quote = quote.charAt(0);
+                        igcount = 0;
+                      } else if (b[a] === "<" && end === ">" && b[igcount - 1] === "=" && (quote === "\"" || quote === "'")) {
+                        quote = quote + "<";
+                        igcount = 0;
+                      } else if (b[a] === ">" && (quote === "\"<" || quote === "'<")) {
+                        quote = quote.charAt(0);
+                        igcount = 0;
+                      } else if (igcount === 0 && quote !== ">" && (quote.length < 2 || (quote.charAt(0) !== "\"" && quote.charAt(0) !== "'"))) {
+
+                        //terminate attribute at the conclusion of a quote pair
+                        f = 0;
+                        if (lex.length > 1) {
+                          tname = lex[1] + lex[2];
+                          tname = tname.toLowerCase();
+                        }
+
+                        e = quote.length - 1;
+
+                        if (e > -1) {
+
+                          do {
+
+                            if (b[a - f] !== quote.charAt(e))  break;
+
+                            f = f + 1;
+                            e = e - 1;
+
+                          } while (e > -1);
+
+                        }
+
+                        if (e < 0) {
+                          attributeLexer(true);
+                          if (b[a + 1] === lastchar) break;
+                        }
+
+                      } else if (igcount > 0 && (/\s/).test(b[a]) === false) {
+                        igcount = 0;
+                      }
+
+                      a = a + 1;
+
+                    } while (a < c);
+                  }
+                } else if (end !== "%>" && end !== "\n" && (b[a] === "\"" || b[a] === "'")) {
+
+                  //opening quote
+                  quote = b[a];
+
+                } else if (
+                  ltype !== "comment" &&
+                  end !== "\n" &&
+                  b[a] === "<" &&
+                  b[a + 1] === "!" &&
+                  b[a + 2] === "-" &&
+                  b[a + 3] === "-" &&
+                  b[a + 4] !== "#" &&
+                  data.types[parse.count] !== "conditional"
+                ) {
+
+                  quote = "-->";
+
+                } else if (
+                  b[a] === "{" &&
+                  lex[0] !== "{" &&
+                  end !== "\n" &&
+                  end !== "%>" &&
+                  end !== "%]" && (
+                    b[a + 1] === "{" ||
+                    b[a + 1] === "%" ||
+                    b[a + 1] === "@" ||
+                    b[a + 1] === "#"
+                  )
+                ) {
+
+                  // Opening embedded template expression
+                  if (b[a + 1] === "{") {
+
+                    quote = b[a + 2] === "{" ? "}}}" : "}}";
+
+                  } else {
+
+                    quote = b[a + 1] + "}";
+
+                    if (
+                      attribute.length < 1 && (
+                        attstore.length < 1 ||
+                        (/\s/).test(b[a - 1]) === true
+                      )
+                    ) {
+
+                      lex.pop();
+                      do {
+                        if (b[a] === "\n") {
+                          lines = lines + 1;
+                        }
+                        attribute.push(b[a]);
+                        a = a + 1;
+                      } while (a < c && b[a - 1] + b[a] !== quote);
+                      attribute.push("}");
+                      attstore.push([attribute.join(""), lines]);
+                      attribute = [];
+                      lines = 1;
+                      quote = "";
+                    }
+                  }
+                  if (quote === end) {
+                    quote = "";
+                  }
+                } else if ((simple === true || ltype === "sgml") && end !== "\n" && (/\s/).test(b[a]) === true && b[a - 1] !== "<") {
+                  //identify a space in a regular start or singleton tag
+                  if (ltype === "sgml") {
+                    lex.push(" ");
+                  } else {
+                    stest = true;
+                  }
+                } else if (simple === true && options.language === "jsx" && b[a] === "/" && (b[a + 1] === "*" || b[a + 1] === "/")) {
+                  //jsx comment immediately following tag name
+                  stest = true;
+                  lex[lex.length - 1] = " ";
+                  attribute.push(b[a]);
+                  if (b[a + 1] === "*") {
+                    jsxquote = "\u002a/";
+                  } else {
+                    jsxquote = "\n";
+                  }
+                } else if ((b[a] === lastchar || (end === "\n" && b[a + 1] === "<")) && (lex.length > end.length + 1 || lex[0] === "]") && (options.language !== "jsx" || jsxcount === 0)) {
+                  if (end === "\n") {
+                    if ((/\s/).test(lex[lex.length - 1]) === true) {
+                      do {
+                        lex.pop();
+                        a = a - 1;
+                      } while ((/\s/).test(lex[lex.length - 1]) === true);
+                    }
+                    break;
+                  }
+
+                  if (
+                    lex[0] === "{" &&
+                    lex[1] === "%" && (
+                      (lex[2] === "-" && (
+                        lex.join("").replace(/\s+/g, "") === "{%-comment-%}" ||
+                        lex.join("").replace(/\s+/g, "") === "{%-comment%}"
+                      )) || (
+                        lex.join("").replace(/\s+/g, "") === "{%comment%}" ||
+                        lex.join("").replace(/\s+/g, "") === "{%comment-%}"
+                      )
+                    )
+                  ) {
+
+                    end = "endcomment";
+                    lastchar = "t";
+                    preserve = true;
+                    ltype = "comment";
+
+                  } else {
+
+                    //if current character matches the last character of the tag ending sequence
+                    f = lex.length;
+                    e = end.length - 1;
+                    if (e > -1) {
+                      do {
+                        f = f - 1;
+                        if (lex[f] !== end.charAt(e)) {
+                          break;
+                        }
                         e = e - 1;
                       } while (e > -1);
                     }
                     if (e < 0) {
-                      quote = "";
+                      break;
                     }
                   }
                 }
-              }
-              a = a + 1;
-            } while (a < c);
-            //a correction to incomplete template tags that use multiple angle braces
-            if (options.correct === true) {
-              if (b[a + 1] === ">" && lex[0] === "<" && lex[1] !== "<") {
-                do {
-                  a = a + 1;
-                } while (b[a + 1] === ">");
-              } else if (lex[0] === "<" && lex[1] === "<" && b[a + 1] !== ">" && lex[lex.length - 2] !== ">") {
-                do {
-                  lex.splice(1, 1);
-                } while (lex[1] === "<");
-              }
-            }
-            igcount = 0;
-            element = lex.join("");
-            tname = tagName(element);
-            element = bracketSpace(element);
-            if (tname === "xml") {
-              html = "xml";
-            } else if (html === "" && tname === "!DOCTYPE" && element.toLowerCase().indexOf("xhtml") > 0) {
-              html = "xml";
-            } else if (html === "" && tname === "html") {
-              html = "html";
-            }
-            if (
-              element.replace(start, "")
-              .replace(/^\s+/, "")
-              .indexOf("parse-ignore-start") === 0
-            ) {
+              } else if (
+                b[a] === quote.charAt(quote.length - 1) && (
+                  (
+                    options.language === "jsx" &&
+                    end === "}" && ( b[a - 1] !== "\\" || slashy() === false)
+                  ) || options.language !== "jsx" || end !== "}"
+                )
+              ) {
 
-              a = a + 1;
-
-              do {
-
-                lex.push(b[a]);
-
-                if (
-                  b[a] === "d" &&
-                  lex.slice(lex.length - 16).join("") === "parse-ignore-end"
-                ) {
-                  break;
+                //find the closing quote or embedded template expression
+                f = 0;
+                if (lex.length > 1) {
+                  tname = lex[1] + lex[2];
+                  tname = tname.toLowerCase();
                 }
 
-                a = a + 1;
+                e = quote.length - 1;
 
-              } while (a < c);
-
-
-              do {
-                lex.push(b[a]);
-                if (
-                  b[a] === end.charAt(end.length - 1) &&
-                  b.slice(a - (end.length - 1), a + 1).join("") === end
-                ) {
-                  break;
+                if (e > -1) {
+                  do {
+                    if (b[a - f] !== quote.charAt(e))  break;
+                    f = f + 1;
+                    e = e - 1;
+                  } while (e > -1);
                 }
 
+                if (e < 0) quote = "";
+
+
+              }
+            }
+            a = a + 1;
+          } while (a < c);
+          //a correction to incomplete template tags that use multiple angle braces
+          if (options.correct === true) {
+            if (b[a + 1] === ">" && lex[0] === "<" && lex[1] !== "<") {
+              do {
                 a = a + 1;
-
-              } while (a < c);
-
-              record.token = lex.join("");
-              record.types = "ignore";
-              recordPush(data, record, "");
-              console.log(record, data, lex)
-              return;
+              } while (b[a + 1] === ">");
+            } else if (lex[0] === "<" && lex[1] === "<" && b[a + 1] !== ">" && lex[lex.length - 2] !== ">") {
+              do {
+                lex.splice(1, 1);
+              } while (lex[1] === "<");
             }
           }
-          record.token = element;
-          record.types = ltype;
+          igcount = 0;
+          element = lex.join("");
           tname = tagName(element);
+          element = bracketSpace(element);
 
-          if (preserve === false && options.language !== "jsx") {
-            element = element.replace(/\s+/g, " ");
+          if (tname === "xml") {
+            html = "xml";
+          } else if (html === "" && tname === "!DOCTYPE" && element.toLowerCase().indexOf("xhtml") > 0) {
+            html = "xml";
+          } else if (html === "" && tname === "html") {
+            html = "html";
           }
-          //a quick hack to inject records for a type of template comments
-          if (tname === "comment" && element.slice(0, 2) === "{%") {
-            const lineFindStart = function lexer_markup_tag_lineFindStart(spaces) {
-                if (spaces === "") {
-                  linesStart = 0;
-                } else {
-                  linesStart = spaces.split("\n").length;
-                }
-                return "";
-              },
-              lineFindEnd = function lexer_markup_tag_lineFindEnd(spaces) {
-                if (spaces === "") {
-                  linesEnd = 0;
-                } else {
-                  linesEnd = spaces.split("\n").length;
-                }
-                return "";
-              };
-            let linesStart = 0,
-              linesEnd = 0;
-            record.begin = parse.structure[parse.structure.length - 1][1];
-            record.ender = parse.count + 3;
-            record.stack = parse.structure[parse.structure.length - 1][0];
-            record.types = "template_start";
-            if (element.charAt(2) === "-") {
-              element = element
-                .replace(/^(\s*\{%-\s*comment\s*-%\})/, "")
-                .replace(/(\{%-\s*endcomment\s*-%\}\s*)$/, "");
-              record.token = "{%- comment -%}";
-              recordPush(data, record, "comment");
-              record.begin = parse.count;
-              element = element.replace(/^\s*/, lineFindStart);
-              element = element.replace(/\s*$/, lineFindEnd);
-              record.lines = linesStart;
-              record.stack = "comment";
-              record.token = element;
-              record.types = "comment";
-              recordPush(data, record, "");
-              record.token = "{%- endcomment -%}";
-            } else {
-              element = element
-                .replace(/^(\s*\{%\s*comment\s*%\})/, "")
-                .replace(/(\{%\s*endcomment\s*%\}\s*)$/, "");
-              record.token = "{% comment %}";
-              recordPush(data, record, "comment");
-              record.begin = parse.count;
-              element = element.replace(/^\s*/, lineFindStart);
-              element = element.replace(/\s*$/, lineFindEnd);
-              record.lines = linesStart;
-              record.stack = "comment";
-              record.token = element;
-              record.types = "comment";
-              recordPush(data, record, "");
-              record.token = "{% endcomment %}";
-            }
-            record.lines = linesEnd;
-            record.types = "template_end";
-            recordPush(data, record, "");
-            return;
-          }
-          // a type correction for template tags who have variable start tag names but a
-          // consistent ending tag name
-          if (element.indexOf("{{") === 0 && element.slice(element.length - 2) === "}}") {
-            if (tname === "end") {
-              ltype = "template_end";
-            } else if (tname === "else") {
-              ltype = "template_else";
-            }
-          }
-
-          record.types = ltype;
-          //update a flag for subatomic parsing in SGML tags
-          if (end !== "]>" && sgmlflag > 0 && element.charAt(element.length - 1) !== "[" && (element.slice(element.length - 2) === "]>" || (/^(<!((doctype)|(notation))\s)/i).test(element) === true)) {
-            sgmlflag = sgmlflag - 1;
-          }
-          // cheat identifies HTML singleton elements as singletons even if formatted as
-          // start tags, such as <br> (which is really <br/>)
-          cheat = (function lexer_markup_tag_cheat() {
-
-            const ender = (/(\/>)$/),
-              htmlsings = {
-                area: "singleton",
-                base: "singleton",
-                basefont: "singleton",
-                br: "singleton",
-                col: "singleton",
-                embed: "singleton",
-                eventsource: "singleton",
-                frame: "singleton",
-                hr: "singleton",
-                image: "singleton",
-                img: "singleton",
-                input: "singleton",
-                isindex: "singleton",
-                keygen: "singleton",
-                link: "singleton",
-                meta: "singleton",
-                param: "singleton",
-                progress: "singleton",
-                source: "singleton",
-                wbr: "singleton"
-              },
-              fixsingleton = function lexer_markup_tag_cheat_fixsingleton() {
-                let aa = parse.count,
-                  bb = 0;
-                const vname = tname.slice(1);
-                if (aa > -1) {
-                  do {
-                    if (data.types[aa] === "end") {
-                      bb = bb + 1;
-                    } else if (data.types[aa] === "start") {
-                      bb = bb - 1;
-                      if (bb < 0) {
-                        return false;
-                      }
-                    }
-                    if (bb === 0 && data.token[aa].toLowerCase().indexOf(vname) === 1) {
-                      data.types[aa] = "start";
-                      count.start = count.start + 1;
-                      data.token[aa] = data
-                        .token[aa]
-                        .replace(/(\s*\/>)$/, ">");
-                      return false;
-                    }
-                    aa = aa - 1;
-                  } while (aa > -1);
-                }
-                return false;
-              },
-              peertest = function lexer_markup_tag_cheat_peertest(name, item) {
-                if (htmlblocks[name] === undefined) {
-                  return false;
-                }
-                if (name === item)  return true;
-                if (name === "dd" && item === "dt") return true;
-                if (name === "dt" && item === "dd") return true;
-                if (name === "td" && item === "th")  return true;
-                if (name === "th" && item === "td")  return true;
-                if (
-                  name === "colgroup" && (
-                    item === "tbody" ||
-                    item === "tfoot" ||
-                    item === "thead" ||
-                    item === "tr"
-                  )
-                ) return true;
-
-                if (
-                  name === "tbody" && (
-                    item === "colgroup" ||
-                    item === "tfoot" ||
-                    item === "thead"
-                  )
-                ) return true;
-
-                if (
-                  name === "tfoot" && (
-                    item === "colgroup" ||
-                    item === "tbody" ||
-                    item === "thead"
-                  )
-                ) return true;
-
-                if (
-                  name === "thead" && (
-                    item === "colgroup" ||
-                    item === "tbody" ||
-                    item === "tfoot"
-                  )
-                ) return true;
-
-                if (name === "tr" && item === "colgroup") return true;
-
-                return false;
-              },
-              addHtmlEnd = function(count) {
-                record.lines = (data.lines[parse.count] > 0) ? 1 : 0;
-                record.token = `</${parse.structure[parse.structure.length - 1][0]}>`;
-                record.types = "end";
-                recordPush(data, record, "");
-                if (count > 0) {
-                  do {
-                    record.begin = parse.structure[parse.structure.length - 1][1];
-                    record.stack = parse.structure[parse.structure.length - 1][0];
-                    record.token = `</${parse.structure[parse.structure.length - 1][0]}>`;
-                    recordPush(data, record, "");
-                    count = count - 1;
-                  } while (count > 0);
-                }
-                record.begin = parse.structure[parse.structure.length - 1][1];
-                record.lines = parse.linesSpace;
-                record.stack = parse.structure[parse.structure.length - 1][0];
-                record.token = element;
-                record.types = "end";
-                data.lines[parse.count - 1] = 0;
-              };
-            //determine if the current end tag is actually part of an HTML singleton
-            if (ltype === "end") {
-              const lastToken = data.token[parse.count];
-              if (data.types[parse.count - 1] === "singleton" && lastToken.charAt(lastToken.length - 2) !== "/" && "/" + tagName(lastToken) === tname) {
-                data.types[parse.count - 1] = "start";
-              } else if (
-                tname !== "/span" &&
-                tname !== "/div" &&
-                tname !== "/script" &&
-                options.lexer_options.markup.tag_merge === true && (
-                  html !== "html" || (
-                    html === "html" &&
-                    tname !== "/li"
-                  )
-                )
-              ) {
-
-                if (
-                  tname === "/" + tagName(data.token[parse.count]) &&
-                  data.types[parse.count] === "start"
-                ) {
-                  parse.structure.pop();
-                  data.token[parse.count] = data.token[parse.count].replace(/>$/, "/>");
-                  data.types[parse.count] = "singleton";
-                  singleton = true;
-                  count.start = count.start - 1;
-                  return false;
-                }
-
-                if (
-                  tname === "/" + tagName(data.token[data.begin[parse.count]]) &&
-                  data.types[parse.count].indexOf("attribute") > -1 &&
-                  data.types[data.begin[parse.count]] === "start"
-                ) {
-
-                  parse.structure.pop();
-                  data.token[data.begin[parse.count]] = data
-                    .token[data.begin[parse.count]]
-                    .replace(/>$/, "/>");
-
-                  data.types[data.begin[parse.count]] = "singleton";
-                  singleton = true;
-                  count.start = count.start - 1;
-
-                  return false;
-                }
-              }
-            }
-
-            if (html === "html") {
-
-              // html gets tag names in lowercase, if you want to preserve case sensitivity
-              // beautify as XML
-              if (
-                element.charAt(0) === "<" &&
-                element.charAt(1) !== "!" &&
-                element.charAt(1) !== "?" && (
-                  parse.count < 0 ||
-                  data.types[parse.count].indexOf("template") < 0
-                )
-              ) {
-                element = element.toLowerCase();
-              }
-              if (
-                htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && peertest(tname.slice(1), parse.structure[parse.structure.length - 2][0]) === true) {
-                // looks for HTML tags missing an ending pair when encountering an ending tag for a parent node
-                addHtmlEnd(0);
-              } else if (parse.structure.length > 3 &&
-                htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" &&
-                htmlblocks[parse.structure[parse.structure.length - 2][0]] === "block" &&
-                htmlblocks[parse.structure[parse.structure.length - 3][0]] === "block" &&
-                peertest(tname, parse.structure[parse.structure.length - 4][0]) === true) {
-                // looks for consecutive missing end tags
-                addHtmlEnd(3);
-              } else if (parse.structure.length > 2 &&
-                htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" &&
-                htmlblocks[parse.structure[parse.structure.length - 2][0]] === "block" &&
-                peertest(tname, parse.structure[parse.structure.length - 3][0]) === true) {
-                // looks for consecutive missing end tags
-                addHtmlEnd(2);
-              } else if (parse.structure.length > 1 &&
-                htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" &&
-                peertest(tname, parse.structure[parse.structure.length - 2][0]) === true) {
-                // looks for consecutive missing end tags
-                addHtmlEnd(1);
-              } else if (peertest(tname, parse.structure[parse.structure.length - 1][0]) === true) {
-                // certain tags cannot contain other certain tags if such tags are peers
-                addHtmlEnd(0);
-              } else if (tname.charAt(0) === "/" && htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && parse.structure[parse.structure.length - 1][0] !== tname.slice(1)) {
-                // looks for consecutive missing end tags if the current element is an end tag
-                fixHtmlEnd(element, false);
-                record.begin = parse.structure[parse.structure.length - 1][1];
-                record.lines = parse.linesSpace;
-                record.stack = parse.structure[parse.structure.length - 1][0];
-                record.token = element;
-                record.types = "end";
-                data.lines[parse.count - 1] = 0;
-              }
-
-              //inserts a trailing slash into singleton tags if they do not already have it
-              if (htmlsings[tname] === "singleton") {
-                if (options.correct === true && ender.test(element) === false) {
-                  element = element.slice(0, element.length - 1) + " />";
-                }
-                return true;
-              }
-            }
-            return false;
-          }());
-          //This escape flag is set in the cheat function
-          if (singleton === true) {
-            attributeRecord();
-            return;
-          }
-          // determine if the markup tag potentially contains code interpreted by a
-          // different lexer
-          if ((tname === "script" || tname === "style") && element.slice(element.length - 2) !== "/>") {
-            //get the attribute value for "type"
-            let len = attstore.length - 1,
-              attValue = "",
-              attr = [];
-            if (len > -1) {
-              do {
-                attr = arname(attstore[len][0]);
-                if (attr[0] === "type") {
-                  attValue = attr[1];
-                  if (attValue.charAt(0) === "\"" || attValue.charAt(0) === "'") {
-                    attValue = attValue.slice(1, attValue.length - 1);
-                  }
-                  break;
-                }
-                len = len - 1;
-              } while (len > -1);
-            }
-            //ext is flag to send information between the tag lexer and the content lexer
-            if (
-              tname === "script" && (
-                attValue === "" ||
-                attValue === "text/javascript" ||
-                attValue === "babel" ||
-                attValue === "module" ||
-                attValue === "application/javascript" ||
-                attValue === "application/x-javascript" ||
-                attValue === "text/ecmascript" ||
-                attValue === "application/ecmascript" ||
-                attValue === "text/jsx" ||
-                attValue === "application/jsx" ||
-                attValue === "text/cjs"
-                )
-              ) {
-              ext = true;
-            } else if (
-              tname === "style" &&
-              options.language !== "jsx" && (
-                attValue === "" ||
-                attValue === "text/css"
-              )
-            ) {
-              ext = true;
-            }
-
-            if (ext === true) {
-              len = a + 1;
-              if (len < c) {
-                do {
-                  if ((/\s/).test(b[len]) === false) {
-                    if (b[len] === "<") {
-                      if (b.slice(len + 1, len + 4).join("") === "!--") {
-                        len = len + 4;
-                        if (len < c) {
-                          do {
-                            if ((/\s/).test(b[len]) === false) {
-                              ext = false;
-                              break;
-                            }
-                            if (b[len] === "\n" || b[len] === "\r") {
-                              break;
-                            }
-                            len = len + 1;
-                          } while (len < c);
-                        }
-                      } else {
-                        ext = false;
-                      }
-                    }
-                    break;
-                  }
-                  len = len + 1;
-                } while (len < c);
-              }
-            }
-          }
-          //am I a singleton or a start type?
-          if (simple === true && ignoreme === false && ltype !== "xml" && ltype !== "sgml") {
-            if (cheat === true || element.slice(element.length - 2) === "/>") {
-              ltype = "singleton";
-            } else {
-              ltype = "start";
-            }
-            record.types = ltype;
-          }
-          // additional logic is required to find the end of a tag with the attribute
-          // data-parse-ignore
           if (
-            simple === true &&
-            preserve === false &&
-            ignoreme &&
-            end === ">" &&
-            element.slice(element.length - 2) !== "/>"
+            element.replace(start, "")
+            .replace(/^\s+/, "")
+            .indexOf("parse-ignore-start") === 0
           ) {
 
-            let tags = [],
-              atstring = [];
+            a = a + 1;
 
-            if (cheat === true) {
-              ltype = "singleton";
-            } else {
+            do {
 
-              attstore.forEach(function lexer_markup_tag_atstore(value) {
-                atstring.push(value[0]);
-              });
+              lex.push(b[a]);
 
-              preserve = true;
-              ltype = "ignore";
+              if (
+                b[a] === "d" &&
+                lex.slice(lex.length - 16).join("") === "parse-ignore-end"
+              ) {
+                break;
+              }
 
               a = a + 1;
 
-              if (a < c) {
+            } while (a < c);
 
-                let delim = "",
-                  ee = 0,
-                  ff = 0,
-                  endtag = false;
 
-                do {
-
-                  if (b[a] === "\n") parse.lineNumber = parse.lineNumber + 1;
-
-                  tags.push(b[a]);
-
-                  if (delim === "") {
-
-                    if (b[a] === "\"") {
-
-                      delim = "\"";
-                    } else if (b[a] === "'") {
-
-                      delim = "'";
-
-                    } else if (
-                      tags[0] !== "{" &&
-                      b[a] === "{" && (
-                        options.language === "dustjs" ||
-                        b[a + 1] === "{" ||
-                        b[a + 1] === "%" ||
-                        b[a + 1] === "@" ||
-                        b[a + 1] === "#"
-                      )
-                    ) {
-
-                      if (b[a + 1] === "{") {
-
-                        if (b[a + 2] === "{") {
-                          delim = "}}}";
-                        } else {
-                          delim = "}}";
-                        }
-
-                      } else {
-
-                        delim = b[a + 1] + "}";
-
-                      }
-
-                    } else if (b[a] === "<" && simple === true) {
-
-                      if (b[a + 1] === "/") {
-                        endtag = true;
-                      } else {
-                        endtag = false;
-                      }
-
-                    } else if (b[a] === lastchar && b[a - 1] !== "/") {
-
-                      if (endtag === true) {
-                        igcount = igcount - 1;
-                        if (igcount < 0) {
-                          break;
-                        }
-                      } else {
-                        igcount = igcount + 1;
-                      }
-                    }
-
-                  } else if (b[a] === delim.charAt(delim.length - 1)) {
-                    ff = 0;
-                    ee = delim.length - 1;
-                    if (ee > -1) {
-                      do {
-                        if (b[a - ff] !== delim.charAt(ee)) {
-                          break;
-                        }
-                        ff = ff + 1;
-                        ee = ee - 1;
-                      } while (ee > -1);
-                    }
-                    if (ee < 0) {
-                      delim = "";
-                    }
-                  }
-                  a = a + 1;
-                } while (a < c);
-              }
-            }
-            element = element + tags.join("");
-            element = element.replace(">", ` ${atstring.join(" ")}>`);
-            record.token = element;
-            record.types = "content-ignore";
-            console.log(record, data)
-            attstore = [];
-          }
-
-          // some template tags can be evaluated as a block start/end based on syntax
-          // alone
-          if (record.types.indexOf("template") > -1) {
-            if (element.slice(0, 2) === "{%") {
-              let names = [
-                "autoescape",
-                "case",
-                "capture",
-                "comment",
-                "embed",
-                "filter",
-                "for",
-                "form",
-                "if",
-                "macro",
-                "paginate",
-                "raw",
-                "sandbox",
-                "spaceless",
-                "switch",
-                "tablerow",
-                "unless",
-                "verbatim"
-              ];
+            do {
+              lex.push(b[a]);
               if (
-                (
-                  tname === "case" ||
-                  tname === "default"
-                ) && (
-                  parse.structure[parse.structure.length - 1][0] === "switch" ||
-                  parse.structure[parse.structure.length - 1][0] === "case"
-                )
+                b[a] === end.charAt(end.length - 1) &&
+                b.slice(a - (end.length - 1), a + 1).join("") === end
               ) {
-                record.types = "template_else";
-              } else if (
-                tname === "else" ||
-                tname === "elseif" ||
-                tname === "when" ||
-                tname === "elif" ||
-                tname === "elsif"
-              ) {
-                record.types = "template_else";
-              } else {
-
-                let namelen = names.length - 1;
-
-                do {
-                  if (tname === names[namelen]) {
-                    record.types = "template_start";
-                    break;
-                  }
-
-                  if (tname === "end" + names[namelen]) {
-                    record.types = "template_end";
-                    break;
-                  }
-
-                  namelen = namelen - 1;
-
-                } while (namelen > -1);
-
+                break;
               }
 
-            } else if (
-              element.slice(0, 2) === "{{" &&
-              element.charAt(3) !== "{"
-            ) {
+              a = a + 1;
 
-              if ((/^(\{\{\s*-?\s*end\s*-?\s*\}\})$/).test(element)) {
-                record.types = "template_end";
-              } else if (
-                tname === "define" ||
-                tname === "form" ||
-                tname === "if" ||
-                tname === "range" ||
-                tname === "with"
-              ) {
-                record.types = "template_start";
-              }
+            } while (a < c);
 
-            } else if (record.types === "template") {
-              if (element.indexOf("else") > 2) {
-                record.types = "template_else";
-              }
-            }
-            if (record.types === "template_start" || record.types === "template_else") {
-             if (tname === "" || tname === "%") {
-                tname = tname + element.slice(1).replace(tname, "").replace(/^\s+/, "");
-                tname = tname.slice(0, tname.indexOf("(")).replace(/\s+/, "");
-              }
-            }
-          }
-          // identify script and style hidden within a CDATA escape
-          if (ltype === "cdata" && (record.stack === "script" || record.stack === "style")) {
-            let counta = parse.count,
-              countb = parse.count,
-              stack = record.stack;
-            if (data.types[countb] === "attribute") {
-              do {
-                counta = counta - 1;
-                countb = countb - 1;
-              } while (data.types[countb] === "attribute" && countb > -1);
-            }
-            record.begin = counta;
-            element = element
-              .replace(/^(\s*<!\[cdata\[)/i, "")
-              .replace(/(\]\]>\s*)$/, "");
-            record.token = "<![CDATA[";
-            record.types = "cdata_start";
+            record.token = lex.join("");
+            record.types = "ignore";
             recordPush(data, record, "");
-            parse.structure.push(["cdata", parse.count]);
-            if (stack === "script") {
-              sparser.lexers.script(element);
-            } else {
-              sparser.lexers.style(element);
-            }
-            record.begin = parse.structure[parse.structure.length - 1][1];
-            record.token = "]]>";
-            record.types = "cdata_end";
-            recordPush(data, record, "");
-            parse.structure.pop();
-          } else {
-            recordPush(data, record, tname);
+
+            return;
           }
-          attributeRecord();
-          // inserts a script space in anticipation of word wrap since JSX has unique white space rules
-          if (options.wrap > 0 && options.language === "jsx") {
-            let current_length = 0,
-              bb = parse.count,
-              cc = 0;
-            if (data.types[bb].indexOf("attribute") > -1) {
-              do {
-                current_length = current_length + data.token[bb].length + 1;
-                bb = bb - 1;
-              } while (data.lexer[bb] !== "markup" || data.types[bb].indexOf("attribute") > -1);
-              if (data.lines[bb] === 1) {
-                current_length = current_length + data.token[bb].length + 1;
-              }
-            } else if (data.lines[bb] === 1) {
-              current_length = data.token[bb].length + 1;
-            }
-            cc = bb - 1;
-            if (current_length > 0 && data.types[cc] !== "script_end") {
-              if (data.types[cc].indexOf("attribute") > -1) {
-                do {
-                  current_length = current_length + data.token[cc].length + 1;
-                  cc = cc - 1;
-                } while (data.lexer[cc] !== "markup" || data.types[cc].indexOf("attribute") > -1);
-                if (data.lines[cc] === 1) {
-                  current_length = current_length + data.token[cc].length + 1;
-                }
-              } else if (data.lines[cc] === 1) {
-                current_length = data.token[cc].length + 1;
-              }
-              if (current_length > options.wrap && data.lines[bb] === 1) {
-                record.begin = data.begin[bb];
-                record.ender = bb + 2;
-                record.lexer = data.lexer[bb];
-                record.lines = 1;
-                record.stack = data.stack[bb];
-                record.token = "{";
-                record.types = "script_start";
-                parse.splice({
-                  data: data,
-                  howmany: 0,
-                  index: bb,
-                  record: record
-                });
-                record.begin = bb;
-                record.lexer = "script";
-                record.lines = 0;
-                record.stack = "script";
-                if (options.quote_convert === "single") {
-                  record.token = "' '";
-                } else {
-                  record.token = "\" \"";
-                }
-                record.types = "string";
-                parse.splice({
-                  data: data,
-                  howmany: 0,
-                  index: bb + 1,
-                  record: record
-                });
-                record.lexer = "markup";
-                record.token = "}";
-                record.types = "script_end";
-                parse.splice({
-                  data: data,
-                  howmany: 0,
-                  index: bb + 2,
-                  record: record
-                });
-                data.ender[bb + 3] = data.ender[bb + 3] + 3;
-                bb = bb + 4;
-                do {
-                  data.begin[bb] = data.begin[bb] + 3;
-                  data.ender[bb] = data.ender[bb] + 3;
-                  bb = bb + 1;
-                } while (bb < parse.count);
-              }
-            }
+        }
+        record.token = element;
+        record.types = ltype;
+        tname = tagName(element);
+
+        if (preserve === false && options.language !== "jsx") {
+          element = element.replace(/\s+/g, " ");
+        }
+
+        //a quick hack to inject records for a type of template comments
+        if (tname === "comment" && element.slice(0, 2) === "{%") {
+
+          let linesStart = 0;
+          let linesEnd = 0;
+
+          // lexer_markup_tag_lineFindStart
+          function lineFindStart(spaces) {
+            linesStart = spaces === "" ?  0 : spaces.split("\n").length;
+            return "";
+          };
+
+          // lexer_markup_tag_lineFindEnd
+          function lineFindEnd(spaces) {
+            linesEnd = spaces === "" ?  0 : spaces.split("\n").length;
+            return "";
+          };
+
+          record.begin = parse.structure[parse.structure.length - 1][1];
+          record.ender = parse.count + 3;
+          record.stack = parse.structure[parse.structure.length - 1][0];
+          record.types = "template_start";
+
+          // HOTFIX
+          // When comments contained only a single trim delimiter on either
+          // the right or left side, new tokens were being generated.
+          // This fix applies logic so when a delimited is detected, it will
+          // either apply matchers or not apply at all.
+
+          const hasDelimiter = element.charAt(2) === "-"
+
+          element = element
+            .replace(/^(\s*{%-?\s*comment\s*-?%})/, "")
+            .replace(/({%-?\s*endcomment\s*-?%}\s*)$/, "");
+
+          record.token = hasDelimiter
+            ? "{%- comment -%}"
+            : "{% comment %}";
+
+          recordPush(data, record, "comment");
+
+          record.begin = parse.count;
+          element = element.replace(/^\s*/, lineFindStart);
+          element = element.replace(/\s*$/, lineFindEnd);
+          record.lines = linesStart;
+          record.stack = "comment";
+          record.token = element;
+          record.types = "comment";
+
+          recordPush(data, record, "");
+
+          record.token = hasDelimiter
+            ? "{%- endcomment -%}"
+            : "{% endcomment %}"
+
+          record.lines = linesEnd;
+          record.types = "template_end";
+          recordPush(data, record, "");
+
+          return;
+
+        }
+
+        // a type correction for template tags who have variable start tag names but a
+        // consistent ending tag name
+        if (
+          element.indexOf("{{") === 0 &&
+          element.slice(element.length - 2) === "}}"
+        ) {
+
+          if (tname === "end") {
+            ltype = "template_end";
+          } else if (tname === "else") {
+            ltype = "template_else";
           }
-          //sorts child elements
-          if (
-            options.lexer_options.markup.tag_sort === true &&
-            data.types[parse.count] === "end" &&
-            data.types[parse.count - 1] !== "start" &&
-            tname !== "/script" &&
-            tname !== "/style"
-          ) {
-            let bb = 0,
-              d = 0,
-              startStore = 0,
-              jsxatt = false,
-              endData;
-            const children = [],
-              store = {
-                begin: [],
-                ender: [],
-                lexer: [],
-                lines: [],
-                stack: [],
-                token: [],
-                types: []
-              },
-              storeRecord = function lexer_markup_tag_sorttag_storeRecord(index) {
-                const output = {
-                  begin: data.begin[index],
-                  ender: data.ender[index],
-                  lexer: data.lexer[index],
-                  lines: data.lines[index],
-                  stack: data.stack[index],
-                  token: data.token[index],
-                  types: data.types[index]
-                };
-                return output;
-              },
-              childsort = function lexer_markup_tag_sorttag_childsort(a, b) {
-                if (data.token[a[0]] > data.token[b[0]]) {
-                  return -1;
-                }
-                return 1;
-              };
-            bb = parse.count - 1;
-            if (bb > -1) {
-              let endStore = 0;
-              do {
-                if (data.types[bb] === "start") {
-                  d = d - 1;
-                  if (d < 0) {
-                    startStore = bb + 1;
-                    if (data.types[startStore] === "attribute" || data.types[startStore] === "jsx_attribute_start") {
-                      jsxatt = false;
-                      do {
-                        startStore = startStore + 1;
-                        if (jsxatt === false && data.types[startStore] !== "attribute") {
-                          break;
-                        }
-                        if (data.types[startStore] === "jsx_attribute_start") {
-                          jsxatt = true;
-                        } else if (data.types[startStore] === "jsx_attribute_end") {
-                          jsxatt = false;
-                        }
-                      } while (startStore < c);
-                    }
-                    break;
-                  }
-                } else if (data.types[bb] === "end") {
-                  d = d + 1;
-                  if (d === 1) {
-                    endStore = bb;
-                  }
-                }
-                if (d === 0) {
-                  if (data.types[bb] === "start") {
-                    children.push([bb, endStore]);
-                  } else {
-                    if (data.types[bb] === "singleton" && (data.types[bb + 1] === "attribute" || data.types[bb + 1] === "jsx_attribute_start")) {
-                      let cc = bb + 1;
-                      jsxatt = false;
-                      do {
-                        if (data.types[cc] === "jsx_attribute_start") {
-                          jsxatt = true;
-                        } else if (data.types[cc] === "jsx_attribute_end") {
-                          jsxatt = false;
-                        }
-                        if (jsxatt === false && data.types[cc + 1] !== "attribute" && data.types[cc + 1] !== "jsx_attribute_start") {
-                          break;
-                        }
-                        cc = cc + 1;
-                      } while (cc < parse.count);
-                      children.push([bb, cc]);
-                    } else if (data.types[bb] !== "attribute" && data.types[bb] !== "jsx_attribute_start") {
-                      children.push([bb, bb]);
-                    }
-                  }
-                }
-                bb = bb - 1;
-              } while (bb > -1);
-            }
-            if (children.length < 2) {
-              return;
-            }
-            children.sort(childsort);
-            bb = children.length - 1;
-            if (bb > -1) {
-              do {
-                recordPush(store, storeRecord(children[bb][0]), "");
-                if (children[bb][0] !== children[bb][1]) {
-                  d = children[bb][0] + 1;
-                  if (d < children[bb][1]) {
-                    do {
-                      recordPush(store, storeRecord(d), "");
-                      d = d + 1;
-                    } while (d < children[bb][1]);
-                  }
-                  recordPush(store, storeRecord(children[bb][1]), "");
-                }
-                bb = bb - 1;
-              } while (bb > -1);
-            }
-            endData = {
-              begin: data.begin.pop(),
-              ender: data.ender.pop(),
-              lexer: data.lexer.pop(),
-              lines: data.lines.pop(),
-              stack: data.stack.pop(),
-              token: data.token.pop(),
-              types: data.types.pop()
-            };
-            (function lexer_markup_tag_sorttag_slice() {
-              parse.datanames.forEach(function lexer_markup_tag_sorttag_slice_datanames(value) {
-                data[value] = data[value].slice(0, startStore);
-              });
-            }());
-            parse.concat(data, store);
-            count.end = count.end - 1;
-            recordPush(data, endData, "");
-          }
-          parse.linesSpace = 0;
-        },
-        // parses everything other than markup tags
-        content = function lexer_markup_content() {
-          let lex = [],
-            ltoke = "",
-            jsxbrace = (data.token[parse.count] === "{"),
-            liner = parse.linesSpace,
-            now = a;
-          const name = (ext === true) ?
-            (jsxbrace === true) ?
-            "script" :
-            (parse.structure[parse.structure.length - 1][1] > -1) ?
-            tagName(data.token[parse.structure[parse.structure.length - 1][1]].toLowerCase()) :
-            tagName(data.token[data.begin[parse.count]].toLowerCase()) :
-            "",
-            square = (data.types[parse.count] === "template_start" && data.token[parse.count].indexOf("<!") === 0 && data.token[parse.count].indexOf("<![") < 0 && data.token[parse.count].charAt(data.token[parse.count].length - 1) === "["),
-            record = {
-              begin: parse.structure[parse.structure.length - 1][1],
-              ender: -1,
-              lexer: "markup",
-              lines: liner,
-              stack: parse.structure[parse.structure.length - 1][0],
-              token: "",
-              types: "content"
+        }
+
+        record.types = ltype;
+        //update a flag for subatomic parsing in SGML tags
+        if (end !== "]>" && sgmlflag > 0 && element.charAt(element.length - 1) !== "[" && (element.slice(element.length - 2) === "]>" || (/^(<!((doctype)|(notation))\s)/i).test(element) === true)) {
+          sgmlflag = sgmlflag - 1;
+        }
+        // cheat identifies HTML singleton elements as singletons even if formatted as
+        // start tags, such as <br> (which is really <br/>)
+        cheat = (function lexer_markup_tag_cheat() {
+
+          const ender = (/(\/>)$/),
+            htmlsings = {
+              area: "singleton",
+              base: "singleton",
+              basefont: "singleton",
+              br: "singleton",
+              col: "singleton",
+              embed: "singleton",
+              eventsource: "singleton",
+              frame: "singleton",
+              hr: "singleton",
+              image: "singleton",
+              img: "singleton",
+              input: "singleton",
+              isindex: "singleton",
+              keygen: "singleton",
+              link: "singleton",
+              meta: "singleton",
+              param: "singleton",
+              progress: "singleton",
+              source: "singleton",
+              wbr: "singleton"
             },
-            esctest = function lexer_markup_content_esctest() {
-              let aa = a - 1,
+            fixsingleton = function lexer_markup_tag_cheat_fixsingleton() {
+              let aa = parse.count,
                 bb = 0;
-              if (b[a - 1] !== "\\") {
-                return false;
-              }
+              const vname = tname.slice(1);
               if (aa > -1) {
                 do {
-                  if (b[aa] !== "\\") {
-                    break;
+                  if (data.types[aa] === "end") {
+                    bb = bb + 1;
+                  } else if (data.types[aa] === "start") {
+                    bb = bb - 1;
+                    if (bb < 0) {
+                      return false;
+                    }
                   }
-                  bb = bb + 1;
+                  if (bb === 0 && data.token[aa].toLowerCase().indexOf(vname) === 1) {
+                    data.types[aa] = "start";
+                    count.start = count.start + 1;
+                    data.token[aa] = data
+                      .token[aa]
+                      .replace(/(\s*\/>)$/, ">");
+                    return false;
+                  }
                   aa = aa - 1;
                 } while (aa > -1);
               }
-              if (bb % 2 === 1) {
-                return true;
-              }
               return false;
-            };
-          if (a < c) {
-            let end = "",
-              quote = "",
-              quotes = 0;
-            do {
-              if (b[a] === "\n") {
-                parse.lineNumber = parse.lineNumber + 1;
+            },
+            peertest = function lexer_markup_tag_cheat_peertest(name, item) {
+              if (htmlblocks[name] === undefined) {
+                return false;
               }
-              // external code requires additional parsing to look for the appropriate end
-              // tag, but that end tag cannot be quoted or commented
-              if (ext === true) {
-                if (quote === "") {
-                  if (b[a] === "/") {
-                    if (b[a + 1] === "*") {
-                      quote = "*";
-                    } else if (b[a + 1] === "/") {
-                      quote = "/";
-                    } else if (name === "script" && "([{!=,;.?:&<>".indexOf(b[a - 1]) > -1) {
-                      if (options.language !== "jsx" || b[a - 1] !== "<") {
-                        quote = "reg";
-                      }
-                    }
-                  } else if ((b[a] === "\"" || b[a] === "'" || b[a] === "`") && esctest() === false) {
-                    quote = b[a];
-                  } else if (b[a] === "{" && jsxbrace === true) {
-                    quotes = quotes + 1;
-                  } else if (b[a] === "}" && jsxbrace === true) {
-                    if (quotes === 0) {
-                      sparser.lexers.script(lex.join("").replace(/^(\s+)/, "").replace(/(\s+)$/, ""));
-                      parse.structure[parse.structure.length - 1][1] + 1;
-                      if (data.types[parse.count] === "end" && data.lexer[data.begin[parse.count] - 1] === "script") {
-                        record.lexer = "script";
-                        record.token = (options.correct === true) ? ";" : "x;";
-                        record.types = "separator";
-                        recordPush(data, record, "");
-                        record.lexer = "markup";
-                      }
-                      record.token = "}";
-                      record.types = "script_end";
-                      recordPush(data, record, "");
-                      parse.structure.pop();
-                      break;
-                    }
-                    quotes = quotes - 1;
-                  }
-                  end = b
-                    .slice(a, a + 10)
-                    .join("")
-                    .toLowerCase();
-
-                  //script requires use of the script lexer
-                  if (name === "script") {
-                    if (a === c - 9) {
-                      end = end.slice(0, end.length - 1);
-                    } else {
-                      end = end.slice(0, end.length - 2);
-                    }
-                    if (end === "</script") {
-                      let outside = lex.join("").replace(/^(\s+)/, "").replace(/(\s+)$/, "");
-                      a = a - 1;
-                      if (lex.length < 1) {
-                        break;
-                      }
-                      if ((/^(<!--+)/).test(outside) === true && (/(--+>)$/).test(outside) === true) {
-                        record.token = "<!--";
-                        record.types = "comment";
-                        recordPush(data, record, "");
-                        outside = outside.replace(/^(<!--+)/, "").replace(/(--+>)$/, "");
-                        sparser.lexers.script(outside);
-                        record.token = "-->";
-                        recordPush(data, record, "");
-                      } else {
-                        sparser.lexers.script(outside);
-                      }
-                      break;
-                    }
-                  }
-
-                  //style requires use of the style lexer
-                  if (name === "style") {
-                    if (a === c - 8) {
-                      end = end.slice(0, end.length - 1);
-                    } else if (a === c - 9) {
-                      end = end.slice(0, end.length - 2);
-                    } else {
-                      end = end.slice(0, end.length - 3);
-                    }
-                    if (end === "</style") {
-                      let outside = lex.join("").replace(/^(\s+)/, "").replace(/(\s+)$/, "");
-                      a = a - 1;
-                      if (lex.length < 1) {
-                        break;
-                      }
-                      if ((/^(<!--+)/).test(outside) === true && (/(--+>)$/).test(outside) === true) {
-                        record.token = "<!--";
-                        record.types = "comment";
-                        recordPush(data, record, "");
-                        outside = outside.replace(/^(<!--+)/, "").replace(/(--+>)$/, "");
-                        sparser.lexers.style(outside);
-                        record.token = "-->";
-                        recordPush(data, record, "");
-                      } else {
-                        sparser.lexers.style(outside);
-                      }
-                      break;
-                    }
-                  }
-                } else if (quote === b[a] && (quote === "\"" || quote === "'" || quote === "`" || (quote === "*" && b[a + 1] === "/")) && esctest() === false) {
-                  quote = "";
-                } else if (quote === "`" && b[a] === "$" && b[a + 1] === "{" && esctest() === false) {
-                  quote = "}";
-                } else if (quote === "}" && b[a] === "}" && esctest() === false) {
-                  quote = "`";
-                } else if (quote === "/" && (b[a] === "\n" || b[a] === "\r")) {
-                  quote = "";
-                } else if (quote === "reg" && b[a] === "/" && esctest() === false) {
-                  quote = "";
-                } else if (quote === "/" && b[a] === ">" && b[a - 1] === "-" && b[a - 2] === "-") {
-                  end = b
-                    .slice(a + 1, a + 11)
-                    .join("")
-                    .toLowerCase();
-                  end = end.slice(0, end.length - 2);
-                  if (name === "script" && end === "</script") {
-                    quote = "";
-                  }
-                  end = end.slice(0, end.length - 1);
-                  if (name === "style" && end === "</style") {
-                    quote = "";
-                  }
-                }
-              }
-              //typically this logic is for artifacts nested within an SGML tag
-              if (square === true && b[a] === "]") {
-                a = a - 1;
-                ltoke = lex.join("");
-                if (options.lexer_options.markup.parse_space === false) {
-                  ltoke = ltoke.replace(/\s+$/, "");
-                }
-                liner = 0;
-                record.token = ltoke;
-                recordPush(data, record, "");
-                break;
-              }
-              //general content processing
+              if (name === item)  return true;
+              if (name === "dd" && item === "dt") return true;
+              if (name === "dt" && item === "dd") return true;
+              if (name === "td" && item === "th")  return true;
+              if (name === "th" && item === "td")  return true;
               if (
-                ext === false &&
-                lex.length > 0 && (
-                  (
-                    b[a] === "<" &&
-                    b[a + 1] !== "=" &&
-                    !(/\s|\d/).test(b[a + 1])
-                  ) || (
-                    b[a] === "[" &&
-                    b[a + 1] === "%"
-                  ) || (
-                    b[a] === "{" && (
-                      options.language === "jsx" ||
-                      b[a + 1] === "{" ||
-                      b[a + 1] === "%"
-                    )
-                  )
+                name === "colgroup" && (
+                  item === "tbody" ||
+                  item === "tfoot" ||
+                  item === "thead" ||
+                  item === "tr"
                 )
+              ) return true;
+
+              if (
+                name === "tbody" && (
+                  item === "colgroup" ||
+                  item === "tfoot" ||
+                  item === "thead"
+                )
+              ) return true;
+
+              if (
+                name === "tfoot" && (
+                  item === "colgroup" ||
+                  item === "tbody" ||
+                  item === "thead"
+                )
+              ) return true;
+
+              if (
+                name === "thead" && (
+                  item === "colgroup" ||
+                  item === "tbody" ||
+                  item === "tfoot"
+                )
+              ) return true;
+
+              if (name === "tr" && item === "colgroup") return true;
+
+              return false;
+            },
+            addHtmlEnd = function(count) {
+              record.lines = (data.lines[parse.count] > 0) ? 1 : 0;
+              record.token = `</${parse.structure[parse.structure.length - 1][0]}>`;
+              record.types = "end";
+              recordPush(data, record, "");
+              if (count > 0) {
+                do {
+                  record.begin = parse.structure[parse.structure.length - 1][1];
+                  record.stack = parse.structure[parse.structure.length - 1][0];
+                  record.token = `</${parse.structure[parse.structure.length - 1][0]}>`;
+                  recordPush(data, record, "");
+                  count = count - 1;
+                } while (count > 0);
+              }
+              record.begin = parse.structure[parse.structure.length - 1][1];
+              record.lines = parse.linesSpace;
+              record.stack = parse.structure[parse.structure.length - 1][0];
+              record.token = element;
+              record.types = "end";
+              data.lines[parse.count - 1] = 0;
+            };
+
+          //determine if the current end tag is actually part of an HTML singleton
+          if (ltype === "end") {
+            const lastToken = data.token[parse.count];
+            if (data.types[parse.count - 1] === "singleton" && lastToken.charAt(lastToken.length - 2) !== "/" && "/" + tagName(lastToken) === tname) {
+              data.types[parse.count - 1] = "start";
+            } else if (
+              tname !== "/span" &&
+              tname !== "/div" &&
+              tname !== "/script" &&
+              options.lexer_options.markup.tag_merge === true && (
+                html !== "html" || (
+                  html === "html" &&
+                  tname !== "/li"
+                )
+              )
+            ) {
+
+              if (
+                tname === "/" + tagName(data.token[parse.count]) &&
+                data.types[parse.count] === "start"
+              ) {
+                parse.structure.pop();
+                data.token[parse.count] = data.token[parse.count].replace(/>$/, "/>");
+                data.types[parse.count] = "singleton";
+                singleton = true;
+                count.start = count.start - 1;
+                return false;
+              }
+
+              if (
+                tname === "/" + tagName(data.token[data.begin[parse.count]]) &&
+                data.types[parse.count].indexOf("attribute") > -1 &&
+                data.types[data.begin[parse.count]] === "start"
               ) {
 
-                //regular content
-                a = a - 1;
+                parse.structure.pop();
+                data.token[data.begin[parse.count]] = data
+                  .token[data.begin[parse.count]]
+                  .replace(/>$/, "/>");
 
-                if (
-                  options.lexer_options.markup.parse_space === true ||
-                  parse.structure[parse.structure.length - 1][0] === "comment"
-                ) {
-                  ltoke = lex.join("");
-                } else {
-                  ltoke = lex.join("").replace(/\s+$/, "");
-                }
+                data.types[data.begin[parse.count]] = "singleton";
+                singleton = true;
+                count.start = count.start - 1;
 
-                ltoke = bracketSpace(ltoke);
-                liner = 0;
-                record.token = ltoke;
-
-                if (
-                  options.wrap > 0 &&
-                  options.lexer_options.markup.preserve_text !== true
-                ) {
-
-                  let aa = options.wrap,
-                    len = ltoke.length,
-                    startSpace = "",
-                    endSpace = "";
-
-                  const wrap = options.wrap,
-                    store = [],
-                    wrapper = function beautify_markup_apply_content_wrapper() {
-                      if (ltoke.charAt(aa) === " ") {
-                        store.push(ltoke.slice(0, aa));
-                        ltoke = ltoke.slice(aa + 1);
-                        len = ltoke.length;
-                        aa = wrap;
-                        return;
-                      }
-                      do {
-                        aa = aa - 1;
-                      } while (aa > 0 && ltoke.charAt(aa) !== " ");
-                      if (aa > 0) {
-                        store.push(ltoke.slice(0, aa));
-                        ltoke = ltoke.slice(aa + 1);
-                        len = ltoke.length;
-                        aa = wrap;
-                      } else {
-                        aa = wrap;
-                        do {
-                          aa = aa + 1;
-                        } while (aa < len && ltoke.charAt(aa) !== " ");
-                        store.push(ltoke.slice(0, aa));
-                        ltoke = ltoke.slice(aa + 1);
-                        len = ltoke.length;
-                        aa = wrap;
-                      }
-                    };
-
-                  // HTML anchor lists do not get wrapping unless the content itself exceeds the wrapping limit
-                  if (data.token[data.begin[parse.count]] === "<a>" &&
-                    data.token[data.begin[data.begin[parse.count]]] === "<li>" &&
-                    data.lines[data.begin[parse.count]] === 0 &&
-                    parse.linesSpace === 0 &&
-                    ltoke.length < options.wrap) {
-                    recordPush(data, record, "");
-                    break;
-                  }
-                  if (len < wrap) {
-                    recordPush(data, record, "");
-                    break;
-                  }
-                  if (parse.linesSpace < 1) {
-                    let bb = parse.count;
-                    do {
-                      aa = aa - data.token[bb].length;
-                      if (data.types[bb].indexOf("attribute") > -1) {
-                        aa = aa - 1;
-                      }
-                      if (data.lines[bb] > 0 && data.types[bb].indexOf("attribute") < 0) {
-                        break;
-                      }
-                      bb = bb - 1;
-                    } while (bb > 0 && aa > 0);
-                    if (aa < 1) {
-                      aa = ltoke.indexOf(" ");
-                    }
-                  }
-                  ltoke = lex.join("");
-                  if (options.lexer_options.markup.parse_space === true) {
-                    startSpace = ((/\s/).test(ltoke.charAt(0)) === true) ?
-                      (/\s+/).exec(ltoke)[0] :
-                      "";
-                    endSpace = ((/\s/).test(ltoke.charAt(ltoke.length - 1)) === true) ?
-                      (/\s+$/).exec(ltoke)[0] :
-                      "";
-                  }
-                  ltoke = ltoke.replace(/^\s+/, "").replace(/\s+$/, "").replace(/\s+/g, " ");
-                  do {
-                    wrapper();
-                  } while (aa < len);
-                  if (ltoke !== "" && ltoke !== " ") {
-                    store.push(ltoke);
-                  }
-                  if (options.crlf === true) {
-                    ltoke = store.join("\r\n");
-                  } else {
-                    ltoke = store.join("\n");
-                  }
-                  ltoke = startSpace + ltoke + endSpace;
-                }
-                liner = 0;
-                record.token = ltoke;
-                recordPush(data, record, "");
-                break;
-              }
-              lex.push(b[a]);
-              a = a + 1;
-            } while (a < c);
-          }
-          if (options.lexer_options.markup.parse_space === false) {
-            if (a > now && a < c) {
-              if ((/\s/).test(b[a]) === true) {
-                let x = a;
-                parse.linesSpace = 1;
-                do {
-                  if (b[x] === "\n") {
-                    parse.linesSpace = parse.linesSpace + 1;
-                  }
-                  x = x - 1;
-                } while (x > now && (/\s/).test(b[x]) === true);
-              } else {
-                parse.linesSpace = 0;
-              }
-            } else if (a !== now || (a === now && ext === false)) {
-              //regular content at the end of the supplied source
-              ltoke = lex.join("").replace(/\s+$/, "");
-              liner = 0;
-              //this condition prevents adding content that was just added in the loop above
-              if (record.token !== ltoke) {
-                record.token = ltoke;
-                recordPush(data, record, "");
-                parse.linesSpace = 0;
+                return false;
               }
             }
           }
-          ext = false;
-        };
+
+          if (html === "html") {
+
+            // html gets tag names in lowercase, if you want to preserve case sensitivity
+            // beautify as XML
+            if (
+              element.charAt(0) === "<" &&
+              element.charAt(1) !== "!" &&
+              element.charAt(1) !== "?" && (
+                parse.count < 0 ||
+                data.types[parse.count].indexOf("template") < 0
+              )
+            ) {
+              element = element.toLowerCase();
+            }
+            if (
+              htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && peertest(tname.slice(1), parse.structure[parse.structure.length - 2][0]) === true) {
+              // looks for HTML tags missing an ending pair when encountering an ending tag for a parent node
+              addHtmlEnd(0);
+            } else if (parse.structure.length > 3 &&
+              htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" &&
+              htmlblocks[parse.structure[parse.structure.length - 2][0]] === "block" &&
+              htmlblocks[parse.structure[parse.structure.length - 3][0]] === "block" &&
+              peertest(tname, parse.structure[parse.structure.length - 4][0]) === true) {
+              // looks for consecutive missing end tags
+              addHtmlEnd(3);
+            } else if (parse.structure.length > 2 &&
+              htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" &&
+              htmlblocks[parse.structure[parse.structure.length - 2][0]] === "block" &&
+              peertest(tname, parse.structure[parse.structure.length - 3][0]) === true) {
+              // looks for consecutive missing end tags
+              addHtmlEnd(2);
+            } else if (parse.structure.length > 1 &&
+              htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" &&
+              peertest(tname, parse.structure[parse.structure.length - 2][0]) === true) {
+              // looks for consecutive missing end tags
+              addHtmlEnd(1);
+            } else if (peertest(tname, parse.structure[parse.structure.length - 1][0]) === true) {
+              // certain tags cannot contain other certain tags if such tags are peers
+              addHtmlEnd(0);
+            } else if (tname.charAt(0) === "/" && htmlblocks[parse.structure[parse.structure.length - 1][0]] === "block" && parse.structure[parse.structure.length - 1][0] !== tname.slice(1)) {
+              // looks for consecutive missing end tags if the current element is an end tag
+              fixHtmlEnd(element, false);
+              record.begin = parse.structure[parse.structure.length - 1][1];
+              record.lines = parse.linesSpace;
+              record.stack = parse.structure[parse.structure.length - 1][0];
+              record.token = element;
+              record.types = "end";
+              data.lines[parse.count - 1] = 0;
+            }
+
+            //inserts a trailing slash into singleton tags if they do not already have it
+            if (htmlsings[tname] === "singleton") {
+              if (options.correct === true && ender.test(element) === false) {
+                element = element.slice(0, element.length - 1) + " />";
+              }
+              return true;
+            }
+          }
+          return false;
+        }());
+        //This escape flag is set in the cheat function
+        if (singleton === true) {
+          attributeRecord();
+          return;
+        }
+        // determine if the markup tag potentially contains code interpreted by a
+        // different lexer
+        if (
+          (
+            tname === "script" ||
+            tname === "style"
+          ) && element.slice(element.length - 2) !== "/>"
+        ) {
+
+          //get the attribute value for "type"
+          let len = attstore.length - 1;
+          let attValue = "";
+          let attr = [];
+
+          if (len > -1) {
+            do {
+              attr = arname(attstore[len][0]);
+              if (attr[0] === "type") {
+                attValue = attr[1];
+                if (attValue.charAt(0) === "\"" || attValue.charAt(0) === "'") {
+                  attValue = attValue.slice(1, attValue.length - 1);
+                }
+                break;
+              }
+              len = len - 1;
+            } while (len > -1);
+          }
+
+          // ext is flag to send information between the tag lexer and the content lexer
+          //
+          // HOTFIX
+          // Lets also capture JSON types which are defined
+          // via application/json or application/ld+json
+          if (
+            tname === "script" && (
+              attValue === "" ||
+              attValue === "text/javascript" ||
+              attValue === "babel" ||
+              attValue === "module" ||
+              attValue === "application/javascript" ||
+              attValue === "application/x-javascript" ||
+              attValue === "text/ecmascript" ||
+              attValue === "application/ecmascript" ||
+              attValue === "text/jsx" ||
+              attValue === "application/jsx" ||
+              attValue === "text/cjs" ||
+              attValue === "application/json" ||
+              attValue === "application/ld+json"
+            )
+          ) {
+
+            ext = true;
+
+          } else if (
+            tname === "style" &&
+            options.language !== "jsx" && (
+              attValue === "" ||
+              attValue === "text/css"
+            )
+          ) {
+
+            ext = true;
+          }
+
+          if (ext === true) {
+            len = a + 1;
+            if (len < c) {
+              do {
+                if ((/\s/).test(b[len]) === false) {
+                  if (b[len] === "<") {
+                    if (b.slice(len + 1, len + 4).join("") === "!--") {
+                      len = len + 4;
+                      if (len < c) {
+                        do {
+                          if ((/\s/).test(b[len]) === false) {
+                            ext = false;
+                            break;
+                          }
+                          if (b[len] === "\n" || b[len] === "\r") {
+                            break;
+                          }
+                          len = len + 1;
+                        } while (len < c);
+                      }
+                    } else {
+                      ext = false;
+                    }
+                  }
+                  break;
+                }
+                len = len + 1;
+              } while (len < c);
+            }
+          }
+        }
+
+        //am I a singleton or a start type?
+        if (
+          simple === true &&
+          ignoreme === false &&
+          ltype !== "xml" &&
+          ltype !== "sgml"
+        ) {
+          if (cheat === true || element.slice(element.length - 2) === "/>") {
+            ltype = "singleton";
+          } else {
+            ltype = "start";
+          }
+          record.types = ltype;
+        }
+        // additional logic is required to find the end of a tag with the attribute
+        // data-parse-ignore
+        if (
+          simple === true &&
+          preserve === false &&
+          ignoreme &&
+          end === ">" &&
+          element.slice(element.length - 2) !== "/>"
+        ) {
+
+          let tags = [],
+            atstring = [];
+
+          if (cheat === true) {
+            ltype = "singleton";
+          } else {
+
+            attstore.forEach(function lexer_markup_tag_atstore(value) {
+              atstring.push(value[0]);
+            });
+
+            preserve = true;
+            ltype = "ignore";
+
+            a = a + 1;
+
+            if (a < c) {
+
+              let delim = "",
+                ee = 0,
+                ff = 0,
+                endtag = false;
+
+              do {
+
+                if (b[a] === "\n") parse.lineNumber = parse.lineNumber + 1;
+
+                tags.push(b[a]);
+
+                if (delim === "") {
+
+                  if (b[a] === "\"") {
+
+                    delim = "\"";
+                  } else if (b[a] === "'") {
+
+                    delim = "'";
+
+                  } else if (
+                    tags[0] !== "{" &&
+                    b[a] === "{" && (
+                      b[a + 1] === "{" ||
+                      b[a + 1] === "%" ||
+                      b[a + 1] === "@" ||
+                      b[a + 1] === "#"
+                    )
+                  ) {
+
+                    if (b[a + 1] === "{") {
+
+                      if (b[a + 2] === "{") {
+                        delim = "}}}";
+                      } else {
+                        delim = "}}";
+                      }
+
+                    } else {
+
+                      delim = b[a + 1] + "}";
+
+                    }
+
+                  } else if (b[a] === "<" && simple === true) {
+
+                    if (b[a + 1] === "/") {
+                      endtag = true;
+                    } else {
+                      endtag = false;
+                    }
+
+                  } else if (b[a] === lastchar && b[a - 1] !== "/") {
+
+                    if (endtag === true) {
+                      igcount = igcount - 1;
+                      if (igcount < 0) {
+                        break;
+                      }
+                    } else {
+                      igcount = igcount + 1;
+                    }
+                  }
+
+                } else if (b[a] === delim.charAt(delim.length - 1)) {
+                  ff = 0;
+                  ee = delim.length - 1;
+                  if (ee > -1) {
+                    do {
+                      if (b[a - ff] !== delim.charAt(ee)) {
+                        break;
+                      }
+                      ff = ff + 1;
+                      ee = ee - 1;
+                    } while (ee > -1);
+                  }
+                  if (ee < 0) {
+                    delim = "";
+                  }
+                }
+                a = a + 1;
+              } while (a < c);
+            }
+          }
+          element = element + tags.join("");
+          element = element.replace(">", ` ${atstring.join(" ")}>`);
+          record.token = element;
+          record.types = "content-ignore";
+          attstore = [];
+        }
+
+        // some template tags can be evaluated as a
+        // block start/end based on syntax alone
+        if (record.types.indexOf("template") > -1) {
+
+          if (element.slice(0, 2) === "{%") {
+
+            let names = [
+              "autoescape",
+              "case",
+              "capture",
+              "comment",
+              "embed",
+              "filter",
+              "for",
+              "form",
+              "if",
+              "macro",
+              "paginate",
+              "raw",
+              "sandbox",
+              "spaceless",
+              "switch",
+              "tablerow",
+              "unless",
+              "verbatim"
+            ];
+
+            if (
+              (
+                tname === "case" ||
+                tname === "default"
+              ) && (
+                parse.structure[parse.structure.length - 1][0] === "switch" ||
+                parse.structure[parse.structure.length - 1][0] === "case"
+              )
+            ) {
+              record.types = "template_else";
+            } else if (
+              tname === "else" ||
+              tname === "elseif" ||
+              tname === "when" ||
+              tname === "elif" ||
+              tname === "elsif"
+            ) {
+              record.types = "template_else";
+            } else {
+
+              let namelen = names.length - 1;
+
+              do {
+                if (tname === names[namelen]) {
+                  record.types = "template_start";
+                  break;
+                }
+
+                if (tname === "end" + names[namelen]) {
+                  record.types = "template_end";
+                  break;
+                }
+
+                namelen = namelen - 1;
+
+              } while (namelen > -1);
+
+            }
+
+          } else if (
+            element.slice(0, 2) === "{{" &&
+            element.charAt(3) !== "{"
+          ) {
+
+            if ((/^(\{\{\s*-?\s*end\s*-?\s*\}\})$/).test(element)) {
+              record.types = "template_end";
+            } else if (
+              tname === "define" ||
+              tname === "form" ||
+              tname === "if" ||
+              tname === "range" ||
+              tname === "with"
+            ) {
+              record.types = "template_start";
+            }
+
+          } else if (record.types === "template") {
+            if (element.indexOf("else") > 2) {
+              record.types = "template_else";
+            }
+          }
+          if (record.types === "template_start" || record.types === "template_else") {
+            if (tname === "" || tname === "%") {
+              tname = tname + element.slice(1).replace(tname, "").replace(/^\s+/, "");
+              tname = tname.slice(0, tname.indexOf("(")).replace(/\s+/, "");
+            }
+          }
+        }
+
+        // identify script and style hidden within a CDATA escape
+        if (ltype === "cdata" && (record.stack === "script" || record.stack === "style")) {
+          let counta = parse.count,
+            countb = parse.count,
+            stack = record.stack;
+          if (data.types[countb] === "attribute") {
+            do {
+              counta = counta - 1;
+              countb = countb - 1;
+            } while (data.types[countb] === "attribute" && countb > -1);
+          }
+          record.begin = counta;
+          element = element
+            .replace(/^(\s*<!\[cdata\[)/i, "")
+            .replace(/(\]\]>\s*)$/, "");
+          record.token = "<![CDATA[";
+          record.types = "cdata_start";
+          recordPush(data, record, "");
+          parse.structure.push(["cdata", parse.count]);
+          if (stack === "script") {
+            sparser.lexers.script(element);
+          } else {
+            sparser.lexers.style(element);
+          }
+          record.begin = parse.structure[parse.structure.length - 1][1];
+          record.token = "]]>";
+          record.types = "cdata_end";
+          recordPush(data, record, "");
+          parse.structure.pop();
+        } else {
+          recordPush(data, record, tname);
+        }
+        attributeRecord();
+        // inserts a script space in anticipation of word wrap since JSX has unique white space rules
+        if (options.wrap > 0 && options.language === "jsx") {
+          let current_length = 0,
+            bb = parse.count,
+            cc = 0;
+          if (data.types[bb].indexOf("attribute") > -1) {
+            do {
+              current_length = current_length + data.token[bb].length + 1;
+              bb = bb - 1;
+            } while (data.lexer[bb] !== "markup" || data.types[bb].indexOf("attribute") > -1);
+            if (data.lines[bb] === 1) {
+              current_length = current_length + data.token[bb].length + 1;
+            }
+          } else if (data.lines[bb] === 1) {
+            current_length = data.token[bb].length + 1;
+          }
+          cc = bb - 1;
+          if (current_length > 0 && data.types[cc] !== "script_end") {
+            if (data.types[cc].indexOf("attribute") > -1) {
+              do {
+                current_length = current_length + data.token[cc].length + 1;
+                cc = cc - 1;
+              } while (data.lexer[cc] !== "markup" || data.types[cc].indexOf("attribute") > -1);
+              if (data.lines[cc] === 1) {
+                current_length = current_length + data.token[cc].length + 1;
+              }
+            } else if (data.lines[cc] === 1) {
+              current_length = data.token[cc].length + 1;
+            }
+            if (current_length > options.wrap && data.lines[bb] === 1) {
+              record.begin = data.begin[bb];
+              record.ender = bb + 2;
+              record.lexer = data.lexer[bb];
+              record.lines = 1;
+              record.stack = data.stack[bb];
+              record.token = "{";
+              record.types = "script_start";
+              parse.splice({
+                data: data,
+                howmany: 0,
+                index: bb,
+                record: record
+              });
+              record.begin = bb;
+              record.lexer = "script";
+              record.lines = 0;
+              record.stack = "script";
+              if (options.quote_convert === "single") {
+                record.token = "' '";
+              } else {
+                record.token = "\" \"";
+              }
+              record.types = "string";
+              parse.splice({
+                data: data,
+                howmany: 0,
+                index: bb + 1,
+                record: record
+              });
+              record.lexer = "markup";
+              record.token = "}";
+              record.types = "script_end";
+              parse.splice({
+                data: data,
+                howmany: 0,
+                index: bb + 2,
+                record: record
+              });
+              data.ender[bb + 3] = data.ender[bb + 3] + 3;
+              bb = bb + 4;
+              do {
+                data.begin[bb] = data.begin[bb] + 3;
+                data.ender[bb] = data.ender[bb] + 3;
+                bb = bb + 1;
+              } while (bb < parse.count);
+            }
+          }
+        }
+        //sorts child elements
+        if (
+          options.lexer_options.markup.tag_sort === true &&
+          data.types[parse.count] === "end" &&
+          data.types[parse.count - 1] !== "start" &&
+          tname !== "/script" &&
+          tname !== "/style"
+        ) {
+          let bb = 0,
+            d = 0,
+            startStore = 0,
+            jsxatt = false,
+            endData;
+          const children = [],
+            store = {
+              begin: [],
+              ender: [],
+              lexer: [],
+              lines: [],
+              stack: [],
+              token: [],
+              types: []
+            },
+            storeRecord = function lexer_markup_tag_sorttag_storeRecord(index) {
+              const output = {
+                begin: data.begin[index],
+                ender: data.ender[index],
+                lexer: data.lexer[index],
+                lines: data.lines[index],
+                stack: data.stack[index],
+                token: data.token[index],
+                types: data.types[index]
+              };
+              return output;
+            },
+            childsort = function lexer_markup_tag_sorttag_childsort(a, b) {
+              if (data.token[a[0]] > data.token[b[0]]) {
+                return -1;
+              }
+              return 1;
+            };
+          bb = parse.count - 1;
+          if (bb > -1) {
+            let endStore = 0;
+            do {
+              if (data.types[bb] === "start") {
+                d = d - 1;
+                if (d < 0) {
+                  startStore = bb + 1;
+                  if (data.types[startStore] === "attribute" || data.types[startStore] === "jsx_attribute_start") {
+                    jsxatt = false;
+                    do {
+                      startStore = startStore + 1;
+                      if (jsxatt === false && data.types[startStore] !== "attribute") {
+                        break;
+                      }
+                      if (data.types[startStore] === "jsx_attribute_start") {
+                        jsxatt = true;
+                      } else if (data.types[startStore] === "jsx_attribute_end") {
+                        jsxatt = false;
+                      }
+                    } while (startStore < c);
+                  }
+                  break;
+                }
+              } else if (data.types[bb] === "end") {
+                d = d + 1;
+                if (d === 1) {
+                  endStore = bb;
+                }
+              }
+              if (d === 0) {
+                if (data.types[bb] === "start") {
+                  children.push([bb, endStore]);
+                } else {
+                  if (data.types[bb] === "singleton" && (data.types[bb + 1] === "attribute" || data.types[bb + 1] === "jsx_attribute_start")) {
+                    let cc = bb + 1;
+                    jsxatt = false;
+                    do {
+                      if (data.types[cc] === "jsx_attribute_start") {
+                        jsxatt = true;
+                      } else if (data.types[cc] === "jsx_attribute_end") {
+                        jsxatt = false;
+                      }
+                      if (jsxatt === false && data.types[cc + 1] !== "attribute" && data.types[cc + 1] !== "jsx_attribute_start") {
+                        break;
+                      }
+                      cc = cc + 1;
+                    } while (cc < parse.count);
+                    children.push([bb, cc]);
+                  } else if (data.types[bb] !== "attribute" && data.types[bb] !== "jsx_attribute_start") {
+                    children.push([bb, bb]);
+                  }
+                }
+              }
+              bb = bb - 1;
+            } while (bb > -1);
+          }
+          if (children.length < 2) {
+            return;
+          }
+          children.sort(childsort);
+          bb = children.length - 1;
+          if (bb > -1) {
+            do {
+              recordPush(store, storeRecord(children[bb][0]), "");
+              if (children[bb][0] !== children[bb][1]) {
+                d = children[bb][0] + 1;
+                if (d < children[bb][1]) {
+                  do {
+                    recordPush(store, storeRecord(d), "");
+                    d = d + 1;
+                  } while (d < children[bb][1]);
+                }
+                recordPush(store, storeRecord(children[bb][1]), "");
+              }
+              bb = bb - 1;
+            } while (bb > -1);
+          }
+          endData = {
+            begin: data.begin.pop(),
+            ender: data.ender.pop(),
+            lexer: data.lexer.pop(),
+            lines: data.lines.pop(),
+            stack: data.stack.pop(),
+            token: data.token.pop(),
+            types: data.types.pop()
+          };
+          (function lexer_markup_tag_sorttag_slice() {
+            parse.datanames.forEach(function lexer_markup_tag_sorttag_slice_datanames(value) {
+              data[value] = data[value].slice(0, startStore);
+            });
+          }());
+          parse.concat(data, store);
+          count.end = count.end - 1;
+          recordPush(data, endData, "");
+        }
+        parse.linesSpace = 0;
+      }
+
+      // parses everything other than markup tags
+      function content() {
+        let lex = [],
+          ltoke = "",
+          jsxbrace = (data.token[parse.count] === "{"),
+          liner = parse.linesSpace,
+          now = a;
+        const name = (ext === true) ?
+          (jsxbrace === true) ?
+          "script" :
+          (parse.structure[parse.structure.length - 1][1] > -1) ?
+          tagName(data.token[parse.structure[parse.structure.length - 1][1]].toLowerCase()) :
+          tagName(data.token[data.begin[parse.count]].toLowerCase()) :
+          "",
+          square = (data.types[parse.count] === "template_start" && data.token[parse.count].indexOf("<!") === 0 && data.token[parse.count].indexOf("<![") < 0 && data.token[parse.count].charAt(data.token[parse.count].length - 1) === "["),
+          record = {
+            begin: parse.structure[parse.structure.length - 1][1],
+            ender: -1,
+            lexer: "markup",
+            lines: liner,
+            stack: parse.structure[parse.structure.length - 1][0],
+            token: "",
+            types: "content"
+          },
+          esctest = function lexer_markup_content_esctest() {
+            let aa = a - 1,
+              bb = 0;
+            if (b[a - 1] !== "\\") {
+              return false;
+            }
+            if (aa > -1) {
+              do {
+                if (b[aa] !== "\\") {
+                  break;
+                }
+                bb = bb + 1;
+                aa = aa - 1;
+              } while (aa > -1);
+            }
+            if (bb % 2 === 1) {
+              return true;
+            }
+            return false;
+          };
+        if (a < c) {
+          let end = "",
+            quote = "",
+            quotes = 0;
+          do {
+            if (b[a] === "\n") {
+              parse.lineNumber = parse.lineNumber + 1;
+            }
+            // external code requires additional parsing to look for the appropriate end
+            // tag, but that end tag cannot be quoted or commented
+            if (ext === true) {
+              if (quote === "") {
+                if (b[a] === "/") {
+                  if (b[a + 1] === "*") {
+                    quote = "*";
+                  } else if (b[a + 1] === "/") {
+                    quote = "/";
+                  } else if (name === "script" && "([{!=,;.?:&<>".indexOf(b[a - 1]) > -1) {
+                    if (options.language !== "jsx" || b[a - 1] !== "<") {
+                      quote = "reg";
+                    }
+                  }
+                } else if ((b[a] === "\"" || b[a] === "'" || b[a] === "`") && esctest() === false) {
+                  quote = b[a];
+                } else if (b[a] === "{" && jsxbrace === true) {
+                  quotes = quotes + 1;
+                } else if (b[a] === "}" && jsxbrace === true) {
+                  if (quotes === 0) {
+                    sparser.lexers.script(lex.join("").replace(/^(\s+)/, "").replace(/(\s+)$/, ""));
+                    parse.structure[parse.structure.length - 1][1] + 1;
+                    if (data.types[parse.count] === "end" && data.lexer[data.begin[parse.count] - 1] === "script") {
+                      record.lexer = "script";
+                      record.token = (options.correct === true) ? ";" : "x;";
+                      record.types = "separator";
+                      recordPush(data, record, "");
+                      record.lexer = "markup";
+                    }
+                    record.token = "}";
+                    record.types = "script_end";
+                    recordPush(data, record, "");
+                    parse.structure.pop();
+                    break;
+                  }
+                  quotes = quotes - 1;
+                }
+                end = b
+                  .slice(a, a + 10)
+                  .join("")
+                  .toLowerCase();
+
+                //script requires use of the script lexer
+                if (name === "script") {
+                  if (a === c - 9) {
+                    end = end.slice(0, end.length - 1);
+                  } else {
+                    end = end.slice(0, end.length - 2);
+                  }
+                  if (end === "</script") {
+                    let outside = lex.join("").replace(/^(\s+)/, "").replace(/(\s+)$/, "");
+                    a = a - 1;
+                    if (lex.length < 1) {
+                      break;
+                    }
+                    if ((/^(<!--+)/).test(outside) === true && (/(--+>)$/).test(outside) === true) {
+                      record.token = "<!--";
+                      record.types = "comment";
+                      recordPush(data, record, "");
+                      outside = outside.replace(/^(<!--+)/, "").replace(/(--+>)$/, "");
+                      sparser.lexers.script(outside);
+                      record.token = "-->";
+                      recordPush(data, record, "");
+                    } else {
+                      sparser.lexers.script(outside);
+                    }
+                    break;
+                  }
+                }
+
+                //style requires use of the style lexer
+                if (name === "style") {
+                  if (a === c - 8) {
+                    end = end.slice(0, end.length - 1);
+                  } else if (a === c - 9) {
+                    end = end.slice(0, end.length - 2);
+                  } else {
+                    end = end.slice(0, end.length - 3);
+                  }
+                  if (end === "</style") {
+                    let outside = lex.join("").replace(/^(\s+)/, "").replace(/(\s+)$/, "");
+                    a = a - 1;
+                    if (lex.length < 1) {
+                      break;
+                    }
+                    if ((/^(<!--+)/).test(outside) === true && (/(--+>)$/).test(outside) === true) {
+                      record.token = "<!--";
+                      record.types = "comment";
+                      recordPush(data, record, "");
+                      outside = outside.replace(/^(<!--+)/, "").replace(/(--+>)$/, "");
+                      sparser.lexers.style(outside);
+                      record.token = "-->";
+                      recordPush(data, record, "");
+                    } else {
+                      sparser.lexers.style(outside);
+                    }
+                    break;
+                  }
+                }
+              } else if (quote === b[a] && (quote === "\"" || quote === "'" || quote === "`" || (quote === "*" && b[a + 1] === "/")) && esctest() === false) {
+                quote = "";
+              } else if (quote === "`" && b[a] === "$" && b[a + 1] === "{" && esctest() === false) {
+                quote = "}";
+              } else if (quote === "}" && b[a] === "}" && esctest() === false) {
+                quote = "`";
+              } else if (quote === "/" && (b[a] === "\n" || b[a] === "\r")) {
+                quote = "";
+              } else if (quote === "reg" && b[a] === "/" && esctest() === false) {
+                quote = "";
+              } else if (quote === "/" && b[a] === ">" && b[a - 1] === "-" && b[a - 2] === "-") {
+                end = b
+                  .slice(a + 1, a + 11)
+                  .join("")
+                  .toLowerCase();
+                end = end.slice(0, end.length - 2);
+                if (name === "script" && end === "</script") {
+                  quote = "";
+                }
+                end = end.slice(0, end.length - 1);
+                if (name === "style" && end === "</style") {
+                  quote = "";
+                }
+              }
+            }
+            //typically this logic is for artifacts nested within an SGML tag
+            if (square === true && b[a] === "]") {
+              a = a - 1;
+              ltoke = lex.join("");
+              if (options.lexer_options.markup.parse_space === false) {
+                ltoke = ltoke.replace(/\s+$/, "");
+              }
+              liner = 0;
+              record.token = ltoke;
+              recordPush(data, record, "");
+              break;
+            }
+            //general content processing
+            if (
+              ext === false &&
+              lex.length > 0 && (
+                (
+                  b[a] === "<" &&
+                  b[a + 1] !== "=" &&
+                  !(/\s|\d/).test(b[a + 1])
+                ) || (
+                  b[a] === "[" &&
+                  b[a + 1] === "%"
+                ) || (
+                  b[a] === "{" && (
+                    options.language === "jsx" ||
+                    b[a + 1] === "{" ||
+                    b[a + 1] === "%"
+                  )
+                )
+              )
+            ) {
+
+              //regular content
+              a = a - 1;
+
+              if (
+                options.lexer_options.markup.parse_space === true ||
+                parse.structure[parse.structure.length - 1][0] === "comment"
+              ) {
+                ltoke = lex.join("");
+              } else {
+                ltoke = lex.join("").replace(/\s+$/, "");
+              }
+
+              ltoke = bracketSpace(ltoke);
+              liner = 0;
+              record.token = ltoke;
+
+              if (
+                options.wrap > 0 &&
+                options.lexer_options.markup.preserve_text !== true
+              ) {
+
+                let aa = options.wrap,
+                  len = ltoke.length,
+                  startSpace = "",
+                  endSpace = "";
+
+                const wrap = options.wrap,
+                  store = [],
+                  wrapper = function beautify_markup_apply_content_wrapper() {
+                    if (ltoke.charAt(aa) === " ") {
+                      store.push(ltoke.slice(0, aa));
+                      ltoke = ltoke.slice(aa + 1);
+                      len = ltoke.length;
+                      aa = wrap;
+                      return;
+                    }
+                    do {
+                      aa = aa - 1;
+                    } while (aa > 0 && ltoke.charAt(aa) !== " ");
+                    if (aa > 0) {
+                      store.push(ltoke.slice(0, aa));
+                      ltoke = ltoke.slice(aa + 1);
+                      len = ltoke.length;
+                      aa = wrap;
+                    } else {
+                      aa = wrap;
+                      do {
+                        aa = aa + 1;
+                      } while (aa < len && ltoke.charAt(aa) !== " ");
+                      store.push(ltoke.slice(0, aa));
+                      ltoke = ltoke.slice(aa + 1);
+                      len = ltoke.length;
+                      aa = wrap;
+                    }
+                  };
+
+                // HTML anchor lists do not get wrapping unless the content itself exceeds the wrapping limit
+                if (data.token[data.begin[parse.count]] === "<a>" &&
+                  data.token[data.begin[data.begin[parse.count]]] === "<li>" &&
+                  data.lines[data.begin[parse.count]] === 0 &&
+                  parse.linesSpace === 0 &&
+                  ltoke.length < options.wrap) {
+                  recordPush(data, record, "");
+                  break;
+                }
+                if (len < wrap) {
+                  recordPush(data, record, "");
+                  break;
+                }
+                if (parse.linesSpace < 1) {
+                  let bb = parse.count;
+                  do {
+                    aa = aa - data.token[bb].length;
+                    if (data.types[bb].indexOf("attribute") > -1) {
+                      aa = aa - 1;
+                    }
+                    if (data.lines[bb] > 0 && data.types[bb].indexOf("attribute") < 0) {
+                      break;
+                    }
+                    bb = bb - 1;
+                  } while (bb > 0 && aa > 0);
+                  if (aa < 1) {
+                    aa = ltoke.indexOf(" ");
+                  }
+                }
+                ltoke = lex.join("");
+                if (options.lexer_options.markup.parse_space === true) {
+                  startSpace = ((/\s/).test(ltoke.charAt(0)) === true) ?
+                    (/\s+/).exec(ltoke)[0] :
+                    "";
+                  endSpace = ((/\s/).test(ltoke.charAt(ltoke.length - 1)) === true) ?
+                    (/\s+$/).exec(ltoke)[0] :
+                    "";
+                }
+                ltoke = ltoke.replace(/^\s+/, "").replace(/\s+$/, "").replace(/\s+/g, " ");
+                do {
+                  wrapper();
+                } while (aa < len);
+                if (ltoke !== "" && ltoke !== " ") {
+                  store.push(ltoke);
+                }
+                if (options.crlf === true) {
+                  ltoke = store.join("\r\n");
+                } else {
+                  ltoke = store.join("\n");
+                }
+                ltoke = startSpace + ltoke + endSpace;
+              }
+              liner = 0;
+              record.token = ltoke;
+              recordPush(data, record, "");
+              break;
+            }
+            lex.push(b[a]);
+            a = a + 1;
+          } while (a < c);
+        }
+        if (options.lexer_options.markup.parse_space === false) {
+          if (a > now && a < c) {
+            if ((/\s/).test(b[a]) === true) {
+              let x = a;
+              parse.linesSpace = 1;
+              do {
+                if (b[x] === "\n") {
+                  parse.linesSpace = parse.linesSpace + 1;
+                }
+                x = x - 1;
+              } while (x > now && (/\s/).test(b[x]) === true);
+            } else {
+              parse.linesSpace = 0;
+            }
+          } else if (a !== now || (a === now && ext === false)) {
+            //regular content at the end of the supplied source
+            ltoke = lex.join("").replace(/\s+$/, "");
+            liner = 0;
+            //this condition prevents adding content that was just added in the loop above
+            if (record.token !== ltoke) {
+              record.token = ltoke;
+              recordPush(data, record, "");
+              parse.linesSpace = 0;
+            }
+          }
+        }
+        ext = false;
+      };
+
+
       // trim the attribute_sort_list values
       if (asl > 0) {
         do {
@@ -9086,6 +9518,7 @@ export default (function parse_init() {
     };
     sparser.lexers.markup = markup;
   }());
+
   (function beautify_style_init() {
     const style = function beautify_style(options) {
       const data = options.parsed,
@@ -9394,6 +9827,7 @@ export default (function parse_init() {
     prettydiff.beautify.style = style;
 
   }());
+
   (function options_init() {
     const optionDef = {
       attribute_sort: {
@@ -9470,20 +9904,6 @@ export default (function parse_init() {
         mode: "beautify",
         type: "boolean"
       },
-      color: {
-        api: "any",
-        default: "white",
-        definition: "The color scheme of the reports.",
-        label: "Color",
-        lexer: "any",
-        mode: "any",
-        type: "string",
-        values: {
-          "canvas": "A light brown color scheme",
-          "shadow": "A black and ashen color scheme",
-          "white": "A white and pale grey color scheme"
-        }
-      },
       comment_line: {
         api: "any",
         default: false,
@@ -9521,16 +9941,6 @@ export default (function parse_init() {
         label: "Compressed CSS",
         lexer: "style",
         mode: "beautify",
-        type: "boolean"
-      },
-      conditional: {
-        api: "any",
-        default: false,
-        definition: "If true then conditional comments used by Internet Explorer are preserved at min" +
-          "ification of markup.",
-        label: "IE Comments (HTML Only)",
-        lexer: "markup",
-        mode: "minify",
         type: "boolean"
       },
       config: {
@@ -9805,22 +10215,6 @@ export default (function parse_init() {
         mode: "beautify",
         type: "number"
       },
-      jsscope: {
-        api: "any",
-        default: "none",
-        definition: "An educational tool to generate HTML output of JavaScript code to identify scope" +
-          " regions and declared references by color.  This option is ignored unless the code language is JavaScript or TypeScript.",
-        label: "JavaScript Scope Identification",
-        lexer: "script",
-        mode: "beautify",
-        type: "string",
-        values: {
-          html: "generates HTML output with escaped angle braces and ampersands for embedding as " +
-            "code, which is handy in code producing tools",
-          none: "prevents use of this option",
-          report: "generates HTML output that renders in web browsers"
-        }
-      },
       language: {
         api: "any",
         default: "auto",
@@ -9887,25 +10281,6 @@ export default (function parse_init() {
         mode: "beautify",
         type: "number"
       },
-      minify_keep_comments: {
-        api: "any",
-        default: false,
-        definition: "Prevents minification from stripping out comments.",
-        label: "Keep Comments",
-        lexer: "any",
-        mode: "minify",
-        type: "boolean"
-      },
-      minify_wrap: {
-        api: "any",
-        default: false,
-        definition: "Whether minified script should wrap after a specified character width.  This opt" +
-          "ion requires a value from option 'wrap'.",
-        label: "Minification Wrapping",
-        lexer: "script",
-        mode: "minify",
-        type: "boolean"
-      },
       mode: {
         api: "any",
         default: "diff",
@@ -9917,7 +10292,6 @@ export default (function parse_init() {
         values: {
           beautify: "beautifies code and returns a string",
           diff: "returns either command line list of differences or an HTML report",
-          minify: "minifies code and returns a string",
           parse: "using option 'parseFormat' returns an object with shallow arrays, a multidimensi" +
             "onal array, or an HTML report"
         }
@@ -10212,16 +10586,6 @@ export default (function parse_init() {
         mode: "beautify",
         type: "boolean"
       },
-      top_comments: {
-        api: "any",
-        default: false,
-        definition: "If mode is 'minify' this determines whether comments above the first line of cod" +
-          "e should be kept.",
-        label: "Retain Comment At Code Start",
-        lexer: "any",
-        mode: "minify",
-        type: "boolean"
-      },
       unformatted: {
         api: "any",
         default: false,
@@ -10279,7 +10643,9 @@ export default (function parse_init() {
     prettydiff.api
       .optionDef = optionDef;
   }());
+
   (function beautify_markup_init() {
+
     const markup = function beautify_markup(options) {
       const data = options.parsed,
         lexer = "markup",
@@ -10686,10 +11052,7 @@ export default (function parse_init() {
                         if(ca === 0) break;
 
                         level[ia - 1] = lev
-                        console.log(data.token[ia])
-
                         ca--
-
                       }
 
                     }
@@ -11026,6 +11389,7 @@ export default (function parse_init() {
           } while (a < c);
           return level;
         }());
+
       return (function beautify_markup_apply() {
         const build = [],
           ind = (function beautify_markup_apply_tab() {
@@ -11183,6 +11547,7 @@ export default (function parse_init() {
     };
     prettydiff.beautify.markup = markup;
   }());
+
   (function beautify_script_init() {
     const script = function beautify_script(options) {
       let scolon = 0,
@@ -11768,11 +12133,7 @@ export default (function parse_init() {
                 level.push(-20);
               } else if (data.types[a - 1] !== "comment" && ((ltoke === "{" && ctoke === "}") || (ltoke === "[" && ctoke === "]"))) {
                 level[a - 1] = -20;
-                if (ctoke === "}" && options.language === "titanium") {
-                  level.push(indent);
-                } else {
-                  level.push(-20);
-                }
+                level.push(-20);
               } else if (ctoke === "]") {
                 if ((list[list.length - 1] === true && destruct[destruct.length - 1] === false && options.format_array !== "inline") || (ltoke === "]" && level[a - 2] === indent + 1)) {
                   level[a - 1] = indent;
@@ -12608,11 +12969,7 @@ export default (function parse_init() {
                     } while (aa > bb);
                   }
                 }
-                if ((data.types[a - 1] === "word" || data.types[a - 1] === "reference") && data.token[a - 2] === "for") {
-                  //This is for Volt templates
-                  level.push(-10);
-                  return;
-                }
+
                 if (destruct[destruct.length - 1] === false || (data.token[a - 2] === "+" && (ltype === "string" || ltype === "number") && level[a - 2] > 0 && (ltoke.charAt(0) === "\"" || ltoke.charAt(0) === "'"))) {
                   if (data.stack[a] === "method") {
                     if (data.token[a - 2] === "+" && (ltoke.charAt(0) === "\"" || ltoke.charAt(0) === "'") && (data.token[a - 3].charAt(0) === "\"" || data.token[a - 3].charAt(0) === "'")) {
@@ -13025,16 +13382,12 @@ export default (function parse_init() {
                 if (apiword.indexOf(data.token[a + 1]) < 0) {
                   news = news + 1;
                 }
-                if (options.jsscope !== "none") {
-                  data.token[a] = "<strong class='new'>new</strong>";
-                }
+
               }
               if (ctoke === "from" && ltype === "end" && a > 0 && (data.token[data.begin[a - 1] - 1] === "import" || data.token[data.begin[a - 1] - 1] === ",")) {
                 level[a - 1] = -10;
               }
-              if (ctoke === "this" && options.jsscope !== "none") {
-                data.token[a] = "<strong class=\"new\">this</strong>";
-              }
+
               if (ctoke === "function") {
                 if (options.space === false && a < b - 1 && (data.token[a + 1] === "(" || data.token[a + 1] === "x(")) {
                   level.push(-20);
@@ -13128,9 +13481,7 @@ export default (function parse_init() {
               }
               level.push(-10);
             };
-          if (options.language === "titanium") {
-            indent = indent - 1;
-          }
+
           do {
             if (data.lexer[a] === lexer) {
               ctype = data.types[a];
@@ -13406,353 +13757,18 @@ export default (function parse_init() {
               }
             } while (a > 0);
           }
-          if (options.jsscope !== "none" && options.jsscope !== "interim") {
-            let linecount = 1,
-              last = "",
-              scope = 0,
-              scoped = [],
-              indent = options.indent_level,
-              foldindex = [],
-              start = prettydiff.start,
-              exlines = [],
-              exlevel = 0,
-              exline;
-            const code = [],
-              optionValue = options.jsscope,
-              foldstart = function beautify_script_output_scope_foldstart() {
-                let index = code.length;
-                do {
-                  index = index - 1;
-                } while (index > 0 && code[index] !== "<li>");
-                if (code[index] === "<li>") {
-                  code[index] = `<li class="fold" title="folds from line ${linecount} to line xxx">`;
-                  code[index + 1] = `-${code[index + 1]}`;
-                  foldindex.push([index, a]);
-                }
-              },
-              foldend = function beautify_script_output_scope_foldend() {
-                const lastfold = foldindex[foldindex.length - 1];
-                if (data.types[a] === "end" && lastfold[1] === data.begin[a]) {
-                  code[lastfold[0]] = code[lastfold[0]].replace("xxx", String(linecount));
-                  foldindex.pop();
-                } else if (data.types[a - 1] === "comment") {
-                  let endfold = (a === b - 1) ?
-                    linecount :
-                    linecount - 1;
-                  code[lastfold[0]] = code[lastfold[0]].replace("xxx", String(endfold));
-                  foldindex.pop();
-                }
-              },
-              // splits block comments, which are single tokens, into multiple lines of output
-              blockline = function beautify_script_output_scope_blockline(x) {
-                const commentLines = x.split(lf),
-                  ii = commentLines.length;
-                let hh = 0;
-                if (levels[a] > 0) {
-                  do {
-                    commentLines[0] = tab + commentLines[0];
-                    hh = hh + 1;
-                  } while (hh < levels[a]);
-                }
-                hh = 1;
-                build.push(commentLines[0]);
-                if (hh < ii) {
-                  do {
-                    linecount = linecount + 1;
-                    code.push("<li>");
-                    code.push(String(linecount));
-                    code.push("</li>");
-                    build.push(`<em class="line">&#xA;</em></li><li class="c0">${commentLines[hh]}`);
-                    hh = hh + 1;
-                  } while (hh < ii);
-                }
-              },
-              //a function for calculating indentation after each new line
-              nlscope = function beautify_script_output_scope_nlscope(x) {
-                let dd = 0;
-                const total = (function beautify_script_output_scope_nlscope_total() {
-                    if (a === b - 1) {
-                      return 0;
-                    }
-                    if (data.lines[a + 1] - 1 > pres) {
-                      return pres - 1;
-                    }
-                    if (data.lines[a + 1] > 1) {
-                      return data.lines[a + 1] - 2;
-                    }
-                    return 0;
-                  }()),
-                  scopepush = function beautify_script_output_scope_nlscope_scopepush() {
-                    let aa = 0,
-                      bb = 0;
-                    if (x > 0) {
-                      do {
-                        build.push(`<span class="l${bb}">${tab}</span>`);
-                        if (scoped[aa] === true) {
-                          bb = bb + 1;
-                        }
-                        aa = aa + 1;
-                      } while (aa < x);
-                    }
-                  };
-                if (data.token[a] !== "x}" || (data.token[a] === "x}" && data.token[a + 1] !== "}")) {
-                  let index = 0;
-                  if (total > 0) {
-                    do {
-                      linecount = linecount + 1;
-                      code.push("<li>");
-                      code.push(String(linecount));
-                      code.push("</li>");
-                      build.push(`<em class="line">&#xA;</em></li><li class="s0">`);
-                      index = index + 1;
-                    } while (index < total);
-                  }
-                  linecount = linecount + 1;
-                  code.push("<li>");
-                  code.push(String(linecount));
-                  code.push("</li>");
-                  if (a < b - 1 && data.types[a + 1] === "comment") {
-                    build.push(`<em class="line">&#xA;</em></li><li class="c0">`);
-                    do {
-                      build.push(tab);
-                      dd = dd + 1;
-                    } while (dd < levels[a]);
-                  } else {
-                    if (data.token[a + 1] === "}" && data.stack[a + 1] !== "object" && data.stack[a + 1] !== "class") {
-                      build.push(`<em class="line">&#xA;</em></li><li class="l${scope - 1}">`);
-                    } else {
-                      build.push(`<em class="line">&#xA;</em></li><li class="l${scope}">`);
-                    }
-                    scopepush();
-                  }
-                } else {
-                  scopepush();
-                }
-              },
-              multiline = function beautify_script_output_scope_multiline(x) {
-                const temparray = x.split(lf),
-                  d = temparray.length;
-                let c = 1;
-                build.push(temparray[0]);
-                do {
-                  nlscope(indent);
-                  build.push(temparray[c]);
-                  c = c + 1;
-                } while (c < d);
-              };
-            options.jsscope = "interim";
-            code.push("<div class=\"beautify\" data-prettydiff-ignore=\"true\"><ol class=\"count\">");
-            code.push("<li>");
-            code.push("1");
-            code.push("</li>");
-            if (data.types[a] === "comment" && data.token[a].indexOf("/*") === 0) {
-              build.push(`<ol class="data"><li class="c0">${tab}`);
-            } else {
-              build.push("<ol class=\"data\"><li>");
-            }
-            a = 0;
-            if (indent > 0) {
-              do {
-                build.push(tab);
-                a = a + 1;
-              } while (a < indent);
-            }
-            scope = 0;
-            // this loops combines the white space as determined from the algorithm with the
-            // tokens to create the output
-            a = prettydiff.start;
-            do {
-              if (data.lexer[a] === lexer || prettydiff.beautify[data.lexer[a]] === undefined) {
-                if (levels[a] > -1 && a < b - 1) {
-                  if (levels[a] < scoped.length) {
-                    do {
-                      scoped.pop();
-                    } while (levels[a] < scoped.length);
-                  }
-                }
-                if (data.types[a] === "comment" && data.token[a].indexOf("/*") === 0) {
-                  blockline(data.token[a]);
-                } else if (invisibles.indexOf(data.token[a]) < 0) {
-                  if (data.types[a] === "start" && (levels[a] > -1 || data.types[a + 1] === "comment")) {
-                    foldstart();
-                  } else if (data.token[a].indexOf("//") === 0 && a < b - 1 && data.token[a + 1].indexOf("//") === 0 && data.token[a - 1].indexOf("//") !== 0 && levels[a - 1] > -1) {
-                    foldstart();
-                  } else if (foldindex.length > 0) {
-                    if (data.types[a] === "end") {
-                      foldend();
-                    } else if ((data.token[a].indexOf("//") !== 0 || a === b - 1) && data.token[foldindex[foldindex.length - 1][1]].indexOf("//") === 0) {
-                      foldend();
-                    }
-                  }
-                  if (data.types[a] === "reference") {
-                    reference();
-                  } else if (data.token[a] === "{") {
-                    if (data.stack[a + 1] === "object" || data.stack[a + 1] === "class") {
-                      scoped.push(false);
-                      build.push("{");
-                    } else {
-                      if (scoped.length === levels[a]) {
-                        if (scoped[scoped.length - 1] === false) {
-                          scoped[scoped.length - 1] = true;
-                          scope = scope + 1;
-                        }
-                      } else {
-                        scoped.push(true);
-                        scope = scope + 1;
-                      }
-                      data.token[a] = `<em class="s${scope}">{</em>`;
-                      build.push(data.token[a]);
-                    }
-                    if (levels[a] > scoped.length) {
-                      do {
-                        scoped.push(false);
-                      } while (levels[a] > scoped.length);
-                    }
-                  } else if (data.token[a] === "}") {
-                    if (data.stack[a] === "object" || data.stack[a] === "class") {
-                      build.push("}");
-                    } else {
-                      build.push(`<em class="s${scope}">}</em>`);
-                      scope = scope - 1;
-                    }
-                  } else {
-                    if (data.types[a].indexOf("string") > -1 && data.token[a].indexOf("\n") > 0) {
-                      multiline(data.token[a].replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
-                    } else if (data.types[a] === "operator" || data.types[a] === "comment" || data.types[a].indexOf("string") > -1 || data.types[a] === "regex") {
-                      build.push(data.token[a].replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
-                    } else {
-                      if (data.types[a] === "start" && levels[a] > -1) {
-                        scoped.push(false);
-                      }
-                      if (data.token[a] !== ";" || options.no_semicolon === false) {
-                        build.push(data.token[a]);
-                      } else if (levels[a] < 0 && data.types[a + 1] !== "comment") {
-                        build.push(";");
-                      }
-                    }
-                  }
-                }
-                if (a < b - 1 && data.lexer[a + 1] !== lexer && data.begin[a] === data.begin[a + 1] && data.types[a + 1].indexOf("end") < 0 && data.token[a] !== ",") {
-                  build.push(" ");
-                } else if (levels[a] > -1 && a < b - 1) {
-                  lastLevel = levels[a];
-                  nlscope(levels[a]);
-                } else if (levels[a] === -10) {
-                  build.push(" ");
-                  if (data.lexer[a + 1] !== lexer) {
-                    lastLevel = lastLevel + 1;
-                  }
-                }
-              } else {
-                if (externalIndex[a] === a) {
-                  build.push(data.token[a]
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/&lt;strong class="new"&gt;this&lt;\/strong&gt;/g, "<strong class=\"new\">this</strong>")
-                    .replace(/&lt;strong class="new"&gt;new&lt;\/strong&gt;/g, "<strong class=\"new\">new</strong>"));
-                } else {
-                  prettydiff.end = externalIndex[a];
-                  options.indent_level = lastLevel;
-                  prettydiff.start = a;
-                  external = prettydiff.beautify[data.lexer[a]](options)
-                    .replace(/\s+$/, "")
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/&lt;strong class="new"&gt;this&lt;\/strong&gt;/g, "<strong class=\"new\">this</strong>")
-                    .replace(/&lt;strong class="new"&gt;new&lt;\/strong&gt;/g, "<strong class=\"new\">new</strong>");
-                  if (external.indexOf(lf) > -1) {
-                    if (start === 0) {
-                      exline = new RegExp(`\\r?\\n(${tab}){${lastLevel}}`, "g");
-                      external = external.replace(exline, lf);
-                    }
-                    exlines = external.split(lf);
-                    exlevel = 0;
-                    if (exlines.length > 1) {
-                      do {
-                        build.push(exlines[exlevel]);
-                        nlscope(lastLevel);
-                        exlevel = exlevel + 1;
-                      } while (exlevel < exlines.length - 1);
-                      build.push(exlines[exlevel]);
-                    }
-                  } else {
-                    build.push(external);
-                  }
-                  a = prettydiff.iterator;
-                  if (levels[a] === -10) {
-                    build.push(" ");
-                  } else if (levels[a] > -1) {
-                    nlscope(levels[a]);
-                  }
-                }
-              }
-              a = a + 1;
-            } while (a < b);
-            a = build.length - 1;
-            do {
-              if (build[a] === tab) {
-                build.pop();
-              } else {
-                break;
-              }
-              a = a - 1;
-            } while (a > -1);
-            //this logic is necessary to some line counting corrections to the HTML output
-            last = build[build.length - 1];
-            if (last.indexOf("<li") > 0) {
-              build[build.length - 1] = "<em class=\"line\">&#xA;</em></li>";
-            } else if (last.indexOf("</li>") < 0) {
-              build.push("<em class=\"line\">&#xA;</em></li>");
-            }
-            build.push("</ol></div>");
-            last = build.join("").replace(/prettydifflt/g, "<").replace(/prettydiffgt/g, ">");
-            if (last.match(/<li/g) !== null) {
-              scope = last
-                .match(/<li/g)
-                .length;
-              if (linecount - 1 > scope) {
-                linecount = linecount - 1;
-                do {
-                  code.pop();
-                  code.pop();
-                  code.pop();
-                  linecount = linecount - 1;
-                } while (linecount > scope);
-              }
-            }
-            code.push("</ol>");
-            code.push(lf);
-            code.push(last);
-            if (options.new_line === true) {
-              code.push(lf);
-            }
-            options.jsscope = optionValue;
-            return [
-              "<p>Scope analysis does not provide support for undeclared variables.</p>",
-              "<p><em>",
-              scolon,
-              "</em> instances of <strong>missing semicolons</strong> counted.</p>",
-              "<p><em>",
-              news,
-              "</em> unnecessary instances of the keyword <strong>new</strong> counted.</p>",
-              code.join("")
-            ].join("").replace(/(\s+)$/, "").replace(options.binary_check, "");
-          }
+
           a = prettydiff.start;
           do {
             if (data.lexer[a] === lexer || prettydiff.beautify[data.lexer[a]] === undefined) {
               if (invisibles.indexOf(data.token[a]) < 0) {
-                if (data.types[a] === "reference" && options.jsscope === "interim") {
-                  reference();
-                } else {
-                  if (data.token[a] !== ";" || options.no_semicolon === false) {
-                    build.push(data.token[a]);
-                  } else if (levels[a] < 0 && data.types[a + 1] !== "comment") {
-                    build.push(";");
-                  }
+
+                if (data.token[a] !== ";" || options.no_semicolon === false) {
+                  build.push(data.token[a]);
+                } else if (levels[a] < 0 && data.types[a + 1] !== "comment") {
+                  build.push(";");
                 }
+
               }
               if (a < b - 1 && data.lexer[a + 1] !== lexer && data.begin[a] === data.begin[a + 1] && data.types[a + 1].indexOf("end") < 0 && data.token[a] !== ",") {
                 build.push(" ");
@@ -13792,13 +13808,18 @@ export default (function parse_init() {
         }());
       return output;
     };
+
     prettydiff.beautify.script = script;
+
   }());
+
   prettydiff.sparser = sparser;
   prettydiff.version = {
     "date": "18 Aug 2019",
     "number": "101.2.6",
     "parse": "1.4.12"
   };
+
   return prettydiff;
+
 }());

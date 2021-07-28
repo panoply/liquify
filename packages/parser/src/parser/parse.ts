@@ -53,6 +53,9 @@ export function parse (document: IAST): IAST {
 
     switch (token) {
 
+      /* -------------------------------------------- */
+      /* PARSER ERROR                                 */
+      /* -------------------------------------------- */
       case TokenType.ParseError:
 
         node.errors.push(document.errors.length);
@@ -68,6 +71,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* WHITESPACE                                   */
+      /* -------------------------------------------- */
       case TokenType.Whitespace:
 
         if (node.kind === NodeKind.Liquid) {
@@ -78,12 +84,18 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* HTML START TAG OPEN                          */
+      /* -------------------------------------------- */
       case TokenType.HTMLStartTagOpen:
 
         htmlNode(NodeType.Pair);
 
         break;
 
+      /* -------------------------------------------- */
+      /* HTML START TAG CLOSE                         */
+      /* -------------------------------------------- */
       case TokenType.HTMLStartTagClose:
 
         parent = node = parent;
@@ -94,12 +106,19 @@ export function parse (document: IAST): IAST {
         track = undefined;
 
         break;
+
+      /* -------------------------------------------- */
+      /* HTML VOID TAG CLOSE                          */
+      /* -------------------------------------------- */
       case TokenType.HTMLVoidTagOpen:
 
         htmlNode(NodeType.Void);
 
         break;
 
+      /* -------------------------------------------- */
+      /* HTML VOID TAG CLOSE                          */
+      /* -------------------------------------------- */
       case TokenType.HTMLVoidTagClose:
 
         closeNode(NodeType.Void);
@@ -108,6 +127,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* HTML END TAG CLOSE                           */
+      /* -------------------------------------------- */
       case TokenType.HTMLEndTagOpen:
 
         parent = node = parent;
@@ -118,6 +140,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* HTML END TAG CLOSE                           */
+      /* -------------------------------------------- */
       case TokenType.HTMLEndTagClose:
 
         closeNode(NodeType.Pair);
@@ -125,6 +150,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* HTML LIQUID ATTRIBUTE                        */
+      /* -------------------------------------------- */
       case TokenType.HTMLLiquidAttribute:
 
         // node = parent;
@@ -132,6 +160,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* HTML ATTRIBUTE NAME                          */
+      /* -------------------------------------------- */
       case TokenType.HTMLAttributeName:
 
         attr = s.token;
@@ -141,6 +172,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* HTML ATTRIBUTE VALUE                         */
+      /* -------------------------------------------- */
       case TokenType.HTMLAttributeValue:
 
         if (node.type === Type.embedded) {
@@ -155,7 +189,7 @@ export function parse (document: IAST): IAST {
         break;
 
       /* -------------------------------------------- */
-      /* LIQUID                                       */
+      /* LIQUID TAG OPEN                              */
       /* -------------------------------------------- */
       case TokenType.TagOpen:
 
@@ -163,6 +197,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID START TAG NAME                        */
+      /* -------------------------------------------- */
       case TokenType.StartTagName:
 
         node.tag = s.token;
@@ -179,12 +216,18 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID START TAG CLOSE                       */
+      /* -------------------------------------------- */
       case TokenType.StartTagClose:
 
         closeNode(NodeType.Start);
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID OUTPUT TAG OPEN                       */
+      /* -------------------------------------------- */
       case TokenType.OutputTagOpen:
 
         liquidNode(NodeType.Void);
@@ -193,6 +236,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID OUTPUT TAG NAME                       */
+      /* -------------------------------------------- */
       case TokenType.OutputTagName:
 
         node.tag = s.token;
@@ -203,6 +249,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID OUTPUT OBJECT TAG NAME                */
+      /* -------------------------------------------- */
       case TokenType.ObjectTagName:
 
         node.tag = s.token;
@@ -222,12 +271,18 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID OUTPUT TAG CLOSE                      */
+      /* -------------------------------------------- */
       case TokenType.OutputTagClose:
 
         closeNode(NodeType.Output);
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID SINGULAR TAG NAME                     */
+      /* -------------------------------------------- */
       case TokenType.SingularTagName:
 
         node.tag = s.token;
@@ -237,12 +292,18 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID SINGULAR TAG CLOSE                    */
+      /* -------------------------------------------- */
       case TokenType.SingularTagClose:
 
         closeNode(NodeType.Output);
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID END TAG OPEN                          */
+      /* -------------------------------------------- */
       case TokenType.EndTagOpen:
 
         parent = node = parent;
@@ -253,12 +314,18 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID END TAG CLOSE                         */
+      /* -------------------------------------------- */
       case TokenType.EndTagClose:
 
         closeNode(NodeType.Pair);
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID EMBEDDED TAG JSON                     */
+      /* -------------------------------------------- */
       case TokenType.EmbeddedJSON:
 
         node.languageId = NodeLanguage.json;
@@ -266,6 +333,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID EMBEDDED TAG CSS                      */
+      /* -------------------------------------------- */
       case TokenType.EmbeddedCSS:
 
         node.languageId = NodeLanguage.css;
@@ -273,6 +343,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID EMBEDDED TAG JAVASCRIPT               */
+      /* -------------------------------------------- */
       case TokenType.EmbeddedJavaScript:
 
         node.languageId = NodeLanguage.javascript;
@@ -280,12 +353,18 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID ITERATION TAG                         */
+      /* -------------------------------------------- */
       case TokenType.Iteration:
 
         node.scope = {};
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID ITERATION ITEREE                      */
+      /* -------------------------------------------- */
       case TokenType.IterationIteree:
 
         scope = s.token;
@@ -293,6 +372,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID ITERATION ARRAY                       */
+      /* -------------------------------------------- */
       case TokenType.IterationArray:
 
         // node.scope[scope] = q.cursor.object?.object as string;
@@ -303,6 +385,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID OBJECT                                */
+      /* -------------------------------------------- */
       case TokenType.Object:
 
         object = s.offset;
@@ -324,6 +409,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID OBJECT PROPERTY                       */
+      /* -------------------------------------------- */
       case TokenType.ObjectProperty:
 
         node.objects[object].push(s.token);
@@ -355,6 +443,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID FILTER                                */
+      /* -------------------------------------------- */
       case TokenType.Filter:
 
         filter = s.offset + s.cursor;
@@ -367,6 +458,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID FILTER INDENTIFIER                    */
+      /* -------------------------------------------- */
       case TokenType.FilterIdentifier:
 
         node.filters[filter].push(s.token);
@@ -374,6 +468,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID FILTER ARGUMENT                       */
+      /* -------------------------------------------- */
       case TokenType.FilterArgument:
 
         node.filters[filter].push(s.token);
@@ -381,12 +478,18 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID FILTER END                            */
+      /* -------------------------------------------- */
       case TokenType.FilterEnd:
 
         filter = NaN;
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID VARIABLE KEYWORD                      */
+      /* -------------------------------------------- */
       case TokenType.VariableKeyword:
 
         scope = s.token;
@@ -394,6 +497,9 @@ export function parse (document: IAST): IAST {
 
         break;
 
+      /* -------------------------------------------- */
+      /* LIQUID VARIABLE VALUE                        */
+      /* -------------------------------------------- */
       case TokenType.VariableValue:
 
         document.root.scope[scope] = s.token;
