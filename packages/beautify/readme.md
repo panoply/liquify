@@ -1,6 +1,12 @@
 ## @liquify/format
 
-This module contains Liquid formatting vendors and modules used by the [Liquify](https://liquify.dev) text editor extension/plugin. Provided in this repository are modified packages that have been adjusted to work within Liquify. These are **not standalone** modules and though this can be consumed on the NPM registry, there would be very little use-case where this can be used outside of Liquify.
+This module contains Liquid formatting vendors and modules used by the [Liquify](https://liquify.dev) text editor extension/plugin. Provided in this repository is a heavily modified version of [PrettyDiff](https://github.com/prettydiff/prettydiff) which has been edited to work within Liquify. These are **not standalone** modules and though this can be consumed on the NPM registry, there would be very little use-case where this can be used outside of Liquify.
+
+### Supported
+
+- Liquid in HTML
+- Liquid in CSS
+- Liquid in SCSS
 
 ### What's Included
 
@@ -13,11 +19,70 @@ This module contains Liquid formatting vendors and modules used by the [Liquify]
 
 ## How it works
 
-Liquify supports formatting capabilities and performs beautification to multiple languages. As of 2021, there is no formatter other than a language aware tool known as [PrettyDiff](https://github.com/prettydiff/prettydiff) that can perform formatting on a template language like Liquid. PrettyDiff is an abandoned project and though no longer maintained its capable of supporting Liquid, HTML and other languages rather efficiently.
+Liquify supports formatting capabilities and performs beautification to multiple languages. As of 2021, there is no formatter other than a language aware tool known as [PrettyDiff](https://github.com/prettydiff/prettydiff) that can perform formatting on a template language like Liquid. PrettyDiff is an abandoned project and though no longer maintained its capable of supporting Liquid, HTML and other languages rather efficiently. The version of PrettyDiff used in Liquify has had its source modified and stripped of various aspects that hold no virtue in Liquify.
 
 Liquid documents are typically HTML (Markup) files and it is likely that such documents contain embedded language regions, like `<script>` or `<style>` tags. If you are using Jekyll or 11ty, you may also have Yaml frontmatter blocks. In the Shopify Liquid variation you also JSON `{% schema %}` tags.
 
 Liquify provides formatting to such regions via switching between formatting tools and consumes external configuration files from various tools, like prettier and applies beautification in accordance with those rule-sets.
+
+## PrettyDiff Changes
+
+The PrettyDiff parser and its internal parsing engine Sparser have been heavily modified. Due to the chaotic nature in which the original project exists and because PrettyDiff and Sparser were designed to support a multitude of different languages, this hard-forked version used by Liquify has completely stripped support out for various languages.
+
+#### Fixes
+
+PrettyDiff had some minor issues when working with Liquid and HTML markup languages. This hard-fork fixed some of those issues that were wreaking havoc or causing invalid beautification.
+
+- Fixed unformatted option, in markup all internal markup attributes are ignored.
+- Fixed the newline semi-colons for template languages infused in in CSS/SCSS and LESS
+
+
+#### Additions
+
+Various additions were added to the parsing and beautification process within PrettyDiff. Specifically that which related to the formatting of Liquid and Markup (HTML).
+
+- Added new logic to Liquid tags used in HTML attributes
+
+#### Removals
+
+Because we only seek beautification from PrettyDiff, we have the vast majority of code report features used when diffing. This purge means we remove a number of options which were used.
+
+Refer to the [changelog](/changelog.md) for a details list of modifications.
+
+- minify_keep_comments
+- minify_wrap
+- top_comments
+- conditional
+
+#### Languages
+
+- HTML
+- XML
+- CSS
+- SCSS
+- LESS
+- TypeScript
+- JavaScript
+- JSP
+- JSX
+- Handlebars
+- ~~CSV~~
+- ~~Java~~
+- ~~CSharp~~
+- ~~DustJS~~
+- ~~Silver Stripe~~
+- ~~Vapor Leaf~~
+- ~~Markdown~~
+- ~~PHP~~
+- ~~PHP HTML~~
+- ~~Titanium~~
+- ~~EJS~~
+- ~~ERB (Ruby) Template~~
+- ~~Apache Velocity~~
+- ~~Volt~~
+- ~~HTML TWIG Template~~
+
+Anyone who has studied the PrettyDiff and Sparser projects would be well aware of just how beautifully chaotic the architecture and the overall design of these tools are. Despite PrettyDiff being a TypeScript project, its distributed code is composed using an internal cli. This approach is fitting for those using PrettyDiff as a diffing engine or client but for its use-case within Liquify, we only leverage the beautification aspects for a select few languages. The vendor file `prettydiff.js` is the generated distributed node source, it is from that file amendments and changes have been made.
 
 #### IMPORTANT
 
