@@ -1,0 +1,12 @@
+# DIRECTORIES
+# --------------------
+stores
+versions
+src
+
+# FILES
+# -------------------
+rollup.config.mjs
+.pnpm-debug.log
+readme.md
+changelog.md
