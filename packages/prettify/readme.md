@@ -124,13 +124,13 @@ Refer to the [typings](#) declaration file for des
   braceStyle: 'none',
   braceAllman: false,
   caseSpace: false,
-  commentNewline: false
-  commentIndent: false
+  commentNewline: false,
+  commentIndent: false,
   attemptCorrection: false,
   elseNewline: false,
   endComma: 'never',
   arrayFormat: 'default',
-  objectIndent: 'default'
+  objectIndent: 'default',
   functionNameSpace: true,
   functionSpace: true,
   indentLevel: 0,
@@ -141,7 +141,7 @@ Refer to the [typings](#) declaration file for des
   noCaseIndent: false,
   noSemicolon: false,
   objectSort: false,
-  preserveLine: 2
+  preserveLine: 2,
   preserveComment: false,
   quoteConvert: 'none',
   semicolon: true,
