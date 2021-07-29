@@ -7,7 +7,6 @@ import beep from '@rollup/plugin-beep'
 import filesize from 'rollup-plugin-filesize'
 import del from 'rollup-plugin-delete'
 import typescript from 'typescript'
-import { bundleImports } from 'rollup-plugin-bundle-imports'
 
 export default {
   input: {
