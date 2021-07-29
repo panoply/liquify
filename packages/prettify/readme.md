@@ -379,18 +379,22 @@ Lexer modes provide inline comments control and support ignoring regions of code
 - `// @prettify: ignore:start`
 - `// @prettify: ignore:end`
 
-##### Liquid Comments
+### Liquid Comments
 
 - `{% comment %} @prettify: ignore:start {% endcomment %}`
 - `{% comment %} @prettify: ignore:end {% endcomment %}`
 
 # Credits
 
-Prettify is made possible by combining 2 beautification tools. Prettier and PrettyDiff. The export is a wrapper around these packages by forwarding the input.
+Prettify is made possible by combining 2 beautification tools. Prettier and PrettyDiff. The export is a wrapper around these packages that forwards string input.
 
-### [PrettyDiff](https://github.com/prettydiff/prettydiff) and [Sparser](https://github.com/unibeautify/sparser)
+#### [PrettyDiff](https://github.com/prettydiff/prettydiff) and [Sparser](https://github.com/unibeautify/sparser)
 
 [Austin Cheney](https://github.com/prettydiff) who is the original author of [PrettyDiff](https://github.com/prettydiff/prettydiff) and [Sparser](https://github.com/unibeautify/sparser) created these two projects and this module is only possible because of the work he has done. PrettyDiff was abandoned in 2019 and Austin has since created [Shared File Systems](https://github.com/prettydiff/share-file-systems) which is a privacy first point-to-point communication tool, please check it out and also have a read of [wisdom](https://github.com/prettydiff/wisdom) which personally helped me become a better developer.
+
+#### [Prettier](https://prettier.io/)
+
+Thanks to the maintainers and creators of this loved and brilliant tool. If you are not working do not use Prettify, instead just use Prettier. It is important to reiterate that Prettify is a wrapper, it passes input to Prettier.
 
 ## Author
 
