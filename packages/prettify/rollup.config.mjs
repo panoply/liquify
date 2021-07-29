@@ -10,10 +10,8 @@ import typescript from 'typescript'
 
 export default {
   input: {
-    index: 'src/index.ts',
-    pd: './src/prettydiff/export.js',
-    '@vendor/prettydiff': './src/vendors/prettydiff.js',
-    '@vendor/jsbeautify': './src/vendors/jsbeautify.js'
+    index: 'src/export.ts',
+    prettydiff: './src/prettydiff/index.ts'
   },
   preserveEntrySignatures: 'allow-extension',
   syntheticNamedExports: true,
@@ -25,11 +23,7 @@ export default {
       exports: 'named',
       esModule: false,
       freeze: false,
-      preferConst: true,
-      globals: {
-        parser: '$'
-      }
-
+      preferConst: true
     }
   ],
   plugins: env.if('dev')(

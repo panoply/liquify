@@ -1,6 +1,6 @@
 # @liquify/prettify
 
-Liquid Language formatting support that provides beatification/diffing features in languages that couple with Liquid. Prettify leverages the [Sparser](https://github.com/unibeautify/sparser) lexing engine and its parse approach was adapted from the distributed source code of [PrettyDiff](https://github.com/prettydiff/prettydiff). In addition, Prettify streamlines input to [Prettier](https://prettier.io/) when dealing with embedded code regions or handling languages like markdown.
+Liquid Language formatting support that provides beatification/diffing features in languages that couple with Liquid. Prettify leverages the [Sparser](https://github.com/unibeautify/sparser) lexing engine and its parse approach has been adapted from the distributed source code of [PrettyDiff](https://github.com/prettydiff/prettydiff). In addition, Prettify streamlines input to [Prettier](https://prettier.io/) when dealing with some embedded code regions (like frontmatter) or for handling languages like markdown.
 
 ### Supported Languages
 
@@ -111,9 +111,9 @@ prettify.markup("{% if x %} {{ x }}").catch((input, error) => {
 });
 ```
 
-### Rules
+### Options
 
-Prettify uses a custom set of beautification rules (options). Though input is forwarded to Prettier and internally uses PrettyDiff, options names differ as its combining these 2 tools to generate the output. If you are formatting on a per-language basis, you can simply provide options as a second parameter, but if you are dealing with multiple languages you preset formatting options
+Prettify uses a custom set of beautification rules (options). Though input is forwarded to Prettier and internally uses PrettyDiff, options names differ as its combining these 2 tools to generate the output. If you are formatting on a per-language basis, you can simply provide options as a second parameter, but if you are dealing with multiple languages you can preset formatting options.
 
 ```typescript
 {
@@ -394,7 +394,7 @@ Prettify is made possible by combining 2 beautification tools. Prettier and Pret
 
 ### [Prettier](https://prettier.io/)
 
-Thanks to the maintainers and creators of this loved and brilliant tool. If you are not working do not use Prettify, instead just use Prettier. It is important to reiterate that Prettify is a wrapper, it passes input to Prettier.
+Thanks to the maintainers and creators of this beloved and brilliant tool. If you are not working with Liquid, then you will not need Prettify, instead just use Prettier. It is important to reiterate that Prettify is mostly a wrapper, it passes the input of some languages to Prettier.
 
 ## Author
 

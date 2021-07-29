@@ -1,7 +1,8 @@
 /* eslint no-use-before-define: ["error", { "variables": false }] */
 import { sparser } from './sparser'
+import { Defaults } from '../../types/prettydiff'
 
-const prettydiff = function mode (diffmeta) {
+const prettydiff = function mode (diffmeta?: any) {
 
   const pdcomment = function mode_pdcomment () {
 
@@ -698,7 +699,7 @@ prettydiff.options = {
   , vertical: false
   , wrap: 0
   , lexerOptions: {}
-}
+} as Defaults
 
 prettydiff.scopes = []
 prettydiff.start = 0
