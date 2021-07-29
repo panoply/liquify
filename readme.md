@@ -27,6 +27,7 @@ These packages are considered the _core_ modules of the project.
 - [@liquify/parser](#)
 - [@liquify/server](#)
 - [@liquify/beautify](#)
+- [@liquify/prettify](#)
 - [@liquify/specs](#)
 - [@liquify/schema](#)
 
