@@ -48,7 +48,6 @@
     "concurrency": 5
   },
   "dependencies": {
-    "@liquify/beautify": "workspace:^0.1.0",
     "@liquify/liquid-language-specs": "workspace:^0.1.2",
     "@liquify/liquid-parser": "workspace:^0.1.1-beta.1",
     "@liquify/schema-stores": "workspace:^0.1.5",
