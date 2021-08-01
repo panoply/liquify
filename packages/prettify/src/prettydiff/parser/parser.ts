@@ -1,16 +1,16 @@
-import { parse } from './parse'
-import { sparser } from './sparser'
+import { parse } from './parse';
+import { sparser } from './sparser';
 
 function parser () {
 
   const langstore = [
     sparser.options.language,
     sparser.options.lexer
-  ]
+  ];
 
-  parse.count = -1
-  parse.linesSpace = 0
-  parse.lineNumber = 1
+  parse.count = -1;
+  parse.linesSpace = 0;
+  parse.lineNumber = 1;
   parse.data = {
     begin: [],
     ender: [],
@@ -19,7 +19,7 @@ function parser () {
     stack: [],
     token: [],
     types: []
-  }
+  };
 
   parse.datanames = [
     'begin',
@@ -29,88 +29,92 @@ function parser () {
     'stack',
     'token',
     'types'
-  ]
+  ];
 
-  parse.structure = [ [ 'global', -1 ] ]
+  parse.structure = [ [ 'global', -1 ] ];
   parse.structure.pop = () => {
-    const len = parse.structure.length - 1
-    const arr = parse.structure[len]
-    if (len > 0) parse.structure.splice(len, 1)
-    return arr
-  }
+    const len = parse.structure.length - 1;
+    const arr = parse.structure[len];
+    if (len > 0) parse.structure.splice(len, 1);
+    return arr;
+  };
 
   if (sparser.options.language === 'auto' || sparser.options.lexer === 'auto') {
-    const lang = sparser.libs.language.auto(sparser.options.source, 'javascript')
-    if (sparser.options.language === 'auto') sparser.options.language = lang[0]
-    if (sparser.options.lexer === 'auto') sparser.options.lexer = lang[1]
+
+    // @ts-ignore
+    const lang = sparser.libs.language.auto(sparser.options.source, 'javascript');
+    if (sparser.options.language === 'auto') sparser.options.language = lang[0];
+    if (sparser.options.lexer === 'auto') sparser.options.lexer = lang[1];
   }
 
   if (typeof sparser.lexers[sparser.options.lexer] === 'function') {
 
     // reset references data if sparser is used on multiple files
-    parse.references = [ [] ]
+    parse.references = [ [] ];
 
-    sparser.parseError = ''
-    sparser.options.lexer_options = sparser.options.lexer_options || {}
+    sparser.parseError = '';
+
+    // @ts-ignore
+    sparser.options.lexerOptions = sparser.options.lexerOptions || {};
 
     Object.keys(sparser.lexers).forEach((value) => {
-      sparser.options.lexer_options[value] = sparser.options.lexer_options[value] || {}
-    })
+      sparser.options.lexerOptions[value] = sparser.options.lexerOptions[value] || {};
+    });
 
     // This line parses the code using a lexer file
-    sparser.lexers[sparser.options.lexer](`${sparser.options.source} `)
+    sparser.lexers[sparser.options.lexer](`${sparser.options.source} `);
 
   } else {
 
     // restore language and lexer values
-    sparser.parseError = `Specified lexer, ${sparser.options.lexer}, is not a function.`
+    sparser.parseError = `Specified lexer, ${sparser.options.lexer}, is not a function.`;
   }
 
   // validate that all the data arrays are the same length
   (function () {
 
-    let a = 0
-    let b = 0
+    let a = 0;
+    let b = 0;
 
-    const keys = Object.keys(parse.data)
-    const c = keys.length
+    const keys = Object.keys(parse.data);
+    const c = keys.length;
 
     do {
 
-      b = a + 1
+      b = a + 1;
 
       do {
 
         if (parse.data[keys[a]].length !== parse.data[keys[b]].length) {
-          sparser.parseError = `"${keys[a]}" array is of different length than "${keys[b]}"`
-          break
+          sparser.parseError = `"${keys[a]}" array is of different length than "${keys[b]}"`;
+          break;
         }
 
-        b = b + 1
+        b = b + 1;
 
-      } while (b < c)
+      } while (b < c);
 
-      a = a + 1
+      a = a + 1;
 
-    } while (a < c - 1)
+    } while (a < c - 1);
 
-  })()
+  })();
 
   // Fix begin values.
   // They must be reconsidered after reordering from object sort
   if (
     parse.data.begin.length > 0 && (
-      sparser.options.lexer_options[sparser.options.lexer].objectSort === true ||
-      sparser.options.lexer_options.markup.tagSort === true
+      sparser.options.lexerOptions[sparser.options.lexer].objectSort === true ||
+      sparser.options.lexerOptions.markup.tagSort === true
     )
   ) {
-    parse.sortCorrection(0, parse.count + 1)
+    parse.sortCorrection(0, parse.count + 1);
   }
 
   if (sparser.options.format === 'minimal') {
-    let a = 0
-    const data = []
-    const len = parse.count + 1
+    let a = 0;
+    const data = [];
+    const len = parse.count + 1;
 
     do {
       data.push([
@@ -121,20 +125,20 @@ function parser () {
         parse.data.stack[a],
         parse.data.token[a],
         parse.data.types[a]
-      ])
+      ]);
 
-      a = a + 1
-    } while (a < len)
+      a = a + 1;
+    } while (a < len);
 
-    return data
+    return data;
   }
 
   if (sparser.options.format === 'objects') {
 
-    let a = 0
+    let a = 0;
 
-    const data = []
-    const len = parse.count + 1
+    const data = [];
+    const len = parse.count + 1;
 
     do {
 
@@ -146,23 +150,23 @@ function parser () {
         stack: parse.data.stack[a],
         token: parse.data.token[a],
         types: parse.data.types[a]
-      })
+      });
 
-      a = a + 1
+      a = a + 1;
 
-    } while (a < len)
+    } while (a < len);
 
-    return data
+    return data;
   }
 
   if (sparser.options.format === 'testprep') {
 
-    let a = 0
+    let a = 0;
 
-    const data = []
-    const len = parse.count + 1
+    const data = [];
+    const len = parse.count + 1;
 
-    if (sparser.parseError !== '') return sparser.parseError
+    if (sparser.parseError !== '') return sparser.parseError;
 
     do {
 
@@ -176,22 +180,25 @@ function parser () {
           token: parse.data.token[a],
           types: parse.data.types[a]
         })
-      )
+      );
 
-      a = a + 1
+      a = a + 1;
 
-    } while (a < len)
+    } while (a < len);
 
-    return `[\n${data.join(',\n')}\n]`
+    return `[\n${data.join(',\n')}\n]`;
   }
 
-  sparser.options.language = langstore[0]
-  sparser.options.lexer = langstore[1]
+  sparser.options.language = langstore[0];
+  sparser.options.lexer = langstore[1];
 
-  return parse.data
+  return parse.data;
 }
 
-sparser.parse = parse
-sparser.parser = parser
+// @ts-ignore
+sparser.parse = parse;
 
-export { parse, sparser, parser }
+// @ts-ignore
+sparser.parser = parser;
+
+export { parse, sparser, parser };

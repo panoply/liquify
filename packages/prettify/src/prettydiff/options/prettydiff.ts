@@ -1,5 +1,5 @@
 
-import { prettydiff } from '../parser/prettydiff'
+import { prettydiff } from '../parser/prettydiff';
 
 export default (function options_init () {
   const optionDef = {
@@ -668,7 +668,8 @@ export default (function options_init () {
       , mode: 'any'
       , type: 'number'
     }
-  }
-  prettydiff.api
-    .optionDef = optionDef
-}())
+  };
+
+  // @ts-ignore
+  prettydiff.api.optionDef = optionDef;
+}());

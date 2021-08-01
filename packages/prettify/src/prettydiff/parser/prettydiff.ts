@@ -1,20 +1,27 @@
 /* eslint no-use-before-define: ["error", { "variables": false }] */
-import { sparser } from './sparser'
-import { Defaults } from '../../types/prettydiff'
 
-const prettydiff = function mode (diffmeta?: any) {
+// @ts-nocheck
+
+import { sparser } from './sparser';
+import { PrettyDiffOptions, PrettyDiff, Meta } from '../../types/prettydiff';
+
+const prettydiff: PrettyDiff = function mode (diffmeta?: Meta) {
+
+  const { options } = prettydiff;
 
   const pdcomment = function mode_pdcomment () {
 
-    const ops = prettydiff.sparser.options
+    const ops = prettydiff.sparser.options;
 
-    const sindex = options.source.search(/((\/(\*|\/))|<!--*)\s*prettydiff\.com/)
-    const dindex = options.diff.search(/((\/(\*|\/))|<!--*)\s*prettydiff\.com/)
-    let a = 0
-    let b = 0
-    let keys
-    let def
-    let len
+    const sindex = options.source.search(/((\/(\*|\/))|<!--*)\s*@prettify\s+format:/);
+    const dindex = options.diff.search(/((\/(\*|\/))|<!--*)\s*@prettify\s+format:/);
+    let a = 0;
+    let b = 0;
+
+    // @ts-ignore
+    const def = prettydiff.sparser.libs.optionDef;
+    const keys = Object.keys(def);
+    const len = keys.length;
 
     // Parses the prettydiff settings comment
     //
@@ -53,45 +60,45 @@ const prettydiff = function mode (diffmeta?: any) {
       )
     )) {
 
-      const pdcom = sindex
-      let a = (pdcom > -1) ? pdcom : dindex
-      let b = 0
-      let quote = ''
-      let item = ''
-      let lang = ''
-      let lex = ''
-      let valkey = []
-      let op = []
+      const pdcom = sindex;
+      let a = (pdcom > -1) ? pdcom : dindex;
+      let b = 0;
+      let quote = '';
+      let item = '';
+      let lang = '';
+      let lex = '';
+      let valkey = [];
+      let op = [];
 
-      const ops = []
-      const source = (pdcom > -1) ? options.source : options.diff
-      const len = source.length
+      const ops = [];
+      const source = (pdcom > -1) ? options.source : options.diff;
+      const len = source.length;
       const comment = (source.charAt(a) === '<')
         ? '<!--'
         : (source.charAt(a + 1) === '/')
           ? '//'
-          : '/\u002a'
+          : '/\u002a';
 
       // mode_pdcomment_esc
       function esc () {
 
-        if (source.charAt(a - 1) !== '\\') return false
+        if (source.charAt(a - 1) !== '\\') return false;
 
-        let x = a
+        let x = a;
 
         do {
-          x = x - 1
-        } while (x > 0 && source.charAt(x) === '\\')
+          x = x - 1;
+        } while (x > 0 && source.charAt(x) === '\\');
 
-        return (a - x) % 2 === 0
+        return (a - x) % 2 === 0;
       };
 
       do {
 
-        if (source.slice(a - 3, a) === 'com') break
-        a = a + 1
+        if (source.slice(a - 3, a) === 'com') break;
+        a = a + 1;
 
-      } while (a < len)
+      } while (a < len);
 
       do {
 
@@ -99,7 +106,7 @@ const prettydiff = function mode (diffmeta?: any) {
           if (quote === '') {
             if (source.charAt(a) === '"') {
 
-              quote = '"'
+              quote = '"';
 
               if (ops.length > 0 && (
                 ops[ops.length - 1].charAt(ops[ops.length - 1]
@@ -107,12 +114,12 @@ const prettydiff = function mode (diffmeta?: any) {
                     ops[ops.length - 1].charAt(ops[ops.length - 1]
                       .length - 1) === '='
               )) {
-                b = a
+                b = a;
               }
 
             } else if (source.charAt(a) === "'") {
 
-              quote = "'"
+              quote = "'";
 
               if (
                 ops.length > 0 && (
@@ -121,11 +128,11 @@ const prettydiff = function mode (diffmeta?: any) {
                     ops[ops.length - 1].charAt(ops[ops.length - 1]
                       .length - 1) === '='
                 )
-              ) b = a
+              ) b = a;
 
             } else if (source.charAt(a) === '`') {
 
-              quote = '`'
+              quote = '`';
 
               if (
 
@@ -136,19 +143,19 @@ const prettydiff = function mode (diffmeta?: any) {
                       .length - 1) === '='
                 )
 
-              ) b = a
+              ) b = a;
 
             } else if ((/\s/).test(source.charAt(a)) === false && b ===
                 0) {
 
-              b = a
+              b = a;
 
             } else if (
               source.charAt(a) === ',' || (
                 (/\s/).test(source.charAt(a)) === true && b > 0)
             ) {
 
-              item = source.slice(b, a)
+              item = source.slice(b, a);
 
               if (ops.length > 0) {
 
@@ -163,8 +170,8 @@ const prettydiff = function mode (diffmeta?: any) {
 
                   // For cases where white space is between option name and
                   // assignment operator
-                  ops[ops.length - 1] = ops[ops.length - 1] + item
-                  b = a
+                  ops[ops.length - 1] = ops[ops.length - 1] + item;
+                  b = a;
 
                 } else if (
                   ops.length > 0 && (
@@ -176,60 +183,60 @@ const prettydiff = function mode (diffmeta?: any) {
 
                   // For cases where white space is between assignment
                   // operator and value
-                  ops[ops.length - 1] = ops[ops.length - 1] + item
-                  b = 0
+                  ops[ops.length - 1] = ops[ops.length - 1] + item;
+                  b = 0;
 
                 } else {
 
-                  ops.push(item)
-                  b = 0
+                  ops.push(item);
+                  b = 0;
                 }
 
               } else {
-                ops.push(item)
-                b = 0
+                ops.push(item);
+                b = 0;
               }
             }
 
             if (comment === '<!--' && source.slice(a - 2, a + 1) ===
-                '-->') break
-            if (comment === '//' && source.charAt(a) === '\n') break
+                '-->') break;
+            if (comment === '//' && source.charAt(a) === '\n') break;
             if (comment === '/\u002a' && source.slice(a - 1, a + 1) ===
                 '\u002a/') {
-              break
+              break;
             }
 
           } else if (source.charAt(a) === quote && quote !== '${') {
-            quote = ''
+            quote = '';
           } else if (quote === '`' && source.slice(a, a + 2) === '${') {
-            quote = '${'
+            quote = '${';
           } else if (quote === '${' && source.charAt(a) === '}') {
-            quote = '`'
+            quote = '`';
           }
         }
 
-        a = a + 1
+        a = a + 1;
 
-      } while (a < len)
+      } while (a < len);
 
       if (b > 0) {
 
-        quote = source.slice(b, a + 1)
+        quote = source.slice(b, a + 1);
 
-        if (comment === '<!--') quote = quote.replace(/\s*-+>$/, '')
-        else if (comment === '//') quote = quote.replace(/\s+$/, '')
-        else quote = quote.replace(/\s*\u002a\/$/, '')
+        if (comment === '<!--') quote = quote.replace(/\s*-+>$/, '');
+        else if (comment === '//') quote = quote.replace(/\s+$/, '');
+        else quote = quote.replace(/\s*\u002a\/$/, '');
 
-        ops.push(quote)
+        ops.push(quote);
       }
 
-      a = ops.length
+      a = ops.length;
 
       if (a > 0) {
 
         do {
 
-          a = a - 1
+          a = a - 1;
 
           if (ops[a].indexOf('=') > 0 && ops[a].indexOf(':') > 0) {
 
@@ -237,7 +244,7 @@ const prettydiff = function mode (diffmeta?: any) {
               op = [
                 ops[a].slice(0, ops[a].indexOf('='))
                 , ops[a].slice(ops[a].indexOf('=') + 1)
-              ]
+              ];
             }
 
           } else if (ops[a].indexOf('=') > 0) {
@@ -245,20 +252,20 @@ const prettydiff = function mode (diffmeta?: any) {
             op = [
               ops[a].slice(0, ops[a].indexOf('='))
               , ops[a].slice(ops[a].indexOf('=') + 1)
-            ]
+            ];
 
           } else if (ops[a].indexOf(':') > 0) {
 
             op = [
               ops[a].slice(0, ops[a].indexOf(':'))
               , ops[a].slice(ops[a].indexOf(':') + 1)
-            ]
+            ];
 
           } else if (
             prettydiff.api.optionDef[ops[a]] !== undefined &&
               prettydiff.api.optionDef[ops[a]].type === 'boolean'
           ) {
-            options[ops[a]] = true
+            options[ops[a]] = true;
           }
 
           if (op.length === 2 && prettydiff.api.optionDef[op[0]] !==
@@ -271,7 +278,7 @@ const prettydiff = function mode (diffmeta?: any) {
 
               ) && op[1].charAt(op[1].length - 1) === op[1].charAt(0)
             ) {
-              op[1] = op[1].slice(1, op[1].length - 1)
+              op[1] = op[1].slice(1, op[1].length - 1);
             }
 
             if (
@@ -279,15 +286,15 @@ const prettydiff = function mode (diffmeta?: any) {
                 isNaN(Number(op[1])) === false
             ) {
 
-              options[op[0]] = Number(op[1])
+              options[op[0]] = Number(op[1]);
 
             } else if (prettydiff.api.optionDef[op[0]].type ===
                 'boolean') {
 
               if (op[1] === 'true') {
-                options[op[0]] = true
+                options[op[0]] = true;
               } else if (op[1] === 'false') {
-                options[op[0]] = false
+                options[op[0]] = false;
               }
 
             } else {
@@ -295,222 +302,218 @@ const prettydiff = function mode (diffmeta?: any) {
                   undefined) {
 
                 valkey = Object.keys(prettydiff.api.optionDef[op[0]]
-                  .values)
-                b = valkey.length
+                  .values);
+                b = valkey.length;
 
                 do {
 
-                  b = b - 1
+                  b = b - 1;
 
                   if (valkey[b] === op[1]) {
-                    options[op[0]] = op[1]
-                    break
+                    options[op[0]] = op[1];
+                    break;
                   }
 
-                } while (b > 0)
+                } while (b > 0);
 
               } else {
 
                 if (op[0] === 'language') {
-                  lang = op[1]
+                  lang = op[1];
                 } else if (op[0] === 'lexer') {
-                  lex = op[1]
+                  lex = op[1];
                 }
 
-                options[op[0]] = op[1]
+                options[op[0]] = op[1];
 
               }
             }
           }
-        } while (a > 0)
+        } while (a > 0);
 
         if (lex === '' && lang !== '') {
           lex = prettydiff.api.language
-            .setlexer(lang)
+            .setlexer(lang);
         }
 
       }
     }
 
-    if (options.mode === 'diff') modeValue = 'beautify'
+    if (options.mode === 'diff') modeValue = 'beautify';
 
     if (options.lexer === 'script') {
 
       const styleguide = {
         airbnb () {
-          options.bracePadding = true
-          options.attemptCorrection = true
-          options.lexerOptions.script.endComma = 'always'
-          options.indentChar = ' '
-          options.indentSize = 2
-          options.preserveLine = 1
-          options.quoteConvert = 'single'
-          options.variableList = 'each'
-          options.wrap = 80
+          options.bracePadding = true;
+          options.attemptCorrection = true;
+          options.endComma = 'always';
+          options.indentChar = ' ';
+          options.indentSize = 2;
+          options.preserveLine = 1;
+          options.quoteConvert = 'single';
+          options.variableList = 'each';
+          options.wrap = 80;
         }
         , crockford () {
-          options.bracePadding = false
-          options.attemptCorrection = true
-          options.elseNewline = false
-          options.lexerOptions.script.endComma = 'never'
-          options.indentChar = ' '
-          options.indentSize = 4
-          options.noCaseIndent = true
-          options.space = true
-          options.variableList = 'each'
-          options.vertical = false
+          options.bracePadding = false;
+          options.attemptCorrection = true;
+          options.elseNewline = false;
+          options.endComma = 'never';
+          options.indentChar = ' ';
+          options.indentSize = 4;
+          options.noCaseIndent = true;
+          options.functionSpace = true;
+          options.variableList = 'each';
+          options.vertical = false;
         }
         , google () {
-          options.attemptCorrection = true
-          options.indentChar = ' '
-          options.indentSize = 4
-          options.preserveLine = 1
-          options.quoteConvert = 'single'
-          options.vertical = false
-          options.wrap = -1
+          options.attemptCorrection = true;
+          options.indentChar = ' ';
+          options.indentSize = 4;
+          options.preserveLine = 1;
+          options.quoteConvert = 'single';
+          options.vertical = false;
+          options.wrap = -1;
         }
         , jquery () {
-          options.bracePadding = true
-          options.attemptCorrection = true
-          options.indentChar = '\u0009'
-          options.indentSize = 1
-          options.quoteConvert = 'double'
-          options.variableList = 'each'
-          options.wrap = 80
+          options.bracePadding = true;
+          options.attemptCorrection = true;
+          options.indentChar = '\u0009';
+          options.indentSize = 1;
+          options.quoteConvert = 'double';
+          options.variableList = 'each';
+          options.wrap = 80;
         }
         , jslint () {
-          options.bracePadding = false
-          options.attemptCorrection = true
-          options.elseNewline = false
-          options.lexerOptions.script.endComma = 'never'
-          options.indentChar = ' '
-          options.indentSize = 4
-          options.noCaseIndent = true
-          options.space = true
-          options.variableList = 'each'
-          options.vertical = false
+          options.bracePadding = false;
+          options.attemptCorrection = true;
+          options.elseNewline = false;
+          options.endComma = 'never';
+          options.indentChar = ' ';
+          options.indentSize = 4;
+          options.noCaseIndent = true;
+          options.functionSpace = true;
+          options.variableList = 'each';
+          options.vertical = false;
         }
         , mrdoobs () {
-          options.braceNewline = true
-          options.bracePadding = true
-          options.attemptCorrection = true
-          options.indentChar = '\u0009'
-          options.indentSize = 1
-          options.vertical = false
+          options.braceNewline = true;
+          options.bracePadding = true;
+          options.attemptCorrection = true;
+          options.indentChar = '\u0009';
+          options.indentSize = 1;
+          options.vertical = false;
         }
         , mediawiki () {
-          options.bracePadding = true
-          options.attemptCorrection = true
-          options.indentChar = '\u0009'
-          options.indentSize = 1
-          options.preserveLine = 1
-          options.quoteConvert = 'single'
-          options.space = false
-          options.wrap = 80
+          options.bracePadding = true;
+          options.attemptCorrection = true;
+          options.indentChar = '\u0009';
+          options.indentSize = 1;
+          options.preserveLine = 1;
+          options.quoteConvert = 'single';
+          options.functionSpace = false;
+          options.wrap = 80;
         }
         , meteor () {
-          options.attemptCorrection = true
-          options.indentChar = ' '
-          options.indentSize = 2
-          options.wrap = 80
+          options.attemptCorrection = true;
+          options.indentChar = ' ';
+          options.indentSize = 2;
+          options.wrap = 80;
         }
         , semistandard () {
-          options.braceNewline = false
-          options.bracePadding = false
-          options.braceAllman = false
-          options.attemptCorrection = true
-          options.endComma = 'never'
-          options.indentChar = ' '
-          options.indentSize = 2
-          options.endNewline = false
-          options.noSemicolon = false
-          options.preserveLine = 1
-          options.quoteConvert = 'single'
-          options.space = true
-          options.ternaryLine = false
-          options.variableList = 'each'
-          options.vertical = false
-          options.wrap = 0
+          options.braceNewline = false;
+          options.bracePadding = false;
+          options.braceAllman = false;
+          options.attemptCorrection = true;
+          options.endComma = 'never';
+          options.indentChar = ' ';
+          options.indentSize = 2;
+          options.endNewline = false;
+          options.noSemicolon = false;
+          options.preserveLine = 1;
+          options.quoteConvert = 'single';
+          options.functionSpace = true;
+          options.ternaryLine = false;
+          options.variableList = 'each';
+          options.vertical = false;
+          options.wrap = 0;
         }
         , standard () {
-          options.braceNewline = false
-          options.bracePadding = false
-          options.braceAllman = false
-          options.attemptCorrection = true
-          options.endComma = 'never'
-          options.indentChar = ' '
-          options.indentSize = 2
-          options.endNewline = false
-          options.noSemicolon = true
-          options.preserveLine = 1
-          options.quoteConvert = 'single'
-          options.space = true
-          options.ternaryLine = false
-          options.variableList = 'each'
-          options.vertical = false
-          options.wrap = 0
+          options.braceNewline = false;
+          options.bracePadding = false;
+          options.braceAllman = false;
+          options.attemptCorrection = true;
+          options.endComma = 'never';
+          options.indentChar = ' ';
+          options.indentSize = 2;
+          options.endNewline = false;
+          options.noSemicolon = true;
+          options.preserveLine = 1;
+          options.quoteConvert = 'single';
+          options.functionSpace = true;
+          options.ternaryLine = false;
+          options.variableList = 'each';
+          options.vertical = false;
+          options.wrap = 0;
         }
         , yandex () {
-          options.bracePadding = false
-          options.attemptCorrection = true
-          options.quoteConvert = 'single'
-          options.variableList = 'each'
-          options.vertical = false
+          options.bracePadding = false;
+          options.attemptCorrection = true;
+          options.quoteConvert = 'single';
+          options.variableList = 'each';
+          options.vertical = false;
         }
-      }
+      };
 
       const braceStyle = {
         collapse () {
-          options.braceNewline = false
-          options.bracePadding = false
-          options.braceAllman = false
-          options.objectIndent = 'indent'
-          options.neverFlatten = true
+          options.braceNewline = false;
+          options.bracePadding = false;
+          options.braceAllman = false;
+          options.objectIndent = 'indent';
+          options.neverFlatten = true;
         }
         , 'collapse-preserve-inline': function () {
-          options.braceNewline = false
-          options.bracePadding = true
-          options.braceAllman = false
-          options.objectIndent = 'inline'
-          options.neverFlatten = false
+          options.braceNewline = false;
+          options.bracePadding = true;
+          options.braceAllman = false;
+          options.objectIndent = 'inline';
+          options.neverFlatten = false;
         }
         , expand () {
-          options.braceNewline = false
-          options.bracePadding = false
-          options.braceAllman = true
-          options.objectIndent = 'indent'
-          options.neverFlatten = true
+          options.braceNewline = false;
+          options.bracePadding = false;
+          options.braceAllman = true;
+          options.objectIndent = 'indent';
+          options.neverFlatten = true;
         }
-      }
+      };
 
       if (styleguide[options.styleguide] !== undefined) {
-        styleguide[options.styleguide]()
+        styleguide[options.styleguide]();
       }
 
       if (braceStyle[options.braceStyle] !== undefined) {
-        braceStyle[options.braceStyle]()
+        braceStyle[options.braceStyle]();
       }
 
-      if (options.language === 'json') options.wrap = 0
+      if (options.language === 'json') options.wrap = 0;
 
     }
-
-    def = prettydiff.sparser.libs.optionDef
-    keys = Object.keys(def)
-    len = keys.length
 
     do {
       if (options[keys[a]] !== undefined) {
 
         if (def[keys[a]].lexer[0] === 'all') {
-          ops[keys[a]] = options[keys[a]]
+          ops[keys[a]] = options[keys[a]];
         } else {
 
-          b = def[keys[a]].lexer.length
+          b = def[keys[a]].lexer.length;
 
           do {
 
-            b = b - 1
+            b = b - 1;
 
             if (
               keys[a] !== 'parseSpace' || (
@@ -519,78 +522,67 @@ const prettydiff = function mode (diffmeta?: any) {
                   options[keys[a]] === true
               )
             ) {
-              ops.lexer_options[def[keys[a]].lexer[b]][keys[a]] =
-                  options[keys[a]]
+              ops.lexerOptions[def[keys[a]].lexer[b]][keys[a]] =
+                  options[keys[a]];
             }
 
-          } while (b > 0)
+          } while (b > 0);
         }
       }
 
-      a = a + 1
+      a = a + 1;
 
-    } while (a < len)
-  }
+    } while (a < len);
+  };
 
-  const options = prettydiff.options
-  const lf = (options.crlf === true) ? '\r\n' : '\n'
+  const lf = (options.crlf === true) ? '\r\n' : '\n';
 
-  let modeValue = options.mode
-  let result = ''
+  let modeValue = options.mode;
+  let result = '';
 
-  if (options.language === 'text' && options.mode !== 'diff') {
-    options.language = 'auto'
-  }
-
-  if (options.lexer === 'text' && options.mode !== 'diff') {
-    options.lexer = 'auto'
-  }
+  if (options.language === 'text' && options.mode !== 'diff') options.language = 'auto';
+  if (options.lexer === 'text' && options.mode !== 'diff') options.lexer = 'auto';
 
   if (options.language === 'text' || options.lexer === 'text') {
-    options.language = 'text'
-    options.languageName = 'Plain Text'
-    options.lexer = 'text'
+    options.language = 'text';
+    options.languageName = 'Plain Text';
+    options.lexer = 'text';
   } else if (options.language === 'auto' || options.lexer === 'auto') {
 
-    const def = (
-      options.languageDefault === '' ||
-        options.languageDefault === null ||
-        options.languageDefault === undefined
-    ) ? 'javascript' : options.languageDefault
-
-    let lang = prettydiff.api.language.auto(options.source, def)
+    let lang = prettydiff.api.language.auto(
+      options.source,
+      options.languageDefault ?? 'javascript'
+    );
 
     if (lang[0] === 'text') {
 
       if (options.mode === 'diff') {
-        lang[2] = 'Plain Text'
+        lang[2] = 'Plain Text';
       } else {
-        lang = [ 'javascript', 'script', 'JavaScript' ]
+        lang = [
+          'javascript',
+          'script',
+          'JavaScript'
+        ];
       }
 
     }
 
     if (options.language === 'auto') {
-      options.language = lang[0]
-      options.languageName = lang[2]
+      (options.language as string) = lang[0];
+      options.languageName = lang[2];
     }
 
     if (options.lexer === 'auto') {
-      options.lexer = lang[1]
+      (options.lexer as string) = lang[1];
     }
   }
 
-  pdcomment()
+  pdcomment();
 
   if (options.mode === 'parse') {
-
-    const parseFormat = options.parseFormat
-    const api = options.api
-
-    options.parsed = prettydiff.sparser.parser()
-
-    result = JSON.stringify(options.parsed)
-
+    options.parsed = prettydiff.sparser.parser();
+    result = JSON.stringify(options.parsed);
   } else {
 
     if (
@@ -599,30 +591,43 @@ const prettydiff = function mode (diffmeta?: any) {
           options.language !== 'text'
       )
     ) {
-      result =
-          `Error: Library prettydiff.${modeValue}.${options.lexer} does not exist.`
+      result = `Error: Library prettydiff.${modeValue}.${options.lexer} does not exist.`;
     } else {
 
-      options.parsed = prettydiff.sparser.parser()
-      result = prettydiff[modeValue][options.lexer](options)
+      options.parsed = prettydiff.sparser.parser();
+      result = prettydiff[modeValue][options.lexer](options);
 
     }
   }
 
   result = options.endNewline === true
     ? result.replace(/\s*$/, lf)
-    : result.replace(/\s+$/, '')
+    : result.replace(/\s+$/, '');
 
-  prettydiff.end = 0
-  prettydiff.start = 0
+  prettydiff.end = 0;
+  prettydiff.start = 0;
 
-  return result
-}
+  if (options.language === 'json') {
 
-prettydiff.api = {}
-prettydiff.beautify = {}
-prettydiff.end = 0
-prettydiff.iterator = 0
+    try {
+
+      JSON.parse(result);
+
+    } catch (error) {
+
+      prettydiff.sparser.parseError = error.message;
+
+      return options.source;
+    }
+  }
+
+  return result;
+};
+
+prettydiff.api = {};
+prettydiff.beautify = {};
+prettydiff.end = 0;
+prettydiff.iterator = 0;
 
 prettydiff.meta = {
   error: ''
@@ -632,7 +637,7 @@ prettydiff.meta = {
   , outsize: 0
   , difftotal: 0
   , difflines: 0
-}
+};
 
 prettydiff.options = {
   attributeSort: false
@@ -699,10 +704,12 @@ prettydiff.options = {
   , vertical: false
   , wrap: 0
   , lexerOptions: {}
-} as Defaults
+} as PrettyDiffOptions;
 
-prettydiff.scopes = []
-prettydiff.start = 0
-prettydiff.sparser = sparser
+prettydiff.scopes = [];
+prettydiff.start = 0;
 
-export { prettydiff }
+// @ts-ignore
+prettydiff.sparser = sparser;
+
+export { prettydiff };

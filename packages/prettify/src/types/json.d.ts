@@ -1,4 +1,4 @@
-import { SharedOptions, SharedEnforced } from './shared'
+import { SharedOptions, SharedEnforced } from './shared';
 
 /**
  * Enforced JSON Formatting Rules

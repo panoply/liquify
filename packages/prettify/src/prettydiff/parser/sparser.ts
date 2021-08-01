@@ -1,8 +1,9 @@
+
 export const sparser = {
-  lexers: {}
-  , libs: {}
-  , options: {
-    lexer_options: {
+  lexers: {},
+  libs: {},
+  options: {
+    lexerOptions: {
       markup: {
         attributeSort: false
         , attributeSortList: []
@@ -39,4 +40,4 @@ export const sparser = {
     date: '18 Aug 2019'
     , number: '1.4.12'
   }
-}
+};

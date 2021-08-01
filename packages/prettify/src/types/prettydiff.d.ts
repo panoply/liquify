@@ -1,3 +1,5 @@
+import { Sparser, Language, OptionDef, Parsed } from './sparser';
+
 export interface MappedRules {
   arrayFormat: 'format_array',
   attemptCorrection: 'correct',
@@ -41,7 +43,27 @@ export interface MappedRules {
   wrap: 'wrap'
 }
 
-export interface Defaults {
+interface Scopes extends Array<[string, number]>{
+    [index:number]: [string, number];
+}
+
+export interface Meta {
+  error: string,
+  lang: string[],
+  time: string,
+  insize: number,
+  outsize: number
+  difftotal: number,
+  difflines: number
+}
+
+export interface PDLanguage {
+    auto(sample:string, defaultLang:string): string[];
+    nameproper(input:string): string;
+    setlexer(input:string):string;
+}
+
+export interface PrettyDiffOptions {
   arrayFormat?: 'default' | 'indent' | 'inline',
   attemptCorrection?: boolean,
   attributeSort?: boolean,
@@ -54,6 +76,8 @@ export interface Defaults {
   classPadding?: boolean,
   commentIndent?: boolean,
   commentNewline?: boolean,
+  compressCSS?: boolean,
+  diff?: string,
   elseNewline?: boolean,
   endComma?: 'none' | 'always' | 'never',
   endNewline?: boolean,
@@ -62,20 +86,26 @@ export interface Defaults {
   functionNameSpace?: boolean,
   functionSpace?: boolean,
   indentLevel?: number,
-  indentChar?: ' ',
+  crlf?: boolean,
+  indentChar?: ' ' | '\u0009',
   indentSize?: number,
   languageName?: string,
-  language?: 'auto' | 'html' | 'css' | 'javascript' | 'typescript' | 'json',
+  language?: 'auto' | 'html' | 'css' | 'javascript' | 'typescript' | 'json' | 'text' | 'jsx',
   languageDefault?: string,
-  lexer?: 'auto' | 'markup' | 'style' | 'script'
-  mode?: 'beautify' | 'diff',
+  lexer?: 'auto' | 'markup' | 'style' | 'script' | 'text',
+  lexerOptions?: {
+    markup?: object,
+    script?: object,
+    style?: object
+  },
+  mode?: 'beautify' | 'diff' | 'parse'
   methodChain?: number,
   neverFlatten?: boolean,
   noCaseIndent?: boolean,
   noLeadZero?: boolean,
   noSemicolon?: boolean,
   objectIndent?: 'default' | 'indent' | 'inline',
-  preserveAttributes?: boolean,
+  preserveAttribute?: boolean,
   preserveComment?: boolean,
   preserveLine?: number,
   preserveText?: boolean,
@@ -83,12 +113,55 @@ export interface Defaults {
   quoteConvert?: 'none' | 'double' | 'single',
   selectorList?: boolean,
   selfCloseSpace?: boolean,
+  styleguide?:
+  | 'none'
+  | 'airbnb'
+  | 'crockford'
+  | 'google'
+  | 'jquery'
+  | 'jslint'
+  | 'mediawiki'
+  | 'mrdoob'
+  | 'none'
+  | 'semistandard'
+  | 'standard'
+  | 'yandex'
   source?: string,
   tagMerge?: false,
   tagSort?: false,
   ternaryLine?: boolean,
   variableList?: 'none' | 'each' |'list',
   vertical?: boolean,
-  wrap?: number
+  wrap?: number,
+  parsed?: Parsed
 
+}
+
+export interface PrettyDiff {
+  (meta?: Meta): string;
+  api: {
+    language?: Language,
+    optionDef?: OptionDef
+  }
+  beautify: {
+    style?(options: PrettyDiffOptions): string,
+    markup?(options: PrettyDiffOptions): string,
+    script?(options: PrettyDiffOptions): string,
+  },
+  sparser?: Sparser,
+  start: number,
+  end: number,
+  scopes: Scopes,
+  iterator: number,
+  meta: {
+    error: string,
+    lang: string[],
+    time: string,
+    insize: number,
+    outsize: number
+    difftotal: number,
+    difflines: number
+  },
+  options: PrettyDiffOptions
+  parsed: PrettyDiffOptions
 }

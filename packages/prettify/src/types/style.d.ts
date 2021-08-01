@@ -1,4 +1,4 @@
-import { SharedOptions, SharedEnforced } from './shared'
+import { SharedOptions, SharedEnforced } from './shared';
 
 /**
  * Enforced CSS and SCSS Formatting Rules
@@ -26,7 +26,6 @@ export interface StyleEnforced extends SharedEnforced {
    * values are minifed for faster reading of selectors.
    */
   readonly compressedCSS: false,
-
 
 }
 
@@ -200,5 +199,3 @@ export interface IStyleOptions extends SharedOptions {
    */
   quoteConvert: 'double' | 'single' | 'none'
 }
-
-

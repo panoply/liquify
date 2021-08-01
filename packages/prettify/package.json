@@ -20,13 +20,20 @@
   "types": "package/@types/index.d.ts",
   "exports": {
     "require": "./package/index.js",
-    "import": "./package/index.js"
+    "import": "./package/index.esm.js"
   },
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava test/dev.test.js --color --verbose --watch"
+    "test": "ava test/dev.test.js --color --verbose --watch",
+    "test:cases": "ava ./test/cases/* --verbose --color --watch"
+  },
+  "eslintConfig": {
+    "extends": ["@liquify/eslint-config-ts"],
+    "rules": {
+      "no-unmodified-loop-condition": "off"
+    }
   },
   "ava": {
     "require": ["esm"],

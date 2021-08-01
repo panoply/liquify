@@ -1,78 +1,64 @@
-import { IPrettify, IGlobalOptions } from "./options";
-import * as rules from './rules'
-import { prettydiff } from "./prettydiff/index";
+import { IPrettify, IGlobalOptions } from './options';
+import { json, markup, script, style, options } from './specifics';
 
 export class Prettify implements IPrettify {
 
+  constructor (rules: IGlobalOptions) { if (rules) options(rules); }
 
-  constructor(options: IGlobalOptions) { this.rules(options) }
+  /**
+   * Updates formatting options
+   *
+   * Accepts a global rule object, updates all formatting
+   * options
+   */
+  rules (rules: IGlobalOptions) { return options(rules); }
 
-  rules(options: IGlobalOptions) {
+  /**
+   * Executes Markup beautification
+   *
+   * **Support Languages:**
+   *
+   * - HTML
+   * - Liquid
+   * - HTML + Liquid
+   */
+  markup (input: string) { return markup(input); }
 
-    const { assign } = Object
+  /**
+   * Executes Script beautification
+   *
+   * **Support Languages:**
+   *
+   * - JavaScript
+   * - JavaScript + Liquid
+   * - JSX
+   * - JSX + Liquid
+   * - TypeScript
+   * - TypeScript +  Liquid
+   */
+  script (input: string) { return script(input); }
 
-    assign(rules.markup, options.markup)
-    assign(rules.style, options.style)
-    assign(rules.json, options.json)
+  /**
+   * Executes Style beautification
+   *
+   * **Support Languages:**
+   *
+   * - CSS
+   * - CSS + Liquid
+   * - SCSS
+   * - SCSS + Liquid
+   * - LESS
+   * - LESS +  Liquid
+   */
+  style (input: string) { return style(input); }
 
-  }
-
-
-  markup(input: string) {
-
-    if (prettydiff.options.language !== 'html') prettydiff.options = rules.markup
-
-    return new Promise((resolve, reject) => {
-
-      prettydiff.options.source = input
-      const beautified = prettydiff()
-      Object.assign(rules.markup, prettydiff.options)
-
-      return prettydiff.sparser.parseError
-        ? reject({ input, error: prettydiff.sparser.parseError })
-        : resolve(beautified)
-
-    }) as Promise<string>
-
-  }
-
-  style(input: string) {
-
-    if (prettydiff.options.language !== 'css')  prettydiff.options = rules.style
-
-    return new Promise((resolve, reject) => {
-
-      prettydiff.options.source = input
-
-      const beautified = prettydiff()
-      Object.assign(rules.style, prettydiff.options)
-
-      return prettydiff.sparser.parseError
-        ? reject({ input, error: prettydiff.sparser.parseError })
-        : resolve(beautified)
-
-    }) as Promise<string>
-
-  }
-
-  json(input: string) {
-
-    if (prettydiff.options.language !== 'json') prettydiff.options = rules.json
-
-    return new Promise((resolve, reject) => {
-
-      prettydiff.options.source = input
-
-      const beautified = prettydiff()
-      Object.assign(rules.json, prettydiff.options)
-
-      return prettydiff.sparser.parseError
-        ? reject({ input, error: prettydiff.sparser.parseError })
-        : resolve(beautified)
-
-    }) as Promise<string>
-
-
-  }
+  /**
+   * Executes JSON beautification
+   *
+   * **Support Languages:**
+   *
+   * - JSON
+   */
+  json (input: string) { return json(input); }
 
 }

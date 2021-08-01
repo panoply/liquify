@@ -1,9 +1,10 @@
-import { prettydiff } from '../parser/prettydiff'
-import { sparser } from '../parser/sparser'
+import { prettydiff } from '../parser/prettydiff';
+import { sparser } from '../parser/sparser';
+import { PDLanguage } from '../../types/prettydiff';
 
 export default (function language_init () {
 
-  const language = {
+  const language: PDLanguage = {
 
     setlexer (input) {
 
@@ -25,17 +26,17 @@ export default (function language_init () {
         , typescript: 'script'
         , xhtml: 'markup'
         , xml: 'markup'
-      }
+      };
       if (typeof input !== 'string') {
-        return 'script'
+        return 'script';
       }
       if (input.indexOf('html') > -1) {
-        return 'markup'
+        return 'markup';
       }
       if (langmap[input] === undefined) {
-        return 'script'
+        return 'script';
       }
-      return langmap[input]
+      return langmap[input];
     },
 
     nameproper (input) {
@@ -51,13 +52,13 @@ export default (function language_init () {
         , text: 'Plain Text'
         , typescript: 'TypeScript'
 
-      }
+      };
 
       if (typeof input !== 'string' || langmap[input] === undefined) {
-        return input.toUpperCase()
+        return input.toUpperCase();
       }
 
-      return langmap[input]
+      return langmap[input];
     },
 
     // * [0] = language value
@@ -65,18 +66,18 @@ export default (function language_init () {
     // * [2] = pretty formatting for text output to user
     auto (sample, defaultLang) {
 
-      let b = []
-      let c = 0
+      let b = [];
+      let c = 0;
 
       const vartest = (
         (
           /(((var)|(let)|(const)|(function)|(import))\s+(\w|\$)+[a-zA-Z0-9]*)/
         ).test(sample) === true && (/@import/).test(sample) === false
-      )
+      );
 
       const finalstatic = (
         /((((final)|(public)|(private))\s+static)|(static\s+void))/)
-        .test(sample)
+        .test(sample);
 
       // language_auto_output
       function output (langname) {
@@ -84,13 +85,13 @@ export default (function language_init () {
         if (langname === 'unknown') {
           return [ defaultLang,
             language.setlexer(defaultLang)
-            , 'unknown' ]
+            , 'unknown' ];
         }
         if (langname === 'xhtml' || langname === 'markup') {
-          return [ 'xml', language.setlexer('xml'), 'XHTML' ]
+          return [ 'xml', language.setlexer('xml'), 'XHTML' ];
         }
         return [ langname, language.setlexer(langname), language
-          .nameproper(langname) ]
+          .nameproper(langname) ];
       }
 
       // language_auto_cssA
@@ -99,27 +100,27 @@ export default (function language_init () {
         if (
           (/\$[a-zA-Z]/).test(sample) === true ||
             (/\{\s*(\w|\.|\$|#)+\s*\{/).test(sample) === true
-        ) return output('scss')
+        ) return output('scss');
 
         if (
           (/@[a-zA-Z]/).test(sample) === true ||
             (/\{\s*(\w|\.|@|#)+\s*\{/).test(sample) === true
-        ) return output('less')
+        ) return output('less');
 
-        return output('css')
+        return output('css');
       }
 
       // language_auto_notmarkup
       function notmarkup () {
 
-        let d = 1
-        let join = ''
-        let flaga = false
-        let flagb = false
+        let d = 1;
+        let join = '';
+        let flaga = false;
+        let flagb = false;
 
         const publicprivate = (
           /((public)|(private))\s+(static\s+)?(((v|V)oid)|(class)|(final))/
-        ).test(sample)
+        ).test(sample);
 
         // language_auto_notmarkup_javascriptA
         function javascriptA () {
@@ -135,7 +136,7 @@ export default (function language_init () {
             if (finalstatic === true || (/\w<\w+(,\s+\w+)*>/).test(
               sample
             ) === true) {
-              return output('typescript')
+              return output('typescript');
             }
 
             if (
@@ -143,7 +144,7 @@ export default (function language_init () {
                 (/<\w+((\s+\w)|>)/).test(sample) === true) {
               return output(
                 'jsx'
-              )
+              );
             }
 
             if (
@@ -152,13 +153,13 @@ export default (function language_init () {
                 (/=\s*<\w+/).test(sample) === true) {
               return output(
                 'typescript'
-              )
+              );
             }
 
-            return output('javascript')
+            return output('javascript');
           }
 
-          return output('unknown')
+          return output('unknown');
         }
 
         // language_auto_notmarkup_cssOrJavaScript
@@ -167,7 +168,7 @@ export default (function language_init () {
           if (
             (/:\s*((number)|(string))/).test(sample) === true &&
               (/((public)|(private))\s+/).test(sample) === true
-          ) return output('typescript')
+          ) return output('typescript');
 
           if (
             (/^(\s*(\$|@))/).test(sample) === false &&
@@ -177,24 +178,24 @@ export default (function language_init () {
                 (/(\?|:)\s*(\{|\[)/).test(sample) === true ||
                 (/(\{|\s|;)render\s*\(\)\s*\{/).test(sample) === true ||
                 (/^(\s*return;?\s*\{)/).test(sample) === true
-            ) return output('javascript')
+            ) return output('javascript');
           }
 
           if (
             (/\{\{#/).test(sample) === true &&
               (/\{\{\//).test(sample) === true &&
               (/<\w/).test(sample) === true
-          ) return output('handlebars')
+          ) return output('handlebars');
 
-          if ((/\{\s*(\w|\.|@|#)+\s*\{/).test(sample) === true) { return output('less') }
-          if ((/\$(\w|-)/).test(sample) === true) return output('scss')
+          if ((/\{\s*(\w|\.|@|#)+\s*\{/).test(sample) === true) { return output('less'); }
+          if ((/\$(\w|-)/).test(sample) === true) return output('scss');
           if ((/(;|\{|:)\s*@\w/).test(sample) === true) {
             return output(
               'less'
-            )
+            );
           }
 
-          return output('css')
+          return output('css');
 
         };
 
@@ -206,8 +207,8 @@ export default (function language_init () {
 
               if (b[d] === '*' && b[d - 1] === '/') {
 
-                b[d - 1] = ''
-                flaga = true
+                b[d - 1] = '';
+                flaga = true;
 
               } else if (
                 flagb === false &&
@@ -220,7 +221,7 @@ export default (function language_init () {
                   b[d + 5] === 'r' &&
                   b[d + 6] === ':'
               ) {
-                flagb = true
+                flagb = true;
               }
 
             } else if (
@@ -230,26 +231,26 @@ export default (function language_init () {
                 b[d + 1] === '/'
             ) {
 
-              flaga = false
-              b[d] = ''
-              b[d + 1] = ''
+              flaga = false;
+              b[d] = '';
+              b[d + 1] = '';
 
             } else if (flagb === true && b[d] === ';') {
 
-              flagb = false
-              b[d] = ''
+              flagb = false;
+              b[d] = '';
 
             }
 
-            if (flaga === true || flagb === true) b[d] = ''
+            if (flaga === true || flagb === true) b[d] = '';
 
-            d = d + 1
+            d = d + 1;
 
-          } while (d < c)
+          } while (d < c);
 
         }
 
-        join = b.join('')
+        join = b.join('');
 
         if (
           (/\s\/\//).test(sample) === false &&
@@ -257,7 +258,7 @@ export default (function language_init () {
             (/^(\s*(\{|\[)(?!%))/).test(sample) === true &&
             (/((\]|\})\s*)$/).test(sample) &&
             sample.indexOf(',') !== -1
-        ) return output('json')
+        ) return output('json');
 
         if (
           (/((\}?(\(\))?\)*;?\s*)|([a-z0-9]("|')?\)*);?(\s*\})*)$/i)
@@ -273,7 +274,7 @@ export default (function language_init () {
             ) === -1 ||
               (/^(\s*if\s+\()/).test(sample) === true
           )
-        ) return javascriptA()
+        ) return javascriptA();
 
         // * u007b === {
         // * u0024 === $
@@ -291,9 +292,9 @@ export default (function language_init () {
                 (/;\s*base64/).test(sample) === true
           )
         ) && (/function(\s+\w+)*\s*\(/).test(join) === false
-        ) return cssOrJavaScript()
+        ) return cssOrJavaScript();
 
-        return output('unknown')
+        return output('unknown');
       }
 
       // language_auto_markup
@@ -303,9 +304,9 @@ export default (function language_init () {
           if ((/\{\{(#|\/|\{)/).test(sample) === true) {
             return output(
               'handlebars'
-            )
+            );
           }
-          return output('html')
+          return output('html');
         };
 
         if (
@@ -323,41 +324,41 @@ export default (function language_init () {
               (/XHTML\s+1\.1/).test(sample) === false &&
               (/XHTML\s+1\.0\s+(S|s)((trict)|(TRICT))/).test(sample) ===
               false)
-        ) return html()
+        ) return html();
 
         if (
           (/<jsp:include\s/).test(sample) === true ||
             (/<c:((set)|(if))\s/).test(sample) === true
-        ) return output('jsp')
+        ) return output('jsp');
 
         if ((/\{\{(#|\/|\{)/).test(sample) === true) {
           return output(
             'handlebars'
-          )
+          );
         }
 
         if (
           (/<jsp:include\s/).test(sample) === true ||
             (/<c:((set)|(if))\s/).test(sample) === true
-        ) return output('jsp')
+        ) return output('jsp');
 
-        return output('xml')
+        return output('xml');
 
       };
 
       if (sample === null || sample.replace(/\s+/g, '') === '') {
-        return output('unknown')
+        return output('unknown');
       }
 
       if ((/^(\s*<!DOCTYPE\s+html>)/i).test(sample) === true) {
-        return markup()
+        return markup();
       }
 
       if ((
         /^\s*@((charset)|(import)|(include)|(keyframes)|(media)|(namespace)|(page))/
       ).test(sample) ===
           true) {
-        return cssA()
+        return cssA();
       }
 
       if (
@@ -374,23 +375,23 @@ export default (function language_init () {
               (/>\s*<\w/).test(sample) === false
           )
         )
-      ) return cssA()
+      ) return cssA();
 
       b = sample.replace(
         /\[[a-zA-Z][\w-]*=("|')?[a-zA-Z][\w-]*("|')?\]/g, ''
       ).split(
         ''
-      )
-      c = b.length
+      );
+      c = b.length;
 
-      if ((/^(\s*(\{|<)(%|#|\{))/).test(sample) === true) { return markup() }
+      if ((/^(\s*(\{|<)(%|#|\{))/).test(sample) === true) { return markup(); }
 
       if (
         (
           (/^([\s\w-]*<)/).test(sample) === false &&
             (/(>[\s\w-]*)$/).test(sample) === false
         ) || finalstatic === true
-      ) return notmarkup()
+      ) return notmarkup();
 
       if (
         (
@@ -412,15 +413,18 @@ export default (function language_init () {
         return (
           (/^([\s\w]*<)/).test(sample) === false ||
             (/(>[\s\w]*)$/).test(sample) === false
-        ) ? markup() : notmarkup()
+        ) ? markup() : notmarkup();
       }
 
-      return output('unknown')
+      return output('unknown');
     }
 
-  }
+  };
 
-  sparser.libs.language = language
-  prettydiff.api.language = language
+  // @ts-ignore
+  sparser.libs.language = language;
 
-}())
+  // @ts-ignore
+  prettydiff.api.language = language;
+
+}());

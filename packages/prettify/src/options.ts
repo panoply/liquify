@@ -1,16 +1,16 @@
-import { IMarkupOptions } from './types/markup'
-import { IStyleOptions } from './types/style'
-import { IJSONOptions } from './types/json'
+import { IMarkupOptions } from './types/markup';
+import { IScriptOptions } from './types/script';
+import { IStyleOptions } from './types/style';
+import { IJSONOptions } from './types/json';
 
 interface IGlobalOptions {
   markup: IMarkupOptions,
   style: IStyleOptions,
+  script: IScriptOptions,
   json: IJSONOptions
 }
 
-
 interface IPrettify {
-
 
   /**
    * Updates formatting options
@@ -25,7 +25,7 @@ interface IPrettify {
    * - Liquid
    * - HTML + Liquid
    */
-  markup(input: string): Promise<string>
+  markup(input: string): string
 
   /**
    * Executes Style beautification
@@ -39,7 +39,7 @@ interface IPrettify {
    * - LESS
    * - LESS +  Liquid
    */
-  style(input: string): Promise<string>
+  style(input: string): string
 
   /**
    * Executes Script beautification
@@ -62,7 +62,7 @@ interface IPrettify {
    *
    * - JSON
    */
-  json(input: string): Promise<string>
+  json(input: string):string
 
   /**
    * Executes Script beautification
@@ -86,10 +86,9 @@ interface IPrettify {
 
 }
 
-export {
-  IPrettify,
+export { IPrettify,
   IGlobalOptions,
   IJSONOptions,
   IMarkupOptions,
-  IStyleOptions
-}
+  IStyleOptions,
+  IScriptOptions };

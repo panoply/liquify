@@ -1,3 +1,3 @@
-export * from './specifics'
-export * from './prettify'
-export * from './options'
+export * from './specifics';
+export * from './prettify';
+export * from './options';

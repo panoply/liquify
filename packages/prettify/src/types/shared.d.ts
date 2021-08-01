@@ -36,7 +36,7 @@ export interface SharedOptions {
    *
    * @default 2
    */
-  preserveLines: number,
+  preserveLine: number,
 
   /**
    * **PrettyDiff**: `new_line`
@@ -53,9 +53,8 @@ export interface SharedOptions {
    *
    * @default false
    */
-  newlineEnd: boolean
+  endNewline: boolean
 }
-
 
 export interface SharedEnforced {
 
@@ -70,7 +69,6 @@ export interface SharedEnforced {
    * be set to 'beautify' and no other option should be applied.
    */
   readonly mode: 'beautify';
-
 
   /**
    * **PrettyDiff** `indent_char`

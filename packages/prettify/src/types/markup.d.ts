@@ -1,4 +1,4 @@
-import { SharedOptions, SharedEnforced } from './shared'
+import { SharedOptions, SharedEnforced } from './shared';
 
 /**
  * Enforced HTML Formatting Rules
@@ -21,11 +21,6 @@ export interface MarkupEnforced extends SharedEnforced {
    *
    * ---
    *
-   * **Former Rule**
-   *
-   * `tag_merge`
-   *
-   *
    * **Description**
    *
    * Allows immediately adjacement start and end markup tags
@@ -38,10 +33,6 @@ export interface MarkupEnforced extends SharedEnforced {
    * It's attempts to sort tag placements. Its wreaks havoc within HTML.
    *
    * ---
-   *
-   * **Former Rule**
-   *
-   * `tag_sort`
    *
    * **Description**
    *
@@ -66,9 +57,6 @@ export interface IMarkupOptions extends SharedOptions {
    * alphabetically.
    *
    * ---
-   * **Former Rule**
-   *
-   * `attribute_sort`
    *
    * **Description**
    *
@@ -83,10 +71,6 @@ export interface IMarkupOptions extends SharedOptions {
    * Define a sort list from which attributes should be arranged
    *
    * ---
-  /**
-   * **Former Rule**
-   *
-   * `attribute_sort_list`
    *
    *  **Description**
    *
@@ -99,10 +83,6 @@ export interface IMarkupOptions extends SharedOptions {
   attributeSortList: string[]
 
   /**
-   * **Former Rule**
-   *
-   * `comment_line`
-   *
    * **Description**
    *
    * If a blank new line should be forced above comments.
@@ -112,10 +92,6 @@ export interface IMarkupOptions extends SharedOptions {
   commentNewline: boolean
 
   /**
-   * **Former Rule**
-   *
-   * `comments`
-   *
    * **Description**
    *
    * This will determine whether comments should always start at position
@@ -125,12 +101,7 @@ export interface IMarkupOptions extends SharedOptions {
    */
   commentIndent: boolean
 
-
   /**
-   * **Former Rule**
-   *
-   * `space_close`
-   *
    * **Description**
    *
    * Markup self-closing tags end will end with `' />'` instead of `'/>'`
@@ -140,11 +111,6 @@ export interface IMarkupOptions extends SharedOptions {
   selfCloseSpace: boolean,
 
   /**
-   *
-   * **Former Rule**
-   *
-   * `preserve_comment`
-   *
    * **Description**
    *
    * Prevent comment reformatting due to option wrap.
@@ -154,11 +120,6 @@ export interface IMarkupOptions extends SharedOptions {
   preserveComment: boolean,
 
   /**
-   *
-   * **Former Rule**
-   *
-   * `preserve_text`
-   *
    * **Description**
    *
    * If text in the provided markup code should be preserved exactly as provided.
@@ -169,10 +130,6 @@ export interface IMarkupOptions extends SharedOptions {
   preserveText: boolean,
 
   /**
-   * **Former Rule**
-   *
-   * `correct`
-   *
    * **Description**
    *
    * Automatically correct some sloppiness in code
@@ -182,11 +139,6 @@ export interface IMarkupOptions extends SharedOptions {
   attemptCorrection: boolean
 
   /**
-   *
-   * **Former Rule**
-   *
-   * `force_attribute`
-   *
    * **Description**
    *
    * If all markup attributes should be indented each onto their own line._
@@ -196,11 +148,6 @@ export interface IMarkupOptions extends SharedOptions {
   forceAttribute: boolean
 
   /**
-   *
-   * **Former Rule**
-   *
-   * `force_indent`
-   *
    * **Description**
    *
    * Will force indentation upon all content and tags without regard for the
@@ -211,10 +158,6 @@ export interface IMarkupOptions extends SharedOptions {
   forceIndent: boolean
 
   /**
-   * **Former Rule**
-   *
-   * `quote_convert`
-   *
    * **Description**
    *
    * If the quotes of markup attributes should be converted to single quotes
@@ -232,16 +175,7 @@ export interface IMarkupOptions extends SharedOptions {
    */
   quoteConvert: 'double' | 'single' | 'none'
 
-
   /**
-   * This will preserve HTML attributes.
-   *
-   * ---
-   *
-   * **Former Rule**
-   *
-   * `unformatted`
-   *
    * **Description**
    *
    * If markup tags should have their insides preserved.
@@ -253,4 +187,3 @@ export interface IMarkupOptions extends SharedOptions {
   preserveAttributes: boolean
 
 }
-
