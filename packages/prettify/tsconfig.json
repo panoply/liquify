@@ -1,0 +1,13 @@
+{
+  "extends": "@liquify/tsconfig",
+  "exclude": ["node_modules/**", "package", "test"],
+  "include": ["src/index.ts", "src/**/*.ts"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "typeRoots": ["src/liquid/types/*"],
+    "declaration": true,
+    "declarationDir": "package/@types",
+    "outDir": "package",
+    "baseUrl": "."
+  }
+}
