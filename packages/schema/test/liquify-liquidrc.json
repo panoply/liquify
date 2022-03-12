@@ -48,11 +48,17 @@
   },
   "format": {
     "html": {
-      "force_attribute": true,
-      "braces": false,
-      "preserve": 1,
-      "tag_newline": true,
-      "tag_whitespace": "always",
+      "attributeSort": false,
+      "attributeSortList": [],
+      "commentIndent": false,
+      "commentNewline": false,
+      "preserveAttributes": false,
+      "preserveComment": false,
+      "preserveLine": 3,
+      "preserveText": true,
+      "quoteConvert": "none",
+      "forceAttribute": false,
+      "attemptCorrection": false,
       "tags": [
         {
           "name": "testersss"

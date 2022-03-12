@@ -2,9 +2,9 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {
-    "**/node_modules": true,
-    "**/package/node_modules": false,
-    "**/package": true,
+    //"**/node_modules": true,
+    // "**/package/node_modules": false,
+    //"**/package": true,
     "**/versions": true,
     "**/.git": true,
     "**/.svn": true,
@@ -21,7 +21,7 @@
   },
   "editor.semanticHighlighting.enabled": false,
   "editor.formatOnPaste": true,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.formatOnType": true,
   "editor.wordWrap": "wordWrapColumn",
   "editor.wordWrapColumn": 96,
@@ -167,7 +167,7 @@
       "format": "svg"
     }
   ],
-  "cSpell.enableFiletypes": ["javascript"],
+  "cSpell.enableFiletypes": ["markdown"],
   "cSpell.words": [
     "argsize",
     "bendcomment",
@@ -189,6 +189,7 @@
     "turbolinks"
   ],
   "cSpell.ignoreWords": [
+    "allman",
     "arname",
     "atstring",
     "attstore",
@@ -196,6 +197,7 @@
     "bcount",
     "blockinsert",
     "braccount",
+    "braces",
     "camelcase",
     "cfelseif",
     "cfif",

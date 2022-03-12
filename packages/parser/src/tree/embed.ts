@@ -99,7 +99,7 @@ export class Embed extends Node {
 
     this.regionLiteral = this.textDocument;
 
-    return document.regions.push(this);
+    return document.regions.push(this) - 1;
   }
 
   /**

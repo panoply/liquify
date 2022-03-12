@@ -1,0 +1,1455 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 18,
+    "total": 18,
+    "workspacePrefix": "/Users/Panoply/Sites/liquify"
+  },
+  "1 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/eslint-config",
+      "version": "0.1.0",
+      "description": "Sharable eslint-config extender for TypeScript and JavaScript packages.",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "license": "MIT",
+      "main": "index.js",
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/eslint-config"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "update:workspace": "pnpm update @liquify/eslint-config -r",
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "dependencies": {
+        "eslint-config-standard": "^16.0.3",
+        "eslint-plugin-node": "^11.1.0"
+      },
+      "devDependencies": {
+        "eslint": "^7.30.0"
+      },
+      "peerDependencies": {
+        "eslint": "^7.28.0"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/eslint-config"
+  },
+  "2 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "atom-liquid",
+      "main": "./export/atom/client.cjs.js",
+      "version": "0.1.0",
+      "description": "Liquid language support for Atom",
+      "keywords": [],
+      "private": false,
+      "license": "MIT",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "_watch": "rollup -c -w",
+        "_build": "rollup -c --environment prod"
+      },
+      "dependencies": {
+        "atom-languageclient": "^1.14.0"
+      },
+      "repository": {
+        "url": "https://github.com/panoply/liquify"
+      },
+      "devDependencies": {
+        "rollup-plugin-terser": "^7.0.2"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/packages/clients/atom"
+  },
+  "3 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/tsconfig",
+      "version": "1.0.0",
+      "description": "Liquify TypeScript Configuration",
+      "homepage": "https://liquify.dev",
+      "author": {
+        "name": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "MIT",
+      "main": "tsconfig.json",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/tsconfig"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/tsconfig"
+  },
+  "4 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/eslint-config-js",
+      "version": "1.0.0",
+      "description": "Shareable ESLint config for JavaScript projects within the Liquify development workspace",
+      "main": "index.js",
+      "scripts": {
+        "update:workspace": "pnpm update @liquify/eslint-config-js -r",
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/eslint-config/packages/javascript"
+      },
+      "keywords": [
+        "eslint-config",
+        "eslint-javascript",
+        "liquify"
+      ],
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "license": "MIT",
+      "dependencies": {
+        "@babel/eslint-parser": "^7.14.7",
+        "@babel/eslint-plugin": "^7.14.5",
+        "@liquify/eslint-config": "workspace:^0.1.0",
+        "eslint-plugin-import": "^2.23.4",
+        "eslint-plugin-promise": "^5.1.0"
+      },
+      "devDependencies": {
+        "eslint": "^7.30.0"
+      },
+      "peerDependencies": {
+        "eslint": "^7.28.0"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/eslint-js"
+  },
+  "5 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/eslint-config-ts",
+      "version": "1.0.2",
+      "description": "Shareable ESLint config for TypeScript projects within the Liquify development workspace",
+      "main": "index.js",
+      "scripts": {
+        "update:workspace": "pnpm update @liquify/eslint-config-ts -r",
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/eslint-config/packages/javascript"
+      },
+      "keywords": [
+        "eslint-config",
+        "eslint-typescript",
+        "liquify"
+      ],
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "license": "MIT",
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "homepage": "https://github.com/panoply/liquify#readme",
+      "dependencies": {
+        "@liquify/eslint-config": "workspace:^0.1.0",
+        "@typescript-eslint/eslint-plugin": "^4.28.2",
+        "@typescript-eslint/parser": "^4.28.2"
+      },
+      "devDependencies": {
+        "eslint": "^7.30.0"
+      },
+      "peerDependencies": {
+        "eslint": "^7.28.0"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/eslint-ts"
+  },
+  "6 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-config",
+      "version": "1.0.0",
+      "description": "Shared Rollup configuration interface used within the Liquify monorepo.",
+      "keywords": [
+        "rollup",
+        "rollup-plugin",
+        "config"
+      ],
+      "homepage": "https://github.com/panoply/liquify",
+      "author": {
+        "name": "Νίκος Σαβίδης ",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "MIT",
+      "type": "module",
+      "types": "./index.d.ts",
+      "exports": "./index.js",
+      "scripts": {
+        "dev": "tsc --watch",
+        "build": "tsc",
+        "postpublish": "pnpm up @brixtol/rollup-config -r"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/rollup-config"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/master/build/rollup-config"
+      },
+      "eslintConfig": {
+        "ignorePatterns": [
+          "index.js",
+          "index.d.ts"
+        ],
+        "extends": "@liquify/eslint-config"
+      },
+      "dependencies": {
+        "@brixtol/rollup-utils": "workspace:^1.1.2",
+        "@rollup/plugin-alias": "^3.1.9",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^21.0.1",
+        "@rollup/plugin-html": "^0.2.4",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-multi-entry": "^4.1.0",
+        "@rollup/plugin-node-resolve": "^13.1.3",
+        "@rollup/plugin-replace": "^3.0.1",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-dts": "^4.1.0",
+        "rollup-plugin-esbuild": "^4.8.2",
+        "rollup-plugin-filesize": "^9.1.2",
+        "rollup-plugin-html2": "^3.1.0",
+        "rollup-plugin-livereload": "^2.0.5",
+        "rollup-plugin-node-polyfills": "^0.2.1",
+        "rollup-plugin-postcss": "^4.0.2",
+        "rollup-plugin-serve": "^1.1.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-ts-paths": "^1.0.5",
+        "rollup-plugin-typescript2": "^0.31.1"
+      },
+      "devDependencies": {
+        "@liquify/eslint-config": "workspace:^0.1.0",
+        "@liquify/tsconfig": "workspace:^1.0.0"
+      },
+      "optionalDependencies": {
+        "autoprefixer": "^10.4.2",
+        "esbuild": "^0.14.12",
+        "postcss": "^8.4.5",
+        "rollup": "^2.65.0",
+        "typescript": "^4.5.5"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/rollup-config"
+  },
+  "7 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-plugin-utils",
+      "version": "0.1.1",
+      "description": "Rollup plugin utilities for working with the Liquify monorepo codebase",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "license": "MIT",
+      "type": "module",
+      "types": "package/index.d.ts",
+      "main": "package/index.js",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "files": [
+        "package"
+      ],
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/scripts/rollup"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "release": {
+        "branches": [
+          "master",
+          "next"
+        ]
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-js"
+        ]
+      },
+      "devDependencies": {
+        "@liquify/eslint-config-js": "workspace:^1.0.0",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^19.0.0",
+        "esm": "^3.2.25",
+        "rollup": "^2.53.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "dependencies": {
+        "chalk": "^4.1.1",
+        "jsonminify": "^0.4.1",
+        "strip-indent": "^4.0.0",
+        "strip-json-comments": "^3.1.1",
+        "types-eslintrc": "^1.0.3"
+      },
+      "peerDependencies": {
+        "rollup": "^2.51.1"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/rollup-plugins/utils"
+  },
+  "8 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/cryptographer",
+      "version": "0.1.0",
+      "description": "Encrypt and decrypt strings, numbers and objects to produce enigmatic string sequences",
+      "created": "06-10-2020",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "license": "MIT",
+      "type": "module",
+      "main": "package/index.js",
+      "types": "package/index.d.ts",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/vscode-liquid.git"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/vscode-liquid/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "pack": "cd versions; npm pack ../ && cd ..",
+        "test": "ava --watch --verbose"
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-js"
+        ]
+      },
+      "ava": {
+        "require": [
+          "esm",
+          "@babel/register"
+        ],
+        "babel": true,
+        "files": [
+          "test/index.js"
+        ],
+        "concurrency": 5
+      },
+      "devDependencies": {
+        "@ava/babel": "^1.0.1",
+        "@liquify/eslint-config-js": "workspace:^1.0.0",
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^19.0.0",
+        "@types/node": "^15.14.1",
+        "ava": "^3.15.0",
+        "chalk": "^4.1.1",
+        "esm": "^3.2.25",
+        "rollup": "^2.53.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "peerDependencies": {
+        "rollup": "^2.51.1"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/cryptographer"
+  },
+  "9 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-plugin-obfuscator",
+      "version": "0.2.0",
+      "description": "Hard forked rollup plugin support for JavaScript code obfuscation using JavaScript  Obfuscator.",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "license": "MIT",
+      "type": "module",
+      "types": "packages/index.d.ts",
+      "main": "package/index.js",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/rollup-plugins/obfuscator"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "prepack": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava --verbose"
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-js"
+        ]
+      },
+      "ava": {
+        "babel": true,
+        "files": [
+          "test/**/**"
+        ],
+        "concurrency": 5
+      },
+      "release": {
+        "branches": [
+          "master",
+          "next"
+        ]
+      },
+      "devDependencies": {
+        "@ava/babel": "^1.0.1",
+        "@liquify/eslint-config-js": "workspace:^1.0.0",
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@rollup/plugin-beep": "^0.2.0",
+        "ava": "^3.15.0",
+        "rollup": "^2.53.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "dependencies": {
+        "@rollup/pluginutils": "^4.1.0",
+        "javascript-obfuscator": "^2.15.5"
+      },
+      "peerDependencies": {
+        "rollup": "^2.51.1"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/rollup-plugins/obfuscator"
+  },
+  "10 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/prettify",
+      "version": "0.1.0",
+      "private": false,
+      "license": "MIT",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "description": "🩸 Liquid Language beautification support for multiple languages.",
+      "engines": {
+        "pnpm": ">=4",
+        "node": ">=12"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify.git"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "main": "./package/index.js",
+      "module": "./package/index.mjs",
+      "types": "package/@types/export.d.ts",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava test/dev.test.mjs --color --verbose --watch",
+        "test:cases": "ava ./test/cases/* --verbose --color --watch"
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-ts"
+        ],
+        "rules": {
+          "no-unmodified-loop-condition": "off"
+        }
+      },
+      "ava": {
+        "require": [
+          "esm"
+        ],
+        "files": [
+          "test/**/*.test.mjs"
+        ],
+        "concurrency": 5
+      },
+      "devDependencies": {
+        "@ava/babel": "^2.0.0",
+        "@liquify/eslint-config-ts": "workspace:^1.0.1",
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@liquify/tsconfig": "workspace:^1.0.0",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^21.0.2",
+        "@rollup/plugin-node-resolve": "^13.1.3",
+        "ava": "^4.1.0",
+        "esbuild": "^0.14.25",
+        "esm": "^3.2.25",
+        "rollup": "^2.70.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-esbuild": "^4.8.2",
+        "rollup-plugin-filesize": "^9.1.2",
+        "typescript": "^4.6.2"
+      },
+      "peerDependencies": {
+        "ava": "^3.15.0",
+        "rollup": "^2.53.3"
+      },
+      "dependencies": {
+        "prettier": "^2.5.1"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/packages/prettify"
+  },
+  "11 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/schema-stores",
+      "version": "0.1.5",
+      "private": false,
+      "license": "SEE LICENSE IN LICENSE.txt",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "description": "Liquid language variation specification references used by Liquify",
+      "engines": {
+        "pnpm": ">=4",
+        "node": ">=12"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify.git"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "type": "module",
+      "main": "package/index.js",
+      "types": "package/index.d.ts",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.es.js"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd .."
+      },
+      "devDependencies": {
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^19.0.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-watch-assets": "^1.0.1"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/packages/schema"
+  },
+  "12 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-plugin-cryptospec",
+      "version": "0.1.0",
+      "description": "Rollup plugin used by Liquify IDE editor tool for encryption and cryptography bundle processing",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "license": "MIT",
+      "type": "module",
+      "types": "package/index.d.ts",
+      "main": "package/index.js",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/scripts/rollup"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod && node ./scripts/strip.mjs",
+        "tests": "node ./test/require-specs.js",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava --verbose"
+      },
+      "esm": {
+        "cjs": true
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-js"
+        ]
+      },
+      "ava": {
+        "babel": true,
+        "files": [
+          "test/**/**"
+        ],
+        "concurrency": 5
+      },
+      "release": {
+        "branches": [
+          "master",
+          "next"
+        ]
+      },
+      "devDependencies": {
+        "@ava/babel": "^1.0.1",
+        "@liquify/eslint-config-js": "workspace:^1.0.0",
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-node-resolve": "^13.0.0",
+        "ava": "^3.15.0",
+        "chalk": "^4.1.1",
+        "esm": "^3.2.25",
+        "fs-extra": "^10.0.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-strip-code": "^0.2.7",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "dependencies": {
+        "@liquify/cryptographer": "workspace:^0.1.0",
+        "@rollup/pluginutils": "^4.1.0",
+        "rambda": "^6.7.0"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/build/rollup-plugins/cryptospec"
+  },
+  "13 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "liquify-vscode",
+      "version": "0.0.1",
+      "displayName": "Liquify",
+      "description": "Liquid Language Support for vscode. Provides syntax highlighting, IntelliSense capabilities, diagnostic and validations, formatting, hovers, completions and more!",
+      "publisher": "sissel",
+      "icon": "assets/logo.png",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "preview": false,
+      "private": false,
+      "license": "see LICENSE.txt",
+      "keywords": [
+        "liquid",
+        "shopify",
+        "jekyll",
+        "language",
+        "lsp",
+        "formatting",
+        "completions",
+        "codelens",
+        "validations",
+        "linting"
+      ],
+      "categories": [
+        "Formatters",
+        "Programming Languages",
+        "Other"
+      ],
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify.git"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "main": "package/client.js",
+      "exports": {
+        "require": "./package/client.js"
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-ts"
+        ],
+        "rules": {
+          "semi": [
+            "error",
+            "always"
+          ]
+        }
+      },
+      "engines": {
+        "vscode": "^1.52.0"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd .."
+      },
+      "activationEvents": [
+        "onLanguage:liquid",
+        "onLanguage:liquid-11ty",
+        "onLanguage:liquid-jekyll",
+        "onLanguage:liquid-shopify",
+        "workspaceContains:**/.liquidrc",
+        "workspaceContains:**/.liquidrc.json"
+      ],
+      "contributes": {
+        "themes": [
+          {
+            "label": "Potion Theme",
+            "uiTheme": "vs-dark",
+            "path": "./themes/potion-color-theme.json"
+          }
+        ],
+        "jsonValidation": [
+          {
+            "fileMatch": [
+              ".liquidrc",
+              ".liquidrc.json"
+            ],
+            "url": "./@stores/liquidrc.json"
+          },
+          {
+            "fileMatch": [
+              ".liquidspec",
+              ".liquidspec.json"
+            ],
+            "url": "./@stores/specs.json"
+          },
+          {
+            "fileMatch": "settings_data.json",
+            "url": "./@stores/settings_data.json"
+          },
+          {
+            "fileMatch": [
+              "settings_schema.json"
+            ],
+            "url": "./@stores/settings_schema.json"
+          }
+        ],
+        "commands": [
+          {
+            "command": "liquid.releaseNotes",
+            "title": "Liquid: Release Notes"
+          },
+          {
+            "command": "liquid.validateDocument",
+            "title": "Liquid: Validate Document"
+          },
+          {
+            "command": "liquid.disableFormatting",
+            "title": "Liquid: Disable Formatting"
+          },
+          {
+            "command": "liquid.enableFormatting",
+            "title": "Liquid: Enable Formatting"
+          },
+          {
+            "command": "liquid.toggleOutput",
+            "title": "Liquid: Toggle Output"
+          },
+          {
+            "command": "liquid.formatDocument",
+            "title": "Liquid: Format Document"
+          },
+          {
+            "command": "liquid.formatSelection",
+            "title": "Liquid: Format Selection"
+          },
+          {
+            "command": "liquid.toggleLiquid",
+            "title": "Liquid: Activate Liquid"
+          },
+          {
+            "command": "liquid.liquidrc",
+            "title": "Liquid: Generate a .liquidrc file"
+          }
+        ],
+        "keybindings": [
+          {
+            "command": "liquid.formatDocument",
+            "key": "ctrl+shift+l",
+            "mac": "cmd+shift+l",
+            "when": "editorTextFocus"
+          }
+        ],
+        "languages": [
+          {
+            "id": "liquid",
+            "configuration": "./language-configuration.json",
+            "aliases": [
+              "Liquid"
+            ],
+            "extensions": [
+              ".liquid"
+            ]
+          },
+          {
+            "id": "liquid-shopify",
+            "configuration": "./language-configuration.json",
+            "aliases": [
+              "Liquid Shopify"
+            ],
+            "extensions": [
+              ".liquid"
+            ],
+            "filenamePatterns": [
+              "layout/*.liquid",
+              "snippets/*.liquid",
+              "sections/*.liquid",
+              "templates/**/*.liquid"
+            ]
+          },
+          {
+            "id": "liquid-jekyll",
+            "configuration": "./language-configuration.json",
+            "firstLine": "---",
+            "aliases": [
+              "Liquid Jekyll"
+            ],
+            "extensions": [
+              ".liquid",
+              ".jekyll"
+            ]
+          },
+          {
+            "id": "javascript",
+            "extensions": [
+              ".js.liquid"
+            ]
+          },
+          {
+            "id": "css",
+            "extensions": [
+              ".css.liquid"
+            ]
+          },
+          {
+            "id": "scss",
+            "extensions": [
+              ".scss.liquid",
+              ".sass.liquid"
+            ]
+          },
+          {
+            "id": "json",
+            "extensions": [
+              ".json.liquid"
+            ]
+          },
+          {
+            "id": "jsonc",
+            "filenames": [
+              ".liquidrc",
+              ".liquidrc.json"
+            ]
+          },
+          {
+            "id": "liquidspec",
+            "filenames": [
+              ".liquidspec",
+              ".liquidspec.json"
+            ]
+          }
+        ],
+        "grammars": [
+          {
+            "language": "liquid",
+            "scopeName": "source.liquid",
+            "path": "./syntax/liquid.tmLanguage.json"
+          },
+          {
+            "language": "liquid-shopify",
+            "scopeName": "source.liquid.shopify",
+            "path": "./syntax/liquid-shopify.tmLanguage.json"
+          },
+          {
+            "language": "liquid-jekyll",
+            "scopeName": "source.liquid.jekyll",
+            "path": "./syntax/liquid-jekyll.tmLanguage.json"
+          },
+          {
+            "scopeName": "source.liquid.frontmatter",
+            "path": "./syntax/injections/frontmatter.json",
+            "injectTo": [
+              "source.liquid.jekyll"
+            ],
+            "embeddedLanguages": {
+              "meta.embedded.block.frontmatter.liquid": "yaml"
+            }
+          },
+          {
+            "scopeName": "markdown.liquid.codeblock",
+            "path": "./syntax/injections/liquid-markdown.codeblock.json",
+            "injectTo": [
+              "text.html.markdown"
+            ],
+            "embeddedLanguages": {
+              "meta.embedded.block.liquid": "liquid"
+            }
+          },
+          {
+            "language": "liquidspec",
+            "scopeName": "source.liquid.specs",
+            "injectTo": [
+              "source.json"
+            ],
+            "path": "./syntax/injections/liquify-specs.inject.json"
+          },
+          {
+            "scopeName": "source.liquid.embedded",
+            "path": "./syntax/injections/embedded.inject.json",
+            "injectTo": [
+              "source.liquid.shopify"
+            ],
+            "embeddedLanguages": {
+              "meta.embedded.block.javascript.liquid": "javascript",
+              "meta.embedded.block.schema.liquid": "json",
+              "meta.embedded.block.stylesheet.liquid": "css",
+              "meta.embedded.block.style.liquid": "css",
+              "meta.embedded.block.stylesheet.scss.liquid": "scss"
+            }
+          }
+        ],
+        "configuration": {
+          "type": "object",
+          "title": "Liquid configuration",
+          "properties": {
+            "liquid.trace.server": {
+              "scope": "window",
+              "type": "string",
+              "enum": [
+                "off",
+                "messages",
+                "verbose"
+              ],
+              "default": "off",
+              "description": "Traces the communication between VS Code and the language server."
+            },
+            "liquid.notifier.releases": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to show version update notifications"
+            },
+            "liquid.notifier.recommendations": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to show recommendation notifications. This provides and show tips when using the extension."
+            },
+            "liquid.notifier.conflicts": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to notify you of conflicting extensions. Helps prevent issues from occuring."
+            },
+            "liquid.completion.enable": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to enable/disable the completion intellisense feature."
+            },
+            "liquid.hover.enable": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to enable/disable hover tooltip tag descriptions."
+            },
+            "liquid.validateOnOpen": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to vaidate documents upon opening. When set to false, validations will run only when a document is touched (changed)"
+            },
+            "liquid.validate": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to enable/disable the Liquid code validation feature."
+            },
+            "liquid.format": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to enable/disable Liquid formatting."
+            },
+            "liquid.formatting": {
+              "default": false,
+              "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or if you really must, you can use the \"liquid.format.*\" workspace setting where the asterix (*) is replaced by one of the following:\n\n- \"html\"\n- \"javascript\"\n- \"css\"\n- \"scss\"\n- \"json\"\n\nNote: If \"liquid.format.enable\" is set to \"false\" all formatting will be disabled."
+            },
+            "liquid.rules": {
+              "default": false,
+              "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or if you really must, you can use the \"liquid.format.*\" workspace setting where the asterix (*) is replaced by one of the following:\n\n- \"html\"\n- \"javascript\"\n- \"css\"\n- \"scss\"\n- \"json\"\n\nNote: If \"liquid.format.enable\" is set to \"false\" all formatting will be disabled."
+            },
+            "liquid.formatIgnore": {
+              "default": false,
+              "deprecationMessage": "DEPRECATED!\nDefine ignore tags in the \"liquid.format.html\": { \"tags\": [] } property ruleset and set the \"kind\" value to \"ignore\""
+            },
+            "liquid.beautify": {
+              "default": false,
+              "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or use the \"liquid.format.*\" workspace setting."
+            }
+          }
+        }
+      },
+      "dependencies": {
+        "strip-json-comments": "^3.1.1",
+        "vscode-languageclient": "^7.0.0"
+      },
+      "devDependencies": {
+        "@liquify/eslint-config-ts": "workspace:^1.0.1",
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@liquify/schema-stores": "workspace:^0.1.5",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-replace": "^3.0.0",
+        "@types/vscode": "^1.58.1",
+        "rollup": "^2.53.2",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-filesize": "^9.1.1",
+        "rollup-plugin-typescript2": "^0.30.0",
+        "rollup-plugin-watch-assets": "^1.0.1",
+        "typescript": "^4.3.5"
+      },
+      "peerDependencies": {
+        "rollup": "^2.51.2"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/packages/clients/vscode"
+  },
+  "14 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/liquid-language-specs",
+      "version": "0.1.2",
+      "private": false,
+      "author": {
+        "name": "Νίκος Σαβίδης",
+        "email": "n.savvidis@gmx.com"
+      },
+      "contributors": [
+        {
+          "name": "Joseph Curtis",
+          "email": "joecurt85@gmail.com"
+        }
+      ],
+      "license": "SEE LICENSE IN LICENSE.txt",
+      "description": "Liquid language variation specification references used by Liquify",
+      "main": "./package/index.js",
+      "types": "./package/@types/index.d.ts",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.js"
+      },
+      "engines": {
+        "pnpm": ">=4",
+        "node": ">=12"
+      },
+      "homepage": "https://liquify.dev",
+      "repository": {
+        "url": "https://github.com/panoply/liquify"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "html": "node ./scripts/html:generate.js",
+        "package": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava ./test/* --watch --verbose --color",
+        "test:cases": "ava ./test/cases/* --verbose --color"
+      },
+      "ava": {
+        "require": [
+          "esm"
+        ],
+        "concurrency": 5
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-ts"
+        ],
+        "rules": {
+          "no-template-curly-in-string": "off",
+          "no-unused-vars": "off",
+          "no-control-regex": "off",
+          "prefer-const": "off"
+        }
+      },
+      "devDependencies": {
+        "@ava/babel": "^2.0.0",
+        "@liquify/eslint-config-ts": "workspace:^1.0.1",
+        "@liquify/rollup-plugin-obfuscator": "workspace:^0.2.0",
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@liquify/tsconfig": "workspace:^1.0.0",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^19.0.1",
+        "@rollup/plugin-node-resolve": "^13.0.2",
+        "ava": "^3.15.0",
+        "esm": "^3.2.25",
+        "rollup": "^2.53.3",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-filesize": "^9.1.1",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-typescript2": "^0.30.0",
+        "rollup-plugin-watch-assets": "^1.0.1",
+        "typescript": "^4.3.5",
+        "vscode-languageserver": "^7.0.0",
+        "vscode-languageserver-types": "^3.16.0",
+        "vscode-web-custom-data": "^0.3.4"
+      },
+      "peerDependencies": {
+        "rollup": "^2.53.0",
+        "typescript": "^4.3.5"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/packages/specs"
+  },
+  "15 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/web",
+      "version": "0.1.0",
+      "description": "Liquify IDE Website",
+      "author": "Nikolas Savvidis <nicos@gmx.com>",
+      "license": "ISC",
+      "main": ".eleventy.js",
+      "private": true,
+      "scripts": {
+        "dev": "npm-run-all clean make --parallel styles 11ty rollup",
+        "build": "pnpm run clean && pnpm run 11ty:build && pnpm run styles:prop && rollup:prod",
+        "11ty": "pnpx eleventy --serve --watch",
+        "11ty:build": "pnpx eleventy",
+        "rollup": "rollup -c -w",
+        "rollup:prod": "rollup -c --environment prod",
+        "styles": "sass src/style/stylesheet.scss public/assets/stylesheet.css --watch --load-path=./node_modules/ && postcss ./public/assets/*.css --replace",
+        "styles:prod": "sass ./src/style/ public/assets/ && postcss public/assets/*.css --replace",
+        "make": "mkdirp ./public && mkdirp ./public/assets && mkdirp ./public/assets",
+        "clean": "rimraf public",
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "eslintConfig": {
+        "extends": "@liquify/eslint-config-ts"
+      },
+      "dependencies": {
+        "@brixtol/cryptographer": "^0.1.2",
+        "@liquify/schema-stores": "workspace:^0.1.5",
+        "bootstrap": "^5.0.2",
+        "countup.js": "^2.0.7",
+        "freezeframe": "^5.0.2",
+        "mithril": "^2.0.4",
+        "stimulus": "^2.0.0"
+      },
+      "devDependencies": {
+        "@11ty/eleventy": "^0.12.1",
+        "@liquify/eslint-config-ts": "workspace:^1.0.1",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-buble": "^0.21.3",
+        "@rollup/plugin-node-resolve": "^13.0.0",
+        "@types/aws-lambda": "^8.10.78",
+        "autoprefixer": "^10.2.6",
+        "cssnano": "^5.0.6",
+        "eleventy-plugin-svg-contents": "^0.7.0",
+        "eslint": "^7.30.0",
+        "eslint-plugin-babel": "^5.3.1",
+        "light-server": "^2.9.1",
+        "mkdirp": "^1.0.4",
+        "node-sass-chokidar": "^1.5.0",
+        "npm-run-all": "^4.1.5",
+        "postcss-cli": "^8.3.1",
+        "prettier": "^2.3.2",
+        "prettier-stylelint": "^0.4.2",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.53.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-typescript2": "^0.30.0",
+        "sass": "^1.35.2",
+        "stylelint": "^13.13.1",
+        "stylelint-config-rational-order": "^0.1.2",
+        "stylelint-scss": "^3.19.0"
+      },
+      "repository": {
+        "url": "git+https://github.com/panoply/liquify.dev.git"
+      },
+      "peerDependencies": {
+        "@11ty/eleventy": "^0.11.0",
+        "cssnano": "^4.1.10",
+        "eslint": "^7.2.0",
+        "prettier": "^2.0.5",
+        "rollup": "^2.15.0",
+        "stylelint": "^13.6.0"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify.dev/issues"
+      },
+      "homepage": "https://github.com/panoply/liquify.dev#readme"
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/web"
+  },
+  "16 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/liquid-parser",
+      "version": "0.1.1-beta.1",
+      "description": "An incremental parser for the Liquid Templating Language",
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "package": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava test/* --watch --verbose",
+        "test:cases": "ava test/cases/**/* --verbose --color"
+      },
+      "private": false,
+      "author": {
+        "name": "Νίκος Σαβίδης",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "see LICENSE.txt",
+      "main": "package/parser.js",
+      "types": "./package/@types/index.d.ts",
+      "exports": {
+        "require": "./package/parser.js"
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-ts"
+        ],
+        "rules": {
+          "no-use-before-define": "off",
+          "no-control-regex": "off"
+        }
+      },
+      "ava": {
+        "require": [
+          "esm"
+        ],
+        "concurrency": 5
+      },
+      "dependencies": {
+        "@liquify/liquid-language-specs": "workspace:^0.1.2",
+        "lodash.inrange": "^3.3.6",
+        "vscode-languageserver-textdocument": "^1.0.1",
+        "yamljs": "^0.3.0"
+      },
+      "repository": {
+        "url": "https://github.com/panoply/liquid-parser"
+      },
+      "devDependencies": {
+        "@ava/babel": "^2.0.0",
+        "@liquify/eslint-config-ts": "workspace:^1.0.1",
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@liquify/tsconfig": "workspace:^1.0.0",
+        "@rollup/plugin-alias": "^3.1.4",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^19.0.1",
+        "@rollup/plugin-node-resolve": "^13.0.2",
+        "@rollup/plugin-typescript": "^8.2.3",
+        "@types/lodash.inrange": "^3.3.6",
+        "ava": "^3.15.0",
+        "chalk": "^4.1.1",
+        "esm": "^3.2.25",
+        "json-stringify-safe": "^5.0.1",
+        "pretty-hrtime": "^1.0.3",
+        "rollup": "^2.53.3",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-filesize": "^9.1.1",
+        "rollup-plugin-typescript2": "^0.30.0",
+        "typescript": "^4.3.5",
+        "vscode-languageserver-types": "^3.16.0"
+      },
+      "peerDependencies": {
+        "rollup": "^2.51.1",
+        "typescript": "^4.3.2"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/packages/parser"
+  },
+  "17 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/liquid-language-server",
+      "version": "0.1.0",
+      "description": "Language Server for the Liquid Templating Language",
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava --color --watch"
+      },
+      "private": false,
+      "author": "",
+      "owner": "SISSEL | ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
+      "license": "see LICENSE.txt",
+      "main": "package/server.js",
+      "types": "./package/@types/index.d.ts",
+      "exports": {
+        "require": "./package/server.js",
+        "import": "./package/server.es.js"
+      },
+      "bundledDependencies": [
+        "vscode-css-languageservice",
+        "vscode-json-languageservice",
+        "vscode-languageserver",
+        "vscode-languageserver-textdocument",
+        "vscode-languageserver-types",
+        "vscode-uri"
+      ],
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config-ts"
+        ]
+      },
+      "ava": {
+        "require": [
+          "esm",
+          "@babel/register"
+        ],
+        "babel": {
+          "testOptions": {
+            "babelrc": true,
+            "configFile": false
+          }
+        },
+        "files": [
+          "test/parsing/parser.js"
+        ],
+        "concurrency": 5
+      },
+      "dependencies": {
+        "@liquify/liquid-language-specs": "workspace:^0.1.2",
+        "@liquify/liquid-parser": "workspace:^0.1.1-beta.1",
+        "@liquify/prettify": "workspace:^0.1.0",
+        "@liquify/schema-stores": "workspace:^0.1.5",
+        "indent-string": "^5.0.0",
+        "lodash": "^4.17.21",
+        "strip-json-comments": "^3.1.1",
+        "vscode-css-languageservice": "^5.1.4",
+        "vscode-emmet-helper": "^2.6.4",
+        "vscode-json-languageservice": "^4.1.6",
+        "vscode-languageserver": "^7.0.0",
+        "vscode-languageserver-textdocument": "^1.0.1",
+        "vscode-uri": "^3.0.2"
+      },
+      "repository": {
+        "url": "https://github.com/panoply/liquify"
+      },
+      "devDependencies": {
+        "@ava/babel": "^2.0.0",
+        "@liquify/eslint-config-ts": "workspace:^1.0.1",
+        "@liquify/rollup-plugin-obfuscator": "workspace:^0.2.0",
+        "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
+        "@liquify/tsconfig": "workspace:^1.0.0",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^19.0.1",
+        "@rollup/plugin-node-resolve": "^13.0.2",
+        "@rollup/plugin-replace": "^3.0.0",
+        "@rollup/plugin-typescript": "^8.2.3",
+        "@types/lodash": "^4.14.171",
+        "ava": "^3.15.0",
+        "dotenv": "^10.0.0",
+        "esm": "^3.2.25",
+        "marky": "^1.2.2",
+        "pretty-ms": "^7.0.1",
+        "rollup": "^2.53.3",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-filesize": "^9.1.1",
+        "rollup-plugin-typescript2": "^0.30.0",
+        "typescript": "^4.3.5",
+        "vscode-languageserver-types": "^3.16.0"
+      },
+      "peerDependencies": {
+        "rollup": "^2.51.2"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/packages/server"
+  },
+  "18 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "liquify",
+      "version": "0.0.0-development",
+      "description": "Liquid Templating Language Support and IDE tooling",
+      "author": "Nikolas Savvidis <nicos@gmx.com>",
+      "license": "SEE LICENSE IN LICENSE",
+      "private": true,
+      "engines": {
+        "node": "14",
+        "vscode": "^1.50.0",
+        "pnpm": ">=5"
+      },
+      "scripts": {
+        "dev": "pnpm dev -r --stream  --filter ./packages/ --no-sort --workspace-concurrency Infinity",
+        "build": "pnpm build -r --stream --filter !./web/  --workspace-concurrency Infinity",
+        "semantic-release": "semantic-release",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "preinstall": "npx only-allow pnpm"
+      },
+      "husky": {
+        "hooks": {
+          "post-merge": "pnpm run push"
+        }
+      },
+      "repository": {
+        "url": "https://github.com/panoply/liquify"
+      },
+      "devDependencies": {
+        "chalk": "^4.1.2",
+        "eslint-config-prettier": "^8.5.0",
+        "fs-extra": "^10.0.1",
+        "husky": "^6.0.0",
+        "inquirer": "^8.2.1",
+        "prettier": "^2.5.1",
+        "prettier-eslint": "^12.0.0"
+      },
+      "publishConfig": {
+        "access": "restricted"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify"
+  },
+  "19 debug pnpm:context": {
+    "currentLockfileExists": true,
+    "storeDir": "/Users/Panoply/.pnpm-store/v3",
+    "virtualStoreDir": "/Users/Panoply/Sites/liquify/node_modules/.pnpm"
+  },
+  "20 debug pnpm:stage": {
+    "prefix": "/Users/Panoply/Sites/liquify",
+    "stage": "resolution_started"
+  },
+  "21 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../eslint-config",
+    "wanted": {
+      "dependentId": "build/eslint-js",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:^0.1.0"
+    }
+  },
+  "22 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../eslint-config",
+    "wanted": {
+      "dependentId": "build/eslint-ts",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:^0.1.0"
+    }
+  },
+  "23 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../eslint-config",
+    "wanted": {
+      "dependentId": "build/rollup-config",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:^0.1.0"
+    }
+  },
+  "24 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../tsconfig",
+    "wanted": {
+      "dependentId": "build/rollup-config",
+      "name": "@liquify/tsconfig",
+      "rawSpec": "workspace:^1.0.0"
+    }
+  },
+  "25 error pnpm": {
+    "code": "ERR_PNPM_NO_MATCHING_VERSION_INSIDE_WORKSPACE",
+    "pkgsStack": [],
+    "err": {
+      "name": "pnpm",
+      "message": "In : No matching version found for @brixtol/rollup-utils@^1.1.2 inside the workspace",
+      "code": "ERR_PNPM_NO_MATCHING_VERSION_INSIDE_WORKSPACE",
+      "stack": "pnpm: In : No matching version found for @brixtol/rollup-utils@^1.1.2 inside the workspace\n    at tryResolveFromWorkspace (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:85965:15)\n    at resolveNpm (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:85856:39)\n    at Object.resolve (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:86088:40)\n    at ctx.requestsQueue.add.priority (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74461:75)\n    at run (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74177:90)\n    at PQueue._tryToStartAnother (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74131:13)\n    at /Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74190:16\n    at new Promise (<anonymous>)\n    at PQueue.add (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74172:16)\n    at resolveAndFetch (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74461:55)"
+    }
+  }
+}

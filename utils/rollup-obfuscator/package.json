@@ -1,0 +1,64 @@
+{
+  "name": "@liquify/rollup-obfuscator",
+  "version": "0.2.0",
+  "description": "Hard forked rollup plugin support for JavaScript code obfuscation using JavaScript  Obfuscator.",
+  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+  "license": "MIT",
+  "type": "module",
+  "types": "packages/index.d.ts",
+  "main": "package/index.js",
+  "module": "package/index.mjs",
+  "exports": {
+    "require": "./package/index.js",
+    "import": "./package/index.mjs"
+  },
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/master/build/rollup-obfuscator"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c --environment prod",
+    "prepack": "rollup -c --environment prod",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava --verbose"
+  },
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@liquify/eslint-config"
+    ]
+  },
+  "ava": {
+    "files": [
+      "test/**/**"
+    ],
+    "concurrency": 5
+  },
+  "release": {
+    "branches": [
+      "master",
+      "next"
+    ]
+  },
+  "devDependencies": {
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/rollup-utils": "workspace:*",
+    "ava": "^3.15.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^4.1.0",
+    "javascript-obfuscator": "^2.15.5"
+  },
+  "optionalDependencies": {
+    "rollup": "^2.70.0"
+  }
+}

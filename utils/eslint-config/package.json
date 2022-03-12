@@ -1,0 +1,39 @@
+{
+  "name": "@liquify/eslint-config",
+  "version": "1.0.0",
+  "description": "Sharable ESLint config consumed within the Liquify monorepo workspace.",
+  "license": "MIT",
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com",
+    "url": "https://liquify.dev"
+  },
+  "private": false,
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/master/build/eslint-config"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
+  "scripts": {
+    "postinstall": "pnpm update @liquify/eslint-config -r"
+  },
+  "prettier": "@liquify/prettier-config",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.14.0",
+    "@typescript-eslint/parser": "^5.14.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0"
+  },
+  "devDependencies": {
+    "@liquify/prettier-config": "workspace:*"
+  },
+  "optionalDependencies": {
+    "eslint": "^8.11.0",
+    "typescript": "^4.6.2"
+  }
+}

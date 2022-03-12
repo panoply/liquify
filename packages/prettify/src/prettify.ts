@@ -1,9 +1,17 @@
-import { IPrettify, IGlobalOptions } from './options';
-import { json, markup, script, style, options } from './specifics';
+import { IGlobalOptions } from './types/options';
+import { json, markup, script, style, options } from './modes';
 
 export class Prettify implements IPrettify {
 
   constructor (rules: IGlobalOptions) { if (rules) options(rules); }
+
+  /**
+   * Formatting Error
+   *
+   * If formatting encountered an error this value
+   * will contain a string else it will be null
+   */
+  error = null
 
   /**
    * Updates formatting options

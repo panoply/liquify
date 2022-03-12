@@ -26,7 +26,6 @@ These packages are considered the _core_ modules of the project.
 
 - [@liquify/parser](#)
 - [@liquify/server](#)
-- [@liquify/beautify](#)
 - [@liquify/prettify](#)
 - [@liquify/specs](#)
 - [@liquify/schema](#)
@@ -50,8 +49,8 @@ These packages are project specific [Rollup](https://rollupjs.org) plugins.
 
 These packages are the sharable configurations.
 
-- [@liquify/rollup-config](#)
 - [@liquify/eslint-config](#)
+- [@liquify/tsconfig](#)
 
 ###### IMPORTANT
 
@@ -118,5 +117,4 @@ Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com).
 Liquify took a considerable amount of time to build. Many sleepless nights and a lot of hours were poured into the project and not many were willing to take on the task. Thanks to all those who used to previous version of this extension and a special thanks to a couple of developers that frequent the [Shopify Developers](https://discord.com/channels/597504637167468564/597507881419407404) discord channel.
 
 - [Mansedan](#)
-- [Wolf Grey](#)
 - [Dave W](#)

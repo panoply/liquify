@@ -5,7 +5,7 @@ import ts from 'rollup-plugin-typescript2';
 import typescript from 'typescript';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
-import obfuscator from '@liquify/rollup-plugin-obfuscator';
+import obfuscator from '../../utils/rollup-obfuscator/package';
 import filesize from 'rollup-plugin-filesize';
 import noderesolve from '@rollup/plugin-node-resolve';
 import beep from '@rollup/plugin-beep';

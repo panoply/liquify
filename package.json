@@ -1,8 +1,12 @@
 {
   "name": "liquify",
   "version": "0.0.0-development",
-  "description": "Liquid Templating Language Support and IDE tooling",
-  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "description": "Liquid Language Support and IDE tooling",
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com",
+    "url": "https://liquify.dev"
+  },
   "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "engines": {
@@ -13,6 +17,7 @@
   "scripts": {
     "dev": "pnpm dev -r --stream  --filter ./packages/ --no-sort --workspace-concurrency Infinity",
     "build": "pnpm build -r --stream --filter !./web/  --workspace-concurrency Infinity",
+    "utils": "pnpm build -r --stream --filter ./utils/  --workspace-concurrency Infinity",
     "semantic-release": "semantic-release",
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx only-allow pnpm"
@@ -26,15 +31,21 @@
     "url": "https://github.com/panoply/liquify"
   },
   "devDependencies": {
-    "chalk": "^4.1.1",
-    "eslint-config-prettier": "^8.3.0",
-    "fs-extra": "^10.0.0",
-    "husky": "^6.0.0",
-    "inquirer": "^8.1.1",
-    "prettier": "^2.3.2",
-    "prettier-eslint": "^12.0.0"
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/tsconfig": "workspace:*",
+    "esbuild": "^0.14.25",
+    "eslint": "^8.11.0",
+    "prettier": "^2.5.1",
+    "rollup": "^2.70.0",
+    "typescript": "^4.6.2"
   },
   "publishConfig": {
     "access": "restricted"
+  },
+  "peerDependencyRules": {
+    "allowedVersions": {
+      "eslint": "*"
+    }
   }
 }

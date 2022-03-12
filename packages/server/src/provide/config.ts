@@ -63,8 +63,10 @@ export class Config implements IServer.Config {
         language: 'html',
         language_default: 'html',
         lexer: 'markup',
-        new_line: true,
+        jsscope: 'none',
         tag_merge: false,
+
+        new_line: true,
         space_close: false,
         indent_size: 2,
         indent_level: 0,
@@ -82,7 +84,6 @@ export class Config implements IServer.Config {
         tag_sort: false,
         unformatted: false,
         indent_char: ' ',
-        jsscope: 'none',
         wrap: 0,
         tags: []
       },

@@ -1,0 +1,32 @@
+{
+  "name": "@liquify/prettier-config",
+  "version": "1.0.0",
+  "description": "Prettier configuration consumed by Brixtol Textiles",
+  "main": "index.js",
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com",
+    "url": "https://liquify.dev"
+  },
+  "prettier": "./index.js",
+  "license": "MIT",
+  "keywords": [
+    "prettier",
+    "prettierconfig",
+    "config",
+    "formatting"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/tree/next/build/prettier-config"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/tree/next/build/prettier-config/issues"
+  },
+  "engines": {
+    "pnpm": ">=6"
+  },
+  "optionalDependencies": {
+    "prettier": "^2.5.1"
+  }
+}

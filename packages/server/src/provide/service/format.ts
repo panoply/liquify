@@ -1,9 +1,11 @@
-import * as format from '@liquify/beautify';
+import * as format from '@liquify/prettify';
 import { Formatting } from 'types/server';
 import { is } from 'utils/common';
 import { NodeKind, INode, IEmbed, IAST, TextDocument } from '@liquify/liquid-parser';
 import { TextEdit } from 'vscode-languageserver';
 import indentString from 'indent-string';
+
+type Provider = 'prettydiff' | 'jsbeautify' | 'prettier'
 
 /**
  * Formatting Functions
@@ -23,8 +25,52 @@ import indentString from 'indent-string';
  */
 
 /* -------------------------------------------- */
+/* LOCAL SCOPES                                 */
+/* -------------------------------------------- */
+
+const insertions: TextEdit[] = [];
+const deleteions: TextEdit[] = [];
+
+/* -------------------------------------------- */
 /* LOCAL FUNCTIONS                              */
 /* -------------------------------------------- */
+
+function Insert () {
+
+}
+
+function Delete () {
+
+}
+
+function Format (source: string, rules:  provider: Provider) {
+
+}
+
+function Regions (node: IEmbed, { languageRules }: Formatting) {
+
+  const rules = languageRules[node.languageId];
+
+  rules.indent_level = is(node.parent.type, 0)
+    ? 0
+    : indentation(literal, node.start, editorRules.tabSize);
+
+  const beautify = format.prettydiff(node.innerContent, rules);
+
+  // Check Sparser for errors
+  // Validations will handle missing pairs
+  // We still echo Sparser log for additional context.
+  if (beautify.errors) {
+    console.error(beautify.errors);
+    return textEdit;
+  }
+
+  // Apply indentation to tag block
+  return is(node.kind, NodeKind.HTML)
+    ? HTMLRegions(literal, textEdit, beautify.source, node)
+    : LiquidRegions(literal, textEdit, beautify.source, node);
+
+}
 
 /**
  * Format Pre-Placements
@@ -38,10 +84,10 @@ function preplacement (editText: string): string {
   return editText
 
     // Reset HTML Liquid string attributes
-    .replace(/=(["'])(\{[{%]-?)/g, '=$1 $2')
+    //.replace(/=(["'])(\{[{%]-?)/g, '=$1 $2')
 
     // Enforce comments to use trims
-    .replace(/({%-?)\s*(\b(?:end)?comment\s*)(-?%})/g, '{%- $2 -%}');
+    //.replace(/({%-?)\s*(\b(?:end)?comment\s*)(-?%})/g, '{%- $2 -%}');
 
 };
 
@@ -56,7 +102,7 @@ function replacements (newText: string): string {
   return newText
 
     // Patches Liquid Quotation alignments
-    .replace(/=(["'])\s*(\{[{%]-?)/g, '=$1$2')
+    //.replace(/=(["'])\s*(\{[{%]-?)/g, '=$1$2')
 
     // Ignores Embedded HTML language regions
     .replace(/<!--parse-ignore-start-->/g, '')
@@ -164,7 +210,7 @@ function embedded (literal: TextDocument, { languageRules, editorRules }: Format
       ? 0
       : indentation(literal, node.start, editorRules.tabSize);
 
-    const beautify = format.prettydiff(node.innerContent, rules);
+    const beautify = format[node.languageId](node.innerContent, rules);
 
     // Check Sparser for errors
     // Validations will handle missing pairs
@@ -194,14 +240,10 @@ function formatMarkup (source: string, { languageRules }: Formatting) {
 
   // console.log(source);
 
-  const beautify = format.prettydiff(preplacement(source), languageRules.html);
+  const beautify = format.markup(preplacement(source), languageRules.html);
 
-  if (beautify.errors) {
-    console.error(beautify.errors);
-    return replacements(source);
-  }
 
-  return replacements(beautify.source);
+  return replacements(beautify);
 
 }
 

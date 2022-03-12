@@ -1,15 +1,12 @@
 import { state as $, query as q, Type, IProperties } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
-import { TextEdit } from 'vscode-languageserver';
 import { NodeKind } from 'lexical/kind';
 import { NodeLanguage } from 'lexical/language';
 import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { Node, NodeType } from 'tree/nodes';
 import { Embed } from 'tree/embed';
-import { alignRange } from 'parser/utils';
-import * as Regexp from 'lexical/expressions';
 import * as s from 'parser/stream';
 import * as scanner from 'parser/scanner';
 
@@ -578,7 +575,11 @@ export function parse (document: IAST): IAST {
     parent.children.push(node);
 
     // parent = node;
-    if (type === NodeType.Pair) parent = node;
+    if (type === NodeType.Pair) {
+
+      parent = node;
+      literal = document.literal();
+    }
 
   }
 
@@ -633,7 +634,7 @@ export function parse (document: IAST): IAST {
       pair.delete(node);
 
       parent = node.parent;
-      // if (node.kind === NodeKind.HTML) html = node.parent;
+      //  if (node.kind === NodeKind.HTML) html = node.parent;
       // if (node.kind === NodeKind.Liquid) liquid = node.parent;
       if (node.type === Type.embedded) {
         embed = (node as Embed).region(embed, literal);
@@ -646,11 +647,10 @@ export function parse (document: IAST): IAST {
 
     }
 
-    if (type === NodeType.Start) {
+    if (type === NodeType.Start && literal) {
 
       if (node.embeddedId === NodeLanguage.css && node.kind === NodeKind.Liquid) {
 
-        // console.log(node);
         literal = TextDocument.update(literal, [
           {
             text: `/*${node.startToken.slice(2, -2)}*/`,

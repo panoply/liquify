@@ -16,8 +16,6 @@ The website functions and operates by leveraging the following services:
 - [Netlify](https://netlify.com/)
 - [FaunaDB](https://fauna.com)
 
-## Deployment
-
 ## Development
 
 #### System Requirements
@@ -112,6 +110,6 @@ The project styling leverages the [Bootstrap 4](#) framework Grid and Utilities,
 | `.align-items-*`     | `.ai-*` |
 | `.align-self-*`      | `.as-*` |
 
-<hr>
+## Author
 
-🥛 <small>Laced with Moloko Plus by [Νίκος Σαβίδης](mailto:nicos@gmx.com)</small>
+🥛 [Νίκος Σαβίδης](mailto:nicos@gmx.com) <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />

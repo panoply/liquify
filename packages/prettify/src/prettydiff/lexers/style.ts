@@ -1152,35 +1152,23 @@ export default (function style_init () {
         comment(false);
       } else if (b[a] === '/' && b[a + 1] === '/') {
         comment(true);
-      } else if (b[a] === '<' && b[a + 1] === '%') {
-        // asp
-        template('<%', '%>');
       } else if (b[a] === '{' && b[a + 1] === '%') {
-        // asp
+        // Liquid
         template('{%', '%}');
-      } else if (b[a] === '{' && b[a + 1] === '{' && b[a + 2] === '{') {
-        // mustache
-        template('{{{', '}}}');
       } else if (b[a] === '{' && b[a + 1] === '{') {
-        // handlebars
+        // Liquid
         template('{{', '}}');
-      } else if (b[a] === '<' && b[a + 1] === '!' && b[a + 2] === '-' &&
-          b[a + 3] === '-' && b[a + 4] === '#') {
-        // ssi
-        template('<!--#', '-->');
-      } else if (b[a] === '@' && b[a + 1] === 'e' && b[a + 2] === 'l' &&
-          b[a + 3] === 's' && b[a + 4] === 'e' &&
-          (b[a + 5] === '{' || (/\s/).test(b[a + 5]) === true)) {
-        ltoke = '@else';
-        ltype = 'template_else';
-        recordPush('');
-        a = a + 4;
-      } else if (b[a] === '{' || (b[a] === '(' && data.token[parse
-        .count] === ':' && data.types[parse.count -
-            1] === 'variable')) {
+      } else if (
+        b[a] === '{' || (
+          b[a] === '(' &&
+          data.token[parse.count] === ':' &&
+          data.types[parse.count - 1] === 'variable')
+      ) {
+
         item('start');
         ltype = 'start';
         ltoke = b[a];
+
         if (b[a] === '(') {
           recordPush('map');
           mapper.push(0);
@@ -1192,26 +1180,38 @@ export default (function style_init () {
         } else {
           recordPush('block');
         }
+
         nosort.push(false);
-      } else if (b[a] === '}' || (b[a] === ')' && parse.structure[parse
-        .structure.length - 1][0] === 'map' &&
-            mapper[mapper.length - 1] === 0)) {
-        if (b[a] === '}' && data.types[parse.count] === 'item' && data
-          .token[parse.count - 1] === '{' && data
-          .token[parse.count - 2] !== undefined && data.token[parse
-          .count - 2].charAt(data.token[parse.count -
-              2].length - 1) === '@') {
+
+      } else if (
+        b[a] === '}' || (
+          b[a] === ')' &&
+          parse.structure[parse.structure.length - 1][0] === 'map' &&
+          mapper[mapper.length - 1] === 0
+        )
+      ) {
+
+        if (
+          b[a] === '}' &&
+          data.types[parse.count] === 'item' &&
+          data.token[parse.count - 1] === '{' &&
+          data.token[parse.count - 2] !== undefined &&
+          data.token[parse.count - 2].charAt(data.token[parse.count - 2].length - 1) === '@'
+        ) {
+
           data.token[parse.count - 2] = data.token[parse.count - 2] +
-              '{' + data.token[parse.count] +
-              '}';
+            '{' + data.token[parse.count] + '}';
+
           parse.pop(data);
           parse.pop(data);
           parse.structure.pop();
+
         } else {
-          if (b[a] === ')') {
-            mapper.pop();
-          }
+
+          if (b[a] === ')') mapper.pop();
+
           item('end');
+
           if (b[a] === '}' && data.token[parse.count] !== ';') {
             if (data.types[parse.count] === 'value' || data.types[parse
               .count] === 'function' || (data.types[

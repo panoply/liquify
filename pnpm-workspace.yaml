@@ -1,32 +1,27 @@
 packages:
   - "."
+  - "utils/tsconfig"
+  - "utils/prettier-config"
+  - "utils/eslint-config"
+  - "utils/rollup-utils"
+  - "utils/cryptographer"
+  - "utils/rollup-cryptospec"
+  - "utils/rollup-obfuscator"
+  - "utils/rollup-config"
 
-  - "build/rollup-plugins/utils"
+  #- "packages/clients/atom"
+  #- "!packages/clients/atom/package/*"
 
-  - "build/eslint-config"
-  - "build/eslint-ts"
-  - "build/eslint-js"
-  - "build/tsconfig"
+  #- "packages/prettify"
 
-  - "build/cryptographer"
-  - "build/rollup-plugins/cryptospec"
+  #- "packages/clients/vscode"
+  #- "!packages/clients/vscode/package/*"
 
-  - "build/rollup-plugins/globs"
-  - "build/rollup-plugins/obfuscator"
+  #- "packages/parser"
 
-  - "packages/clients/atom"
-  - "!packages/clients/atom/package/*"
+  #- "packages/server"
+  #- "!packages/server/package/*"
 
-  - "packages/beautify"
-
-  - "packages/clients/vscode"
-  - "!packages/clients/vscode/package/*"
-
-  - "packages/parser"
-
-  - "packages/server"
-  - "!packages/server/package/*"
-
-  - "packages/schema"
-  - "packages/specs"
-  - "web"
+  #- "packages/schema"
+  #- "packages/specs"
+  #- "web"

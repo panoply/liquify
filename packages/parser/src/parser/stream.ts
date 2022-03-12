@@ -42,7 +42,6 @@ export let size: number = 0;
  * content changes and is called via the `onDidChangeTextDocument` event.
  */
 export function Create (text: string): string {
-
   source = text;
   cursor = 0;
   offset = 0;
@@ -51,7 +50,6 @@ export function Create (text: string): string {
   size = text.length;
 
   return source;
-
 }
 
 /**
@@ -66,14 +64,15 @@ export function ComputeLineOffsets (
   isLineStart: boolean,
   textOffset = 0
 ): number[] {
-
   const result: number[] = isLineStart ? [ textOffset ] : [];
 
   for (let i = 0; i < text.length; i++) {
     const ch = text.charCodeAt(i);
 
     if (ch === CAR || ch === NWL) {
-      if (ch === CAR && i + 1 < text.length && text.charCodeAt(i + 1) === NWL) i++;
+      if (ch === CAR && i + 1 < text.length && text.charCodeAt(i + 1) === NWL) {
+        i++;
+      }
       result.push(textOffset + i + 1);
     }
   }
@@ -100,10 +99,8 @@ export function ComputeLineOffsets (
  *
  */
 export function Tokenize (from?: number, to?: number): string {
-
   token = source.slice(from || cursor, to || offset);
   return token;
-
 }
 
 /**
@@ -121,9 +118,7 @@ export function Tokenize (from?: number, to?: number): string {
  * > - `token` Newly matched token
  */
 export function TokenCodeChar (code: number, consume: boolean = true): boolean {
-
   if (token.charCodeAt(0) === code) {
-
     if (consume) {
       token = token.substring(1);
       cursor = cursor + 1;
@@ -133,7 +128,6 @@ export function TokenCodeChar (code: number, consume: boolean = true): boolean {
   }
 
   return false;
-
 }
 
 /**
@@ -144,9 +138,7 @@ export function TokenCodeChar (code: number, consume: boolean = true): boolean {
  * **DOES NOT MODIFY**
  */
 export function TokenContains (regex: RegExp, trim: boolean = false): boolean {
-
   return regex.test(trim ? token.trim() : token);
-
 }
 
 /**
@@ -157,9 +149,7 @@ export function TokenContains (regex: RegExp, trim: boolean = false): boolean {
  * **DOES NOT MODIFY**
  */
 export function TokenNextWhitespace (regex: RegExp): boolean {
-
   return regex.test(token);
-
 }
 
 /**
@@ -178,7 +168,6 @@ export function TokenNextWhitespace (regex: RegExp): boolean {
  *
  */
 export function TokenRewind (start: number, regex: RegExp): boolean {
-
   const string = source.slice(start, offset);
   const end = string.search(regex);
 
@@ -187,7 +176,6 @@ export function TokenRewind (start: number, regex: RegExp): boolean {
   token = string.substring(0, end);
 
   return true;
-
 }
 
 /**
@@ -205,7 +193,6 @@ export function TokenRewind (start: number, regex: RegExp): boolean {
  *
  */
 export function TokenCapture (regex: RegExp): boolean {
-
   const match = regex.exec(source.slice(offset));
 
   if (match === null) return false;
@@ -248,17 +235,17 @@ export function TokenCapture (regex: RegExp): boolean {
  * ---
  */
 export function Cursor (location?: number): number {
-
   cursor = isNaN(location)
     ? cursor + token.length
-    : location === 0 ? 0 : location === undefined
-      ? offset
-      : cursor + location;
+    : location === 0
+      ? 0
+      : location === undefined
+        ? offset
+        : cursor + location;
 
   if (cursor < 0) cursor = 0;
 
   return cursor;
-
 }
 
 /* -------------------------------------------- */
@@ -277,7 +264,6 @@ export function Cursor (location?: number): number {
  * ---
  */
 export function Jump (n: number): number {
-
   if (n > size) return GotoEnd();
 
   offset = n;
@@ -359,7 +345,6 @@ export function GotoEnd (): number {
  * How many steps backwards, defaults to `1`
  */
 export function UnlessPrevCodeChar (char: number, step: number = 1): boolean {
-
   return source.charCodeAt(offset - step) !== char;
 }
 
@@ -378,7 +363,6 @@ export function UnlessPrevCodeChar (char: number, step: number = 1): boolean {
  * How many steps backwards, defaults to `1`
  */
 export function IsPrevCodeChar (char: number, step: number = 1): boolean {
-
   return source.charCodeAt(offset - step) === char;
 }
 
@@ -391,7 +375,6 @@ export function IsPrevCodeChar (char: number, step: number = 1): boolean {
  * **DOES NOT MODIFY**
  */
 export function IsNextCodeChar (code: number): boolean {
-
   return source.charCodeAt(offset + 1) === code;
 }
 
@@ -404,7 +387,6 @@ export function IsNextCodeChar (code: number): boolean {
  * **DOES NOT MODIFY**
  */
 export function IsCodeChar (code: number): boolean {
-
   return code === GetCodeChar();
 }
 
@@ -422,7 +404,6 @@ export function IsCodeChar (code: number): boolean {
  * character code at current index.
  */
 export function GetCodeChar (at?: number): number {
-
   return source.charCodeAt(at || offset);
 }
 
@@ -441,7 +422,6 @@ export function GetCodeChar (at?: number): number {
  * character code at current index.
  */
 export function GetChar (at?: number): string {
-
   return source.charAt(at || offset);
 }
 
@@ -467,7 +447,6 @@ export function GetChar (at?: number): string {
  * quotations are not consumed and included in token.
  */
 export function SkipQuotedString (consume?: number | number[] | true): boolean {
-
   const n = offset;
 
   if (!/^["']/.test(source.slice(n))) return false;
@@ -480,11 +459,16 @@ export function SkipQuotedString (consume?: number | number[] | true): boolean {
   }
 
   // consume escaped strings, eg: \" or \'
-  if (GetCodeChar(location - 1) === BWS) { return SkipQuotedString(location); }
+  if (GetCodeChar(location - 1) === BWS) {
+    return SkipQuotedString(location);
+  }
 
   // custom consumed character codes
   if (typeof consume !== 'undefined' && typeof consume !== 'boolean') {
-    if (Array.isArray(consume) && consume.indexOf(GetCodeChar(location)) !== -1) {
+    if (
+      Array.isArray(consume) &&
+      consume.indexOf(GetCodeChar(location)) !== -1
+    ) {
       return SkipQuotedString(location);
     }
   }
@@ -492,9 +476,7 @@ export function SkipQuotedString (consume?: number | number[] | true): boolean {
   cursor = offset;
   offset = location + 1;
   token =
-    consume === true
-      ? source.slice(n + 1, location)
-      : source.slice(n, offset);
+    consume === true ? source.slice(n + 1, location) : source.slice(n, offset);
 
   return true;
 }
@@ -515,7 +497,6 @@ export function SkipQuotedString (consume?: number | number[] | true): boolean {
  * > - `token` Optionally tokenize the match, defaults to `undefined`
  */
 export function ConsumeUntil (regex: RegExp, tokenize?: boolean): boolean {
-
   const match = source.slice(offset).search(regex);
 
   if (match === null || match < 0) return false;
@@ -554,7 +535,6 @@ export function ConsumeUnless (
   unless: RegExp,
   tokenize: boolean = true
 ): boolean {
-
   const string = source.slice(offset);
   const match = string.search(regex);
 
@@ -570,7 +550,6 @@ export function ConsumeUnless (
   offset = offset + match;
 
   return true;
-
 }
 
 /**
@@ -593,7 +572,6 @@ export function ConsumeUnless (
  * If match is `-1` the stream will move to end and return `NaN`
  */
 export function UntilSequence (regex: RegExp): number {
-
   const match = source.slice(offset).search(regex);
 
   if (match < 0) {
@@ -628,7 +606,6 @@ export function UntilSequence (regex: RegExp): number {
   * By default, this is `true` and the consumption is tokenized
   */
 export function IfSequence (regex: RegExp, tokenize: boolean = true): boolean {
-
   const substring = source.slice(offset);
   const match = substring.search(regex);
 
@@ -657,7 +634,6 @@ export function IfSequence (regex: RegExp, tokenize: boolean = true): boolean {
  * become troublesome in future. Needs to be be re-thought.
  */
 function WhileChar (condition: Function): boolean {
-
   const pos = offset;
 
   while (offset < size && condition(source.charCodeAt(offset))) offset++;
@@ -699,7 +675,6 @@ function WhileChar (condition: Function): boolean {
  * ---
  */
 export function ReverseWhitespace (from?: number): boolean {
-
   const pos = from === undefined ? cursor : from;
   const str = source.slice(0, pos);
 
@@ -712,13 +687,14 @@ export function ReverseWhitespace (from?: number): boolean {
       str.charCodeAt(rev) !== NWL ||
       str.charCodeAt(rev) !== LFD ||
       str.charCodeAt(rev) !== LFD
-    ) break;
+    ) {
+      break;
+    }
   }
 
   cursor = rev;
 
   return true;
-
 }
 
 /**
@@ -733,7 +709,6 @@ export function ReverseWhitespace (from?: number): boolean {
  * > - `spaces` Spaces is adjusted (see @todo in `WhileChar`)
  */
 export function SkipWhitespace (): boolean {
-
   return WhileChar(
     (charCode: number) =>
       charCode === WSP ||
@@ -757,10 +732,7 @@ export function SkipWhitespace (): boolean {
  *
  */
 export function Whitespace (): boolean {
-
-  return WhileChar(
-    (charCode: number) => charCode === WSP || charCode === TAB
-  );
+  return WhileChar((charCode: number) => charCode === WSP || charCode === TAB);
 }
 
 /**
@@ -776,7 +748,6 @@ export function Whitespace (): boolean {
  *
  */
 export function Newlines (): boolean {
-
   return WhileChar(
     (charCode: number) =>
       charCode === NWL || charCode === LFD || charCode === CAR
@@ -795,7 +766,6 @@ export function Newlines (): boolean {
   * to `1` for decrementing this index
   */
 export function IsPrevRegExp (regex: RegExp, reverse: number = 1): boolean {
-
   return regex.test(source.slice(offset - reverse, offset));
 }
 
@@ -813,7 +783,6 @@ export function IsPrevRegExp (regex: RegExp, reverse: number = 1): boolean {
  * > - `token`  Character is tokenized
  */
 export function IfRegExp (regex: RegExp): boolean {
-
   const match = regex.exec(source.slice(offset));
 
   if (match === null) return false;
@@ -834,7 +803,6 @@ export function IfRegExp (regex: RegExp): boolean {
  *
  */
 export function IsRegExp (regex: RegExp): boolean {
-
   return regex.test(source.slice(offset));
 }
 
@@ -857,14 +825,12 @@ export function IsRegExp (regex: RegExp): boolean {
  * By default this is `true` and the character is tokenized
  */
 export function IfCodeChar (code: number, tokenize: boolean = true): boolean {
-
   if (code !== source.charCodeAt(offset)) return false;
   if (tokenize) token = source.charAt(offset);
 
   offset = offset + 1;
 
   return true;
-
 }
 
 /**
@@ -881,12 +847,10 @@ export function IfCodeChar (code: number, tokenize: boolean = true): boolean {
  * > - `offset` Moves to offset before match
  */
 export function UntilCharCode (code: number): boolean {
-
   while (offset < size) {
     if (source.charCodeAt(offset) === code) return true;
     offset++;
   }
 
   return false;
-
 }

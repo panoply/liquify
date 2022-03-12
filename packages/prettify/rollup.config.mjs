@@ -1,13 +1,11 @@
 import { defineConfig as Rollup } from 'rollup';
-import ts from 'rollup-plugin-typescript2';
-import { terser } from 'rollup-plugin-terser';
+import esbuild, { minify } from 'rollup-plugin-esbuild';
 import commonjs from '@rollup/plugin-commonjs';
 import noderesolve from '@rollup/plugin-node-resolve';
-import { env } from '@liquify/rollup-plugin-utils';
+import { env } from '../../utils/rollup-utils/package';
 import beep from '@rollup/plugin-beep';
 import filesize from 'rollup-plugin-filesize';
 import del from 'rollup-plugin-delete';
-import typescript from 'typescript';
 
 export default Rollup(
   {
@@ -25,7 +23,7 @@ export default Rollup(
       },
       {
         format: 'esm',
-        file: 'package/index.esm.js',
+        file: 'package/index.mjs',
         sourcemap: process.env.prod ? false : 'inline',
         esModule: true,
         freeze: false,
@@ -35,13 +33,7 @@ export default Rollup(
     ],
     plugins: env.if('dev')(
       [
-        ts(
-          {
-            check: false,
-            useTsconfigDeclarationDir: true,
-            typescript
-          }
-        ),
+        esbuild(),
         noderesolve({
           extensions: [ '.js', '.ts' ]
         }),
@@ -57,13 +49,7 @@ export default Rollup(
       ]
     )(
       [
-        terser(
-          {
-            ecma: 6
-            , warnings: 'verbose'
-            , compress: { passes: 2 }
-          }
-        ),
+        minify(),
         filesize(
           {
             showGzippedSize: false,

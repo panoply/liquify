@@ -164,13 +164,25 @@
     "validateHTML": {
       "type": "object",
       "properties": {
-        "tag_pairs": {
+        "unknownAttributes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates the attributes used on tags",
+          "markdownDescription": "Validates the attributes used on tags.\n\nFor example:\n\n\t<main type=\"text\">\n</main>\n\n Where the `type` is a valid attribute but only on certain tags (like the `<input>` tag) and has no business being used on a semantic `<main>` tag."
+        },
+        "attributeValues": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates the values of tag attributes",
+          "markdownDescription": "Validates the values of tag attributes.\n\nFor example:\n\n\t<input type=\"foo\">\n Where the `type` attribute does not accept a value equal to `foo` and only accepts certain values, like `text` or `checkbox` etc etc."
+        },
+        "syntacticPairs": {
           "type": "boolean",
           "default": true,
           "description": "Validates the start and end tag existence of HTML pairs",
           "markdownDescription": "Validates the start and end tag existence of HTML pairs.\n\nFor example:\n\n\t<main>\n\t\t<div>\n\t</main>\n\n Where the `<div>` tag is missing its closing (end) tag."
         },
-        "tag_name": {
+        "tagNames": {
           "type": "string",
           "default": "strict",
           "description": "Validates HTML tag names",
@@ -191,13 +203,55 @@
             }
           ]
         },
-        "syntactics": {
+        "tagPlacement": {
           "type": "boolean",
           "default": true,
           "description": "Validates the hierarchical placements of tags, ie: li tags must be contained in ul tags",
           "markdownDescription": "Validates the hierarchical placements of tags, ie: `li` tags must be contained in `ul` tags.\n\nFor example:\n\n\t<li>\n\t\t<ul></ul>\n\t</li>\n\n Where the `<ul></ul>` is incorrectly placed."
         },
-        "quotes": {
+        "outputTagAttributes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allows Liquid output tags to be used in HTML tag attributes.",
+          "markdownDescription": "Allows Liquid output tags to be used in HTML tag attributes.\n\nFor example:\n\n\t<div class=\"foo\" {{ some_value }}>"
+        },
+        "outputTagValues": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).",
+          "markdownDescription": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).\n\nFor example:\n\n\t<div id=\"{{ foo }}\" class=\"{{ value }}\">"
+        },
+        "controlTagsValues": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allows Liquid control type tags to be used in HTML tag attribute values (within quotations).",
+          "markdownDescription": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).\n\nFor example:\n\n\t<div class=\"foo {% if x %}bar{% endif %}\">"
+        },
+        "controlTagAttributes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allows Liquid control type tags to be used in HTML tag attributes.",
+          "markdownDescription": "Allows Liquid control type tags to be used in HTML tag attributes.\n\nFor example:\n\n\t<div {% if true %} class=\"x\" {% endif %}>"
+        },
+        "iterationAttributes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allows Liquid iteration type tags to be used in HTML tag attributes (not reccomended).",
+          "markdownDescription": "Allows Liquid iteration type tags to be used in HTML tag attributes (not reccomended).\n\nFor example:\n\n\t<div {% for i in items %} data-{{ i }}=\"foo\" {% endfor %}>\n\n---\n\n**NOTE:**\n\nLeave this options set to `false` and avoid infusing for loops within HTML tag attributes. It's dangerous, un-predicatable and can lead to hard to maintain code.\n\n\"_But... Shopify said it was ok..._\"\n\nWell Shopify is wrong and the vast majority of that engineering team are plebs."
+        },
+        "iterationValues": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allows Liquid iteration type tags to be used in HTML tag values (not reccomended).",
+          "markdownDescription": "Allows Liquid iteration type tags to be used in HTML tag attributes values between quotes (not reccomended).\n\nFor example:\n\n\t<div class={% for i in items %}{{ i }}{% endfor %}\">\n\n---\n\n**NOTE:**\n\nLeave this options set to `false` and avoid infusing for loops within HTML tag attributes values. It's dangerous, un-predicatable and can lead to hard to maintain code.\n\n\"_But... Shopify said it was ok..._\"\n\nWell Shopify is wrong and the vast majority of that engineering team are plebs."
+        }
+      }
+    },
+    "validateTag": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "quotationCharacters": {
           "type": "string",
           "default": "double",
           "description": "Validates the type of quotation characters used for tag values",
@@ -222,91 +276,54 @@
             }
           ]
         },
-        "attributes": {
+        "syntacticPairs": {
           "type": "boolean",
           "default": true,
-          "description": "Validates the attributes used on tags",
-          "markdownDescription": "Validates the attributes used on tags.\n\nFor example:\n\n\t<main type=\"text\">\n</main>\n\n Where the `type` is a valid attribute but only on certain tags (like the `<input>` tag) and has no business being used on a semantic `<main>` tag."
+          "description": "Validates the start and end tag existence of Liquid and HTML tag pairs.",
+          "markdownDescription": "Validates the start and end tag existence of Liquid and HTML tag pairs."
         },
-        "values": {
-          "type": "boolean",
-          "default": true,
-          "description": "Validates the values of tag attributes",
-          "markdownDescription": "Validates the values of tag attributes.\n\nFor example:\n\n\t<input type=\"foo\">\n Where the `type` attribute does not accept a value equal to `foo` and only accepts certain values, like `text` or `checkbox` etc etc."
-        },
-        "liquid": {
-          "description": "Liquid specific validations when Liquid syntax is being used within HTML tags between open (<) and close (>) delimiter values.",
-          "markdownDescription": "Liquid specific validations when Liquid syntax is being used within HTML tags between open `<` and close `>` delimiter values.",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "output_attributes": {
-              "type": "boolean",
-              "default": true,
-              "description": "Allows Liquid output tags to be used in HTML tag attributes.",
-              "markdownDescription": "Allows Liquid output tags to be used in HTML tag attributes.\n\nFor example:\n\n\t<div class=\"foo\" {{ some_value }}>"
-            },
-            "output_values": {
-              "type": "boolean",
-              "default": true,
-              "description": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).",
-              "markdownDescription": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).\n\nFor example:\n\n\t<div id=\"{{ foo }}\" class=\"{{ value }}\">"
-            },
-            "control_values": {
-              "type": "boolean",
-              "default": true,
-              "description": "Allows Liquid control type tags to be used in HTML tag attribute values (within quotations).",
-              "markdownDescription": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).\n\nFor example:\n\n\t<div class=\"foo {% if x %}bar{% endif %}\">"
-            },
-            "control_attributes": {
-              "type": "boolean",
-              "default": true,
-              "description": "Allows Liquid control type tags to be used in HTML tag attributes.",
-              "markdownDescription": "Allows Liquid control type tags to be used in HTML tag attributes.\n\nFor example:\n\n\t<div {% if true %} class=\"x\" {% endif %}>"
-            },
-            "iteration_attributes": {
-              "type": "boolean",
-              "default": false,
-              "description": "Allows Liquid iteration type tags to be used in HTML tag attributes (not reccomended).",
-              "markdownDescription": "Allows Liquid iteration type tags to be used in HTML tag attributes (not reccomended).\n\nFor example:\n\n\t<div {% for i in items %} data-{{ i }}=\"foo\" {% endfor %}>\n\n---\n\n**NOTE:**\n\nLeave this options set to `false` and avoid infusing for loops within HTML tag attributes. It's dangerous, un-predicatable and can lead to hard to maintain code.\n\n\"_But... Shopify said it was ok..._\"\n\nWell Shopify is wrong and the vast majority of that engineering team are plebs."
-            },
-            "iteration_values": {
-              "type": "boolean",
-              "default": false,
-              "description": "Allows Liquid iteration type tags to be used in HTML tag values (not reccomended).",
-              "markdownDescription": "Allows Liquid iteration type tags to be used in HTML tag attributes values between quotes (not reccomended).\n\nFor example:\n\n\t<div class={% for i in items %}{{ i }}{% endfor %}\">\n\n---\n\n**NOTE:**\n\nLeave this options set to `false` and avoid infusing for loops within HTML tag attributes values. It's dangerous, un-predicatable and can lead to hard to maintain code.\n\n\"_But... Shopify said it was ok..._\"\n\nWell Shopify is wrong and the vast majority of that engineering team are plebs."
-            }
-          }
-        }
-      }
-    },
-    "validateTag": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "pair": {
-          "type": "boolean",
-          "default": true,
-          "title": "Tag Pairs",
-          "description": "Validates the start and end tag existence of Liquid pairs"
-        },
-        "placement": {
+        "tagPlacement": {
           "type": "boolean",
           "default": true,
           "title": "Tag Placement",
           "description": "Validates the placement position of tags that should be nested"
         },
-        "whitespace": {
-          "type": "boolean",
-          "default": true,
-          "title": "Tag Whitespace",
-          "description": "Validates if the tag accepts whitespace dash `-` attribute values"
+        "extraneousWhitespace": {
+          "type": "object",
+          "properties": {
+            "enable": {
+              "type": "boolean",
+              "description": "Whether to allow or disallow extraneous whitespace."
+            },
+            "limit": {
+              "type": "number",
+              "default": 1,
+              "description": "The maximum number of whitespace that can be preserved"
+            }
+          },
+          "additionalProperties": true,
+          "description": "Allows extraneous whitespace within Liquid tags.",
+          "markdownDescription": "Allows extraneous whitespace within Liquid tags.\n\nFor example:\n\n\t{{ tag   }}\n\n---\n\n**NOTE:**\n\nThis is auto-fixable ruleset, so extraneous whitespace that is detected will automatically stripped if you are formatting on save."
         },
-        "newline": {
+        "iterationArrayType": {
           "type": "boolean",
           "default": true,
-          "title": "Tag Newline",
-          "description": "Validates if a tag can span multiple lines or just a single line"
+          "description": "Validates whether a provided iteration array is of an array type."
+        },
+        "unknownFilter": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates whether a provided tag filter is known or unknown."
+        },
+        "noNestedForLoops": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates whether for loops can nest for loops"
+        },
+        "filterArguments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates a filter arguments"
         }
       }
     },
@@ -489,95 +506,89 @@
     },
     "markup": {
       "properties": {
-        "attribute_sort": {
+        "indentSize": {
+          "type": "number",
+          "default": 2,
+          "description": "The level of indentation to be applied to HTML and Liquid syntax. This option does not apply to embedded regions."
+        },
+        "attributeSort": {
           "type": "boolean",
           "default": false,
           "title": "Sort Attributes",
-          "description": "Alphanumerically sort document attributes. Attribute sorting is ignored on tags that contain attributes template attributes"
+          "description": "Alphanumerically sort HTML attributes from A to Z.",
+          "markdownDescription": "Alphanumerically sort HTML attributes from A to Z.\n\n**Enabled**\n\n\t<div data-attr=\"b\" id=\"c\" class=\"a\">\n\nAfter **Disabled**\n\n\t<div class=\"a\" data-attr=\"b\" id=\"c\">\n\nWhere `class` becomes the first attribute, followed by `data-attr` and then `id` sorted alphanumerically.\n\n---\n\n**NOTE:**\n\nTypically, its best to either set this option with `attributeSortList` as we developers _generally_ do not alphanumerically sort HTML attributes."
         },
-        "attribute_sort_list": {
-          "type": "string",
+        "attributeSortList": {
+          "type": "array",
           "title": "Sort Attribute List",
-          "description": "A comma separated list of attribute names. Attributes will be sorted according to this list and then alphanumerically. This option requires \"attribute_sort\" have a value of true"
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of HTML attribute names. Attributes will be sorted according to this list and then alphanumerically. This option requires \"attribute_sort\" have a value of true and does not support Liquid tag names, only HTML names are applicable.",
+          "markdownDescription": "A list of HTML attribute names. Attributes will be sorted according to this list and then alphanumerically. This option requires `attribute_sort` have a value of `true` and does not accept Liquid tag names, only HTML names are applicable."
         },
-        "correct": {
+        "attemptCorrection": {
           "type": "boolean",
           "default": false,
           "title": "Fix Sloppy Code",
-          "description": "Automatically correct some sloppiness in code"
+          "description": "Automatically attempts to correct some sloppiness in code. Use this option with care, it may wreak havoc in some cases."
         },
-        "comments": {
+        "commentNewline": {
           "type": "boolean",
           "default": false,
-          "description": "This will determine whether comments should always start at position 0 of each line or if comments should be indented according to the code"
+          "description": "This will determine whether comments should always start at position 0 of each line or if comments should be indented according to the code.",
+          "markdownDescription": "This will determine whether comments should always start at position `0` of each line or if comments should be indented according to the code."
         },
-        "force_attribute": {
+        "forceAttribute": {
           "type": "boolean",
           "default": false,
-          "title": "Force Indentation of All Attributes",
-          "description": "If all document attributes should be indented each onto their own line"
+          "description": "If all document attributes should be indented each onto their own line.\n\nBefore:\n\n\t<div id=\"a\" class=\"b\" data-attr=\"c\">\n\nAfter:\n\n\t<div\n\t    id=\"a\"\n\t    class=\"b\"\n\t    data-attr=\"c\">",
+          "markdownDescription": "If all document attributes should be indented each onto their own line. This is the recommended format setting when working with Liquid and HTML as it allows for clear and concise markup code.\n\n---\n\n**Disabled**: 👎\n\n\t<div id=\"a\" class=\"b\" data-attr=\"c\">\n\n**Enabled** 👍\n\n\t<div\n\t id=\"a\"\n\t class=\"b\"\n\t data-attr=\"c\">\n\n---\n\n**NOTE:**\n\nTypically, it is recommended that this option be set to `true` instead of `false` when working with Liquid. Forcing attributes onto a newline allows for clear and concise markup.\n\n\"_But... Shopify does not recommended that..._\"\n\nDon't listen to Shopify, they rarely get things right. Shopify is a company that promotes tooling that indirectly helps insidious platforms like Facebook, do not sip from their cup."
         },
-        "format_comments": {
+        "commentIndent": {
           "type": "string",
           "default": false,
-          "description": "Control how Liquid comment are formatted"
+          "description": "If a blank new line should be forced above comments."
         },
-        "preserve": {
+        "preserveLine": {
           "type": "number",
-          "default": 1,
-          "title": "Preserve Consecutive New Lines",
-          "description": "The maximum number of consecutive empty lines to retain"
+          "default": 3,
+          "description": "The maximum number of consecutive empty lines to retain."
         },
-        "preserve_comment": {
+        "preserveComment": {
           "type": "boolean",
           "default": false,
           "title": "Eliminate Word Wrap Upon Comments",
-          "description": "Prevent comment reformatting due to option wrap"
+          "description": "Prevent comment reformatting due to option wrap."
         },
-        "preserve_text": {
+        "preserveText": {
           "type": "boolean",
           "default": true,
           "title": "Preserve Markup Text White Space",
-          "description": "If text in the provided document code should be preserved exactly as provided. This option eliminates beautification and wrapping of text content"
+          "description": "If text in the provided document code should be preserved exactly as provided. This option eliminates beautification and wrapping of text content."
         },
         "wrap": {
           "type": "number",
           "title": "Wrap Limit",
-          "description": "Character width limit before applying word wrap. A 0 value disables this option. Defaults to the word wrap limit set workspace or user settings."
+          "description": "Character width limit before applying word wrap. A 0 value disables this option. Defaults to the word wrap limit set workspace or user settings.",
+          "markdownDescription": "Character width limit before applying word wrap. A `0` value disables this option. Typically, you can leave this option, as it will defaults to the word wrap limit set within workspace/user settings of your text editor."
         },
-        "space_close": {
+        "selfCloseSpace": {
           "type": "boolean",
           "default": false,
-          "title": "Close Markup Self-Closing Tags with a Space",
-          "description": "Markup self-closing tags end will end with ' />' instead of '/>'"
+          "description": "Markup self-closing tags end will end with ' />' instead of '/>'",
+          "markdownDescription": "Markup self-closing tags end will end with ' />' instead of '/>' on the ending delimeters.\n\n---\n\n**Disabled**:\n\n\t<meta charset=\"UTF-8\">\n\n**Enabled**:\n\n\t<meta charset=\"UTF-8\" />\n\n---\n\n**NOTE:**\n\nThis is optional and self-closing tags are no longer required as of HTML5, so use this how you wish."
         },
-        "tag_whitespace": {
-          "type": "string",
-          "description": "Automatically apply whitespace dashes (-) to the encasing Liquid brace tags, eg: {{- -}} or {%- -%}. Please note that tags nested within HTML Attributes will not have whitespaces applied.",
-          "oneOf": [
-            {
-              "enum": ["off"],
-              "description": "Disables this rule"
-            },
-            {
-              "enum": ["never"],
-              "description": "Never applies whitespace dashes to Liquid tags, eg: \"{% tag %}\""
-            },
-            {
-              "enum": ["always"],
-              "description": "Will always apply whitespace dashes to Liquid tags, eg: \"{%- tag -%}\""
-            }
-          ]
-        },
-        "tag_padding": {
+        "preserveAttributes": {
           "type": "boolean",
           "default": false,
-          "description": "Apply and newline before and after content contained with tag blocks. This option is only applied to Tag Associates and Overrides"
+          "description": "If HTML tags should have their insides (attributes) preserved. This option will prevent attributes from being formatted.",
+          "markdownDescription": "If HTML tags should have their insides (attributes) preserved. This option will prevent attributes from being formatted.\n\n---\n\n**Disabled** 👎\n\n\t<div   id=\"a\"\n  \tclass=\"b\" data-attr=\"c\">\n\n**Enabled** 👍\n\n\t<div\n\t id=\"a\"\n\t class=\"b\"\n\t data-attr=\"c\">\n\n---\n\n**NOTE:**\n\nThere might be some situations where you do not desire attributes to be formatted, in such case use this option."
         },
-        "quote_convert": {
+        "quoteConvert": {
           "default": "none",
-          "title": "Convert Quotes",
-          "description": "If the quotes of script strings or document attributes should be converted to single quotes or double quotes",
+          "description": "If quotation character should be converted to specific type or not.",
+          "markdownDescription": "If quotation character should be converted to specific type or not.\n\n**double** 👍\n\n\t<div id=\"a\" class=\"b\">\n\n**single** 👎\n\n\t<div id='b' class='a'>\n\n**none** 👎\n\n\t<div id=\"b\" class='a' data-attr=c>\n\nBy default, this is set to `double`\n\n---\n\n**NOTE:**\n\nYou really should **not** use single quotations in HTML, it is not recommended  and typically frowned upon. Liquid quotes within tags should use single and HTML should use double.\n\n",
           "oneOf": [
             {
               "enum": ["double"],
