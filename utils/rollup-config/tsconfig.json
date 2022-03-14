@@ -1,0 +1,13 @@
+{
+  "extends": "@liquify/tsconfig",
+  "exclude": ["node_modules/**", "package"],
+  "include": ["src/index.ts"],
+  "compilerOptions": {
+    "outDir": ".",
+    "rootDir": "src",
+    "target": "ES2016",
+    "removeComments": false,
+    "moduleResolution": "node",
+    "skipLibCheck": true
+  }
+}
