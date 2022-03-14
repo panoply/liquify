@@ -1,15 +1,15 @@
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
-import { ParseError } from 'lexical/errors';
+import inRange from 'lodash.inrange';
+import { ParseError } from '../lexical/errors';
+import { Diagnostics, IDiagnostic } from '../lexical/diagnostics';
 import { TextEdit, TextDocumentItem } from 'vscode-languageserver-types';
 // import { NodeLanguage } from 'lexical/language';
 // import { Config } from 'config';
 // import { NodeKind } from 'lexical/kind';
-import inRange from 'lodash.inrange';
-import { Node } from 'tree/nodes';
-import { Embed } from 'tree/embed';
-import { GetFormedRange } from 'parser/utils';
-import { Diagnostics, IDiagnostic } from 'lexical/diagnostics';
-import * as s from 'parser/stream';
+import { Node } from '../tree/nodes';
+import { Embed } from '../tree/embed';
+import { GetFormedRange } from '../parser/utils';
+import * as s from '../parser/stream';
 // import { spec, Type } from '@liquify/liquid-language-specs';
 
 /**
@@ -71,12 +71,12 @@ export class IAST {
   /**
    * The error diagnostics consumed by LSP
    */
-  public selection: Range
+  public selection: Range;
 
   /**
    * Line offsets for the document
    */
-  private lines: number[] | undefined
+  private lines: number[] | undefined;
 
   /**
    * The cursor offset index, which is generated from
@@ -90,13 +90,13 @@ export class IAST {
   public format: { enable: boolean, error?: IDiagnostic } = {
     enable: true,
     error: undefined
-  }
+  };
 
   /**
    * List of parsing errors and validations
    * encountered while scanning the document.
    */
-  public errors: IDiagnostic[] = []
+  public errors: IDiagnostic[] = [];
 
   /**
    * List of indexes where embedded nodes
@@ -126,7 +126,7 @@ export class IAST {
    * Returns the node at the current cursor location or null
    * if the cursor is not located within a node on the tree.
    */
-  public linting: TextEdit[] = []
+  public linting: TextEdit[] = [];
 
   /**
    * Reference to the most recent document changes provided

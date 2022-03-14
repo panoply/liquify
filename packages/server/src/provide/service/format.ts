@@ -240,9 +240,7 @@ function formatMarkup (source: string, { languageRules }: Formatting) {
 
   // console.log(source);
 
-  const beautify = format.markup(preplacement(source), languageRules.html);
-
-  return replacements(beautify);
+  return format.markup(preplacement(source), languageRules.markup);
 
 }
 
@@ -301,14 +299,15 @@ export function regions (document: IAST, rules: Formatting): TextEdit[] {
  * `regions()` in the sense that no regions exists and only HTML
  * and Liquid syntaxes are detected.
  */
-export function markup (document: IAST, rules: Formatting): TextEdit[] {
+export async function markup (document: IAST, { languageRules }: Formatting): Promise<TextEdit[]> {
 
   const source = document.literal().getText();
   const range = document.getRange(0, source.length);
+  const newText = await format.markup(source, languageRules.markup);
 
   return [
     TextEdit.replace(range, linting(document)),
-    TextEdit.replace(range, formatMarkup(source, rules))
+    TextEdit.replace(range, newText)
   ];
 
 };

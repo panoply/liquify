@@ -1,4 +1,4 @@
-import { IFilters } from 'liquid/types/filters';
+import { IFilters } from '../../types/filters';
 
 export let Filters: IFilters;
 

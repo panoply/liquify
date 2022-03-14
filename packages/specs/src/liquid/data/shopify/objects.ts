@@ -1,4 +1,4 @@
-import { IObjects } from 'liquid/types/objects';
+import { IObjects } from '../../types/objects';
 
 export let Objects: IObjects;
 

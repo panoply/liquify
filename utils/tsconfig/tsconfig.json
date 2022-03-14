@@ -6,7 +6,7 @@
   "compilerOptions": {
     "types": ["node"],
     "incremental": true,
-    "declaration": true,
+    "declaration": false,
     "outDir": "package",
     "target": "ES6",
     "removeComments": true,

@@ -15,4 +15,5 @@ packages:
   - "packages/parser"
   - "packages/server"
   - "packages/specs"
+  - "types"
 

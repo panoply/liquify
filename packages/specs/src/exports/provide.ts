@@ -9,13 +9,13 @@ export {
   LiquidOutputResolve,
   LiquidFilterResolve
 
-} from 'liquid/controller/provide';
+} from '../liquid/controller/provide';
 
 export {
 
   setCompletions
 
-} from 'liquid/controller/queries';
+} from '../liquid/controller/queries';
 
 /* HTML QUERIES ------------------------------- */
 
@@ -29,4 +29,4 @@ export {
   HTMLValueComplete,
   HTMLValueResolve
 
-} from 'html/controller/provide';
+} from '../html/controller/provide';

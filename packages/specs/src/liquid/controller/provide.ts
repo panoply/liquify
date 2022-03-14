@@ -1,6 +1,8 @@
-import { IProperties } from 'liquid/types';
+import { Parser } from '@liquify/types';
+import { IProperties } from '../types';
 import { variation } from './queries';
-import { descriptive, TypeNames } from 'shared/generators';
+import { descriptive, TypeNames } from '../../shared/generators';
+import { isString } from '../../shared/typeof';
 import {
   CompletionItemKind,
   CompletionItem,
@@ -72,26 +74,29 @@ export function LiquidTagResolve (item: CompletionItem, edits?: TextEdit[]) {
 
 }
 
-export async function LiquidPropertyComplete (
-  objects: { [offset: number]: string[] | number },
-  _scope: { [tagName: string]: string } | string | string | undefined,
-  offset: number
-) {
+export async function LiquidPropertyComplete (node: Parser.INode, offset: number) {
+
+  const scope = node.parent.scope?.[node.tag];
 
   // Lets first acquire the object from the node
   // We decrement the offset value by 1 for the dot or bracket seperator
-  let props: string[] | number = objects[offset - 1];
+  let props: string[] | number = node.objects[offset - 1];
+
+  // Store the boolean checksum
+  const isArray = Array.isArray(props);
+
+  // Lets handle scoped references. When a token has a scope value it infers
+  // a re-assignment (ie: {% assign x = something %} or {% for x in arr %})
+  // where the x is the re-assignment. We need to replace the parsed entries
+  // with the scope value which will be the object to walk
+  if (isString(scope) && isArray) (props as string[]).splice(0, 1, scope);
 
   // If we are pointing to an array, the node objects property would
   // equate to "{ 10: [ 'object' ] }" where the value 10 is the offset
   // We prevent passing to the walk() iterator if we an object name.
-  if (Array.isArray(props) && props.length === 1) {
-
-    const properties = variation.objects[props[0] as string]?.properties;
-
-    return properties
-      ? Object.entries(properties).map(ProvideProps)
-      : null;
+  if (isArray && (props as string[]).length === 1) {
+    const properties = variation.objects[props[0]]?.properties;
+    return properties ? Object.entries(properties).map(ProvideProps) : null;
   }
 
   // If props is not pointing to a number, we cancel
@@ -106,6 +111,8 @@ export async function LiquidPropertyComplete (
   // walk the objects contained on the node
   return (function walk (props: string[], value: IProperties) {
 
+    if (!value) return null;
+
     const object = value?.[props[0]]?.properties;
 
     // We check if we have walked to the last property
@@ -115,6 +122,6 @@ export async function LiquidPropertyComplete (
       ? object && walk(props.slice(1), object)
       : object ? Object.entries(object).map(ProvideProps) : null;
 
-  }(props.slice(1), variation.objects[props[0]].properties));
+  }(props.slice(1), variation.objects[props[0]]?.properties));
 
 }

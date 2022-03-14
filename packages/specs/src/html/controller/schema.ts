@@ -1,11 +1,11 @@
-import { isObject, isString } from 'shared/typeof';
+import { isObject, isString } from '../../shared/typeof';
 import { MarkupContent } from 'vscode-languageserver-types';
 import {
   IHTMLValue,
   IHTMLAttribute,
   IHTMLTagAttributes,
   IHTMLSpecs
-} from 'html/types/markup';
+} from '../types/markup';
 
 import {
   HTMLDataVSCode,
@@ -13,7 +13,7 @@ import {
   IValueSet,
   ITagData,
   IAttributeData
-} from 'html/types/custom';
+} from '../types/custom';
 
 /**
  * Merges custom data using vscode schema to Liquify compatiable HTML spec

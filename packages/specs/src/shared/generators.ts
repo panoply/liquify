@@ -1,9 +1,9 @@
 /* eslint-disable array-bracket-newline */
 
-import { Tokens } from 'exports/types';
+import { Tokens } from '../exports/types';
 import { Type } from './enums';
-import { Arguments, IParameter } from 'liquid/types/common';
-import { IFilter } from 'liquid/types/filters';
+import { Arguments, IParameter } from '../liquid/types/common';
+import { IFilter } from '../liquid/types/filters';
 
 import {
   SignatureInformation,

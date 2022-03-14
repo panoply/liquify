@@ -1,5 +1,5 @@
-import { LiquidParser } from '../../package/parser';
-import { Chalk } from 'chalk';
+import { LiquidParser } from '../../package/parser.mjs';
+import type { Chalk } from 'chalk';
 
 type LogColors = (
   'black'
@@ -42,7 +42,7 @@ type LogColors = (
 
 /* CHALK -------------------------------------- */
 
-export const chalk: Chalk;
+export const chalk: typeof Chalk;
 
 /* TO TOKEN ----------------------------------- */
 
@@ -88,7 +88,7 @@ export function log(
 export interface Server {
   languageId:string,
   version: number,
-  text: document,
+  text: string,
   uri: string
 }
 

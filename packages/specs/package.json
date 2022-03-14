@@ -15,7 +15,7 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
   "main": "./package/index.js",
-  "types": "./package/types/index.d.ts",
+  "types": "@liquify/types/specs/index.d.ts",
   "exports": {
     "require": "./package/index.js",
     "import": "./package/index.js"
@@ -62,6 +62,7 @@
     "@liquify/prettier-config": "workspace:*",
     "@liquify/rollup-config": "workspace:*",
     "@liquify/tsconfig": "workspace:*",
+    "@liquify/types": "workspace:*",
     "@vscode/web-custom-data": "^0.3.8",
     "ava": "^4.1.0",
     "esm": "^3.2.25",

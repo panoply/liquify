@@ -1,5 +1,5 @@
-import { IAST } from 'tree/ast';
 import { TextDocumentItem, VersionedTextDocumentIdentifier } from 'vscode-languageserver-types';
+import { IAST } from './ast';
 
 export const model: Map<string, IAST> = new Map();
 

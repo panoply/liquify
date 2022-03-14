@@ -1,16 +1,11 @@
 import { query as q, IEngine } from '@liquify/liquid-language-specs';
-import { parse } from 'parser/parse';
+import { parse } from './parser/parse';
 import { create, update, get, remove, model } from 'tree/model';
 import { IAST } from './tree/ast';
 import { Config, IConfig } from './config';
 import { Node } from './tree/nodes';
 import { Embed as IIEmbed } from './tree/embed';
-import {
-  VersionedTextDocumentIdentifier,
-  Range,
-  DidChangeTextDocumentParams,
-  TextDocumentItem
-} from 'vscode-languageserver-types';
+import { TextDocumentItem } from 'vscode-languageserver-types';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
@@ -19,7 +14,7 @@ export { IAST } from './tree/ast';
 export { Node as INode } from './tree/nodes';
 export { NodeLanguage } from './lexical/language';
 export { NodeKind } from './lexical/kind';
-
+export { TokenType as Tokens } from './lexical/tokens';
 export * from '@liquify/liquid-language-specs';
 export * as Regexp from './lexical/expressions';
 export * as Characters from './lexical/characters';

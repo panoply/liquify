@@ -18,7 +18,7 @@ export class JSONLanguageService {
 
   public service: LanguageService = getLanguageService({
     clientCapabilities: ClientCapabilities.LATEST
-  })
+  });
 
   constructor (schema: object) {
 

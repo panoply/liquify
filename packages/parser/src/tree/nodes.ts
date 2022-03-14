@@ -1,13 +1,14 @@
 /* eslint no-unused-vars: "off" */
 
-import { Range, Position } from 'vscode-languageserver-textdocument';
-import { NodeKind } from 'lexical/kind';
-import { document } from 'tree/model';
-import { findFirst } from 'parser/utils';
-import { IScopes, NodeType, INode } from 'tree/typings';
-import { NodeLanguage } from 'lexical/language';
-import { Type } from 'types/export';
-export { NodeType, Token, IScopes } from 'tree/typings';
+import { Range } from 'vscode-languageserver-textdocument';
+import { NodeKind } from '../lexical/kind';
+import { NodeLanguage } from '../lexical/language';
+import { document } from './model';
+import { findFirst } from '../parser/utils';
+import { NodeType, INode } from './typings';
+import { Type } from '../types/export';
+
+export { NodeType, Token, IScopes } from './typings';
 
 // import inRange from 'lodash.inrange';
 
@@ -116,7 +117,7 @@ export class Node implements INode {
    * `null` is returned.
    */
   get prevSibling (): Node | null {
-    return this.parent.children[this.index - 1];
+    return this.parent.children[this.index - 1] || null;
   }
 
   /**
@@ -137,10 +138,24 @@ export class Node implements INode {
   }
 
   /**
+   * Returns the previous child in the node tree. When only 1 child
+   * exists within the tree the parent is returned, else we return
+   * the previous child
+   */
+  get prevChild () {
+
+    const idx = this.parent.children.length;
+
+    return idx === 1 ? this.parent : this.parent.children[idx - 2];
+
+  }
+
+  /**
    * Returns the last child in this nodes tree. Returns `null`
    * if the node has no children or is a void/singular type.
    */
   get lastChild (): Node | undefined {
+
     return this.children?.[this.children.length - 1] || null;
   }
 
@@ -190,6 +205,7 @@ export class Node implements INode {
 
     const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
 
+    console.log(offset, node);
     if (node >= 0) {
       const child = this.children[node];
       if (offset > child.start && offset <= child.end) {

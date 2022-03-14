@@ -1,11 +1,11 @@
-import { Node, NodeType } from 'tree/nodes';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { TextEdit } from 'vscode-languageserver';
-import { document } from 'tree/model';
-import { NodeLanguage } from 'lexical/language';
-import { customChanges } from 'parser/utils';
+// import { TextDocumentContentChangeEvent } from 'vscode-languageserver-protocol';
+// import { TextEdit } from 'vscode-languageserver';
 import inRange from 'lodash.inrange';
-import { TextDocumentContentChangeEvent } from 'vscode-languageserver-protocol';
+import { document } from './model';
+import { Node, NodeType } from './nodes';
+import { NodeLanguage } from '../lexical/language';
+import { customChanges } from '../parser/utils';
 
 export class Embed extends Node {
 
@@ -16,18 +16,18 @@ export class Embed extends Node {
     this.parent.children.pop();
   }
 
-  public regionLiteral: TextDocument
+  public regionLiteral: TextDocument;
 
   /**
    * The index reference of the embedded region on `AST.regions[]`
    */
-  public regionIndex: number
+  public regionIndex: number;
 
   /**
    * The line offset number of the embedded region. This points to
    * the start range line number and used to align features in LSP.
    */
-  public regionOffset: number
+  public regionOffset: number;
 
   /**
    * Embedded Language ID. This value excludes `HTML` and `Liquid` and
@@ -39,7 +39,7 @@ export class Embed extends Node {
    * The TextDocument literal reference. This value is passed to Language
    * service within LSP.
    */
-  public textDocument: TextDocument
+  public textDocument: TextDocument;
 
   /**
    * Region

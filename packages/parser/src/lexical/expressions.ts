@@ -217,7 +217,7 @@ export const TagEnder = /^-?\s*?end/i;
  * Captures a Liquid comment end tag
  *
  */
-export const CommentTagEnd = /{%-?\s*?endcomment\b/i;
+export const CommentTagEnd = /{%-?\s*?endcomment\b/;
 
 /**
  * `{%-?\s*?endraw`
@@ -227,7 +227,7 @@ export const CommentTagEnd = /{%-?\s*?endcomment\b/i;
  * Captures a Liquid raw end tag
  *
  */
-export const RawTagEnd = /{%-?\s*?endraw\b/i;
+export const RawTagEnd = /{%-?\s*?endraw\b/;
 
 /**
  * `{%-?\s*?endschema`
@@ -237,7 +237,7 @@ export const RawTagEnd = /{%-?\s*?endraw\b/i;
  * Captures a Liquid raw end tag
  *
  */
-export const SchemaTagEnd = /{%-?\s*?endschema\b/i;
+export const SchemaTagEnd = /{%-?\s*?endschema\b/;
 
 /**
  * `{%-?\s*?endstyle`
@@ -247,7 +247,7 @@ export const SchemaTagEnd = /{%-?\s*?endschema\b/i;
  * Captures a Liquid raw end tag
  *
  */
-export const StyleTagEnd = /{%-?\s*?endstyle\b/i;
+export const StyleTagEnd = /{%-?\s*?endstyle\b/;
 
 /**
  * `{%-?\s*?endstylesheet`
@@ -257,7 +257,7 @@ export const StyleTagEnd = /{%-?\s*?endstyle\b/i;
  * Captures a Liquid raw end tag
  *
  */
-export const StylesheetTagEnd = /{%-?\s*?endstylesheet\b/i;
+export const StylesheetTagEnd = /{%-?\s*?endstylesheet\b/;
 
 /**
  * `{%-?\s*?endjavascript`
@@ -267,7 +267,7 @@ export const StylesheetTagEnd = /{%-?\s*?endstylesheet\b/i;
  * Captures a Liquid raw end tag
  *
  */
-export const JavascriptTagEnd = /{%-?\s*?endjavascript\b/i;
+export const JavascriptTagEnd = /{%-?\s*?endjavascript\b/;
 
 /**
  * `^end`
@@ -277,7 +277,7 @@ export const JavascriptTagEnd = /{%-?\s*?endjavascript\b/i;
  * Captures an `end` keyword
  *
  */
-export const KeywordEnd = /^end/i;
+export const KeywordEnd = /^end/;
 
 /**
  * `^empty`
@@ -288,6 +288,16 @@ export const KeywordEnd = /^end/i;
  *
  */
 export const KeywordEmpty = /^empty/;
+
+/**
+ * `^else`
+ *
+ * ---
+ *
+ * Captures an `else` keyword
+ *
+ */
+export const KeywordElse = /^else\b/;
 
 /**
  * `^in`

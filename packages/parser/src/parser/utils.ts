@@ -1,6 +1,12 @@
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
 
 /* -------------------------------------------- */
+/* EXPOSED NATIVES                              */
+/* -------------------------------------------- */
+
+export const assign = Object.assign;
+
+/* -------------------------------------------- */
 /* PARSER RELATER                               */
 /* -------------------------------------------- */
 

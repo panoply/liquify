@@ -35,6 +35,8 @@ export function doObjectHover (document: IAST, position: Position) {
 
   let word: string;
 
+  if(typeof node.s === 'string')
+
   if (node.type !== 0) {
     if (inRange(offset, node.offsets[0], node.offsets[1])) {
       word = getWord(node.startToken, character);
@@ -53,7 +55,6 @@ export function doObjectHover (document: IAST, position: Position) {
       html5.attributes?.[word]
     );
   } else {
-
     cursor = (
       liquid.variation?.objects?.[word] ||
       liquid.variation.tags?.[word] ||

@@ -5,11 +5,10 @@
   "compilerOptions": {
     "types": ["node"],
     "rootDir": "src",
-    "incremental": true,
+    "incremental": false,
     "typeRoots": ["node_modules/@types", "src/types/*"],
     "declaration": true,
-    "declarationDir": "package/@types",
-    "preserveConstEnums": false,
+    "declarationDir": "package/types",
     "outDir": "package",
     "baseUrl": ".",
     "paths": {

@@ -16,11 +16,6 @@
   "type": "module",
   "types": "./index.d.ts",
   "main": "index.js",
-  "module": "index.js",
-  "exports": {
-    "require": "./index.js",
-    "import": "./index.js"
-  },
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",

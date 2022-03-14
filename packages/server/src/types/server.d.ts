@@ -219,26 +219,26 @@ export class Config {
   /**
    * The `.rc` files location
    */
-  rcfile: IRCFiles
+  rcfile: IRCFiles;
 
   /**
    * The rootURI path of workspace
    */
-  rootUri: string
+  rootUri: string;
 
   /**
    * Path includes used to resolve include/import tags
    */
-  paths: object
-  capability: Capability
-  trace:Trace
-  notifier: Notifiers
-  provider: Providers
-  service: Services
+  paths: object;
+  capability: Capability;
+  trace:Trace;
+  notifier: Notifiers;
+  provider: Providers;
+  service: Services;
   formatting: {
     ignore: { files: string[] },
     editorRules: FormattingEditorConfigs,
     languageRules: IFormatting
-  }
+  };
 
 }

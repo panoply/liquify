@@ -1,4 +1,4 @@
-import { WSP, TAB, NWL, LFD, CAR, BWS } from 'lexical/characters';
+import { WSP, TAB, NWL, LFD, CAR, BWS } from '../lexical/characters';
 
 /* -------------------------------------------- */
 /* STATES                                       */

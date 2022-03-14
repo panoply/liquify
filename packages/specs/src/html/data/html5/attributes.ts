@@ -1,4 +1,4 @@
-import { Attributes as IAttributes } from 'html/types/markup';
+import { Attributes as IAttributes } from '../../types/markup';
 
 export let Attributes: IAttributes;
 

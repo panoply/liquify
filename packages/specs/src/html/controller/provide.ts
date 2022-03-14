@@ -1,10 +1,10 @@
-import * as Specification from 'html/data/export';
-import { IHTMLTagAttributes, IHTMLSpecs } from 'html/types/markup';
-import { IHTMLProvideAttrs, IHTMLCompletions } from 'html/types/completions';
-import { HTMLDataVSCode } from 'html/types/custom';
+import * as Specification from '../data/export';
+import { IHTMLTagAttributes, IHTMLSpecs } from '../types/markup';
+import { IHTMLProvideAttrs, IHTMLCompletions } from '../types/completions';
+import { HTMLDataVSCode } from '../types/custom';
 import { schema } from './schema';
-import { Tokens } from 'exports/types';
-import { documentation, descriptive } from 'shared/generators';
+import { Tokens } from '../../exports/types';
+import { documentation, descriptive } from '../../shared/generators';
 import {
   CompletionItemKind,
   CompletionItem,

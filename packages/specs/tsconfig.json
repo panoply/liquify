@@ -3,10 +3,11 @@
   "exclude": ["node_modules/**", "package/**", "test"],
   "include": ["src/index.ts", "src/**/*.ts"],
   "compilerOptions": {
-    "incremental": false,
     "rootDir": "src",
+    "incremental": false,
     "declaration": true,
     "declarationDir": "package/types",
+    "emitDeclarationOnly": true,
     "outDir": "package",
     "removeComments": false,
     "baseUrl": ".",

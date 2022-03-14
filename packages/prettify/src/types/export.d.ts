@@ -1,4 +1,12 @@
-import { IGlobalOptions, IJSONOptions, IMarkupOptions, IScriptOptions, IStyleOptions } from './options';
+import {
+  IGlobalOptions,
+  IJSONOptions,
+  IMarkupOptions,
+  IScriptOptions,
+  IStyleOptions
+} from './options';
+
+export * from './options';
 
 /**
  * Updates formatting options

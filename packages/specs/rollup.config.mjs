@@ -49,7 +49,10 @@ export default rollup(
           {
             verbose: true,
             runOnce: env.watch,
-            targets: 'package/*'
+            targets: [
+              'package/*',
+              '!package/types/**'
+            ]
           }
         ),
         plugin.esbuild(),

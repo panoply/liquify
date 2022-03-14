@@ -30,6 +30,8 @@ export const enum TokenType {
   Control,
   ControlCondition,
   ControlOperator,
+  ControlElse,
+  ControlElseIf,
 
   DelimiterOpen,
   DelimiterClose,
@@ -38,6 +40,7 @@ export const enum TokenType {
   /* TAGS --------------------------------------- */
 
   TagOpen,
+  TagClose,
 
   EndTagOpen,
   EndTagClose,

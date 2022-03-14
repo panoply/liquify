@@ -3,14 +3,24 @@ import { rollup, env, config, plugin } from '@liquify/rollup-config';
 export default rollup(
   {
     input: 'src/index.ts',
-    output: {
-      format: 'cjs',
-      file: config.output.cjs,
-      sourcemap: env.is('prod', 'hidden'),
-      preferConst: true,
-      esModule: false,
-      chunkFileNames: '[name].js'
-    },
+    output: [
+      {
+        format: 'cjs',
+        file: config.output.cjs,
+        sourcemap: env.is('prod', 'hidden'),
+        preferConst: true,
+        esModule: false,
+        chunkFileNames: 'parser.js'
+      },
+      {
+        format: 'esm',
+        file: config.output.esm,
+        sourcemap: env.is('prod', 'hidden'),
+        preferConst: true,
+        esModule: false,
+        chunkFileNames: 'parser.mjs'
+      }
+    ],
     external: [
       '@liquify/liquid-language-specs',
       'vscode-languageserver-textdocument'
@@ -29,7 +39,10 @@ export default rollup(
           {
             verbose: true,
             runOnce: env.watch,
-            targets: 'package/*'
+            targets: [
+              'package/*',
+              '!package/types/**'
+            ]
           }
         ),
         plugin.copy(
@@ -38,8 +51,8 @@ export default rollup(
             copyOnce: env.watch,
             targets: [
               {
-                src: 'node_modules/@liquify/liquid-language-specs/package/@specs',
-                dest: 'package/@specs'
+                src: 'node_modules/@liquify/liquid-language-specs/package/specs',
+                dest: 'package/specs'
               }
             ]
           }
@@ -61,8 +74,7 @@ export default rollup(
               '.js'
             ]
           }
-        ),
-        plugin.beep()
+        )
       ]
     )(
       [

@@ -12,6 +12,7 @@ export {
   isObjectType,
   isOptional,
   isParameter,
+  isParent,
   isProperty,
   isRequired,
   isTagType,
@@ -23,7 +24,7 @@ export {
   nextParameter,
   prevArgument,
   reset
-} from 'liquid/controller/queries';
+} from '../liquid/controller/queries';
 
 /* HTML QUERIES ------------------------------- */
 
@@ -38,4 +39,4 @@ export {
   isEmbedded,
   isLanguage
 
-} from 'html/controller/queries';
+} from '../html/controller/queries';

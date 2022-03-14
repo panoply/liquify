@@ -25,7 +25,6 @@
   "editor.wordWrapColumn": 96,
   "editor.detectIndentation": true,
   "editor.renderWhitespace": "none",
-  "editor.renderIndentGuides": true,
   "editor.codeActionsOnSave": {
     "source.deleteSemicolons": true,
     "source.fixAll.eslint": true

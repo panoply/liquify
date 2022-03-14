@@ -1,4 +1,4 @@
-import { IHTMLTag, IHTMLValue, IHTMLTagAttributes } from 'html/types/markup';
+import { IHTMLTag, IHTMLValue, IHTMLTagAttributes } from '../types/markup';
 import { html5 } from './provide';
 import { is } from 'shared/finders';
 

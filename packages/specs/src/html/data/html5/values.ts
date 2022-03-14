@@ -1,4 +1,4 @@
-import { Values as IValues } from 'html/types/markup';
+import { Values as IValues } from '../../types/markup';
 
 export let Values: IValues;
 

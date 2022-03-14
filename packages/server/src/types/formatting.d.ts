@@ -1,21 +1,10 @@
-import { HTMLRules, JSONRules } from './prettydiff';
-export { EnforcedRules, HTMLEnforce, JSONEnforce, SharedRules } from './prettydiff';
+import { IMarkupOptions, IJSONOptions, IScriptOptions, IStyleOptions } from '@liquify/prettify';
 
 export interface AssociateTags {
   kind: 'html' | 'liquid'
   name: string
   attr?: string
 }
-
-/**
- * Extend associated tags to HTML
- */
-interface IHTMLFormat extends HTMLRules { tags?: AssociateTags[] }
-
-/**
- * Extend associated tags to JSON
- */
-interface IJSONFormat extends JSONRules { tags?: AssociateTags[] }
 
 /**
  * Text Editor Settings
@@ -43,23 +32,19 @@ export interface IFormatting {
   /**
    * PrettyDiff options the HTML/Liquid language
    */
-  html: IHTMLFormat;
+  markup: Partial<IMarkupOptions>
 
   /**
    * PrettyDiff options for the JSON language
    */
-  json: IJSONFormat;
+  json: Partial<IJSONOptions>
 
   /**
    * @todo Implement Prettier or JSBeautify
    */
-  javascript: any;
+  script: Partial<IScriptOptions>
   /**
    * @todo Implement Prettier or JSBeautify
    */
-  css: any;
-  /**
-   * @todo Implement Prettier or JSBeautify
-   */
-  scss: any;
+  style: Partial<IStyleOptions>
 }

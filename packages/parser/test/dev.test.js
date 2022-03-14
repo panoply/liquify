@@ -6,10 +6,11 @@ import { parser } from './cases/shared';
 const text = `
 
 
-  {% if foo %}
+    {% for foo in collection.products %}
 
-  {% endif %}
+      {{ foo.available }}
 
+    {% endfor %}
 
 
 
@@ -32,6 +33,7 @@ function Stack (ast) {
         type: child.type,
         end: child.end,
         scope: child.scope,
+        offsets: child.offsets,
         errors: child.errors,
         embeddedId: child.embeddedId,
         languageId: child.languageId,
@@ -73,7 +75,7 @@ test('FullDocument Parse', t => {
   // console.log(ast.getTokenAt(60));
   const end = process.hrtime(start);
   console.log(Stack(ast));
-  // console.log(ast);
+  // console.log(ast.nodes);
   // console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());
 

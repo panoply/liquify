@@ -5,14 +5,12 @@ import {
   Within,
   QueryErrors
 } from '@liquify/liquid-language-specs';
-
-import { TokenType } from 'lexical/tokens';
-import { ScanState, ScanCache } from 'lexical/state';
-import { ParseError } from 'lexical/errors';
-
-import * as s from 'parser/stream';
-import * as r from 'lexical/expressions';
-import * as c from 'lexical/characters';
+import { TokenType } from '../lexical/tokens';
+import { ScanState, ScanCache } from '../lexical/state';
+import { ParseError } from '../lexical/errors';
+import * as r from '../lexical/expressions';
+import * as c from '../lexical/characters';
+import * as s from './stream';
 
 /* -------------------------------------------- */
 /* EXPORT SCOPE                                 */
@@ -55,6 +53,15 @@ export let error: number;
  * the stream.
  */
 let cache: number = ScanCache.Reset;
+
+/**
+ * Ender
+ *
+ * Holds a reference to the type of tags
+ * ending delimeter reference. This is so we
+ * can gracefully consume tokens when errors occur
+ */
+let ender: number = ScanCache.Reset;
 
 /**
  * Scan State
@@ -211,6 +218,7 @@ function LiquidSeq () {
   // Liquid output type delimiter, eg: {{ or {{-
   if (s.IfCodeChar(c.LCB)) {
     state = ScanState.AfterOutputTagOpen;
+    ender = ScanState.BeforeOutputTagClose;
     return TokenType.OutputTagOpen;
   }
 
@@ -220,6 +228,8 @@ function LiquidSeq () {
     // Lets peek ahead to see if we are dealing with an {% end %}
     // type tag, but we will not consume, just check
     if (s.IsRegExp(r.TagEnder)) {
+
+      ender = ScanState.BeforeEndTagClose;
 
       // Skip over whitespace
       s.SkipWhitespace();
@@ -522,22 +532,32 @@ function Scan (): number {
 
         // Control type tags, eg: {% assign %} or {% capture %}
         if (q.isTagType(Type.variable)) {
-          state = ScanState.VariableIdentifier;
-          return $.liquid.tag?.singular
-            ? TokenType.SingularTagName
-            : TokenType.StartTagName;
 
+          state = ScanState.VariableIdentifier;
+
+          if ($.liquid.tag?.singular) {
+            ender = ScanState.BeforeSingularTagClose;
+            return TokenType.SingularTagName;
+          } else {
+            ender = ScanState.BeforeStartTagClose;
+            return TokenType.StartTagName;
+          }
         }
 
         /* CONTROL TYPE ------------------------------- */
 
         // Control type tags, eg: {% if %} or {% unless %}
         if (q.isTagType(Type.control)) {
+
           state = ScanState.Control;
 
-          return $.liquid.tag?.singular
-            ? TokenType.SingularTagName
-            : TokenType.StartTagName;
+          if ($.liquid.tag?.singular) {
+            ender = ScanState.BeforeSingularTagClose;
+            return TokenType.SingularTagName;
+          } else {
+            ender = ScanState.BeforeStartTagClose;
+            return TokenType.StartTagName;
+          }
         }
 
         /* EMBEDDED TYPE ------------------------------ */
@@ -545,6 +565,7 @@ function Scan (): number {
         // Embedded language type tags, eg: {% schema %}
         if (q.isTagType(Type.embedded)) {
           state = ScanState.EmbeddedLanguage;
+          ender = ScanState.BeforeStartTagClose;
           return TokenType.StartTagName;
         }
 
@@ -552,10 +573,16 @@ function Scan (): number {
 
         // Iteration type tags, eg: {% for %}
         if (q.isTagType(Type.iteration)) {
+
           state = ScanState.Iteration;
-          return $.liquid.tag?.singular
-            ? TokenType.SingularTagName
-            : TokenType.StartTagName;
+
+          if ($.liquid.tag?.singular) {
+            ender = ScanState.BeforeSingularTagClose;
+            return TokenType.SingularTagName;
+          } else {
+            ender = ScanState.BeforeStartTagClose;
+            return TokenType.StartTagName;
+          }
         }
 
         /* UNKNOWN TYPE ------------------------------- */
@@ -1115,6 +1142,13 @@ function Scan (): number {
 
       // Make sure the control tag is not empty, eg: {% if ^ %}
       if (s.IsRegExp(r.TagCloseClear)) {
+
+        // We have a valid else tag, eg: {% else^ %}
+        if (s.TokenContains(r.KeywordElse)) {
+          state = ScanState.BeforeSingularTagClose;
+          return TokenType.ControlElse;
+        }
+
         state = ScanState.GotoTagEnd;
         error = ParseError.MissingCondition;
         return TokenType.ParseError;
@@ -1247,7 +1281,7 @@ function Scan (): number {
           return TokenType.ParseError;
         }
 
-        // Assign tags accept filters, which mean its not a `capture``
+        // Assign tags accept filters, which mean its not a `capture`
         // Pass to the operator scan
         if ($.liquid.tag?.filters) {
           state = ScanState.VariableOperator;
@@ -1285,23 +1319,46 @@ function Scan (): number {
     /* -------------------------------------------- */
     case ScanState.VariableAssignment:
 
+      // We are dealing with an assign tag and we assume
+      // that a filter exists after assignment
       state = ScanState.Filter;
 
+      // Lets check for a string assignment, eg: {% assign x = 'string' %}
       if (s.IsRegExp(r.StringQuotations)) {
 
-        if (s.SkipQuotedString(true)) {
-          return TokenType.VariableValue;
-        }
+        // We have a string assignment, we will pass to filter next
+        if (s.SkipQuotedString(true)) return TokenType.VariableValue;
 
-        error = ParseError.MissingQuotation;
+        // If we get here we have an invalid string (missing quotation)
+        // We will also assert a cache to denote we are closing a singular tag
+        cache = ScanState.BeforeSingularTagClose;
         state = ScanState.GotoTagEnd;
+        error = ParseError.MissingQuotation;
         return TokenType.ParseError;
       }
 
-      // Variable name keyword identifier can be wild
+      // Variable assignment name can be wild
       if (s.IfRegExp(r.KeywordAlphaNumeric)) {
 
+        // Lets consult the specification to see if we know about the value
+        // being assigned (ie: if it is a known object)
+        if (q.setObject(s.token)) {
+
+          // We have set the specification, lets now determine
+          // if the value contains object notation and proceed accordingly
+          if (s.IsRegExp(r.PropertyNotation)) {
+            cache = ScanState.GotoTagEnd;
+            state = ScanState.Object;
+            return TokenType.Object;
+          }
+        }
+
+        if (s.IsRegExp(r.TagCloseClear)) {
+          state = ScanState.BeforeSingularTagClose;
+        }
+
         return TokenType.VariableValue;
+
       }
 
       state = ScanState.GotoTagEnd;
@@ -1600,32 +1657,28 @@ function Scan (): number {
       // Tag is closed so we will consume, eg: }} or %}
       if (s.IfRegExp(r.DelimitersClose)) {
 
+        state = ScanState.CharSeq;
+
         // Reset the cursor spec
         // q.reset();
 
+        // STATE QUALIFIERS
+
         // Start tag close, eg: {% tag %}^
-        if (state === ScanState.BeforeStartTagClose) {
-          state = ScanState.CharSeq;
-          return TokenType.StartTagClose;
-        }
+        if (ender === ScanState.BeforeStartTagClose) return TokenType.StartTagClose;
 
         // End tag close, eg: {% endtag %}^
-        if (state === ScanState.BeforeEndTagClose) {
-          state = ScanState.CharSeq;
-          return TokenType.EndTagClose;
-        }
+        if (ender === ScanState.BeforeEndTagClose) return TokenType.EndTagClose;
 
         // Output tag close, eg: {{ output }}^
-        if (state === ScanState.BeforeOutputTagClose) {
-          state = ScanState.CharSeq;
-          return TokenType.OutputTagClose;
-        }
+        if (ender === ScanState.BeforeOutputTagClose) return TokenType.OutputTagClose;
 
         // Singular tag close, eg: {% singular %}^
-        if (state === ScanState.BeforeSingularTagClose) {
-          state = ScanState.CharSeq;
-          return TokenType.SingularTagClose;
-        }
+        if (ender === ScanState.BeforeSingularTagClose) return TokenType.SingularTagClose;
+
+        // FALLBACK
+
+        return TokenType.TagClose;
 
       }
 

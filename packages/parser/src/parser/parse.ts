@@ -1,17 +1,16 @@
 import { state as $, query as q, Type, IProperties } from '@liquify/liquid-language-specs';
-import { TokenType } from 'lexical/tokens';
+import { TokenType } from '../lexical/tokens';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
-import { TextEdit } from 'vscode-languageserver';
-import { NodeKind } from 'lexical/kind';
-import { NodeLanguage } from 'lexical/language';
-import { ParseError as Errors } from 'lexical/errors';
-import { IAST } from 'tree/ast';
-import { Node, NodeType } from 'tree/nodes';
-import { Embed } from 'tree/embed';
-import { alignRange } from 'parser/utils';
-import * as Regexp from 'lexical/expressions';
-import * as s from 'parser/stream';
-import * as scanner from 'parser/scanner';
+// import { TextEdit } from 'vscode-languageserver';
+import { NodeKind } from '../lexical/kind';
+import { NodeLanguage } from '../lexical/language';
+import { ParseError as Errors } from '../lexical/errors';
+import { IAST } from '../tree/ast';
+import { Node, NodeType } from '../tree/nodes';
+import { Embed } from '../tree/embed';
+import { assign } from '../parser/utils';
+import * as s from '../parser/stream';
+import * as scanner from '../parser/scanner';
 
 /* PAIR SETS ---------------------------------- */
 
@@ -197,6 +196,19 @@ export function parse (document: IAST): IAST {
         break;
 
       /* -------------------------------------------- */
+      /* LIQUID TAG CLOSE                             */
+      /* -------------------------------------------- */
+      case TokenType.TagClose:
+
+        if (node.singular) {
+          closeNode(NodeType.Singular);
+        } else {
+          closeNode(NodeType.Pair);
+        }
+
+        break;
+
+      /* -------------------------------------------- */
       /* LIQUID START TAG NAME                        */
       /* -------------------------------------------- */
       case TokenType.StartTagName:
@@ -204,6 +216,7 @@ export function parse (document: IAST): IAST {
         node.tag = s.token;
         node.type = $.liquid.tag.type;
         node.singular = false;
+        parent = node;
 
         if (node.type === Type.embedded) {
           node = new Embed(node);
@@ -260,9 +273,11 @@ export function parse (document: IAST): IAST {
           node.scope = node.parent.scope[s.token];
         }
 
+        console.log(node.scope);
+
         // console.log(liquid.parent.scope[s.token]);
 
-        Object.assign(node.objects, { [s.offset]: [ s.token ] });
+        assign(node.objects, { [s.offset]: [ s.token ] });
 
         if (!isNaN(filter) && node.filters?.[filter]) {
           node.filters[filter].push(object);
@@ -286,6 +301,7 @@ export function parse (document: IAST): IAST {
 
         node.tag = s.token;
         node.type = $.liquid.tag.type;
+        node.singular = true;
 
         pair.delete(node);
 
@@ -353,6 +369,17 @@ export function parse (document: IAST): IAST {
         break;
 
       /* -------------------------------------------- */
+      /* LIQUID CONTROL ELSE TAG                      */
+      /* -------------------------------------------- */
+      case TokenType.ControlElse:
+
+        if (!q.isParent(node.prevChild.tag)) {
+          error = document.report(Errors.InvalidPlacement);
+        }
+
+        break;
+
+      /* -------------------------------------------- */
       /* LIQUID ITERATION TAG                         */
       /* -------------------------------------------- */
       case TokenType.Iteration:
@@ -376,10 +403,10 @@ export function parse (document: IAST): IAST {
       /* -------------------------------------------- */
       case TokenType.IterationArray:
 
-        // node.scope[scope] = q.cursor.object?.object as string;
+        // node.scope[scope] = ($.liquid.object as IProperties)?.object;
 
         if (node.parent.type === Type.iteration) {
-        //  Object.assign(node.scope, node.parent.scope);
+        //  assign(node.scope, node.parent.scope);
         }
 
         break;
@@ -391,11 +418,11 @@ export function parse (document: IAST): IAST {
 
         object = s.offset;
 
-        Object.assign(node.objects, { [s.offset]: [ s.token ] });
+        assign(node.objects, { [s.offset]: [ s.token ] });
 
         if (node.parent.type === Type.iteration) {
           if (node.parent.scope?.[s.token]) {
-            Object.assign(node.scope, node.parent.scope);
+            assign(node.scope, node.parent.scope);
             q.setObject(node.parent.scope[s.token]);
           }
         } else {
@@ -449,7 +476,7 @@ export function parse (document: IAST): IAST {
 
         filter = s.offset + s.cursor;
 
-        Object.assign(node.filters, { [filter]: [] });
+        assign(node.filters, { [filter]: [] });
 
         if (scanner.error === Errors.MissingWhitespace) {
           document.report(Errors.UnknownProperty);
@@ -574,7 +601,6 @@ export function parse (document: IAST): IAST {
     parent.children.push(node);
 
     // s parent = node;
-    if (type === NodeType.Pair) parent = node;
 
   }
 
@@ -625,6 +651,12 @@ export function parse (document: IAST): IAST {
         error = undefined;
       }
 
+    } else if (node.singular) {
+
+      if (error) {
+        error(node.range);
+        error = undefined;
+      }
     }
 
   }

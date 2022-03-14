@@ -1,11 +1,11 @@
-import * as Specification from 'liquid/data/export';
-import { ICompletions } from 'liquid/types/data';
-import { Values, IArgument } from 'liquid/types/common';
-import { ITag, IFilter, IObject, Variation } from 'liquid/types';
-import { Type, IEngine, Within, QueryErrors } from 'shared/enums';
-import { documentation, filterCompletions } from 'shared/generators';
-import { isNumber } from 'shared/typeof';
-import { inPattern, inValues, inRange } from 'shared/finders';
+import * as Specification from '../data/export';
+import { ICompletions } from '../types/data';
+import { Values, IArgument } from '../types/common';
+import { ITag, IFilter, IObject, Variation } from '../types';
+import { Type, IEngine, Within, QueryErrors } from '../../shared/enums';
+import { documentation, filterCompletions } from '../../shared/generators';
+import { isNumber } from '../../shared/typeof';
+import { inPattern, inValues, inRange } from '../../shared/finders';
 import { CompletionItemKind } from 'vscode-languageserver-types';
 
 /* -------------------------------------------- */
@@ -518,6 +518,18 @@ export function isProperty (token: string): boolean {
 export function isAllowed (prop: 'trims' | 'filters'): boolean {
 
   return tag ? tag?.[prop] ?? true : object ? object?.[prop] ?? true : false;
+
+}
+
+/**
+ * Is Parent
+ *
+ * Check to see if the tag or object has the correct parent
+ * tag, ie: a child of a certain tag or scope.
+ */
+export function isParent (name: string) {
+
+  return tag.parents.includes(name);
 
 }
 

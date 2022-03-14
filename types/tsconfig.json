@@ -1,0 +1,16 @@
+{
+  "extends": "@liquify/tsconfig",
+  "exclude": ["node_modules/**"],
+  "include": [
+    "../packages/specs",
+    "../packages/parser",
+    "../packages/prettify"
+  ],
+  "compilerOptions": {
+    "incremental": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "removeComments": false
+  }
+}

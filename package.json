@@ -15,7 +15,7 @@
     "pnpm": ">=5"
   },
   "scripts": {
-    "dev": "pnpm dev -r --stream  --filter ./packages/ --no-sort --workspace-concurrency Infinity",
+    "dev": "pnpm dev -r --stream  --filter ./packages/ --filter ./types/ --no-sort --workspace-concurrency Infinity",
     "build": "pnpm build -r --stream --filter !./web/  --workspace-concurrency Infinity",
     "utils": "pnpm build -r --stream --filter ./utils/  --workspace-concurrency Infinity",
     "semantic-release": "semantic-release",
@@ -34,10 +34,11 @@
     "@liquify/eslint-config": "workspace:*",
     "@liquify/prettier-config": "workspace:*",
     "@liquify/tsconfig": "workspace:*",
-    "esbuild": "^0.14.25",
+    "@liquify/types": "workspace:*",
+    "esbuild": "^0.14.26",
     "eslint": "^8.11.0",
     "prettier": "^2.5.1",
-    "rollup": "^2.70.0",
+    "rollup": "^2.70.1",
     "typescript": "^4.6.2"
   },
   "publishConfig": {

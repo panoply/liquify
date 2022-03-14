@@ -16,10 +16,13 @@
   },
   "license": "see LICENSE.txt",
   "main": "package/parser.js",
-  "types": "./package/@types/index.d.ts",
+  "module": "packages/parser.mjs",
   "exports": {
-    "require": "./package/parser.js"
+    "require": "./package/parser.js",
+    "import": "./package/parser.mjs"
   },
+  "bin": "",
+  "types": "@liquify/types/parser/index.d.ts",
   "prettier": "@liquify/prettier-config",
   "eslintConfig": {
     "ignorePatterns": [
@@ -34,15 +37,15 @@
     }
   },
   "ava": {
+    "concurrency": 5,
     "require": [
       "esm"
-    ],
-    "concurrency": 5
+    ]
   },
   "dependencies": {
     "@liquify/liquid-language-specs": "workspace:^0.1.2",
     "lodash.inrange": "^3.3.6",
-    "vscode-languageserver-textdocument": "^1.0.1",
+    "vscode-languageserver-textdocument": "^1.0.4",
     "yamljs": "^0.3.0"
   },
   "repository": {
@@ -53,14 +56,15 @@
     "@liquify/prettier-config": "workspace:*",
     "@liquify/rollup-config": "workspace:*",
     "@liquify/tsconfig": "workspace:*",
+    "@liquify/types": "workspace:*",
     "@types/lodash.inrange": "^3.3.6",
-    "ava": "^3.15.0",
-    "chalk": "^4.1.1",
+    "ava": "3.15.0",
+    "chalk": "4.1.1",
     "esm": "^3.2.25",
     "json-stringify-safe": "^5.0.1",
     "pretty-hrtime": "^1.0.3",
-    "rollup": "^2.53.3",
-    "typescript": "^4.3.5",
+    "rollup": "^2.70.1",
+    "typescript": "^4.6.2",
     "vscode-languageserver-types": "^3.16.0"
   }
 }
