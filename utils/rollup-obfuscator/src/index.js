@@ -1,4 +1,4 @@
-import JavaScriptObfuscator from 'javascript-obfuscator'
+import JavaScriptObfuscator from 'javascript-obfuscator';
 
 /**
  * Replace - Runs a regular expression and replaces
@@ -8,18 +8,18 @@ import JavaScriptObfuscator from 'javascript-obfuscator'
 export default function (options = {}) {
 
   return ({
-    name: '@liquify/rollup-plugin-obfuscator',
+    name: '@liquify/rollup-obfuscator',
     renderChunk (code) {
 
-      const obfuscate = JavaScriptObfuscator.obfuscate(code, options)
-      const result = { code: obfuscate.getObfuscatedCode() }
+      const obfuscate = JavaScriptObfuscator.obfuscate(code, options);
+      const result = { code: obfuscate.getObfuscatedCode() };
 
       if (options.sourceMap && options.sourceMapMode !== 'inline') {
-        result.map = obfuscate.getSourceMap()
+        result.map = obfuscate.getSourceMap();
       }
 
-      return result
+      return result;
 
     }
-  })
+  });
 }

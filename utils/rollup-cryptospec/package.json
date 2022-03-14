@@ -2,11 +2,16 @@
   "name": "@liquify/rollup-plugin-cryptospec",
   "version": "0.1.0",
   "description": "Rollup plugin used by Liquify IDE editor tool for encryption and cryptography bundle processing",
-  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+  "homepage": "https://github.com/panoply/liquify",
+  "author": {
+    "name": "Νίκος Σαβίδης ",
+    "email": "n.savvidis@gmx.com"
+  },
   "license": "MIT",
   "type": "module",
   "types": "package/index.d.ts",
   "main": "package/index.js",
+  "module": "package/index.mjs",
   "exports": {
     "require": "./package/index.js",
     "import": "./package/index.mjs"
