@@ -80,7 +80,6 @@ let pairs: number[] = [];
 /**
  * Runs document scan
  *
- * @param {number} [offset=0]
  * The position offset from which to start scanning
  */
 export function scan (start: number = 0): number {
@@ -535,6 +534,7 @@ function Scan (): number {
         // Control type tags, eg: {% if %} or {% unless %}
         if (q.isTagType(Type.control)) {
           state = ScanState.Control;
+
           return $.liquid.tag?.singular
             ? TokenType.SingularTagName
             : TokenType.StartTagName;

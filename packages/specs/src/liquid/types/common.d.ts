@@ -1,6 +1,5 @@
-import { shopify, standard } from '../data/export';
 import { UnionConcat } from './utils';
-import { Type, BasicTypeRange, BasicToArgumentTypeRange } from './types';
+import { BasicTypes, ArgumentTypes } from './types';
 import { IFilter } from './filters';
 import { ITag } from './tags';
 import { IObject } from './objects';
@@ -9,44 +8,14 @@ import { IObject } from './objects';
 /* ENGINE ENUM                                  */
 /* -------------------------------------------- */
 
-export const enum IEngine {
-
-  /**
-   * Liquid Standard Variation
-   *
-   * **FREE**
-   */
-  standard = 'standard',
-
-  /**
-   * Liquid Shopify Variation
-   *
-   * **LICENSED**
-   */
-  shopify = 'shopify',
-
-  /**
-   * Liquid Jekyll Variation
-   *
-   * **FREE**
-   */
-  jekyll = 'jekyll',
-
-  /**
-   * Liquid Eleventy Variation
-   *
-   * **FREE**
-   */
-  eleventy = 'eleventy'
-
-}
+export type Engine = 'standard' | 'shopify' | 'jekyll' | 'eleventy'
 
 /* -------------------------------------------- */
 /* VARIATION                                    */
 /* -------------------------------------------- */
 
 export interface Variation {
-  readonly engine?: IEngine;
+  readonly engine?: Engine;
   readonly updated?: string;
   readonly filters?: { [tag: string]: IFilter }
   readonly objects?:{ [tag: string]: IObject; }
@@ -60,12 +29,6 @@ export interface Variation {
 export type Specifiers = IFilter & IObject & ITag;
 
 /* -------------------------------------------- */
-/* SEPARATORS                                   */
-/* -------------------------------------------- */
-
-export const enum Separator { comma = 1, whitespace, equal }
-
-/* -------------------------------------------- */
 /* ACCEPTS                                      */
 /* -------------------------------------------- */
 
@@ -75,20 +38,13 @@ declare type IAccepts = UnionConcat<'string' | 'number' | 'boolean' | 'object' |
 /* TAG SCOPES                                   */
 /* -------------------------------------------- */
 
-export type TagScopes = (
-  | shopify.TagList
-  | standard.TagsList
-);
+export type TagScopes = string[]
 
 /* -------------------------------------------- */
 /* SCOPES                                       */
 /* -------------------------------------------- */
 
-export type IScopes = (
-  | shopify.ObjectList
-  | shopify.TagList
-  | standard.TagsList
-);
+export type IScopes = string[]
 
 /* -------------------------------------------- */
 /* LIQUID SPECIFICATION NAMES                   */
@@ -187,7 +143,7 @@ export interface IParameter {
    * the `value` property. If type is set `keyword` and a value exists, those
    * entries will be ignored.
    */
-  readonly type?: BasicTypeRange | Type.keyword
+  readonly type?: BasicTypes | 'keyword'
 
   /**
    * Description of argument which will be rendered in
@@ -238,7 +194,7 @@ export namespace IArgument {
     /**
      * Argument type is equal to value of 'parameter'
      */
-    readonly type: Type.parameter
+    readonly type: 'parameter'
 
     /**
      * Whether the argument is required or optional.
@@ -261,7 +217,7 @@ export namespace IArgument {
      * - `2` Whitespace
      * - `3` Equals
      */
-    readonly seperator?: Separator
+    readonly seperator?: 1 | 2 | 3
 
     /**
      * The parameters available to the argument. If the parameter has no
@@ -274,7 +230,7 @@ export namespace IArgument {
      * the character sequence and intercepts value type, but accept any parameter
      * name that is a alpha-numeric combination.
      */
-    readonly value: { [parameter: string]: IParameter } | BasicTypeRange
+    readonly value: { [parameter: string]: IParameter } | BasicTypes
 
   }
 
@@ -283,7 +239,7 @@ export namespace IArgument {
     /**
      * Argument type is equal to value of 'parameter'
      */
-    readonly type: BasicToArgumentTypeRange
+    readonly type: BasicTypes | ArgumentTypes
 
     /**
      * Pattern
@@ -391,7 +347,7 @@ export namespace IArgument {
      *
      * ```
      */
-    readonly value?: string | string[] | Values[] | { [property: string]: Values[]}
+    readonly value?: string | string[] | Values[] | { [property: string]: Values[] }
 
     /**
      * Whether the argument values can loosely matched, meaning

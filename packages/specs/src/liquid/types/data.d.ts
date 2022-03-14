@@ -1,6 +1,5 @@
 import { CompletionItemKind, MarkupContent } from 'vscode-languageserver-types';
 import { TagScopes, IArgument } from './common';
-import { Type } from './types';
 
 export interface ICompletion {
   label: string,
@@ -21,13 +20,13 @@ export interface ICompletions {
   objects?: ICompletion[]
 }
 
-export const TypeNames = {
-  [Type.any]: 'string',
-  [Type.object]: 'object',
-  [Type.integer]: 'integer',
-  [Type.number]: 'number',
-  [Type.boolean]: 'boolean',
-  [Type.string]: 'string',
-  [Type.array]: 'array',
-  [Type.data]: 'data'
-} as const;
+export interface TypeNames {
+  1: 'string',
+  2: 'object',
+  3: 'integer',
+  4: 'number',
+  5: 'boolean',
+  6: 'string',
+  7: 'array',
+  8: 'data'
+}

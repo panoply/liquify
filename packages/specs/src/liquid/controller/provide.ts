@@ -1,16 +1,11 @@
-import { ICompletions, TypeNames } from '../types/data';
-import { Properties } from '../types/objects';
-import { Arguments, IArgument, IParameter } from '../types/common';
-import { Type } from '../types/types';
-import { descriptive, signatures } from './../../utils/generators';
-import { Tokens } from '../../shared/types';
-import { completions, variation } from './queries';
+import { IProperties } from 'liquid/types';
+import { variation } from './queries';
+import { descriptive, TypeNames } from 'shared/generators';
 import {
   CompletionItemKind,
   CompletionItem,
   InsertTextFormat,
-  TextEdit,
-  SignatureInformation
+  TextEdit
 } from 'vscode-languageserver-types';
 
 /* -------------------------------------------- */
@@ -79,7 +74,7 @@ export function LiquidTagResolve (item: CompletionItem, edits?: TextEdit[]) {
 
 export async function LiquidPropertyComplete (
   objects: { [offset: number]: string[] | number },
-  scope: { [tagName: string]: string } | string | string | undefined,
+  _scope: { [tagName: string]: string } | string | string | undefined,
   offset: number
 ) {
 
@@ -109,7 +104,7 @@ export async function LiquidPropertyComplete (
 
   // This is our iterator function, it allows us to
   // walk the objects contained on the node
-  return (function walk (props: string[], value: Properties) {
+  return (function walk (props: string[], value: IProperties) {
 
     const object = value?.[props[0]]?.properties;
 

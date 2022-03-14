@@ -5,56 +5,14 @@ import { parser } from './cases/shared';
 
 const text = `
 
-<div>
 
-  <div>
+  {% if foo %}
 
-    <style>
-      .class {
-        width: auto;
-      }
+  {% endif %}
 
-      .class {
-        width: auto;
-        background: {{ something.prop }};
-        font-size: {{ something.prop }};
-      }
 
-      {% if condition %}
-        div > .some > .class {
-          width: 100px;
-          background: {{ something.prop }};
-          font-size: 120px;
-        }
-      {% endif %}
 
-      body {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-overflow-scrolling: touch;
-      }
 
-      main {
-        height: 100vh;
-      }
-
-      h1 {
-        font-weight: {{ something.prop | filter: 'foo' }};
-        font-size: {{ something.prop | filter: 'foo' }};
-        line-height: 4.2rem;
-      }
-
-      p {
-        font-weight: 400;
-        color: rgb(211, 211, 211);
-        font-size: 1.1rem;
-        font-family: {{ something.prop | filter: 'foo' }};
-      }
-    </style>
-
-  </div>
-
-</div>
 `;
 
 function Stack (ast) {

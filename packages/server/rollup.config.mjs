@@ -1,17 +1,7 @@
-import { defineConfig as Rollup } from 'rollup';
-import { env, config } from '@liquify/rollup-plugin-utils';
-import ts from 'rollup-plugin-typescript2';
-import typescript from 'typescript';
-import { terser } from 'rollup-plugin-terser';
-import commonjs from '@rollup/plugin-commonjs';
-import filesize from 'rollup-plugin-filesize';
-import noderesolve from '@rollup/plugin-node-resolve';
-import beep from '@rollup/plugin-beep';
-import copy from 'rollup-plugin-copy';
-import del from 'rollup-plugin-delete';
+import { env, config, plugin, rollup } from '@liquify/rollup-config';
 import { path as stores } from '@liquify/schema-stores';
 
-export default Rollup(
+export default rollup(
   [
     {
       input: 'src/index.ts',
@@ -25,10 +15,12 @@ export default Rollup(
       },
       external: [
         '@liquify/liquid-parser',
+        '@liquify/prettify',
         '@liquify/liquid-language-specs',
-        '@liquify/beautify',
         'lodash',
-        'strip-json-comments',
+        'fs',
+        'marky',
+        'path',
         'vscode-languageserver',
         'vscode-css-languageservice',
         'vscode-json-languageservice',
@@ -40,60 +32,63 @@ export default Rollup(
       ],
       plugins: env.if('dev')(
         [
-          del(
+          plugin.del(
             {
               verbose: true,
               runOnce: env.watch,
               targets: 'package/*'
             }
           ),
-          copy(
+          plugin.copy(
             {
               verbose: true,
               copyOnce: env.watch,
               targets: [
                 {
                   src: stores('shopify/sections'),
-                  dest: 'package/@stores/shopify'
+                  dest: 'package/stores/shopify'
                 }
               ]
             }
           ),
-          ts(
+          plugin.alias(
             {
-              check: false,
-              useTsconfigDeclarationDir: true,
-              typescript
+              customResolver: plugin.resolve(
+                {
+                  extensions: [ '.ts' ]
+                }
+              ),
+              entries: config.alias([
+                'export',
+                'types',
+                'service',
+                'provide',
+                'modes',
+                'utils'
+              ])
             }
           ),
-          noderesolve(
+          plugin.esbuild(
             {
-              preferBuiltins: true,
-              extensions: [
-                '.ts',
-                '.js'
-              ]
-            }
-          ),
-          commonjs({
-            extensions: [
-              '.ts',
-              '.js'
-            ]
-          }),
-          beep()
-        ]
-      )(
-        [
-          terser(
-            {
-              ecma: 2016,
-              compress: {
-                passes: 5
+
+              optimizeDeps: {
+                include: [
+
+                ]
               }
             }
           ),
-          filesize(
+          plugin.resolve(
+            {
+              preferBuiltins: true
+            }
+          )
+
+        ]
+      )(
+        [
+          plugin.esminify(),
+          plugin.filesize(
             {
               showGzippedSize: false,
               showMinifiedSize: true

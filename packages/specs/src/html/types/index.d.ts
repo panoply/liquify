@@ -1,23 +1,23 @@
 /* eslint-disable object-curly-newline */
 
-export {
+export type {
   IHTMLSpecs,
   IHTMLAttribute,
   IHTMLTag,
   IHTMLTagAttributes,
   IHTMLValue
-} from './types/markup';
+} from './markup';
 
-export {
+export type {
   IHTMLCompletionAttrs,
   IHTMLCompletionData,
   IHTMLCompletionTagData,
   IHTMLCompletionTags,
   IHTMLCompletions,
   IHTMLProvideAttrs
-} from './types/completions';
+} from './completions';
 
-export {
+export type {
   HTMLDataVSCode,
   DataSource
-} from './types/custom';
+} from './custom';

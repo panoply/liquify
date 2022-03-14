@@ -1,12 +1,15 @@
 import { state as $, query as q, Type, IProperties } from '@liquify/liquid-language-specs';
 import { TokenType } from 'lexical/tokens';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
+import { TextEdit } from 'vscode-languageserver';
 import { NodeKind } from 'lexical/kind';
 import { NodeLanguage } from 'lexical/language';
 import { ParseError as Errors } from 'lexical/errors';
 import { IAST } from 'tree/ast';
 import { Node, NodeType } from 'tree/nodes';
 import { Embed } from 'tree/embed';
+import { alignRange } from 'parser/utils';
+import * as Regexp from 'lexical/expressions';
 import * as s from 'parser/stream';
 import * as scanner from 'parser/scanner';
 
@@ -177,7 +180,6 @@ export function parse (document: IAST): IAST {
         if (node.type === Type.embedded) {
           node.languageId = q.isLanguage(s.token) as NodeLanguage;
           node.embeddedId = node.languageId;
-
         }
 
         node.attributes[attr as string] = s.token;
@@ -513,8 +515,7 @@ export function parse (document: IAST): IAST {
 
   if (document.regions.length >= embed) document.regions.splice(embed);
 
-  for (const { range } of pair) document.report(Errors.MissingEndTag)(range);
-
+  pair.forEach(({ range }) => document.report(Errors.MissingEndTag)(range));
   pair.clear();
 
   /* RETURN ------------------------------------- */
@@ -549,7 +550,6 @@ export function parse (document: IAST): IAST {
         node = new Embed(node);
         node.type = Type.embedded;
         node.languageId = languageId as NodeLanguage;
-        node.embeddedId = node.languageId;
         node.parent.children.push(node);
         literal = document.literal();
       }
@@ -569,17 +569,12 @@ export function parse (document: IAST): IAST {
   function liquidNode (type: NodeType): void {
 
     node = new Node(type, scanner.begin, parent, NodeKind.Liquid);
-    node.embeddedId = parent.embeddedId ?? parent.languageId;
 
     // Add this node child to the parent
     parent.children.push(node);
 
-    // parent = node;
-    if (type === NodeType.Pair) {
-
-      parent = node;
-      literal = document.literal();
-    }
+    // s parent = node;
+    if (type === NodeType.Pair) parent = node;
 
   }
 
@@ -617,25 +612,10 @@ export function parse (document: IAST): IAST {
 
     if (type === NodeType.Pair) {
 
-      if (node.embeddedId === NodeLanguage.css && node.kind === NodeKind.Liquid) {
-
-        literal = TextDocument.update(literal, [
-          {
-            text: `/*${node.endToken.slice(2, -2)}*/`,
-            range: {
-              start: literal.positionAt(node.offsets[2]),
-              end: literal.positionAt(node.offsets[3])
-            }
-          }
-        ], literal.version + 1);
-      }
-
       // Syntactic pair match, remove from the set
       pair.delete(node);
-
       parent = node.parent;
-      //  if (node.kind === NodeKind.HTML) html = node.parent;
-      // if (node.kind === NodeKind.Liquid) liquid = node.parent;
+
       if (node.type === Type.embedded) {
         embed = (node as Embed).region(embed, literal);
       }
@@ -647,34 +627,6 @@ export function parse (document: IAST): IAST {
 
     }
 
-    if (type === NodeType.Start && literal) {
-
-      if (node.embeddedId === NodeLanguage.css && node.kind === NodeKind.Liquid) {
-
-        literal = TextDocument.update(literal, [
-          {
-            text: `/*${node.startToken.slice(2, -2)}*/`,
-            range: {
-              start: literal.positionAt(node.offsets[0]),
-              end: literal.positionAt(node.offsets[1])
-            }
-          }
-        ], literal.version + 1);
-      }
-
-    }
-
-    if (type === NodeType.Output) {
-
-      if (node.embeddedId === NodeLanguage.css && node.kind === NodeKind.Liquid) {
-        literal = TextDocument.update(literal, [
-          {
-            range: node.range,
-            text: '--' + 'x'.repeat(node.startToken.length - 2)
-          }
-        ], literal.version + 1);
-      }
-    }
   }
 
   function pendingClose (): void {

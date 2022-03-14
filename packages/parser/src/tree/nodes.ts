@@ -18,23 +18,22 @@ export { NodeType, Token, IScopes } from 'tree/typings';
  */
 export class Node implements INode {
 
-  public kind: NodeKind = NodeKind.Liquid
+  public kind: NodeKind = NodeKind.Liquid;
   public offsets: [number?, number?, number?, number?] = [];
   public attributes?: object;
   public filters?: object;
   public type: Type | NodeType;
   public languageId?: NodeLanguage;
-  public embeddedId?: NodeLanguage;
   public tag: string;
   public root: number;
   public index: number;
   public parent: Node;
   public children: Node[] = [];
-  public objects?: {}
+  public objects?: {};
   public scope: {};
   public singular: boolean;
   public lastError: number;
-  public errors: number[] = []
+  public errors: number[] = [];
 
   constructor (type?: NodeType, start?: number, parent?: Node, kind?: NodeKind) {
 

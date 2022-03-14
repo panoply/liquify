@@ -35,7 +35,7 @@ export function options (options: IGlobalOptions) {
  */
 export function markup (input: string, options?: IMarkupOptions): Promise<string> {
 
-  if (options) assign(rules.style, options);
+  if (options) assign(rules.markup, options);
   if (prettydiff.options.language !== 'html') prettydiff.options = rules.markup;
 
   prettydiff.options.source = input;
@@ -46,7 +46,9 @@ export function markup (input: string, options?: IMarkupOptions): Promise<string
 
   return new Promise((resolve, reject) => {
 
-    if (prettydiff.sparser.parseError.length) return reject(prettydiff.sparser.parseError);
+    if (prettydiff.sparser.parseError.length) {
+      return reject(prettydiff.sparser.parseError);
+    }
 
     return resolve(formatted);
 
@@ -79,7 +81,9 @@ export function script (input: string, options?: IScriptOptions): Promise<string
 
   return new Promise((resolve, reject) => {
 
-    if (prettydiff.sparser.parseError.length) return reject(prettydiff.sparser.parseError);
+    if (prettydiff.sparser.parseError.length) {
+      return reject(prettydiff.sparser.parseError);
+    }
 
     return resolve(formatted);
 
@@ -112,7 +116,9 @@ export function style (input: string, options?: IStyleOptions): Promise<string> 
 
   return new Promise((resolve, reject) => {
 
-    if (prettydiff.sparser.parseError.length) return reject(prettydiff.sparser.parseError);
+    if (prettydiff.sparser.parseError.length) {
+      return reject(prettydiff.sparser.parseError);
+    }
 
     return resolve(formatted);
 
@@ -138,7 +144,9 @@ export function json (input: string, options?: IJSONOptions): Promise<string> {
 
   return new Promise((resolve, reject) => {
 
-    if (prettydiff.sparser.parseError.length) return reject(prettydiff.sparser.parseError);
+    if (prettydiff.sparser.parseError.length) {
+      return reject(prettydiff.sparser.parseError);
+    }
 
     return resolve(formatted);
 

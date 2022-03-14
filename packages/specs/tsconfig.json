@@ -1,13 +1,21 @@
 {
   "extends": "@liquify/tsconfig",
-  "exclude": ["node_modules/**", "package", "test"],
+  "exclude": ["node_modules/**", "package/**", "test"],
   "include": ["src/index.ts", "src/**/*.ts"],
   "compilerOptions": {
+    "incremental": false,
     "rootDir": "src",
-    "typeRoots": ["src/liquid/types/*"],
     "declaration": true,
-    "declarationDir": "package/@types",
+    "declarationDir": "package/types",
     "outDir": "package",
-    "baseUrl": "."
+    "removeComments": false,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./src/*"],
+      "exports/*": ["src/exports/*"],
+      "html/*": ["./src/html/*"],
+      "liquid/*": ["./src/liquid/*"],
+      "shared/*": ["src/shared/*"]
+    }
   }
 }

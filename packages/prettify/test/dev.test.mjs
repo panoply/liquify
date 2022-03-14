@@ -13,6 +13,7 @@ test('test', t => {
   prettify
     .markup(mocks.markup.markup_unformatted, {
       forceAttribute: true
+
     })
     .then(value => t.log(value))
     .catch(e => t.log(e));

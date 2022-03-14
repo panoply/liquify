@@ -1,15 +1,16 @@
-import * as Specification from '../data/export';
-import { ICompletions } from '../types/data';
-import { Variation, Values, IArgument, IEngine } from '../types/common';
-import { ITag } from '../types/tags';
-import { IFilter } from '../types/filters';
-import { IObject } from '../types/objects';
-import { Type } from '../types/types';
-import { QueryErrors, Within } from '../types/enums';
-import { documentation, filterCompletions, signatures } from '../../utils/generators';
-import { isNumber } from '../../utils/typeof';
-import { inPattern, inValues, inRange } from './../../utils/finders';
-import { CompletionItemKind, SignatureInformation } from 'vscode-languageserver-types';
+import * as Specification from 'liquid/data/export';
+import { ICompletions } from 'liquid/types/data';
+import { Values, IArgument } from 'liquid/types/common';
+import { ITag, IFilter, IObject, Variation } from 'liquid/types';
+import { Type, IEngine, Within, QueryErrors } from 'shared/enums';
+import { documentation, filterCompletions } from 'shared/generators';
+import { isNumber } from 'shared/typeof';
+import { inPattern, inValues, inRange } from 'shared/finders';
+import { CompletionItemKind } from 'vscode-languageserver-types';
+
+/* -------------------------------------------- */
+/* ENUMS                                        */
+/* -------------------------------------------- */
 
 /* -------------------------------------------- */
 /* EXPORT SCOPES                                */
@@ -129,7 +130,7 @@ export function reset (): void {
  * or filter until a `type` match is detected. If an
  * argument is `required` walk is cancelled.
  */
-export function getArgument (type: Type): boolean {
+export function getArgument (type: any): boolean {
 
   const start: number = index;
   const limit = cursor.arguments.length - 1;
@@ -181,7 +182,7 @@ export function getArgument (type: Type): boolean {
 export function isParameter (token: string) {
 
   if (argument === undefined) return false;
-  if (argument.type !== Type.parameter && !getArgument(Type.parameter)) {
+  if ((argument.type as any) !== Type.parameter && !getArgument(Type.parameter)) {
     return false;
   }
 
@@ -438,7 +439,7 @@ export function prevArgument (): boolean {
   within = Within.Arguments;
   argument = cursor.arguments[index];
 
-  if (argument.type === Type.parameter && unique.has(prev)) {
+  if ((argument.type as any) === Type.parameter && unique.has(prev)) {
     unique.delete(prev);
   }
 
@@ -542,7 +543,7 @@ export function isError (err: QueryErrors) {
  */
 export function isObjectType (type: Type): boolean {
 
-  return object?.type === type;
+  return (object?.type as any) === type;
 }
 
 /**
@@ -553,7 +554,7 @@ export function isObjectType (type: Type): boolean {
  */
 export function isTagType (type: Type): boolean {
 
-  return tag?.type === type;
+  return (tag?.type as any) === type;
 }
 
 /**
@@ -565,7 +566,7 @@ export function isTagType (type: Type): boolean {
  */
 export function isType (type: Type): boolean {
 
-  return argument?.type === type;
+  return (argument?.type as any) === type;
 }
 
 /**

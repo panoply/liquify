@@ -20,15 +20,23 @@
   "exports": {
     "require": "./package/parser.js"
   },
+  "prettier": "@liquify/prettier-config",
   "eslintConfig": {
-    "extends": ["@liquify/eslint-config-ts"],
+    "ignorePatterns": [
+      "package/*"
+    ],
+    "extends": [
+      "@liquify/eslint-config"
+    ],
     "rules": {
       "no-use-before-define": "off",
       "no-control-regex": "off"
     }
   },
   "ava": {
-    "require": ["esm"],
+    "require": [
+      "esm"
+    ],
     "concurrency": 5
   },
   "dependencies": {
@@ -41,15 +49,10 @@
     "url": "https://github.com/panoply/liquid-parser"
   },
   "devDependencies": {
-    "@ava/babel": "^2.0.0",
-    "@liquify/eslint-config-ts": "workspace:^1.0.1",
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
-    "@liquify/tsconfig": "workspace:^1.0.0",
-    "@rollup/plugin-alias": "^3.1.4",
-    "@rollup/plugin-beep": "^0.2.0",
-    "@rollup/plugin-commonjs": "^19.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.2",
-    "@rollup/plugin-typescript": "^8.2.3",
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/rollup-config": "workspace:*",
+    "@liquify/tsconfig": "workspace:*",
     "@types/lodash.inrange": "^3.3.6",
     "ava": "^3.15.0",
     "chalk": "^4.1.1",
@@ -57,15 +60,7 @@
     "json-stringify-safe": "^5.0.1",
     "pretty-hrtime": "^1.0.3",
     "rollup": "^2.53.3",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-filesize": "^9.1.1",
-    "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.3.5",
     "vscode-languageserver-types": "^3.16.0"
-  },
-  "peerDependencies": {
-    "rollup": "^2.51.1",
-    "typescript": "^4.3.2"
   }
 }

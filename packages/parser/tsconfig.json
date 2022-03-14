@@ -9,6 +9,7 @@
     "typeRoots": ["node_modules/@types", "src/types/*"],
     "declaration": true,
     "declarationDir": "package/@types",
+    "preserveConstEnums": false,
     "outDir": "package",
     "baseUrl": ".",
     "paths": {

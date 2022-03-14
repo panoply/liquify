@@ -4,24 +4,15 @@ packages:
   - "utils/prettier-config"
   - "utils/eslint-config"
   - "utils/rollup-utils"
+  - "utils/rollup-enums"
   - "utils/cryptographer"
   - "utils/rollup-cryptospec"
   - "utils/rollup-obfuscator"
   - "utils/rollup-config"
+  - "packages/schema"
+  - "packages/prettify"
+  - "packages/clients/vscode"
+  - "packages/parser"
+  - "packages/server"
+  - "packages/specs"
 
-  #- "packages/clients/atom"
-  #- "!packages/clients/atom/package/*"
-
-  #- "packages/prettify"
-
-  #- "packages/clients/vscode"
-  #- "!packages/clients/vscode/package/*"
-
-  #- "packages/parser"
-
-  #- "packages/server"
-  #- "!packages/server/package/*"
-
-  #- "packages/schema"
-  #- "packages/specs"
-  #- "web"

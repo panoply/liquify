@@ -1,10 +1,6 @@
 import { IReferences, IScopes, IArgument } from './common';
 export { IArgument } from './common';
 
-/* TYPE EXPORT -------------------------------- */
-
-export { Type } from './types';
-
 /* FILTER INTERFACE EXPORT -------------------- */
 
 export interface IFilter {
@@ -63,4 +59,4 @@ export interface IFilter {
 
 /* REFERENCE ---------------------------------- */
 
-export interface Filters { [name: string]: IFilter; }
+export interface IFilters { [name: string]: IFilter; }

@@ -1,15 +1,8 @@
-import { defineConfig as Rollup } from 'rollup';
-import esbuild, { minify } from 'rollup-plugin-esbuild';
-import commonjs from '@rollup/plugin-commonjs';
-import noderesolve from '@rollup/plugin-node-resolve';
-import { env } from '../../utils/rollup-utils/package';
-import beep from '@rollup/plugin-beep';
-import filesize from 'rollup-plugin-filesize';
-import del from 'rollup-plugin-delete';
+import { rollup, plugin, env } from '@liquify/rollup-config';
 
-export default Rollup(
+export default rollup(
   {
-    input: 'src/export.ts',
+    input: 'src/index.ts',
     preserveEntrySignatures: 'allow-extension',
     output: [
       {
@@ -33,24 +26,29 @@ export default Rollup(
     ],
     plugins: env.if('dev')(
       [
-        esbuild(),
-        noderesolve({
-          extensions: [ '.js', '.ts' ]
-        }),
-        commonjs(),
-        beep(),
-        del(
+        plugin.del(
           {
             verbose: true,
             runOnce: !process.env.prod,
             targets: 'package/*'
           }
-        )
+        ),
+        plugin.copy(
+          {
+            targets: [
+              {
+                src: 'src/types/**',
+                dest: 'package/types'
+              }
+            ]
+          }
+        ),
+        plugin.esbuild()
       ]
     )(
       [
-        minify(),
-        filesize(
+        plugin.esminify(),
+        plugin.filesize(
           {
             showGzippedSize: false,
             showMinifiedSize: true

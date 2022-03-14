@@ -18,7 +18,7 @@
   },
   "main": "./package/index.js",
   "module": "./package/index.mjs",
-  "types": "package/@types/export.d.ts",
+  "types": "package/types/export.d.ts",
   "exports": {
     "require": "./package/index.js",
     "import": "./package/index.mjs"
@@ -30,9 +30,10 @@
     "test": "ava test/dev.test.mjs --color --verbose --watch",
     "test:cases": "ava ./test/cases/* --verbose --color --watch"
   },
+  "prettier": "@liquify/prettier-config",
   "eslintConfig": {
     "extends": [
-      "@liquify/eslint-config-ts"
+      "@liquify/eslint-config"
     ],
     "rules": {
       "no-unmodified-loop-condition": "off"
@@ -48,26 +49,15 @@
     "concurrency": 5
   },
   "devDependencies": {
-    "@ava/babel": "^2.0.0",
-    "@liquify/eslint-config-ts": "workspace:^1.0.1",
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
-    "@liquify/tsconfig": "workspace:^1.0.0",
-    "@rollup/plugin-beep": "^0.2.0",
-    "@rollup/plugin-commonjs": "^21.0.2",
-    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/rollup-config": "workspace:*",
+    "@liquify/tsconfig": "workspace:*",
     "ava": "^4.1.0",
-    "esbuild": "^0.14.25",
-    "esm": "^3.2.25",
+    "esbuild": "^0.14.12",
+    "eslint": "^8.11.0",
     "rollup": "^2.70.0",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-esbuild": "^4.8.2",
-    "rollup-plugin-filesize": "^9.1.2",
     "typescript": "^4.6.2"
-  },
-  "peerDependencies": {
-    "ava": "^3.15.0",
-    "rollup": "^2.53.3"
   },
   "dependencies": {
     "prettier": "^2.5.1"

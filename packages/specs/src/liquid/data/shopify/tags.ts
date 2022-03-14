@@ -1,10 +1,10 @@
-import { Tags as ITags, Type } from '../../types/tags';
+import { ITags } from 'liquid/types/tags';
 
 export let Tags: ITags;
 
 Tags = {
   echo: {
-    type: Type.variable,
+    type: 'variable',
     description: 'Outputs an expression in the rendered HTML. This is identical to wrapping an expression in `{{` and `}}`, but works inside liquid tags. Filters are supported.',
     singular: true,
     reference: {
@@ -13,11 +13,11 @@ Tags = {
     }
   },
   form: {
-    type: Type.generator,
+    type: 'generator',
     description: 'Creates an HTML `<form>` element along with the required `<input>` elements to submit the form to a particular endpoint.',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true,
         pattern: /(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)/,
         value: [
@@ -84,7 +84,7 @@ Tags = {
         ]
       },
       {
-        type: Type.object,
+        type: 'object',
         value: {
           product: [
             {
@@ -121,7 +121,7 @@ Tags = {
     filters: false,
     deprecated: true,
     singular: true,
-    type: Type.import,
+    type: 'import',
     reference: {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include'
@@ -130,10 +130,10 @@ Tags = {
   layout: {
     description: "Include \"{% layout 'alternate' %}\" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:",
     singular: true,
-    type: Type.import,
+    type: 'import',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -143,20 +143,20 @@ Tags = {
     }
   },
   paginate: {
-    type: Type.iteration,
+    type: 'iteration',
     description: 'Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.',
     arguments: [
       {
-        type: Type.array,
+        type: 'array',
         required: true
       },
       {
-        type: Type.keyword,
+        type: 'keyword',
         value: 'by',
         required: true
       },
       {
-        type: Type.integer,
+        type: 'integer',
         required: true,
         pattern: [ 1, 50 ]
       }
@@ -170,10 +170,10 @@ Tags = {
     description: 'Renders a section from the sections folder of a theme.',
     filters: false,
     singular: true,
-    type: Type.import,
+    type: 'import',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -187,7 +187,7 @@ Tags = {
     filters: false,
     language: 'json',
     unique: true,
-    type: Type.embedded,
+    type: 'embedded',
     trims: false,
     reference: {
       name: 'Shopify Liquid',
@@ -195,7 +195,7 @@ Tags = {
     }
   },
   style: {
-    type: Type.embedded,
+    type: 'embedded',
     description: 'The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.',
     filters: false,
     trims: false,
@@ -206,7 +206,7 @@ Tags = {
     }
   },
   stylesheet: {
-    type: Type.embedded,
+    type: 'embedded',
     description: 'The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.',
     filters: false,
     trims: false,
@@ -215,7 +215,7 @@ Tags = {
     language: 'css',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         value: 'scss',
         description: 'SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.'
       }
@@ -226,7 +226,7 @@ Tags = {
     }
   },
   javascript: {
-    type: Type.embedded,
+    type: 'embedded',
     description: 'The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.',
     filters: false,
     deprecated: true,

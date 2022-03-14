@@ -1,6 +1,6 @@
 import { Filters } from './filters';
 import { Tags } from './tags';
-import { Filters as IFilters } from '../../types/filters';
+import { IFilters } from 'liquid/types/filters';
 
 /**
  * Liquid Standard: Filters

@@ -42,14 +42,17 @@ These packages are the text editor [LSP](https://microsoft.github.io/language-se
 
 These packages are project specific [Rollup](https://rollupjs.org) plugins.
 
-- [@liquify/rollup-plugin-obfuscator](#)
-- [@liquify/rollup-plugin-utils](#)
+- [@liquify/rollup-cryptospec](#)
+- [@liquify/rollup-obfuscator](#)
+- [@liquify/rollup-utils](#)
 
 ### Sharable Configs
 
 These packages are the sharable configurations.
 
 - [@liquify/eslint-config](#)
+- [@liquify/prettier-config](#)
+- [@liquify/rollup-config](#)
 - [@liquify/tsconfig](#)
 
 ###### IMPORTANT

@@ -18,7 +18,7 @@ Prettify supports beautification of Liquid together with several other languages
 
 # Install
 
-This module is used by the [Liquify IDE](https://liquify.dev) extension. The project is available on the public NPM registry and can be consumed by individuals and used by other projects.
+This module is used by the [Liquify IDE](https://liquify.dev) extension. The project is available on the public NPM registry and can be consumed by individuals and used by any project which is not maintained, created or shipped under and/or by the Shopify organization, its company and/or employees of Shopify. Everyone else is free to use as they wish.
 
 ```cli
 <pnpm|npm|yarn> i @liquify/prettify --save-dev
@@ -44,12 +44,16 @@ An optional class instance is available which accepts a global rule-set. Each be
 The instance exposes the same methods provided by the language specifics export. The difference being that you cannot pass options to the specifics. This approach also provides an additional `rules()` method which can be used to update the globals we supplied the instance.
 
 ```typescript
-import { Prettify } from "@liquify/prettify";
-
-const prettify = new Prettify(rules: object)
+import * prettify from "@liquify/prettify";
 
 // Update Rules
-prettify.rules(rules: options): void
+prettify.options(rules: options, rules?: {
+  markup?: IMarkupRules,
+  style?: IStyleRules,
+  script?: IScriptRules,
+  json?: IJsonRules,
+  yaml?: IYamlRules
+}): void
 
 // Markup = HTML
 prettify.markup(source: string): Promise<string>
@@ -75,22 +79,22 @@ Prettify exposes direct access to methods on the export and can be used when you
 > This approach will apply defaults to embedded regions when using `markup` lexer mode. If you need control of how contents of embedded regions are formatted within markup, use a language instance instead.
 
 ```typescript
-import * as prettify from "@liquify/prettify";
+import { markup, style, script, json, yaml } from "@liquify/prettify";
 
 // Markup = HTML
-const markup = prettify.markup(source: string, rules?: object): Promise<string>
+markup(source: string, rules?: object): Promise<string>
 
 // Style = CSS, SCSS or LESS
-const style  = prettify.style(source: string, rules?: object): Promise<string>
+style(source: string, rules?: object): Promise<string>
 
 // Script = JavaScript, TypeScript or JSX
-const script = prettify.script(source: string, rules?: object): Promise<string>
+script(source: string, rules?: object): Promise<string>
 
 // JSON
-const json = prettify.json(source: string, rules?: object): Promise<string>
+json(source: string, rules?: object): Promise<string>
 
 // YAML
-const yaml = prettify.yaml(source: string, rules?: object): Promise<string>
+yaml(source: string, rules?: object): Promise<string>
 
 ```
 
@@ -99,18 +103,19 @@ const yaml = prettify.yaml(source: string, rules?: object): Promise<string>
 Each method returns a promise, so when formatting fails or a parse error occurs, `.catch()` is invoked. The error returns an object. The object contains the provided input (`source`) and the error message.
 
 ```typescript
-import { Prettify } from "@liquify/prettify";
+import * as prettify from "@liquify/prettify";
 
-const prettify = new Prettify(rules: object)
+const code = "{% if x %} {{ x }} {%- endif -%}";
 
-prettify.markup("{% if x %} {{ x }}").catch((input, error) => {
+prettify
+  .markup(code)
+  .then((formatted) => console.log(formatted))
+  .catch((error) => {
+    console.error(error);
 
-  console.error(error);
-
-  // Return the original input
-  return input;
-
-});
+    // Return the original input
+    return code;
+  });
 ```
 
 ### Options
@@ -304,15 +309,41 @@ Refer to the [typings](#) declaration file for description.
 }
 ```
 
+# Inline Control
+
+Inline control is supported and can be applied by referencing the `@prettify` keyword in a comment followed by the operation. There are 3 operations available, `disable`, `format` and `ignore` each of which can be expressed as follows:
+
+- `@prettify disable`
+- `@prettify format:file {}`
+- `@prettify format:start {}`
+- `@prettify format:end`
+- `@prettify ignore:start`
+- `@prettify ignore:end`
+
+### Disable Prettify
+
+You can disable Prettify from formatting a file by placing an inline control comment at the type of the file:
+
+```html
+{% comment %} @prettify disable {% endcomment %}
+
+<div>
+  <ul>
+    <li>The entire file will not be formatted</li>
+  </ul>
+</div>
+
+```
+
 # Inline Formatting
 
 Prettify provides inline formatting support via comments. Inline formatting adopts a similar approach used in linters and other projects. The difference is how inline formats are expressed. You can direct Prettify to format a specific block or region of code by encapsulating it between 2 comment blocks or you can define formatting option to be applied to an entire file.
 
 ### HTML Comments
 
-- `<!-- @prettify: format:file {} -->`
-- `<!-- @prettify: format:start {} -->`
-- `<!-- @prettify: format:end -->`
+- `<!-- @prettify format:file {} -->`
+- `<!-- @prettify format:start {} -->`
+- `<!-- @prettify format:end -->`
 
 ### CSS, SCSS or LESS Comments
 
@@ -334,6 +365,8 @@ Prettify provides inline formatting support via comments. Inline formatting adop
 
 ### Example
 
+Using HTML comments
+
 <!-- prettier-ignore -->
 ```html
 
@@ -353,23 +386,14 @@ Prettify provides inline formatting support via comments. Inline formatting adop
 <!-- @prettify: format:end -->
 ```
 
-Inline formats are asserted by referencing the `@prettify` keyword followed by an operation. There are 3 operations available:
-
-- `@prettify disable`
-- `@prettify format:file {}`
-- `@prettify format:start {}`
-- `@prettify format:end`
-- `@prettify ignore:start`
-- `@prettify ignore:end`
-
 # Ignoring Code
 
 Lexer modes provide inline comments control and support ignoring regions of code. This logic is mostly lifted from within PrettyDiff and supports Liquid comments:
 
 ### HTML Comments
 
-- `<!-- @prettify: ignore:start -->`
-- `<!-- @prettify: ignore:end -->`
+- `<!-- @prettify ignore:start -->`
+- `<!-- @prettify ignore:end -->`
 
 ### CSS, SCSS or LESS Comments
 
@@ -378,13 +402,13 @@ Lexer modes provide inline comments control and support ignoring regions of code
 
 ### JavaScript, TypeScript Comments
 
-- `// @prettify: ignore:start`
-- `// @prettify: ignore:end`
+- `// @prettify ignore:start`
+- `// @prettify ignore:end`
 
 ### Liquid Comments
 
-- `{% comment %} @prettify: ignore:start {% endcomment %}`
-- `{% comment %} @prettify: ignore:end {% endcomment %}`
+- `{% comment %} @prettify ignore:start {% endcomment %}`
+- `{% comment %} @prettify ignore:end {% endcomment %}`
 
 # Credits
 

@@ -1,17 +1,6 @@
-import { defineConfig as Rollup } from 'rollup';
-import { env, config, banner } from '@liquify/rollup-plugin-utils';
-import alias from '@rollup/plugin-alias';
-import ts from 'rollup-plugin-typescript2';
-import typescript from 'typescript';
-import { terser } from 'rollup-plugin-terser';
-import commonjs from '@rollup/plugin-commonjs';
-import obfuscator from '../../utils/rollup-obfuscator/package';
-import filesize from 'rollup-plugin-filesize';
-import noderesolve from '@rollup/plugin-node-resolve';
-import beep from '@rollup/plugin-beep';
-import del from 'rollup-plugin-delete';
+import { env, banner, rollup, plugin, config } from '@liquify/rollup-config';
 
-export default Rollup(
+export default rollup(
   {
     input: {
 
@@ -19,13 +8,12 @@ export default Rollup(
 
       index: 'src/index.ts',
 
-      '@html/attributes': 'src/html/data/html5/attributes.ts',
-      '@html/tags': 'src/html/data/html5/tags.ts',
-      '@html/values': 'src/html/data/html5/values.ts',
-
-      '@liquid/standard': 'src/liquid/data/standard/export.ts',
-      '@liquid/shopify': 'src/liquid/data/shopify/export.ts',
-      '@liquid/jekyll': 'src/liquid/data/jekyll/export.ts'
+      'html/attributes': 'src/html/data/html5/attributes.ts',
+      'html/tags': 'src/html/data/html5/tags.ts',
+      'html/values': 'src/html/data/html5/values.ts',
+      'liquid/standard': 'src/liquid/data/standard/export.ts',
+      'liquid/shopify': 'src/liquid/data/shopify/export.ts',
+      'liquid/jekyll': 'src/liquid/data/jekyll/export.ts'
 
     },
     preserveEntrySignatures: 'allow-extension',
@@ -43,84 +31,65 @@ export default Rollup(
     ],
     plugins: env.if('dev')(
       [
-
-        del(
+        plugin.alias(
+          {
+            customResolver: plugin.resolve({
+              extensions: [ '.ts' ]
+            }),
+            entries: config.alias([
+              'exports',
+              'html',
+              'liquid',
+              'shared',
+              'utils'
+            ])
+          }
+        ),
+        plugin.del(
           {
             verbose: true,
             runOnce: env.watch,
             targets: 'package/*'
           }
         ),
-        ts(
+        plugin.esbuild(),
+        plugin.enums(
           {
-            check: false,
-            useTsconfigDeclarationDir: true,
-            typescript
+            include: [
+              'src/liquid/data/shopify/*.ts',
+              'src/liquid/data/standard/*.ts'
+            ],
+            enums: {
+              any: 1,
+              object: 2,
+              integer: 3,
+              number: 4,
+              boolean: 5,
+              string: 6,
+              array: 7,
+              data: 8,
+              parameter: 9,
+              keyword: 10,
+              attribute: 11,
+              control: 12,
+              comment: 13,
+              embedded: 14,
+              generator: 15,
+              import: 16,
+              iteration: 17,
+              link: 18,
+              output: 19,
+              variable: 20,
+              raw: 21,
+              unknown: 22
+            }
           }
-        ),
-        noderesolve(
-          {
-            extensions: [
-              '.ts',
-              '.js'
-            ]
-          }
-        ),
-        commonjs(
-          {
-            extensions: [
-              '.ts',
-              '.js'
-            ]
-          }
-        ),
-        beep()
+        )
       ]
     )(
       [
-        terser(
-          {
-            ecma: 2016,
-            compress: {
-              passes: 5
-            }
-          }
-        ),
-        obfuscator(
-          {
-            target: 'node',
-            exclude: [
-              '!/index.js',
-              '!/index.es.js'
-            ],
-            ignoreRequireImports: true,
-            compact: true,
-            controlFlowFlattening: false,
-            deadCodeInjection: false,
-            debugProtection: false,
-            debugProtectionInterval: false,
-            disableConsoleOutput: false,
-            identifierNamesGenerator: 'hexadecimal',
-            log: true,
-            numbersToExpressions: false,
-            renameGlobals: false,
-            rotateStringArray: true,
-            selfDefending: false,
-            shuffleStringArray: false,
-            simplify: true,
-            splitStrings: false,
-            stringArray: false,
-            stringArrayEncoding: [],
-            stringArrayIndexShift: true,
-            stringArrayWrappersCount: 1,
-            stringArrayWrappersChainedCalls: true,
-            stringArrayWrappersParametersMaxCount: 2,
-            stringArrayWrappersType: 'variable',
-            stringArrayThreshold: 0.75,
-            unicodeEscapeSequence: false
-          }
-        ),
-        filesize(
+        plugin.esminify(),
+        plugin.filesize(
           {
             showGzippedSize: false,
             showMinifiedSize: true

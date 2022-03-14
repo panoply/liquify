@@ -56,7 +56,7 @@ test.serial('Unknown Filter name\n', t => {
 
     t.is(token, match);
     t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
-    // t.log('Diagnostic :', c.chalk.white.italic(message));
+    t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });
@@ -86,7 +86,7 @@ test.serial('Missing Argument\n', t => {
 
     t.is(token, match);
     t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
-    // t.log('Diagnostic :', c.chalk.white.italic(message));
+    t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });
@@ -116,7 +116,7 @@ test.serial('Invalid argument types\n', t => {
 
     t.is(token, match);
     t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
-    // t.log('Diagnostic :', c.chalk.white.italic(message));
+    t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });
@@ -145,7 +145,7 @@ test.serial('Invalid argument parameter\n', t => {
 
     t.is(token, match);
     t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
-    // t.log('Diagnostic :', c.chalk.white.italic(message));
+    t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });
@@ -171,7 +171,7 @@ test.serial('Duplicate argument parameters\n', t => {
 
     t.is(token, match);
     t.log(c.chalk.magenta(title), c.log(input, match, 'redBright'), newline);
-    // t.log('Diagnostic :', c.chalk.white.italic(message));
+    t.log('Diagnostic :', c.chalk.white.italic(message));
     t.pass();
 
   });

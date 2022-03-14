@@ -1,17 +1,6 @@
-import { defineConfig as Rollup } from 'rollup';
-import { env, config } from '@liquify/rollup-plugin-utils';
-import alias from '@rollup/plugin-alias';
-import ts from 'rollup-plugin-typescript2';
-import typescript from 'typescript';
-import { terser } from 'rollup-plugin-terser';
-import commonjs from '@rollup/plugin-commonjs';
-import filesize from 'rollup-plugin-filesize';
-import noderesolve from '@rollup/plugin-node-resolve';
-import beep from '@rollup/plugin-beep';
-import del from 'rollup-plugin-delete';
-import copy from 'rollup-plugin-copy';
+import { rollup, env, config, plugin } from '@liquify/rollup-config';
 
-export default Rollup(
+export default rollup(
   {
     input: 'src/index.ts',
     output: {
@@ -28,7 +17,7 @@ export default Rollup(
     ],
     plugins: env.if('dev')(
       [
-        alias({
+        plugin.alias({
           entries: {
             tree: config.path('src/tree'),
             parser: config.path('src/parser'),
@@ -36,14 +25,14 @@ export default Rollup(
             config: config.path('src/config.ts')
           }
         }),
-        del(
+        plugin.del(
           {
             verbose: true,
             runOnce: env.watch,
             targets: 'package/*'
           }
         ),
-        copy(
+        plugin.copy(
           {
             verbose: true,
             copyOnce: env.watch,
@@ -55,14 +44,8 @@ export default Rollup(
             ]
           }
         ),
-        ts(
-          {
-            check: false,
-            useTsconfigDeclarationDir: true,
-            typescript
-          }
-        ),
-        noderesolve(
+        plugin.esbuild(),
+        plugin.resolve(
           {
             extensions: [
               '.ts',
@@ -70,7 +53,7 @@ export default Rollup(
             ]
           }
         ),
-        commonjs(
+        plugin.commonjs(
           {
             requireReturnsDefault: 'namespace',
             extensions: [
@@ -79,19 +62,12 @@ export default Rollup(
             ]
           }
         ),
-        beep()
+        plugin.beep()
       ]
     )(
       [
-        terser(
-          {
-            ecma: 2016,
-            compress: {
-              passes: 5
-            }
-          }
-        ),
-        filesize(
+        plugin.esminify(),
+        plugin.filesize(
           {
             showGzippedSize: false,
             showMinifiedSize: true

@@ -1,4 +1,4 @@
-import { Filters as IFilters, Type } from '../../types/filters';
+import { IFilters } from 'liquid/types/filters';
 
 export let Filters: IFilters;
 
@@ -16,7 +16,7 @@ Filters = {
     snippet: "append: '$1' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -30,7 +30,7 @@ Filters = {
     snippet: 'at_least: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: 'number',
         required: true
       }
     ],
@@ -44,7 +44,7 @@ Filters = {
     snippet: 'at_most: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: 'number',
         required: true
       }
     ],
@@ -79,7 +79,7 @@ Filters = {
     snippet: 'concat: $1 $0',
     arguments: [
       {
-        type: Type.array,
+        type: 'array',
         required: true
       }
     ],
@@ -93,7 +93,7 @@ Filters = {
     snippet: "date: '$1' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -107,14 +107,14 @@ Filters = {
     snippet: "default: '$1' $0",
     arguments: [
       {
-        type: Type.any,
+        type: 'any',
         required: true
       },
       {
-        type: Type.parameter,
+        type: 'parameter',
         value: {
           allow_false: {
-            type: Type.boolean,
+            type: 'boolean',
             description: 'To allow variables to return false instead of the default value, you can use the `allow_false` parameter.'
           }
         }
@@ -130,7 +130,7 @@ Filters = {
     snippet: 'divided_by: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: 'number',
         required: true
       }
     ],
@@ -183,7 +183,7 @@ Filters = {
     snippet: "join: '$1' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ]
@@ -207,7 +207,7 @@ Filters = {
     snippet: "map: '$1' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -221,7 +221,7 @@ Filters = {
     snippet: 'minus: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: 'number',
         required: true
       }
     ],
@@ -235,7 +235,7 @@ Filters = {
     snippet: 'modulo: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: 'number',
         required: true
       }
     ],
@@ -256,7 +256,7 @@ Filters = {
     snippet: 'plus: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: 'number',
         required: true
       }
     ],
@@ -270,7 +270,7 @@ Filters = {
     snippet: "prepend: '$1' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -284,7 +284,7 @@ Filters = {
     snippet: "remove: '$1' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -298,7 +298,7 @@ Filters = {
     snippet: "remove_first: '$1' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -312,11 +312,11 @@ Filters = {
     snippet: "replace: '$1', '$2' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       },
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -330,11 +330,11 @@ Filters = {
     snippet: "replace_first: '$1', '$2' $0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       },
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -376,11 +376,11 @@ Filters = {
     snippet: 'slice: $1 $0',
     arguments: [
       {
-        type: Type.integer,
+        type: 'integer',
         required: true
       },
       {
-        type: Type.integer,
+        type: 'integer',
         required: false
       }
     ],
@@ -393,7 +393,7 @@ Filters = {
     description: 'Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting',
     arguments: [
       {
-        type: Type.integer,
+        type: 'integer',
         required: false
       }
     ],
@@ -414,7 +414,7 @@ Filters = {
     snippet: 'split: $1',
     arguments: [
       {
-        type: Type.integer,
+        type: 'integer',
         required: true
       }
     ],
@@ -449,7 +449,7 @@ Filters = {
     snippet: 'times: $1 $0',
     arguments: [
       {
-        type: Type.number,
+        type: 'number',
         required: true
       }
     ],
@@ -463,11 +463,11 @@ Filters = {
     snippet: 'truncate: $1 $0',
     arguments: [
       {
-        type: Type.integer,
+        type: 'integer',
         required: true
       },
       {
-        type: Type.string,
+        type: 'string',
         required: false
       }
     ],
@@ -481,11 +481,11 @@ Filters = {
     snippet: 'truncatewords: $1 $0',
     arguments: [
       {
-        type: Type.integer,
+        type: 'integer',
         required: true
       },
       {
-        type: Type.string,
+        type: 'string',
         required: false
       }
     ],
@@ -527,11 +527,11 @@ Filters = {
     snippet: "where: '$1'$0",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       },
       {
-        type: Type.string,
+        type: 'string',
         required: false
       }
     ],

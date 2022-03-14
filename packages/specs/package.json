@@ -15,7 +15,7 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
   "main": "./package/index.js",
-  "types": "./package/@types/index.d.ts",
+  "types": "./package/types/index.d.ts",
   "exports": {
     "require": "./package/index.js",
     "import": "./package/index.js"
@@ -30,7 +30,7 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c --environment prod",
+    "build": "rollup -c --environment prod && tsc --emitDeclarationOnly",
     "html": "node ./scripts/html:generate.js",
     "package": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava ./test/* --watch --verbose --color",
@@ -42,9 +42,13 @@
     ],
     "concurrency": 5
   },
+  "prettier": "@liquify/prettier-config",
   "eslintConfig": {
+    "ignorePatterns": [
+      "package/**"
+    ],
     "extends": [
-      "@liquify/eslint-config-ts"
+      "@liquify/eslint-config"
     ],
     "rules": {
       "no-template-curly-in-string": "off",
@@ -54,30 +58,15 @@
     }
   },
   "devDependencies": {
-    "@ava/babel": "^2.0.0",
-    "@liquify/eslint-config-ts": "workspace:^1.0.1",
-    "@liquify/rollup-plugin-obfuscator": "workspace:^0.2.0",
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
-    "@liquify/tsconfig": "workspace:^1.0.0",
-    "@rollup/plugin-beep": "^0.2.0",
-    "@rollup/plugin-commonjs": "^19.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.2",
-    "ava": "^3.15.0",
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/rollup-config": "workspace:*",
+    "@liquify/tsconfig": "workspace:*",
+    "@vscode/web-custom-data": "^0.3.8",
+    "ava": "^4.1.0",
     "esm": "^3.2.25",
-    "rollup": "^2.53.3",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-filesize": "^9.1.1",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "rollup-plugin-watch-assets": "^1.0.1",
-    "typescript": "^4.3.5",
+    "typescript": "^4.6.2",
     "vscode-languageserver": "^7.0.0",
-    "vscode-languageserver-types": "^3.16.0",
-    "vscode-web-custom-data": "^0.3.4"
-  },
-  "peerDependencies": {
-    "rollup": "^2.53.0",
-    "typescript": "^4.3.5"
+    "vscode-languageserver-types": "^3.16.0"
   }
 }

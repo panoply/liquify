@@ -4,19 +4,22 @@
   "include": ["src/**/**/*.ts"],
   "compilerOptions": {
     "rootDir": "src",
+    "target": "ES2016",
+    "incremental": false,
     "typeRoots": ["node_modules/@types", "src/types/*"],
     "declaration": true,
-    "declarationDir": "package/@types",
+    "declarationDir": "package/types",
     "outDir": "package",
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"],
-      "vendors": ["./package/vendors/*"],
-      "types": ["./src/types/*"],
-      "service": ["./src/provide/service/*"],
-      "provide": ["./src/provide/*"],
-      "modes": ["./src/modes/*"]
+      "export": ["./src/export.ts"],
+      "types/*": ["./src/types/*"],
+      "service/*": ["./src/provide/service/*"],
+      "provide/*": ["./src/provide/*"],
+      "modes/*": ["./src/modes/*"],
+      "utils/*": ["./src/utils/*"]
     }
   }
 }

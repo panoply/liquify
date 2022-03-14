@@ -1,4 +1,4 @@
-import { Tags as ITags } from '../../types/markup';
+import { Tags as ITags } from 'html/types/markup';
 
 export let Tags: ITags;
 

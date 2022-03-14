@@ -1,4 +1,4 @@
-import { Filters as IFilters, Type } from '../../types/filters';
+import { IFilters } from 'liquid/types/filters';
 
 export let Filters: IFilters;
 
@@ -7,7 +7,7 @@ Filters = {
     description: 'Returns the asset URL of an image in the `/assets` folder of a theme. asset_img_url accepts an image size parameter.\n\nYou can specify only a `width` or only a `height` and Shopify will calculate the other dimension based on the original image size, keeping the original image\'s aspect ratio.',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         description: 'The original image size',
         pattern: /\b(?:master|x?[1-9]\d{2,3}|[1-9]\d{2,3}x|[1-9]\d{2,3}x[1-9]\d{2,3})\b/,
         value: [
@@ -24,10 +24,10 @@ Filters = {
         ]
       },
       {
-        type: Type.parameter,
+        type: 'parameter',
         value: {
           crop: {
-            type: Type.string,
+            type: 'string',
             description: 'You can specify a crop parameter to make sure that the resulting image\'s dimensions match the requested dimensions. If the entire image won\'t fit in your requested dimensions, the crop parameter specifies what part of the image to show',
             pattern: /\b(?:top|center|bottom|right)\b/,
             value: [
@@ -39,7 +39,7 @@ Filters = {
             ]
           },
           scale: {
-            type: Type.integer,
+            type: 'integer',
             description: 'The scale parameter lets you specify the pixel density of the image',
             pattern: /\b[23]\b/,
             value: [
@@ -48,7 +48,7 @@ Filters = {
             ]
           },
           format: {
-            type: Type.string,
+            type: 'string',
             description: 'The format parameter lets you specify what file format to use for the displayed image.',
             pattern: /\bp?jpg\b/,
             value: [
@@ -137,7 +137,7 @@ Filters = {
     description: 'Modifies the given component of a color',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true,
         value: [
           'red',
@@ -150,7 +150,7 @@ Filters = {
         ]
       },
       {
-        type: Type.integer,
+        type: 'integer',
         required: true,
         pattern: {
           red: [ 0, 255 ],
@@ -171,7 +171,7 @@ Filters = {
     description: 'Lightens the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: Type.integer,
+        type: 'integer',
         pattern: [ 0, 100 ],
         required: true
       }
@@ -185,7 +185,7 @@ Filters = {
     description: 'Saturates the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: Type.integer,
+        type: 'integer',
         pattern: [ 0, 100 ],
         required: true
       }
@@ -199,7 +199,7 @@ Filters = {
     description: 'Desaturates the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: Type.integer,
+        type: 'integer',
         pattern: [ 0, 100 ],
         required: true
       }
@@ -213,12 +213,12 @@ Filters = {
     description: 'Blends together two colors. Blend factor should be a value between 0 and 100 percent.',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
         required: true
       },
       {
-        type: Type.integer,
+        type: 'integer',
         pattern: [ 0, 100 ],
         required: true
       }
@@ -232,7 +232,7 @@ Filters = {
     description: 'Calculates the contrast ratio between two colors. Returns the numerator part of the ratio, which has a denominator of 1. For example, for a contrast ratio of 3.5:1, the filter returns 3.5.\n\nWith regards to accessibility, [WCAG 2.0 level AA](https://www.w3.org/WAI/WCAG20/quickref/#qr-visual-audio-contrast-contrast) requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text. [Level AAA](https://www.w3.org/WAI/WCAG20/quickref/#qr-visual-audio-contrast7) requires a contrast ratio of at least 7:1 for normal text and 4.5:1 for large text.\n\nThe order in which you specify the colors does not matter. The filter will automatically detect the lighter and darker colors.',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         pattern: /#[A-Fa-f0-9]{8}/,
         required: true
       }
@@ -246,7 +246,7 @@ Filters = {
     description: 'Calculates the [color difference](https://en.wikipedia.org/wiki/Color_difference) or distance between two colors. With regards to accessibility, the W3C [suggests](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) that the color difference should be greater than 500.',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
         required: true
       }
@@ -269,14 +269,14 @@ Filters = {
     scope: [ 'paginate' ],
     arguments: [
       {
-        type: Type.parameter,
+        type: 'parameter',
         value: {
           next: {
-            type: Type.string,
+            type: 'string',
             description: 'The next link label'
           },
           prev: {
-            type: Type.string,
+            type: 'string',
             description: 'The prev link label'
           }
         }
@@ -291,7 +291,7 @@ Filters = {
     description: 'Calculates the perceived brightness difference between two colors. With regards to accessibility, the W3C [suggests](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) that the brightness difference should be greater than 125.',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
         required: true
       }
@@ -322,7 +322,7 @@ Filters = {
     description: 'Returns a CSS @font-face declaration to load the chosen font',
     arguments: [
       {
-        type: Type.parameter,
+        type: 'parameter',
         value: {
           font_display: {
             pattern: /\b(?:auto|block|swap|fallback|optional)\b/,
@@ -364,12 +364,12 @@ Filters = {
     snippet: "font_modify:  '${1|normal,italic,oblique|}', '${2|100,200,300,400,500,600,700,800,900,lighter,normal,bold,bolder|}'",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true,
         value: [ 'style', 'weight' ]
       },
       {
-        type: Type.string,
+        type: 'string',
         required: true,
         pattern: {
           style: /\b(?:normal|italic|oblique)\b/,
@@ -422,7 +422,7 @@ Filters = {
     snippet: "${1|font_url|font_url: 'woff'}",
     arguments: [
       {
-        type: Type.string
+        type: 'string'
       }
     ],
     reference: {
@@ -513,11 +513,11 @@ Filters = {
     snippet: "link_to: '${1:url}', '${2:title}'",
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       },
       {
-        type: Type.string
+        type: 'string'
       }
     ],
     reference: {
@@ -531,7 +531,7 @@ Filters = {
     snippet: 'link_to_add_tag: ${1}',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -546,7 +546,7 @@ Filters = {
     snippet: 'link_to_remove_tag: ${1}',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -561,7 +561,7 @@ Filters = {
     snippet: 'link_to_tag: ${1}',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         required: true
       }
     ],
@@ -659,7 +659,7 @@ Filters = {
     description: 'Takes a placeholder name and outputs a placeholder SVG illustration. An optional argument can be supplied to include a custom class attribute on the SVG tag.',
     arguments: [
       {
-        type: Type.string
+        type: 'string'
       }
     ],
     reference: {
@@ -725,8 +725,8 @@ Filters = {
     description: 'Uses a translation key to access the locale file for the active language. Returns the corresponding string of translated text in the locale file.',
     arguments: [
       {
-        type: Type.parameter,
-        value: Type.string,
+        type: 'parameter',
+        value: 'string',
         seperator: 1
       }
     ],
@@ -739,32 +739,32 @@ Filters = {
     description: 'Converts a timestamp into a HTML `<time>` tag.',
     arguments: [
       {
-        type: Type.string,
+        type: 'string',
         pattern: /%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,
         description: 'The time_tag filter accepts the same parameters as Ruby\'s strftime method.'
       },
       {
-        type: Type.string,
+        type: 'string',
         value: 'foo'
       },
       {
-        type: Type.string,
+        type: 'string',
         value: 'bar'
       },
       {
-        type: Type.string,
+        type: 'string',
         value: 'baz'
       },
       {
-        type: Type.parameter,
+        type: 'parameter',
         value: {
           datetime: {
-            type: Type.string,
+            type: 'string',
             pattern: /%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,
             description: 'A datetime parameter with strftime shorthand formats to use a custom format for the datetime attribute of the output `<time>` tag.'
           },
           format: {
-            type: Type.string,
+            type: 'string',
             description: 'The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use',
             strict: false,
             value: [
@@ -843,7 +843,7 @@ Filters = {
     description: 'Formats the product variant\'s weight. The weight unit is set in [General settings](https://www.shopify.com/admin/settings/general).',
     arguments: [
       {
-        type: Type.string
+        type: 'string'
       }
     ],
     reference: {

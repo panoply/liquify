@@ -1,15 +1,26 @@
 /* eslint-disable array-bracket-newline */
 
-import { Tokens } from './../shared/types';
-import { Type } from '../liquid/types/types';
-import { TypeNames } from '../liquid/types/data';
-import { Arguments, IParameter } from '../liquid/types/common';
-import { IFilter } from '../liquid/types/filters';
+import { Tokens } from 'exports/types';
+import { Type } from './enums';
+import { Arguments, IParameter } from 'liquid/types/common';
+import { IFilter } from 'liquid/types/filters';
+
 import {
   SignatureInformation,
   CompletionItem,
   MarkupContent
 } from 'vscode-languageserver-types';
+
+export const TypeNames = {
+  1: 'string',
+  2: 'object',
+  3: 'integer',
+  4: 'number',
+  5: 'boolean',
+  6: 'string',
+  7: 'array',
+  8: 'data'
+};
 
 export const signatures: {
   tags: { [tag: string]: SignatureInformation[] },

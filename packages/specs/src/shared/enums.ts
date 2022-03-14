@@ -1,4 +1,68 @@
-import { Range } from './utils';
+
+/**
+ * Within Enums
+ */
+export const enum QueryErrors {
+  ParameterNotUnique = 1,
+  ParameterUnknown
+}
+
+/**
+ * Within Enums
+ */
+export const enum Within {
+  Tag = 1,
+  Filter,
+  Arguments,
+  Parameter,
+  ParameterValue,
+}
+
+/* -------------------------------------------- */
+/* ENGINE ENUM                                  */
+/* -------------------------------------------- */
+
+export const enum IEngine {
+
+  /**
+   * Liquid Standard Variation
+   *
+   * **FREE**
+   */
+  standard = 'standard',
+
+  /**
+   * Liquid Shopify Variation
+   *
+   * **LICENSED**
+   */
+  shopify = 'shopify',
+
+  /**
+   * Liquid Jekyll Variation
+   *
+   * **FREE**
+   */
+  jekyll = 'jekyll',
+
+  /**
+   * Liquid Eleventy Variation
+   *
+   * **FREE**
+   */
+  eleventy = 'eleventy'
+
+}
+
+/* -------------------------------------------- */
+/* SEPARATORS                                   */
+/* -------------------------------------------- */
+
+export const enum Separator {
+  comma = 1,
+  whitespace,
+  equal
+}
 
 /* -------------------------------------------- */
 /* MAIN EXPORT USING ALL TYPES                  */
@@ -552,8 +616,3 @@ export const enum Type {
   unknown,
 
 }
-
-export type BasicTypeRange = Range<1, 9>
-export type ArgumentTypeRange = Range<9, 12>
-export type BasicToArgumentTypeRange = Range<1, 12>
-export type TagTypeRange = Range<12, 22>

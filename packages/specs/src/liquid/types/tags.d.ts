@@ -1,6 +1,5 @@
 import { IReferences, IArgument, IParameter, TagScopes } from './common';
-import { TagTypeRange } from './types';
-export { Type } from './types';
+import { TagTypes } from './types';
 
 /* TAG EMBEDDED LANGUAGES --------------------- */
 
@@ -23,7 +22,7 @@ export interface ITag {
    * The type categorization of the tag. Type categorization is
    * required on tags.
    */
-  readonly type: TagTypeRange,
+  readonly type: TagTypes,
 
   /**
    * Is this tag singular, ie: does not require an `{% endtag %}`
@@ -117,4 +116,4 @@ export interface ITag {
 
 /* REFERENCE ---------------------------------- */
 
-export interface Tags { [name: string]: ITag; }
+export interface ITags { [name: string]: ITag; }
