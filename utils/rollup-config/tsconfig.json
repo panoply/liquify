@@ -8,6 +8,7 @@
     "target": "ES2016",
     "removeComments": false,
     "moduleResolution": "node",
+    "incremental": false,
     "skipLibCheck": true
   }
 }
