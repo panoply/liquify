@@ -5,63 +5,64 @@
 
 # Liquify
 
-Language tooling for the [Liquid Template Language](#). Liquify provides IDE capabilities to developers working with Liquid and its multiple variations. Contained in this repository is various packages and modules used by the Liquify text editor extension/plugin available in [VSCode](https://code.visualstudio.com), [Sublime](#) and [Atom](#).
+Language tooling for the [Liquid Template Language](#). Liquify provides IDE capabilities to developers working with Liquid and its multiple variations. Contained in this monorepo repository is various packages and modules used by the Liquify text editor extension available in [VSCode](https://code.visualstudio.com).
 
 - [Documentation](https://liquify.dev)
-- [VSCode](#)
+- [VSCode Extension](#)
 
 ### Why
 
-The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi), Liquid is leveraged by SaaS services and open source projects like Jekyll, Eleventy and many more. Despite Liquid being actively maintained by Shopify and the foundation of its storefront theme development, very little effort has been made by the Shopify team in providing modern IDE features for developers working in environments that use the language.
+The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is leveraged by hundreds of SaaS services and thousands of open source projects. Despite Liquid being actively maintained by Shopify and the foundation of its storefront theme development very little effort has been made by the company (excluding the abysmal failure theme-check) to provide modern IDE features for those developers working within environments that leverage this language.
 
-Liquify was created to solve this issue and provide everything required when developing in a Liquid workspace. It aims to become to deliver powerful editor capabilities that enrich the programing experience and lives of developers.
+Liquify was created to solve this issue and provide everything required for Liquid and Shopify theme projects. It aims to deliver powerful editor capabilities that enrich the programing experience and lives of developers.
 
 ### Pricing / License
 
 Liquify is currently free to use in this alpha pre-release stage. A yearly licensing cost may _potentially_ be incurred for those who want features which pertain to the Shopify variation. There are no plans as of yet to implement this pay wall so it exists free to use with all features available to all users.
 
+###### IMPORTANT
+
+**Packages may operating under [MIT](https://mit-license.org/), [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#). Packages operating under [PROPRIETARY](#) consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types). Though code is public, please be aware of the licensing imposed upon each package.**
+
 ### Core Packages
 
 These packages are considered the _core_ modules of the project.
 
-- [@liquify/parser](#)
-- [@liquify/server](#)
+- [@liquify/liquid-parser](#)
+- [@liquify/liquid-language-server](#)
+- [@liquify/liquid-language-specs](#)
 - [@liquify/prettify](#)
-- [@liquify/specs](#)
-- [@liquify/schema](#)
+- [@liquify/schema-specs](#)
+- [@liquify/syncify](#)
 
 ### Client Packages
 
 These packages are the text editor [LSP](https://microsoft.github.io/language-server-protocol/specifications/specification-current/) clients.
 
 - [@liquify/vscode](#)
-- [@liquify/sublime](#)
-- [@liquify/atom](#)
 
-### Rollup Plugins
+### Utility Packages
 
 These packages are project specific [Rollup](https://rollupjs.org) plugins.
 
+- [@liquify/cryptographer](#)
 - [@liquify/rollup-cryptospec](#)
 - [@liquify/rollup-obfuscator](#)
+- [@liquify/rollup-enums](#)
 - [@liquify/rollup-utils](#)
 
-### Sharable Configs
+### Config Packages
 
-These packages are the sharable configurations.
+These packages are the sharable configurations for the development workspace.
 
 - [@liquify/eslint-config](#)
 - [@liquify/prettier-config](#)
 - [@liquify/rollup-config](#)
 - [@liquify/tsconfig](#)
 
-###### IMPORTANT
+## Contributing
 
-**Some packages may operating under [MIT](https://mit-license.org/), [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#). Packages operating under [PROPRIETARY](#) consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types). Though code is public, please be aware of the licensing imposed upon each package.**
-
-## Setup
-
-The project is a combination monorepo/multirepo that uses [pnpm](https://pnpm.js.org/) for dependency and workspace management. Development is intended to be conducted within the [vscode](https://code.visualstudio.com/) text editor. The development environment requires the following:
+The project is a monorepo that uses [pnpm](https://pnpm.js.org/) for dependency and workspace management. Development is intended to be conducted within the [vscode](https://code.visualstudio.com/) text editor.
 
 <details>
 <summary>
@@ -117,7 +118,7 @@ Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com).
 
 ##### ACKNOWLEDGEMENTS
 
-Liquify took a considerable amount of time to build. Many sleepless nights and a lot of hours were poured into the project and not many were willing to take on the task. Thanks to all those who used to previous version of this extension and a special thanks to a couple of developers that frequent the [Shopify Developers](https://discord.com/channels/597504637167468564/597507881419407404) discord channel.
+Liquify took a considerable amount of time to build. Many sleepless nights and a lot of hours were poured into the project as not many were willing to take on the task. Thanks to all those who used the previous version of this extension and a special thanks to a couple of developers who were key players in the overall approach
 
 - [Mansedan](#)
 - [Dave W](#)
