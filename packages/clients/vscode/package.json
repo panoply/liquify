@@ -37,9 +37,11 @@
   "exports": {
     "require": "./package/client.js"
   },
+  "prettier": "@liquify/prettier-config",
   "eslintConfig": {
-    "extends": [
-      "@liquify/eslint-config-ts"
+    "extends": "@liquify/eslint-config",
+    "ignorePatterns": [
+      "package/**"
     ],
     "rules": {
       "semi": [
@@ -55,6 +57,17 @@
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd .."
+  },
+  "dependencies": {
+    "strip-json-comments": "^4.0.0",
+    "vscode-languageclient": "^7.0.0"
+  },
+  "devDependencies": {
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/rollup-config": "workspace:*",
+    "@liquify/schema-stores": "workspace:*",
+    "@types/vscode": "^1.65.0"
   },
   "activationEvents": [
     "onLanguage:liquid",
@@ -78,24 +91,24 @@
           ".liquidrc",
           ".liquidrc.json"
         ],
-        "url": "./@stores/liquidrc.json"
+        "url": "./package/stores/liquidrc.json"
       },
       {
         "fileMatch": [
           ".liquidspec",
           ".liquidspec.json"
         ],
-        "url": "./@stores/specs.json"
+        "url": "./package/stores/specs.json"
       },
       {
         "fileMatch": "settings_data.json",
-        "url": "./@stores/settings_data.json"
+        "url": "../package/stores/settings_data.json"
       },
       {
         "fileMatch": [
           "settings_schema.json"
         ],
-        "url": "./@stores/settings_schema.json"
+        "url": "./package/stores/settings_schema.json"
       }
     ],
     "commands": [
@@ -355,24 +368,5 @@
         }
       }
     }
-  },
-  "dependencies": {
-    "strip-json-comments": "^3.1.1",
-    "vscode-languageclient": "^7.0.0"
-  },
-  "devDependencies": {
-    "@liquify/eslint-config": "workspace:*",
-    "@liquify/rollup-config": "workspace:*",
-    "@liquify/schema-stores": "workspace:*",
-    "@types/vscode": "^1.58.1",
-    "rollup": "^2.53.2",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-filesize": "^9.1.1",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "rollup-plugin-watch-assets": "^1.0.1",
-    "typescript": "^4.3.5"
-  },
-  "peerDependencies": {
-    "rollup": "^2.51.2"
   }
 }

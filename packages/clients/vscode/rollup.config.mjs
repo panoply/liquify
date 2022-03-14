@@ -1,16 +1,7 @@
-import { defineConfig as Rollup } from 'rollup';
-import { terser } from 'rollup-plugin-terser';
-import typescript from 'rollup-plugin-typescript2';
-import { env, jsonmin, config, banner } from '@liquify/rollup-plugin-utils';
-import replace from '@rollup/plugin-replace';
-import beep from '@rollup/plugin-beep';
-import watch from 'rollup-plugin-watch-assets';
-import copy from 'rollup-plugin-copy';
-import del from 'rollup-plugin-delete';
+import { rollup, env, config, plugin, banner, jsonmin } from '@liquify/rollup-config';
 import { path } from '@liquify/schema-stores';
-import filesize from 'rollup-plugin-filesize';
 
-export default Rollup(
+export default rollup(
   {
     input: 'src/index.ts',
     output: [
@@ -33,7 +24,7 @@ export default Rollup(
     ],
     plugins: env.if('dev')(
       [
-        replace(
+        plugin.replace(
           {
             preventAssignment: true,
             values: {
@@ -41,24 +32,23 @@ export default Rollup(
             }
           }
         ),
-        del(
+        plugin.del(
           {
             verbose: true,
             runOnce: env.watch,
             targets: 'package/*'
           }
         ),
-        watch(
+        plugin.watch(
           {
             assets: [
               'src/syntax/**/*.json'
             ]
           }
         ),
-        copy(
+        plugin.copy(
           {
             verbose: true,
-            // copyOnce: env.watch,
             targets: [
               {
                 cwd: process.cwd(),
@@ -70,7 +60,7 @@ export default Rollup(
                     'shopify/settings_schema'
                   ]
                 ),
-                dest: 'package/@stores'
+                dest: 'package/stores'
               },
               {
                 src: 'syntax/**/*.json',
@@ -81,23 +71,12 @@ export default Rollup(
             ]
           }
         ),
-        typescript(
-          {
-            useTsconfigDeclarationDir: true
-          }
-        ),
-        beep()
+        plugin.esbuild()
       ]
     )(
       [
-        terser(
-          {
-            ecma: 2016
-            , warnings: 'verbose'
-            , compress: { passes: 2 }
-          }
-        ),
-        filesize(
+        plugin.esminify(),
+        plugin.filesize(
           {
             showGzippedSize: false,
             showMinifiedSize: true
