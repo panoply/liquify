@@ -7,9 +7,9 @@ import esbuild, { minify } from 'rollup-plugin-esbuild';
 import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
 import filesize from 'rollup-plugin-filesize';
+import watch from 'rollup-plugin-watch-assets';
 import enums from '@liquify/rollup-enums';
 import obfuscator from '@liquify/rollup-obfuscator';
-
 export { defineConfig as rollup } from 'rollup';
 export { config, env, banner, jsonmin, date } from '@liquify/rollup-utils';
 
@@ -84,6 +84,10 @@ export const plugin = {
   /**
    * Liquid Language Specs string to enum converter
    */
-  get enums () { return enums; }
+  get enums () { return enums; },
+  /**
+   * Watch additional assets in Rollup
+   */
+  get watch () { return watch; }
 
 };

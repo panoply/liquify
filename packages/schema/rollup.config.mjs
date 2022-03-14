@@ -1,5 +1,4 @@
 import { jsonmin, env, config, plugin } from '@liquify/rollup-config';
-import watch from 'rollup-plugin-watch-assets';
 
 export default {
   input: 'src/index.js',
@@ -29,7 +28,7 @@ export default {
           targets: 'package/*'
         }
       ),
-      watch(
+      plugin.watch(
         {
           assets: [
             'src/stores/**/*.json',

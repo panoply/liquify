@@ -41,7 +41,6 @@
   "devDependencies": {
     "@liquify/eslint-config": "workspace:*",
     "@liquify/prettier-config": "workspace:*",
-    "@liquify/rollup-config": "workspace:*",
-    "rollup-plugin-watch-assets": "^1.0.1"
+    "@liquify/rollup-config": "workspace:*"
   }
 }

@@ -90,4 +90,8 @@ export declare const plugin: {
      * Liquid Language Specs string to enum converter
      */
     readonly enums: typeof enums;
+    /**
+     * Watch additional assets in Rollup
+     */
+    readonly watch: any;
 };

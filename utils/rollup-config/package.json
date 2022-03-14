@@ -54,7 +54,8 @@
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-esbuild": "^4.8.2",
-    "rollup-plugin-filesize": "^9.1.2"
+    "rollup-plugin-filesize": "^9.1.2",
+    "rollup-plugin-watch-assets": "^1.0.1"
   },
   "devDependencies": {
     "@liquify/eslint-config": "workspace:*",

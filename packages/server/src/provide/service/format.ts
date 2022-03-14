@@ -43,7 +43,7 @@ function Delete () {
 
 }
 
-function Format (source: string, rules:  provider: Provider) {
+function Format (source: string, provider: Provider) {
 
 }
 
@@ -81,13 +81,13 @@ function Regions (node: IEmbed, { languageRules }: Formatting) {
  */
 function preplacement (editText: string): string {
 
-  return editText
+  return editText;
 
-    // Reset HTML Liquid string attributes
-    //.replace(/=(["'])(\{[{%]-?)/g, '=$1 $2')
+  // Reset HTML Liquid string attributes
+  // .replace(/=(["'])(\{[{%]-?)/g, '=$1 $2')
 
-    // Enforce comments to use trims
-    //.replace(/({%-?)\s*(\b(?:end)?comment\s*)(-?%})/g, '{%- $2 -%}');
+  // Enforce comments to use trims
+  // .replace(/({%-?)\s*(\b(?:end)?comment\s*)(-?%})/g, '{%- $2 -%}');
 
 };
 
@@ -101,8 +101,8 @@ function replacements (newText: string): string {
 
   return newText
 
-    // Patches Liquid Quotation alignments
-    //.replace(/=(["'])\s*(\{[{%]-?)/g, '=$1$2')
+  // Patches Liquid Quotation alignments
+  // .replace(/=(["'])\s*(\{[{%]-?)/g, '=$1$2')
 
     // Ignores Embedded HTML language regions
     .replace(/<!--parse-ignore-start-->/g, '')
@@ -241,7 +241,6 @@ function formatMarkup (source: string, { languageRules }: Formatting) {
   // console.log(source);
 
   const beautify = format.markup(preplacement(source), languageRules.html);
-
 
   return replacements(beautify);
 
