@@ -556,7 +556,7 @@
           {
             "enum": ["reference"],
             "type": "string",
-            "description": "Passing reference means the argument can accept a Liquid variable or Liquid object value. For example:\n\n{% assign var = 10 %}\n{% for i in tags offset: var }}\n\nWhen you assert a parameter to accept a reference you cover both cases for object or variable"
+            "description": "Passing reference means the argument can accept a Liquid variable or Liquid object value. For example:\n\n{% assign var = 10 %}\n{% for i in tags offset: var %}\n\nWhen you assert a parameter to accept a reference you cover both cases for object or variable"
           }
         ]
       }

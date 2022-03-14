@@ -18,23 +18,30 @@
   },
   "type": "module",
   "main": "package/index.js",
+  "module": "package/index.mjs",
   "types": "package/index.d.ts",
   "exports": {
     "require": "./package/index.js",
-    "import": "./package/index.es.js"
+    "import": "./package/index.mjs"
   },
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd .."
   },
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "ignorePatterns": [
+      "package/*"
+    ],
+    "extends": [
+      "@liquify/eslint-config"
+    ]
+  },
   "devDependencies": {
-    "@liquify/rollup-plugin-utils": "workspace:^0.1.1",
-    "@rollup/plugin-beep": "^0.2.0",
-    "@rollup/plugin-commonjs": "^19.0.0",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-terser": "^7.0.2",
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/rollup-config": "workspace:*",
     "rollup-plugin-watch-assets": "^1.0.1"
   }
 }

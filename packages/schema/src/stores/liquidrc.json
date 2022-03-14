@@ -154,7 +154,7 @@
             }
           },
           "properties": {
-            "$ref": "#/definitions/object_properties",
+            "$ref": "#/definitions/specObjectProperties",
             "description": "List of properties pertaining to the object. When the property the property asserts a type \"object\" you will nest its properties in a recursive manner.",
             "default": [{}]
           }
@@ -453,7 +453,7 @@
     },
     "liquid": {
       "properties": {
-        "dash_trim": {
+        "dashTrim": {
           "type": "string",
           "default": "off",
           "title": "Sort Attributes",
@@ -917,7 +917,12 @@
           "items": [
             {
               "type": "string",
-              "enum": [".js.liquid", ".js", ".ts.liquid", ".ts"]
+              "enum": [
+                ".js.liquid",
+                ".js",
+                ".ts.liquid",
+                ".ts"
+              ]
             }
           ]
         },

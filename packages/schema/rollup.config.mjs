@@ -1,10 +1,5 @@
-import { terser } from 'rollup-plugin-terser'
-import commonjs from '@rollup/plugin-commonjs'
-import { jsonmin, env, config } from '@liquify/rollup-plugin-utils'
-import beep from '@rollup/plugin-beep'
-import watch from 'rollup-plugin-watch-assets'
-import copy from 'rollup-plugin-copy'
-import del from 'rollup-plugin-delete'
+import { jsonmin, env, config, plugin } from '@liquify/rollup-config';
+import watch from 'rollup-plugin-watch-assets';
 
 export default {
   input: 'src/index.js',
@@ -27,13 +22,7 @@ export default {
   ],
   plugins: env.if('dev')(
     [
-      commonjs(
-        {
-          transformMixedEsModules: true
-        }
-      ),
-      beep(),
-      del(
+      plugin.del(
         {
           verbose: true,
           runOnce: !process.env.prod,
@@ -48,7 +37,7 @@ export default {
           ]
         }
       ),
-      copy(
+      plugin.copy(
         {
           verbose: true,
           copyOnce: !!process.env.prod,
@@ -58,33 +47,31 @@ export default {
               dest: 'package'
             },
             {
-              src: [ 'src/stores/liquidrc.json', 'src/stores/specs.json' ],
-              dest: 'package/@stores',
+              src: [
+                'src/stores/liquidrc.json',
+                'src/stores/specs.json'
+              ],
+              dest: 'package/stores',
               transform: contents => jsonmin(contents.toString())
             },
             {
               src: 'src/stores/jekyll/_config.json',
-              dest: 'package/@stores/jekyll',
+              dest: 'package/stores/jekyll',
               transform: contents => jsonmin(contents.toString())
             },
             {
               src: 'src/stores/shopify/*.json',
-              dest: 'package/@stores/shopify',
+              dest: 'package/stores/shopify',
               transform: contents => jsonmin(contents.toString())
             }
           ]
         }
-      )
+      ),
+      plugin.esbuild()
     ]
   )(
     [
-      terser(
-        {
-          ecma: 6
-          , warnings: 'verbose'
-          , compress: { passes: 2 }
-        }
-      )
+      plugin.esminify()
     ]
   )
-}
+};

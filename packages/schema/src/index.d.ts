@@ -1,11 +1,11 @@
 declare type Filenames =
-  | "liquidrc"
-  | "specs"
-  | "shopify/sections"
-  | "shopify/settings_schema"
-  | "shopify/settings_data"
-  | "shopify/locales"
-  | "jekyll/_config";
+  | 'liquidrc'
+  | 'specs'
+  | 'shopify/sections'
+  | 'shopify/settings_schema'
+  | 'shopify/settings_data'
+  | 'shopify/locales'
+  | 'jekyll/_config';
 
 /**
  * Returns the schema store
@@ -23,12 +23,12 @@ export function store(filename: Filenames): Promise<object>;
  *
  * @param {Filenames|Filenames[]} filename
  * @param {string} prepend
- * Defaults to `'/node_modules/@liquify/schema-stores/@stores`
+ *
+ * Defaults to `'/node_modules/@liquify/schema-stores/stores`
  */
 export function path(
   filename: Filenames | Filenames[],
   prepend?: string
 ): string | string[];
 
-
-export default store
+export default store;

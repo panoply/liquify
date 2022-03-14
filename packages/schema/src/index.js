@@ -9,13 +9,13 @@ export async function store (name) {
 
   try {
 
-    const schema = await import(`./@stores/${name}.json`)
+    const schema = await import(`./stores/${name}.json`);
 
-    return schema
+    return schema;
 
   } catch (e) {
 
-    throw new Error(e)
+    throw new Error(e);
 
   }
 }
@@ -30,13 +30,13 @@ export async function store (name) {
  */
 export function path (
   name,
-  prepend = 'node_modules/@liquify/schema-stores/package/@stores'
+  prepend = 'node_modules/@liquify/schema-stores/package/stores'
 ) {
 
-  if (typeof name === 'string') return `${prepend}/${name}.json`
+  if (typeof name === 'string') return `${prepend}/${name}.json`;
 
-  if (Array.isArray(name)) return name.map(id => `${prepend}/${id}.json`)
+  if (Array.isArray(name)) return name.map(id => `${prepend}/${id}.json`);
 
 }
 
-export default store
+export default store;
