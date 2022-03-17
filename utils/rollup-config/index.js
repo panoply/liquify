@@ -6,9 +6,11 @@ import replace from '@rollup/plugin-replace';
 import esbuild, { minify } from 'rollup-plugin-esbuild';
 import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
+import dts from 'rollup-plugin-dts';
 import filesize from 'rollup-plugin-filesize';
 import enums from '@liquify/rollup-enums';
 import obfuscator from '@liquify/rollup-obfuscator';
+import watch from '@liquify/rollup-watch';
 export { defineConfig as rollup } from 'rollup';
 export { config, env, banner, jsonmin, date } from '@liquify/rollup-utils';
 /**
@@ -83,4 +85,12 @@ export const plugin = {
      * Liquid Language Specs string to enum converter
      */
     get enums() { return enums; },
+    /**
+     * Generate type `.d.ts` definition files.
+     */
+    get dts() { return dts; },
+    /**
+     * Extend Rollup's watch instance via chokidar
+     */
+    get watch() { return watch; }
 };

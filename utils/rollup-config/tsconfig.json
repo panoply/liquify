@@ -6,6 +6,7 @@
     "outDir": ".",
     "rootDir": "src",
     "target": "ES2016",
+    "declaration": true,
     "removeComments": false,
     "moduleResolution": "node",
     "incremental": false,

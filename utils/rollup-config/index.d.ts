@@ -7,6 +7,7 @@ import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
 import enums from '@liquify/rollup-enums';
 import obfuscator from '@liquify/rollup-obfuscator';
+import watch from '@liquify/rollup-watch';
 export { defineConfig as rollup } from 'rollup';
 export { config, env, banner, jsonmin, date } from '@liquify/rollup-utils';
 /**
@@ -91,7 +92,11 @@ export declare const plugin: {
      */
     readonly enums: typeof enums;
     /**
-     * Watch additional assets in Rollup
+     * Generate type `.d.ts` definition files.
      */
-    readonly watch: any;
+    readonly dts: import("rollup").PluginImpl<import("rollup-plugin-dts").Options>;
+    /**
+     * Extend Rollup's watch instance via chokidar
+     */
+    readonly watch: typeof watch;
 };

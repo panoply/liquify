@@ -15,7 +15,10 @@
   "license": "MIT",
   "type": "module",
   "types": "./index.d.ts",
-  "main": "index.js",
+  "module": "index.js",
+  "exports": {
+    "import": "./index.js"
+  },
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
@@ -23,10 +26,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/panoply/liquify/master/build/rollup-config"
+    "url": "https://github.com/panoply/liquify/master/utils/rollup-config"
   },
   "bugs": {
-    "url": "https://github.com/panoply/liquify/master/build/rollup-config"
+    "url": "https://github.com/panoply/liquify/master/utils/rollup-config"
   },
   "prettier": "@liquify/prettier-config",
   "eslintConfig": {
@@ -40,6 +43,7 @@
     "@liquify/rollup-enums": "workspace:*",
     "@liquify/rollup-obfuscator": "workspace:*",
     "@liquify/rollup-utils": "workspace:*",
+    "@liquify/rollup-watch": "workspace:*",
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-beep": "^0.2.0",
     "@rollup/plugin-commonjs": "^21.0.2",
@@ -48,6 +52,7 @@
     "@rollup/plugin-replace": "^4.0.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-dts": "^4.2.0",
     "rollup-plugin-esbuild": "^4.8.2",
     "rollup-plugin-filesize": "^9.1.2",
     "rollup-plugin-watch-assets": "^1.0.1"
