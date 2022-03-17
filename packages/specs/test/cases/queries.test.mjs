@@ -1,5 +1,5 @@
 import test from 'ava';
-import { liquid, query as q, state as $ } from '../../package/index';
+import { liquid, query as q, state as $ } from '../../package/index.js';
 
 function setData (variation) {
 

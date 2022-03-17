@@ -14,8 +14,8 @@
   ],
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "Liquid language variation specification references used by Liquify",
+  "types": "./package/index.d.ts",
   "main": "./package/index.js",
-  "types": "@liquify/types/specs/index.d.ts",
   "exports": {
     "require": "./package/index.js",
     "import": "./package/index.js"
@@ -30,16 +30,13 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c --environment prod && tsc --emitDeclarationOnly",
+    "build": "rollup -c --environment prod",
     "html": "node ./scripts/html:generate.js",
     "package": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava ./test/* --watch --verbose --color",
+    "test": "ava ./test/dev.test.mjs --watch --verbose --color",
     "test:cases": "ava ./test/cases/* --verbose --color"
   },
   "ava": {
-    "require": [
-      "esm"
-    ],
     "concurrency": 5
   },
   "prettier": "@liquify/prettier-config",
@@ -58,15 +55,8 @@
     }
   },
   "devDependencies": {
-    "@liquify/eslint-config": "workspace:*",
-    "@liquify/prettier-config": "workspace:*",
-    "@liquify/rollup-config": "workspace:*",
-    "@liquify/tsconfig": "workspace:*",
-    "@liquify/types": "workspace:*",
     "@vscode/web-custom-data": "^0.3.8",
     "ava": "^4.1.0",
-    "esm": "^3.2.25",
-    "typescript": "^4.6.2",
     "vscode-languageserver": "^7.0.0",
     "vscode-languageserver-types": "^3.16.0"
   }

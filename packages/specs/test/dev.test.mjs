@@ -1,5 +1,5 @@
 import test from 'ava';
-import { liquid, query as q, state as $, provide } from '../package/index';
+import { liquid, query as q, state as $, provide } from '../package/index.js';
 
 test('Get Completions\n', t => {
 
