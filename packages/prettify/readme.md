@@ -44,7 +44,7 @@ An optional class instance is available which accepts a global rule-set. Each be
 The instance exposes the same methods provided by the language specifics export. The difference being that you cannot pass options to the specifics. This approach also provides an additional `rules()` method which can be used to update the globals we supplied the instance.
 
 ```typescript
-import * prettify from "@liquify/prettify";
+import * as prettify from "@liquify/prettify";
 
 // Update Rules
 prettify.options(rules: options, rules?: {
@@ -102,20 +102,21 @@ yaml(source: string, rules?: object): Promise<string>
 
 Each method returns a promise, so when formatting fails or a parse error occurs, `.catch()` is invoked. The error returns an object. The object contains the provided input (`source`) and the error message.
 
+<!-- prettier-ignore -->
 ```typescript
-import * as prettify from "@liquify/prettify";
+import * as prettify from '@liquify/prettify';
 
-const code = "{% if x %} {{ x }} {%- endif -%}";
+const code = '{% if x %} {{ x }} {% endif %}';
 
-prettify
-  .markup(code)
-  .then((formatted) => console.log(formatted))
-  .catch((error) => {
-    console.error(error);
+prettify.markup(code).then(formatted => console.log(formatted)).catch(error => {
 
-    // Return the original input
-    return code;
-  });
+  // Print the PrettyDiff error
+  console.error(error);
+
+  // Return the original input
+  return code;
+
+});
 ```
 
 ### Options
@@ -365,7 +366,7 @@ Prettify provides inline formatting support via comments. Inline formatting adop
 
 ### Example
 
-Using HTML comments
+Using inline HTML comments to apply formatting on a specific block of code:
 
 <!-- prettier-ignore -->
 ```html
