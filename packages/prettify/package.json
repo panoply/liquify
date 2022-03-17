@@ -11,20 +11,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/panoply/liquify.git"
+    "url": "https://github.com/panoply/liquify/master/packages/prettify"
   },
   "bugs": {
     "url": "https://github.com/panoply/liquify/issues"
   },
-  "main": "./package/index.js",
-  "module": "./package/index.mjs",
-  "types": "package/types/export.d.ts",
+  "types": "package/index.d.ts",
+  "main": "package/index.js",
+  "module": "package/index.mjs",
   "exports": {
     "require": "./package/index.js",
     "import": "./package/index.mjs"
   },
   "scripts": {
     "dev": "rollup -c -w",
+    "types": "tsc --emit",
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava test/dev.test.mjs --color --verbose --watch",
@@ -44,20 +45,13 @@
       "esm"
     ],
     "files": [
-      "test/**/*.test.mjs"
+      "test/**/*.test.js"
     ],
     "concurrency": 5
   },
   "devDependencies": {
-    "@liquify/eslint-config": "workspace:*",
-    "@liquify/prettier-config": "workspace:*",
-    "@liquify/rollup-config": "workspace:*",
-    "@liquify/tsconfig": "workspace:*",
     "ava": "^4.1.0",
-    "esbuild": "^0.14.12",
-    "eslint": "^8.11.0",
-    "rollup": "^2.70.0",
-    "typescript": "^4.6.2"
+    "esm": "^3.2.25"
   },
   "dependencies": {
     "prettier": "^2.5.1"
