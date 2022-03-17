@@ -126,6 +126,7 @@ export const json_invalid = `
   }
 ]
 `;
+
 /**
  * JSON Style
  *
