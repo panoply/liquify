@@ -1,34 +1,33 @@
 import test from 'ava';
-import * as mocks from '../mocks/markup';
-import { Prettify } from '../../package/index';
+import * as mocks from '../mocks/markup.mjs';
+import * as prettify from '../../package/index.mjs';
 
-const prettify = new Prettify({
-  markup: {
+test('Markup format ', async t => {
+
+  const markup = await prettify.markup(mocks.markup_unformatted, {
     forceAttribute: false
-  }
-});
-
-test('Markup format ', t => {
-
-  const markup = prettify.markup(mocks.markup_unformatted);
+  });
 
   t.log(markup);
   t.pass();
 
 });
 
-test('Markup inline comment ignore', t => {
+test('Markup inline comment ignore', async t => {
 
-  const markup = prettify.markup(mocks.markup_ignore_inline);
+  const markup = await prettify.markup(mocks.markup_ignore_inline, {
+    forceAttribute: false
+  });
 
   t.log(markup);
   t.pass();
 
 });
 
-test('Markup invalid input passed', t => {
+test.skip('Markup invalid input passed', async t => {
 
-  t.throws(() => prettify.markup(mocks.markup_invalid));
+  await t.throwsAsync(() => prettify.markup(mocks.markup_invalid));
+
   t.pass();
 
 });

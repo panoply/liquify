@@ -1,30 +1,28 @@
 import test from 'ava';
-import * as mocks from '../mocks/script';
-import { Prettify } from '../../package/index';
+import * as mocks from '../mocks/script.mjs';
+import * as prettify from '../../package/index.mjs';
 
-const prettify = new Prettify();
+test('Script formatting via language Instance', async t => {
 
-test('Script formatting via language Instance', t => {
-
-  const script = prettify.script(mocks.script_unformatted);
+  const script = await prettify.script(mocks.script_unformatted);
 
   t.log(script);
   t.pass();
 
 });
 
-test('Script formatting with Liquid', t => {
+test('Script formatting with Liquid', async t => {
 
-  const script = prettify.script(mocks.script_with_liquid);
+  const script = await prettify.script(mocks.script_with_liquid);
 
   t.log(script);
   t.pass();
 
 });
 
-test('Script formatting invalid', t => {
+test.skip('Script formatting invalid', t => {
 
-  t.throws(() => prettify.script(mocks.script_invalid));
+  t.throws(async () => await prettify.script(mocks.script_invalid));
   t.pass();
 
 });
