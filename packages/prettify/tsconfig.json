@@ -3,8 +3,10 @@
   "exclude": ["node_modules/**", "package", "test"],
   "include": ["src/index.ts"],
   "compilerOptions": {
-    "typeRoots": ["src/liquid/types/*"],
-    "outDir": "package",
+    "incremental": false,
+    "declaration": true,
+    "removeComments": false,
+    "emitDeclarationOnly": true,
     "baseUrl": "."
   }
 }
