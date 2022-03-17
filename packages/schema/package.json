@@ -16,10 +16,9 @@
   "bugs": {
     "url": "https://github.com/panoply/liquify/issues"
   },
-  "type": "module",
+  "types": "package/index.d.ts",
   "main": "package/index.js",
   "module": "package/index.mjs",
-  "types": "package/index.d.ts",
   "exports": {
     "require": "./package/index.js",
     "import": "./package/index.mjs"
@@ -37,10 +36,5 @@
     "extends": [
       "@liquify/eslint-config"
     ]
-  },
-  "devDependencies": {
-    "@liquify/eslint-config": "workspace:*",
-    "@liquify/prettier-config": "workspace:*",
-    "@liquify/rollup-config": "workspace:*"
   }
 }

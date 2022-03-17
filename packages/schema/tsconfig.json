@@ -1,0 +1,12 @@
+{
+  "extends": "@liquify/tsconfig",
+  "exclude": ["node_modules/**", "package", "test"],
+  "include": ["src/index.ts"],
+  "compilerOptions": {
+    "incremental": false,
+    "declaration": true,
+    "removeComments": false,
+    "emitDeclarationOnly": true,
+    "baseUrl": "."
+  }
+}
