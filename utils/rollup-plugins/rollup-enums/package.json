@@ -2,7 +2,11 @@
   "name": "@liquify/rollup-enums",
   "version": "1.0.0",
   "description": "Converts string values to enum number values in Liquid Language Specs",
-  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <n.savvidis@gmx.com>",
+  "homepage": "https://github.com/panoply/liquify",
+  "author": {
+    "name": "Νίκος Σαβίδης ",
+    "email": "n.savvidis@gmx.com"
+  },
   "license": "MIT",
   "type": "module",
   "types": "package/index.d.ts",
@@ -15,7 +19,7 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/panoply/liquify/master/build/rollup-enums"
+    "url": "https://github.com/panoply/liquify/master/utils/rollup-plugins/rollup-enums"
   },
   "bugs": {
     "url": "https://github.com/panoply/liquify/issues"
