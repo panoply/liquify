@@ -1,0 +1,14 @@
+{
+  "name": "prettify-e2e-tests",
+  "version": "1.0.0",
+  "description": "e2e tests for prettify ",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./prettify.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@liquify/prettify": "link:../.."
+  }
+}
