@@ -7,6 +7,7 @@ import esbuild, { minify } from 'rollup-plugin-esbuild';
 import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
 import dts from 'rollup-plugin-dts';
+import { terser } from 'rollup-plugin-terser';
 import filesize from 'rollup-plugin-filesize';
 import enums from '@liquify/rollup-enums';
 import obfuscator from '@liquify/rollup-obfuscator';
@@ -78,6 +79,10 @@ export const plugin = {
    * [rollup-plugin-esbuild](https://git.io/J1DEP)
    */
   get esminify () { return minify; },
+  /**
+   * Minify code using Terser
+   */
+  get terser () { return terser; },
   /**
    * Obfuscation minification workspace plugin
    */

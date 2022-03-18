@@ -271,7 +271,9 @@ export const banner = (license = 'PROPRIETARY') => {
        * Version:  ${version}
        * Updated:  ${date}
        *
-       */`
+       */
+
+      `
     );
     case 'MIT': return stripIndent(
       `
@@ -305,7 +307,9 @@ export const banner = (license = 'PROPRIETARY') => {
        * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
        * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
        * SOFTWARE.
-       */`
+       */
+
+      `
     );
     case 'CC BY-NC-ND 4.0': return stripIndent(
       `
@@ -323,7 +327,9 @@ export const banner = (license = 'PROPRIETARY') => {
        *
        * Please refer to the LICENSE.txt and/or ThirdPartyNotices.txt files included in bundle.
        *
-       */`
+       */
+
+      `
     );
   }
 };

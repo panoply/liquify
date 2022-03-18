@@ -5,6 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
+import { terser } from 'rollup-plugin-terser';
 import enums from '@liquify/rollup-enums';
 import obfuscator from '@liquify/rollup-obfuscator';
 import watch from '@liquify/rollup-watch';
@@ -83,6 +84,10 @@ export declare const plugin: {
         legalComments?: "none" | "inline" | "eof" | "linked" | "external";
         target?: string | string[];
     }) => import("rollup").Plugin;
+    /**
+     * Minify code using Terser
+     */
+    readonly terser: typeof terser;
     /**
      * Obfuscation minification workspace plugin
      */

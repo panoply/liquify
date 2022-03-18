@@ -41,6 +41,9 @@
   },
   "prettier": "@liquify/prettier",
   "eslintConfig": {
+    "ignorePatterns": [
+      "package/*"
+    ],
     "extends": [
       "@liquify/eslint-config"
     ]
