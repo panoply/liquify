@@ -1,0 +1,1633 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 11,
+    "total": 11,
+    "workspacePrefix": "/Users/Panoply/Sites/liquify"
+  },
+  "1 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/tsconfig",
+      "version": "1.0.0",
+      "description": "Liquify TypeScript Configuration",
+      "homepage": "https://liquify.dev",
+      "author": {
+        "name": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "MIT",
+      "main": "tsconfig.json",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/tsconfig"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/tsconfig"
+  },
+  "2 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/eslint-config",
+      "version": "1.0.0",
+      "description": "Sharable ESLint config consumed within the Liquify monorepo workspace.",
+      "license": "MIT",
+      "author": {
+        "name": "Νίκος Σαβίδης",
+        "email": "n.savvidis@gmx.com",
+        "url": "https://liquify.dev"
+      },
+      "private": false,
+      "main": "index.js",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/eslint-config"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "postinstall": "pnpm update @liquify/eslint-config -r"
+      },
+      "prettier": "@liquify/prettier-config",
+      "dependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.14.0",
+        "@typescript-eslint/parser": "^5.14.0",
+        "eslint-config-standard": "^16.0.3",
+        "eslint-plugin-import": "^2.25.4",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^6.0.0"
+      },
+      "devDependencies": {
+        "@liquify/prettier-config": "workspace:*"
+      },
+      "optionalDependencies": {
+        "eslint": "^8.11.0",
+        "typescript": "^4.6.2"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/eslint-config"
+  },
+  "3 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-utils",
+      "version": "1.0.0",
+      "description": "Rollup plugin utilities for working with the Liquify monorepo codebase",
+      "author": {
+        "name": "Νίκος Σαβίδης",
+        "email": "n.savvidis@gmx.com",
+        "url": "https://liquify.dev"
+      },
+      "license": "MIT",
+      "type": "module",
+      "types": "package/index.d.ts",
+      "main": "package/index.js",
+      "module": "package/index.mjs",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "files": [
+        "package"
+      ],
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/build/rollup-utils"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "release": {
+        "branches": [
+          "master",
+          "next"
+        ]
+      },
+      "prettier": "@liquify/prettier",
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config"
+        ]
+      },
+      "devDependencies": {
+        "@liquify/eslint-config": "workspace:*",
+        "@liquify/prettier-config": "workspace:*",
+        "@rollup/plugin-commonjs": "^21.0.2",
+        "esm": "^3.2.25",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "dependencies": {
+        "chalk": "^5.0.1",
+        "dotenv": "^16.0.0",
+        "fs-extra": "^10.0.1",
+        "jsonminify": "^0.4.2",
+        "strip-indent": "^4.0.0",
+        "strip-json-comments": "^4.0.0",
+        "types-eslintrc": "^1.0.3",
+        "types-json": "^1.2.2"
+      },
+      "optionalDependencies": {
+        "rollup": "^2.70.0"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/rollup-utils"
+  },
+  "4 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/cryptographer",
+      "version": "0.1.0",
+      "description": "Encrypt and decrypt strings, numbers and objects to produce enigmatic string sequences",
+      "created": "06-10-2020",
+      "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+      "license": "MIT",
+      "type": "module",
+      "main": "package/index.js",
+      "types": "package/index.d.ts",
+      "module": "package/index.mjs",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/vscode-liquid.git"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/vscode-liquid/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "pack": "cd versions; npm pack ../ && cd ..",
+        "test": "ava --watch --verbose"
+      },
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config"
+        ]
+      },
+      "ava": {
+        "require": [
+          "esm"
+        ],
+        "files": [
+          "test/index.js"
+        ],
+        "concurrency": 5
+      },
+      "devDependencies": {
+        "@ava/babel": "^1.0.1",
+        "@liquify/eslint-config": "workspace:^1.0.0",
+        "@liquify/prettier-config": "workspace:^1.0.0",
+        "@liquify/rollup-utils": "workspace:^1.0.0",
+        "@rollup/plugin-commonjs": "^19.0.0",
+        "@types/node": "^15.14.1",
+        "ava": "^3.15.0",
+        "chalk": "^4.1.1",
+        "esm": "^3.2.25"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/cryptographer"
+  },
+  "5 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-enums",
+      "version": "1.0.0",
+      "description": "Converts string values to enum number values in Liquid Language Specs",
+      "homepage": "https://github.com/panoply/liquify",
+      "author": {
+        "name": "Νίκος Σαβίδης ",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "MIT",
+      "type": "module",
+      "types": "package/index.d.ts",
+      "main": "package/index.js",
+      "module": "package/index.mjs",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/utils/rollup-plugins/rollup-enums"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "prepack": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava --verbose"
+      },
+      "prettier": "@liquify/prettier-config",
+      "eslintConfig": {
+        "ignorePatterns": [
+          "package/*"
+        ],
+        "extends": [
+          "@liquify/eslint-config"
+        ]
+      },
+      "devDependencies": {
+        "@liquify/eslint-config": "workspace:*",
+        "@liquify/prettier-config": "workspace:*",
+        "@liquify/rollup-utils": "workspace:*",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "dependencies": {
+        "@rollup/pluginutils": "^4.1.0"
+      },
+      "optionalDependencies": {
+        "rollup": "^2.70.0"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/rollup-plugins/rollup-enums"
+  },
+  "6 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-obfuscator",
+      "version": "0.2.0",
+      "description": "Hard forked rollup plugin support for JavaScript code obfuscation using JavaScript  Obfuscator.",
+      "author": {
+        "name": "Νίκος Σαβίδης ",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "MIT",
+      "type": "module",
+      "types": "package/index.d.ts",
+      "main": "package/index.js",
+      "module": "package/index.mjs",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/utils/rollup-plugins/rollup-obfuscator"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "prepack": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava --verbose"
+      },
+      "prettier": "@liquify/prettier-config",
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config"
+        ]
+      },
+      "ava": {
+        "files": [
+          "test/**/**"
+        ],
+        "concurrency": 5
+      },
+      "release": {
+        "branches": [
+          "master",
+          "next"
+        ]
+      },
+      "devDependencies": {
+        "@liquify/eslint-config": "workspace:*",
+        "@liquify/prettier-config": "workspace:*",
+        "@liquify/rollup-utils": "workspace:*",
+        "ava": "^4.1.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "dependencies": {
+        "@rollup/pluginutils": "^4.2.0",
+        "javascript-obfuscator": "^4.0.0"
+      },
+      "optionalDependencies": {
+        "rollup": "^2.70.0"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/rollup-plugins/rollup-obfuscator"
+  },
+  "7 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-watch",
+      "version": "1.0.0",
+      "description": "Extends rollup watch instance to additional files",
+      "homepage": "https://github.com/panoply/liquify",
+      "author": {
+        "name": "Νίκος Σαβίδης ",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "MIT",
+      "type": "module",
+      "types": "package/index.d.ts",
+      "main": "package/index.js",
+      "module": "package/index.mjs",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/utils/rollup-plugins/rollup-watch"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod",
+        "prepack": "rollup -c --environment prod",
+        "pack": "cd versions; pnpm pack ../ && cd ..",
+        "test": "ava --verbose"
+      },
+      "prettier": "@liquify/prettier-config",
+      "eslintConfig": {
+        "ignorePatterns": [
+          "package/*"
+        ],
+        "extends": [
+          "@liquify/eslint-config"
+        ]
+      },
+      "devDependencies": {
+        "@liquify/eslint-config": "workspace:*",
+        "@liquify/prettier-config": "workspace:*",
+        "@liquify/rollup-utils": "workspace:*",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "optionalDependencies": {
+        "rollup": "^2.70.0"
+      },
+      "dependencies": {
+        "globby": "^13.1.1"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/rollup-plugins/rollup-watch"
+  },
+  "8 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-config",
+      "version": "1.0.0",
+      "description": "Shared Rollup configuration interface used within the Liquify monorepo.",
+      "keywords": [
+        "rollup",
+        "rollup-plugin",
+        "config"
+      ],
+      "homepage": "https://github.com/panoply/liquify",
+      "author": {
+        "name": "Νίκος Σαβίδης ",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "MIT",
+      "type": "module",
+      "types": "./index.d.ts",
+      "main": "index.js",
+      "scripts": {
+        "dev": "tsc --watch",
+        "build": "tsc",
+        "postpublish": "pnpm up @liquify/rollup-config -r"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/utils/rollup-config"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/master/utils/rollup-config"
+      },
+      "prettier": "@liquify/prettier-config",
+      "eslintConfig": {
+        "extends": "@liquify/eslint-config",
+        "ignorePatterns": [
+          "index.js",
+          "index.d.ts"
+        ]
+      },
+      "dependencies": {
+        "@liquify/rollup-enums": "workspace:*",
+        "@liquify/rollup-obfuscator": "workspace:*",
+        "@liquify/rollup-utils": "workspace:*",
+        "@liquify/rollup-watch": "workspace:*",
+        "@rollup/plugin-alias": "^3.1.9",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-commonjs": "^21.0.2",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-node-resolve": "^13.1.3",
+        "@rollup/plugin-replace": "^4.0.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-dts": "^4.2.0",
+        "rollup-plugin-esbuild": "^4.8.2",
+        "rollup-plugin-filesize": "^9.1.2",
+        "rollup-plugin-watch-assets": "^1.0.1"
+      },
+      "devDependencies": {
+        "@liquify/eslint-config": "workspace:*",
+        "@liquify/prettier-config": "workspace:*",
+        "@liquify/tsconfig": "workspace:*"
+      },
+      "peerDependencies": {
+        "esbuild": "^0.14.12",
+        "rollup": "^2.65.0",
+        "typescript": "^4.5.5"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/rollup-config"
+  },
+  "9 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/rollup-plugin-cryptospec",
+      "version": "0.1.0",
+      "description": "Rollup plugin used by Liquify IDE editor tool for encryption and cryptography bundle processing",
+      "homepage": "https://github.com/panoply/liquify",
+      "author": {
+        "name": "Νίκος Σαβίδης ",
+        "email": "n.savvidis@gmx.com"
+      },
+      "license": "MIT",
+      "type": "module",
+      "types": "package/index.d.ts",
+      "main": "package/index.js",
+      "module": "package/index.mjs",
+      "exports": {
+        "require": "./package/index.js",
+        "import": "./package/index.mjs"
+      },
+      "private": false,
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/master/utils/rollup-plugins/rollup-cryptospec"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/issues"
+      },
+      "scripts": {
+        "dev": "rollup -c -w",
+        "build": "rollup -c --environment prod && node ./scripts/strip.mjs",
+        "postpack": "cd versions; pnpm pack ../ && cd .."
+      },
+      "prettier": "@liquify/prettier-config",
+      "eslintConfig": {
+        "extends": [
+          "@liquify/eslint-config"
+        ]
+      },
+      "release": {
+        "branches": [
+          "master",
+          "next"
+        ]
+      },
+      "devDependencies": {
+        "@liquify/eslint-config": "workspace:*",
+        "@liquify/prettier-config": "workspace:*",
+        "@liquify/rollup-utils": "workspace:*",
+        "@rollup/plugin-beep": "^0.2.0",
+        "@rollup/plugin-node-resolve": "^13.0.0",
+        "chalk": "^4.1.1",
+        "fs-extra": "^10.0.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-strip-code": "^0.2.7",
+        "rollup-plugin-terser": "^7.0.2"
+      },
+      "dependencies": {
+        "@liquify/cryptographer": "workspace:*",
+        "@rollup/pluginutils": "^4.1.0",
+        "rambda": "^6.7.0"
+      },
+      "optionalDependencies": {
+        "rollup": "^2.70.0"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/rollup-plugins/rollup-cryptospec"
+  },
+  "10 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "liquify",
+      "version": "0.0.0-development",
+      "description": "Liquid Language Support and IDE tooling",
+      "author": {
+        "name": "Νίκος Σαβίδης",
+        "email": "n.savvidis@gmx.com",
+        "url": "https://liquify.dev"
+      },
+      "license": "SEE LICENSE IN LICENSE",
+      "private": true,
+      "engines": {
+        "node": "14",
+        "vscode": "^1.50.0",
+        "pnpm": ">=5"
+      },
+      "scripts": {
+        "dev": "pnpm dev -r --stream  --filter ./packages/ --filter ./editors/ --no-sort --workspace-concurrency Infinity",
+        "build": "pnpm build -r --stream --filter !./web/  --workspace-concurrency Infinity",
+        "utils": "pnpm build -r --stream --filter ./utils/  --workspace-concurrency Infinity",
+        "semantic-release": "semantic-release",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "preinstall": "npx only-allow pnpm"
+      },
+      "husky": {
+        "hooks": {
+          "post-merge": "pnpm run push"
+        }
+      },
+      "repository": {
+        "url": "https://github.com/panoply/liquify"
+      },
+      "devDependencies": {
+        "@liquify/eslint-config": "workspace:*",
+        "@liquify/prettier-config": "workspace:*",
+        "@liquify/tsconfig": "workspace:*",
+        "@liquify/types": "workspace:*",
+        "esbuild": "^0.14.27",
+        "eslint": "^8.11.0",
+        "prettier": "^2.6.0",
+        "rollup": "^2.70.1",
+        "typescript": "^4.6.2"
+      },
+      "publishConfig": {
+        "access": "restricted"
+      },
+      "peerDependencyRules": {
+        "allowedVersions": {
+          "eslint": "*"
+        }
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify"
+  },
+  "11 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/prettier-config",
+      "version": "1.0.0",
+      "description": "Prettier configuration consumed by Brixtol Textiles",
+      "main": "index.js",
+      "author": {
+        "name": "Νίκος Σαβίδης",
+        "email": "n.savvidis@gmx.com",
+        "url": "https://liquify.dev"
+      },
+      "prettier": "./index.js",
+      "license": "MIT",
+      "keywords": [
+        "prettier",
+        "prettierconfig",
+        "config",
+        "formatting"
+      ],
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/panoply/liquify/tree/next/build/prettier-config"
+      },
+      "bugs": {
+        "url": "https://github.com/panoply/liquify/tree/next/build/prettier-config/issues"
+      },
+      "engines": {
+        "pnpm": ">=6"
+      },
+      "optionalDependencies": {
+        "prettier": "^2.5.1"
+      }
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/utils/prettier-config"
+  },
+  "12 debug pnpm:context": {
+    "currentLockfileExists": false,
+    "storeDir": "/Users/Panoply/.pnpm-store/v3",
+    "virtualStoreDir": "/Users/Panoply/Sites/liquify/node_modules/.pnpm"
+  },
+  "13 debug pnpm:stage": {
+    "prefix": "/Users/Panoply/Sites/liquify",
+    "stage": "resolution_started"
+  },
+  "14 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../prettier-config",
+    "wanted": {
+      "dependentId": "utils/eslint-config",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "15 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../eslint-config",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "16 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../prettier-config",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "17 debug pnpm:request-retry": {
+    "attempt": 1,
+    "error": {
+      "type": "system",
+      "errno": "ENOTFOUND",
+      "code": "ENOTFOUND",
+      "erroredSysCall": "getaddrinfo"
+    },
+    "maxRetries": 2,
+    "method": "GET",
+    "timeout": 10000,
+    "url": "https://registry.npmjs.org/rollup-plugin-delete"
+  },
+  "18 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/eslint-config-standard/16.0.3",
+    "wanted": {
+      "dependentId": "utils/eslint-config",
+      "name": "eslint-config-standard",
+      "rawSpec": "^16.0.3"
+    }
+  },
+  "19 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint-config-standard/16.0.3",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "20 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint-config-standard/16.0.3",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "21 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/jsonminify/0.4.2",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "jsonminify",
+      "rawSpec": "^0.4.2"
+    }
+  },
+  "22 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/jsonminify/0.4.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "23 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/jsonminify/0.4.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "24 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-copy/3.4.0",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "rollup-plugin-copy",
+      "rawSpec": "^3.4.0"
+    }
+  },
+  "25 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-copy/3.4.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "26 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-copy/3.4.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "27 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/eslint-plugin-promise/6.0.0",
+    "wanted": {
+      "dependentId": "utils/eslint-config",
+      "name": "eslint-plugin-promise",
+      "rawSpec": "^6.0.0"
+    }
+  },
+  "28 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint-plugin-promise/6.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "29 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/strip-indent/4.0.0",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "strip-indent",
+      "rawSpec": "^4.0.0"
+    }
+  },
+  "30 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/strip-indent/4.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "31 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/strip-indent/4.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "32 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint-plugin-promise/6.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "33 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/eslint-plugin-node/11.1.0",
+    "wanted": {
+      "dependentId": "utils/eslint-config",
+      "name": "eslint-plugin-node",
+      "rawSpec": "^11.1.0"
+    }
+  },
+  "34 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint-plugin-node/11.1.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "35 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/eslint-plugin-import/2.25.4",
+    "wanted": {
+      "dependentId": "utils/eslint-config",
+      "name": "eslint-plugin-import",
+      "rawSpec": "^2.25.4"
+    }
+  },
+  "36 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint-plugin-import/2.25.4",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "37 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-terser/7.0.2",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "rollup-plugin-terser",
+      "rawSpec": "^7.0.2"
+    }
+  },
+  "38 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-terser/7.0.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "39 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../eslint-config",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:^1.0.0"
+    }
+  },
+  "40 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../prettier-config",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:^1.0.0"
+    }
+  },
+  "41 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../rollup-utils",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "@liquify/rollup-utils",
+      "rawSpec": "workspace:^1.0.0"
+    }
+  },
+  "42 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/dotenv/16.0.0",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "dotenv",
+      "rawSpec": "^16.0.0"
+    }
+  },
+  "43 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/dotenv/16.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "44 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/fs-extra/10.0.1",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "fs-extra",
+      "rawSpec": "^10.0.1"
+    }
+  },
+  "45 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/fs-extra/10.0.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "46 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint-plugin-node/11.1.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "47 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint-plugin-import/2.25.4",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "48 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-terser/7.0.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "49 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/dotenv/16.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "50 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/fs-extra/10.0.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "51 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/strip-json-comments/4.0.0",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "strip-json-comments",
+      "rawSpec": "^4.0.0"
+    }
+  },
+  "52 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/strip-json-comments/4.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "53 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/types-json/1.2.2",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "types-json",
+      "rawSpec": "^1.2.2"
+    }
+  },
+  "54 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/types-json/1.2.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "55 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/types-eslintrc/1.0.3",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "types-eslintrc",
+      "rawSpec": "^1.0.3"
+    }
+  },
+  "56 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/types-eslintrc/1.0.3",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "57 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../eslint-config",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-enums",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "58 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../prettier-config",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-enums",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "59 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../rollup-utils",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-enums",
+      "name": "@liquify/rollup-utils",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "60 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-copy/3.4.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-enums",
+      "name": "rollup-plugin-copy",
+      "rawSpec": "^3.4.0"
+    }
+  },
+  "61 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/esm/3.2.25",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "esm",
+      "rawSpec": "^3.2.25"
+    }
+  },
+  "62 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/esm/3.2.25",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "63 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/esm/3.2.25",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "esm",
+      "rawSpec": "^3.2.25"
+    }
+  },
+  "64 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-terser/7.0.2",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-enums",
+      "name": "rollup-plugin-terser",
+      "rawSpec": "^7.0.2"
+    }
+  },
+  "65 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/strip-json-comments/4.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "66 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/types-json/1.2.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "67 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/types-eslintrc/1.0.3",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "68 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/esm/3.2.25",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "69 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/pluginutils/4.2.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-enums",
+      "name": "@rollup/pluginutils",
+      "rawSpec": "^4.1.0"
+    }
+  },
+  "70 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/pluginutils/4.2.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "71 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../eslint-config",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "72 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../prettier-config",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "73 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../rollup-utils",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "@liquify/rollup-utils",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "74 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/pluginutils/4.2.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "75 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/chalk/5.0.1",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "chalk",
+      "rawSpec": "^5.0.1"
+    }
+  },
+  "76 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/chalk/5.0.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "77 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/chalk/4.1.2",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "chalk",
+      "rawSpec": "^4.1.1"
+    }
+  },
+  "78 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/chalk/4.1.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "79 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-copy/3.4.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "rollup-plugin-copy",
+      "rawSpec": "^3.4.0"
+    }
+  },
+  "80 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-terser/7.0.2",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "rollup-plugin-terser",
+      "rawSpec": "^7.0.2"
+    }
+  },
+  "81 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/pluginutils/4.2.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "@rollup/pluginutils",
+      "rawSpec": "^4.2.0"
+    }
+  },
+  "82 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/chalk/5.0.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "83 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/chalk/4.1.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "84 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/eslint/8.11.0",
+    "wanted": {
+      "dependentId": "utils/eslint-config",
+      "name": "eslint",
+      "rawSpec": "^8.11.0"
+    }
+  },
+  "85 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint/8.11.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "86 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/eslint/8.11.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "87 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/ava/3.15.0",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "ava",
+      "rawSpec": "^3.15.0"
+    }
+  },
+  "88 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/ava/3.15.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "89 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/ava/4.1.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "ava",
+      "rawSpec": "^4.1.0"
+    }
+  },
+  "90 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/ava/4.1.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "91 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../eslint-config",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-watch",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "92 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../prettier-config",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-watch",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "93 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../rollup-utils",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-watch",
+      "name": "@liquify/rollup-utils",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "94 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-copy/3.4.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-watch",
+      "name": "rollup-plugin-copy",
+      "rawSpec": "^3.4.0"
+    }
+  },
+  "95 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-terser/7.0.2",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-watch",
+      "name": "rollup-plugin-terser",
+      "rawSpec": "^7.0.2"
+    }
+  },
+  "96 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/plugin-commonjs/21.0.2",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "@rollup/plugin-commonjs",
+      "rawSpec": "^21.0.2"
+    }
+  },
+  "97 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-commonjs/21.0.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "98 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/plugin-commonjs/19.0.2",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "@rollup/plugin-commonjs",
+      "rawSpec": "^19.0.0"
+    }
+  },
+  "99 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-commonjs/19.0.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "100 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../eslint-config",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "101 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../prettier-config",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "102 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../tsconfig",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@liquify/tsconfig",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "103 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../rollup-plugins/rollup-enums",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@liquify/rollup-enums",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "104 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../rollup-plugins/rollup-obfuscator",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@liquify/rollup-obfuscator",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "105 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../rollup-utils",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@liquify/rollup-utils",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "106 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../rollup-plugins/rollup-watch",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@liquify/rollup-watch",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "107 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/ava/3.15.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "108 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/ava/4.1.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "109 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-commonjs/21.0.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "110 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-commonjs/19.0.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "111 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/globby/13.1.1",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-watch",
+      "name": "globby",
+      "rawSpec": "^13.1.1"
+    }
+  },
+  "112 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/globby/13.1.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "113 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/globby/13.1.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "114 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/plugin-alias/3.1.9",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@rollup/plugin-alias",
+      "rawSpec": "^3.1.9"
+    }
+  },
+  "115 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-alias/3.1.9",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "116 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/plugin-commonjs/21.0.2",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@rollup/plugin-commonjs",
+      "rawSpec": "^21.0.2"
+    }
+  },
+  "117 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-alias/3.1.9",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "118 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@ava/babel/1.0.1",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "@ava/babel",
+      "rawSpec": "^1.0.1"
+    }
+  },
+  "119 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@ava/babel/1.0.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "120 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@ava/babel/1.0.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "121 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/plugin-json/4.1.0",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@rollup/plugin-json",
+      "rawSpec": "^4.1.0"
+    }
+  },
+  "122 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-json/4.1.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "123 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-json/4.1.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "124 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@types/node/15.14.9",
+    "wanted": {
+      "dependentId": "utils/cryptographer",
+      "name": "@types/node",
+      "rawSpec": "^15.14.1"
+    }
+  },
+  "125 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@types/node/15.14.9",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "126 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-copy/3.4.0",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "rollup-plugin-copy",
+      "rawSpec": "^3.4.0"
+    }
+  },
+  "127 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@types/node/15.14.9",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "128 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/javascript-obfuscator/4.0.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "javascript-obfuscator",
+      "rawSpec": "^4.0.0"
+    }
+  },
+  "129 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/javascript-obfuscator/4.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "130 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/javascript-obfuscator/4.0.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "131 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/plugin-node-resolve/13.1.3",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "@rollup/plugin-node-resolve",
+      "rawSpec": "^13.1.3"
+    }
+  },
+  "132 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-node-resolve/13.1.3",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "133 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-dts/4.2.0",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "rollup-plugin-dts",
+      "rawSpec": "^4.2.0"
+    }
+  },
+  "134 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-dts/4.2.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "135 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup/2.70.1",
+    "wanted": {
+      "dependentId": "utils/rollup-utils",
+      "name": "rollup",
+      "rawSpec": "^2.70.0"
+    }
+  },
+  "136 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup/2.70.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "137 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup/2.70.1",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-enums",
+      "name": "rollup",
+      "rawSpec": "^2.70.0"
+    }
+  },
+  "138 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup/2.70.1",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-obfuscator",
+      "name": "rollup",
+      "rawSpec": "^2.70.0"
+    }
+  },
+  "139 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup/2.70.1",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-watch",
+      "name": "rollup",
+      "rawSpec": "^2.70.0"
+    }
+  },
+  "140 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../eslint-config",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "141 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../prettier-config",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "142 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../rollup-utils",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "@liquify/rollup-utils",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "143 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/plugin-node-resolve/13.1.3",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "@rollup/plugin-node-resolve",
+      "rawSpec": "^13.0.0"
+    }
+  },
+  "144 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/chalk/4.1.2",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "chalk",
+      "rawSpec": "^4.1.1"
+    }
+  },
+  "145 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/fs-extra/10.0.1",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "fs-extra",
+      "rawSpec": "^10.0.0"
+    }
+  },
+  "146 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-copy/3.4.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "rollup-plugin-copy",
+      "rawSpec": "^3.4.0"
+    }
+  },
+  "147 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-dts/4.2.0",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "148 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup/2.70.1",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "149 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/@rollup/plugin-node-resolve/13.1.3",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "150 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-filesize/9.1.2",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "rollup-plugin-filesize",
+      "rawSpec": "^9.1.2"
+    }
+  },
+  "151 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-filesize/9.1.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "152 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-terser/7.0.2",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "rollup-plugin-terser",
+      "rawSpec": "^7.0.2"
+    }
+  },
+  "153 debug pnpm:_dependency_resolved": {
+    "resolution": "link:../../cryptographer",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "@liquify/cryptographer",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "154 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@rollup/pluginutils/4.2.0",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "@rollup/pluginutils",
+      "rawSpec": "^4.1.0"
+    }
+  },
+  "155 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-filesize/9.1.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "found_in_store"
+  },
+  "156 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup-plugin-esbuild/4.8.2",
+    "wanted": {
+      "dependentId": "utils/rollup-config",
+      "name": "rollup-plugin-esbuild",
+      "rawSpec": "^4.8.2"
+    }
+  },
+  "157 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/rollup-plugin-esbuild/4.8.2",
+    "requester": "/Users/Panoply/Sites/liquify",
+    "status": "resolved"
+  },
+  "158 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rollup/2.70.1",
+    "wanted": {
+      "dependentId": "utils/rollup-plugins/rollup-cryptospec",
+      "name": "rollup",
+      "rawSpec": "^2.70.0"
+    }
+  },
+  "159 debug pnpm:_dependency_resolved": {
+    "resolution": "link:utils/eslint-config",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@liquify/eslint-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "160 debug pnpm:_dependency_resolved": {
+    "resolution": "link:utils/prettier-config",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@liquify/prettier-config",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "161 debug pnpm:_dependency_resolved": {
+    "resolution": "link:utils/tsconfig",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@liquify/tsconfig",
+      "rawSpec": "workspace:*"
+    }
+  },
+  "162 error pnpm": {
+    "code": "ERR_PNPM_NO_MATCHING_VERSION_INSIDE_WORKSPACE",
+    "pkgsStack": [],
+    "err": {
+      "name": "pnpm",
+      "message": "In : No matching version found for @liquify/types@* inside the workspace",
+      "code": "ERR_PNPM_NO_MATCHING_VERSION_INSIDE_WORKSPACE",
+      "stack": "pnpm: In : No matching version found for @liquify/types@* inside the workspace\n    at tryResolveFromWorkspace (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:85965:15)\n    at resolveNpm (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:85856:39)\n    at Object.resolve (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:86088:40)\n    at ctx.requestsQueue.add.priority (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74461:75)\n    at run (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74177:90)\n    at PQueue._tryToStartAnother (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74131:13)\n    at PQueue._next (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74080:14)\n    at run (/Users/Panoply/.nvm/versions/node/v14.17.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.1/node_modules/pnpm/dist/pnpm.cjs:74187:18)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:95:5)"
+    }
+  }
+}

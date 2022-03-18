@@ -2,7 +2,7 @@ import { TextDocument, Position, Range } from 'vscode-languageserver-textdocumen
 import inRange from 'lodash.inrange';
 import { ParseError } from '../lexical/errors';
 import { Diagnostics, IDiagnostic } from '../lexical/diagnostics';
-import { TextEdit, TextDocumentItem } from 'vscode-languageserver-types';
+import { TextEdit } from 'vscode-languageserver-types';
 // import { NodeLanguage } from 'lexical/language';
 // import { Config } from 'config';
 // import { NodeKind } from 'lexical/kind';
@@ -247,7 +247,7 @@ export class IAST {
   public getRange (
     start: number = s.cursor,
     end: number = s.offset
-  ): Parser.Range {
+  ): Range {
 
     return {
       start: this.positionAt(start),

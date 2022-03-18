@@ -6,7 +6,6 @@ node_modules/
 # -------------------
 .DS_Store
 .eslintcache
-pnpm-lock.yaml
 pnpm-debug.log
 tests
 tsconfig.tsbuildinfo

@@ -12,7 +12,7 @@ Language tooling for the [Liquid Template Language](#). Liquify provides IDE cap
 
 ### Why
 
-The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is leveraged by hundreds of SaaS services and thousands of open source projects. Despite Liquid being actively maintained by Shopify and the foundation of its storefront theme development very little effort has been made by the company (excluding the abysmal failure theme-check) to provide modern IDE features for those developers working within environments that leverage this language.
+The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is leveraged by hundreds of SaaS services and thousands of open source projects. Despite Liquid being actively maintained by Shopify and the foundation of its storefront theme development very little effort has been made by the company to provide modern IDE features for those developers working within environments that leverage this language.
 
 Liquify was created to solve this issue and provide everything required for Liquid and Shopify theme projects. It aims to deliver powerful editor capabilities that enrich the programing experience and lives of developers.
 
@@ -23,6 +23,12 @@ Liquify is currently free to use in this alpha pre-release stage. A yearly licen
 ###### IMPORTANT
 
 **Packages may operating under [MIT](https://mit-license.org/), [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#). Packages operating under [PROPRIETARY](#) consider source code as [Trade Secret](https://en.wikipedia.org/wiki/Proprietary_software#Types). Though code is public, please be aware of the licensing imposed upon each package.**
+
+### Client Packages
+
+These packages are the text editor [LSP](https://microsoft.github.io/language-server-protocol/specifications/specification-current/) clients.
+
+- [@liquify/vscode](#)
 
 ### Core Packages
 
@@ -35,21 +41,16 @@ These packages are considered the _core_ modules of the project.
 - [@liquify/schema-specs](#)
 - [@liquify/syncify](#)
 
-### Client Packages
-
-These packages are the text editor [LSP](https://microsoft.github.io/language-server-protocol/specifications/specification-current/) clients.
-
-- [@liquify/vscode](#)
-
 ### Utility Packages
 
-These packages are project specific [Rollup](https://rollupjs.org) plugins.
+These packages are mostly project specific [Rollup](https://rollupjs.org) plugins.
 
 - [@liquify/cryptographer](#)
 - [@liquify/rollup-cryptospec](#)
 - [@liquify/rollup-obfuscator](#)
 - [@liquify/rollup-enums](#)
 - [@liquify/rollup-utils](#)
+- [@liquify/rollup-watch](#)
 
 ### Config Packages
 

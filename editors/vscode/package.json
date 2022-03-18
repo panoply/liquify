@@ -6,8 +6,8 @@
   "publisher": "sissel",
   "icon": "assets/logo.png",
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
-  "preview": false,
-  "private": false,
+  "preview": true,
+  "private": true,
   "license": "see LICENSE.txt",
   "keywords": [
     "liquid",
@@ -63,10 +63,7 @@
     "vscode-languageclient": "^7.0.0"
   },
   "devDependencies": {
-    "@liquify/eslint-config": "workspace:*",
-    "@liquify/prettier-config": "workspace:*",
-    "@liquify/rollup-config": "workspace:*",
-    "@liquify/schema-stores": "workspace:*",
+    "@liquify/schema-stores": "workspace:^0.1.5",
     "@types/vscode": "^1.65.0"
   },
   "activationEvents": [
@@ -152,8 +149,8 @@
     "keybindings": [
       {
         "command": "liquid.formatDocument",
-        "key": "ctrl+shift+l",
-        "mac": "cmd+shift+l",
+        "key": "ctrl+l",
+        "mac": "ctrl+l",
         "when": "editorTextFocus"
       }
     ],

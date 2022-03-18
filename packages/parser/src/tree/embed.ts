@@ -33,7 +33,7 @@ export class Embed extends Node {
    * Embedded Language ID. This value excludes `HTML` and `Liquid` and
    * used to identify the language
    */
-  public languageId: Exclude<NodeLanguage, NodeLanguage.liquid | NodeLanguage.html>;
+  declare public languageId: Exclude<NodeLanguage, NodeLanguage.liquid | NodeLanguage.html>;
 
   /**
    * The TextDocument literal reference. This value is passed to Language

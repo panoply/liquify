@@ -6,17 +6,11 @@
     "rootDir": "src",
     "incremental": false,
     "declaration": true,
+    "target": "ES6",
     "declarationDir": "package/types",
     "emitDeclarationOnly": true,
     "outDir": "package",
     "removeComments": false,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["./src/*"],
-      "exports/*": ["src/exports/*"],
-      "html/*": ["./src/html/*"],
-      "liquid/*": ["./src/liquid/*"],
-      "shared/*": ["src/shared/*"]
-    }
+    "baseUrl": "."
   }
 }

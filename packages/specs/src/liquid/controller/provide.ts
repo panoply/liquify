@@ -1,4 +1,3 @@
-import { Parser } from '@liquify/types';
 import { IProperties } from '../types';
 import { variation } from './queries';
 import { descriptive, TypeNames } from '../../shared/generators';
@@ -74,7 +73,7 @@ export function LiquidTagResolve (item: CompletionItem, edits?: TextEdit[]) {
 
 }
 
-export async function LiquidPropertyComplete (node: Parser.INode, offset: number) {
+export async function LiquidPropertyComplete (node: any, offset: number) {
 
   const scope = node.parent.scope?.[node.tag];
 
@@ -105,7 +104,7 @@ export async function LiquidPropertyComplete (node: Parser.INode, offset: number
   // Lets now move to the node objects property which contains the
   // current object depths, eg: "{ 10: [ 'object', 'prop' ], 20: 10 }"
   // where our offset is "20" which points to property value "10"
-  props = objects[props] as string[];
+  props = node.objects[props] as string[];
 
   // This is our iterator function, it allows us to
   // walk the objects contained on the node

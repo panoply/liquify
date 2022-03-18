@@ -1,4 +1,3 @@
-import { AssociateTags } from './types/parser';
 import { NodeLanguage } from './lexical/language';
 import { IEngine } from '@liquify/liquid-language-specs';
 
@@ -120,7 +119,7 @@ export interface IConfig {
    * By default all rules are not active.
    */
   linting?: object;
-  associate_tags?: AssociateTags[];
+  associate_tags?: any
 }
 
 /**

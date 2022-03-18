@@ -6,7 +6,7 @@ import { NodeLanguage } from '../lexical/language';
 import { document } from './model';
 import { findFirst } from '../parser/utils';
 import { NodeType, INode } from './typings';
-import { Type } from '../types/export';
+import { Type } from '@liquify/liquid-language-specs';
 
 export { NodeType, Token, IScopes } from './typings';
 

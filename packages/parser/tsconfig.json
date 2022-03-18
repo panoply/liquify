@@ -5,17 +5,12 @@
   "compilerOptions": {
     "types": ["node"],
     "rootDir": "src",
+    "removeComments": false,
     "incremental": false,
     "typeRoots": ["node_modules/@types", "src/types/*"],
     "declaration": true,
     "declarationDir": "package/types",
     "outDir": "package",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["./src/*"],
-      "parser": ["./src/parser/*"],
-      "lexical": ["./src/lexical/*"],
-      "tree": ["./src/lexical/tree/*"]
-    }
+    "baseUrl": "."
   }
 }

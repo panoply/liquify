@@ -2,7 +2,7 @@
 
 # @liquify/parser
 
-An incremental parser/scanner for the Liquid Template Language. Developed for use with the [Liquify IDE](https://liquify.dev) text editor plugin to construct a detailed workable Abstract Syntax Tree. The parser is used in combination with the [Language Server Protocol](https://microsoft.github.io/language-server-protocol/) implementation. The Liquify parser adopts the same pattern and its scanning approach is loosely based on the [vscode-html-languageservice](https://github.com/microsoft/vscode-html-languageservice) and borrows logic found within [vscode-languageserver-node](https://github.com/microsoft/vscode-languageserver-node) in order to interface text documents with the LSP.
+An incremental parser/scanner for the Liquid Template Language. Developed for use with the [Liquify IDE](https://liquify.dev) text editor plugin to construct a detailed workable Abstract Syntax Tree. The parser is used in combination with the [Language Server Protocol](https://microsoft.github.io/language-server-protocol/) implementation. The Liquify parser adopts the same pattern and its scan approach is loosely based on the [vscode-html-languageservice](https://github.com/microsoft/vscode-html-languageservice) with borrowed logic from [vscode-languageserver-node](https://github.com/microsoft/vscode-languageserver-node).
 
 ###### IMPORTANT
 
@@ -37,7 +37,7 @@ Parser.scan(textDocument: TextDocument): AST
  * Document update. In LSP this is called on document
  * change event. It incrementally updates the document.
  */
-Parser.update (contentChanges): AST
+Parser.update(contentChanges): AST
 
 /**
  * String scan, different from `Parser.create()` and
@@ -49,7 +49,7 @@ Parser.parse(content: string): AST
  * Returns a Document AST via a URI identifier. In LSP
  * this is called for different capabilities.
  */
-Parser.get (uri: string): AST
+Parser.get(uri: string): AST
 
 /**
  * Deletes a document record from the AST
@@ -166,6 +166,7 @@ export class Node {
   get prevSibling (): Node | null
   get firstChild (): Node | null
   get lastChild (): Node | null
+  get prevChild (): Node | null
 
   // TOKENS
   get startToken(): string;

@@ -174,16 +174,17 @@ export function documentation (
   value: string
 } {
 
-  if (!description && !reference?.name) return { kind: 'plaintext', value: '' };
+  if (!description && !reference?.name) {
+    return { kind: 'plaintext', value: '' };
 
-  if (!reference?.name) return { kind: 'plaintext', value: '' };
-
-  const value = description +
-    '\n\n' +
-    '[' + reference.name + ']' +
-    '(' + reference.url + ')';
-
-  return { kind: 'markdown', value };
+  } else if (!reference?.name) {
+    return { kind: 'plaintext', value: '' };
+  } else {
+    return {
+      kind: 'markdown',
+      value: `${description + '\n\n'} [${reference.name}](${reference.url})`
+    };
+  }
 
 };
 

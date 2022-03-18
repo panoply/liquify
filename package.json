@@ -1,7 +1,7 @@
 {
   "name": "liquify",
   "version": "0.0.0-development",
-  "description": "Liquid Language Support and IDE tooling",
+  "description": "Liquid Language Support and editor IDE tooling",
   "author": {
     "name": "Νίκος Σαβίδης",
     "email": "n.savvidis@gmx.com",
@@ -15,10 +15,9 @@
     "pnpm": ">=5"
   },
   "scripts": {
-    "dev": "pnpm dev -r --stream  --filter ./packages/ --filter ./types/ --no-sort --workspace-concurrency Infinity",
+    "dev": "pnpm dev -r --stream  --filter ./packages/ --filter ./editors/ --no-sort --workspace-concurrency Infinity",
     "build": "pnpm build -r --stream --filter !./web/  --workspace-concurrency Infinity",
     "utils": "pnpm build -r --stream --filter ./utils/  --workspace-concurrency Infinity",
-    "semantic-release": "semantic-release",
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx only-allow pnpm"
   },
@@ -34,10 +33,10 @@
     "@liquify/eslint-config": "workspace:*",
     "@liquify/prettier-config": "workspace:*",
     "@liquify/tsconfig": "workspace:*",
-    "@liquify/types": "workspace:*",
-    "esbuild": "^0.14.26",
+    "@liquify/rollup-config": "workspace:*",
+    "esbuild": "^0.14.27",
     "eslint": "^8.11.0",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
     "rollup": "^2.70.1",
     "typescript": "^4.6.2"
   },

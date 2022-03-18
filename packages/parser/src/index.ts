@@ -1,6 +1,6 @@
 import { query as q, IEngine } from '@liquify/liquid-language-specs';
 import { parse } from './parser/parse';
-import { create, update, get, remove, model } from 'tree/model';
+import { create, update, get, remove, model } from './tree/model';
 import { IAST } from './tree/ast';
 import { Config, IConfig } from './config';
 import { Node } from './tree/nodes';
@@ -96,7 +96,7 @@ export class LiquidParser {
     return remove(uri);
   }
 
-  update ({ textDocument, contentChanges }: DidChangeTextDocumentParams): IAST {
+  update ({ textDocument, contentChanges }: any): IAST {
 
     return parse(
       update(

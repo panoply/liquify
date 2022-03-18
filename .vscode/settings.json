@@ -9,7 +9,9 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "**/.pnpm-debug.log": true
+    "**/.pnpm-debug.log": true,
+    "**/pnpm-debug.log": true,
+    "**/pnpm-lock.yaml": true
   },
   "files.associations": {
     ".meta": "json",
