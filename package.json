@@ -15,7 +15,10 @@
     "pnpm": ">=5"
   },
   "scripts": {
-    "dev": "pnpm dev -r --stream  --filter ./packages/ --filter ./editors/ --no-sort --workspace-concurrency Infinity",
+    "dev:server": "pnpm dev --filter @liquify/server",
+    "dev:prettify": "pnpm dev --filter @liquify/prettify",
+    "dev:parser": "pnpm dev --filter @liquify/parser",
+    "dev:all": "pnpm dev -r --stream  --filter ./packages/ --filter ./editors/ --no-sort --workspace-concurrency Infinity",
     "build": "pnpm build -r --stream --filter !./web/  --workspace-concurrency Infinity",
     "utils": "pnpm build -r --stream --filter ./utils/  --workspace-concurrency Infinity",
     "test": "echo \"Error: no test specified\" && exit 1",

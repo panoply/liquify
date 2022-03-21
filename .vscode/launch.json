@@ -9,12 +9,10 @@
       "env": {
         "SERVER_PATH": "${workspaceRoot}"
       },
-      "outFiles": [
-        "${workspaceRoot}/packages/vscode/client/vscode/package/*.js"
-      ],
+      "outFiles": ["${workspaceRoot}/editors/vscode/package/*.js"],
       "args": [
         "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceRoot}/packages/clients/vscode",
+        "--extensionDevelopmentPath=${workspaceRoot}/editors/vscode",
         "${workspaceRoot}/tests"
       ]
     },

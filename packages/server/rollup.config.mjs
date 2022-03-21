@@ -42,7 +42,6 @@ export default rollup(
           plugin.copy(
             {
               verbose: true,
-              copyOnce: env.watch,
               targets: [
                 {
                   src: stores('shopify/sections'),

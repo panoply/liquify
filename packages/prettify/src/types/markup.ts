@@ -141,7 +141,7 @@ export interface IMarkupOptions extends SharedOptions {
   /**
    * **Description**
    *
-   * If all markup attributes should be indented each onto their own line._
+   * If all markup attributes should be indented each onto their own line.
    *
    * @default false
    */

@@ -129,7 +129,7 @@ Prettify uses a custom set of beautification rules (options). Though input is fo
     newlineEnd: true,
     selfCloseSpace: false,
     indentLevel: 0,
-    preserveLines: 3,
+    preserveLine: 3,
     indentSize: 2,
     wrap: 80,
     preserveComment: true,

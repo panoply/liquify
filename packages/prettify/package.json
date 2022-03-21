@@ -29,6 +29,7 @@
     "build": "rollup -c --environment prod",
     "pack": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava test/dev.test.mjs --color --verbose --watch",
+    "test:markup": "ava test/markup/* --color --verbose --watch",
     "test:cases": "ava ./test/cases/* --verbose --color --watch"
   },
   "prettier": "@liquify/prettier-config",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "ava": "^4.1.0",
+    "chalk": "^5.0.1",
     "esm": "^3.2.25"
   },
   "dependencies": {
