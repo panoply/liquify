@@ -2,7 +2,7 @@ import { query as q, IEngine } from '@liquify/liquid-language-specs';
 import { parse } from './parser/parse';
 import { create, update, get, remove, model } from './tree/model';
 import { IAST } from './tree/ast';
-import { Config, IConfig } from './config';
+import { config, IConfig } from './config';
 import { Node } from './tree/nodes';
 import { Embed as IIEmbed } from './tree/embed';
 import { TextDocumentItem } from 'vscode-languageserver-types';
@@ -27,9 +27,9 @@ export class LiquidParser {
 
   constructor (options: IConfig) {
 
-    Object.assign(Config, options);
+    Object.assign(config, options);
 
-    q.setEngine(Config.engine);
+    q.setEngine(config.engine);
 
   }
 
