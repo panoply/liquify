@@ -399,6 +399,12 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     source: 'Liquid Parser',
     data: { doFormat: true }
   },
+  [ParseError.UnknownObject]: {
+    severity: ErrorLevel.Warning,
+    message: 'Unknown object',
+    source: 'Liquid Parser',
+    data: { doFormat: true }
+  },
   [ParseError.UnknownProperty]: {
     severity: ErrorLevel.Warning,
     message: 'Unknown property value',
