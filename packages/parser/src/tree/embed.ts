@@ -118,17 +118,15 @@ export class Embed extends Node {
       this.textDocument = textDocument;
     } else {
 
+      const region = literal.getText({
+        start: literal.positionAt(this.offsets[1]),
+        end: literal.positionAt(this.offsets[2])
+      });
+
+      const changes = customChanges(region, textDocument);
+
       // update the embedded region
-      this.textDocument = TextDocument.update(
-        textDocument,
-        customChanges(
-          literal.getText({
-            start: literal.positionAt(this.offsets[1]),
-            end: literal.positionAt(this.offsets[2])
-          }), textDocument
-        ),
-        textDocument.version + 1
-      );
+      this.textDocument = TextDocument.update(textDocument, changes, textDocument.version + 1);
     }
 
     document.regions.splice(index, 1, this);
