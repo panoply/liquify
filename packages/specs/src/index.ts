@@ -6,7 +6,7 @@ export * as html5 from './html/specs';
 
 /* SHARED TYPINGS ----------------------------- */
 
-export { Type, IEngine, Separator, Within, QueryErrors } from './shared/enums';
+export { Type, IEngine, Separator, Within, QueryErrors, BasicTypes } from './shared/enums';
 
 export type { Variation, Engine } from './liquid/types/common';
 export type { IObject, IProperty, IObjects, IProperties } from './liquid/types/objects';
