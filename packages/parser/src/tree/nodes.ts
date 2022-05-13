@@ -24,7 +24,7 @@ export class Node implements INode {
   public attributes?: object;
   public filters?: object;
   public type: Type | NodeType;
-  public languageId?: NodeLanguage;
+  public languageId?: NodeLanguage = NodeLanguage.liquid;
   public tag: string;
   public root: number;
   public index: number;
@@ -36,14 +36,15 @@ export class Node implements INode {
   public lastError: number;
   public errors: number[] = [];
 
-  constructor (type?: NodeType, start?: number, parent?: Node, kind?: NodeKind) {
+  constructor (type: NodeType, start?: number, parent?: Node, kind?: NodeKind) {
 
     if (type === NodeType.Root) {
 
+      this.tag = 'ROOT';
       this.type = NodeType.Root;
       this.offsets.push(0, document.size);
       this.children = [];
-      this.scope = {};
+      this.scope = Object.create(null);
 
     } else {
 
@@ -56,11 +57,11 @@ export class Node implements INode {
       this.singular = true;
 
       if (this.kind === NodeKind.HTML) {
-        this.attributes = {};
+        this.attributes = Object.create(null);
         this.type = type;
       } else {
-        this.objects = {};
-        this.filters = {};
+        this.objects = Object.create(null);
+        this.filters = Object.create(null);
       }
 
       if (type === NodeType.Pair) {
@@ -205,7 +206,6 @@ export class Node implements INode {
 
     const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
 
-    console.log(offset, node);
     if (node >= 0) {
       const child = this.children[node];
       if (offset > child.start && offset <= child.end) {
