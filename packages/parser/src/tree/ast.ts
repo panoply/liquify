@@ -1,16 +1,17 @@
 import { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
-import inRange from 'lodash.inrange';
-import { ParseError } from '../lexical/errors';
-import { Diagnostics, IDiagnostic } from '../lexical/diagnostics';
 import { TextEdit } from 'vscode-languageserver-types';
+import inRange from 'lodash.inrange';
+import { ParseError, ErrorLevel } from '../lexical/errors';
+import { Diagnostics, IDiagnostic } from '../lexical/diagnostics';
 // import { NodeLanguage } from 'lexical/language';
 // import { Config } from 'config';
 // import { NodeKind } from 'lexical/kind';
 import { Node } from '../tree/nodes';
 import { Embed } from '../tree/embed';
 import { GetFormedRange } from '../parser/utils';
+import { config } from '../config';
 import * as s from '../parser/stream';
-// import { spec, Type } from '@liquify/liquid-language-specs';
+// import { BasicTypes } from '@liquify/liquid-language-specs';
 
 /**
  * Abstract Syntax Tree
@@ -105,6 +106,11 @@ export class IAST {
   public variables: object = Object.create(null);
 
   /**
+   * Global scopes
+   */
+  public scopes: { [name: string]: Node } = Object.create(null);
+
+  /**
    * Returns the node at the current cursor location or null
    * if the cursor is not located within a node on the tree.
    */
@@ -148,7 +154,8 @@ export class IAST {
 
       diagnostic.range = range;
 
-      this.errors.push(diagnostic);
+      if (config.strict) this.errors.push(diagnostic);
+
       this.linting.push({ newText: ' ', range });
 
     }
@@ -166,8 +173,11 @@ export class IAST {
         }
       }
 
-      this.errors.push(diagnostic);
-
+      if (diagnostic.severity === ErrorLevel.Warning) {
+        if (config.strict) this.errors.push(diagnostic);
+      } else {
+        this.errors.push(diagnostic);
+      }
     };
   }
 
