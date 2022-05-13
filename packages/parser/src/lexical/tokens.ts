@@ -11,11 +11,16 @@ export const enum TokenType {
   Number,
 
   Separator,
+
   Variable,
   VariableIdentifier,
   VariableKeyword,
   VariableOperator,
   VariableValue,
+  VariableValueString,
+  VariableValueKeyword,
+  VariableValueObject,
+  VariableValueNumber,
 
   Filter,
   FilterOperator,
