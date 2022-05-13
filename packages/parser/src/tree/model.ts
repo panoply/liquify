@@ -18,12 +18,7 @@ export let document: IAST;
  * Creates an AST instance and stores it to within the cache model.
  * This logic is lifted mostly from vscode-languageserver-node.
  */
-export function create ({
-  uri,
-  languageId,
-  version,
-  text
-}: TextDocumentItem) {
+export function create ({ uri, languageId, version, text }: TextDocumentItem) {
 
   if (model.has(uri)) return model.get(uri);
 
@@ -65,10 +60,7 @@ export function remove (uri: string): void {
 /**
  * Update Text Document
  */
-export function update ({
-  uri,
-  version
-}: VersionedTextDocumentIdentifier, changes: any): IAST {
+export function update ({ uri, version }: VersionedTextDocumentIdentifier, changes: any): IAST {
 
   if (document.uri !== uri) {
     if (model.has(uri)) document = model.get(uri);
