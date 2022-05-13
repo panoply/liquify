@@ -16,13 +16,13 @@ export type TagEmbeddedLanguages =
 
 /* TAG SPECIFICATIONS ------------------------- */
 
-export interface ITag {
+export interface ITag<T = TagTypes> {
 
   /**
    * The type categorization of the tag. Type categorization is
    * required on tags.
    */
-  readonly type: TagTypes,
+  readonly type: T,
 
   /**
    * Is this tag singular, ie: does not require an `{% endtag %}`

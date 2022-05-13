@@ -74,6 +74,7 @@ export class LiquidService {
     // JSON Language Service
     if (support.json) {
       const schema = await store('shopify/sections');
+      console.log(schema);
       this.mode.json = new JSONLanguageService(schema);
     }
 

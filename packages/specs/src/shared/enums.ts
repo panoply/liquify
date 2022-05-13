@@ -616,3 +616,160 @@ export const enum Type {
   unknown,
 
 }
+
+export const enum BasicTypes {
+
+  /**
+   * **BASIC TYPE**
+   *
+   * Any Type
+   *
+   * Asserts any type on an argument, this is the
+   * default. When a token uses this type alphanumeric
+   * character sequences are consumed.
+   *
+   * ---
+   *
+   * **Examples**
+   *
+   * When an _any_ type is present the parser will
+   * consume the argument and not run any validation.
+   *
+   * ---
+   */
+  any = 1,
+
+  /**
+   * **BASIC TYPE**
+   *
+   * Object types represent a token which has properties.
+   * When a spec uses this type it is expected to have
+   * additional values.
+   *
+   * ---
+   *
+   * **Example**
+   *
+   * - `object.prop`
+   * - `object['prop']`
+   *
+   * ---
+   *
+   */
+  object,
+
+  /**
+   * **BASIC TYPE**
+   *
+   * A value that is a digit integer type. It assumes
+   * a negative number (without decimal point) or basic
+   * number (without decimal point).
+   *
+   * ---
+   *
+   * **Example**
+   *
+   * - `25`
+   * - `1000`
+   *
+   * ---
+   *
+   */
+  integer,
+
+  /**
+   * **BASIC TYPE**
+   *
+   * A value that is a digit integer or float type. It
+   * will assume one or the other.
+   *
+   * ---
+   *
+   * **Example**
+   *
+   * - `25`
+   * - `-39.756`
+   *
+   * ---
+   *
+   */
+  number,
+
+  /**
+   * **BASIC TYPE**
+   *
+   * Boolean type represents a word boolean value, but can also
+   * represent additional word values as follows:
+   *
+   * ---
+   *
+   * **Example**
+   *
+   * - `true`
+   * - `false`
+   * - `nil`
+   * - `empty`
+   *
+   * ---
+   *
+   */
+  boolean,
+
+  /**
+   * **BASIC TYPE**
+   *
+   * Refers to token value surrounded by quotation characters.
+   *
+   * ---
+   *
+   * **Example**
+   *
+   * - `'string'`
+   * - `"string"`
+   *
+   * ---
+   */
+  string,
+
+  /**
+   * **BASIC TYPE**
+   *
+   * Array types are used to describe a Liquid value object
+   * which holds an array (collection) value, for example:
+   *
+   * ---
+   *
+   * **Example**
+   *
+   * You would assert an _array_ type when the token requires
+   * such an input to correctly operate, for example an array
+   * is required to be past in the for tag.
+   *
+   * - `{% for i in array %}`
+   * - `{{ array | uniq }}`
+   *
+   * ---
+   *
+   */
+  array,
+
+  /**
+   * **BASIC TYPE**
+   *
+   * Data Type
+   *
+   * Data types described a value which contains no properties
+   * and outputs data, likely to be globals, like that you would
+   * encounter with `content_for_header` in shopify.
+   *
+   * ---
+   *
+   * **Example**
+   *
+   * - `{{ content_for_header }}`
+   *
+   * ---
+   *
+   */
+  data
+}

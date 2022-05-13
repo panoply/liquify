@@ -12,7 +12,8 @@ test('test', t => {
 
   prettify
     .markup(mocks.markup.markup_unformatted, {
-      forceAttribute: true
+      forceAttribute: false,
+      wrap: 50
 
     })
     .then(value => t.log(value))
