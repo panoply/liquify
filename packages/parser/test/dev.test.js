@@ -6,12 +6,13 @@ import { parser } from './cases/shared';
 const text = `
 
 
-    {% for foo in collection.products %}
+  {%- if item.img_desktop != blank and item.img_mobile != blank -%}
+  <picture>
 
-      {{ foo.available }}
-
-    {% endfor %}
-
+  </picture>
+  {%- else -%}
+  {%- render 'placeholder', type: 'hero_image' -%}
+  {%- endif -%}
 
 
 `;
@@ -35,7 +36,6 @@ function Stack (ast) {
         scope: child.scope,
         offsets: child.offsets,
         errors: child.errors,
-        embeddedId: child.embeddedId,
         languageId: child.languageId,
         literal: child.regionLiteral,
         children: child.children.map(({ tag }) => tag),
@@ -47,12 +47,12 @@ function Stack (ast) {
           end: child.parent.end,
           index: child.parent.index,
           root: child.parent.root,
-          embeddedId: child.parent.embeddedId,
           languageId: child.parent.languageId,
           children: child.parent.children.length
         }
 
       });
+
       if (child.parent) stack.push(...child.children);
     }
 
@@ -75,7 +75,7 @@ test('FullDocument Parse', t => {
   // console.log(ast.getTokenAt(60));
   const end = process.hrtime(start);
   console.log(Stack(ast));
-  // console.log(ast.nodes);
+  // console.log(ast);
   // console.log(...ast.nodes);
   // console.log(ast.getHTMLNodes());
 
