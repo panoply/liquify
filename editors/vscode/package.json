@@ -99,7 +99,7 @@
       },
       {
         "fileMatch": "settings_data.json",
-        "url": "../package/stores/settings_data.json"
+        "url": "./package/stores/settings_data.json"
       },
       {
         "fileMatch": [
