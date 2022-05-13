@@ -13,7 +13,7 @@ export const Parser = new LiquidParser(
     comments: true,
     linting: {},
     newlines: false,
-    strict: true,
+    strict: false,
     variables: true,
     associate_tags: []
   }
