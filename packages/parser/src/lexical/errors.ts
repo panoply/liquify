@@ -487,7 +487,6 @@ export const enum ParseError {
    */
   WarnWhitespace,
 
-
   /**
    * Warn Extrenous Whitespace
    *
@@ -505,6 +504,14 @@ export const enum ParseError {
    * {{ tag | filter: foo: 'bar' }} // 'foo' is unknown
    */
   UnknownFilterArgumentParameter,
+
+  /**
+   * Unknown Object
+   *
+   * @example
+   * {{- something.this_is_unknown_object -}}
+   */
+  UnknownObject,
 
   /**
    * Unknown Property
