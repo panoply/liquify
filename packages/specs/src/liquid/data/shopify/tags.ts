@@ -183,7 +183,7 @@ Tags = {
     }
   },
   schema: {
-    description: 'The javascript tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ',
+    description: 'The schema tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ',
     filters: false,
     language: 'json',
     unique: true,
