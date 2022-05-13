@@ -154,7 +154,6 @@ export function parse (document: IAST): IAST {
       /* -------------------------------------------- */
       case TokenType.HTMLLiquidAttribute:
 
-        // node = parent;
         node = parent;
 
         break;
@@ -178,7 +177,6 @@ export function parse (document: IAST): IAST {
 
         if (node.type === Type.embedded) {
           node.languageId = q.isLanguage(s.token) as NodeLanguage;
-          node.embeddedId = node.languageId;
         }
 
         node.attributes[attr as string] = s.token;
@@ -209,6 +207,18 @@ export function parse (document: IAST): IAST {
         break;
 
       /* -------------------------------------------- */
+      /* LIQUID TAG CLOSE                             */
+      /* -------------------------------------------- */
+      case TokenType.Unknown:
+
+        node.tag = s.token;
+        node.type = Type.unknown;
+
+        parent = node;
+
+        break;
+
+      /* -------------------------------------------- */
       /* LIQUID START TAG NAME                        */
       /* -------------------------------------------- */
       case TokenType.StartTagName:
@@ -216,12 +226,15 @@ export function parse (document: IAST): IAST {
         node.tag = s.token;
         node.type = $.liquid.tag.type;
         node.singular = false;
+
         parent = node;
 
         if (node.type === Type.embedded) {
           node = new Embed(node);
           node.parent.children.push(node);
+
           parent = node;
+          literal = document.literal();
         }
 
         pair.add(node);
@@ -273,7 +286,7 @@ export function parse (document: IAST): IAST {
           node.scope = node.parent.scope[s.token];
         }
 
-        console.log(node.scope);
+        // console.log(node.scope);
 
         // console.log(liquid.parent.scope[s.token]);
 
@@ -320,6 +333,7 @@ export function parse (document: IAST): IAST {
       /* LIQUID END TAG OPEN                          */
       /* -------------------------------------------- */
       case TokenType.EndTagOpen:
+      case TokenType.EndTagName:
 
         parent = node = parent;
 
@@ -344,7 +358,6 @@ export function parse (document: IAST): IAST {
       case TokenType.EmbeddedJSON:
 
         node.languageId = NodeLanguage.json;
-        node.embeddedId = node.languageId;
 
         break;
 
@@ -354,7 +367,6 @@ export function parse (document: IAST): IAST {
       case TokenType.EmbeddedCSS:
 
         node.languageId = NodeLanguage.css;
-        node.embeddedId = node.languageId;
 
         break;
 
@@ -364,7 +376,6 @@ export function parse (document: IAST): IAST {
       case TokenType.EmbeddedJavaScript:
 
         node.languageId = NodeLanguage.javascript;
-        node.embeddedId = node.languageId;
 
         break;
 
@@ -373,7 +384,7 @@ export function parse (document: IAST): IAST {
       /* -------------------------------------------- */
       case TokenType.ControlElse:
 
-        if (!q.isParent(node.prevChild.tag)) {
+        if (!q.isParent(node.parent.tag)) {
           error = document.report(Errors.InvalidPlacement);
         }
 
@@ -384,7 +395,7 @@ export function parse (document: IAST): IAST {
       /* -------------------------------------------- */
       case TokenType.Iteration:
 
-        node.scope = {};
+        node.scope = Object.create(null);
 
         break;
 
@@ -426,7 +437,9 @@ export function parse (document: IAST): IAST {
             q.setObject(node.parent.scope[s.token]);
           }
         } else {
-          q.setObject(s.token);
+          if (!q.setObject(s.token)) {
+            document.report(Errors.UnknownObject)();
+          }
         }
 
         if (!isNaN(filter) && node.filters?.[filter]) {
@@ -454,7 +467,9 @@ export function parse (document: IAST): IAST {
           }
 
           if (typeof node.scope[scope] === 'string') {
-            q.setObject(node.scope[scope]);
+            if (!q.setObject(node.scope[scope])) {
+              document.report(Errors.UnknownObject)();
+            }
           }
 
         }
@@ -463,7 +478,7 @@ export function parse (document: IAST): IAST {
           if (!q.isObjectType(node.scope as number)) {
             document.report(Errors.RejectObject)();
           }
-        } else if (q.setObject(node.scope as string) && !q.isProperty(s.token)) {
+        } else if (!q.isProperty(s.token)) {
           document.report(Errors.UnknownProperty)();
         }
 
@@ -519,6 +534,7 @@ export function parse (document: IAST): IAST {
       case TokenType.VariableKeyword:
 
         scope = s.token;
+
         document.root.scope[s.token] = null;
 
         break;
@@ -567,6 +583,7 @@ export function parse (document: IAST): IAST {
 
     node = new Node(type, scanner.begin, parent, NodeKind.HTML);
     node.tag = s.token;
+    node.languageId = NodeLanguage.html;
     parent.children.push(node);
 
     if (type === NodeType.Pair) {
