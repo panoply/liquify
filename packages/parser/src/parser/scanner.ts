@@ -231,6 +231,18 @@ function LiquidSeq () {
 
       ender = ScanState.BeforeEndTagClose;
 
+      if (s.IfCodeChar(c.DSH)) {
+
+        // Skip over whitespace
+        s.SkipWhitespace();
+
+      } else {
+
+        // Skip over whitespace
+        s.SkipWhitespace();
+
+      }
+
       // Skip over whitespace
       s.SkipWhitespace();
 
@@ -242,7 +254,7 @@ function LiquidSeq () {
         // Lets consume the end tag name identifier, eg: {%- endtag^
         if (s.IfRegExp(r.KeywordAlpha)) {
           state = ScanState.BeforeEndTagClose;
-          return TokenType.EndTagOpen;
+          return TokenType.EndTagName;
         }
 
         // If we get here, we have an invalid end tag name
@@ -586,8 +598,12 @@ function Scan (): number {
         }
 
         /* UNKNOWN TYPE ------------------------------- */
-
         state = ScanState.GotoTagEnd;
+
+        if (s.IfRegExp(r.KeywordAlpha)) {
+          return TokenType.Unknown;
+        }
+
         return TokenType.Unknown;
       }
 
@@ -1219,7 +1235,13 @@ function Scan (): number {
           return TokenType.Object;
         }
 
-        // TODO: HANDLE UNKNOWN OBJECTS
+        // The keyword is not known to our spec, we will now check if
+        // if the value contains a property notation character
+        if (s.IsRegExp(r.PropertyNotation)) {
+          cache = ScanState.ControlOperator;
+          state = ScanState.Object;
+          return TokenType.Object;
+        }
 
         // When we get here, the spec does not know about the condition value,
         // So lets  check for an operator
