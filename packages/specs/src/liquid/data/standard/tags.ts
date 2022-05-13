@@ -1,8 +1,6 @@
 import { ITags } from '../../types/tags';
 
-export let Tags: ITags;
-
-Tags = {
+export const Tags: ITags = {
   assign: {
     type: 'variable',
     description: 'Creates a new variable.',
