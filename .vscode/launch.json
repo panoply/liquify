@@ -9,7 +9,7 @@
       "env": {
         "SERVER_PATH": "${workspaceRoot}"
       },
-      "outFiles": ["${workspaceRoot}/editors/vscode/package/*.js"],
+      "outFiles": ["${workspaceRoot}/packages/vscode/package/*.js"],
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceRoot}/editors/vscode",
@@ -21,7 +21,6 @@
       "type": "node",
       "request": "attach",
       "port": 6009,
-      "protocol": "inspector",
       "cwd": "${workspaceFolder}/packages/server/src/",
       "restart": true,
       "sourceMaps": true,

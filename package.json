@@ -15,14 +15,27 @@
     "pnpm": ">=5"
   },
   "scripts": {
-    "dev:server": "pnpm dev --filter @liquify/server",
-    "dev:prettify": "pnpm dev --filter @liquify/prettify",
-    "dev:parser": "pnpm dev --filter @liquify/parser",
-    "dev:all": "pnpm dev -r --stream  --filter ./packages/ --filter ./editors/ --no-sort --workspace-concurrency Infinity",
-    "build": "pnpm build -r --stream --filter !./web/  --workspace-concurrency Infinity",
-    "utils": "pnpm build -r --stream --filter ./utils/  --workspace-concurrency Infinity",
+    "dev": "pnpm run -r -F !@liquify/docs dev",
+    "build": "pnpm --workspace-concurrency=1 --stream run -r -F !@liquify/docs build",
+    "build:utils": "pnpm --stream run -r -F \"./utils/**\" build",
+    "build:all": "pnpm run build:utils && pnpm run build",
+    "@server": "pnpm run -r -F @liquify/liquid-language-server",
+    "@prettify": "pnpm run -F @liquify/prettify",
+    "@parser": "pnpm run -F @liquify/liquid-parser",
+    "@schema": "pnpm run -F @liquify/schema-stores",
+    "@specs": "pnpm run -F @liquify/liquid-language-specs",
+    "@vscode": "pnpm run -F @liquify/vscode",
+    "@docs": "pnpm run -F @liquify/docs",
+    "@rollup-config": "pnpm run -F @liquify/rollup-config",
+    "@rollup-plugins": "pnpm run -r -F ./utils/rollup-plugins",
+    "@rollup-enums": "pnpm run -r -F @liquify/rollup-enums",
+    "@rollup-obfuscator": "pnpm run -r -F @liquify/rollup-obfuscator",
+    "@rollup-watch": "pnpm run -r -F @liquify/rollup-watch",
+    "@rollup-cryptospec": "pnpm run -r -F @liquify/rollup-cryptospec",
+    "@rollup-utils": "pnpm run -F @liquify/rollup-utils",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "bb": "pnpm run build --filter @liquify/rollup-utils && pnpm run build:utils"
   },
   "husky": {
     "hooks": {

@@ -2,7 +2,7 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {
-    "**/node_modules": true,
+    // "**/node_modules": true,
     "**/versions": true,
     "**/.git": true,
     "**/.svn": true,

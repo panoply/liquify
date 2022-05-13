@@ -1,0 +1,50 @@
+{
+  "name": "@liquify/docs",
+  "version": "0.1.0",
+  "description": "Liquify IDE Website",
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "ISC",
+  "main": ".eleventy.js",
+  "private": true,
+  "scripts": {
+    "dev": "npm-run-all clean make --parallel styles 11ty rollup",
+    "build": "pnpm run clean && pnpm run 11ty:build && pnpm run styles:prop && rollup:prod",
+    "11ty": "pnpx eleventy --serve --watch",
+    "11ty:build": "pnpx eleventy",
+    "rollup": "rollup -c -w",
+    "rollup:prod": "rollup -c --environment prod",
+    "styles": "sass src/style/stylesheet.scss public/assets/stylesheet.css --watch --load-path=./node_modules/ && postcss ./public/assets/*.css --replace",
+    "styles:prod": "sass ./src/style/ public/assets/ && postcss public/assets/*.css --replace",
+    "make": "mkdirp ./public && mkdirp ./public/assets && mkdirp ./public/assets",
+    "clean": "rimraf public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "eslintConfig": {
+    "extends": "@liquify/eslint-config"
+  },
+  "dependencies": {
+    "@liquify/schema-stores": "workspace:^0.1.5",
+    "countup.js": "^2.1.0",
+    "freezeframe": "^5.0.2",
+    "mithril": "^2.0.4",
+    "spx": "0.0.2-beta.1",
+    "stimulus": "^3.0.1"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^1.0.1",
+    "@liquify/eslint-config": "workspace:^1.0.0",
+    "@types/aws-lambda": "^8.10.97",
+    "autoprefixer": "^10.4.7",
+    "cssnano": "^5.1.7",
+    "eleventy-plugin-svg-contents": "^0.7.0",
+    "postcss": "^8.4.13",
+    "postcss-cli": "^9.1.0"
+  },
+  "repository": {
+    "url": "git+https://github.com/panoply/liquify.dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify.dev/issues"
+  },
+  "homepage": "https://github.com/panoply/liquify.dev#readme"
+}

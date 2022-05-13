@@ -1,5 +1,6 @@
 packages:
   - "."
+  - "docs"
   - "utils/tsconfig"
   - "utils/prettier-config"
   - "utils/eslint-config"
@@ -15,5 +16,5 @@ packages:
   - "packages/specs"
   - "packages/parser"
   - "packages/server"
-  - "editors/vscode"
+  - "packages/vscode"
 

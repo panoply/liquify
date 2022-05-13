@@ -18,15 +18,15 @@ Prettify supports beautification of Liquid together with several other languages
 
 # Install
 
-This module is used by the [Liquify IDE](https://liquify.dev) extension. The project is available on the public NPM registry and can be consumed by individuals and used by any project which is not maintained, created or shipped under and/or by the Shopify organization, its company and/or employees of Shopify. Everyone else is free to use as they wish.
+This module is used by the [Liquify IDE](https://liquify.dev) extension. The project is available on the public NPM registry and can be consumed by individuals and used by any project which is not maintained, created or shipped by the Shopify organization, its company and/or employees of the platform. Everyone else is free to use as they wish.
 
 ```cli
-<pnpm|npm|yarn> i @liquify/prettify --save-dev
+<pnpm add @liquify/prettify --save-dev
 ```
 
 # Usage
 
-The tool provides beautification rules for multiple languages. Each supported language exposes different formatting options. The export accepts a `string` type and second (optional) rules object. There are different modes available, each mode is representative of a single language or multiple languages.
+The tool provides beautification rules for multiple languages that are infusing Liquid. Each supported language exposes different formatting options. The export accepts a `string` type and second (optional) rules object. There are different modes available, each mode is representative of a single language or multiple languages.
 
 - markup
 - style
@@ -333,7 +333,6 @@ You can disable Prettify from formatting a file by placing an inline control com
     <li>The entire file will not be formatted</li>
   </ul>
 </div>
-
 ```
 
 # Inline Formatting

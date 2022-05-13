@@ -44,7 +44,7 @@ export declare const plugin: {
      *
      * [rollup-plugin-esbuild](https://git.io/J1DEP)
      */
-    readonly esbuild: (options?: import("rollup-plugin-esbuild").Options) => import("rollup").Plugin;
+    readonly esbuild: ({ include, exclude, sourceMap: _sourceMap, optimizeDeps, tsconfig, loaders: _loaders, ...esbuildOptions }?: import("rollup-plugin-esbuild").Options) => import("rollup").Plugin;
     /**
      * Show filesize in the cli
      *
@@ -74,15 +74,8 @@ export declare const plugin: {
      *
      * [rollup-plugin-esbuild](https://git.io/J1DEP)
      */
-    readonly esminify: (options?: {
+    readonly esminify: (options?: Omit<import("esbuild").TransformOptions, "sourcemap"> & {
         sourceMap?: boolean;
-        minify?: boolean;
-        minifyWhitespace?: boolean;
-        minifyIdentifiers?: boolean;
-        minifySyntax?: boolean;
-        keepNames?: boolean;
-        legalComments?: "none" | "inline" | "eof" | "linked" | "external";
-        target?: string | string[];
     }) => import("rollup").Plugin;
     /**
      * Minify code using Terser
