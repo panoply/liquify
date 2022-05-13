@@ -32,7 +32,7 @@ export interface IConfig {
   license?: string;
 
   /**
-   * Whether or not to parser HTML markup and include
+   * Whether or not to parse HTML markup and include
    * tags in the generated AST.
    *
    * @default true
@@ -41,11 +41,10 @@ export interface IConfig {
 
   /**
    * An LSP specific option which informs that we will
-   * be persisting, ie: executing frequent parses like
-   * that which is relevant to LSP or other editors.
+   * be persisting, ie: executing frequent parses in watch mode.
    *
    * By setting this option to `true` the parser will keep
-   * initialize its cache model and execute partial changes,
+   * an initialize its cache model and execute partial changes,
    * similar to incremental type updates.
    *
    * @default false
@@ -95,7 +94,7 @@ export interface IConfig {
 
   /**
    * Whether or not to parse HTML comments. In Liquify, you can
-   * optionally supply lint, formatting and validation rules
+   * optionally supply linting, formatting and validation rules
    * inline within Liquid or HTML comments. Settings this to `false`
    * will ignore all comments and skip their contents for inline options.
    *
@@ -129,7 +128,7 @@ export interface IConfig {
  * Options defined here effect how the parser should behave, what
  * should be parsed/skipped/included etc etc.
  */
-export const Config: IConfig = {
+export const config: IConfig = {
   license: '',
   persist: true,
   frontmatter: false,
