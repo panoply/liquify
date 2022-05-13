@@ -290,6 +290,16 @@ export const KeywordEnd = /^end/;
 export const KeywordEmpty = /^empty/;
 
 /**
+ * `^blank`
+ *
+ * ---
+ *
+ * Captures an `blank` keyword
+ *
+ */
+export const KeywordBlank = /^blank\b/;
+
+/**
  * `^else`
  *
  * ---
@@ -317,7 +327,7 @@ export const OperatorIteration = /^in/;
  * Captures control condition operators
  *
  */
-export const OperatorControl = /^(?:=[!=]|[<>]=?|(?:and|or|contains)\b)/;
+export const OperatorControl = /^(?:[!=]=|[<>]=?|(?:and|or|contains)\b)/;
 
 /**
  * `^\s*?[[.]`
@@ -330,7 +340,12 @@ export const OperatorControl = /^(?:=[!=]|[<>]=?|(?:and|or|contains)\b)/;
 export const PropertyNotation = /^\s*?[[.]/;
 
 /**
+ *
  * `^[$\w-]+`
+ *
+ * ---
+ *
+ * Captures the property value
  */
 export const PropertyValue = /^[$\w-]+/;
 
