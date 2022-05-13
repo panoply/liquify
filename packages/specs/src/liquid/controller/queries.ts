@@ -34,7 +34,7 @@ export let completions: ICompletions;
 /**
  * Tag Specification
  */
-export let tag: ITag;
+export let tag: ITag<Type>;
 
 /**
  * Filter Specification
@@ -376,7 +376,7 @@ export function setTag (name: string): boolean {
 
   if (!variation.tags?.[name]) return false;
 
-  cursor = tag = variation.tags[name];
+  cursor = tag = variation.tags[name] as unknown as ITag<Type>;
   argument = cursor?.arguments?.[0] as IArgument.Argument;
   within = Within.Arguments;
 
@@ -578,7 +578,10 @@ export function isTagType (type: Type): boolean {
  */
 export function isType (type: Type): boolean {
 
-  return (argument?.type as any) === type;
+  const arg = argument?.type as any;
+
+  return arg === Type.any ? true : arg === type;
+
 }
 
 /**
