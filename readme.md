@@ -85,7 +85,7 @@ The project is a monorepo that uses [pnpm](https://pnpm.js.org/) for dependency 
 - Clone this repository `git clone https://github.com/panoply/liquify.git`
 - Run `pnpm i`
 
-The project will be complied and all packages will build in `postinstall. You can `cd`into any package or alternatively you can run `pnpm dev`from workspace root to execute a global watch. It is recommended to`cd` into the packages and conduct development from within the specific directories and leverage Terminal panes because this way you get better oversight.
+The project will be complied and all packages will build in `postinstall`. You can `cd`into any package or alternatively you can run `pnpm dev` from workspace root to execute a global watch. It is recommended to`cd` into the packages and conduct development from within the specific directories and leverage Terminal panes because this way you get better oversight.
 
 ### Developing
 
