@@ -15,8 +15,8 @@
     "pnpm": ">=5"
   },
   "scripts": {
-    "dev": "pnpm run -r -F !@liquify/docs dev",
-    "build": "pnpm --workspace-concurrency=1 --stream run -r -F !@liquify/docs build",
+    "dev": "pnpm --workspace-concurrency=10 --stream run -r -F !@liquify/docs dev",
+    "build": "pnpm --workspace-concurrency=2 --stream run -r -F !@liquify/docs build",
     "build:utils": "pnpm --stream run -r -F \"./utils/**\" build",
     "build:all": "pnpm run build:utils && pnpm run build",
     "@server": "pnpm run -r -F @liquify/liquid-language-server",
@@ -33,9 +33,8 @@
     "@rollup-watch": "pnpm run -r -F @liquify/rollup-watch",
     "@rollup-cryptospec": "pnpm run -r -F @liquify/rollup-cryptospec",
     "@rollup-utils": "pnpm run -F @liquify/rollup-utils",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx only-allow pnpm",
-    "bb": "pnpm run build --filter @liquify/rollup-utils && pnpm run build:utils"
+    "postinstall": "pnpm run build:all"
   },
   "husky": {
     "hooks": {

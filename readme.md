@@ -12,7 +12,7 @@ Language tooling for the [Liquid Template Language](#). Liquify provides IDE cap
 
 ### Why
 
-The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is leveraged by hundreds of SaaS services and thousands of open source projects. Despite Liquid being actively maintained by Shopify and the foundation of its storefront theme development very little effort on their behalf has been to provide modern IDE features for those developers working within environments using the language.
+The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is leveraged by hundreds of SaaS services and thousands of open source projects. Despite Liquid being actively maintained by Shopify and the foundation for its storefront themes, very little effort on their behalf has been to provide modern IDE features for those developers working within environments using this template language.
 
 Liquify was created to solve this issue and provide everything required for Liquid and Shopify theme projects. It aims to deliver powerful editor capabilities that enrich the programing experience and lives of developers.
 
@@ -84,32 +84,58 @@ The project is a monorepo that uses [pnpm](https://pnpm.js.org/) for dependency 
 - Ensure [pnpm](https://pnpm.js.org/) is installed globally `npm i pnpm -g`
 - Clone this repository `git clone https://github.com/panoply/liquify.git`
 - Run `pnpm i`
-- Run `pnpm build`
 
-The project will be complied and all packages will build. You can `cd` into any package or alternatively you can run `pnpm dev` from workspace root to execute a global watch.
+The project will be complied and all packages will build in `postinstall. You can `cd`into any package or alternatively you can run `pnpm dev`from workspace root to execute a global watch. It is recommended to`cd` into the packages and conduct development from within the specific directories and leverage Terminal panes because this way you get better oversight.
 
-> It is recommended to `cd` into the packages and conduct development from within the package opposed to using the global watch command.
+### Developing
 
-### Development
+All packages are compiled with [ESBuild](https://esbuild.github.io/) and are processed together with the [Rollup](https://rollupjs.org) bundler. Each package contains a `rollup.config.mjs` file. Each contained package follows a standardized script execution pattern:
 
-All packages build using the powerful [Rollup](https://rollupjs.org) bundler. Each package contain a `rollup.config.mjs` file. Each contained package follows a standardized script execution pattern, so the same commands be called from both the workspace root or within a package.
+#### Per Package
 
-```cli
-pnpm dev                 Watch input files/directories and rebuild on changes
-pnpm build               Build production/development bundles
-pnpm test **    --flags  Tests a file in watch mode, use <pnpm test dev> in development
-pnpm test:cases --flags  Runs all test which exists within /cases directory
-pnpm publish             Publish package to third party services, eg: npm registry
-pnpm package             Package compression of bundles like pnpm pack
--w, --watch              Watch input files/directories and rebuild on changes
--d, --dev                Development build and/or bundle
--p, --prod               Production build and/or bundle
---dry-run                Dry run the command
+```
+pnpm dev       Watch and build mode
+pnpm build     Build mode only (production)
+pnpm test      Run tests, the project uses AVA
+```
+
+If you cannot be bothered to `cd` into each package then you can target packages from root directory of the workspace by passing the target name prepended with an `@` character or alternatively just run `pnpm dev` and all core packages will run in watch mode.
+
+#### Recursive (Workspace Root)
+
+```
+pnpm dev                    Watch input files/directories and rebuild on changes
+pnpm build                  Build production/development bundles
+pnpm build:utils            Build development bundles only, ie: utilities
+pnpm build:all              Build production/development bundles, runs on postinstall
+```
+
+#### Targeting (Workspace Root)
+
+```
+pnpm @server                <dev|build|test>   Targets the Liquid Language Server package
+pnpm @prettify              <dev|build|test>   Targets the Prettify package
+pnpm @parser                <dev|build|test>   Targets the Liquid Language Parser package
+pnpm @specs                 <dev|build|test>   Targets the Liquid Language Specs package
+pnpm @schema                <dev|build|test>   Targets the Schema Stores package
+pnpm @vscode                <dev|build>        Targets the vscode client package
+```
+
+#### Utilities (Workspace Root)
+
+```
+pnpm @rollup-config         <dev|build>        Targets the rollup config package
+pnpm @rollup-plugins        <dev|build>        Targets the rollup plugins package
+pnpm @rollup-enums          <dev|build>        Targets the rollup enums plugin package
+pnpm @rollup-obfuscator     <dev|build>        Targets the rollup obfuscator plugin package
+pnpm @rollup-watch          <dev|build>        Targets the rollup watch plugin package
+pnpm @rollup-cryptospec     <dev|build>        Targets the rollup cryptospec plugin package
+pnpm @rollup-utils          <dev|build>        Targets the rollup utilities package
 ```
 
 <img src="https://raw.githubusercontent.com/panoply/liquify/build/assets/line.svg?token=ABVXCLEXKEVWIXMT4M2GCSLBAUC6A" />
 
-##### CONTRIBUTORS
+## Contributors
 
 Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com).
 
@@ -117,9 +143,9 @@ Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com).
 <br>
 🍔 <small>[Joseph Curtis](#)</small> <img align="right" src="https://img.shields.io/badge/-@jCurt-1DA1F2?logo=twitter&logoColor=fff" />
 
-##### ACKNOWLEDGEMENTS
+## Acknowledgements
 
-Liquify took a considerable amount of time to build. Many sleepless nights and a lot of hours were poured into the project as not many were willing to take on the task. Thanks to all those who used the previous version of this extension and a special thanks to a couple of developers who were key players in the overall approach
+Liquify took a considerable amount of time to build. Many sleepless nights and a lot of hours were poured into the project as not many were willing to take on this task. Thanks to all those who used the previous version of this extension and a special thanks to a couple of developers who were key players in the overall approaches.
 
 - [Mansedan](#)
 - [Dave W](#)

@@ -9,7 +9,7 @@
  *
  * Package:  @liquify/rollup-enums
  * Version:  1.0.0
- * Updated:  2022-05-13 23:11:04
+ * Updated:  2022-05-14 12:24:52
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
