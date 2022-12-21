@@ -12,4 +12,5 @@ packages/ace/src/build
 .DS_Store
 .eslintcache
 .pnpm-debug.log
+pnpm-debug.log
 tsconfig.tsbuildinfo
