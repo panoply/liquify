@@ -1,0 +1,105 @@
+{
+  "name": "@liquify/liquid-parser",
+  "version": "0.1.1-beta.1",
+  "description": "An incremental parser for the Liquid Templating Language",
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup --minify",
+    "package": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava tests/dev.test.mjs --watch --verbose",
+    "test:tags": "ava tests/cases/tags.test.mjs --verbose --color",
+    "test:objects": "ava tests/cases/objects.test.mjs --verbose --color"
+  },
+  "private": false,
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com"
+  },
+  "license": "see LICENSE.txt",
+  "types": "./package/index.d.ts",
+  "main": "./package/index.js",
+  "module": "packages/index.js",
+  "exports": {
+    ".": {
+      "require": "./package/index.js",
+      "import": "./package/index.js",
+      "node": "./package/index.js",
+      "default": "./package/index.js"
+    },
+    "./regex": {
+      "require": "./package/regex.js",
+      "import": "./package/regex.js",
+      "node": "./package/regex.js",
+      "default": "./package/regex.js"
+    },
+    "./lexical": {
+      "require": "./package/lexical.js",
+      "import": "./package/lexical.js",
+      "node": "./package/lexical.js",
+      "default": "./package/lexical.js"
+    }
+  },
+  "files": [
+    "./package"
+  ],
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "ignorePatterns": [
+      "package/*"
+    ],
+    "extends": [
+      "@liquify/eslint-config"
+    ],
+    "rules": {
+      "no-use-before-define": "off",
+      "no-control-regex": "off",
+      "@typescript-eslint/indent": [
+        "error",
+        2
+      ]
+    }
+  },
+  "ava": {
+    "concurrency": 5
+  },
+  "dependencies": {
+    "@liquify/ava": "workspace:^0.0.5",
+    "@liquify/liquid-language-specs": "workspace:*",
+    "lodash.inrange": "^3.3.6",
+    "mergerino": "^0.4.0",
+    "vscode-languageserver-textdocument": "^1.0.7",
+    "yamljs": "^0.3.0"
+  },
+  "repository": {
+    "url": "https://github.com/panoply/liquid-parser"
+  },
+  "devDependencies": {
+    "@types/lodash.inrange": "^3.3.7",
+    "ansis": "^1.5.5",
+    "ava": "5.0.1",
+    "json-stringify-safe": "^5.0.1",
+    "pretty-hrtime": "^1.0.3",
+    "tsup": "^6.4.0",
+    "vscode-languageserver-types": "^3.17.2"
+  },
+  "tsup": {
+    "entry": [
+      "./src/index.ts",
+      "./src/lexical/index.ts",
+      "./src/lexical/diagnostics.ts"
+    ],
+    "external": [
+      "vscode-languageserver-textdocument"
+    ],
+    "format": "cjs",
+    "dts": {
+      "entry": "./src/index.ts",
+      "resolve": true
+    },
+    "outDir": "package",
+    "legacyOutput": false,
+    "splitting": false,
+    "treeshake": "smallest",
+    "bundle": true
+  }
+}

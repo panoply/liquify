@@ -1,0 +1,81 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "extensionHost",
+      "request": "launch",
+      "name": "Client",
+      "runtimeExecutable": "${execPath}",
+      "env": {
+        "SERVER_PATH": "${workspaceFolder}"
+      },
+      "outFiles": [
+        "${workspaceFolder}/packages/vscode/package/*.js"
+      ],
+      "args": [
+        "--disable-extensions",
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode",
+        "${workspaceRoot}/tests/environments/playground"
+      ]
+    },
+    {
+      "type": "extensionHost",
+      "request": "launch",
+      "name": "Shopify",
+      "runtimeExecutable": "${execPath}",
+      "env": {
+        "SERVER_PATH": "${workspaceFolder}"
+      },
+      "outFiles": [
+        "${workspaceFolder}/packages/vscode/package/*.js"
+      ],
+      "args": [
+        "--disable-extensions",
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode",
+        "${workspaceRoot}/tests/environments/shopify"
+      ]
+    },
+    {
+      "name": "Environment",
+      "type": "node",
+      "request": "attach",
+      "port": 6008,
+      "restart": true,
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/server/package/server.js",
+        "${workspaceFolder}/packages/server/package/server.js.map"
+      ]
+    },
+    {
+      "name": "Server",
+      "type": "node",
+      "request": "attach",
+      "port": 6009,
+      "cwd": "${workspaceFolder}/packages/server/src/",
+      "restart": true,
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/server/package/server.js",
+        "${workspaceFolder}/packages/server/package/server.js.map"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Shopify Environment",
+      "configurations": [
+        "Shopify",
+        "Environment"
+      ],
+      "stopAll": true
+    },
+    {
+      "name": "Client + Server",
+      "configurations": [
+        "Client",
+        "Server"
+      ]
+    }
+  ]
+}

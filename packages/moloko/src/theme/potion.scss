@@ -1,0 +1,227 @@
+@import "./moloko";
+
+.ace_folding-enabled > .ace_gutter-cell {
+  color: #444;
+}
+
+
+.ace-potion {
+  color: #f8f8f2;
+  white-space: pre-wrap;
+  text-shadow: none;
+  background-color: #0e0e0e;
+  -webkit-font-smoothing: antialiased;
+
+  .ace_gutter {
+    color: #fff;
+    background: #0e0e0e;
+  }
+
+  .ace_print-margin {
+    width: 0.01rem;
+    background: #ffffff15;
+  }
+
+
+  .ace_cursor {
+    border-left: 1px solid #f8f8f0 !important;
+  }
+
+  .ace_marker-layer .ace_selection {
+    background: #ffffff15;
+  }
+
+  &.ace_multiselect .ace_selection.ace_start {
+    box-shadow: 0 0 3px 0 #272822;
+  }
+
+  .ace_marker-layer {
+    .ace_step {
+      background: rgb(102 82 0);
+    }
+
+    .ace_bracket {
+      margin: -1px 0 0 -1px;
+      border: 1px solid #ffffff15;
+    }
+
+    .ace_active-line {
+      background: #ffffff15;
+    }
+  }
+
+  .ace_gutter-active-line {
+    color: #fff;
+    background-color: #0e0e0e;
+  }
+
+  .ace_marker-layer .ace_selected-word {
+    border: 1px solid #ffffff15;
+  }
+
+  .ace_invisible {
+    color: #454545;
+
+    &.ace_invisible_eol {
+      display: none;
+    }
+  }
+
+  .ace_meta.ace_tag.ace_punctuation.ace_ouput-open.ace_liquid,
+  .ace_punctuation.ace_close.ace_output.ace_liquid {
+    color: #9ba0a1;
+  }
+
+  .ace_meta.ace_tag {
+
+    &.ace_tag-name.ace_xml { color: #ff93bc; }
+
+    &.ace_punctuation {
+      &.ace_tag-open.ace_xml,
+      &.ace_end-tag-open.ace_xml,
+      &.ace_tag-close.ace_xml { color: #becaff; }
+    }
+  }
+
+  .ace_keyword {
+    &.ace_operator {
+      &.ace_attribute-equals.ace_xml { color: #ff93bc; }
+    }
+  }
+
+  .ace_entity {
+
+    &.ace_name.ace_function {
+      color: #9ee34f;
+    }
+
+    &.ace_other {
+      color: #9ee34f;
+
+      &.ace_attribute-name {
+        color: #9ee34f;
+      }
+    }
+
+    &.ace_other.ace_attribute-name.ace_xml {
+      color: #91ebc2;
+    }
+
+    &.ace_name.ace_tag {
+      color: #fc2172;
+    }
+  }
+
+  .ace_keyword,
+  .ace_meta.ace_tag,
+  .ace_storage {
+    color: #fc2172;
+  }
+
+  .ace_punctuation {
+    color: #fff;
+
+    &.ace_tag {
+      color: #fff;
+    }
+  }
+
+  .ace_constant {
+    color: #fc2172;
+
+    &.ace_character,
+    &.ace_language,
+    &.ace_numeric,
+    &.ace_other {
+      color: #ae81ff;
+    }
+  }
+
+  .ace_invalid {
+    color: #f8f8f0;
+    background-color: #fc2172;
+
+    &.ace_deprecated {
+      color: #f8f8f0;
+      background-color: #ae81ff;
+    }
+  }
+
+  .ace_support {
+
+    &.ace_class,
+    &.ace_type {
+      color: #66d9ef;
+    }
+
+    &.ace_constant,
+    &.ace_function {
+      color: #66d9ef;
+    }
+  }
+
+  .ace_fold {
+    background-color: #9ee34f;
+    border-color: #f8f8f2;
+  }
+
+  .ace_storage {
+    &.ace_type {
+      color: #66d9ef;
+
+      + .ace_identifier {
+        color: #fff;
+      }
+    }
+  }
+
+
+  .ace_variable.ace_language {
+    color: #ffab40;
+  }
+
+
+  .ace_keyword + .ace_punctuation.ace_operator {
+    color: #888;
+  }
+
+  .ace_punctuation.ace_operator {
+    color: #888;
+
+    + .ace_identifier {
+      color: #fff;
+    }
+  }
+
+  .ace_paren {
+
+    &.ace_lparen,
+    &.ace_rparen {
+      color: #888;
+    }
+  }
+
+  .ace_variable {
+    color: #9ee34f;
+
+    &.ace_parameter {
+      color: #ffab40;
+      font-style: italic;
+    }
+  }
+
+  .ace_string {
+    color: #fff78c;
+  }
+
+  .ace_comment {
+    color: #888;
+  }
+
+  .ace_indent-guide {
+    position: relative;
+    z-index: 99999;
+    display: inline-block;
+    border-right: 0.01rem solid #3f3f3f;
+  }
+}

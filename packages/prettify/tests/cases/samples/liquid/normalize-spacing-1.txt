@@ -1,0 +1,38 @@
+---
+Testing Liquid `normalizeSpacing` rule within output tokens. We are testing the stripping of extraneous whitespace characters.
+---
+
+
+{{  object  .  property  }}
+
+{{  object  .  property    }}
+
+{{  object. property [ '  foo  '  ] . foo  }}
+
+{{   object .property [ '  foo']      }}
+
+{{ ' foo '  |   filter  :   'stripping'  |  append : 'foo'  , 'bar'  | t:  foo  }}
+
+
+{{    object.prop | append:       'one'     | replace: 'this',     'that'
+
+| prepend: object .   prop
+
+   |append:    'bar'
+
+
+   | append:      'baz'
+}}
+
+<div class="foo"></div>
+
+{%if foo>bar     and bar==bar%}
+{%endif%}
+
+{% liquid
+
+   if x and y
+      hello
+   endf
+
+%}

@@ -1,0 +1,14 @@
+<meta charset="utf-8" />
+<img src="/some-url"/>
+<br/>
+<br/>
+<br />
+<input type="text" />
+<hr />
+<picture>
+  <path srcset="." />
+  <path srcset="."/>
+  <path srcset="."
+  />
+  <path srcset="."                  />
+</picture>

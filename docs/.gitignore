@@ -1,0 +1,13 @@
+# DIRECTORIES
+# --------------------
+node_modules/
+.netlify
+.sass-cache
+public
+
+# FILES
+# -------------------
+.DS_Store
+.eslintcache
+pnpm-lock.yaml
+pnpm-debug.log

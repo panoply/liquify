@@ -1,0 +1,24 @@
+{
+  "extends": "@liquify/tsconfig",
+  "exclude": [
+    "node_modules/**",
+    "package",
+    "test"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "types": [
+      "node"
+    ],
+    "declaration": true,
+    "removeComments": false,
+    "incremental": false,
+    "typeRoots": [
+      "node_modules/@types",
+    ],
+    "outDir": "package",
+    "baseUrl": "."
+  }
+}

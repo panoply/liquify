@@ -1,0 +1,15 @@
+# DIRECTORIES
+# --------------------
+node_modules/
+package/
+!tests/**
+/tests/
+packages/ace/ace
+packages/ace/src/build
+
+# FILES
+# -------------------
+.DS_Store
+.eslintcache
+pnpm-debug.log
+tsconfig.tsbuildinfo

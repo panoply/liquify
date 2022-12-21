@@ -1,0 +1,11 @@
+---
+Testing unit based beautification rule which will remove leading zeros `0` from number values. The option will preserve some units (like `%`)
+---
+
+.selector {
+width: 0.1%;
+height: 0.05rem;
+font-size: 00.30em;
+padding: 0.9px;
+line-height: 001.10%;
+}

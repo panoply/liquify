@@ -1,0 +1,756 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
+}
+
+main {
+  height: 100vh;
+}
+
+h1 {
+  font-weight: 300;
+  font-size: 3.5rem;
+  line-height: 4.2rem;
+}
+
+p {
+  color: rgb(211 211 211);
+  font-weight: 400;
+  font-size: 1.1rem;
+  font-family: "proxima nova";
+}
+
+.div {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 300px;
+
+  /// height: 100vh;
+
+  > div {
+    margin: 0 auto;
+  }
+}
+
+.drop {
+  position: relative;
+  top: -30px;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 20px;
+  border-radius: 20px;
+  border-radius: 20px;
+  animation-name: drip;
+  animation-name: drip;
+  animation-name: drip;
+  animation-duration: 2s;
+  animation-duration: 2s;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(1, 0, 0.91, 0.19);
+  animation-timing-function: cubic-bezier(1, 0, 0.91, 0.19);
+  animation-timing-function: cubic-bezier(1, 0, 0.91, 0.19);
+  animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+.drop::before {
+  position: absolute;
+  top: -22px;
+  width: 0;
+  height: 0;
+  border-right: 10px solid transparent;
+  border-bottom: 30px solid rgb(255 255 255 / 100%);
+  border-left: 10px solid transparent;
+  content: "";
+}
+
+.wave {
+  position: relative;
+  bottom: 0;
+  width: 2px;
+  height: 1px;
+  border: #fff 7px solid;
+  border-radius: 300px / 150px;
+  border-radius: 300px / 150px;
+  border-radius: 300px / 150px;
+  opacity: 0;
+  animation-name: ripple;
+  animation-name: ripple;
+  animation-name: ripple;
+  animation-duration: 2s;
+  animation-duration: 2s;
+  animation-duration: 2s;
+  animation-delay: 2s;
+  animation-delay: 2s;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+.wave::after {
+  position: absolute;
+  bottom: -5px;
+  left: -5px;
+  width: 2px;
+  height: 1px;
+  border: #fff 5px solid;
+  border-radius: 300px / 150px;
+  border-radius: 300px / 150px;
+  border-radius: 300px / 150px;
+  opacity: 0;
+  animation-name: ripple-2;
+  animation-name: ripple-2;
+  animation-name: ripple-2;
+  animation-duration: 2s;
+  animation-duration: 2s;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  content: "";
+}
+
+@keyframes ripple {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    bottom: -100px;
+    width: 600px;
+    height: 300px;
+    border-width: 1px;
+    opacity: 0;
+  }
+}
+
+@keyframes ripple-2 {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    bottom: 100px;
+    left: 200px;
+    width: 200px;
+    height: 100px;
+    border-width: 1px;
+  }
+}
+
+@keyframes drip {
+  to {
+    top: 190px;
+  }
+}
+
+.ͼ1.cm-editor.cm-focused {
+  outline: 1px dotted #212121;
+}
+
+.ͼ1.cm-editor {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.ͼ1 .cm-scroller {
+  position: relative;
+  z-index: 0;
+  display: flex !important;
+  align-items: flex-start !important;
+  height: 100%;
+  overflow-x: auto;
+  font-family: monospace;
+  line-height: 1.4;
+}
+
+.ͼ1 .cm-content[contenteditable="true"] {
+  -webkit-user-modify: read-write-plaintext-only;
+}
+
+.ͼ1 .cm-content {
+  display: block;
+  flex-grow: 2;
+  box-sizing: border-box;
+  min-height: 100%;
+  margin: 0;
+  padding: 4px 0;
+  white-space: pre;
+  word-wrap: normal;
+  outline: none;
+}
+
+.ͼ1 .cm-lineWrapping {
+  white-space: pre-wrap;
+  white-space: break-spaces;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.ͼ2 .cm-content {
+  caret-color: black;
+}
+
+.ͼ3 .cm-content {
+  caret-color: white;
+}
+
+.ͼ1 .cm-line {
+  display: block;
+  padding: 0 2px 0 4px;
+}
+
+.ͼ1 .cm-selectionLayer {
+  z-index: -1;
+  contain: size style;
+}
+
+.ͼ1 .cm-selectionBackground {
+  position: absolute;
+}
+
+.ͼ2 .cm-selectionBackground {
+  background: #d9d9d9;
+}
+
+.ͼ3 .cm-selectionBackground {
+  background: #222;
+}
+
+.ͼ2.cm-focused .cm-selectionBackground {
+  background: #d7d4f0;
+}
+
+.ͼ3.cm-focused .cm-selectionBackground {
+  background: #233;
+}
+
+.ͼ1 .cm-cursorLayer {
+  z-index: 100;
+  contain: size style;
+  pointer-events: none;
+}
+
+.ͼ1.cm-focused .cm-cursorLayer {
+  animation: steps(1) cm-blink 1.2s infinite;
+}
+
+@keyframes cm-blink {
+  50% {
+    visibility: hidden;
+  }
+}
+
+@keyframes cm-blink2 {
+  50% {
+    visibility: hidden;
+  }
+}
+
+.ͼ1 .cm-cursor,
+.ͼ1 .cm-dropCursor {
+  position: absolute;
+  margin-left: -0.6px;
+  border-left: 1.2px solid black;
+  pointer-events: none;
+}
+
+.ͼ1 .cm-cursor {
+  display: none;
+}
+
+.ͼ3 .cm-cursor {
+  border-left-color: #444;
+}
+
+.ͼ1.cm-focused .cm-cursor {
+  display: block;
+}
+
+.ͼ2 .cm-activeLine {
+  background-color: #f3f9ff;
+}
+
+.ͼ3 .cm-activeLine {
+  background-color: #223039;
+}
+
+.ͼ2 .cm-specialChar {
+  color: red;
+}
+
+.ͼ3 .cm-specialChar {
+  color: #f78;
+}
+
+.ͼ1 .cm-gutters {
+  left: 0;
+  z-index: 200;
+  display: flex;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.ͼ2 .cm-gutters {
+  color: #6c6c6c;
+  background-color: #f5f5f5;
+  border-right: 1px solid #ddd;
+}
+
+.ͼ3 .cm-gutters {
+  color: #ccc;
+  background-color: #333338;
+}
+
+.ͼ1 .cm-gutter {
+  display: flex !important;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.ͼ1 .cm-gutterElement {
+  box-sizing: border-box;
+}
+
+.ͼ1 .cm-lineNumbers .cm-gutterElement {
+  min-width: 20px;
+  padding: 0 3px 0 5px;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.ͼ2 .cm-activeLineGutter {
+  background-color: #e2f2ff;
+}
+
+.ͼ3 .cm-activeLineGutter {
+  background-color: #222227;
+}
+
+.ͼ1 .cm-panels {
+  position: sticky;
+  right: 0;
+  left: 0;
+  box-sizing: border-box;
+}
+
+.ͼ2 .cm-panels {
+  color: black;
+  background-color: #f5f5f5;
+}
+
+.ͼ2 .cm-panels-top {
+  border-bottom: 1px solid #ddd;
+}
+
+.ͼ2 .cm-panels-bottom {
+  border-top: 1px solid #ddd;
+}
+
+.ͼ3 .cm-panels {
+  color: white;
+  background-color: #333338;
+}
+
+.ͼ1 .cm-tab {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.ͼ1 .cm-widgetBuffer {
+  display: inline;
+  height: 1em;
+  vertical-align: text-top;
+}
+
+.ͼ1 .cm-placeholder {
+  display: inline-block;
+  color: #888;
+  vertical-align: top;
+}
+
+.ͼ1 .cm-button {
+  padding: 0.2em 1em;
+  color: inherit;
+  font-size: 70%;
+  vertical-align: middle;
+  border-radius: 1px;
+}
+
+.ͼ2 .cm-button:active {
+  background-image: linear-gradient(#b4b4b4, #d0d3d6);
+}
+
+.ͼ2 .cm-button {
+  background-image: linear-gradient(#eff1f5, #d9d9df);
+  border: 1px solid #888;
+}
+
+.ͼ3 .cm-button:active {
+  background-image: linear-gradient(#111, #333);
+}
+
+.ͼ3 .cm-button {
+  background-image: linear-gradient(#393939, #111);
+  border: 1px solid #888;
+}
+
+.ͼ1 .cm-textfield {
+  padding: 0.2em 0.5em;
+  color: inherit;
+  font-size: 70%;
+  vertical-align: middle;
+  border: 1px solid silver;
+}
+
+.ͼ2 .cm-textfield {
+  background-color: white;
+}
+
+.ͼ3 .cm-textfield {
+  background-color: inherit;
+  border: 1px solid #555;
+}
+
+.ͼ1 .cm-selectionMatch {
+  background-color: #99ff7780;
+}
+
+.ͼ1 .cm-searchMatch .cm-selectionMatch {
+  background-color: transparent;
+}
+
+.ͼ1 .cm-tooltip.cm-tooltip-autocomplete > ul > li {
+  padding: 1px 3px;
+  overflow-x: hidden;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.ͼ1 .cm-tooltip.cm-tooltip-autocomplete > ul {
+  min-width: 250px;
+  max-width: 700px;
+  max-width: min(700px, 95vw);
+  max-height: 10em;
+  margin: 0;
+  padding: 0;
+  overflow: hidden auto;
+  font-family: monospace;
+  white-space: nowrap;
+  list-style: none;
+}
+
+.ͼ2 .cm-tooltip-autocomplete ul li[aria-selected] {
+  color: white;
+  background: #17c;
+}
+
+.ͼ3 .cm-tooltip-autocomplete ul li[aria-selected] {
+  color: white;
+  background: #347;
+}
+
+.ͼ1 .cm-completionListIncompleteTop::before,
+.ͼ1 .cm-completionListIncompleteBottom::after {
+  display: block;
+  text-align: center;
+  opacity: 0.5;
+  content: "···";
+}
+
+.ͼ1 .cm-tooltip.cm-completionInfo {
+  position: absolute;
+  width: max-content;
+  max-width: 300px;
+  padding: 3px 9px;
+}
+
+.ͼ1 .cm-completionInfo.cm-completionInfo-left {
+  right: 100%;
+}
+
+.ͼ1 .cm-completionInfo.cm-completionInfo-right {
+  left: 100%;
+}
+
+.ͼ2 .cm-snippetField {
+  background-color: #0002;
+}
+
+.ͼ3 .cm-snippetField {
+  background-color: #fff2;
+}
+
+.ͼ1 .cm-snippetFieldPosition {
+  width: 0;
+  height: 1.15em;
+  margin: 0 -0.7px -0.7em;
+  vertical-align: text-top;
+  border-left: 1.4px dotted #888;
+}
+
+.ͼ1 .cm-completionMatchedText {
+  text-decoration: underline;
+}
+
+.ͼ1 .cm-completionDetail {
+  margin-left: 0.5em;
+  font-style: italic;
+}
+
+.ͼ1 .cm-completionIcon {
+  display: inline-block;
+  width: 0.8em;
+  padding-right: 0.6em;
+  font-size: 90%;
+  text-align: center;
+  opacity: 0.6;
+}
+
+.ͼ1 .cm-completionIcon-function::after,
+.ͼ1 .cm-completionIcon-method::after {
+  content: "ƒ";
+}
+
+.ͼ1 .cm-completionIcon-class::after {
+  content: "○";
+}
+
+.ͼ1 .cm-completionIcon-interface::after {
+  content: "◌";
+}
+
+.ͼ1 .cm-completionIcon-variable::after {
+  content: "𝑥";
+}
+
+.ͼ1 .cm-completionIcon-constant::after {
+  content: "𝐶";
+}
+
+.ͼ1 .cm-completionIcon-type::after {
+  content: "𝑡";
+}
+
+.ͼ1 .cm-completionIcon-enum::after {
+  content: "∪";
+}
+
+.ͼ1 .cm-completionIcon-property::after {
+  content: "□";
+}
+
+.ͼ1 .cm-completionIcon-keyword::after {
+  content: "🔑︎";
+}
+
+.ͼ1 .cm-completionIcon-namespace::after {
+  content: "▢";
+}
+
+.ͼ1 .cm-completionIcon-text::after {
+  font-size: 50%;
+  vertical-align: middle;
+  content: "abc";
+}
+
+.ͼ1 .cm-tooltip {
+  z-index: 100;
+}
+
+.ͼ2 .cm-tooltip {
+  background-color: #f5f5f5;
+  border: 1px solid #bbb;
+}
+
+.ͼ2 .cm-tooltip-section:not(:first-child) {
+  border-top: 1px solid #bbb;
+}
+
+.ͼ3 .cm-tooltip {
+  color: white;
+  background-color: #333338;
+}
+
+.ͼ1 .cm-tooltip-arrow::before,
+.ͼ1 .cm-tooltip-arrow::after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+  content: "";
+}
+
+.ͼ1 .cm-tooltip-above .cm-tooltip-arrow::before {
+  border-top: 7px solid #bbb;
+}
+
+.ͼ1 .cm-tooltip-above .cm-tooltip-arrow::after {
+  bottom: 1px;
+  border-top: 7px solid #f5f5f5;
+}
+
+.ͼ1 .cm-tooltip-above .cm-tooltip-arrow {
+  bottom: -7px;
+}
+
+.ͼ1 .cm-tooltip-below .cm-tooltip-arrow::before {
+  border-bottom: 7px solid #bbb;
+}
+
+.ͼ1 .cm-tooltip-below .cm-tooltip-arrow::after {
+  top: 1px;
+  border-bottom: 7px solid #f5f5f5;
+}
+
+.ͼ1 .cm-tooltip-below .cm-tooltip-arrow {
+  top: -7px;
+}
+
+.ͼ1 .cm-tooltip-arrow {
+  position: absolute;
+  z-index: -1;
+  width: 14px;
+  height: 7px;
+  overflow: hidden;
+}
+
+.ͼ3 .cm-tooltip .cm-tooltip-arrow::before {
+  border-top-color: #333338;
+  border-bottom-color: #333338;
+}
+
+.ͼ3 .cm-tooltip .cm-tooltip-arrow::after {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.ͼ1.cm-focused .cm-matchingBracket {
+  background-color: #328c8252;
+}
+
+.ͼ1.cm-focused .cm-nonmatchingBracket {
+  background-color: #b554;
+}
+
+.ͼ1 .cm-foldPlaceholder {
+  margin: 0 1px;
+  padding: 0 1px;
+  color: #888;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  border-radius: 0.2em;
+  cursor: pointer;
+}
+
+.ͼ1 .cm-foldGutter span {
+  padding: 0 1px;
+  cursor: pointer;
+}
+
+.ͼ5 {
+  color: #7a757a;
+}
+
+.ͼ6 {
+  text-decoration: underline;
+}
+
+.ͼ7 {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.ͼ8 {
+  font-style: italic;
+}
+
+.ͼ9 {
+  font-weight: bold;
+}
+
+.ͼa {
+  text-decoration: line-through;
+}
+
+.ͼb {
+  color: #708;
+}
+
+.ͼc {
+  color: #219;
+}
+
+.ͼd {
+  color: #164;
+}
+
+.ͼe {
+  color: #a11;
+}
+
+.ͼf {
+  color: #e40;
+}
+
+.ͼg {
+  color: #00f;
+}
+
+.ͼh {
+  color: #30a;
+}
+
+.ͼi {
+  color: #085;
+}
+
+.ͼj {
+  color: #167;
+}
+
+.ͼk {
+  color: #256;
+}
+
+.ͼl {
+  color: #00c;
+}
+
+.ͼm {
+  color: #940;
+}
+
+.ͼn {
+  color: #f00;
+}
+
+.ͼ4 .cm-line ::selection {
+  background-color: transparent !important;
+}
+
+.ͼ4 .cm-line::selection {
+  background-color: transparent !important;
+}
+
+.ͼ4 .cm-line {
+  caret-color: transparent !important;
+}

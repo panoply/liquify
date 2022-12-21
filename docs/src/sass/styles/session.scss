@@ -1,0 +1,80 @@
+.session {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 200;
+  width: 500px;
+  border-color: $cyan;
+}
+
+.bd-bottom {
+  border-color: $cyan;
+}
+
+.session-scroll {
+  overflow-y: scroll;
+}
+
+.session-tabs {
+  height: 40px;
+}
+
+.session-logs {
+  position: absolute;
+  top: 41px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+
+  .active {
+    height: 20%;
+  }
+
+  .action {
+    height: 40%;
+  }
+
+  .history {
+    height: 40%;
+  }
+}
+
+.session-details {
+  .memory {
+    height: 10%;
+  }
+
+
+  .relapse-btn {
+    color: $white;
+    border-bottom: $border-width solid $cyan;
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      color: $white;
+    }
+
+    .icon-open {
+      display: none;
+    }
+
+    .icon-close {
+      display: flex;
+    }
+
+    &.opened {
+      color: $cyan;
+
+      .icon-open {
+        display: flex;
+      }
+
+      .icon-close {
+        display: none;
+      }
+    }
+  }
+}
+

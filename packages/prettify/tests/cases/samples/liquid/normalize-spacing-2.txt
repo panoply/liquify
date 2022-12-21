@@ -1,0 +1,36 @@
+---
+Testing Liquid `normalizeSpacing` rule within tag tokens. We are testing the stripping of extraneous whitespace characters.
+---
+
+
+{%  assign foo  ='bar' %}
+
+{%   assign  foo   =  object  .  property  %}
+
+{%  if  foo  ==  bar    and   foo  <    bar   or  foo   >  bar  %}
+
+<p>Conditionl Extranenous</p>
+
+{%   endif   %}
+
+{%    unless  foo  !=  bar    contains   foo   <=    bar   or  foo   >=   bar  %}
+
+<p>Conditionl Extranenous</p>
+
+{%   endif   %}
+
+
+{%   assign   =  object  .  property  |  filter  :   'stripping'  |  append : 'foo'  , 'bar'  | t:  foo   %}
+
+
+{%  for  x  in  arr   param:  x %}
+
+{%  endif  %}
+
+
+{%  for  x  in  (1. .50)   param:  x %}
+
+{%  endif  %}
+
+
+{%  render   'xxx'  with  product  ['x'  ]   as  foo   %}

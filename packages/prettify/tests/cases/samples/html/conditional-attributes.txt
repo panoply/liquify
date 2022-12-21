@@ -1,0 +1,21 @@
+<div class="x" {% if x %}id="foo"{% endif%}>
+
+  <ul
+   {% unless x and xx == true %}
+   class="x"
+   {% else %}
+   class="xx"
+   {% endunless %}>
+
+    <li
+     data-attr="x"
+     {%- if x contains 'x' -%}
+     id="x"
+     {% elsif %}
+     class="foo"
+     {% endif -%}>
+
+      {{ x | filter: 'xx' }}
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,101 @@
+
+---
+Test CSS selector sorting. Class selector sorting will be applied in alphabetical order. The first snapshot has sorting enabled, the second snapshot has it disabled.
+---
+
+.v,
+.z,
+.y,
+.a,
+.g,
+.u,
+.x > .a > .b,
+.x > .c > .d,
+.c > .d > .x,
+.f,
+.e,
+.n,
+.r,
+.t > .v > .x,
+.w,
+.b,
+.h,
+.j,
+.m,
+.k,
+.o,
+.ö,
+.ä {
+background-image: url("barn.jpg");
+z-index: 999;
+color: #fff;
+width: 200px;
+background-repeat: no-repeat;
+background-position: right top;
+background-attachment: fixed;
+font-weight: 100;
+font-style: bold:
+margin-top: 100px;
+display: flex;
+position: absolute;
+float: right;
+margin-left: 100px;
+padding-right: 25px;
+transition: ease-in;
+visibility:
+padding-bottom: 40px;
+font-weight: 100;
+font-style: bold:
+padding-left: 25px;
+visibility: collapse;
+min-inline-size: inherit;
+}
+
+
+.v,
+.z,
+.y,
+.a,
+.g,
+.u,
+.x,
+.x,
+.c,
+.f,
+.e,
+.n,
+.r,
+.t,
+.w,
+.b,
+.h,
+.j,
+.m,
+.k,
+.o,
+.ö,
+.ä {
+background-image: url("barn.jpg");
+z-index: 999;
+color: #fff;
+width: 200px;
+background-repeat: no-repeat;
+background-position: right top;
+background-attachment: fixed;
+font-weight: 100;
+font-style: bold:
+margin-top: 100px;
+display: flex;
+position: absolute;
+float: right;
+margin-left: 100px;
+padding-right: 25px;
+transition: ease-in;
+visibility:
+padding-bottom: 40px;
+font-weight: 100;
+font-style: bold:
+padding-left: 25px;
+visibility: collapse;
+min-inline-size: inherit;
+}

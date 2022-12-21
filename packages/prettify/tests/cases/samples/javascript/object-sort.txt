@@ -1,0 +1,112 @@
+---
+Tests `object` sorting or property keys. Sorting will apply alphabetical ordering. This case also tests against non-english letters.
+---
+
+const A_Z = {
+v: 1,
+z: 2,
+y: 3,
+a: 4,
+g: 5,
+u: 6,
+x: 7,
+x: 8,
+c: 9,
+f: 10,
+e: 11,
+n: 12,
+r: 13,
+t: 14,
+w: 15,
+b: 16,
+h: 17,
+j: 18,
+m: 19,
+k: 20,
+o: 21,
+ö: 22,
+ä: 23
+};
+
+const inArray = [
+{
+v: 1,
+z: 2,
+y: 3,
+a: 4,
+g: 5,
+u: 6,
+x: 7,
+x: 8,
+c: 9,
+f: 10,
+e: 11,
+n: 12,
+r: 13,
+t: 14,
+w: 15,
+b: 16,
+h: 17,
+j: 18,
+m: 19,
+k: 20,
+o: 21,
+ö: 22,
+ä: 23
+},
+{
+v: 1,
+z: 2,
+y: 3,
+a: 4,
+g: 5,
+u: 6,
+x: 7,
+x: 8,
+c: 9,
+f: 10,
+e: 11,
+n: 12,
+r: 13,
+t: 14,
+w: 15,
+b: 16,
+h: 17,
+j: 18,
+m: 19,
+k: 20,
+o: 21,
+ö: 22,
+ä: 23
+}
+]
+
+
+function inFunction () {
+
+  const number =  {
+  v: 1,
+  z: 2,
+  y: 3,
+  a: 4,
+  g: 5,
+  u: 6,
+  x: 7,
+  x: 8,
+  c: 9,
+  f: 10,
+  e: 11,
+  n: 12,
+  r: 13,
+  t: 14,
+  w: 15,
+  b: 16,
+  h: 17,
+  j: 18,
+  m: 19,
+  k: 20,
+  o: 21,
+  ö: 22,
+  ä: 23
+  }
+}

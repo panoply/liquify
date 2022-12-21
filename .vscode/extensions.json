@@ -1,0 +1,15 @@
+{
+  "unwantedRecommendations": [
+    "neilding.language-liquid",
+    "Shopify.theme-check-vscode",
+    "killalau.vscode-liquid-snippets"
+  ],
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "vscode-icons-team.vscode-icons",
+    "fabiospampinato.vscode-highlight",
+    "bierner.comment-tagged-templates"
+  ]
+}

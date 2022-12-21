@@ -1,0 +1,10 @@
+# DIRECTORIES
+# --------------------
+package/
+
+# FILES
+# -------------------
+.DS_Store
+.eslintcache
+pnpm-lock.yaml
+pnpm-debug.log

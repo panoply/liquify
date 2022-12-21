@@ -1,0 +1,46 @@
+export default (
+/* html */`
+<h1>Attribute Sorting Sample</h1>
+
+<p>
+This code sample can be used to test the attribute sorting capabilities of Prettify.
+</p>
+
+<main id="three" class="one" data-a="two">
+<div
+
+data-c="3"
+data-b="2"
+data-d="4"
+data-e="5"
+data-e="6"
+data-a="1"
+id="last"
+
+>
+The attributes used on this tag will be sorted alphabeticaly
+</div>
+
+<ul>
+
+  <li
+  class="x"
+  id={{ some.object }}
+  data-c="3"
+data-b="2"
+data-d="4"
+data-e="5"
+data-e="6"
+data-a="1"
+  >The attributes of this tag will be sorted because it contains a liquid value</li>
+
+    <li
+  class="x"
+  {% if x %}data-x{% endif %}
+    data-c="3"
+data-b="2"
+  data-a="1"
+  >No sorting will be applied to this tag because it contains Liquid attributes</li>
+</ul>
+</main>
+`);

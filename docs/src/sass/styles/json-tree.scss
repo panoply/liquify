@@ -1,0 +1,123 @@
+.json-tree {
+
+  /* Background for the tree. May use for <body> element */
+  &-bg {
+    background: $black;
+  }
+
+  /* Styles for the container of the tree (e.g. fonts, margins etc.) */
+  &-tree {
+    width: 100%;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-left: 20px;
+    font-size: 13px;
+    font-family: "PT Mono", monospace;
+    list-style-type: none;
+  }
+
+  /* Styles for a list of child nodes */
+  &-child-nodes {
+    display: none;
+    margin-bottom: 5px;
+    margin-left: 0;
+    padding-left: 10px;
+    line-height: 2;
+    list-style-type: none;
+  }
+
+  &-node-expanded > &-value-wrapper > &-value > &-child-nodes {
+    display: block;
+  }
+
+  /* Styles for labels */
+
+  &-label-wrapper {
+    float: left;
+    margin-right: 8px;
+  }
+
+  &-label {
+    position: relative;
+    padding: 1px;
+    color: cyan;
+    font-weight: normal;
+    vertical-align: top;
+    border-radius: 4px;
+    cursor: default;
+  }
+
+  &-node-marked > &-label-wrapper > &-label {
+    background: #fff2aa;
+  }
+
+  /* Styles for values */
+
+  &-value-wrapper {
+    display: inline;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  &-node-complex > &-value-wrapper {
+    overflow: inherit;
+  }
+
+  &-value {
+    display: inline;
+    vertical-align: top;
+  }
+
+  &-value-null {
+    color: #777;
+  }
+
+  &-value-string {
+    color: $yellow;
+  }
+
+  &-value-number {
+    color: $pink;
+  }
+
+  &-value-boolean {
+    color: $blue;
+  }
+
+
+  /* Styles for active elements */
+
+  &-expand-button {
+    position: absolute;
+    top: 3px;
+    left: -15px;
+    display: block;
+    width: 11px;
+    height: 11px;
+  }
+
+  &-node-expanded > &-label-wrapper > &-label > &-expand-button {
+    background-position: 0 -11px;
+  }
+
+  &-show-more {
+    cursor: pointer;
+  }
+
+  &-node-expanded > &-value-wrapper > &-value > &-show-more {
+    display: none;
+  }
+
+  &-node-empty > &-label-wrapper > &-label > &-expand-button,
+  &-node-empty > &-value-wrapper > &-value > &-show-more {
+    display: none !important;
+  }
+
+  &-node-complex > &-label-wrapper > &-label {
+    cursor: pointer;
+  }
+
+  &-node-empty > &-label-wrapper > &-label {
+    cursor: default !important;
+  }
+}

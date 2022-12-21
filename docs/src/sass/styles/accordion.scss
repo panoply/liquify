@@ -1,0 +1,84 @@
+/* -------------------------------------------- */
+/* RELAPSE                                      */
+/* -------------------------------------------- */
+
+$relapse-border-width: 1px !default;
+$relapse-border-color: #e5e5e5 !default;
+$relapse-padding: 50px !default;
+$relapse-transition-height: 225ms !default;
+$relapse-transition-opacity: 200ms !default;
+$relapse-transition-timing: ease-in-out !default;
+
+.relapse {
+  position: relative;
+  display: block;
+  width: 100%;
+  border: none;
+  border-top: none;
+
+
+  &-fold {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity $relapse-transition-opacity linear,
+      max-height $relapse-transition-height $relapse-transition-timing;
+    transition: opacity $relapse-transition-opacity linear,
+      max-height $relapse-transition-height $relapse-transition-timing;
+    will-change: opacity, max-height;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+      transition: none;
+    }
+
+    > :first-child {
+      padding: $relapse-padding;
+    }
+
+    &.expanded {
+      max-height: auto;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  &-btn {
+    display: inherit;
+    width: 100%;
+    margin: 0;
+    padding: inherit;
+    color: inherit;
+    font-size: inherit;
+    text-align: left;
+    background-color: inherit;
+    border: 0;
+
+    // border-top: $relapse-border-width solid $relapse-border-color;
+    border-radius: 0;
+    cursor: pointer;
+    user-select: none;
+
+
+    &.initial + .relapse-fold {
+      max-height: unset;
+      visibility: visible;
+      opacity: 1;
+    }
+
+    &.initial {
+      color: inherit;
+      background-color: inherit;
+    }
+
+    &.opened {
+      color: inherit;
+      background-color: inherit;
+    }
+
+    &.focused {
+      background-color: inherit;
+      outline: none;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+---
+Testing HTML (markup) `attributeCasing` rule.
+---
+
+<div
+
+ID="FOO"
+class="HelloWorld"
+data-VaLuE="eXampLE"
+DATA-BOOLEAN>
+
+<div CLASS="UPPERCASE" data-VaLuE="UPPERCASE">
+  <div DATA-{{ SOME_TAG }}-{% if x %}baR{% else %}baz{% endif%}="XxXxX"></div>
+</div>
+
+</div>
+

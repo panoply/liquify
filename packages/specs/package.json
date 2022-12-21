@@ -1,0 +1,65 @@
+{
+  "name": "@liquify/liquid-language-specs",
+  "version": "0.1.7",
+  "private": false,
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com"
+  },
+  "contributors": [
+    {
+      "name": "Joseph Curtis",
+      "email": "joecurt85@gmail.com"
+    }
+  ],
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "description": "Liquid language variation specification references used by Liquify",
+  "types": "./package/specs.d.ts",
+  "main": "./package/index.js",
+  "module": "./package/index.js",
+  "exports": {
+    "require": "./package/index.js",
+    "import": "./package/index.js"
+  },
+  "engines": {
+    "pnpm": ">=4",
+    "node": ">=12"
+  },
+  "homepage": "https://liquify.dev",
+  "repository": {
+    "url": "https://github.com/panoply/liquify"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup --minify",
+    "predev": "tsup --env.NODE_ENV predev",
+    "html": "node ./scripts/html-specs.js && eslint ./src/html/data/html5/*.ts --fix",
+    "package": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava ./test/dev.test.mjs --watch --verbose --color",
+    "test:cases": "ava ./test/liquid/queries.test.mjs --verbose --color"
+  },
+  "ava": {
+    "concurrency": 5
+  },
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "ignorePatterns": [
+      "package/**"
+    ],
+    "extends": [
+      "@liquify/eslint-config"
+    ],
+    "rules": {
+      "no-template-curly-in-string": "off",
+      "no-unused-vars": "off",
+      "no-control-regex": "off",
+      "prefer-const": "off"
+    }
+  },
+  "devDependencies": {
+    "@vscode/web-custom-data": "^0.4.4",
+    "ava": "^5.0.1",
+    "tsup": "^6.4.0",
+    "vscode-languageserver-types": "^3.17.2"
+  }
+}

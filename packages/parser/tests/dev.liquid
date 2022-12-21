@@ -1,0 +1,81 @@
+{% assign foo = article %}
+
+{{ foo['user'].image['src']  }}
+
+{% assign bar = article %}
+
+{{ bar.user.email | append: foo.image.src   }}
+
+{% assign foo = article %}
+
+{{ foo['user'].image['src']  }}
+
+{% assign bar = article %}
+
+{{ bar.user.email | | append:  foo.image.src   }}
+
+
+<ul>
+  {%- for link in section.settings.menu.links -%}
+
+    <li>
+      {%- if link.links != blank -%}
+        <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+          <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+            {{ link.title | escape }}
+            {% render 'icon-arrow' %}
+            {% render 'icon-caret' %}
+
+          </summary>
+          <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+            <div class="menu-drawer__inner-submenu">
+              <button class="menu link link--text focus-inset" aria-expanded="true">
+                {% render 'icon-arrow' %}
+                {{ link.title | escape }}
+              </button>
+              <ul class="menu-xx nav" role="list" tabindex="-1">
+                {%- for childlink in link.links -%}
+                  <li>
+                    {%- if childlink.links == blank -%}
+                      <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                        {{ childlink.title | escape }}
+                      </a>
+                    {%- else -%}
+                      <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                        <summary class="menu-xx-item link link--text nav focus-inset">
+                          {{ childlink.title | escape }}
+                          {% render 'icon-arrow' %}
+                          {% render 'icon-caret' %}
+                        </summary>
+                        <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                          <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                            {% render 'icon-arrow' %}
+                            {{ childlink.title | escape }}
+                          </button>
+                          <ul class="menu-xx nav" role="list" tabindex="-1">
+                            {%- for grandchildlink in childlink.links -%}
+                              <li>
+                                <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                  {{ grandchildlink.title | escape }}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      </details>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </div>
+        </details>
+      {%- else -%}
+        <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+          {{ link.title | escape }}
+        </a>
+      {%- endif -%}
+    </li>
+
+  {% endfor %}
+</ul>

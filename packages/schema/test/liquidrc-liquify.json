@@ -1,0 +1,120 @@
+{
+  "$schema": "../package/liquidrc.json",
+  "engine": "shopify",
+  "files": {
+    "locales": "path/en.json",
+    "settings": "path/to/settings_schema.json",
+    "snippets": "path/to/snippets/*.liquid",
+    "sections": "path/to/sections/*.liquid"
+  },
+  "validate": {
+    "attributeValues": true,
+    "controlTagAttributes": true,
+    "controlTagsValues": true,
+    "iterationAttributes": false,
+    "iterationValues": false,
+    "outputTagAttributes": true,
+    "outputTagValues": true,
+    "syntacticHTMLPairs": true,
+    "syntacticLiquidPairs": true,
+    "tagHTMLPlacement": true,
+    "tagLiquidPlacement": true,
+    "tagNames": "strict",
+    "unknownAttributes": true,
+    "filterArguments": true,
+    "iterationArrayType": true,
+    "noNestedForLoops": true,
+    "quotationCharacters": "double",
+    "syntacticPairs": true,
+    "tagPlacement": true,
+    "unknownFilter": true
+  },
+  "format": {
+    "commentIndent": false,
+    "crlf": false,
+    "endNewLine": false,
+    "indentSize": 2,
+    "wrap": 0,
+    "preserveLine": 3,
+    "preserveComment": false,
+    "markup": {
+      "attributeCasing": "lowercase",
+      "attributeSort": false,
+      "attributeSortList": [],
+      "delimiterSpacing": false,
+      "commentNewline": false,
+      "correct": false,
+      "delimiterTrims": "force",
+      "forceAttribute": false,
+      "forceIndent": false,
+      "forceLeadAttribute": false,
+      "lineBreakOperator": "before",
+      "preserveAttributes": false,
+      "preserveText": true,
+      "quoteConvert": "double",
+      "selfCloseSpace": false
+    },
+    "style": {
+      "braceAllman": false,
+      "classPadding": false,
+      "comments": false,
+      "correct": false,
+      "noLeadZero": false,
+      "quoteConvert": "double",
+      "selectorList": false,
+      "sortProperties": false,
+      "sortSelectors": false
+    },
+    "json": {
+      "arrayFormat": "default",
+      "braceAllman": false,
+      "bracePadding": false,
+      "objectIndent": "default",
+      "objectSort": false
+    },
+    "script": {
+      "arrayFormat": "default",
+      "braceAllman": false,
+      "braceNewline": false,
+      "bracePadding": false,
+      "caseSpace": false,
+      "correct": false,
+      "elseNewline": false,
+      "endComma": "always",
+      "functionNameSpace": false,
+      "functionSpace": false,
+      "methodChain": 3,
+      "neverFlatten": false,
+      "noCaseIndent": false,
+      "noSemicolon": false,
+      "objectIndent": "default",
+      "objectSort": false,
+      "quoteConvert": "double",
+      "ternaryLine": false,
+      "variableList": false,
+      "vertical": false
+    }
+  },
+  "specs": {
+    "liquid": {
+      "tags": {
+        "marvelous": {
+          "type": "custom",
+          "description": "The greatest boxer to have ever lived!",
+          "arguments": [
+            {
+              "type": "string",
+              "value": "marvin",
+              "required": true
+            },
+            {
+              "type": "string",
+              "value": "hagler",
+              "required": false
+            }
+          ]
+        }
+      }
+    }
+  }
+}

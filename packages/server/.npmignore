@@ -1,0 +1,10 @@
+# DIRECTORIES
+# --------------------
+src/
+variations/
+src/
+
+# FILES
+# -------------------
+.gitignore
+rollup.config.mjs

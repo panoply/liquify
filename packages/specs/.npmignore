@@ -1,0 +1,12 @@
+# DIRECTORIES
+samples
+variations
+test
+versions
+typings
+
+# FILES
+.env
+.env.example
+rollup.config.mjs
+pnpm-debug.log

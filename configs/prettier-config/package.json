@@ -1,0 +1,35 @@
+{
+  "name": "@liquify/prettier-config",
+  "version": "1.0.1",
+  "description": "Sharable Prettier config consumed within the Liquify monorepo workspace.",
+  "main": "index.js",
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com",
+    "url": "https://liquify.dev"
+  },
+  "prettier": "./index.js",
+  "license": "MIT",
+  "keywords": [
+    "prettier",
+    "prettierconfig",
+    "config",
+    "formatting"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/tree/next/build/prettier-config"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/tree/next/build/prettier-config/issues"
+  },
+  "engines": {
+    "pnpm": ">=6"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  },
+  "peerDependencies": {
+    "prettier": "^2.7.1"
+  }
+}

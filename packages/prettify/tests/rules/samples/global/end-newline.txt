@@ -1,0 +1,4 @@
+---
+Testing newline ending, ie: whether or not to insert a final line.
+---
+Lorem ipsum dolor sit amet, consectetur adipiscing elit

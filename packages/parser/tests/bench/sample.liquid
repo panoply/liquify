@@ -1,0 +1,3004 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %}
+        &ndash; tagged "{{ current_tags | join: ', ' }}
+        "{% endif -%}
+      {%- if current_page != 1 %}
+        &ndash; Page {{ current_page }}
+      {% endif -%}
+      {%- unless page_title contains shop.name %}
+        &ndash; {{ shop.name }}
+      {% endunless -%}
+    </title>
+
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {%- unless settings.type_body_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" s crossorigin>
+    {%- endunless -%}
+
+    {%- unless settings.type_header_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+
+
+    <link rel="stylesheet" href="{{ 'file-1.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'file-2.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'file-3.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'file-4.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'file-4.css' | asset_url }}" media="print" onload="this.media='all'">
+
+    {%- if settings.something -%}
+      <link rel="stylesheet" href="{{ 'file-6.css' | asset_url }}" media="print" onload="this.media='all'">
+      <link rel="stylesheet" href="{{ 'file-7.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+
+    {%- if section.something == 'mega' -%}
+      <link rel="stylesheet" href="{{ 'file-8.css' | asset_url }}" media="print" onload="this.media='all'">
+      <noscript>{{ 'file-10.css' | asset_url | stylesheet_tag }}</noscript>
+    {%- endif -%}
+
+    {%- if settings.something == "xxx" -%}
+      {{ 'file-11.css' | asset_url | stylesheet_tag }}
+      {{ 'file-12.css' | asset_url | stylesheet_tag }}
+      {{ 'file-13.css' | asset_url | stylesheet_tag }}
+      {{ 'file-15.css' | asset_url | stylesheet_tag }}
+      {{ 'file-16.css' | asset_url | stylesheet_tag }}
+      {{ 'file-17.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+  </head>
+
+  <body>
+    <!-- Here is our main header that is used across all the pages of our website -->
+
+    <header>
+      <h1>Header</h1>
+    </header>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+<nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+    <!-- Here is our page's main content -->
+    <main>
+
+      <!-- It contains an article -->
+      <article>
+        <h2>Article heading</h2>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Donec a diam lectus. Set sit amet ipsum mauris. Maecenas congue ligula as quam viverra nec consectetur ant hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur.</p>
+
+        <h3>subsection</h3>
+
+        <p>Donec ut librero sed accu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aenean ut gravida lorem. Ut turpis felis, pulvinar a semper sed, adipiscing id dolor.</p>
+
+        <p>Pelientesque auctor nisi id magna consequat sagittis. Curabitur dapibus, enim sit amet elit pharetra tincidunt feugiat nist imperdiet. Ut convallis libero in urna ultrices accumsan. Donec sed odio eros.</p>
+      </article>
+
+      <section>
+        <h1>Form validation example</h1>
+
+        <div class="errors" role="alert" aria-relevant="all">
+          <ul></ul>
+        </div>
+
+        <p>Fields marked with an asterisk (*) are required.</p>
+
+        <form>
+          <div>
+            <label for="name">Enter your name*:</label>
+            <input type="text" name="name" id="name" aria-required="true">
+          </div>
+          <div>
+            <label for="age">Enter your age*:</label>
+            <input type="number" name="age" id="age" placeholder="Enter 1 to 150" aria-required="true">
+          </div>
+          <div>
+            <label for="musician">Musician:</label>
+            <input type="checkbox" name="musician" id="musician">
+          </div>
+          <div>
+            <label for="instruments">Instruments played*:</label>
+            <input type="text" name="instruments" id="instruments" aria-required="true">
+          </div>
+          <div>
+            <input type="submit">
+          </div>
+          <select>
+            <option value="AFG">Afghanistan</option>
+            <option value="ALA">Åland Islands</option>
+            <option value="ALB">Albania</option>
+            <option value="DZA">Algeria</option>
+            <option value="ASM">American Samoa</option>
+            <option value="AND">Andorra</option>
+            <option value="AGO">Angola</option>
+            <option value="AIA">Anguilla</option>
+            <option value="ATA">Antarctica</option>
+            <option value="ATG">Antigua and Barbuda</option>
+            <option value="ARG">Argentina</option>
+            <option value="ARM">Armenia</option>
+            <option value="ABW">Aruba</option>
+            <option value="AUS">Australia</option>
+            <option value="AUT">Austria</option>
+            <option value="AZE">Azerbaijan</option>
+            <option value="BHS">Bahamas</option>
+            <option value="BHR">Bahrain</option>
+            <option value="BGD">Bangladesh</option>
+            <option value="BRB">Barbados</option>
+            <option value="BLR">Belarus</option>
+            <option value="BEL">Belgium</option>
+            <option value="BLZ">Belize</option>
+            <option value="BEN">Benin</option>
+            <option value="BMU">Bermuda</option>
+            <option value="BTN">Bhutan</option>
+            <option value="BOL">Bolivia, Plurinational State of</option>
+            <option value="BES">Bonaire, Sint Eustatius and Saba</option>
+            <option value="BIH">Bosnia and Herzegovina</option>
+            <option value="BWA">Botswana</option>
+            <option value="BVT">Bouvet Island</option>
+            <option value="BRA">Brazil</option>
+            <option value="IOT">British Indian Ocean Territory</option>
+            <option value="BRN">Brunei Darussalam</option>
+            <option value="BGR">Bulgaria</option>
+            <option value="BFA">Burkina Faso</option>
+            <option value="BDI">Burundi</option>
+            <option value="KHM">Cambodia</option>
+            <option value="CMR">Cameroon</option>
+            <option value="CAN">Canada</option>
+            <option value="CPV">Cape Verde</option>
+            <option value="CYM">Cayman Islands</option>
+            <option value="CAF">Central African Republic</option>
+            <option value="TCD">Chad</option>
+            <option value="CHL">Chile</option>
+            <option value="CHN">China</option>
+            <option value="CXR">Christmas Island</option>
+            <option value="CCK">Cocos (Keeling) Islands</option>
+            <option value="COL">Colombia</option>
+            <option value="COM">Comoros</option>
+            <option value="COG">Congo</option>
+            <option value="COD">Congo, the Democratic Republic of the</option>
+            <option value="COK">Cook Islands</option>
+            <option value="CRI">Costa Rica</option>
+            <option value="CIV">Côte d'Ivoire</option>
+            <option value="HRV">Croatia</option>
+            <option value="CUB">Cuba</option>
+            <option value="CUW">Curaçao</option>
+            <option value="CYP">Cyprus</option>
+            <option value="CZE">Czech Republic</option>
+            <option value="DNK">Denmark</option>
+            <option value="DJI">Djibouti</option>
+            <option value="DMA">Dominica</option>
+            <option value="DOM">Dominican Republic</option>
+            <option value="ECU">Ecuador</option>
+            <option value="EGY">Egypt</option>
+            <option value="SLV">El Salvador</option>
+            <option value="GNQ">Equatorial Guinea</option>
+            <option value="ERI">Eritrea</option>
+            <option value="EST">Estonia</option>
+            <option value="ETH">Ethiopia</option>
+            <option value="FLK">Falkland Islands (Malvinas)</option>
+            <option value="FRO">Faroe Islands</option>
+            <option value="FJI">Fiji</option>
+            <option value="FIN">Finland</option>
+            <option value="FRA">France</option>
+            <option value="GUF">French Guiana</option>
+            <option value="PYF">French Polynesia</option>
+            <option value="ATF">French Southern Territories</option>
+            <option value="GAB">Gabon</option>
+            <option value="GMB">Gambia</option>
+            <option value="GEO">Georgia</option>
+            <option value="DEU">Germany</option>
+            <option value="GHA">Ghana</option>
+            <option value="GIB">Gibraltar</option>
+            <option value="GRC">Greece</option>
+            <option value="GRL">Greenland</option>
+            <option value="GRD">Grenada</option>
+            <option value="GLP">Guadeloupe</option>
+            <option value="GUM">Guam</option>
+            <option value="GTM">Guatemala</option>
+            <option value="GGY">Guernsey</option>
+            <option value="GIN">Guinea</option>
+            <option value="GNB">Guinea-Bissau</option>
+            <option value="GUY">Guyana</option>
+            <option value="HTI">Haiti</option>
+            <option value="HMD">Heard Island and McDonald Islands</option>
+            <option value="VAT">Holy See (Vatican City State)</option>
+            <option value="HND">Honduras</option>
+            <option value="HKG">Hong Kong</option>
+            <option value="HUN">Hungary</option>
+            <option value="ISL">Iceland</option>
+            <option value="IND">India</option>
+            <option value="IDN">Indonesia</option>
+            <option value="IRN">Iran, Islamic Republic of</option>
+            <option value="IRQ">Iraq</option>
+            <option value="IRL">Ireland</option>
+            <option value="IMN">Isle of Man</option>
+            <option value="ISR">Israel</option>
+            <option value="ITA">Italy</option>
+            <option value="JAM">Jamaica</option>
+            <option value="JPN">Japan</option>
+            <option value="JEY">Jersey</option>
+            <option value="JOR">Jordan</option>
+            <option value="KAZ">Kazakhstan</option>
+            <option value="KEN">Kenya</option>
+            <option value="KIR">Kiribati</option>
+            <option value="PRK">Korea, Democratic People's Republic of</option>
+            <option value="KOR">Korea, Republic of</option>
+            <option value="KWT">Kuwait</option>
+            <option value="KGZ">Kyrgyzstan</option>
+            <option value="LAO">Lao People's Democratic Republic</option>
+            <option value="LVA">Latvia</option>
+            <option value="LBN">Lebanon</option>
+            <option value="LSO">Lesotho</option>
+            <option value="LBR">Liberia</option>
+            <option value="LBY">Libya</option>
+            <option value="LIE">Liechtenstein</option>
+            <option value="LTU">Lithuania</option>
+            <option value="LUX">Luxembourg</option>
+            <option value="MAC">Macao</option>
+            <option value="MKD">Macedonia, the former Yugoslav Republic of</option>
+            <option value="MDG">Madagascar</option>
+            <option value="MWI">Malawi</option>
+            <option value="MYS">Malaysia</option>
+            <option value="MDV">Maldives</option>
+            <option value="MLI">Mali</option>
+            <option value="MLT">Malta</option>
+            <option value="MHL">Marshall Islands</option>
+            <option value="MTQ">Martinique</option>
+            <option value="MRT">Mauritania</option>
+            <option value="MUS">Mauritius</option>
+            <option value="MYT">Mayotte</option>
+            <option value="MEX">Mexico</option>
+            <option value="FSM">Micronesia, Federated States of</option>
+            <option value="MDA">Moldova, Republic of</option>
+            <option value="MCO">Monaco</option>
+            <option value="MNG">Mongolia</option>
+            <option value="MNE">Montenegro</option>
+            <option value="MSR">Montserrat</option>
+            <option value="MAR">Morocco</option>
+            <option value="MOZ">Mozambique</option>
+            <option value="MMR">Myanmar</option>
+            <option value="NAM">Namibia</option>
+            <option value="NRU">Nauru</option>
+            <option value="NPL">Nepal</option>
+            <option value="NLD">Netherlands</option>
+            <option value="NCL">New Caledonia</option>
+            <option value="NZL">New Zealand</option>
+            <option value="NIC">Nicaragua</option>
+            <option value="NER">Niger</option>
+            <option value="NGA">Nigeria</option>
+            <option value="NIU">Niue</option>
+            <option value="NFK">Norfolk Island</option>
+            <option value="MNP">Northern Mariana Islands</option>
+            <option value="NOR">Norway</option>
+            <option value="OMN">Oman</option>
+            <option value="PAK">Pakistan</option>
+            <option value="PLW">Palau</option>
+            <option value="PSE">Palestinian Territory, Occupied</option>
+            <option value="PAN">Panama</option>
+            <option value="PNG">Papua New Guinea</option>
+            <option value="PRY">Paraguay</option>
+            <option value="PER">Peru</option>
+            <option value="PHL">Philippines</option>
+            <option value="PCN">Pitcairn</option>
+            <option value="POL">Poland</option>
+            <option value="PRT">Portugal</option>
+            <option value="PRI">Puerto Rico</option>
+            <option value="QAT">Qatar</option>
+            <option value="REU">Réunion</option>
+            <option value="ROU">Romania</option>
+            <option value="RUS">Russian Federation</option>
+            <option value="RWA">Rwanda</option>
+            <option value="BLM">Saint Barthélemy</option>
+            <option value="SHN">Saint Helena, Ascension and Tristan da Cunha</option>
+            <option value="KNA">Saint Kitts and Nevis</option>
+            <option value="LCA">Saint Lucia</option>
+            <option value="MAF">Saint Martin (French part)</option>
+            <option value="SPM">Saint Pierre and Miquelon</option>
+            <option value="VCT">Saint Vincent and the Grenadines</option>
+            <option value="WSM">Samoa</option>
+            <option value="SMR">San Marino</option>
+            <option value="STP">Sao Tome and Principe</option>
+            <option value="SAU">Saudi Arabia</option>
+            <option value="SEN">Senegal</option>
+            <option value="SRB">Serbia</option>
+            <option value="SYC">Seychelles</option>
+            <option value="SLE">Sierra Leone</option>
+            <option value="SGP">Singapore</option>
+            <option value="SXM">Sint Maarten (Dutch part)</option>
+            <option value="SVK">Slovakia</option>
+            <option value="SVN">Slovenia</option>
+            <option value="SLB">Solomon Islands</option>
+            <option value="SOM">Somalia</option>
+            <option value="ZAF">South Africa</option>
+            <option value="SGS">South Georgia and the South Sandwich Islands</option>
+            <option value="SSD">South Sudan</option>
+            <option value="ESP">Spain</option>
+            <option value="LKA">Sri Lanka</option>
+            <option value="SDN">Sudan</option>
+            <option value="SUR">Suriname</option>
+            <option value="SJM">Svalbard and Jan Mayen</option>
+            <option value="SWZ">Swaziland</option>
+            <option value="SWE">Sweden</option>
+            <option value="CHE">Switzerland</option>
+            <option value="SYR">Syrian Arab Republic</option>
+            <option value="TWN">Taiwan, Province of China</option>
+            <option value="TJK">Tajikistan</option>
+            <option value="TZA">Tanzania, United Republic of</option>
+            <option value="THA">Thailand</option>
+            <option value="TLS">Timor-Leste</option>
+            <option value="TGO">Togo</option>
+            <option value="TKL">Tokelau</option>
+            <option value="TON">Tonga</option>
+            <option value="TTO">Trinidad and Tobago</option>
+            <option value="TUN">Tunisia</option>
+            <option value="TUR">Turkey</option>
+            <option value="TKM">Turkmenistan</option>
+            <option value="TCA">Turks and Caicos Islands</option>
+            <option value="TUV">Tuvalu</option>
+            <option value="UGA">Uganda</option>
+            <option value="UKR">Ukraine</option>
+            <option value="ARE">United Arab Emirates</option>
+            <option value="GBR">United Kingdom</option>
+            <option value="USA">United States</option>
+            <option value="UMI">United States Minor Outlying Islands</option>
+            <option value="URY">Uruguay</option>
+            <option value="UZB">Uzbekistan</option>
+            <option value="VUT">Vanuatu</option>
+            <option value="VEN">Venezuela, Bolivarian Republic of</option>
+            <option value="VNM">Viet Nam</option>
+            <option value="VGB">Virgin Islands, British</option>
+            <option value="VIR">Virgin Islands, U.S.</option>
+            <option value="WLF">Wallis and Futuna</option>
+            <option value="ESH">Western Sahara</option>
+            <option value="YEM">Yemen</option>
+            <option value="ZMB">Zambia</option>
+            <option value="ZWE">Zimbabwe</option>
+          </select>
+
+          {%- if paginate.parts.size > 0 -%}
+            <div class="pagination-wrapper">
+              <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+                <ul class="pagination__list list-unstyled" role="list">
+                  {%- if paginate.previous -%}
+                    <li>
+                      <a href="{{ paginate.previous.url }}{{ anchor }}" class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce" aria-label="{{ 'general.pagination.previous' | t }}">
+                        {% render 'icon-caret' %}
+                      </a>
+                    </li>
+                  {%- endif -%}
+
+                  {%- for part in paginate.parts -%}
+                    <li>
+                      {%- if part.is_link -%}
+                        <a href="{{ part.url }}{{ anchor }}" class="pagination__item link" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">{{ part.title }}</a>
+                      {%- else -%}
+                        {%- if part.title == paginate.current_page -%}
+                          <span class="pagination__item pagination__item--current" aria-current="page" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">{{ part.title }}</span>
+                        {%- else -%}
+                          <span class="pagination__item">{{ part.title }}</span>
+                        {%- endif -%}
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+
+                  {%- if paginate.next -%}
+                    <li>
+                      <a href="{{ paginate.next.url }}{{ anchor }}" class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce" aria-label="{{ 'general.pagination.next' | t }}">
+                        {%- render 'icon-caret' -%}
+                      </a>
+                    </li>
+                  {%- endif -%}
+                </ul>
+              </nav>
+            </div>
+          {%- endif -%}
+
+          {%- if filter_type == 'horizontal' -%}
+            <div class="active-facets active-facets-desktop">
+              {%- for filter in results.filters -%}
+                {%- for value in filter.active_values -%}
+                  <facet-remove>
+                    <a href="{{ value.url_to_remove }}" class="active-facets__button active-facets__button--light">
+                      <span class="active-facets__button-inner button button--tertiary">
+                        {{ filter.label }}: {{ value.label | escape }}
+                        {% render 'icon-close-small' %}
+                        <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                      </span>
+                    </a>
+                  </facet-remove>
+                {%- endfor -%}
+                {% if filter.type == "price_range" %}
+                  {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+                    <facet-remove>
+                      <a href="{{ filter.url_to_remove }}" class="active-facets__button active-facets__button--light">
+                        <span class="active-facets__button-inner button button--tertiary">
+                          {%- if filter.min_value.value -%}
+                            {{ filter.min_value.value | money }}
+                          {%- else -%}
+                            {{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}
+                            {{ filter.max_value.value | money }}
+                          {%- else -%}
+                            {{ filter.range_max | money }}{%- endif -%}
+                          {% render 'icon-close-small' %}
+                          <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                        </span>
+                      </a>
+                    </facet-remove>
+                  {%- endif -%}
+                {% endif %}
+              {%- endfor -%}
+              <facet-remove class="active-facets__button-wrapper">
+                <a href="{{ results_url }}" class="active-facets__button-remove underlined-link">
+                  <span>{{ 'products.facets.clear_all' | t }}</span>
+                </a>
+              </facet-remove>
+            </div>
+          {%- endif -%}
+
+          <select>
+            <option value="">Select Country</option>
+            <option value="['Nigeria','NG']">Nigeria</option>
+            <option value="['Afghanistan','AF']">Afghanistan</option>
+            <option value="['Ãƒâ€¦land Islands','AX']">Ãƒâ€¦land Islands</option>
+            <option value="['Albania','AL']">Albania</option>
+            <option value="['Algeria','DZ']">Algeria</option>
+            <option value="['American Samoa','AS']">American Samoa</option>
+            <option value="['Andorra','AD']">Andorra</option>
+            <option value="['Angola','AO']">Angola</option>
+            <option value="['Anguilla','AI']">Anguilla</option>
+            <option value="['Antarctica','AQ']">Antarctica</option>
+            <option value="['Antigua and Barbuda','AG']">Antigua and Barbuda</option>
+            <option value="['Argentina','AR']">Argentina</option>
+            <option value="['Armenia','AM']">Armenia</option>
+            <option value="['Aruba','AW']">Aruba</option>
+            <option value="['Australia','AU']">Australia</option>
+            <option value="['Austria','AT']">Austria</option>
+            <option value="['Azerbaijan','AZ']">Azerbaijan</option>
+            <option value="['Bahamas','BS']">Bahamas</option>
+            <option value="['Bahrain','BH']">Bahrain</option>
+            <option value="['Bangladesh','BD']">Bangladesh</option>
+            <option value="['Barbados','BB']">Barbados</option>
+            <option value="['Belarus','BY']">Belarus</option>
+            <option value="['Belgium','BE']">Belgium</option>
+            <option value="['Belize','BZ']">Belize</option>
+            <option value="['Benin','BJ']">Benin</option>
+            <option value="['Bermuda','BM']">Bermuda</option>
+            <option value="['Bhutan','BT']">Bhutan</option>
+            <option value="['Bolivia, Plurinational State of','BO']">"Bolivia, Plurinational State of"</option>
+            <option value="['Bonaire, Sint Eustatius and Saba','BQ']">"Bonaire, Sint Eustatius and Saba"</option>
+            <option value="['Bosnia and Herzegovina','BA']">Bosnia and Herzegovina</option>
+            <option value="['Botswana','BW']">Botswana</option>
+            <option value="['Bouvet Island','BV']">Bouvet Island</option>
+            <option value="['Brazil','BR']">Brazil</option>
+            <option value="['British Indian Ocean Territory','IO']">British Indian Ocean Territory</option>
+            <option value="['Brunei Darussalam','BN']">Brunei Darussalam</option>
+            <option value="['Bulgaria','BG']">Bulgaria</option>
+            <option value="['Burkina Faso','BF']">Burkina Faso</option>
+            <option value="['Burundi','BI']">Burundi</option>
+            <option value="['Cambodia','KH']">Cambodia</option>
+            <option value="['Cameroon','CM']">Cameroon</option>
+            <option value="['Canada','CA']">Canada</option>
+            <option value="['Cape Verde','CV']">Cape Verde</option>
+            <option value="['Cayman Islands','KY']">Cayman Islands</option>
+            <option value="['Central African Republic','CF']">Central African Republic</option>
+            <option value="['Chad','TD']">Chad</option>
+            <option value="['Chile','CL']">Chile</option>
+            <option value="['China','CN']">China</option>
+            <option value="['Christmas Island','CX']">Christmas Island</option>
+            <option value="['Cocos (Keeling) Islands','CC']">Cocos (Keeling) Islands</option>
+            <option value="['Colombia','CO']">Colombia</option>
+            <option value="['Comoros','KM']">Comoros</option>
+            <option value="['Congo','CG']">Congo</option>
+            <option value="['Congo, the Democratic Republic of the','CD']">"Congo, the Democratic Republic of the"</option>
+            <option value="['Cook Islands','CK']">Cook Islands</option>
+            <option value="['Costa Rica','CR']">Costa Rica</option>
+            <option value="['CÃƒÂ´te d'Ivoire','CI']">CÃƒÂ´te d'Ivoire</option>
+            <option value="['Croatia','HR']">Croatia</option>
+            <option value="['Cuba','CU']">Cuba</option>
+            <option value="['CuraÃƒÂ§ao','CW']">CuraÃƒÂ§ao</option>
+            <option value="['Cyprus','CY']">Cyprus</option>
+            <option value="['Czech Republic','CZ']">Czech Republic</option>
+            <option value="['Denmark','DK']">Denmark</option>
+            <option value="['Djibouti','DJ']">Djibouti</option>
+            <option value="['Dominica','DM']">Dominica</option>
+            <option value="['Dominican Republic','DO']">Dominican Republic</option>
+            <option value="['Ecuador','EC']">Ecuador</option>
+            <option value="['Egypt','EG']">Egypt</option>
+            <option value="['El Salvador','SV']">El Salvador</option>
+            <option value="['Equatorial Guinea','GQ']">Equatorial Guinea</option>
+            <option value="['Eritrea','ER']">Eritrea</option>
+            <option value="['Estonia','EE']">Estonia</option>
+            <option value="['Ethiopia','ET']">Ethiopia</option>
+            <option value="['Falkland Islands (Malvinas)','FK']">Falkland Islands (Malvinas)</option>
+            <option value="['Faroe Islands','FO']">Faroe Islands</option>
+            <option value="['Fiji','FJ']">Fiji</option>
+            <option value="['Finland','FI']">Finland</option>
+            <option value="['France','FR']">France</option>
+            <option value="['French Guiana','GF']">French Guiana</option>
+            <option value="['French Polynesia','PF']">French Polynesia</option>
+            <option value="['French Southern Territories','TF']">French Southern Territories</option>
+            <option value="['Gabon','GA']">Gabon</option>
+            <option value="['Gambia','GM']">Gambia</option>
+            <option value="['Georgia','GE']">Georgia</option>
+            <option value="['Germany','DE']">Germany</option>
+            <option value="['Ghana','GH']">Ghana</option>
+            <option value="['Gibraltar','GI']">Gibraltar</option>
+            <option value="['Greece','GR']">Greece</option>
+            <option value="['Greenland','GL']">Greenland</option>
+            <option value="['Grenada','GD']">Grenada</option>
+            <option value="['Guadeloupe','GP']">Guadeloupe</option>
+            <option value="['Guam','GU']">Guam</option>
+            <option value="['Guatemala','GT']">Guatemala</option>
+            <option value="['Guernsey','GG']">Guernsey</option>
+            <option value="['Guinea','GN']">Guinea</option>
+            <option value="['Guinea-Bissau','GW']">Guinea-Bissau</option>
+            <option value="['Guyana','GY']">Guyana</option>
+            <option value="['Haiti','HT']">Haiti</option>
+            <option value="['Heard Island and McDonald Islands','HM']">Heard Island and McDonald Islands</option>
+            <option value="['Holy See (Vatican City State)','VA']">Holy See (Vatican City State)</option>
+            <option value="['Honduras','HN']">Honduras</option>
+            <option value="['Hong Kong','HK']">Hong Kong</option>
+            <option value="['Hungary','HU']">Hungary</option>
+            <option value="['Iceland','IS']">Iceland</option>
+            <option value="['India','IN']">India</option>
+            <option value="['Indonesia','ID']">Indonesia</option>
+            <option value="['Iran, Islamic Republic of','IR']">"Iran, Islamic Republic of"</option>
+            <option value="['Iraq','IQ']">Iraq</option>
+            <option value="['Ireland','IE']">Ireland</option>
+            <option value="['Isle of Man','IM']">Isle of Man</option>
+            <option value="['Israel','IL']">Israel</option>
+            <option value="['Italy','IT']">Italy</option>
+            <option value="['Jamaica','JM']">Jamaica</option>
+            <option value="['Japan','JP']">Japan</option>
+            <option value="['Jersey','JE']">Jersey</option>
+            <option value="['Jordan','JO']">Jordan</option>
+            <option value="['Kazakhstan','KZ']">Kazakhstan</option>
+            <option value="['Kenya','KE']">Kenya</option>
+            <option value="['Kiribati','KI']">Kiribati</option>
+            <option value="['Korea, Democratic People's Republic of','KP']">"Korea, Democratic People's Republic of"</option>
+            <option value="['Korea, Republic of','KR']">"Korea, Republic of"</option>
+            <option value="['Kuwait','KW']">Kuwait</option>
+            <option value="[Kyrgyzstan','KG']">yrgyzstan</option>
+            <option value="['Lao People`s Democratic Republic','LA']">Lao People's Democratic Republic</option>
+            <option value="['Latvia','LV']">Latvia</option>
+            <option value="['Lebanon','LB']">Lebanon</option>
+            <option value="['Lesotho','LS']">Lesotho</option>
+            <option value="['Liberia','LR']">Liberia</option>
+            <option value="['Libya','LY']">Libya</option>
+            <option value="['Liechtenstein','LI']">Liechtenstein</option>
+            <option value="['Lithuania','LT']">Lithuania</option>
+            <option value="['Luxembourg','LU']">Luxembourg</option>
+            <option value="['Macao','MO']">Macao</option>
+            <option value="['Macedonia, the Former Yugoslav Republic of','MK']">"Macedonia, the Former Yugoslav Republic of"</option>
+            <option value="['Madagascar','MG']">Madagascar</option>
+            <option value="['Malawi','MW']">Malawi</option>
+            <option value="['Malaysia','MY']">Malaysia</option>
+            <option value="['Maldives','MV']">Maldives</option>
+            <option value="['Mali','ML']">Mali</option>
+            <option value="['Malta','MT']">Malta</option>
+            <option value="['Marshall Islands','MH']">Marshall Islands</option>
+            <option value="['Martinique','MQ']">Martinique</option>
+            <option value="['Mauritania','MR']">Mauritania</option>
+            <option value="['Mauritius','MU']">Mauritius</option>
+            <option value="['Mayotte','YT']">Mayotte</option>
+            <option value="['Mexico','MX']">Mexico</option>
+            <option value="['Micronesia, Federated States of','FM']">"Micronesia, Federated States of</option>
+            <option value="['Moldova, Republic of','MD']">"Moldova, Republic of"</option>
+            <option value="['Monaco','MC']">Monaco</option>
+            <option value="['Mongolia','MN']">Mongolia</option>
+            <option value="['Montenegro','ME']">Montenegro</option>
+            <option value="['Montserrat','MS']">Montserrat</option>
+            <option value="['Morocco','MA']">Morocco</option>
+            <option value="['Mozambique','MZ']">Mozambique</option>
+            <option value="['Myanmar','MM']">Myanmar</option>
+            <option value="['Namibia','NA']">Namibia</option>
+            <option value="['Nauru','NR']">Nauru</option>
+            <option value="['Nepal','NP']">Nepal</option>
+            <option value="['Netherlands','NL']">Netherlands</option>
+            <option value="['New Caledonia','NC']">New Caledonia</option>
+            <option value="['New Zealand','NZ']">New Zealand</option>
+            <option value="['Nicaragua','NI']">Nicaragua</option>
+            <option value="['Niger','NE']">Niger</option>
+            <option value="['Niue','NU']">Niue</option>
+            <option value="['Norfolk Island','NF']">Norfolk Island</option>
+            <option value="['Northern Mariana Islands','MP']">Northern Mariana Islands</option>
+            <option value="['Norway','NO']">Norway</option>
+            <option value="['Oman','OM']">Oman</option>
+            <option value="['Pakistan','PK']">Pakistan</option>
+            <option value="['Palau','PW']">Palau</option>
+            <option value="['Palestine, State of','PS']">"Palestine, State of"</option>
+            <option value="['Panama','PA']">Panama</option>
+            <option value="['Papua New Guinea','PG']">Papua New Guinea</option>
+            <option value="['Paraguay','PY']">Paraguay</option>
+            <option value="['Peru','PE']">Peru</option>
+            <option value="['Philippines','PH']">Philippines</option>
+            <option value="['Pitcairn','PN']">Pitcairn</option>
+            <option value="['Poland','PL']">Poland</option>
+            <option value="['Portugal','PT']">Portugal</option>
+            <option value="['Puerto Rico','PR']">Puerto Rico</option>
+            <option value="['Qatar','QA']">Qatar</option>
+            <option value="['RÃƒÂ©union','RE']">RÃƒÂ©union</option>
+            <option value="['Romania','RO']">Romania</option>
+            <option value="['Russian Federation','RU']">Russian Federation</option>
+            <option value="['Rwanda','RW']">Rwanda</option>
+            <option value="['Saint BarthÃƒÂ©lemy','BL']">Saint BarthÃƒÂ©lemy</option>
+            <option value="['Saint Helena','Ascension and Tristan da Cunha','SH']">"Saint Helena, Ascension and Tristan da Cunha"</option>
+            <option value="['Saint Kitts and Nevis','KN']">Saint Kitts and Nevis</option>
+            <option value="['Saint Lucia','LC']">Saint Lucia</option>
+            <option value="['Saint Martin (French part)','MF']">Saint Martin (French part)</option>
+            <option value="['Saint Pierre and Miquelon','PM']">Saint Pierre and Miquelon</option>
+            <option value="['Saint Vincent and the Grenadines','VC']">Saint Vincent and the Grenadines</option>
+            <option value="['Samoa','WS']">Samoa</option>
+            <option value="['San Marino','SM']">San Marino</option>
+            <option value="['Sao Tome and Principe','ST']">Sao Tome and Principe</option>
+            <option value="['Saudi Arabia','SA']">Saudi Arabia</option>
+            <option value="['Senegal','SN']">Senegal</option>
+            <option value="['Serbia','RS']">Serbia</option>
+            <option value="['Seychelles','SC']">Seychelles</option>
+            <option value="['Sierra Leone','SL']">Sierra Leone</option>
+            <option value="['Singapore','SG']">Singapore</option>
+            <option value="['Sint Maarten (Dutch part)','SX']">Sint Maarten (Dutch part)</option>
+            <option value="['Slovakia','SK']">Slovakia</option>
+            <option value="['Slovenia','SI']">Slovenia</option>
+            <option value="['Solomon Islands','SB']">Solomon Islands</option>
+            <option value="['Somalia','SO']">Somalia</option>
+            <option value="['South Africa','ZA']">South Africa</option>
+            <option value="['South Georgia and the South Sandwich Islands','GS']">South Georgia and the South Sandwich Islands</option>
+            <option value="['South Sudan','SS']">South Sudan</option>
+            <option value="['Spain','ES']">Spain</option>
+            <option value="['Sri Lanka','LK']">Sri Lanka</option>
+            <option value="['Sudan','SD']">Sudan</option>
+            <option value="['Suriname','SR']">Suriname</option>
+            <option value="['Svalbard and Jan Mayen','SJ']">Svalbard and Jan Mayen</option>
+            <option value="['Swaziland','SZ']">Swaziland</option>
+            <option value="['Sweden','SE']">Sweden</option>
+            <option value="['Switzerland','CH']">Switzerland</option>
+            <option value="['Syrian Arab Republic','SY']">Syrian Arab Republic</option>
+            <option value="['Taiwan, Province of China','TW']">"Taiwan, Province of China"</option>
+            <option value="['Tajikistan','TJ']">Tajikistan</option>
+            <option value="['Tanzania, United Republic of','TZ']">"Tanzania, United Republic of"</option>
+            <option value="['Thailand','TH']">Thailand</option>
+            <option value="['Timor-Leste','TL']">Timor-Leste</option>
+            <option value="['Togo','TG']">Togo</option>
+            <option value="['Tokelau','TK']">Tokelau</option>
+            <option value="['Tonga','TO']">Tonga</option>
+            <option value="['Trinidad and Tobago','TT']">Trinidad and Tobago</option>
+            <option value="['Tunisia','TN']">Tunisia</option>
+            <option value="['Turkey','TR']">Turkey</option>
+            <option value="['Turkmenistan','TM']">Turkmenistan</option>
+            <option value="['Turks and Caicos Islands','TC']">Turks and Caicos Islands</option>
+            <option value="['Tuvalu','TV']">Tuvalu</option>
+            <option value="['Uganda','UG']">Uganda</option>
+            <option value="['Ukraine','UA']">Ukraine</option>
+            <option value="['United Arab Emirates','AE']">United Arab Emirates</option>
+            <option value="['United Kingdom','GB']">United Kingdom</option>
+            <option value="['United States','US']">United States</option>
+            <option value="['United States Minor Outlying Islands','UM']">United States Minor Outlying Islands</option>
+            <option value="['Uruguay','UY']">Uruguay</option>
+            <option value="['Uzbekistan','UZ']">Uzbekistan</option>
+            <option value="['Vanuatu','VU']">Vanuatu</option>
+            <option value="['Venezuela, Bolivarian Republic of','VE']">"Venezuela, Bolivarian Republic of"</option>
+            <option value="['Viet Nam','VN']">Viet Nam</option>
+            <option value="['Virgin Islands, British','VG']">"Virgin Islands, British"</option>
+            <option value="['Virgin Islands, U.S.','VI']">"Virgin Islands, U.S."</option>
+            <option value="['Wallis and Futuna','WF']">Wallis and Futuna</option>
+            <option value="['Western Sahara','EH']">Western Sahara</option>
+            <option value="['Yemen','YE']">Yemen</option>
+            <option value="['Zambia','ZM']">Zambia</option>
+            <option value="['Zimbabwe','ZW']">Zimbabwe</option>
+          </select>
+          <div></div>
+        </form>
+
+        <p class="hidden-alert" aria-live="assertive"></p>
+
+      </section>
+
+      <!-- the aside content can also be nested within the main content -->
+      <aside>
+        <h2>Related</h2>
+
+        <ul>
+          <li><a href="#">Oh I do like to be beside the seaside</a></li>
+          <li><a href="#">Oh I do like to be beside the sea</a></li>
+          <li><a href="#">Although in the North of England</a></li>
+          <li><a href="#">It never stops raining</a></li>
+          <li><a href="#">Oh well...</a></li>
+        </ul>
+      </aside>
+
+      <section>
+        <h2>ARIA div buttons</h2>
+        <div data-message="This is from the first button" tabindex="0" role="button">Click me!</div>
+        <div data-message="This is from the second button" tabindex="0" role="button">Click me too!</div>
+        <div data-message="This is from the third button" tabindex="0" role="button">And me!</div>
+      </section>
+
+
+      <div class="divTable blueTable">
+        <div class="divTableHeading">
+          <div class="divTableRow">
+            <div class="divTableHead">head1</div>
+            <div class="divTableHead">head2</div>
+            <div class="divTableHead">head3</div>
+            <div class="divTableHead">head4</div>
+            <div class="divTableHead">head5</div>
+            <div class="divTableHead">head6</div>
+            <div class="divTableHead">head7</div>
+            <div class="divTableHead">head8</div>
+            <div class="divTableHead">head9</div>
+            <div class="divTableHead">head10</div>
+            <div class="divTableHead">head11</div>
+            <div class="divTableHead">head12</div>
+          </div>
+        </div>
+        <div class="divTableBody">
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_1</div>
+            <div class="divTableCell">cell2_1</div>
+            <div class="divTableCell">cell3_1</div>
+            <div class="divTableCell">cell4_1</div>
+            <div class="divTableCell">cell5_1</div>
+            <div class="divTableCell">cell6_1</div>
+            <div class="divTableCell">cell7_1</div>
+            <div class="divTableCell">cell8_1</div>
+            <div class="divTableCell">cell9_1</div>
+            <div class="divTableCell">cell10_1</div>
+            <div class="divTableCell">cell11_1</div>
+            <div class="divTableCell">cell12_1</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_2</div>
+            <div class="divTableCell">cell2_2</div>
+            <div class="divTableCell">cell3_2</div>
+            <div class="divTableCell">cell4_2</div>
+            <div class="divTableCell">cell5_2</div>
+            <div class="divTableCell">cell6_2</div>
+            <div class="divTableCell">cell7_2</div>
+            <div class="divTableCell">cell8_2</div>
+            <div class="divTableCell">cell9_2</div>
+            <div class="divTableCell">cell10_2</div>
+            <div class="divTableCell">cell11_2</div>
+            <div class="divTableCell">cell12_2</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_3</div>
+            <div class="divTableCell">cell2_3</div>
+            <div class="divTableCell">cell3_3</div>
+            <div class="divTableCell">cell4_3</div>
+            <div class="divTableCell">cell5_3</div>
+            <div class="divTableCell">cell6_3</div>
+            <div class="divTableCell">cell7_3</div>
+            <div class="divTableCell">cell8_3</div>
+            <div class="divTableCell">cell9_3</div>
+            <div class="divTableCell">cell10_3</div>
+            <div class="divTableCell">cell11_3</div>
+            <div class="divTableCell">cell12_3</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_4</div>
+            <div class="divTableCell">cell2_4</div>
+            <div class="divTableCell">cell3_4</div>
+            <div class="divTableCell">cell4_4</div>
+            <div class="divTableCell">cell5_4</div>
+            <div class="divTableCell">cell6_4</div>
+            <div class="divTableCell">cell7_4</div>
+            <div class="divTableCell">cell8_4</div>
+            <div class="divTableCell">cell9_4</div>
+            <div class="divTableCell">cell10_4</div>
+            <div class="divTableCell">cell11_4</div>
+            <div class="divTableCell">cell12_4</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_5</div>
+            <div class="divTableCell">cell2_5</div>
+            <div class="divTableCell">cell3_5</div>
+            <div class="divTableCell">cell4_5</div>
+            <div class="divTableCell">cell5_5</div>
+            <div class="divTableCell">cell6_5</div>
+            <div class="divTableCell">cell7_5</div>
+            <div class="divTableCell">cell8_5</div>
+            <div class="divTableCell">cell9_5</div>
+            <div class="divTableCell">cell10_5</div>
+            <div class="divTableCell">cell11_5</div>
+            <div class="divTableCell">cell12_5</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_6</div>
+            <div class="divTableCell">cell2_6</div>
+            <div class="divTableCell">cell3_6</div>
+            <div class="divTableCell">cell4_6</div>
+            <div class="divTableCell">cell5_6</div>
+            <div class="divTableCell">cell6_6</div>
+            <div class="divTableCell">cell7_6</div>
+            <div class="divTableCell">cell8_6</div>
+            <div class="divTableCell">cell9_6</div>
+            <div class="divTableCell">cell10_6</div>
+            <div class="divTableCell">cell11_6</div>
+            <div class="divTableCell">cell12_6</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_7</div>
+            <div class="divTableCell">cell2_7</div>
+            <div class="divTableCell">cell3_7</div>
+            <div class="divTableCell">cell4_7</div>
+            <div class="divTableCell">cell5_7</div>
+            <div class="divTableCell">cell6_7</div>
+            <div class="divTableCell">cell7_7</div>
+            <div class="divTableCell">cell8_7</div>
+            <div class="divTableCell">cell9_7</div>
+            <div class="divTableCell">cell10_7</div>
+            <div class="divTableCell">cell11_7</div>
+            <div class="divTableCell">cell12_7</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_8</div>
+            <div class="divTableCell">cell2_8</div>
+            <div class="divTableCell">cell3_8</div>
+            <div class="divTableCell">cell4_8</div>
+            <div class="divTableCell">cell5_8</div>
+            <div class="divTableCell">cell6_8</div>
+            <div class="divTableCell">cell7_8</div>
+            <div class="divTableCell">cell8_8</div>
+            <div class="divTableCell">cell9_8</div>
+            <div class="divTableCell">cell10_8</div>
+            <div class="divTableCell">cell11_8</div>
+            <div class="divTableCell">cell12_8</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_9</div>
+            <div class="divTableCell">cell2_9</div>
+            <div class="divTableCell">cell3_9</div>
+            <div class="divTableCell">cell4_9</div>
+            <div class="divTableCell">cell5_9</div>
+            <div class="divTableCell">cell6_9</div>
+            <div class="divTableCell">cell7_9</div>
+            <div class="divTableCell">cell8_9</div>
+            <div class="divTableCell">cell9_9</div>
+            <div class="divTableCell">cell10_9</div>
+            <div class="divTableCell">cell11_9</div>
+            <div class="divTableCell">cell12_9</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_10</div>
+            <div class="divTableCell">cell2_10</div>
+            <div class="divTableCell">cell3_10</div>
+            <div class="divTableCell">cell4_10</div>
+            <div class="divTableCell">cell5_10</div>
+            <div class="divTableCell">cell6_10</div>
+            <div class="divTableCell">cell7_10</div>
+            <div class="divTableCell">cell8_10</div>
+            <div class="divTableCell">cell9_10</div>
+            <div class="divTableCell">cell10_10</div>
+            <div class="divTableCell">cell11_10</div>
+            <div class="divTableCell">cell12_10</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_11</div>
+            <div class="divTableCell">cell2_11</div>
+            <div class="divTableCell">cell3_11</div>
+            <div class="divTableCell">cell4_11</div>
+            <div class="divTableCell">cell5_11</div>
+            <div class="divTableCell">cell6_11</div>
+            <div class="divTableCell">cell7_11</div>
+            <div class="divTableCell">cell8_11</div>
+            <div class="divTableCell">cell9_11</div>
+            <div class="divTableCell">cell10_11</div>
+            <div class="divTableCell">cell11_11</div>
+            <div class="divTableCell">cell12_11</div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">cell1_12</div>
+            <div class="divTableCell">cell2_12</div>
+            <div class="divTableCell">cell3_12</div>
+            <div class="divTableCell">cell4_12</div>
+            <div class="divTableCell">cell5_12</div>
+            <div class="divTableCell">cell6_12</div>
+            <div class="divTableCell">cell7_12</div>
+            <div class="divTableCell">cell8_12</div>
+            <div class="divTableCell">cell9_12</div>
+            <div class="divTableCell">cell10_12</div>
+            <div class="divTableCell">cell11_12</div>
+            <div class="divTableCell">cell12_12</div>
+          </div>
+        </div>
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+            {% render block %}
+          {%- when 'text' -%}
+            <p class="product__text{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}" {{ block.shopify_attributes }}>
+              {{- block.settings.text -}}
+            </p>
+          {%- when 'title' -%}
+            <h2 class="product__title {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
+              {%- if product.title != blank -%}
+                {{ product.title | escape }}
+              {%- else -%}
+                {{ 'onboarding.product_title' | t }}
+              {%- endif -%}
+            </h2>
+          {%- when 'price' -%}
+            <div class="no-js-hidden" id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+              {%- render 'price', product: product, use_variant: true, show_badges: true, price_class: 'price--large' -%}
+            </div>
+            {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+              <div class="product__tax caption rte">
+                {%- if shop.taxes_included -%}
+                  {{ 'products.product.include_taxes' | t }}
+                {%- endif -%}
+                {%- if shop.shipping_policy.body != blank -%}
+                  {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+            {%- if product != blank -%}
+              <div {{ block.shopify_attributes }}></div>
+            {%- endif -%}
+          {%- when 'quantity_selector' -%}
+            <div class="product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}" {{ block.shopify_attributes }}>
+              <label class="form__label" for="quantity-{{ section.id }}">
+                {{ 'products.product.quantity.label' | t }}
+              </label>
+              <quantity-input class="quantity">
+                <button class="quantity__button no-js-hidden" name="minus" type="button">
+                  <span class="visually-hidden">
+                    {{ 'products.product.quantity.decrease' | t: product: product.title | escape }}</span>
+                  {% render 'icon-minus' %}
+                </button>
+                <input class="quantity__input" type="number" name="quantity" id="quantity-{{ section.id }}" min="1" value="1" form="{{ product_form_id }}">
+                <button class="quantity__button no-js-hidden" name="plus" type="button">
+                  <span class="visually-hidden">
+                    {{ 'products.product.quantity.increase' | t: product: product.title | escape }}</span>
+                  {% render 'icon-plus' %}
+                </button>
+              </quantity-input>
+            </div>
+          {%- when 'share' -%}
+            <script src="{{ 'share.js' | asset_url }}" defer="defer"></script>
+            <share-button id="share-{{ section.id }}" class="share-button" {{ block.shopify_attributes }}>
+              <button class="share-button__button hidden">
+                {% render 'icon-share' %}
+                {{ block.settings.share_label | escape }}
+              </button>
+              <details id="details-{{ block.id }}-{{ section.id }}">
+                <summary class="share-button__button">
+                  {% render 'icon-share' %}
+                  {{ block.settings.share_label | escape }}
+                </summary>
+                <div id="product-share-{{ section.id }}" class="share-button__fallback motion-reduce">
+                  <div class="field">
+                    <span id="sharemessage-{{ section.id }}" class="share-button__message hidden" role="status"></span>
+                    <input type="text" class="field__input" id="url" value="{{ product.selected_variant.url | default: product.url | prepend: request.origin }}" placeholder="{{ 'general.share.share_url' | t }}" onclick="this.select();" readonly>
+                    <label class="field__label" for="url">
+                      {{ 'general.share.share_url' | t }}</label>
+                  </div>
+                  <button class="share-button__close hidden no-js-hidden">
+                    {% render 'icon-close' %}
+                    <span class="visually-hidden">
+                      {{ 'general.share.close' | t }}</span>
+                  </button>
+                  <button class="share-button__copy no-js-hidden">
+                    {% render 'icon-clipboard' %}
+                    <span class="visually-hidden">
+                      {{ 'general.share.copy_to_clipboard' | t }}</span>
+                  </button>
+                </div>
+              </details>
+            </share-button>
+          {%- when 'variant_picker' -%}
+            {%- unless product.has_only_default_variant -%}
+              {%- if block.settings.picker_type == 'button' -%}
+                <variant-radios class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}" data-update-url="false" {{ block.shopify_attributes }}>
+                  {%- for option in product.options_with_values -%}
+                    <fieldset class="js product-form__input">
+                      <legend class="form__label">
+                        {{ option.name }}</legend>
+                      {%- for value in option.values -%}
+                        <input type="radio" id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value | escape }}" form="{{ product_form_id }}"
+                          {% if option.selected_value == value %}
+                          checked
+                          {% endif %}>
+                        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+                          {{ value }}
+                        </label>
+                      {%- endfor -%}
+                    </fieldset>
+                  {%- endfor -%}
+                  <script type="application/json">
+                    {{ product.variants | json }}
+                  </script>
+                </variant-radios>
+              {%- else -%}
+                <variant-selects class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}" data-update-url="false" {{ block.shopify_attributes }}>
+                  {%- for option in product.options_with_values -%}
+                    <div class="product-form__input product-form__input--dropdown">
+                      <label class="form__label" for="option-{{ section.id }}-{{ forloop.index0 }}">
+                        {{ option.name }}
+                      </label>
+                      <div class="select">
+                        <select id="option-{{ section.id }}-{{ forloop.index0 }}" class="select__select" name="options[{{ option.name | escape }}]" form="{{ product_form_id }}">
+                          {%- for value in option.values -%}
+                            <option value="{{ value | escape }}" {% if option.selected_value == value %}
+                              selected="selected"
+                              {% endif %}>
+                              {{ value }}
+                            </option>
+                          {%- endfor -%}
+                        </select>
+                        {% render 'icon-caret' %}
+                      </div>
+                    </div>
+                  {%- endfor -%}
+
+                </variant-selects>
+              {%- endif -%}
+            {%- endunless -%}
+
+
+          {%- when 'buy_buttons' -%}
+            <div {{ block.shopify_attributes }}></div>
+          {%- when 'custom_liquid' -%}
+            {{ block.settings.custom_liquid }}
+          {%- when 'rating' -%}
+            {%- if product.metafields.reviews.rating.value != blank -%}
+              {% liquid
+                  assign rating_decimal = 0
+                  assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1
+                  if decimal >= 0.3 and decimal <= 0.7
+                  assign rating_decimal = 0.5
+                elsif decimal > 0.7
+                  assign rating_decimal = 1
+                  endif %}
+              <div class="rating" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
+                <span aria-hidden="true" class="rating-star color-icon-{{ settings.accent_icons }}" style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }};"></span>
+              </div>
+              <p class="rating-text caption">
+                <span aria-hidden="true">
+                  {{ product.metafields.reviews.rating.value }}
+                  {{ product.metafields.reviews.rating.value.scale_max }}</span>
+              </p>
+              <p class="rating-count caption">
+                <span aria-hidden="true">({{ product.metafields.reviews.rating_count }})</span>
+                <span class="visually-hidden">
+                  {{ product.metafields.reviews.rating_count }}
+                  {{ "accessibility.total_reviews" | t }}</span>
+              </p>
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+
+      <div class="blueTable outerTableFooter">
+        <div class="tableFootStyle">
+          <div class="links">
+            <a href="#">&laquo;</a>
+            <a class="active" href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">&raquo;</a>
+          </div>
+        </div>
+      </div>
+
+
+      {%- if section.settings.show_social -%}
+        <ul class="footer__list-social list-unstyled list-social" role="list">
+          {%- if settings.social_twitter_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_twitter_link }}" class="link list-social__link">
+                {%- render 'icon-twitter' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.twitter' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_facebook_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_facebook_link }}" class="link list-social__link">
+                {%- render 'icon-facebook' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.facebook' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_pinterest_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_pinterest_link }}" class="link list-social__link">
+                {%- render 'icon-pinterest' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.pinterest' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_instagram_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_instagram_link }}" class="link list-social__link">
+                {%- render 'icon-instagram' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.instagram' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_tiktok_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_tiktok_link }}" class="link list-social__link">
+                {%- render 'icon-tiktok' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.tiktok' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_tumblr_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_tumblr_link }}" class="link list-social__link">
+                {%- render 'icon-tumblr' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.tumblr' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_snapchat_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_snapchat_link }}" class="link list-social__link">
+                {%- render 'icon-snapchat' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.snapchat' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_youtube_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_youtube_link }}" class="link list-social__link">
+                {%- render 'icon-youtube' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.youtube' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_vimeo_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_vimeo_link }}" class="link list-social__link">
+                {%- render 'icon-vimeo' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.vimeo' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+
+      <table class="blueTable">
+        <thead>
+          <tr>
+            <th>head1</th>
+            <th>head2</th>
+            <th>head3</th>
+            <th>head4</th>
+            <th>head5</th>
+            <th>head6</th>
+            <th>head7</th>
+            <th>head8</th>
+            <th>head9</th>
+            <th>head10</th>
+            <th>head11</th>
+            <th>head12</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <td colspan="12">
+              <div class="links">
+                <a href="#">&laquo;</a>
+                <a class="active" href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">&raquo;</a>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+        <tbody>
+          <tr>
+            <td>cell1_1</td>
+            <td>cell2_1</td>
+            <td>cell3_1</td>
+            <td>cell4_1</td>
+            <td>cell5_1</td>
+            <td>cell6_1</td>
+            <td>cell7_1</td>
+            <td>cell8_1</td>
+            <td>cell9_1</td>
+            <td>cell10_1</td>
+            <td>cell11_1</td>
+            <td>cell12_1</td>
+          </tr>
+          <tr>
+            <td>cell1_2</td>
+            <td>cell2_2</td>
+            <td>cell3_2</td>
+            <td>cell4_2</td>
+            <td>cell5_2</td>
+            <td>cell6_2</td>
+            <td>cell7_2</td>
+            <td>cell8_2</td>
+            <td>cell9_2</td>
+            <td>cell10_2</td>
+            <td>cell11_2</td>
+            <td>cell12_2</td>
+          </tr>
+          <tr>
+            <td>cell1_3</td>
+            <td>cell2_3</td>
+            <td>cell3_3</td>
+            <td>cell4_3</td>
+            <td>cell5_3</td>
+            <td>cell6_3</td>
+            <td>cell7_3</td>
+            <td>cell8_3</td>
+            <td>cell9_3</td>
+            <td>cell10_3</td>
+            <td>cell11_3</td>
+            <td>cell12_3</td>
+          </tr>
+          <tr>
+            <td>cell1_4</td>
+            <td>cell2_4</td>
+            <td>cell3_4</td>
+            <td>cell4_4</td>
+            <td>cell5_4</td>
+            <td>cell6_4</td>
+            <td>cell7_4</td>
+            <td>cell8_4</td>
+            <td>cell9_4</td>
+            <td>cell10_4</td>
+            <td>cell11_4</td>
+            <td>cell12_4</td>
+          </tr>
+          <tr>
+            <td>cell1_5</td>
+            <td>
+
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}
+            </td>
+            <td>cell3_5</td>
+            <td>cell4_5</td>
+            <td>
+
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}
+            </td>
+            <td>cell6_5</td>
+            <td>cell7_5</td>
+            <td>cell8_5</td>
+            <td>cell9_5</td>
+            <td>cell10_5</td>
+            <td>cell11_5</td>
+            <td>
+
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td>cell1_6</td>
+            <td>cell2_6</td>
+            <td>cell3_6</td>
+            <td>cell4_6</td>
+            <td>cell5_6</td>
+            <td>cell6_6</td>
+            <td>cell7_6</td>
+            <td>cell8_6</td>
+            <td>cell9_6</td>
+            <td>cell10_6</td>
+            <td>cell11_6</td>
+            <td>cell12_6</td>
+          </tr>
+          <tr>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}<</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}<</td>
+            <td>
+              {% if article.image.width >= 350 %}
+                {{ article.image | image_url: width: 350 }} 350w,{% endif %}
+              {% if article.image.width >= 750 %}
+                {{ article.image | image_url: width: 750 }} 750w,{% endif %}
+              {% if article.image.width >= 1100 %}
+                {{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if article.image.width >= 1500 %}
+                {{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if article.image.width >= 2200 %}
+                {{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if article.image.width >= 3000 %}
+                {{ article.image | image_url: width: 3000 }} 3000w,{% endif %}<</td>
+          </tr>
+          <tr>
+            <td>cell1_8</td>
+            <td>cell2_8</td>
+            <td>cell3_8</td>
+            <td>cell4_8</td>
+            <td>cell5_8</td>
+            <td>cell6_8</td>
+            <td>cell7_8</td>
+            <td>cell8_8</td>
+            <td>cell9_8</td>
+            <td>cell10_8</td>
+            <td>cell11_8</td>
+            <td>cell12_8</td>
+          </tr>
+          <tr>
+            <td>cell1_9</td>
+            <td>cell2_9</td>
+            <td>cell3_9</td>
+            <td>cell4_9</td>
+            <td>cell5_9</td>
+            <td>cell6_9</td>
+            <td>cell7_9</td>
+            <td>cell8_9</td>
+            <td>cell9_9</td>
+            <td>cell10_9</td>
+            <td>cell11_9</td>
+            <td>cell12_9</td>
+          </tr>
+          <tr>
+            <td>cell1_10</td>
+            <td>cell2_10</td>
+            <td>cell3_10</td>
+            <td>cell4_10</td>
+            <td>cell5_10</td>
+            <td>cell6_10</td>
+            <td>cell7_10</td>
+            <td>cell8_10</td>
+            <td>cell9_10</td>
+            <td>cell10_10</td>
+            <td>cell11_10</td>
+            <td>cell12_10</td>
+          </tr>
+          <tr>
+            <td>cell1_11</td>
+            <td>cell2_11</td>
+            <td>cell3_11</td>
+            <td>cell4_11</td>
+            <td>cell5_11</td>
+            <td>cell6_11</td>
+            <td>cell7_11</td>
+            <td>cell8_11</td>
+            <td>cell9_11</td>
+            <td>cell10_11</td>
+            <td>cell11_11</td>
+            <td>cell12_11</td>
+          </tr>
+          <tr>
+            <td>cell1_12</td>
+            <td>cell2_12</td>
+            <td>cell3_12</td>
+            <td>cell4_12</td>
+            <td>cell5_12</td>
+            <td>cell6_12</td>
+            <td>cell7_12</td>
+            <td>cell8_12</td>
+            <td>cell9_12</td>
+            <td>cell10_12</td>
+            <td>cell11_12</td>
+            <td>cell12_12</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <ul class="list list-social list-unstyled" role="list">
+        {%- if settings.social_twitter_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_twitter_link }}" class="list-social__link link">
+              {%- render 'icon-twitter' -%}
+              <span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_facebook_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_facebook_link }}" class="list-social__link link">
+              {%- render 'icon-facebook' -%}
+              <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_pinterest_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_pinterest_link }}" class="list-social__link link">
+              {%- render 'icon-pinterest' -%}
+              <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_instagram_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_instagram_link }}" class="list-social__link link">
+              {%- render 'icon-instagram' -%}
+              <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_tiktok_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_tiktok_link }}" class="list-social__link link">
+              {%- render 'icon-tiktok' -%}
+              <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_tumblr_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_tumblr_link }}" class="list-social__link link">
+              {%- render 'icon-tumblr' -%}
+              <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_snapchat_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_snapchat_link }}" class="list-social__link link">
+              {%- render 'icon-snapchat' -%}
+              <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_youtube_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_youtube_link }}" class="list-social__link link">
+              {%- render 'icon-youtube' -%}
+              <span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_vimeo_link != blank -%}
+          <li class="list-social__item">
+            <a href="{{ settings.social_vimeo_link }}" class="list-social__link link">
+              {%- render 'icon-vimeo' -%}
+              <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+      </ul>
+
+      <div class="{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}" id="product-grid" data-id="{{ section.id }}">
+        <div class="xx"></div>
+        <ul class="grid product-grid  grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop" role="list">
+
+          {%- for item in search.results -%}
+            {% assign lazy_load = false %}
+            {%- if forloop.index > 2 -%}
+              {%- assign lazy_load = true -%}
+            {%- endif -%}
+
+            <li class="grid__item">
+              {%- case item.object_type -%}
+                {%- when 'product' -%}
+                  {%- capture product_settings -%}
+                    {%- if section.settings.product_show_vendor -%}vendor,{%- endif -%}title,price{%- endcapture -%}
+                  {% render 'card-product'
+                   , card_product: item
+                   , media_aspect_ratio: section.settings.image_ratio
+                   , show_secondary_image: section.settings.show_secondary_image
+                   , show_vendor: section.settings.show_vendor
+                   , show_rating: section.settings.show_rating
+                   , lazy_load: lazy_load
+                   %}
+                {%- when 'article' -%}
+                  {% render 'article-card'
+                   , article: item
+                   , show_image: true
+                   , show_date: section.settings.article_show_date
+                   , show_author: section.settings.article_show_author
+                   , show_badge: true
+                   , media_aspect_ratio: 1
+                   , lazy_load: lazy_load
+                   %}
+                {%- when 'page' -%}
+                  <div class="card-wrapper underline-links-hover">
+                    <div class="card card--card card--text ratio color-{{ settings.card_color_scheme }}" style="--ratio-percent: 100%;">
+                      <div class="card__content">
+                        <div class="card__information">
+                          <h3 class="card__heading">
+                            <a href="{{ item.url }}" class="full-unstyled-link">
+                              {{ item.title | truncate: 50 | escape }}
+                            </a>
+                          </h3>
+                        </div>
+                        <div class="card__badge {{ settings.badge_position }}">
+                          <span class="badge color-background-1">{{ 'templates.search.page' | t }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              {%- endcase -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+        {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate: paginate %}
+        {%- endif -%}
+      </div>
+
+
+
+      {%- if section.settings.show_social -%}
+        <ul class="footer__list-social list-unstyled list-social" role="list">
+          {%- if settings.social_twitter_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_twitter_link }}" class="link list-social__link">
+                {%- render 'icon-twitter' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.twitter' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_facebook_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_facebook_link }}" class="link list-social__link">
+                {%- render 'icon-facebook' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.facebook' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_pinterest_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_pinterest_link }}" class="link list-social__link">
+                {%- render 'icon-pinterest' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.pinterest' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_instagram_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_instagram_link }}" class="link list-social__link">
+                {%- render 'icon-instagram' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.instagram' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_tiktok_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_tiktok_link }}" class="link list-social__link">
+                {%- render 'icon-tiktok' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.tiktok' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_tumblr_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_tumblr_link }}" class="link list-social__link">
+                {%- render 'icon-tumblr' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.tumblr' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_snapchat_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_snapchat_link }}" class="link list-social__link">
+                {%- render 'icon-snapchat' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.snapchat' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_youtube_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_youtube_link }}" class="link list-social__link">
+                {%- render 'icon-youtube' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.youtube' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_vimeo_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_vimeo_link }}" class="link list-social__link">
+                {%- render 'icon-vimeo' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.vimeo' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+
+       {%- if section.settings.show_social -%}
+        <ul class="footer__list-social list-unstyled list-social" role="list">
+          {%- if settings.social_twitter_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_twitter_link }}" class="link list-social__link">
+                {%- render 'icon-twitter' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.twitter' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_facebook_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_facebook_link }}" class="link list-social__link">
+                {%- render 'icon-facebook' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.facebook' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_pinterest_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_pinterest_link }}" class="link list-social__link">
+                {%- render 'icon-pinterest' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.pinterest' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_instagram_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_instagram_link }}" class="link list-social__link">
+                {%- render 'icon-instagram' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.instagram' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_tiktok_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_tiktok_link }}" class="link list-social__link">
+                {%- render 'icon-tiktok' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.tiktok' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_tumblr_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_tumblr_link }}" class="link list-social__link">
+                {%- render 'icon-tumblr' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.tumblr' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_snapchat_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_snapchat_link }}" class="link list-social__link">
+                {%- render 'icon-snapchat' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.snapchat' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_youtube_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_youtube_link }}" class="link list-social__link">
+                {%- render 'icon-youtube' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.youtube' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_vimeo_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_vimeo_link }}" class="link list-social__link">
+                {%- render 'icon-vimeo' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.vimeo' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+
+       {%- if section.settings.show_social -%}
+        <ul class="footer__list-social list-unstyled list-social" role="list">
+          {%- if settings.social_twitter_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_twitter_link }}" class="link list-social__link">
+                {%- render 'icon-twitter' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.twitter' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_facebook_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_facebook_link }}" class="link list-social__link">
+                {%- render 'icon-facebook' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.facebook' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_pinterest_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_pinterest_link }}" class="link list-social__link">
+                {%- render 'icon-pinterest' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.pinterest' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_instagram_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_instagram_link }}" class="link list-social__link">
+                {%- render 'icon-instagram' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.instagram' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_tiktok_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_tiktok_link }}" class="link list-social__link">
+                {%- render 'icon-tiktok' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.tiktok' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_tumblr_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_tumblr_link }}" class="link list-social__link">
+                {%- render 'icon-tumblr' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.tumblr' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_snapchat_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_snapchat_link }}" class="link list-social__link">
+                {%- render 'icon-snapchat' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.snapchat' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_youtube_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_youtube_link }}" class="link list-social__link">
+                {%- render 'icon-youtube' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.youtube' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_vimeo_link != blank -%}
+            <li class="list-social__item">
+              <a href="{{ settings.social_vimeo_link }}" class="link list-social__link">
+                {%- render 'icon-vimeo' -%}
+                <span class="visually-hidden">
+                  {{ 'general.social.links.vimeo' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+    </main>
+
+
+<nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <nav class="menu">
+      <ul class="menu-xx xxx nav" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                <summary class="menu-xx-item nav link link--text focus-inset{% if link.child_active %}x{% endif %}">
+                  {{ link.title | escape }}
+                  {% render 'icon-arrow' %}
+                  {% render 'icon-caret' %}
+                </summary>
+                <div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+                  <div class="menu-drawer__inner-submenu">
+                    <button class="menu link link--text focus-inset" aria-expanded="true">
+                      {% render 'icon-arrow' %}
+                      {{ link.title | escape }}
+                    </button>
+                    <ul class="menu-xx nav" role="list" tabindex="-1">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {%- if childlink.links == blank -%}
+                            <a href="{{ childlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if childlink.current %}x{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- else -%}
+                            <details id="Details-menu-drawer-submenu-{{ forloop.index }}">
+                              <summary class="menu-xx-item link link--text nav focus-inset">
+                                {{ childlink.title | escape }}
+                                {% render 'icon-arrow' %}
+                                {% render 'icon-caret' %}
+                              </summary>
+                              <div id="childlink-{{ childlink.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce">
+                                <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                  {% render 'icon-arrow' %}
+                                  {{ childlink.title | escape }}
+                                </button>
+                                <ul class="menu-xx nav" role="list" tabindex="-1">
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                  {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="menu-xx-item link link--text nav focus-inset{% if grandchildlink.current %}x{% endif %}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                        {{ grandchildlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="{% if link.current %}x{% endif %}" {% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+    <!-- And here is our main footer that is used across all the pages of our website -->
+
+    <footer>
+      <p>©Copyright 2050 by nobody. All rights reversed.</p>
+    </footer>
+
+  </body>
+</html>

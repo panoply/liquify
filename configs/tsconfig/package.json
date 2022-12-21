@@ -1,0 +1,19 @@
+{
+  "name": "@liquify/tsconfig",
+  "version": "1.0.0",
+  "description": "Liquify TypeScript Configuration",
+  "homepage": "https://liquify.dev",
+  "author": {
+    "name": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ",
+    "email": "n.savvidis@gmx.com"
+  },
+  "license": "MIT",
+  "main": "tsconfig.json",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/master/build/tsconfig"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  }
+}

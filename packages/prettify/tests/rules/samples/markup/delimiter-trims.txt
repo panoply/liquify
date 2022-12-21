@@ -1,0 +1,65 @@
+---
+Testing delimiter trim appliers. This is a Liquid specific beautification option.
+---
+
+{{no_trims | filter: 'something'}}
+{{no_trims | filter: 'something'}}
+{{no_trims | filter: 'something'}}
+
+{{- full_trims | filter: 'something'-}}
+{{- full_trims | filter: 'something'-}}
+{{- full_trims | filter: 'something'-}}
+{{- full_trims | filter: 'something'-}}
+
+{{- left_trim | filter: 'something'}}
+{{- left_trim | filter: 'something'}}
+{{- left_trim | filter: 'something'}}
+{{- left_trim | filter: 'something'}}
+
+{{right_trim | filter: 'something' -}}
+{{right_trim | filter: 'something' -}}
+{{right_trim | filter: 'something' -}}
+{{right_trim | filter: 'something' -}}
+
+{{-
+  newline_top_trim
+}}
+
+{{
+  newline_bottom_trim
+-}}
+
+{{-
+  newline_full_trim
+-}}
+
+{{
+  newline_no_trim
+}}
+
+
+{% if no_trims %}Something{% endif %}
+{%- if full_trims -%}Something{%- endif -%}
+{%if right_trim -%}Something{% endif -%}
+{%- if left_trim -%}Something{%- endif %}
+
+{% for x in arr  -%}
+
+<div class="skip-trims-in-quote {{ example }}">
+
+<ul {% if trims_not_in_quotes -%}{{ right_trim -}}{% endif -%}>
+
+<li class="skip-trims-in-quote {%-if tag_trims -%}{{ example -}}{% endif -%}">
+
+  {{no_trims | filter: 'something'}}
+  {{no_trims | filter: 'something'}}
+
+  {{- full_trims | filter: 'something'-}}
+  {{- full_trims | filter: 'something'-}}
+
+</li>
+
+</ul>
+</div>
+
+{%endif-%}

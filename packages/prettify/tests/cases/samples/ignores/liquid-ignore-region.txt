@@ -1,0 +1,74 @@
+---
+Testing region ignores using Liquid comments. This case excludes certain fragments or blocks from beautification.
+---
+<ul>
+<li>
+
+{{ foo | replace: article.id, 'dd' }}
+
+</li>
+
+
+{% comment %}@prettify-ignore-start{%- endcomment -%}
+<li>
+<div> WILL NOT FORMAT </div>
+</li>
+{% comment -%}@prettify-ignore-end{%- endcomment -%}
+
+<li>
+{{ baz }}
+</li>
+
+<li>
+{{ 'sss' }}
+</li>
+<li {{ bae }}>
+{{ bae }}
+</li>
+<li>
+{{ s }}
+</li>
+</ul>
+
+{% comment %}@prettify-ignore-start{% endcomment %}
+{%if customer.name == "xxx" %} THIS WILL BE IGNORED AND NOT FORMATTED
+{% elsif customer.name == "xx" %}
+The lines and spacing will be preserver {% else %}Hi Stranger!         {% endif %}
+{% comment %}@prettify-ignore-end{% endcomment %}
+
+Formatting is applied:
+
+<div>
+<ul>
+<li>one</li>
+<li>two</li>
+</ul>
+</div>
+
+
+Lets test Liquid comment ignores
+
+{% comment %}@prettify-ignore-start{% endcomment -%}
+
+{%- comment -%}
+example
+{%- endcomment -%}
+
+<div>
+<ul>
+<li>one</li>
+<li>two</li>
+</ul>
+</div>
+{%- comment %}@prettify-ignore-end {%- endcomment %}
+
+
+<div class="bar"> <div>foo </div></div>
+
+
+<div>
+<ul>
+<li>one</li>
+<li>two</li>
+</ul>
+</div>

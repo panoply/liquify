@@ -1,0 +1,68 @@
+---
+Testing forced attribute indentation. We have provided a complex series of attributes. The **cases/attributes** tests deal with a lot of this logic.
+---
+
+<div id="{{ xxx | filter: 'xxx' }}" class="{{ foo.bar }}"
+  data-x="{{ foo.bar }}" data-condition="{% if x %}foo{% else %}{{ x -}}{% endif %}"></div>
+
+<div id="{{ xxx | filter: 'xxx' }}"></div>
+
+<div id="{{ xxx | filter: 'xxx' }}"
+class="{{ foo.bar }}"        data-x="{{ foo.bar }}"       data-condition="{% if x %}foo{% else %}{{ x -}}{% endif %}" data-xx="{{ foo.bar }}">
+
+<div id="{{ xxx | filter: 'xxx' }}" class="{{ foo.bar }}">
+<div
+
+data{% if x %}-foo{% else %}-bar{% endif %}={{ x }}
+{% tag %}={% if x %}"foo"{% else %}{{ bar }}{% endif %}>
+
+<div id={{ x }}>
+
+<div
+ id="x"
+ class="xxx xxx xxx"
+ {% if x == 100 %}
+ data-{% if x %}{{ x }}{%- else -%}foo{%- endif %}-id="xxx"
+ {% elsif x != 200 %}
+ {% unless u == 'foo' and x == 'bar' %}
+ data-{{ object.prop | filter }}
+ {% endunless %}
+ {% endif %}
+ aria-x="foo"
+ style="background-color: {{ bg.color }}; font-size: 20px;">
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+<div data-xx="x" id="{{ xxx | filter: 'xxx' }}" class="{{ foo.bar }}"></div>
+
+<div
+
+  named
+  class="x"
+
+  data-attr
+  data-nq=x
+
+  {{ attribute }}
+  {{ attribute | filter: '' }}
+
+  id={{ unquoted.value }}
+  data-dq="{{ dq.value }}"
+  data-sq='{{ sq.value }}'
+
+  {{ attr }}="liquid-output-attr"
+  {% tag %}="liquid-tag-attr"
+  {% if x %}data-if{% elsif x > 0 %}data-elsif{% else %}data-else{% endif %}={{ value}}
+
+  data-{% if x %}id="foo"{% else %}name{% endif %}
+
+  ></div>
+
+</div>

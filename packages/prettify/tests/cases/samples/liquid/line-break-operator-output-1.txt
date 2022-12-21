@@ -1,0 +1,19 @@
+---
+Testing Liquid `lineBreakOperator` rule within output tokens.
+---
+
+{{ object.prop
+
+  | append: 'one'
+
+| replace: 'this', 'that'
+
+| prepend: 'foo'
+
+   | append: 'bar'
+
+
+   | append: 'baz'
+}}
+
+

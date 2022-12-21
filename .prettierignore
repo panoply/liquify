@@ -1,0 +1,10 @@
+# DO NOT TOUCH THE JS/TS FILES
+
+**/*.js
+**/*.ts
+**/*.mjs
+**/*.cjs
+
+# DO NOT TOUCH SCHEMA DESCRIPTIONS
+
+**/stores/descriptions/**/**/*.md

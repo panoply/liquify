@@ -1,0 +1,25 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding-top: 15px;
+  letter-spacing: 0.03rem;
+
+  // text-transform: uppercase;
+
+  &:focus-visible {
+    display: inline-block;
+    padding-top: 75px;
+    padding-right: 75px;
+    color: $gray-600;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E%3Ccircle cx='12' cy='5' r='3'%3E%3C/circle%3E%3Cline x1='12' y1='22' x2='12' y2='8'%3E%3C/line%3E%3Cpath d='M5 12H2a10 10 0 0 0 20 0h-3'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position-x: 90%;
+    background-position-y: 65px;
+    background-size: 20px;
+    outline: none;
+  }
+}
+

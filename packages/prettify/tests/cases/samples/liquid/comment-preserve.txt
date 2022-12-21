@@ -1,0 +1,8 @@
+{% comment %}
+
+  {%- render 'something' -%}
+
+  {% for x in arr %}
+  {% endfor %}
+
+{% endcomment %}

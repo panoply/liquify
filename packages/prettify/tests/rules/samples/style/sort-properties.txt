@@ -1,0 +1,65 @@
+---
+Test CSS selector property sorting. Property sorting will be applied in alphabetical order. The first snapshot has sorting enabled, the second snapshot has it disabled.
+---
+
+img {
+padding-top: 40px;
+padding-right: 25px;
+padding-bottom: 40px;
+padding-left: 25px;
+margin: 100px;
+font-size: 12px;
+}
+
+body {
+background-image: url("barn.jpg");
+z-index: 999;
+color: #fff;
+width: 200px;
+background-repeat: no-repeat;
+background-position: right top;
+background-attachment: fixed;
+font-weight: 100;
+font-style: bold:
+margin-top: 100px;
+display: flex;
+position: absolute;
+float: right;
+margin-left: 100px;
+padding-right: 25px;
+transition: ease-in;
+visibility:
+padding-bottom: 40px;
+font-weight: 100;
+font-style: bold:
+padding-left: 25px;
+visibility: collapse;
+min-inline-size: inherit;
+}
+
+
+.selector {
+background-image: url("barn.jpg");
+z-index: 999;
+color: #fff;
+width: 200px;
+background-repeat: no-repeat;
+background-position: right top;
+background-attachment: fixed;
+font-weight: 100;
+font-style: bold:
+margin-top: 100px;
+display: flex;
+position: absolute;
+float: right;
+margin-left: 100px;
+padding-right: 25px;
+transition: ease-in;
+visibility:
+padding-bottom: 40px;
+font-weight: 100;
+font-style: bold:
+padding-left: 25px;
+visibility: collapse;
+min-inline-size: inherit;
+}

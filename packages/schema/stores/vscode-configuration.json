@@ -1,0 +1,188 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "Liquid Language Settings",
+  "markdownDescription": "The Liquid extension will look for a `.liquidrc` or `.liquidrc.json` in the root of your project. When no such files exists it will check for the presence of a `prettify` field in `package.json` files. When neither are detected the extension will use the `.vscode/settings.json` file or alternatively your global user settings.",
+  "type": "object",
+  "properties": {
+    "liquid.engine": {
+      "type": "string",
+      "default": "shopify",
+      "enum": ["standard", "shopify", "11ty", "jekyll"],
+      "markdownDescription": "./descriptions/vscode/engine.md"
+    },
+    "liquid.files.locales": {
+      "type": "array",
+      "markdownDescription": "./descriptions/vscode/files/locales.md",
+      "items": {
+        "uniqueItems": true,
+        "type": "string"
+      }
+    },
+    "liquid.files.snippets": {
+      "type": "array",
+      "markdownDescription": "./descriptions/vscode/files/snippets.md",
+      "items": {
+        "uniqueItems": true,
+        "type": "string"
+      }
+    },
+    "liquid.files.settings": {
+      "type": "array",
+      "markdownDescription": "./descriptions/vscode/files/settings.md",
+      "items": {
+        "uniqueItems": true,
+        "type": "string"
+      }
+    },
+    "liquid.files.sections": {
+      "type": ["array", "string"],
+      "markdownDescription": "./descriptions/vscode/files/sections.md",
+      "items": {
+        "uniqueItems": true,
+        "type": "string"
+      }
+    },
+    "liquid.completion.tags": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/completion/tags.md"
+    },
+    "liquid.completion.objects": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/completion/objects.md"
+    },
+    "liquid.completion.properties": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/completion/properties.md"
+    },
+    "liquid.completion.filters": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/completion/filters.md"
+    },
+    "liquid.completion.operators": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/completion/operators.md"
+    },
+    "liquid.completion.sections": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/completion/sections.md"
+    },
+    "liquid.completion.schema": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/completion/schema.md"
+    },
+    "liquid.validate.schema": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/validate/schema.md"
+    },
+    "liquid.hover.tags": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/hover/schema.md"
+    },
+    "liquid.hover.filters": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/hover/schema.md"
+    },
+    "liquid.hover.schema": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "./descriptions/vscode/hover/schema.md"
+    },
+    "liquid.config.baseUrl": {
+      "type": "string",
+      "markdownDescription": "The `liquid.config.baseUrl` option can be used to define a **relative** directory path for resolving config files. The option will only work in projects that use `.liquidrc` files or define rules on a package.json `prettify` field."
+    },
+    "liquid.settings.target": {
+      "type": "string",
+      "default": "workspace",
+      "markdownDescription": "The configuration preferences to use. This option defaults to `workspace`. It is **highly discouraged** to target `user` settings and could lead to unexpected issues outside of Liquid projects. The `workspace` default will write to the `.vscode/settings.json` relative to project root.",
+      "enum": ["workspace", "user"]
+    },
+    "liquid.format.enable": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.enable.md"
+    },
+    "liquid.format.markup": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.markup.md"
+    },
+    "liquid.format.style": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.style.md"
+    },
+    "liquid.format.script": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.script.md"
+    },
+    "liquid.format.json": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.json.md"
+    },
+    "liquid.format.wrap": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.wrap.md"
+    },
+    "liquid.format.indentSize": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.indentSize.md"
+    },
+    "liquid.format.endNewLine": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.endNewLine.md"
+    },
+    "liquid.format.crlf": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.crlf.md"
+    },
+    "liquid.format.commentIndent": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.commentIndent.md"
+    },
+    "liquid.format.preserveLine": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.preserveLine.md"
+    },
+    "liquid.format.preserveComment": {
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.preserveComment.md"
+    },
+    "liquid.format.ignore": {
+      "injectObject": "./prettify.json#ignore"
+    },
+    "liquid.format.rules": {
+      "type": "object",
+      "properties": {
+        "endNewLine": {
+          "injectObject": "./prettify.json#endNewLine"
+        },
+        "wrap": {
+          "injectObject": "./prettify.json#wrap"
+        },
+        "indentSize": {
+          "injectObject": "./prettify.json#indentSize"
+        },
+        "preserveLine": {
+          "injectObject": "./prettify.json#preserveLine"
+        },
+        "useTabs": {
+          "injectObject": "./prettify.json#useTabs"
+        },
+        "crlf": {
+          "injectObject": "./prettify.json#crlf"
+        },
+        "liquid": {
+          "injectObject": "./prettify.json#liquid"
+        },
+        "markup": {
+          "injectObject": "./prettify.json#markup"
+        },
+        "script": {
+          "injectObject": "./prettify.json#script"
+        },
+        "style": {
+          "injectObject": "./prettify.json#style"
+        },
+        "json": {
+          "injectObject": "./prettify.json#json"
+        }
+      }
+    }
+  }
+}

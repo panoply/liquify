@@ -1,0 +1,15 @@
+# DIRECTORIES
+# --------------------
+stores
+versions
+src
+tests
+docs
+
+# FILES
+# -------------------
+rollup.config.mjs
+.pnpm-debug.log
+tsconfig.json
+readme.md
+changelog.md

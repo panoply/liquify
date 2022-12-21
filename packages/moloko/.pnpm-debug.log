@@ -1,0 +1,54 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1,
+    "workspacePrefix": "/Users/Panoply/Sites/liquify"
+  },
+  "1 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@liquify/ace",
+      "version": "1.0.0",
+      "description": "",
+      "main": "index.js",
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "keywords": [],
+      "author": "",
+      "license": "MIT"
+    },
+    "prefix": "/Users/Panoply/Sites/liquify/packages/ace"
+  },
+  "2 debug pnpm:context": {
+    "currentLockfileExists": true,
+    "storeDir": "/Users/Panoply/Library/pnpm/store/v3",
+    "virtualStoreDir": "/Users/Panoply/Sites/liquify/node_modules/.pnpm"
+  },
+  "3 debug pnpm:stage": {
+    "prefix": "/Users/Panoply/Sites/liquify",
+    "stage": "resolution_started"
+  },
+  "4 error pnpm": {
+    "code": "ERR_PNPM_FETCH_404",
+    "hint": "@liquify/prettier-config is not in the npm registry, or you have no permission to fetch it.\n\nAn authorization header was used: Bearer bb75[hidden]",
+    "request": {
+      "authHeaderValue": "Bearer bb752564-ea38-476b-b3f1-abbb28c1bc57",
+      "url": "https://registry.npmjs.org/@liquify%2Fprettier-config"
+    },
+    "response": {
+      "size": 0
+    },
+    "pkgName": "@liquify/prettier-config",
+    "spec": {
+      "fetchSpec": "*",
+      "name": "@liquify/prettier-config",
+      "type": "range"
+    },
+    "pkgsStack": [],
+    "err": {
+      "name": "pnpm",
+      "message": "GET https://registry.npmjs.org/@liquify%2Fprettier-config: Not Found - 404",
+      "code": "ERR_PNPM_FETCH_404",
+      "stack": "pnpm: GET https://registry.npmjs.org/@liquify%2Fprettier-config: Not Found - 404\n    at RetryOperation._fn (/Users/Panoply/Library/pnpm/global/5/.pnpm/pnpm@7.2.0/node_modules/pnpm/dist/pnpm.cjs:84538:19)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)"
+    }
+  }
+}

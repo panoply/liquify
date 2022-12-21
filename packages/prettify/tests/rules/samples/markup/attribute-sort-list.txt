@@ -1,0 +1,42 @@
+---
+Testing attribute sorting list accordance. Attributes will sorted according to the names provided to `attributeSortList[]` and alphanumerically thereafter. This rule requires `attributeSort` to be `true`
+---
+
+<div
+
+data-c="3"
+data-b="2"
+data-d="4"
+data-e="5"
+data-e="6"
+data-a="1"
+id="last"
+
+>
+
+<div>
+
+  <p
+  class="x"
+  id="{{ some.object }}"
+  data-c="3"
+data-b="2"
+data-d="4"
+data-f="8"
+data-e="5"
+data-g="9"
+data-h-attr="10"
+data-h-b-2-attr="12"
+data-h-b-1-attr="10"
+data-i="12"
+data-e="7"
+data-e="6"
+data-a="1"
+  >
+
+  <h1 third second fourth fifth first></h1>
+
+</p>
+
+</div>
+</div>

@@ -1,0 +1,58 @@
+---
+Testing Liquid `lineBreakOperator` rule within output tokens. This contains nested expressed code. Both dlimiter trims are applied here.
+---
+
+<div>
+
+<ul>
+
+<li>
+{{ object.prop
+
+  | append: 'one'
+
+| replace: 'this', 'that'
+
+| prepend: 'foo'
+
+   | append: 'bar'
+
+
+   | append: 'baz'
+}}
+</li>
+
+<li>
+{{ object.prop
+
+  | append: 'one'
+
+| replace: 'this', 'that'
+
+| filter
+| filter_1: 'example'
+| plus: 100
+
+   | append: 'baz'
+-}}
+</li>
+
+<li>
+{{ object.prop
+
+  | append: 'one'
+
+| replace: 'this', 'that'
+
+| filter
+| filter_1: 'example'
+| plus: 100
+
+   | append: 'baz'
+-}}
+</li>
+
+</ul>
+
+
+</div>

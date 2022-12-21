@@ -1,0 +1,9 @@
+.env
+package/
+node_modules/
+tests/testa/node_modules
+versions/
+.pnpm-debug.log
+
+docs
+packages/samples

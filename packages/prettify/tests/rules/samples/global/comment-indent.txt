@@ -1,0 +1,42 @@
+<div>
+
+<!-- test html -->
+<h1>Testing inline comments</h1>
+
+<!-- test html -->
+<p>Hello world</p>
+
+<h1>Testing indented comments</h1>
+
+<section>
+  {%- if x -%}
+  <div>
+            {%- comment -%}
+Donec pretium
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  {%- endcomment -%}
+  {{- 'string' | t -}}
+
+  </div>
+  {% comment %} inline comment {% endcomment %}
+  <ul>
+  <li>
+  {% comment %}Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+  sed do eiusmod tempor incididunt ut labore
+  et dolore magna aliqua.{% endcomment -%}
+  <ul>
+        {% comment %}
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  {% endcomment -%}
+      <li>Hello World</li>
+<!-- Lorem ipsum dolor sit amet -->
+      <li>HTML Comments</li>
+<!-- Lorem ipsum dolor sit amet -->
+      <li>HTML Comments inline</li>
+</ul>
+  </li>
+  </ul>
+  {%- endif -%}
+</section>
+</div>

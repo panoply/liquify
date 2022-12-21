@@ -1,0 +1,461 @@
+{
+  "title": "JSON formatting schema for the VSCode Liquid extension",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "definitions": {
+    "engine": {
+      "type": "string",
+      "oneOf": [
+        {
+          "enum": ["standard"],
+          "description": "Liquid Standard"
+        },
+        {
+          "enum": ["jekyll"],
+          "description": "Liquid Jekyll"
+        },
+        {
+          "enum": ["shopify"],
+          "description": "Liquid Shopify"
+        }
+      ]
+    },
+    "specBasicTypes": {
+      "type": "number",
+      "description": "The valueof type of this object. This refers to what the object holds. This is used to validate whether the value can be iterated.\n\n Please note that the type property here is completely different from type property found in filter arguments.",
+      "oneOf": [
+        {
+          "enum": ["object"],
+          "type": "string",
+          "description": "Representative of an object which has property values. When declaring an \"object\" type it is expect it has \"property\" references."
+        },
+        {
+          "enum": ["number"],
+          "type": "string",
+          "description": "Representative of a number value, eg: 100"
+        },
+        {
+          "enum": ["integer"],
+          "type": "string",
+          "description": "Representative of a boolean value, eg: \"true\" or \"false\""
+        },
+        {
+          "enum": ["boolean"],
+          "type": "string",
+          "description": "Representative of a boolean value, eg: \"true\" or \"false\""
+        },
+        {
+          "enum": ["variable"],
+          "type": "string",
+          "description": "Representative of constantant variable"
+        },
+        {
+          "enum": ["string"],
+          "type": "string",
+          "description": "Representative of a string value."
+        },
+        {
+          "enum": ["array"],
+          "type": "string",
+          "description": "Representative of an array value. Such a type is allowed to be iterated."
+        }
+      ]
+    },
+    "specObjectProperties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "propertyNames": {
+          "pattern": "name|description|type|properties"
+        },
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the property the object provides."
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the property"
+          },
+          "type": {
+            "$ref": "#/definitions/specBasicTypes"
+          },
+          "properties": {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "object"
+                }
+              }
+            },
+            "then": {
+              "description": "The object properties",
+              "$ref": "#/definitions/specObjectProperties"
+            }
+          }
+        }
+      }
+    },
+    "specObjects": {
+      "type": "object",
+      "description": "List of object specifications available to the defined engines variation",
+      "additionalProperties": {
+        "required": ["description", "type"],
+        "properties": {
+          "type": {
+            "$ref": "#/definitions/specBasicTypes"
+          },
+          "deprecated": {
+            "type": "boolean",
+            "description": "Whether this object is deprecated of not, defaults to \"false\" and can be omitted unless otherwise required."
+          },
+          "description": {
+            "description": "Description of this Object",
+            "type": "string"
+          },
+          "filters": {
+            "description": "Whether or not this object value can be use within filters. In some cases, object tags or variable based objects do not accept filters. Some objects in a Variation like Shopify hold \"constanant\" variable state, if an object is defined as such it unlikely it can be used or contain filters. All objects are assumed to be accept and be used within filters, so this field defaults to \"true\" and can be omitted unless otherwise required.",
+            "type": "boolean",
+            "default": false
+          },
+          "reference": {
+            "description": "URL reference to online documentation explaining this object.",
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "pattern": "https\\:.*?"
+              }
+            }
+          },
+          "trims": {
+            "description": "Whether or not this object value can use whitespace dash trim delimiters. Some objects in a Variation like Shopify hold \"constanant\" variable state, if an object is defined as such it unlikely filters are allowed.",
+            "type": "boolean"
+          },
+          "global": {
+            "description": "Whether or not this object is a global value. Global values are accessible from any template or file. All objects are assumed to no global scope, so this field defaults to \"false\" and can be omitted unless otherwise required.",
+            "type": "boolean",
+            "default": true
+          },
+          "const": {
+            "description": "Whether or not this object is a content or constanant value. In some cases, object tags are variable based objects used to output content of templates files and in the Shopify Variation this includes scripts and stylesheets. Some objects in a variations like Shopify hold a \"constanant\" variable state. If an object is defined as such then its unlikely filters or trims are allowed and thus when a object has a const \"true\" value assigned, then both \"trim\" and \"filters\" are assumed to \"false\" and if otherwise not, you will need to explicity set them to \"true\" when this field is true.\n\nand All objects are assumed to not be a \"const\" values, so this field defaults to \"false\" and can be omitted unless otherwise required.",
+            "type": "boolean",
+            "default": false
+          },
+          "scope": {
+            "description": "Some objects are accessible within tag based scope. For example, the \"{{ form }}\" object available in the Shopify Liquid variation is a scope based tag and must be used within a \"{% form %}\" tag. When an object is scope based include the name of tag scope in this field.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "\\b[a-zA-Z_-]+"
+            }
+          },
+          "properties": {
+            "$ref": "#/definitions/specObjectProperties",
+            "description": "List of properties pertaining to the object. When the property the property asserts a type \"object\" you will nest its properties in a recursive manner.",
+            "default": [{}]
+          }
+        }
+      }
+    },
+    "validate": {
+      "type": "object",
+      "properties": {
+        "unknownAttributes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates the attributes used on tags",
+          "markdownDescription": "Validates the attributes used on tags.\n\nFor example:\n\n\t<main type=\"text\">\n</main>\n\n Where the `type` is a valid attribute but only on certain tags (like the `<input>` tag) and has no business being used on a semantic `<main>` tag."
+        },
+        "attributeValues": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates the values of tag attributes",
+          "markdownDescription": "Validates the values of tag attributes.\n\nFor example:\n\n\t<input type=\"foo\">\n Where the `type` attribute does not accept a value equal to `foo` and only accepts certain values, like `text` or `checkbox` etc etc."
+        },
+        "syntacticHTMLPairs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates the start and end tag existence of HTML pairs",
+          "markdownDescription": "Validates the start and end tag existence of HTML pairs.\n\nFor example:\n\n\t<main>\n\t\t<div>\n\t</main>\n\n Where the `<div>` tag is missing its closing (end) tag."
+        },
+        "tagNames": {
+          "type": "string",
+          "default": "strict",
+          "description": "Validates HTML tag names",
+          "oneOf": [
+            {
+              "enum": ["strict"],
+              "description": "Enforces correct tag names are used, only tags that are valid within the official HTML specification are valid or defined custom data tags.",
+              "markdownEnumDescriptions": [
+                "Enforces correct tag names are used, only tags that are valid within the official HTML specification are valid or defined custom data tags.\n\nFor example:\n\n\t<divv></div>\n\n Where the `divv` tag name is invalid."
+              ]
+            },
+            {
+              "enum": ["off"],
+              "description": "Disabled validation of HTML tag names",
+              "markdownEnumDescriptions": [
+                "Disabled validation of HTML tag names.\n\nFor example:\n\n\t<divv></div>\n\n Where the `divv` tag is perfectly fine."
+              ]
+            }
+          ]
+        },
+        "outputTagAttributes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allows Liquid output tags to be used in HTML tag attributes.",
+          "markdownDescription": "Allows Liquid output tags to be used in HTML tag attributes.\n\nFor example:\n\n\t<div class=\"foo\" {{ some_value }}>"
+        },
+        "outputTagValues": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).",
+          "markdownDescription": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).\n\nFor example:\n\n\t<div id=\"{{ foo }}\" class=\"{{ value }}\">"
+        },
+        "controlTagsValues": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allows Liquid control type tags to be used in HTML tag attribute values (within quotations).",
+          "markdownDescription": "Allows Liquid output tags to be used in HTML tag attribute values (within quotations).\n\nFor example:\n\n\t<div class=\"foo {% if x %}bar{% endif %}\">"
+        },
+        "controlTagAttributes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allows Liquid control type tags to be used in HTML tag attributes.",
+          "markdownDescription": "Allows Liquid control type tags to be used in HTML tag attributes.\n\nFor example:\n\n\t<div {% if true %} class=\"x\" {% endif %}>"
+        },
+        "iterationAttributes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allows Liquid iteration type tags to be used in HTML tag attributes (not reccomended).",
+          "markdownDescription": "Allows Liquid iteration type tags to be used in HTML tag attributes (not reccomended).\n\nFor example:\n\n\t<div {% for i in items %} data-{{ i }}=\"foo\" {% endfor %}>\n\n---\n\n**NOTE:**\n\nLeave this options set to `false` and avoid infusing for loops within HTML tag attributes."
+        },
+        "iterationValues": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allows Liquid iteration type tags to be used in HTML tag values (not reccomended).",
+          "markdownDescription": "Allows Liquid iteration type tags to be used in HTML tag attributes values between quotes (not reccomended).\n\nFor example:\n\n\t<div class={% for i in items %}{{ i }}{% endfor %}\">\n\n---\n\n**NOTE:**\n\nLeave this options set to `false` and avoid infusing for loops within HTML tag attributes values.\n."
+        },
+        "quotationCharacters": {
+          "type": "string",
+          "default": "double",
+          "description": "Validates the type of quotation characters used for tag values",
+          "oneOf": [
+            {
+              "enum": ["double"],
+              "description": "Enforces double quotation characters (reccomended)",
+              "markdownEnumDescriptions": [
+                "Enforces double quotation characters (reccomended).\n\nFor example:\n\n\t<div id=\"foo\">\n\n---\n\n**NOTE:**\n\nThe vast majoirty of HTML markup attribute values use double quotes, so don't be a hero. Leave this option set to `double` for sake of the majority."
+              ]
+            },
+            {
+              "enum": ["single"],
+              "description": "Enforced single quotation characters (not-reccomended)",
+              "markdownEnumDescriptions": [
+                "Enforced single quotation characters (not-reccomended).\n\nFor example:\n\n\t<div id='foo'>\n\n---\n\n**NOTE:**\n\nDon't do this. Do you want to get bullied? Using single quotations for HTML attribute values is how you get bullied."
+              ]
+            },
+            {
+              "enum": ["off"],
+              "description": "Disables this validation"
+            }
+          ]
+        },
+        "syntacticLiquidPairs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates the start and end tag existence of Liquid and HTML tag pairs.",
+          "markdownDescription": "Validates the start and end tag existence of Liquid and HTML tag pairs."
+        },
+        "tagHTMLPlacement": {
+          "type": "boolean",
+          "default": true,
+          "title": "Tag Placement",
+          "description": "Validates the placement position of tags that should be nested"
+        },
+        "tagLiquidPlacement": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates the hierarchical placements of tags, ie: li tags must be contained in ul tags",
+          "markdownDescription": "Validates the hierarchical placements of tags, ie: `li` tags must be contained in `ul` tags.\n\nFor example:\n\n\t<li>\n\t\t<ul></ul>\n\t</li>\n\n Where the `<ul></ul>` is incorrectly placed."
+        },
+        "extraneousWhitespace": {
+          "type": "object",
+          "properties": {
+            "enable": {
+              "type": "boolean",
+              "description": "Whether to allow or disallow extraneous whitespace."
+            },
+            "limit": {
+              "type": "number",
+              "default": 1,
+              "description": "The maximum number of whitespace that can be preserved"
+            }
+          },
+          "additionalProperties": true,
+          "description": "Allows extraneous whitespace within Liquid tags.",
+          "markdownDescription": "Allows extraneous whitespace within Liquid tags.\n\nFor example:\n\n\t{{ tag   }}\n\n---\n\n**NOTE:**\n\nThis is auto-fixable ruleset, so extraneous whitespace that is detected will automatically stripped if you are formatting on save."
+        },
+        "iterationArrayType": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates whether a provided iteration array is of an array type."
+        },
+        "unknownFilter": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates whether a provided tag filter is known or unknown."
+        },
+        "noNestedForLoops": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates whether for loops can nest for loops"
+        },
+        "filterArguments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validates a filter arguments"
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "List of file extension to apply formatting rules. Helpful when you want the formatter to handle \".js.liquid\" or \".scss.liquid\" files"
+    },
+    "tags": {
+      "type": "array",
+      "description": "Format options or rules applied to a custom set of defined tags",
+      "items": {
+        "type": "object",
+        "required": ["type", "tag"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "oneOf": [
+              {
+                "enum": ["liquid"],
+                "description": "This option will query select all Liquid tags according to the defined \"tag\" name"
+              },
+              {
+                "enum": ["html"],
+                "description": "This option will query select all HTML tags by according to the defined \"tag\" name"
+              }
+            ]
+          },
+          "tag": {
+            "pattern": "[^<>{}\\/\\%]",
+            "type": "string",
+            "title": "Tag name",
+            "description": "The name of the HTML or Liquid tag. Do not include delimeters or use expression syntax, accepts only a string value"
+          },
+          "attr": {
+            "type": "string",
+            "title": "Tag attribute",
+            "description": "Define the tag by its attribute value. The extension will query select the defined tag and matching attribute property or value"
+          },
+          "ignore": {
+            "type": "boolean",
+            "title": "Ignore Tag",
+            "default": false,
+            "description": "Should this tag be skipped and ignored from formatting."
+          }
+        }
+      }
+    },
+    "ignore": {
+      "items": [
+        {
+          "type": "string",
+          "description": "Glob pattern to files and/or directories to be ignored by the formatter"
+        }
+      ]
+    },
+    "specsHtml": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tags": {
+          "type": "object",
+          "title": "Tags",
+          "description": "Custom HTML tags",
+          "properties": {}
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Attributes",
+          "description": "Custom HTML Attributes"
+        },
+        "values": {
+          "type": "object",
+          "title": "Values",
+          "description": "Custom HTML Attribute values"
+        }
+      }
+    },
+    "specsLiquid": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tags": {
+          "type": "object",
+          "title": "Tags",
+          "description": "Custom Liquid tags",
+          "properties": {}
+        },
+        "filters": {
+          "type": "object",
+          "title": "Filters",
+          "description": "Custom Liquid filters",
+          "properties": {}
+        },
+        "objects": {
+          "$ref": "#/definitions/specObjects"
+        }
+      }
+    }
+  },
+  "required": ["engine"],
+  "properties": {
+    "engine": {
+      "title": "Liquid Engine",
+      "description": "The Liquid variation this project is using. Defaults to \"Standard\" and defines the type of completion references and hover descriptions intellisense uses.",
+      "$ref": "#/definitions/engine"
+    },
+    "validate": {
+      "type": "object",
+      "title": "Validations",
+      "description": "Diagnostic/Linting validation to execute on Liquid syntax.",
+      "$ref": "#/definitions/validate"
+    },
+    "format": {
+      "type": "object",
+      "title": "Prettify Beautification",
+      "description": "Formatting rules and options passed to Prettify",
+      "injectProperties": "./prettify.json"
+    },
+    "specs": {
+      "type": "object",
+      "title": "Specifications",
+      "description": "Extends the specification data references so the parser can understand custom tags and the Language Server can provide features to the tags.",
+      "properties": {
+        "html": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Custom set of HTML tags, attributes or values. Liquify understands and adopts an almost indentical schema to vscode-custom-data and will merge \"html.customData\" contributes located in worskpace settings.",
+          "$ref": "#/definitions/specsHtml"
+        },
+        "liquid": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Custom set of Liquid tags, objects or filters. Extends the liquid specifications. Refer to the Liquid Specifications documentation to learn more about the specs and how to extends them.",
+          "$ref": "#/definitions/specsLiquid"
+        }
+      }
+    }
+  }
+}

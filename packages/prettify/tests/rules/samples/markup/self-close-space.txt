@@ -1,0 +1,18 @@
+---
+Testing self close spacer. This applies a single space character on void tags. This is _legacy_ beautification option and inherited from PrettyDiff. Still hold relevance for some situations.
+---
+
+<meta charset="utf-8" />
+<img src="/some-url"/>
+<br/>
+<br/>
+<br />
+<input type="text" />
+<hr />
+<picture>
+  <path srcset="." />
+  <path srcset="."/>
+  <path srcset="."
+  />
+  <path srcset="."                  />
+</picture>

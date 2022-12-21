@@ -1,0 +1,30 @@
+---
+Testing newline preservation
+---
+
+.class {
+  font-size: 10px;
+
+
+
+
+  background: black;
+
+
+  color: pink;
+}
+
+
+
+
+
+
+
+
+
+.another-class {
+
+
+
+  text-transform: uppercase;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "liquid-parser-benchmarks",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@liquify/liquid-parser": "link:../..",
+    "@types/benchmark": "^2.1.2",
+    "benchmark": "^2.1.4"
+  }
+}

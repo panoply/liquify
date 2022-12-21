@@ -1,0 +1,26 @@
+---
+Testing forced content indentation.
+---
+
+<ul>
+<li>Content will be forced onto newlines</li>
+<li>Content will be forced onto newlines</li>
+<li>Content will be forced onto newlines</li>
+<li>Content will be forced onto newlines</li>
+<li>
+<ul>
+<li>Content will be forced onto newlines</li>
+<li>Content will be forced onto newlines</li>
+<li>Content will be forced onto newlines</li>
+<li>Content will be forced onto newlines</li>
+<li>Content will be forced onto newlines</li>
+</ul>
+</li>
+</ul>
+
+<div>Content will be forced onto newlines</div>
+
+<p>Content will be forced onto newlines
+</p>
+
+<p>Content will be forced onto newlines</p>

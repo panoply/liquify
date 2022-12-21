@@ -1,0 +1,101 @@
+{
+  "name": "@liquify/liquid-language-server",
+  "version": "0.1.0",
+  "description": "Language Server for the Liquid Templating Language",
+  "homepage": "https://liquify.dev",
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com"
+  },
+  "repository": {
+    "url": "https://github.com/panoply/liquify"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup --minify",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava --color --watch"
+  },
+  "private": false,
+  "license": "see LICENSE",
+  "main": "package/server.js",
+  "types": "./package/@types/index.d.ts",
+  "exports": {
+    "require": "./package/server.js",
+    "import": "./package/server.es.js"
+  },
+  "bundledDependencies": [
+    "@liquify/liquid-language-specs",
+    "@liquify/liquid-parser",
+    "vscode-css-languageservice",
+    "vscode-json-languageservice",
+    "vscode-languageserver",
+    "vscode-languageserver-textdocument",
+    "vscode-languageserver-types",
+    "vscode-uri"
+  ],
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "extends": "@liquify/eslint-config",
+    "ignorePatterns": [
+      "package/**"
+    ]
+  },
+  "ava": {
+    "files": [
+      "test/parsing/parser.js"
+    ],
+    "concurrency": 5
+  },
+  "dependencies": {
+    "@liquify/liquid-parser": "workspace:*",
+    "@liquify/prettify": "workspace:*",
+    "@vscode/emmet-helper": "^2.8.4",
+    "fs-extra": "^10.1.0",
+    "indent-string": "^5.0.0",
+    "lodash": "^4.17.21",
+    "strip-json-comments": "^5.0.0",
+    "vscode-css-languageservice": "^6.1.1",
+    "vscode-json-languageservice": "^5.1.1",
+    "vscode-languageserver": "^8.0.2",
+    "vscode-languageserver-textdocument": "^1.0.7",
+    "vscode-uri": "^3.0.6"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.188",
+    "ava": "^5.0.1",
+    "dotenv": "^16.0.3",
+    "marky": "^1.2.5",
+    "pretty-ms": "^8.0.0",
+    "tsup": "^6.4.0",
+    "vscode-languageserver-types": "^3.17.2"
+  },
+  "tsup": {
+    "entry": {
+      "server": "src/index.ts"
+    },
+    "outDir": "package",
+    "bundle": true,
+    "clean": false,
+    "treeshake": true,
+    "legacyOutput": false,
+    "splitting": false,
+    "format": "cjs",
+    "noExternal": [
+      "strip-json-comments",
+      "@liquify/prettify"
+    ],
+    "external": [
+      "@liquify/liquid-language-specs",
+      "@liquify/liquid-parser",
+      "@vscode/emmet-helper",
+      "indent-string",
+      "lodash",
+      "vscode-css-languageservice",
+      "vscode-json-languageservice",
+      "vscode-languageserver",
+      "vscode-languageserver-textdocument",
+      "vscode-uri"
+    ]
+  }
+}

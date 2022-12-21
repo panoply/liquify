@@ -1,0 +1,383 @@
+{
+  "name": "vscode-liquid",
+  "version": "0.0.1",
+  "displayName": "Liquify",
+  "description": "Liquid Language Support for vscode. Provides syntax highlighting, IntelliSense capabilities, diagnostic and validations, formatting, hovers, completions and more!",
+  "publisher": "sissel",
+  "icon": "assets/logo.png",
+  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <nicos@gmx.com>",
+  "preview": true,
+  "private": true,
+  "license": "see LICENSE",
+  "keywords": [
+    "liquid",
+    "shopify",
+    "jekyll",
+    "language",
+    "lsp",
+    "formatting",
+    "completions",
+    "codelens",
+    "validations",
+    "linting"
+  ],
+  "categories": [
+    "Formatters",
+    "Programming Languages",
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
+  "main": "package/client.js",
+  "exports": {
+    "require": "./package/client.js"
+  },
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "extends": "@liquify/eslint-config",
+    "ignorePatterns": [
+      "package/**"
+    ],
+    "rules": {
+      "semi": [
+        "error",
+        "always"
+      ]
+    }
+  },
+  "engines": {
+    "vscode": "^1.52.0"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup --minify",
+    "pack": "cd versions; pnpm pack ../ && cd .."
+  },
+  "tsup": {
+    "entry": {
+      "client": "client/index.ts"
+    },
+    "env": {
+      "process.env.SERVER_PATH": "\"./../\""
+    },
+    "bundle": true,
+    "format": "cjs",
+    "treeshake": true,
+    "clean": false,
+    "outDir": "package",
+    "legacyOutput": false,
+    "splitting": false,
+    "external": [
+      "vscode",
+      "vscode-languageclient",
+      "vscode-languageclient/node"
+    ]
+  },
+  "dependencies": {
+    "strip-json-comments": "^5.0.0",
+    "vscode-languageclient": "^8.0.2"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.73.0"
+  },
+  "activationEvents": [
+    "onLanguage:liquid",
+    "workspaceContains:**/.liquidrc",
+    "workspaceContains:**/.liquidrc.json"
+  ],
+  "extensionDependencies": [
+    "vscode.html-language-features"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Potion Theme",
+        "uiTheme": "vs-dark",
+        "path": "./themes/potion-color-theme.json"
+      }
+    ],
+    "htmlLanguageParticipants": [
+      {
+        "autoInsert": false,
+        "languageId": "liquid"
+      }
+    ],
+    "jsonValidation": [
+      {
+        "url": "https://unpkg.com/@liquify/schema/liquidrc.json",
+        "fileMatch": [
+          ".liquidrc",
+          ".liquidrc.json"
+        ]
+      },
+      {
+        "url": "https://unpkg.com/@liquify/schema/prettify.json",
+        "fileMatch": [
+          ".prettifyrc",
+          ".prettifyrc.json"
+        ]
+      },
+      {
+        "url": "https://unpkg.com/@liquify/schema/shopify/settings_schema.json",
+        "fileMatch": [
+          "settings_schema.json"
+        ]
+      },
+      {
+        "url": "https://unpkg.com/@liquify/schema/shopify/settings_data.json",
+        "fileMatch": [
+          "settings_data.json"
+        ]
+      },
+      {
+        "url": "https://unpkg.com/@liquify/schema/shopify/templates.json",
+        "fileMatch": [
+          "index.json",
+          "index.*.json",
+          "404.json",
+          "article.json",
+          "blog.json",
+          "cart.json",
+          "cart.*.json",
+          "collection.json",
+          "collection.*.json",
+          "list-collection.json",
+          "page.*.json",
+          "page.json",
+          "password.json",
+          "search.json",
+          "search.*.json",
+          "product.json",
+          "product.*.json"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "liquid.releaseNotes",
+        "title": "Liquid: Release Notes"
+      },
+      {
+        "command": "liquid.validateDocument",
+        "title": "Liquid: Validate Document"
+      },
+      {
+        "command": "liquid.disableFormatting",
+        "title": "Liquid: Disable Formatting"
+      },
+      {
+        "command": "liquid.enableFormatting",
+        "title": "Liquid: Enable Formatting"
+      },
+      {
+        "command": "liquid.toggleOutput",
+        "title": "Liquid: Toggle Output"
+      },
+      {
+        "command": "liquid.formatDocument",
+        "title": "Liquid: Format Document"
+      },
+      {
+        "command": "liquid.formatSelection",
+        "title": "Liquid: Format Selection"
+      },
+      {
+        "command": "liquid.toggleLiquid",
+        "title": "Liquid: Activate Liquid"
+      },
+      {
+        "command": "liquid.liquidrc",
+        "title": "Liquid: Generate a .liquidrc file"
+      }
+    ],
+    "languages": [
+      {
+        "id": "log-liquid",
+        "aliases": [
+          "Log Liquid"
+        ]
+      },
+      {
+        "id": "liquid",
+        "configuration": "./language/liquid.language-configuration.json",
+        "extensions": [
+          ".liquid",
+          ".jekyll"
+        ],
+        "aliases": [
+          "Liquid"
+        ]
+      },
+      {
+        "id": "liquid-css",
+        "configuration": "./language/liquid-css.language-configuration.json",
+        "extensions": [
+          ".css.liquid"
+        ],
+        "aliases": [
+          "Liquid CSS"
+        ]
+      },
+      {
+        "id": "liquid-scss",
+        "configuration": "./language/liquid-css.language-configuration.json",
+        "extensions": [
+          ".scss.liquid"
+        ],
+        "aliases": [
+          "Liquid SCSS"
+        ]
+      },
+      {
+        "id": "liquid-javascript",
+        "configuration": "./language/liquid-javascript.language-configuration.json",
+        "extensions": [
+          ".js.liquid"
+        ],
+        "aliases": [
+          "Liquid JavaScript"
+        ]
+      },
+      {
+        "id": "jsonc",
+        "filenames": [
+          ".liquidrc",
+          ".liquidrc.json"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "log-liquid",
+        "scopeName": "liquid.log",
+        "path": "./syntax/languages/log.tmLanguage.json"
+      },
+      {
+        "language": "liquid",
+        "scopeName": "source.liquid",
+        "path": "./syntax/liquid.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.liquid.embedded",
+        "path": "./syntax/injections/embedded.tmLanguage.json",
+        "injectTo": [
+          "source.liquid"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.schema.liquid": "json",
+          "meta.embedded.block.javascript.liquid": "javascript",
+          "meta.embedded.block.stylesheet.liquid": "css",
+          "meta.embedded.block.stylesheet.scss.liquid": "scss",
+          "meta.embedded.block.style.liquid": "liquid-css"
+        }
+      },
+      {
+        "scopeName": "source.liquid.frontmatter",
+        "path": "./syntax/injections/frontmatter.tmLanguage.json",
+        "injectTo": [
+          "source.liquid",
+          "source.json.liquid",
+          "source.yaml.liquid",
+          "source.css.liquid",
+          "source.scss.liquid",
+          "source.js.liquid"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.frontmatter.liquid": "yaml"
+        }
+      }
+    ],
+    "configurationDefaults": {
+      "[liquid]": {
+        "editor.bracketPairColorization.enabled": false,
+        "editor.formatOnSave": true
+      },
+      "emmet.showExpandedAbbreviation": "never",
+      "emmet.showSuggestionsAsSnippets": false,
+      "emmet.showAbbreviationSuggestions": false,
+      "emmet.includeLanguages": {
+        "liquid": "html",
+        "liquid-css": "css",
+        "liquid-scss": "scss"
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Liquid configuration",
+      "properties": {
+        "liquid.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        },
+        "liquid.notifier.releases": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show version update notifications"
+        },
+        "liquid.notifier.recommendations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show recommendation notifications. This provides and show tips when using the extension."
+        },
+        "liquid.notifier.conflicts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to notify you of conflicting extensions. Helps prevent issues from occuring."
+        },
+        "liquid.completion.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to enable/disable the completion intellisense feature."
+        },
+        "liquid.hover.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to enable/disable hover tooltip tag descriptions."
+        },
+        "liquid.validateOnOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to vaidate documents upon opening. When set to false, validations will run only when a document is touched (changed)"
+        },
+        "liquid.validate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to enable/disable the Liquid code validation feature."
+        },
+        "liquid.format": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to enable/disable Liquid formatting."
+        },
+        "liquid.formatting": {
+          "default": false,
+          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or if you really must, you can use the \"liquid.format.*\" workspace setting where the asterix (*) is replaced by one of the following:\n\n- \"html\"\n- \"javascript\"\n- \"css\"\n- \"scss\"\n- \"json\"\n\nNote: If \"liquid.format.enable\" is set to \"false\" all formatting will be disabled."
+        },
+        "liquid.rules": {
+          "default": false,
+          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or if you really must, you can use the \"liquid.format.*\" workspace setting where the asterix (*) is replaced by one of the following:\n\n- \"html\"\n- \"javascript\"\n- \"css\"\n- \"scss\"\n- \"json\"\n\nNote: If \"liquid.format.enable\" is set to \"false\" all formatting will be disabled."
+        },
+        "liquid.formatIgnore": {
+          "default": false,
+          "deprecationMessage": "DEPRECATED!\nDefine ignore tags in the \"liquid.format.html\": { \"tags\": [] } property ruleset and set the \"kind\" value to \"ignore\""
+        },
+        "liquid.beautify": {
+          "default": false,
+          "deprecationMessage": "DEPRECATED!\nDefine beautification formatting rules using a .liquidrc.json file or use the \"liquid.format.*\" workspace setting."
+        }
+      }
+    }
+  }
+}

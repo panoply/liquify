@@ -1,0 +1,291 @@
+/* -------------------------------------------- */
+/* VARIABLE PREFIX                              */
+/* -------------------------------------------- */
+
+$variable-prefix: null;
+
+/* -------------------------------------------- */
+/* EDITABLE OPTIONS                             */
+/* -------------------------------------------- */
+
+$enable-rfs: true;
+
+/* -------------------------------------------- */
+/* PALETTE                                      */
+/* -------------------------------------------- */
+
+$white: #fff;
+$black: #0d0d0d;
+$blue: #2f6896;
+
+
+$indigo: #6610f2;
+$purple: #a77afe;
+$pink: #ef3b7d;
+$salmon: #ff8ab0;
+$red: #dc3545;
+$orange: #ef8c39;
+$yellow: #e6d06c;
+$green: #a5d447;
+$teal: #20c997;
+$cyan: #7ef0ff;
+$sea: #177fd4;
+
+/* -------------------------------------------- */
+/* GRAYS                                        */
+/* -------------------------------------------- */
+
+$gray-100: #f8f9fa;
+$gray-200: #f3f4f5; // FONT COLOUR
+$gray-300: #e1e1e8;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #212529;
+$gray-800: #0f1113; // CODE BACKGROUND
+$gray-900: #121212;
+
+/* -------------------------------------------- */
+/* BACKGROUND COLORS                            */
+/* -------------------------------------------- */
+
+$background-colors: (
+  "ivory": $gray-200,
+  "black": $black,
+  "cyan": $cyan,
+  "ebony": $gray-800,
+  "white": $white
+);
+
+/* -------------------------------------------- */
+/* BORDER COLORS                                */
+/* -------------------------------------------- */
+
+$border-color: $cyan;
+
+/* -------------------------------------------- */
+/* FONT COLORS                                  */
+/* -------------------------------------------- */
+
+$font-colors: (
+  "black": $black,
+  "dark-blue": #30476d,
+  "blue": $sea,
+  "white": $gray-200,
+  "gray": $gray-600,
+  "red": $red,
+  "yellow": $yellow,
+  "cyan": $cyan,
+  "green": $green,
+  "purple": $purple,
+  "pink": $pink
+);
+
+/* -------------------------------------------- */
+/* SPACING                                      */
+/* -------------------------------------------- */
+
+$spacer: 1rem;
+
+/* -------------------------------------------- */
+/* GRID                                         */
+/* -------------------------------------------- */
+
+$grid-columns: 12;
+$grid-gutter-width: 1.5rem;
+$grid-row-columns: 6;
+
+/* -------------------------------------------- */
+/* GRID > BREAKPOINTS                           */
+/* -------------------------------------------- */
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+/* -------------------------------------------- */
+/* GRID > MAX-WIDTHS                            */
+/* -------------------------------------------- */
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1000px,
+  xxl: 1320px
+);
+
+/* -------------------------------------------- */
+/* BODY                                         */
+/* -------------------------------------------- */
+
+$body-bg: #0e0e0e;
+$body-color: $gray-300;
+
+/* -------------------------------------------- */
+/* BORDER                                       */
+/* -------------------------------------------- */
+
+$border-width: 0.01rem;
+
+/* -------------------------------------------- */
+/* FONT FAMILY                                  */
+/* -------------------------------------------- */
+
+// stylelint-disable
+
+$font-family-base:            proxima-nova;
+$font-family-heading:         calling-code;
+$font-family-code:            SFMono-Regular, Menlo, Monaco, "Courier New", Courier, monospace;
+
+// stylelint-enable
+
+/* -------------------------------------------- */
+/* FONT SIZES                                   */
+/* -------------------------------------------- */
+
+$font-size-base: 1rem;
+
+$font-size-xs: $font-size-base * 0.625; // 0.6875rem
+$font-size-md: 0.901rem; // 0.7771rem
+$font-size-sm: $font-size-base * 0.775; // 0.8525rem
+$font-size-lg: $font-size-base * 1.25; // 1.375rem
+
+/* -------------------------------------------- */
+/* FONT HEADINGS                                */
+/* -------------------------------------------- */
+
+$headings-font-style: null;
+$headings-font-weight: 500;
+$headings-line-height: 1.5;
+
+$h1-font-size: $font-size-base * 1.9;
+$h2-font-size: $font-size-base * 1.75;
+$h3-font-size: $font-size-base * 1.5;
+$h4-font-size: $font-size-base * 1.25;
+$h5-font-size: $font-size-base * 1;
+$h6-font-size: $font-size-base;
+
+/* -------------------------------------------- */
+/* FONT WEIGHT                                  */
+/* -------------------------------------------- */
+
+$font-weight-normal: 400;
+$font-weight-lighter: 100;
+$font-weight-light: 300;
+$font-weight-bold: 700;
+$font-weight-bolder: bolder;
+
+/* -------------------------------------------- */
+/* LINE HEIGHT                                  */
+/* -------------------------------------------- */
+
+$line-height-base: 1.5;
+$line-height-sm: 1.25;
+$line-height-lg: 2;
+$line-height-xl: 2.4;
+
+/* -------------------------------------------- */
+/* LINKS                                        */
+/* -------------------------------------------- */
+
+$link-color: $gray-200;
+$link-decoration: null;
+$link-shade-percentage: null;
+$link-hover-color: $cyan;
+$link-hover-decoration: underline;
+
+/* -------------------------------------------- */
+/* BORDERS                                      */
+/* -------------------------------------------- */
+
+$border-color: $gray-700;
+$border-radius: 0.25rem;
+$border-radius-sm: 0.2rem;
+$border-radius-lg: 0.3rem;
+$border-radius-pill: 50rem;
+
+/* -------------------------------------------- */
+/* SHADOWS                                      */
+/* -------------------------------------------- */
+
+$box-shadow: 0 0.5rem 1rem rgba($black, 0.15);
+$box-shadow-sm: 0 0.125rem 0.25rem rgba($black, 0.075);
+$box-shadow-lg: 0 1rem 3rem rgba($black, 0.175);
+$box-shadow-inset: inset 0 1px 2px rgba($black, 0.075);
+
+/* -------------------------------------------- */
+/* HR LINE                                      */
+/* -------------------------------------------- */
+
+$hr-margin-y: $spacer;
+$hr-color: $cyan;
+$hr-opacity: 0.25;
+
+/* -------------------------------------------- */
+/* BUTTONS                                      */
+/* -------------------------------------------- */
+
+$btn-focus-width: 0.15rem !default;
+$btn-focus-opacity: 0.25 !default;
+$btn-focus-box-shadow: 0;
+$btn-disabled-opacity: 1 !default;
+$btn-padding-y-sm: 0.25rem !default;
+$btn-padding-y: 0.375rem !default;
+$btn-padding-y-lg: 0.5rem !default;
+$btn-padding-x-sm: 0.5rem !default;
+$btn-padding-x: 0.75rem !default;
+$btn-padding-x-lg: 1rem !default;
+$btn-white-space: nowrap !default; // set to `nowrap` to prevent text wrapping
+
+
+$relapse-border-width: none;
+$relapse-border-color: transparent;
+$relapse-padding: 10px 10px;
+$relapse-transition-height: 225ms;
+$relapse-transition-opacity: 200ms;
+$relapse-transition-timing: ease-in-out;
+
+
+$input-bg: $white;
+$input-focus-border-color: transparent;
+
+$form-switch-color: $blue;
+$form-switch-width: 2em;
+$form-switch-padding-start: $form-switch-width + 0.5em;
+$form-switch-border-radius: $form-switch-width ;
+$form-switch-transition: background-position 0.15s ease-in-out;
+$form-switch-focus-color: $white ;
+$form-switch-checked-color: $red ;
+$form-switch-checked-bg-position: right center;
+
+/* -------------------------------------------- */
+/* NODE MODULE                                  */
+/* -------------------------------------------- */
+
+
+@import "../../node_modules/@brixtol/bootstrap";
+@import "../../node_modules/relapse";
+
+/* -------------------------------------------- */
+/* COMPONENTS                                   */
+/* -------------------------------------------- */
+
+@import "styles/overwrites";
+@import "styles/code";
+@import "styles/editor";
+@import "styles/stripe";
+@import "styles/playground";
+@import "styles/drawer";
+@import "styles/sidebar";
+@import "styles/json-tree";
+@import "styles/landing";
+@import "styles/accordion";
+@import "styles/session";
+@import "styles/tabs";
+

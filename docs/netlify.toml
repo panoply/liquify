@@ -1,0 +1,45 @@
+[build]
+  functions = "functions"
+  publish   = "public"
+
+[[redirects]]
+  from   = "/prettify"
+  status = 200
+  force  = true
+  to     = "/playground/prettify"
+
+[[redirects]]
+  from    = "/specification.json"
+  status  = 200
+  force   = true
+  to      = "/.netlify/functions/stores"
+  headers = { Content-Type = "application/json" }
+
+
+[[redirects]]
+  from    = "/liquidrc.json"
+  status  = 200
+  force   = true
+  to      = "/.netlify/functions/stores"
+  headers = { Content-Type = "application/json" }
+
+[[redirects]]
+  from    = "/shopify/settings.json"
+  status  = 200
+  force   = true
+  to      = "/.netlify/functions/stores"
+  headers = { Content-Type = "application/json" }
+
+[[redirects]]
+  from    = "/shopify/sections.json"
+  status  = 200
+  force   = true
+  to      = "/.netlify/functions/stores"
+  headers = { Content-Type = "application/json" }
+
+[[redirects]]
+  from    = "/shopify/locales.json"
+  status  = 200
+  force   = true
+  to      = "/.netlify/functions/stores"
+  headers = { Content-Type = "application/json" }

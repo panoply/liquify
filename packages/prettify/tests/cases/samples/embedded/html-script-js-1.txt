@@ -1,0 +1,9 @@
+---
+Testing `<script>` same line structures. Indentation is applied when the contents of the tag is separated by a single whitespace character. When no whitespace characters are applied the token will remain intact.
+---
+
+<script> {%- render 'shop.js' -%} </script>
+<script>{%- render 'shop.js' -%} </script>
+<script> {%- render 'shop.js' -%}</script>
+<script>window.app()</script>
+<script>function(){ return 'foo' }</script>

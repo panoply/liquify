@@ -1,0 +1,28 @@
+---
+Testing Liquid `delimiterTrims` in `strip` mode. All Liquid tags and output object tokens will have their trim dashes removed aside from those within strings, ie: attribute values.
+---
+
+
+{%- for x in full_trims  -%}
+
+<div class="{{- full_trims -}}">
+
+<ul {% if right_trim -%}{{- full_trims -}}{% endif -%}>
+
+<li class="{%- if full_trims -%}{{ right_trim -}}{% endif -%}">
+
+{{- full_trims | filter: 'something' -}}
+{{- left_trim | filter: 'something'}}
+{{ right_trim | filter: 'something' -}}
+{{- full_trims | filter: 'something'-}}
+
+{%- if full_trims -%}
+ {{- full_trims | filter: 'something' -}}
+{%- endif -%}
+
+</li>
+
+</ul>
+</div>
+
+{%- endif -%}

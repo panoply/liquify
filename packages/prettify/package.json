@@ -1,0 +1,122 @@
+{
+  "name": "@liquify/prettify",
+  "version": "0.4.5-beta.1",
+  "license": "MIT",
+  "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <n.savvidis@gmx.com>",
+  "description": "Prettify 🎀 ~ Language beautification support for multiple languages with the Sparser lexing algorithm.",
+  "keywords": [
+    "formatting",
+    "prettify",
+    "beautify",
+    "beautification",
+    "liquid",
+    "html",
+    "shopify",
+    "liquify",
+    "format",
+    "formatter",
+    "prettydiff",
+    "prettier",
+    "sparser"
+  ],
+  "engines": {
+    "pnpm": ">=4",
+    "node": ">=12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/prettify"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/prettify/issues"
+  },
+  "types": "index.d.ts",
+  "main": "index.js",
+  "module": "index.mjs",
+  "exports": {
+    "require": "./index.js",
+    "import": "./index.mjs"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup --minify-identifiers --minify-whitespace",
+    "specs": "node ./scripts/specs.cjs",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava tests/**/*.test.mjs --serial",
+    "tests": "tests -t cases,rules,units",
+    "test:dev": "ava tests/dev.test.mjs --watch",
+    "test:units": "ava tests/units/*.test.mjs ---",
+    "test:rules": "ava tests/rules/*.test.mjs ---",
+    "test:cases": "ava tests/cases/*.test.mjs ---"
+  },
+  "ava": {
+    "extensions": [
+      "mjs"
+    ],
+    "cache": false
+  },
+  "tsup": {
+    "entry": [
+      "./src/index.ts"
+    ],
+    "outDir": "./",
+    "treeshake": true,
+    "globalName": "prettify",
+    "splitting": false,
+    "format": [
+      "cjs",
+      "esm"
+    ]
+  },
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "root": true,
+    "ignorePatterns": [
+      "index.js",
+      "index.mjs",
+      "**/node_modules/*"
+    ],
+    "extends": [
+      "@liquify/eslint-config"
+    ],
+    "rules": {
+      "no-lone-blocks": "off",
+      "no-unmodified-loop-condition": "off",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error"
+      ],
+      "operator-linebreak": [
+        "error",
+        "after",
+        {
+          "overrides": {
+            "?": "before",
+            ":": "before",
+            "&&": "after",
+            "||": "after",
+            "+": "before"
+          }
+        }
+      ]
+    }
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "prettier"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@liquify/ava": "^0.0.5",
+    "@liquify/eslint-config": "^1.1.0",
+    "@liquify/liquid-language-specs": "^0.1.7",
+    "@liquify/prettier-config": "^1.0.1",
+    "@types/benchmark": "^2.1.2",
+    "ava": "^5.1.0",
+    "benchmark": "^2.1.4",
+    "tsup": "^6.5.0",
+    "type-fest": "^3.4.0"
+  }
+}

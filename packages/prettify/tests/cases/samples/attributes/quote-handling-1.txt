@@ -1,0 +1,8 @@
+---
+Testing single quotation `'` characters nesting of Liquid tokens contained within HTML attribute values.
+---
+
+{% for step in steps %}
+<div class="{% if 'xx' %} {{ x | filter: 'quotes' }}{% endif %}">
+</div>
+{% endfor %}

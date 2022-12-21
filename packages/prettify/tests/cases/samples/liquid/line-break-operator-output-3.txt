@@ -1,0 +1,50 @@
+---
+Testing Liquid `lineBreakOperator` rule within output tokens but with trim dashes applied to the delimiters.
+---
+<div class="">
+
+{{- left.trim_only
+
+  | append: 'one'
+
+| replace: 'this', 'that'
+
+| prepend: 'foo'
+
+   | append: 'bar'
+
+|plus: 100
+|   minus: 300
+|replace: 'foo', 'bar'
+
+   | append: 'baz'
+}}
+</div>
+
+{{ right.trim_only
+
+  | append: 'one'
+
+| replace: 'this', 'that'
+
+| prepend: 'foo'
+
+   | append: 'bar'
+
+
+   | append: 'baz'
+-}}
+
+{{- right_and_left.trims
+
+  | append: 'one'
+
+| replace: 'this', 'that'
+
+| prepend: 'foo'
+
+   | append: 'bar'
+
+
+   | append: 'baz'
+-}}

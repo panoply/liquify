@@ -1,0 +1,13 @@
+# FILES
+#--------------------------
+.DS_Store
+.eslintcache
+pnpm-debug.log
+pnpm-lock.yaml
+
+# DIRECTORIES
+# -------------------------
+package/
+node_modules/
+versions/
+themes/

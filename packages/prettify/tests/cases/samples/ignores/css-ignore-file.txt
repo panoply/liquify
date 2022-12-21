@@ -1,0 +1,19 @@
+---
+Testing file ignores using CSS block comments. This entire code snippet with be left intact and exluded from formatting.
+---
+
+/* @prettify-ignore */
+
+
+.will-not-format  {
+
+  color:      white;
+
+          background-color:           var(--main-bg-color);
+
+        margin: 10px;
+
+width: 50px;
+                    --test-prop: 2em;
+  height:                                 50px;
+  display:               inline-block;                 }

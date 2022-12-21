@@ -1,0 +1,9 @@
+<div class="x" id="{% if x %}conditional value{% else %}x{% endif%}">
+
+  <ul class="{{ x }}" id={% unless no.quotations %}{{ conditional.value }}{% endunless%}>
+
+    <li data-attr={{ no.quotations }}>
+      {{ x | filter: 'xx' }}
+    </li>
+  </ul>
+</div>

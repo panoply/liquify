@@ -1,0 +1,539 @@
+div[class*="language-"],
+code[class*="language-"] {
+  padding-left: 1rem;
+  color: $cyan;
+  font-size: 0.945rem;
+  font-family: SFMono-Regular,
+    Menlo,
+    Monaco,
+    "Courier New",
+    Courier,
+    monospace;
+  white-space: pre;
+  white-space: pre-wrap;
+  text-shadow: none;
+  word-wrap: normal;
+  tab-size: 2;
+  hyphens: none;
+}
+
+.editor,
+pre {
+  position: relative;
+  height: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  overflow: auto;
+  border: none;
+  border-radius: 0;
+
+  &[class*="language-"] {
+    color: $cyan;
+    font-family: $font-family-code;
+    white-space: pre;
+    white-space: pre-wrap;
+    text-shadow: none;
+    word-wrap: normal;
+    tab-size: 2;
+    hyphens: none;
+    background: transparent;
+  }
+
+  code {
+    display: block;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    white-space: pre;
+  }
+
+  > code[class*="language-"] {
+    font-size: 0.845rem;
+  }
+}
+
+pre[class*="language-"].line-numbers {
+  position: relative;
+  padding-left: 3.8em;
+  counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2.5rem;
+  width: 2.5rem;
+  font-size: 100%;
+  font-family: $font-family-code;
+
+
+  /* works for line-numbers below 1000 lines */
+  letter-spacing: -1px;
+  border-right: 0.01rem $gray-700 solid;
+  user-select: none;
+  pointer-events: none;
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span::before {
+  display: block;
+  padding-top: 15px;
+  padding-right: 0.8em;
+  padding-bottom: 15px;
+  color: $gray-600;
+  text-align: right;
+  content: counter(linenumber);
+}
+
+.token.tab:not(:empty),
+.token.cr,
+.token.lf,
+.token.space {
+  position: relative;
+}
+
+.token.tab:not(:empty)::before,
+.token.cr::before,
+.token.lf::before,
+.token.space::before {
+  position: absolute;
+  color: $gray-600;
+  opacity: 0.2;
+}
+
+.token.tab:not(:empty)::before {
+  content: "\21E5";
+}
+
+.token.cr::before {
+  content: "\240D";
+}
+
+.token.crlf::before {
+  content: "\240D\240A";
+}
+
+
+.token.space::before {
+  content: "\00B7";
+}
+
+:not(pre) > code[class*="language-"] {
+  font-size: $font-size-sm;
+  background: $gray-800;
+  border-radius: 0.3em;
+}
+
+
+.token {
+
+  &.selector,
+  &.inserted {
+    color: $green;
+  }
+
+  &.atrule,
+  &.attr-value,
+  &.keyword,
+  &.important,
+  &.deleted {
+    color: $pink;
+  }
+
+  &.regex,
+  &.statement {
+    color: $cyan;
+  }
+
+  &.placeholder,
+  &.variable {
+    color: $white;
+  }
+
+  &.important,
+  &.statement,
+  &.bold {
+    font-weight: bold;
+  }
+
+  &.punctuation {
+    color: #ccc;
+  }
+
+  &.entity {
+    cursor: help;
+  }
+
+  &.italic {
+    font-style: italic;
+  }
+
+  &.namespace {
+    opacity: 0.7;
+  }
+
+  &.comment,
+  &.prolog,
+  &.doctype,
+  &.cdata {
+    color: #ccc;
+  }
+
+  &.operator,
+  &.boolean,
+  &.number {
+    color: $purple;
+  }
+
+  &.attr-name,
+  &.string,
+  &.entity,
+  &.url {
+    color: $yellow;
+  }
+}
+
+.language-css,
+.token.string,
+.style .token.string {
+  color: $yellow;
+}
+
+.token.liquid {
+  // tokens
+
+  &-object {
+    color: #81d4fa;
+  }
+
+  &-punctuation {
+    color: $pink;
+  }
+
+  &-property {
+    color: $white;
+  }
+}
+
+
+code.language-style,
+span.liquid-style {
+
+  > .token {
+
+    &.scss-variable {
+      color: $white;
+    }
+
+    &.selector > .token {
+
+      &.colon,
+      &.combinator {
+        color: #e91e63;
+      }
+    }
+
+    &.border-style,
+    &.value {
+      color: #fff9a6;
+    }
+
+    &.selector > .token.attribute > .token {
+
+
+      &.punctuation {
+        color: $white;
+      }
+
+      &.attr-name {
+        color: #91ebc2;
+      }
+
+      &.operator {
+        color: #ff93bc;
+      }
+
+      &.attr-value {
+        color: #fff9a6;
+      }
+    }
+
+    &.comment {
+      color: #666;
+    }
+
+    &.delimeters {
+      color: #666;
+    }
+
+
+    &.atrule > .unit,
+    &.unit {
+      color: #d66088;
+    }
+
+    &.atrule {
+      color: #81d4fa;
+
+      > .rule {
+        color: #cb3f6e;
+      }
+    }
+
+    &.property {
+      color: #85c0db;
+    }
+
+
+    &.hexcode {
+      color: #978fff;
+
+      > .hash {
+        color: #d66088;
+      }
+
+      > .decimal {
+        color: #978fff;
+      }
+    }
+  }
+}
+
+
+code.language-script,
+.token.script,
+.token.liquid-javascript {
+  color: $gray-400;
+
+  .token {
+
+    &.parameter-type,
+    &.return-type,
+    &.semi {
+      color: $gray-300;
+    }
+
+    &.punctuation {
+      color: $gray-400;
+    }
+
+    &.comment {
+      color: $gray-600;
+    }
+
+
+    &.parameter-optional,
+    &.parameter {
+      color: $orange;
+    }
+
+    &.literal-property {
+      color: #0dd4c8;
+    }
+
+    &.type-object,
+    &.type-array {
+      color: #228d9f;
+    }
+
+    &.types {
+      color: $sea;
+    }
+
+    &.function,
+    &.method,
+    &.keyword,
+    &.browser-objects,
+    &.variable {
+      color: #81d4fa;
+    }
+
+    &.keyword.scope {
+      color: $orange;
+    }
+
+    &.op,
+    &.tag,
+    &.punctuation-chars,
+    &.operator,
+    &.control-flow,
+    &.module {
+      color: #cb3f6e;
+    }
+
+
+    &.function {
+      color: $green;
+    }
+
+
+    &.number {
+      color: $salmon;
+    }
+
+    &.nil,
+    &.boolean {
+      color: $purple;
+    }
+
+
+    &.attr-name {
+      color: $green;
+    }
+
+    &.attr-value {
+      color: $yellow;
+    }
+
+    &.style {
+      color: $cyan;
+    }
+
+    &.script {
+      color: #81d4fa;
+
+      .token.keyword {
+        color: #81d4fa;
+      }
+    }
+  }
+}
+
+
+code.language-xxx,
+code.language-mas {
+  color: $gray-100;
+
+  .token {
+
+    &.liquid-comment,
+    &.comment {
+      color: $gray-600;
+    }
+
+    &.ran-lan {
+      color: #becaff;
+    }
+
+    &.tag {
+      color: #ff93bc;
+    }
+
+    &.attr-object,
+    &.filter {
+      color: #81d4fa;
+    }
+
+    &.attr-property {
+      color: $white;
+    }
+
+    &.tag-name {
+      color: #cb3f6e;
+    }
+
+    &.attr-name {
+      color: #91ebc2;
+    }
+
+    &.operators,
+    &.attr-equals {
+      color: #ff93bc;
+    }
+
+    &.attr-value {
+      color: #fff9a6;
+    }
+
+    &.string-property,
+    &.string {
+      color: #fff9a6;
+    }
+
+    &.punctuation-chars {
+      color: #cb3f6e;
+    }
+
+    &.delimiter {
+      color: #fafafa;
+    }
+
+    &.style {
+      color: $cyan;
+    }
+
+    &.script {
+      color: $gray-200;
+
+      .token.function {
+        color: $cyan;
+      }
+
+      .token.keyword {
+        color: $cyan;
+      }
+    }
+  }
+}
+
+code.language-bash {
+  color: $gray-500;
+}
+
+code.language-markup {
+  color: $gray-200;
+
+  .token {
+
+    &.tag {
+      color: #ff93bc;
+    }
+
+    &.attr-name {
+      color: #91ebc2;
+    }
+
+
+    &.attr-value,
+    &.string-property,
+    &.string {
+      color: #fff9a6;
+    }
+
+    &.style {
+      color: $cyan;
+    }
+
+    &.script {
+      color: $cyan;
+
+      .token.function {
+        color: $cyan;
+      }
+
+      .token.keyword {
+        color: $cyan;
+      }
+    }
+
+    &.liquid {
+      // START
+      //
+
+      &-tag {
+        color: #cb3f6e;
+      }
+    }
+  }
+}
+

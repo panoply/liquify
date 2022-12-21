@@ -1,0 +1,164 @@
+{
+  "if": {
+    "prefix": "if",
+    "description": "Control flow tag: if",
+    "body": ["{% if ${1:condition} %}", "\t$2", "{% endif %}"]
+  },
+  "else": {
+    "prefix": "else",
+    "description": "Control flow tag: else",
+    "body": ["{% else %}", "\t"]
+  },
+  "elsif": {
+    "prefix": "elsif",
+    "description": "Control flow tag: elsif",
+    "body": ["{% elsif ${1:condition} %}", "\t"]
+  },
+  "if else": {
+    "prefix": "ifelse",
+    "description": "Control flow tag: if else",
+    "body": [
+      "{% if ${1:condition} %}",
+      "\t$2",
+      "{% else %}",
+      "\t$3",
+      "{% endif %}"
+    ]
+  },
+  "unless": {
+    "prefix": "unless",
+    "description": "Control flow tag: unless",
+    "body": ["{% unless ${1:condition} %}", "\t$2", "{% endunless %}"]
+  },
+  "case": {
+    "prefix": "case",
+    "description": "Control flow tag: case",
+    "body": [
+      "{% case ${1:variable} %}",
+      "\t{% when ${2:condition} %}",
+      "\t\t$3",
+      "\t{% else %}",
+      "\t\t$4",
+      "{% endcase %}"
+    ]
+  },
+  "when": {
+    "prefix": "when",
+    "description": "Control flow tag: when",
+    "body": ["{% when ${1:condition} %}", "$0"]
+  },
+  "cycle": {
+    "prefix": "cycle",
+    "description": "Iteration tag: cycle",
+    "body": ["{% cycle '${1:odd}', '${2:even}' %}"]
+  },
+  "cycle group": {
+    "prefix": "cyclegroup",
+    "description": "Iteration tag: cycle group",
+    "body": ["{% cycle '${1:group name}': '${2:odd}', '${3:even}' %}"]
+  },
+  "for": {
+    "prefix": "for",
+    "description": "Iteration tag: for",
+    "body": [
+      "{% for ${1:item} in ${2:collection} %}",
+      "\t$3",
+      "{% endfor %}"
+    ]
+  },
+  "Option limit": {
+    "prefix": "limit",
+    "description": "For loops option",
+    "body": ["limit: ${1:5}"]
+  },
+  "Option offset": {
+    "prefix": "offset",
+    "description": "For loops option",
+    "body": ["offset: ${1:0}"]
+  },
+  "Option reversed": {
+    "prefix": "reversed",
+    "description": "For loops option",
+    "body": ["reversed"]
+  },
+  "break": {
+    "prefix": "break",
+    "description": "Iteration tag: break",
+    "body": ["{% break %}"]
+  },
+  "continue": {
+    "prefix": "continue",
+    "description": "Iteration tag: continue",
+    "body": ["{% continue %}"]
+  },
+  "tablerow": {
+    "prefix": "tablerow",
+    "description": "Iteration tag: tablerow",
+    "body": [
+      "{% tablerow ${1:item} in ${2:collection} cols: ${3:2} %}",
+      "\t$4",
+      "{% endtablerow %}"
+    ]
+  },
+  "assign": {
+    "prefix": "assign",
+    "description": "Variable tag: assign",
+    "body": ["{% assign ${1:variable} = ${2:value} %}"]
+  },
+  "increment": {
+    "prefix": "increment",
+    "description": "Variable tag: increment",
+    "body": ["{% increment ${1:variable} %}"]
+  },
+  "decrement": {
+    "prefix": "decrement",
+    "description": "Variable tag: decrement",
+    "body": ["{% decrement ${1:variable} %}"]
+  },
+  "capture": {
+    "prefix": "capture",
+    "description": "Variable tag: capture",
+    "body": ["{% capture ${1:variable} %}$2{% endcapture %}"]
+  },
+  "include": {
+    "prefix": "include",
+    "description": "Theme tag: include",
+    "body": ["{% include '${1:snippet}' %}"]
+  },
+  "include with parameters": {
+    "prefix": "includewith",
+    "description": "Theme tag: include with parameters",
+    "body": ["{% include '${1:snippet}', ${2:variable}: ${3:value} %}"]
+  },
+  "section": {
+    "prefix": "section",
+    "description": "Theme tag: section",
+    "body": ["{% section '${1:snippet}' %}"]
+  },
+  "raw": {
+    "prefix": "raw",
+    "description": "Theme tag: raw",
+    "body": ["{% raw %}$1{% endraw %}"]
+  },
+  "layout": {
+    "prefix": "layout",
+    "description": "Theme tag: layout",
+    "body": ["{% layout '${1:layout}' %}"]
+  },
+  "no layout": {
+    "prefix": "layoutnone",
+    "description": "Theme tag: layout none",
+    "body": ["{% layout none %}"]
+  },
+  "paginate": {
+    "prefix": "paginate",
+    "description": "Theme tag: paginate",
+    "body": [
+      "{% paginate ${1:collection.products} by ${2:12} %}",
+      "\t{% for ${3:product} in ${1:collection.products} %}",
+      "\t\t$4",
+      "\t{% endfor %}",
+      "{% endpaginate %}"
+    ]
+  }
+}

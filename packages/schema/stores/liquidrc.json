@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "VSCode Liquid Extension",
+  "description": "This file is used to control settings for the vscode-liquid extension.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "engine": {
+      "injectObject": "./vscode-configuration.json#liquid.engine"
+    },
+    "files": {
+      "type": "object",
+      "properties": {
+        "locales": {
+          "type": "array",
+          "markdownDescription": "./descriptions/vscode/files/locales.md",
+          "items": {
+            "uniqueItems": true,
+            "type": "string"
+          }
+        },
+        "snippets": {
+          "type": "array",
+          "markdownDescription": "./descriptions/vscode/files/snippets.md",
+          "items": {
+            "uniqueItems": true,
+            "type": "string"
+          }
+        },
+        "settings": {
+          "type": "array",
+          "markdownDescription": "./descriptions/vscode/files/settings.md",
+          "items": {
+            "uniqueItems": true,
+            "type": "string"
+          }
+        },
+        "sections": {
+          "type": ["array", "string"],
+          "markdownDescription": "./descriptions/vscode/files/sections.md",
+          "items": {
+            "uniqueItems": true,
+            "type": "string"
+          }
+        }
+      }
+    },
+    "format": {
+      "injectObject": "./prettify.json"
+    },
+    "ignore": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "wrap": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "useTabs": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "indentSize": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "preserveLine": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "endNewLine": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "crlf": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "liquid": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "markup": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "script": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "style": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    },
+    "json": {
+      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
+    }
+  }
+}

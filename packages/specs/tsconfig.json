@@ -1,0 +1,53 @@
+{
+  "extends": "@liquify/tsconfig",
+  "exclude": [
+    "node_modules/**",
+    "package/**",
+    "test"
+  ],
+  "include": [
+    "tsup.config.ts",
+    "scripts/enums.js",
+    "src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "incremental": false,
+    "allowJs": true,
+    "removeComments": false,
+    "outDir": "package",
+    "baseUrl": ".",
+    "paths": {
+      "html": [
+        "./src/html/index.ts",
+      ],
+      "html/*": [
+        "./src/html/controller/*.ts",
+        "./src/html/*.ts",
+        "!./src/html/index.ts"
+      ],
+      "html/data": [
+        "./src/html/data/index.ts",
+      ],
+      "liquid": [
+        "./src/liquid/index.ts",
+      ],
+      "liquid/*": [
+        "./src/liquid/controller/*.ts",
+        "./src/liquid/*.ts",
+        "!./src/liquid/index.ts"
+      ],
+      "liquid/data": [
+        "./src/liquid/data/index.ts",
+      ],
+      "utils/*": [
+        "./src/utils/*.ts",
+      ],
+      "types/*": [
+        "./src/types/*.ts",
+      ],
+      "enums": [
+        "./scripts/enums.js"
+      ]
+    }
+  }
+}

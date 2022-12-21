@@ -1,0 +1,108 @@
+{
+  "name": "@liquify/ava",
+  "version": "0.0.5",
+  "description": "AVA Test runner extension pack for projects contained in the Liquify monorepo workspace.",
+  "author": {
+    "name": "Νίκος Σαβίδης",
+    "email": "n.savvidis@gmx.com"
+  },
+  "license": "MIT",
+  "bin": {
+    "tests": "./package/cli.js"
+  },
+  "type": "module",
+  "main": "./package/*",
+  "exports": {
+    "./parser": {
+      "types": "./package/parser.d.ts",
+      "require": "./package/parser.cjs",
+      "import": "./package/parser.js",
+      "node": "./package/parser.cjs",
+      "default": "./package/parser.js"
+    },
+    "./prettify": {
+      "types": "./package/prettify.d.ts",
+      "require": "./package/prettify.cjs",
+      "import": "./package/prettify.js",
+      "node": "./package/prettify.cjs",
+      "default": "./package/prettify.js"
+    }
+  },
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/packages/ava"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup --minify",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava --verbose",
+    "postpublish": "pnpm update @liquify/ava -r"
+  },
+  "tsup": {
+    "entry": [
+      "./src/cli.ts",
+      "./src/parser.ts",
+      "./src/prettify.ts"
+    ],
+    "outDir": "package",
+    "clean": true,
+    "treeshake": true,
+    "dts": {
+      "entry": [
+        "./src/parser.ts",
+        "./src/prettify.ts"
+      ],
+      "resolve": true
+    },
+    "external": [
+      "chalk",
+      "cli-highlight",
+      "fs-extra",
+      "ava",
+      "@liquify/prettify",
+      "@liquify/liquid-parser"
+    ],
+    "splitting": false,
+    "format": [
+      "esm",
+      "cjs"
+    ]
+  },
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "ignorePatterns": [
+      "package/*",
+      "index.cjs",
+      "index.js",
+      "index.d.ts"
+    ],
+    "extends": [
+      "@liquify/eslint-config"
+    ]
+  },
+  "devDependencies": {
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/liquid-parser": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/prettify": "workspace:*",
+    "@liquify/tsconfig": "workspace:*",
+    "@types/node": "^18.11.9",
+    "@types/prompts": "^2.4.1",
+    "ava": "^5.0.1",
+    "tsup": "^6.4.0"
+  },
+  "peerDependencies": {
+    "ava": "^5.0.1"
+  },
+  "dependencies": {
+    "chalk": "^5.1.2",
+    "cli-highlight": "^2.1.11",
+    "minimist": "^1.2.7",
+    "prompts": "^2.4.2"
+  }
+}

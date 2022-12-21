@@ -1,0 +1,32 @@
+---
+Test multiline tags. These are tags which have content indented onto a newline
+---
+
+{% render 'snippet' with products as product,
+
+param_1: 'foo',
+param_2: 'foo',
+param_2: 'foo',
+
+param_2: 'foo'
+,param_2: 'foo'
+
+,param_2: 'foo'
+param_2: 'foo', param_2: 'foo',
+ %}
+
+
+{% render 'snippet'
+
+,
+
+param_1: 'foo',
+param_2: 'foo',
+param_2: 'foo',
+
+param_2: 'foo'
+,param_2: 'foo'
+
+,param_2: 'foo'
+param_2: 'foo', param_2: 'foo',
+ %}

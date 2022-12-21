@@ -1,0 +1,19 @@
+---
+Testing Liquid `lineBreakOperator` rule within output tokens. This structure focuses on the pipe and filter structures. The placement of the filter and pipe vary, wherein the pipe and filter contain no spaces. Excessive newlines are used and the general structure is chaotic.
+---
+
+{{ object.prop
+
+  | append: 'one'
+
+| replace: 'this', 'that'
+
+| prepend: 'foo'
+
+   | append: 'bar'
+
+
+   | append: 'baz'
+}}
+
+

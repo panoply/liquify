@@ -1,0 +1,17 @@
+packages:
+  - "."
+  - "configs/tsconfig"
+  - "configs/prettier-config"
+  - "configs/eslint-config"
+  - "packages/ava"
+  - "packages/highlight"
+  - "packages/prettify/docs"
+  - "packages/prettify"
+  - "packages/schema"
+  - "packages/specs"
+  - "packages/parser"
+  - "packages/server"
+  - "packages/vscode"
+  - "packages/moloko"
+  - "docs"
+

@@ -1,0 +1,36 @@
+{%- if page.url == '/' -%}
+  {%- assign drawer = '' -%}
+{%- else -%}
+  {%- assign drawer = 'drawer-active' -%}
+{%- endif -%}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+      {{ title }}
+    </title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+    <link rel="preload" href="https://use.typekit.net/zeg4olx.css" as="style">
+    <link rel="stylesheet" href="https://use.typekit.net/zeg4olx.css">
+    <link href="{{'/style.css' | url }}" rel="stylesheet">
+    <script src="{{'/bundle.min.js' | url }}" type="module"></script>
+  </head>
+  <body>
+
+    {%- unless page.url == '/playground/prettify/' -%}{%- endunless -%}
+    {%- if page.url == '/' -%}
+      {% include 'landing' %}
+
+    {%- endif -%}
+
+    {{ content }}
+
+
+    {% svgsprite %}
+
+  </body>
+</html>

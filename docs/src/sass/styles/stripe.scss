@@ -1,0 +1,32 @@
+.stripe {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
+  color: #666;
+  font-weight: 500;
+  font-size: $font-size-xs;
+  font-family: $font-family-heading;
+  text-align: center;
+  text-transform: uppercase;
+
+  &::before {
+    margin-right: 8px;
+  }
+
+  &::after {
+    margin-left: 8px;
+  }
+
+  &::before,
+  &::after {
+    flex-grow: 1;
+    height: 0.01rem;
+    font-size: 0;
+    line-height: 0;
+    background: #666;
+    content: "";
+  }
+}

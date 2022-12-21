@@ -1,0 +1,112 @@
+{
+  "name": "@liquify/docs",
+  "version": "0.1.0.beta-01",
+  "description": "Liquify IDE Website",
+  "author": "Nikolas Savvidis <nicos@gmx.com>",
+  "license": "ISC",
+  "main": ".eleventy.js",
+  "private": true,
+  "scripts": {
+    "dev": "rm -rf public && concurrently \"pnpm run ts:watch\" \"pnpm run sass:watch\" \"pnpm run 11ty:watch\"",
+    "build": "rm -rf public && pnpm run ts:build && pnpm run sass:build && pnpm run 11ty:build && pnpm run postbuild",
+    "postbuild": "postcss --config scripts/postcss.config.cjs public/style.css -r --no-map && rm -rf public/style.css.map",
+    "deploy": "netlify deploy",
+    "11ty:watch": "eleventy --config=scripts/eleventy.cjs --serve --watch",
+    "11ty:build": "eleventy --config=scripts/eleventy.cjs",
+    "ts:watch": "esbuild src/app/bundle.ts --outfile=public/bundle.min.js --format=esm --bundle --watch",
+    "ts:build": "esbuild src/app/bundle.ts --outfile=public/bundle.min.js --format=esm --bundle --minify",
+    "sass:build": "sass ./src/sass/stylesheet.scss:public/style.css",
+    "sass:watch": "sass ./src/sass/stylesheet.scss:public/style.css --watch",
+    "make": "mkdirp ./public",
+    "clean": "rimraf public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "stylelint": {
+    "extends": [
+      "@sissel/stylelint-config"
+    ],
+    "ignoreFiles": [
+      "public",
+      "node_modules"
+    ],
+    "rules": {
+      "rule-empty-line-before": [
+        "always-multi-line",
+        {
+          "ignore": [
+            "after-comment",
+            "first-nested"
+          ]
+        }
+      ]
+    }
+  },
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "extends": "@liquify/eslint-config",
+    "ignorePatterns": [
+      "*.html",
+      "*.liquid"
+    ]
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@brixtol/bootstrap",
+        "bootstrap"
+      ]
+    }
+  },
+  "dependencies": {
+    "@accede-web/tablist": "^2.0.1",
+    "@liquify/moloko": "workspace:*",
+    "@liquify/prettify": "workspace:*",
+    "countup.js": "^2.3.2",
+    "freezeframe": "^5.0.2",
+    "mergerino": "^0.4.0",
+    "mithril": "^2.2.2",
+    "prismjs": "^1.29.0",
+    "rambdax": "^8.1.0",
+    "relapse": "^0.5.0",
+    "spx": "0.0.4-beta.1",
+    "stimulus": "^3.1.1"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^1.0.2",
+    "@11ty/eleventy-navigation": "^0.3.5",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^4.2.0",
+    "@brixtol/bootstrap": "^1.4.2",
+    "@brixtol/tsutils": "^1.4.1",
+    "@fullhuman/postcss-purgecss": "^5.0.0",
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@panoply/11ty": "^0.1.0",
+    "@sissel/stylelint-config": "^1.0.0",
+    "@types/aws-lambda": "^8.10.108",
+    "@types/markdown-it": "*",
+    "@types/mergerino": "^0.4.0",
+    "@types/mithril": "^2.0.11",
+    "@types/prismjs": "^1.26.0",
+    "autoprefixer": "^10.4.13",
+    "concurrently": "^7.5.0",
+    "cssnano": "^5.1.14",
+    "eleventy-plugin-svg-contents": "^0.7.0",
+    "eleventy-plugin-svg-sprite": "^2.0.0",
+    "esbuild": "^0.15.13",
+    "markdown-it": "^13.0.1",
+    "markdown-it-anchor": "^8.6.5",
+    "netlify-cli": "^12.1.0",
+    "postcss": "^8.4.18",
+    "postcss-cli": "^10.0.0",
+    "stylelint": "^14.14.1",
+    "tsup": "^6.4.0",
+    "type-fest": "^3.2.0"
+  },
+  "repository": {
+    "url": "git+https://github.com/panoply/liquify.dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify.dev/issues"
+  },
+  "homepage": "https://github.com/panoply/liquify.dev#readme"
+}

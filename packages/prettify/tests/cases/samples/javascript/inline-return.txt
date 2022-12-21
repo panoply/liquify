@@ -1,0 +1,110 @@
+---
+Tests `inlineReturn` beautification rule.
+---
+
+
+function () {
+
+  if(x === true) return 'x'
+  else return x
+
+}
+
+
+
+function () {
+
+  if(x === true)  {
+    if(x) {
+      foo
+    } else if (xx) {
+
+      if(x) {
+        if(foo) {
+          return x
+        }
+      }
+
+      if(y) return d
+    }
+  } else {
+    return x
+}
+}
+
+
+function () {
+
+  if(foo === true) return 'x'
+  if(bar === true) return 'x'
+  if(baz === true) return 'x'
+
+  return x
+
+}
+
+function () {
+
+   if (y === 1) {
+          x = f
+        } else if (f === 22) {
+          x = 1;
+        } else {
+          return x
+          if (1 === 4) {
+            return x
+          } else if (2) {
+            if (3) return foo; else return xx;
+
+          }
+        }
+
+}
+
+
+function () {
+
+  if(foo === true) return 'x'
+  if(bar === true) return 'x'
+  if(baz === true) return 'x'
+
+  if(x === true && y === false) {
+    return 'x'
+  }
+
+  if(y === 1) {
+    x = f
+  } else if (f === 2) {
+    x = 1
+  } else {
+    return x
+    if(x === 4) {
+      return x
+    } else if (9) {
+      if(xs) {
+        return f9
+      } else {
+        return x9
+        }
+    }
+  }
+
+  if(d === c) {
+    f == 2;
+    for (let x in { foo: bar, doo: yoo }) {
+      g = x
+      if(g === 'ff') return g
+    }
+    return x
+  }
+
+
+if(y === 1) {
+    x = f
+  } else if (ctype === 'string') {
+          string();
+        } else if (ctype.indexOf('template_string') === 0)
+  return x
+
+}
+
