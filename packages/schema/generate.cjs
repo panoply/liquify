@@ -1,5 +1,5 @@
 const { join } = require('node:path');
-const { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } = require('node:fs');
+const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('node:fs');
 
 const cwd = process.cwd();
 
@@ -86,14 +86,19 @@ function mapContent () {
   try {
 
     /**
-     * Reads all files contained in the `/stores` directory
-     */
-    const files = readdirSync(stores);
-
-    /**
      * Ensure we are only traversing JSON files.
      */
-    const items = files.filter(file => file.endsWith('.json'));
+    const items = [
+      'prettify.json',
+      'liquidrc.json',
+      'shopify-sections.json',
+      'shopify-locales.json',
+      'shopify-settings_data.json',
+      'shopify-templates.json',
+      'shopify-settings_schema.json',
+      'specifications.json',
+      'vscode-configuration.json'
+    ];
 
     /* -------------------------------------------- */
     /* LOOP THROUGH FILES                           */
