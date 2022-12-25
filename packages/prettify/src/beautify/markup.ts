@@ -1830,8 +1830,10 @@ prettify.beautify.markup = function (options: Options) {
             rules.commentNewline === true
           )
         ) && (
-          options.preserveLine === 0 ||
+          options.preserveLine === 0 || (
+            build.length > 0 &&
             build[build.length - 1].lastIndexOf(NWL) + 1 < 2
+          )
         )) {
 
           // When preserve line is zero, we will insert
