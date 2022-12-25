@@ -148,6 +148,100 @@ export const definitions: Definitions = {
   },
 
   /* -------------------------------------------- */
+  /* LIQUID:RULES                                 */
+  /* -------------------------------------------- */
+
+  delimiterTrims: {
+    default: 'preserve',
+    description: 'How delimiter whitespace trim dashes should handled on Liquid tokens. You should avoid setting this to force in order to avoid stripping whitespace between text content.',
+    lexer: 'markup',
+    type: 'select',
+    values: [
+      {
+        rule: 'preserve',
+        description: 'All trim dash occurances of trims intact'
+      },
+      {
+        rule: 'strip',
+        description: 'Removes all trim dash occurances for tags and output tokens'
+      },
+      {
+        rule: 'force',
+        description: 'Applies trime dashes to all tags and output tokens'
+      },
+      {
+        rule: 'tags',
+        description: 'Applies trim dashes to tags tokens only'
+      },
+      {
+        rule: 'output',
+        description: 'Applies trim dashes to output object tokens only'
+      }
+    ]
+  },
+  normalizeSpacing: {
+    default: true,
+    description: 'Whether or not to normalize the distributed spacing contained in Liquid tokens.',
+    lexer: 'markup',
+    type: 'boolean'
+  },
+
+  lineBreakSeparator: {
+    default: 'default',
+    description: 'Controls the placement of Liquid tag separator type characters in newline structures.',
+    lexer: 'markup',
+    type: 'select',
+    values: [
+      {
+        rule: 'default',
+        description: 'Leave line break character intace'
+      },
+      {
+        rule: 'before',
+        description: 'Place line break character at the start of expressions'
+      },
+      {
+        rule: 'after',
+        description: 'Place line break character at the end of expressions'
+      }
+    ]
+  },
+  valueForce: {
+    default: 'intent',
+    description: 'Controls force indentation applied in accordance with the attribute value expressions. This rule is Liquid specific.',
+    lexer: 'markup',
+    type: 'select',
+    values: [
+      {
+        rule: 'wrap',
+        description: 'Apply by wrap'
+      },
+      {
+        rule: 'newline',
+        description: 'Apply when newlines'
+      },
+      {
+        rule: 'intent',
+        description: 'Apply on either newline or wrap'
+      },
+      {
+        rule: 'always',
+        description: 'Always apply'
+      },
+      {
+        rule: 'never',
+        description: 'Never apply'
+      }
+    ]
+  },
+  ignoreTagList: {
+    default: [],
+    description: 'A lis tof liquid tag to ignore',
+    lexer: 'liquid',
+    type: 'array'
+  },
+
+  /* -------------------------------------------- */
   /* LEXER:MARKUP                                 */
   /* -------------------------------------------- */
 
@@ -187,34 +281,6 @@ export const definitions: Definitions = {
       }
     ]
   },
-  delimiterTrims: {
-    default: 'preserve',
-    description: 'How delimiter whitespace trim dashes should handled on Liquid tokens. You should avoid setting this to force in order to avoid stripping whitespace between text content.',
-    lexer: 'markup',
-    type: 'select',
-    values: [
-      {
-        rule: 'preserve',
-        description: 'All trim dash occurances of trims intact'
-      },
-      {
-        rule: 'strip',
-        description: 'Removes all trim dash occurances for tags and output tokens'
-      },
-      {
-        rule: 'force',
-        description: 'Applies trime dashes to all tags and output tokens'
-      },
-      {
-        rule: 'tags',
-        description: 'Applies trim dashes to tags tokens only'
-      },
-      {
-        rule: 'output',
-        description: 'Applies trim dashes to output object tokens only'
-      }
-    ]
-  },
   forceAttribute: {
     default: false,
     description: 'If all markup attributes should be indented each onto their own line. This option accepts either a boolean or number value, depending on your preferences you can either force attributes based a count limit, disable forcing or always enable enforcing.',
@@ -243,12 +309,6 @@ export const definitions: Definitions = {
     lexer: 'markup',
     type: 'boolean'
   },
-  normalizeSpacing: {
-    default: true,
-    description: 'Whether or not to normalize the distributed spacing contained in Liquid tokens.',
-    lexer: 'markup',
-    type: 'boolean'
-  },
   preserveAttributes: {
     default: false,
     description: 'If markup tags should have their insides preserved. This option is only available to markup and does not support child tokens that require a different lexer.',
@@ -266,26 +326,6 @@ export const definitions: Definitions = {
     description: 'Markup self-closing tags end will end with " />" instead of "/>".',
     lexer: 'markup',
     type: 'boolean'
-  },
-  lineBreakSeparator: {
-    default: 'default',
-    description: 'Controls the placement of Liquid tag separator type characters in newline structures.',
-    lexer: 'markup',
-    type: 'select',
-    values: [
-      {
-        rule: 'default',
-        description: 'Leave line break character intace'
-      },
-      {
-        rule: 'before',
-        description: 'Place line break character at the start of expressions'
-      },
-      {
-        rule: 'after',
-        description: 'Place line break character at the end of expressions'
-      }
-    ]
   },
   ignoreScripts: {
     default: false,
@@ -328,11 +368,11 @@ export const definitions: Definitions = {
     default: false,
     type: 'boolean'
   },
-  compressCSS: {
-    lexer: 'style',
-    description: 'If CSS should be beautified in a style where the properties and values are minifed for faster reading of selectors.',
-    default: false,
-    type: 'boolean'
+  atRuleSpace: {
+    default: true,
+    description: 'Insert a single whitespace character betwen @ rules.',
+    type: 'boolean',
+    lexer: 'style'
   },
 
   /* -------------------------------------------- */
