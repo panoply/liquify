@@ -53,9 +53,9 @@ export const prettify: Prettify = (function () {
       language: ''
     },
     options: {
-      lexer: 'auto',
-      language: 'text',
-      languageName: 'Plain Text',
+      lexer: 'markup',
+      language: 'liquid',
+      languageName: 'Liquid',
       mode: 'beautify',
       indentLevel: 0,
       crlf: false,
