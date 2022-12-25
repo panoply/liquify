@@ -29,10 +29,10 @@
       "default": 3,
       "markdownDescription": "./descriptions/format/global/preserveLine.md"
     },
-    "endNewLine": {
+    "endNewline": {
       "type": "boolean",
       "default": false,
-      "markdownDescription": "./descriptions/format/global/endNewLine.md"
+      "markdownDescription": "./descriptions/format/global/endNewline.md"
     },
     "crlf": {
       "type": "boolean",
@@ -371,6 +371,11 @@
       "additionalProperties": false,
       "markdownDescription": "Beautification rules for the following _style_ languages:\n\n- **CSS**\n- **SCSS**\n- **\n- **SASS**\n- **LESS**\n\n. Options provided here will also be applied to the following markup embedded language blocks.",
       "properties": {
+        "atRuleSpace": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "./descriptions/format/style/atRuleSpace.md"
+        },
         "commentNewline": {
           "type": "boolean",
           "default": false,
