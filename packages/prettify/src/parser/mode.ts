@@ -4,7 +4,7 @@ import { parse } from '@parser/parse';
 import { size, repeatChar } from '@utils/helpers';
 import { NIL } from '@utils/chars';
 import { keys } from '@utils/native';
-import { detect, reference } from '@parser/language';
+import { detect, setLexer, setLanguageName, reference } from '@parser/language';
 
 /**
  * Parse Input
@@ -149,6 +149,11 @@ export function execute (prettify: Prettify) {
     prettify.options.language = 'text';
     prettify.options.languageName = 'Plain Text';
     prettify.options.lexer = 'markup';
+
+  } else if (prettify.options.lexer === 'auto' && prettify.options.language !== 'text') {
+
+    prettify.options.lexer = setLexer(prettify.options.language);
+    prettify.options.languageName = setLanguageName(prettify.options.language);
 
   } else if (prettify.options.language === 'auto' || prettify.options.language === undefined) {
 
