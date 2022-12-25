@@ -2,7 +2,7 @@ import { assign } from '@utils/native';
 import { cc, NIL } from '@utils/chars';
 import { is } from '@utils/helpers';
 import { Language, LanguageNames, Prettify } from 'types/prettify';
-import { prettify } from '@prettify/model';
+import { prettify } from '@prettify/*';
 
 export const lexmap = {
   markup: 'markup',
@@ -50,7 +50,7 @@ export function setLexer (input: string) {
 
 }
 
-function setLanguageName (input: string) {
+export function setLanguageName (input: string) {
 
   if (typeof input !== 'string' || map[input] === undefined) return input.toUpperCase();
 
