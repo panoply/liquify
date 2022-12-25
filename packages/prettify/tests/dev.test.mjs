@@ -7,7 +7,7 @@ test('develop', async t => {
   await dev(t)(async (source) => {
 
     const output = prettify.formatSync(source, {
-      language: 'liquid',
+
       markup: {
         selfCloseSpace: true,
         forceAttribute: false,
@@ -15,6 +15,8 @@ test('develop', async t => {
       }
 
     });
+
+    console.log(prettify.options.rules);
 
     return {
       repeat: 0,
