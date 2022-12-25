@@ -12,24 +12,16 @@
       "type": "object",
       "properties": {
         "locales": {
-          "type": "array",
-          "markdownDescription": "./descriptions/vscode/files/locales.md",
-          "items": {
-            "uniqueItems": true,
-            "type": "string"
-          }
+          "type": "string",
+          "markdownDescription": "./descriptions/vscode/files/locales.md"
+        },
+        "settings": {
+          "type": "string",
+          "markdownDescription": "./descriptions/vscode/files/settings.md"
         },
         "snippets": {
           "type": "array",
           "markdownDescription": "./descriptions/vscode/files/snippets.md",
-          "items": {
-            "uniqueItems": true,
-            "type": "string"
-          }
-        },
-        "settings": {
-          "type": "array",
-          "markdownDescription": "./descriptions/vscode/files/settings.md",
           "items": {
             "uniqueItems": true,
             "type": "string"
