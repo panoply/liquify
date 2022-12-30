@@ -46,9 +46,6 @@
     "wrap": {
       "deprecationMessage": "./descriptions/format/deprecated/structure.md"
     },
-    "useTabs": {
-      "deprecationMessage": "./descriptions/format/deprecated/structure.md"
-    },
     "indentSize": {
       "deprecationMessage": "./descriptions/format/deprecated/structure.md"
     },
