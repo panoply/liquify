@@ -1,6 +1,6 @@
 {
   "name": "@liquify/eslint-config",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Sharable ESLint config consumed within the Liquify monorepo workspace.",
   "license": "MIT",
   "author": {
