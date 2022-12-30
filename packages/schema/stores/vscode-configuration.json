@@ -124,7 +124,7 @@
       "deprecationMessage": "./descriptions/vscode/deprecated/format.indentSize.md"
     },
     "liquid.format.endNewLine": {
-      "deprecationMessage": "./descriptions/vscode/deprecated/format.endNewline.md"
+      "deprecationMessage": "./descriptions/vscode/deprecated/format.endNewLine.md"
     },
     "liquid.format.crlf": {
       "deprecationMessage": "./descriptions/vscode/deprecated/format.crlf.md"
@@ -155,9 +155,6 @@
         },
         "preserveLine": {
           "injectObject": "./prettify.json#preserveLine"
-        },
-        "useTabs": {
-          "injectObject": "./prettify.json#useTabs"
         },
         "crlf": {
           "injectObject": "./prettify.json#crlf"
