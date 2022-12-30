@@ -33,13 +33,13 @@ export default defineConfig([
 
       /* WORKERS ---------------------------------- */
 
-      'moloko/workers/worker-base': './node_modules/.ace/build/src/worker-base.js',
-      'moloko/workers/worker-css': './node_modules/.ace/build/src/worker-css.js',
-      'moloko/workers/worker-html': './node_modules/.ace/build/src/worker-html.js',
-      'moloko/workers/worker-javascript': './node_modules/.ace/build/src/worker-javascript.js',
-      'moloko/workers/worker-json': './node_modules/.ace/build/src/worker-json.js',
-      'moloko/workers/worker-xml': './node_modules/.ace/build/src/worker-xml.js',
-      'moloko/workers/worker-yaml': './node_modules/.ace/build/src/worker-yaml.js',
+      'worker-base': './node_modules/.ace/build/src-min/worker-base.js',
+      'worker-css': './node_modules/.ace/build/src-min/worker-css.js',
+      'worker-html': './node_modules/.ace/build/src-min/worker-html.js',
+      'worker-javascript': './node_modules/.ace/build/src-min/worker-javascript.js',
+      'worker-json': './node_modules/.ace/build/src-min/worker-json.js',
+      'worker-xml': './node_modules/.ace/build/src-min/worker-xml.js',
+      'worker-yaml': './node_modules/.ace/build/src-min/worker-yaml.js',
 
       /* SAMPLES ------------------------------------ */
 

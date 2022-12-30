@@ -1,8 +1,9 @@
 #!/bin/bash
 
-ace=./node_modules/.ace          # ACE OUTPUT DIRECTORY LOCATION
-src=./src/build                  # SRC FILES USED WHEN BUILDING ACE
-out=../..                        # CD DIRECTORY TO GET BACK TO ROOT
+ver=v1.14.0                       # ACE VERSION TO CLONE
+ace=./node_modules/.ace           # ACE OUTPUT DIRECTORY LOCATION
+src=./src/build                   # SRC FILES USED WHEN BUILDING ACE
+out=../..                         # CD DIRECTORY TO GET BACK TO ROOT
 
 #---------------------------------------------------------------------------
 # DOWNLOAD THE ACE PROJECT AND INSTALL
@@ -10,19 +11,19 @@ out=../..                        # CD DIRECTORY TO GET BACK TO ROOT
 
 # 1. REMOVE THE TEMP DIRECTORY WHERE ACE WILL BUILD
 echo -e "\033[0;32mCleaning Ace Build Directory\033[0m"
-#rm -rf $ace
+rm -rf $ace
 
 # 2. COMPILE THE POTION THEME
 echo -e "\033[0;32mCompiling Potion Theme\033[0m"
-sass ./src/theme/potion.scss:src/build/theme/potion.css --no-source-map
+node ./scripts/ace.mjs
 
 # 3. CLONE ACE FROM GITHUB
-echo -e "\033[0;32mCloing Ace from https://github.com/ajaxorg/ace.git\033[0m"
-#git clone https://github.com/ajaxorg/ace.git $ace/
+echo -e "\033[0;32mCloning Ace $ver from https://github.com/ajaxorg/ace.git\033[0m"
+git -c advice.detachedHead=false clone --depth 1 --branch $ver https://github.com/ajaxorg/ace.git $ace/
 
 # 4. CD INTO THE DIRECTORY AND RUN NPM INSTALL
 echo -e "\033[0;32mInstall Ace\033[0m"
-#cd $ace && npm install && cd $out
+cd $ace && npm install --silent && cd $out
 
 #---------------------------------------------------------------------------
 # REPLACE ACE LIQUID MODE
@@ -78,11 +79,11 @@ cp $src/mode/liquidts-highlight.js $ace/src/mode/liquidts_highlight_rules.js
 
 # 15. COPY THE POTION THEME JS EXPORT
 echo -e "\033[0;32mCreating Potion Theme Export\033[0m"
-cp $src/theme/potion.js $ace/lib/ace/theme/potion.js
+cp $src/theme/potion.js $ace/src/theme/potion.js
 
 # 16. COPY THE POTION THEME CSS EXPORT
 echo -e "\033[0;32mCreating Potion Theme CSS\033[0m"
-cp $src/theme/potion.css $ace/lib/ace/theme/potion.css
+cp $src/theme/potion.css.js $ace/src/theme/potion.css.js
 
 #---------------------------------------------------------------------------
 # REMOVE THE ACE TYPE DECLARATION
@@ -103,15 +104,3 @@ cd $ace && node Makefile.dryice.js  && cd $out
 # 19. CREATE THE ACE BUILD MINIFIED FOR WORKER SUPPORT
 echo -e "\033[0;32mGenerating Minified Ace Build\033[0m"
 cd $ace && node Makefile.dryice.js --m  && cd $out
-
-#---------------------------------------------------------------------------
-# COPY WORKER FILES FROM ACE TO BUNDLE
-#---------------------------------------------------------------------------
-
-echo -e "\033[0;32mCopying Ace Workers CSS\033[0m"
-cp $ace/build/src-min/worker-base.js ./package/worker-base.js &&
-cp $ace/build/src-min/worker-css.js ./package/worker-css.js &&
-cp $ace/build/src-min/worker-html.js ./package/worker-html.js &&
-cp $ace/build/src-min/worker-javascript.js ./package/worker-javascript.js &&
-cp $ace/build/src-min/worker-json.js ./package/worker-json.js &&
-cp $ace/build/src-min/worker-xml.js ./package/worker-xml.js
