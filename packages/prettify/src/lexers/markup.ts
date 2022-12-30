@@ -1082,7 +1082,7 @@ prettify.lexers.markup = function lexer (source: string) {
         } while (len > -1);
       }
 
-      if (is(token, cc.RAN) && grammar.embed('html', tname)) {
+      if (is(token, cc.LAN) && grammar.embed('html', tname)) {
 
         embed = true;
 
@@ -2028,10 +2028,8 @@ prettify.lexers.markup = function lexer (source: string) {
         record.token = token;
         record.types = 'comment';
 
+        return external();
       }
-
-      return external();
-
     }
 
     /**

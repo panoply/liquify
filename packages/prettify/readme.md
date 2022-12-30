@@ -45,13 +45,13 @@ Below is current support list of languages, their completion status and whether 
 | XML                 | 92% Complete | ✓           | _Safe enough to use_            |
 | HTML                | 92% Complete | ✓           | _Safe enough to use_            |
 | Liquid + HTML       | 92% Complete | ✓           | _Safe enough to use_            |
-| Liquid + CSS        | 91% Complete | ✓           | _Safe enough to use_            |
-| JSON                | 92% Complete | ✓           | _Safe enough to use_            |
+| Liquid + CSS        | 87% Complete | ✓           | _Safe enough to use_            |
+| JSON                | 88% Complete | ✓           | _Safe enough to use_            |
 | CSS                 | 92% Complete | ✓           | _Safe enough to use_            |
-| SCSS                | 85% Complete | ✓           | _Use with caution_              |
-| Liquid + JSON       | 82% Complete | ✓           | _Use with caution_              |
-| Liquid + JavaScript | 82% Complete | ✓           | _Use with caution_              |
-| JavaScript          | 82% Complete | 𐄂           | _Use with caution_              |
+| SCSS                | 82% Complete | ✓           | _Use with caution_              |
+| Liquid + JSON       | 80% Complete | ✓           | _Use with caution_              |
+| Liquid + JavaScript | 80% Complete | ✓           | _Use with caution_              |
+| JavaScript          | 78% Complete | 𐄂           | _Use with caution_              |
 | TypeScript          | 70% Complete | 𐄂           | _Avoid using, many defects_     |
 | JSX                 | 70% Complete | 𐄂           | _Avoid using, many defects_     |
 | LESS                | 60% Complete | 𐄂           | _Avoid using, many defects_     |
@@ -74,6 +74,7 @@ _Those wonderful individuals who come across any bugs or defects. Please inform 
   - [Definitions](#definitions)
 - [Rules](#options)
   - [Global Rules](#global-rules)
+  - [Liquid Rules](#liquid-rules)
   - [Markup Rules](#markup-rules)
   - [Style Rules](#style-rules)
   - [JSON Rules](#json-rules)
@@ -291,6 +292,7 @@ Prettify provides a granular set of beautification options (rules). The projects
     selfCloseSpace: false
   },
   style: {
+    atRuleSpace: false,
     commentIndent: false,
     commentNewline: false,
     correct: false,
@@ -300,7 +302,6 @@ Prettify provides a granular set of beautification options (rules). The projects
     sortProperties: false,
     sortSelectors: false,
     quoteConvert: 'none',
-    functionSpace: false,
   },
   json: {
     arrayFormat: 'default',
@@ -355,8 +356,30 @@ Global rules will be applied to all lexer modes. You cannot override globals on 
   crlf: false,
   endNewline: false,
   preserveLine: 3,
-  commentIndent: false,
   grammar: {},
+}
+```
+
+### Liquid Rules
+
+Refer to the [typings](https://github.com/panoply/prettify/blob/pre-release/types/rules/liquid.d.ts) declaration file for description. Rules will be used when formatting the following languages:
+
+- Liquid
+
+```ts
+{
+  commentIndent: false,
+  commentNewline: false,
+  delimiterTrims: 'preserve',
+  ignoreStyles: false,
+  ignoreScripts: false,
+  ignoreJson: false,
+  lineBreakSeparator: 'default',
+  normalizeSpacing: true,
+  preserveCaptures: false,
+  preserveComment: true,
+  quoteConvert: 'double',
+  valueForce: 'intent',
 }
 ```
 
@@ -373,25 +396,21 @@ Refer to the [typings](https://github.com/panoply/prettify/blob/pre-release/type
 
 ```ts
 {
-  correct: false,
+  commentIndent: false,
+  commentNewline: false,
   attributeCasing: 'preserve',
   attributeSort: false,
   attributeSortList: [],
-  delimiterTrims: 'preserve',
-  commentNewline: false,
   forceAttribute: false,
   forceLeadAttribute: false,
   forceIndent: false,
   ignoreStyles: false,
   ignoreScripts: false,
-  lineBreakSeparator: 'default',
-  normalizeSpacing: true,
   preserveAttributes: false,
   preserveComment: true,
   preserveText: true,
   quoteConvert: 'double',
-  selfCloseSpace: false,
-  valueForce: 'intent'
+  selfCloseSpace: false
 }
 ```
 
@@ -405,13 +424,16 @@ Refer to the [typings](https://github.com/panoply/prettify/blob/pre-release/type
 
 ```ts
 {
+  atRuleSpace: false,
+  commentIndent: false,
+  commentNewline: false,
   correct: false,
   classPadding: false,
   noLeadZero: false,
+  preserveComment: true,
   sortProperties: false,
   sortSelectors: false,
   quoteConvert: 'none',
-  functionSpace: false
 }
 ```
 

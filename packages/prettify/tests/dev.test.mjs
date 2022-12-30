@@ -7,16 +7,20 @@ test('develop', async t => {
   await dev(t)(async (source) => {
 
     const output = prettify.formatSync(source, {
-
+      language: 'liquid',
+      preserveLine: 2,
       markup: {
         selfCloseSpace: true,
         forceAttribute: false,
-        forceLeadAttribute: false
+        forceLeadAttribute: false,
+        ignoreScripts: false
+      },
+      script: {
+        correct: true,
+        noSemicolon: true
       }
 
     });
-
-    console.log(prettify.options.rules);
 
     return {
       repeat: 0,

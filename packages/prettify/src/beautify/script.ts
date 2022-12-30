@@ -775,12 +775,14 @@ prettify.beautify.script = (options: Options) => {
               }
 
             } else {
+
               c = data.begin[c];
             }
 
             c = c - 1;
 
           } while (c > begin);
+
         }
 
         varindex.pop();
@@ -799,6 +801,7 @@ prettify.beautify.script = (options: Options) => {
           destruct[destruct.length - 1] === true
         )
       ) {
+
         level[data.begin[a]] = -10;
         level[a - 1] = -10;
         level.push(-20);

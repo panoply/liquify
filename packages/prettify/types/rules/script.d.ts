@@ -43,6 +43,17 @@ export interface ScriptOptions {
   commentNewline?: boolean;
 
   /**
+   * **Default** `true`
+   *
+   * This will determine whether comments should always start at position
+   * `0` of each line or if comments should be indented according to the code.
+   * It is unlikely you will ever want to set this to `false` so generally, just
+   * leave it to `true`
+   *
+   */
+  commentIndent?: boolean;
+
+  /**
    * **Default: `none`**
    *
    * Emulates JSBeautify's brace_style option using existing options.
@@ -339,6 +350,13 @@ export interface ScriptOptions {
    * ```
    */
   variableList?: 'none' | 'each' | 'list';
+
+  /**
+   * **Default** `false`
+   *
+   * Prevent comment reformatting due to option wrap.
+   */
+  preserveComment?: boolean;
 
   /**
    * **Description**

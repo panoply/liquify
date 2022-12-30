@@ -172,7 +172,9 @@ export function wrapCommentBlock (config: WrapComment): [string, number] {
       if (build.slice(build.length - 20).join(NIL) === '@prettify-ignore-end') {
 
         if (liqcomm) {
+
           const d = config.chars.indexOf('{', a);
+
           if (is(config.chars[d + 1], ch.PER)) {
             const ender = config.chars.slice(d, config.chars.indexOf('}', d + 1) + 1).join(NIL);
             if (regEnd.test(ender)) config.ender = ender;
@@ -180,6 +182,7 @@ export function wrapCommentBlock (config: WrapComment): [string, number] {
         }
 
         a = a + 1;
+
         break;
       }
 
@@ -232,13 +235,8 @@ export function wrapCommentBlock (config: WrapComment): [string, number] {
 
         build.push(config.chars[a]);
 
-        if (termination === NWL && config.chars[a + 1] === NWL) {
-          break;
-        }
-
-        if (config.chars[a] === term && config.chars.slice(a - terml, a + 1).join(NIL) === termination) {
-          break;
-        }
+        if (termination === NWL && config.chars[a + 1] === NWL) break;
+        if (config.chars[a] === term && config.chars.slice(a - terml, a + 1).join(NIL) === termination) break;
 
         a = a + 1;
 
@@ -248,7 +246,9 @@ export function wrapCommentBlock (config: WrapComment): [string, number] {
 
     if (config.chars[a] === NWL) a = a - 1;
 
-    output = build.join(NIL).replace(StripEnd, NIL);
+    output = build
+      .join(NIL)
+      .replace(StripEnd, NIL);
 
     return [ output, a ];
   }
@@ -284,7 +284,7 @@ export function wrapCommentBlock (config: WrapComment): [string, number] {
       config.begin === '/*' &&
       output.indexOf(NWL) > 0 &&
       output.replace(NWL, NIL).indexOf(NWL) > 0 &&
-      (/\n(?!(\s*\*))/).test(output) === false
+      /\n(?!(\s*\*))/.test(output) === false
     )
   ) {
 
@@ -480,7 +480,8 @@ export function wrapCommentBlock (config: WrapComment): [string, number] {
  */
 export function wrapCommentLine (config: WrapComment): [string, number] {
 
-  const { wrap, preserveComment } = prettify.options;
+  const { wrap } = prettify.options;
+  const { preserveComment } = prettify.options[config.lexer];
 
   /* -------------------------------------------- */
   /* LEXICAL SCOPES                               */
