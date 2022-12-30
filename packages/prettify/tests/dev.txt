@@ -1,19 +1,46 @@
-<!-- TEST: Shopify Schema Tag Block -->
-
-<ul><li>hello</li></ul>
-
-<!-- @prettify-ignore-start -->
+{% capture foo %}   I will not be formatter   {% endcapture %}
 
 
-{%- liquid
-  if
-    foo == bar
-elsif
-    'foo'
-  endif
-  assign name = 'bar' | filter: 100
--%}
+<div
+  class="hero col mt-{{ section.settings.mt }} mb-{{ section.settings.mb }}"
+  data-carousel-desktop-value="1"
+  data-carousel-draggable-value="{{ section.settings.draggable }}"
+  data-carousel-duration-value="{{ section.settings.duration }}"
+  {% if condition %}
+  data-carousel-hydrate-value="true"
+  data-carousel-id-value="{{ section.id | base64_encode }}"
+  {% else %}
+  data-carousel-interval-value="{{ section.settings.interval }}"
+  {% endif %}
+  data-carousel-loop-value="{{ section.settings.loop }}"
+  data-carousel-mobile-value="1"
+  data-carousel-tablet-value="1"
+  data-controller="carousel">
 
-<!-- @prettify-ignore-end -->
+  <script>
 
-<br>
+  </script>
+
+  {% if section.settings.buttons %}
+    <div
+      class="previous d-flex ai-center"
+      {% if section.settings.buttons %}
+      {% endif %}>
+      <button
+        aria-label="Previous"
+        data-action="click->carousel#prev"
+        type="button">
+        <icon name="chevron-left" />
+      </button>
+    </div>
+    <div class="next d-flex ai-center">
+      <button
+        aria-label="Next"
+        data-action="click->carousel#next"
+        type="button">
+        <icon name="chevron-right" />
+      </button>
+    </div>
+  {% endif %}
+
+</div>

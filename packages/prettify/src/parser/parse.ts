@@ -50,7 +50,7 @@ export const parse = new class Parse {
    * It maintains a store which is generated in the markup lexer and used within
    * the beautify process.
    */
-  public attributes: Set<number> = new Set();
+  public attributes: Map<number, boolean> = new Map();
 
   /**
    * Stores the declared variable names for the script lexer.
