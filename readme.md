@@ -70,7 +70,6 @@ These are an assortment a different packages which were developed for specific p
 
 - [@liquify/moloko](https://github.com/panoply/liquify/tree/next/packages/moloko)
 - [@liquify/highlight](https://github.com/panoply/liquify/tree/next/packages/highlight)
-- [@liquify/release](https://github.com/panoply/liquify/tree/next/packages/release)
 
 ### Documentation Package
 
