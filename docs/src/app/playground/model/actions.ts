@@ -10,7 +10,7 @@ export function actions (state: State) {
    * compliant (accepted) options. Deconstructs the `global`
    * grouped rules and returns an immutable valid copy.
    */
-  function mergeOptions ({ global, markup, script, style, json }: Rulesets) {
+  function mergeOptions ({ global, liquid, markup, script, style, json }: Rulesets) {
 
     return merge<Options>(
       state.options
@@ -18,6 +18,7 @@ export function actions (state: State) {
       ,
       {
         markup
+        , liquid
         , script
         , style
         , json

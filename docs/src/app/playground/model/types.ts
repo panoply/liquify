@@ -44,6 +44,10 @@ export interface Rulesets {
   /**
    * Markup specific rulesets
    */
+  liquid: Options['liquid'];
+  /**
+   * Markup specific rulesets
+   */
   markup: MarkupOptions;
   /**
    * Script specific rulesets

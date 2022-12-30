@@ -1,5 +1,13 @@
 
-import type { Options, GlobalOptions, MarkupOptions, JSONOptions, ScriptOptions, StyleOptions } from '@liquify/prettify';
+import type {
+  Options,
+  GlobalOptions,
+  MarkupOptions,
+  JSONOptions,
+  ScriptOptions,
+  StyleOptions
+} from '@liquify/prettify';
+
 import type { State } from './types';
 import { object } from '../../utilities/helpers';
 
@@ -12,6 +20,7 @@ export function state (): State {
     error: '',
     rules: object<{
       global: GlobalOptions,
+      liquid: Options['liquid'],
       markup: MarkupOptions,
       script: ScriptOptions,
       style: StyleOptions,
@@ -20,7 +29,6 @@ export function state (): State {
 
       global: {
         indentSize: 2,
-        commentIndent: false,
         indentChar: ' ',
         indentLevel: 0,
         wrap: 0,
@@ -30,19 +38,34 @@ export function state (): State {
         languageName: 'Plain Text',
         lexer: 'auto',
         mode: 'beautify',
-        preserveComment: false,
         preserveLine: 2
       },
+      liquid: object<Options['liquid']>(
+        {
+          commentIndent: true,
+          commentNewline: true,
+          correct: false,
+          delimiterTrims: 'preserve',
+          ignoreTagList: [],
+          lineBreakSeparator: 'before',
+          normalizeSpacing: true,
+          preserveComment: false,
+          quoteConvert: 'single',
+          valueForce: 'intent'
+        }
+      ),
       markup: object<Options['markup']>(
         {
           attributeCasing: 'preserve',
-          attributeValues: 'preserve',
           correct: false,
           forceLeadAttribute: false,
           attributeSort: false,
           attributeSortList: [],
-          delimiterSpacing: true,
           commentNewline: false,
+          commentIndent: false,
+          ignoreScripts: true,
+          ignoreStyles: false,
+          preserveComment: false,
           forceAttribute: false,
           forceIndent: false,
           preserveAttributes: false,
@@ -53,11 +76,12 @@ export function state (): State {
       ),
       style: object<Options['style']>(
         {
+          atRuleSpace: true,
+          correct: true,
           classPadding: false,
           noLeadZero: false,
           sortProperties: false,
           sortSelectors: false,
-          compressCSS: false,
           quoteConvert: 'none'
         }
       ),
@@ -82,7 +106,6 @@ export function state (): State {
           commentNewline: true,
           styleGuide: 'none',
           elseNewline: true,
-          inlineReturn: false,
           functionNameSpace: true,
           functionSpace: false,
           methodChain: 0,
@@ -102,7 +125,6 @@ export function state (): State {
       {
 
         indentSize: 2,
-        commentIndent: false,
         indentChar: ' ',
         indentLevel: 0,
         wrap: 0,
@@ -112,18 +134,33 @@ export function state (): State {
         languageName: 'Plain Text',
         lexer: 'auto',
         mode: 'beautify',
-        preserveComment: false,
         preserveLine: 2,
+        liquid: object<Options['liquid']>(
+          {
+            commentIndent: true,
+            commentNewline: true,
+            correct: false,
+            delimiterTrims: 'preserve',
+            ignoreTagList: [],
+            lineBreakSeparator: 'before',
+            normalizeSpacing: true,
+            preserveComment: false,
+            quoteConvert: 'single',
+            valueForce: 'intent'
+          }
+        ),
         markup: object<Options['markup']>(
           {
             attributeCasing: 'preserve',
-            attributeValues: 'preserve',
             correct: false,
             forceLeadAttribute: false,
             attributeSort: false,
             attributeSortList: [],
-            delimiterSpacing: true,
             commentNewline: false,
+            commentIndent: false,
+            ignoreScripts: true,
+            ignoreStyles: false,
+            preserveComment: false,
             forceAttribute: false,
             forceIndent: false,
             preserveAttributes: false,
@@ -135,10 +172,11 @@ export function state (): State {
         style: object<Options['style']>(
           {
             classPadding: false,
+            atRuleSpace: true,
+            correct: true,
             noLeadZero: false,
             sortProperties: false,
             sortSelectors: false,
-            compressCSS: false,
             quoteConvert: 'none'
           }
         ),
@@ -161,9 +199,11 @@ export function state (): State {
             braceNewline: true,
             caseSpace: false,
             commentNewline: true,
+            commentIndent: true,
+            correct: false,
+            preserveComment: false,
             styleGuide: 'none',
             elseNewline: true,
-            inlineReturn: false,
             functionNameSpace: true,
             functionSpace: false,
             methodChain: 0,
