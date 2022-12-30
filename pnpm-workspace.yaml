@@ -3,6 +3,7 @@ packages:
   - "configs/tsconfig"
   - "configs/prettier-config"
   - "configs/eslint-config"
+  - "packages/release"
   - "packages/ava"
   - "packages/highlight"
   - "packages/prettify/docs"

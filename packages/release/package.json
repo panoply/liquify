@@ -1,0 +1,85 @@
+{
+  "name": "@liquify/release",
+  "version": "0.1.0",
+  "description": "Release automation for packages contained within the Liquify monorepo.",
+  "author": {
+    "name": "Νίκος Σαβίδης ",
+    "email": "n.savvidis@gmx.com"
+  },
+  "license": "MIT",
+  "types": "./package/index.d.ts",
+  "main": "./package/index.js",
+  "module": "./package/index.mjs",
+  "exports": {
+    "import": "./package/index.mjs",
+    "types": "./package/index.d.ts",
+    "default": "./package/index.js"
+  },
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/next/packages/release"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
+  "bin": {
+    "release": "./package/index.js"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup --minify",
+    "pack": "cd versions; pnpm pack ../ && cd ..",
+    "test": "ava --verbose --watch"
+  },
+  "tsup": {
+    "entry": [
+      "./src/index.ts"
+    ],
+    "target": "node16",
+    "bundle": true,
+    "outDir": "./package",
+    "treeshake": true,
+    "dts": false,
+    "shims": true,
+    "clean": true,
+    "noExternal": [
+      "ansis",
+      "write-pkg",
+      "execa"
+    ],
+    "splitting": false,
+    "format": [
+      "cjs",
+      "esm"
+    ]
+  },
+  "prettier": "@liquify/prettier-config",
+  "eslintConfig": {
+    "ignorePatterns": [
+      "package/*",
+      "index.cjs",
+      "index.js",
+      "index.d.ts"
+    ],
+    "extends": [
+      "@liquify/eslint-config"
+    ]
+  },
+  "devDependencies": {
+    "@liquify/eslint-config": "workspace:*",
+    "@liquify/prettier-config": "workspace:*",
+    "@liquify/tsconfig": "workspace:*",
+    "@types/conventional-commits-parser": "^3.0.3",
+    "ava": "^5.0.1",
+    "tsup": "^6.4.0"
+  },
+  "dependencies": {
+    "ansis": "^1.5.5",
+    "conventional-commits-parser": "^3.2.4",
+    "execa": "^6.1.0",
+    "semver": "^7.3.8",
+    "write-pkg": "^5.1.0",
+    "yargs-parser": "^21.1.1"
+  }
+}

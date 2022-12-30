@@ -25,6 +25,7 @@
     "specs": "pnpm run -F @liquify/liquid-language-specs",
     "moloko": "pnpm run -F @liquify/moloko",
     "vscode": "pnpm run -F vscode-liquid",
+    "release": "pnpm exec release",
     "docs": "pnpm run -F @liquify/docs",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "pnpm run build"
@@ -38,14 +39,16 @@
     "url": "https://github.com/panoply/liquify"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.0",
     "@liquify/eslint-config": "workspace:*",
     "@liquify/prettier-config": "workspace:*",
+    "@liquify/release": "workspace:^0.1.0",
     "@liquify/tsconfig": "workspace:*",
-    "concurrently": "^7.5.0",
-    "eslint": "^8.26.0",
-    "prettier": "^2.7.1",
-    "tsup": "^6.4.0",
-    "typescript": "^4.8.4"
+    "concurrently": "^7.6.0",
+    "eslint": "^8.30.0",
+    "prettier": "^2.8.1",
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.4"
   },
   "publishConfig": {
     "access": "restricted"

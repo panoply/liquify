@@ -42,6 +42,7 @@
     "build": "tsup --minify-identifiers --minify-whitespace",
     "specs": "node ./scripts/specs.cjs",
     "pack": "cd versions; pnpm pack ../ && cd ..",
+    "release": "pnpm -w release --pkg $npm_package_name",
     "test": "ava tests/**/*.test.mjs --serial",
     "tests": "tests -t cases,rules,units",
     "test:dev": "ava tests/dev.test.mjs --watch",
@@ -110,7 +111,7 @@
   },
   "devDependencies": {
     "@liquify/ava": "^0.0.5",
-    "@liquify/eslint-config": "^1.1.0",
+    "@liquify/eslint-config": "workspace:^1.1.0",
     "@liquify/liquid-language-specs": "^0.1.7",
     "@liquify/prettier-config": "^1.0.1",
     "@types/benchmark": "^2.1.2",
