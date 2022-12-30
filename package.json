@@ -27,6 +27,7 @@
     "vscode": "pnpm run -F vscode-liquid",
     "release": "pnpm exec release",
     "docs": "pnpm run -F @liquify/docs",
+    "ci:publish": "pnpm publish -r",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "pnpm run build"
   },
