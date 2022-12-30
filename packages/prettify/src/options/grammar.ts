@@ -500,7 +500,11 @@ export const grammar = new class Grammar {
     tag: string
   ): false | R {
 
-    if (tag in this[language].embed) return this[language].embed[tag] as R;
+    if (tag in this[language].embed) {
+
+      return this[language].embed[tag] as R;
+
+    }
 
     return false;
 

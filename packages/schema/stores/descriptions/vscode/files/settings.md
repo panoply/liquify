@@ -1,4 +1,4 @@
-**Default** `[]`
+**Default** `""`
 
-Define the location of your `settings_schema.json` file relative to your projects root directory. When you set a reference then completions will be provided to liquid objects starting with `settings.*`
+Provide the path location to your `settings_schema.json` file. Use a path that is relative to the current project root directory. When you provide a path reference then completions will show for liquid objects starting with `settings.*`
 

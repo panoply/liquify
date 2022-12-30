@@ -352,7 +352,21 @@ export const parse = new class Parse {
       };
     }
 
-    return null;
+    const lexer = this.data.lexer[prettify.start];
+
+    return {
+      reset () {
+
+        prettify.options.language = language;
+        prettify.options.indentLevel = 0;
+
+      },
+      get beautify () {
+
+        return prettify.beautify[lexer](prettify.options);
+
+      }
+    };
 
   }
 

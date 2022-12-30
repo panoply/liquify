@@ -1,14 +1,19 @@
-<meta charset="utf-8" />
-<img src="/some-url"/>
-<br/>
-<br/>
-<br />
-<input type="text" />
-<hr />
-<picture>
-  <path srcset="." />
-  <path srcset="."/>
-  <path srcset="."
-  />
-  <path srcset="."                  />
-</picture>
+<!-- TEST: Shopify Schema Tag Block -->
+
+<ul><li>hello</li></ul>
+
+<!-- @prettify-ignore-start -->
+
+
+{%- liquid
+  if
+    foo == bar
+elsif
+    'foo'
+  endif
+  assign name = 'bar' | filter: 100
+-%}
+
+<!-- @prettify-ignore-end -->
+
+<br>

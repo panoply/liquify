@@ -3,6 +3,7 @@
 import { LiteralUnion } from 'type-fest';
 import { MarkupTypes, StyleTypes, ScriptTypes, ExtraTypes } from './parse/tokens';
 import { GlobalOptions } from './rules/global';
+import { LiquidOptions } from './rules/liquid';
 import { MarkupOptions } from './rules/markup';
 import { StyleOptions } from './rules/style';
 import { ScriptOptions } from './rules/script';
@@ -11,6 +12,7 @@ import { ScriptOptions } from './rules/script';
  * Option Rule Names Stirng Literal
  */
 export type RuleNames = (
+  keyof LiquidOptions |
   keyof MarkupOptions |
   keyof GlobalOptions |
   keyof StyleOptions |

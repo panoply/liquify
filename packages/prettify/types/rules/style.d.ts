@@ -197,12 +197,4 @@ export interface StyleOptions {
    * @default 'none'
    */
   quoteConvert?: 'double' | 'single' | 'none'
-
-  /**
-   * **Default:** `false`
-   *
-   * If CSS should be beautified in a style where the properties and
-   * values are minifed for faster reading of selectors
-   */
-  compressCSS?: boolean;
 }

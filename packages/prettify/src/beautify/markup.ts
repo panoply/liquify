@@ -1830,8 +1830,10 @@ prettify.beautify.markup = function (options: Options) {
             rules.commentNewline === true
           )
         ) && (
-          options.preserveLine === 0 ||
+          options.preserveLine === 0 || (
+            build.length > 0 &&
             build[build.length - 1].lastIndexOf(NWL) + 1 < 2
+          )
         )) {
 
           // When preserve line is zero, we will insert
@@ -1869,13 +1871,24 @@ prettify.beautify.markup = function (options: Options) {
         const external = parse.beautify(lastLevel);
         const embedded = external.beautify.replace(StripEnd, NIL);
 
-        build.push(embedded);
+        if (options.language === 'jsx' && (
+          data.types[a - 1] === 'template_string_end' ||
+          data.types[a - 1] === 'jsx_attribute_start' ||
+          data.types[a - 1] === 'script_start'
+        )) {
 
-        if (embedded.endsWith(NWL)) {
-          if (lastLevel - 1 > 0) build.push(repeatChar(lastLevel - 1, ind));
+          build.push(embedded.trimEnd());
+
         } else {
-          if (rules.forceIndent === true || (levels[prettify.iterator] > -1 && extidx[a] > a)) {
-            build.push(newline(levels[prettify.iterator]));
+
+          build.push(embedded);
+
+          if (embedded.endsWith(NWL)) {
+            if (lastLevel - 1 > 0) build.push(repeatChar(lastLevel - 1, ind));
+          } else {
+            if (rules.forceIndent === true || (levels[prettify.iterator] > -1 && extidx[a] > a)) {
+              build.push(newline(levels[prettify.iterator]));
+            }
           }
         }
 

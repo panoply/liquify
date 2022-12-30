@@ -15,16 +15,12 @@ prettify.lexers.script = function script (source: string) {
   const cloneopts = assign({}, options.script);
 
   if (options.language === 'json') {
-    options.script = assign<ScriptOptions, JSONOptions, ScriptOptions>(
-      options.script,
-      options.json,
-      {
-        quoteConvert: 'double',
-        endComma: 'never',
-        noSemicolon: true,
-        vertical: false
-      }
-    );
+    options.script = assign<ScriptOptions, JSONOptions, ScriptOptions>(options.script, options.json, {
+      quoteConvert: 'double',
+      endComma: 'never',
+      noSemicolon: true,
+      vertical: false
+    });
   }
 
   /**

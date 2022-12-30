@@ -1,4 +1,3 @@
-**Default** `[]`
+**Default** `""`
 
-Define a string list of paths relative to the projects root directory which contain locale files. When you set a locale file path location reference, the file appended with `.default.json` will be used to to provide locale completions within Liquid object tag tokens.
-
+Provide the path location to the default locale (ie: `en.default.json`) file. Use a path that is relative to the current project root directory. When you provide a path reference then completions will show for locales in output type object tags.

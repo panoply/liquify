@@ -14,3 +14,17 @@ packages/ace/src/build
 .pnpm-debug.log
 pnpm-debug.log
 tsconfig.tsbuildinfo
+packages/prettify/types/rules/script.d.ts
+packages/prettify/types/rules/global.d.ts
+packages/prettify/tests/dev.txt
+packages/prettify/tests/dev.test.mjs
+packages/prettify/src/parser/parse.ts
+packages/prettify/src/options/grammar.ts
+packages/prettify/src/model.ts
+packages/prettify/src/lexers/script.ts
+packages/prettify/src/lexers/markup.ts
+packages/prettify/src/comments/parse.ts
+packages/prettify/src/beautify/script.ts
+packages/prettify/readme.md
+packages/prettify/index.mjs
+packages/prettify/index.js

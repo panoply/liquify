@@ -11,24 +11,16 @@
       "markdownDescription": "./descriptions/vscode/engine.md"
     },
     "liquid.files.locales": {
-      "type": "array",
-      "markdownDescription": "./descriptions/vscode/files/locales.md",
-      "items": {
-        "uniqueItems": true,
-        "type": "string"
-      }
+      "type": "string",
+      "markdownDescription": "./descriptions/vscode/files/locales.md"
+    },
+    "liquid.files.settings": {
+      "type": "string",
+      "markdownDescription": "./descriptions/vscode/files/settings.md"
     },
     "liquid.files.snippets": {
       "type": "array",
       "markdownDescription": "./descriptions/vscode/files/snippets.md",
-      "items": {
-        "uniqueItems": true,
-        "type": "string"
-      }
-    },
-    "liquid.files.settings": {
-      "type": "array",
-      "markdownDescription": "./descriptions/vscode/files/settings.md",
       "items": {
         "uniqueItems": true,
         "type": "string"
@@ -99,13 +91,16 @@
     },
     "liquid.config.baseUrl": {
       "type": "string",
-      "markdownDescription": "The `liquid.config.baseUrl` option can be used to define a **relative** directory path for resolving config files. The option will only work in projects that use `.liquidrc` files or define rules on a package.json `prettify` field."
+      "markdownDescription": "./descriptions/vscode/config/baseUrl.md"
+    },
+    "liquid.config.method": {
+      "type": "string",
+      "default": "liquidrc",
+      "markdownDescription": "./descriptions/vscode/config/method.md",
+      "enum": ["liquidrc", "workspace"]
     },
     "liquid.settings.target": {
-      "type": "string",
-      "default": "workspace",
-      "markdownDescription": "The configuration preferences to use. This option defaults to `workspace`. It is **highly discouraged** to target `user` settings and could lead to unexpected issues outside of Liquid projects. The `workspace` default will write to the `.vscode/settings.json` relative to project root.",
-      "enum": ["workspace", "user"]
+      "deprecationMessage": "./descriptions/vscode/deprecated/settings.target.md"
     },
     "liquid.format.enable": {
       "deprecationMessage": "./descriptions/vscode/deprecated/format.enable.md"
@@ -149,8 +144,8 @@
     "liquid.format.rules": {
       "type": "object",
       "properties": {
-        "endNewLine": {
-          "injectObject": "./prettify.json#endNewLine"
+        "endNewline": {
+          "injectObject": "./prettify.json#endNewline"
         },
         "wrap": {
           "injectObject": "./prettify.json#wrap"
@@ -160,9 +155,6 @@
         },
         "preserveLine": {
           "injectObject": "./prettify.json#preserveLine"
-        },
-        "useTabs": {
-          "injectObject": "./prettify.json#useTabs"
         },
         "crlf": {
           "injectObject": "./prettify.json#crlf"

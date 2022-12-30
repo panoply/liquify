@@ -1,6 +1,5 @@
 import type { Options } from 'types/prettify';
 import { prettify } from '@prettify/model';
-import { create } from '@utils/native';
 import { repeatChar } from '@utils/helpers';
 import { NIL, NWL, WSP } from '@utils/chars';
 import { StripEnd } from '@utils/regex';
@@ -96,7 +95,7 @@ prettify.beautify.script = (options: Options) => {
   /**
    * External indexes
    */
-  const externalIndex = create(null);
+  const externalIndex = {};
 
   /**
    * Reference to `options.parsed` which is the
@@ -225,7 +224,7 @@ prettify.beautify.script = (options: Options) => {
 
       destructfix(false, false);
 
-      const ind = options.commentIndent === true
+      const ind = options.script.commentIndent === true
         ? indent
         : 0;
 
@@ -334,7 +333,7 @@ prettify.beautify.script = (options: Options) => {
             level.push(indent);
           }
 
-          if (options.commentIndent === true && level[a] > -1 && data.lines[a] < 3) {
+          if (options.script.commentIndent === true && level[a] > -1 && data.lines[a] < 3) {
             data.lines[a] = 3;
           }
         }
@@ -776,12 +775,14 @@ prettify.beautify.script = (options: Options) => {
               }
 
             } else {
+
               c = data.begin[c];
             }
 
             c = c - 1;
 
           } while (c > begin);
+
         }
 
         varindex.pop();
@@ -800,6 +801,7 @@ prettify.beautify.script = (options: Options) => {
           destruct[destruct.length - 1] === true
         )
       ) {
+
         level[data.begin[a]] = -10;
         level[a - 1] = -10;
         level.push(-20);
@@ -3164,9 +3166,10 @@ prettify.beautify.script = (options: Options) => {
 
         level.push(indent);
 
-      } else {
+      } else if (ltype !== 'template' && data.types[a + 1] !== 'template') {
 
         level.push(-10);
+
       }
 
       if (
@@ -3182,6 +3185,7 @@ prettify.beautify.script = (options: Options) => {
 
         level[a - 1] = indent;
       }
+
     };
 
     function template () {
@@ -3190,6 +3194,7 @@ prettify.beautify.script = (options: Options) => {
       //
       // Let's preserve occurances of Liquid tokens contained within
       // JSON strings. This prevents extra spaces being applied.
+      //
       if (options.language !== 'json' && data.types[a - 1] !== 'string') {
 
         if (ctype === 'template_else') {
@@ -3832,7 +3837,8 @@ prettify.beautify.script = (options: Options) => {
         // Improves the indentComment rule by aligning
         // comments to the code they annotate.
         //
-        if (data.types[a] === 'comment' && options.commentIndent === true) {
+        if (data.types[a] === 'comment' && options.script.commentIndent === true) {
+
           if (/\n/.test(data.token[a])) {
 
             const space = data.begin[a] > -1 ? data.token[a].charAt(2) === '*'
@@ -3856,7 +3862,9 @@ prettify.beautify.script = (options: Options) => {
         if (invisibles.indexOf(data.token[a]) < 0) {
 
           if (data.token[a] !== ';' || options.script.noSemicolon === false) {
+
             build.push(data.token[a]);
+
           } else if (levels[a] < 0 && data.types[a + 1] !== 'comment') {
             build.push(';');
           }
@@ -3917,6 +3925,7 @@ prettify.beautify.script = (options: Options) => {
           prettify.start = a;
 
           const ex = parse.beautify(lastLevel);
+
           external = ex.beautify.replace(StripEnd, NIL);
 
           build.push(external);
