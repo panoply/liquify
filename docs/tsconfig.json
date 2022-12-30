@@ -1,5 +1,9 @@
 {
-  "exclude": ["node_modules/**", "package", "test"],
+  "exclude": [
+    "node_modules/**",
+    "package",
+    "test"
+  ],
   "include": [
     "src/index.ts",
     "src/**/*.ts",
@@ -8,17 +12,24 @@
   ],
   "typeAcquisition": {
     "enable": true,
-    "include": ["node"]
+    "include": [
+      "node"
+    ]
   },
   "compilerOptions": {
     "rootDir": "src",
-    "typeRoots": ["node_modules/@types", "src/types/*"],
-    "declaration": true,
-    "declarationDir": "package/@types",
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types/*"
+    ],
     "outDir": "package",
     "target": "ES6",
     "removeComments": true,
-    "lib": ["es2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "es2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "alwaysStrict": true,
     "allowUmdGlobalAccess": true,
@@ -35,8 +46,12 @@
     "pretty": true,
     "baseUrl": ".",
     "paths": {
-      "app": ["./src/app/index.js"],
-      "components": ["./src/app/components/*"]
+      "app": [
+        "./src/app/index.js"
+      ],
+      "components": [
+        "./src/app/components/*"
+      ]
     }
   }
 }

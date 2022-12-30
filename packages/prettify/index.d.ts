@@ -6,7 +6,7 @@ import {
   Language,
   Format,
   Parse
-} from '@liquify/prettify/types/prettify';
+} from './types/prettify';
 
 export {
   Definition,
@@ -21,7 +21,7 @@ export {
   LanguageNames,
   LanguageProperNames,
   LexerNames
-} from '@liquify/prettify/types/prettify';
+} from './types/prettify';
 
 declare const prettify: {
   /**

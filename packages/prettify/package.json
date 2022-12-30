@@ -1,6 +1,6 @@
 {
   "name": "@liquify/prettify",
-  "version": "0.5.2-beta.1",
+  "version": "0.5.4-beta.1",
   "license": "MIT",
   "author": "ΝΙΚΟΛΑΣ ΣΑΒΒΙΔΗΣ <n.savvidis@gmx.com>",
   "description": "Prettify 🎀 ~ Language beautification support for multiple languages with the Sparser lexing algorithm.",
@@ -30,10 +30,11 @@
   "bugs": {
     "url": "https://github.com/panoply/prettify/issues"
   },
-  "types": "index.d.ts",
-  "main": "index.js",
-  "module": "index.mjs",
+  "types": "./index.d.ts",
+  "main": "./index.js",
+  "module": "./index.mjs",
   "exports": {
+    "types": "./index.d.ts",
     "require": "./index.js",
     "import": "./index.mjs"
   },

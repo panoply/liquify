@@ -1240,7 +1240,7 @@ var parse = new class Parse {
         -1
       ]
     ];
-    this.attributes = /* @__PURE__ */ new Set();
+    this.attributes = /* @__PURE__ */ new Map();
     this.references = [[]];
     this.count = -1;
     this.lineStart = 0;
@@ -5966,7 +5966,7 @@ ${Array.isArray(message) ? message.join(NIL) : message}`;
             } else if (isLiquidStart(value) && (liquid.valueForce === "always" || (liquid.valueForce === "intent" || liquid.valueForce === "wrap") && options2.wrap > 0 && Math.abs(a - parse.lineStart) >= options2.wrap || value.indexOf(NWL) > 0 && (liquid.valueForce === "newline" || liquid.valueForce === "intent")) && (is(value[0], 34 /* DQO */) || is(value[0], 39 /* SQO */))) {
               record.token = `${name}=${sq > -1 ? "'" : '"'}`;
               record.types = "attribute";
-              parse.attributes.add(begin);
+              parse.attributes.set(begin, grammar.html.voids.has(record.stack));
               push(data, record, NIL);
               if (idx + 1 === len) {
                 lexer(value.slice(1, -1));
@@ -6004,6 +6004,7 @@ ${Array.isArray(message) ? message.join(NIL) : message}`;
       return script2();
     }
     function exclude(tag, from) {
+      tag = tag.trimStart().split(/\s/)[0];
       if (tag === "comment" || igl.has(tag)) {
         const idx1 = source.indexOf("{%", from);
         let idx2 = idx1;
@@ -6298,6 +6299,17 @@ ${Array.isArray(message) ? message.join(NIL) : message}`;
           lexed.push(b[a]);
           if (a > 3 && is(b[a], 45 /* DSH */) && is(b[a - 1], 45 /* DSH */) && is(b[a - 2], 45 /* DSH */))
             break;
+          a = a + 1;
+          continue;
+        }
+        if (ltype === "ignore" && (end === "</style>" || end === "<\/script>")) {
+          lexed.push(b[a]);
+          if (b[a - 8] === "<" && b[a - 7] === "/" && b[a - 6] === "s" && b[a - 5] === "c" && b[a - 4] === "r" && b[a - 3] === "i" && b[a - 2] === "p" && b[a - 1] === "t" && b[a] === ">") {
+            record.token = lexed.join("");
+            push(data, record, "ignore");
+            a = a + 1;
+            return;
+          }
           a = a + 1;
           continue;
         }
@@ -7069,16 +7081,27 @@ ${Array.isArray(message) ? message.join(NIL) : message}`;
     a = a + 1;
   } while (a < c);
   if (count.end !== count.start && parse.error === NIL) {
+    console.log(count, parse.count);
     if (count.end > count.start) {
       const x = count.end - count.start;
       const p = x === 1 ? NIL : "s";
-      parse.error = `Prettify Error (line ${count.line}):
-${x} more end type${p} than start type${p}`;
+      parse.error = [
+        `Prettify Error (line ${parse.lineNumber - x}):`,
+        `	
+${data.token[count.index]}
+`,
+        `${x} more end type${p} than start type${p}`
+      ].join("\n");
     } else {
       const x = count.start - count.end;
       const p = x === 1 ? NIL : "s";
-      parse.error = `Prettify Error (line ${count.line}):
-${x} more start type${p} than end type${p}`;
+      parse.error = [
+        `Prettify Error (line ${parse.lineNumber - x}):`,
+        `
+${data.token[count.index]}
+`,
+        `${x} more start type${p} than end type${p}`
+      ].join("\n");
     }
   }
   return data;

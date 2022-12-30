@@ -1,4 +1,4 @@
-body {
+module.exports = `body {
   margin: 0;
   overflow: hidden;
   background: #0e0e0e;
@@ -592,4 +592,4 @@ body {
   z-index: 99999;
   display: inline-block;
   border-right: 0.01rem solid #3f3f3f;
-}
+}`;

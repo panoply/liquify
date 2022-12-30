@@ -2,7 +2,7 @@ import type { Definition, LexerNames } from '@liquify/prettify';
 import type { Attrs } from '../model/types';
 import m from 'mithril';
 import moloko from '@liquify/moloko';
-import { definitions } from '@liquify/prettify';
+import prettify from '@liquify/prettify';
 import relapse from 'relapse';
 import { entries, keys } from '../../utilities/native';
 import { object } from '../../utilities/helpers';
@@ -24,6 +24,10 @@ interface Generate {
    * Global formatting rules
    */
   global: Rule[];
+  /**
+   * Liquid specific rules
+   */
+  liquid: Rule[],
   /**
    * Markup specific rules
    */
@@ -64,9 +68,12 @@ function generate (acc: Generate, [ rule, options ]) {
 
   if (options.lexer === 'all') {
     if (rule === 'quoteConvert') {
+
+      acc.liquid.push({ ...options, rule, lexer: 'markup', language: 'liquid' });
       acc.markup.push({ ...options, rule, lexer: 'markup' });
       acc.script.push({ ...options, rule, lexer: 'style' });
       acc.style.push({ ...options, rule, lexer: 'script' });
+
     } else if (rule === 'correct') {
       acc.markup.push({ ...options, rule, lexer: 'markup' });
       acc.script.push({ ...options, rule, lexer: 'style' });
@@ -77,7 +84,30 @@ function generate (acc: Generate, [ rule, options ]) {
     }
   } else if (options.lexer === 'markup') {
 
-    acc.markup.push({ ...options, rule, lexer: 'markup' });
+    if (
+      rule === 'commentIndent' ||
+      rule === 'commentNewline' ||
+      rule === 'correct' ||
+      rule === 'preserveComment'
+    ) {
+
+      acc.liquid.push({ ...options, rule, lexer: 'markup' });
+      acc.markup.push({ ...options, rule, lexer: 'markup' });
+
+    } else if (
+      rule === 'delimiterTrims' ||
+      rule === 'ignoreTagList' ||
+      rule === 'lineBreakSeparator' ||
+      rule === 'normalizeSpacing' ||
+      rule === 'valueForce'
+    ) {
+
+      acc.liquid.push({ ...options, rule, lexer: 'markup' });
+
+    } else {
+
+      acc.markup.push({ ...options, rule, lexer: 'markup' });
+    }
 
   } else if (options.lexer === 'style') {
 
@@ -124,6 +154,7 @@ export const Rules: m.ClosureComponent<Attrs> = ({ attrs: { s, a } }) => {
    */
   const data = object<Generate>({
     global: []
+    , liquid: []
     , markup: []
     , script: []
     , style: []
@@ -134,7 +165,7 @@ export const Rules: m.ClosureComponent<Attrs> = ({ attrs: { s, a } }) => {
    * Composes a workable data list of formatting rules
    * from the `definitions` named export or Prettify.
    */
-  const defs = entries(definitions).reduce(generate, data);
+  const defs = entries(prettify.definitions).reduce(generate, data);
 
   /* -------------------------------------------- */
   /* BEGIN                                        */
@@ -577,6 +608,17 @@ export const Rules: m.ClosureComponent<Attrs> = ({ attrs: { s, a } }) => {
    * the defintion onto the appropriate vnode function.
    */
   function types (lexer: LexerNames, option: Rule) {
+
+    if (
+      option.rule === 'delimiterTrims' ||
+      option.rule === 'ignoreTagList' ||
+      option.rule === 'lineBreakSeparator' ||
+      option.rule === 'normalizeSpacing' ||
+      option.rule === 'valueForce') {
+
+      lexer = 'liquid';
+
+    }
 
     if (Array.isArray(option.type)) {
       return multitype(lexer, option);

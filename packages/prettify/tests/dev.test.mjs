@@ -9,11 +9,16 @@ test('develop', async t => {
     const output = prettify.formatSync(source, {
       language: 'liquid',
       preserveLine: 2,
+      liquid: {
+        valueForce: 'always',
+        ignoreTagList: [ 'capture' ]
+      },
       markup: {
         selfCloseSpace: true,
         forceAttribute: false,
         forceLeadAttribute: false,
-        ignoreScripts: false
+        ignoreScripts: true
+
       },
       script: {
         correct: true,

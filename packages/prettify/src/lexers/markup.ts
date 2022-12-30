@@ -1634,9 +1634,11 @@ prettify.lexers.markup = function lexer (source: string) {
               record.token = `${name}=${sq > -1 ? "'" : '"'}`;
               record.types = 'attribute';
 
-              parse.attributes.add(begin);
+              parse.attributes.set(begin, grammar.html.voids.has(record.stack));
 
               push(data, record, NIL);
+
+              // const before = parse.count + 1;
 
               if (idx + 1 === len) {
                 lexer(value.slice(1, -1));
@@ -1659,6 +1661,12 @@ prettify.lexers.markup = function lexer (source: string) {
               record.types = 'attribute';
               record.stack = stack;
               record.begin = begin;
+
+              // for (let x = before; x < parse.count; x++) {
+              //   if (data.types[x].indexOf('template') > -1) {
+              //     data.token[x] = '  ' + data.token[x];
+              //   }
+              // }
 
             } else {
 
@@ -1698,6 +1706,8 @@ prettify.lexers.markup = function lexer (source: string) {
      * @next traverse()
      */
     function exclude (tag: string, from: number) {
+
+      tag = tag.trimStart().split(/\s/)[0];
 
       // Lets look for liquid tokens keyword sbefore proceeding,
       // We are skipping ahead from the normal parse here.
@@ -2303,6 +2313,36 @@ prettify.lexers.markup = function lexer (source: string) {
 
           if (a > 3 && is(b[a], cc.DSH) && is(b[a - 1], cc.DSH) && is(b[a - 2], cc.DSH)) break;
           a = a + 1;
+          continue;
+        }
+
+        if (ltype === 'ignore' && (end === '</style>' || end === '</script>')) {
+
+          lexed.push(b[a]);
+
+          if (
+            b[a - 8] === '<' &&
+            b[a - 7] === '/' &&
+            b[a - 6] === 's' &&
+            b[a - 5] === 'c' &&
+            b[a - 4] === 'r' &&
+            b[a - 3] === 'i' &&
+            b[a - 2] === 'p' &&
+            b[a - 1] === 't' &&
+            b[a] === '>'
+          ) {
+
+            record.token = lexed.join('');
+
+            push(data, record, 'ignore');
+
+            a = a + 1;
+            return;
+
+          }
+
+          a = a + 1;
+
           continue;
         }
 
@@ -3698,14 +3738,25 @@ prettify.lexers.markup = function lexer (source: string) {
 
   if (count.end !== count.start && parse.error === NIL) {
 
+    console.log(count, parse.count);
+
     if (count.end > count.start) {
       const x = count.end - count.start;
       const p = (x === 1) ? NIL : 's';
-      parse.error = `Prettify Error (line ${count.line}):\n${x} more end type${p} than start type${p}`;
+      parse.error = [
+        `Prettify Error (line ${parse.lineNumber - x}):`,
+        `\t\n${data.token[count.index]}\n`,
+        `${x} more end type${p} than start type${p}`
+      ].join('\n');
     } else {
       const x = count.start - count.end;
       const p = (x === 1) ? NIL : 's';
-      parse.error = `Prettify Error (line ${count.line}):\n${x} more start type${p} than end type${p}`;
+      parse.error = [
+        `Prettify Error (line ${parse.lineNumber - x}):`,
+        `\n${data.token[count.index]}\n`,
+        `${x} more start type${p} than end type${p}`
+      ].join('\n');
+
     }
 
   }

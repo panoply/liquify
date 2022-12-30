@@ -3,6 +3,7 @@ import prettify, { Options as PrettifyOptions, Language } from '@liquify/prettif
 import { attrs } from '@attrs';
 import { language } from '@store';
 import m from 'mithril';
+import './build/moloko.css';
 
 export async function newMode () {
 
