@@ -14,11 +14,6 @@
       "default": 0,
       "markdownDescription": "./descriptions/format/global/wrap.md"
     },
-    "useTabs": {
-      "type": "boolean",
-      "default": false,
-      "markdownDescription": "./descriptions/format/global/useTabs.md"
-    },
     "indentSize": {
       "type": "number",
       "default": 2,
@@ -225,7 +220,6 @@
           "markdownDescription": "./descriptions/format/markup/quoteConvert.md",
           "enum": ["none", "double", "single"]
         },
-
         "delimiterTrims": {
           "deprecationMessage": "./descriptions/format/deprecated/liquid.md"
         },
