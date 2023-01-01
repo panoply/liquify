@@ -2,8 +2,9 @@ import { Options, Helper } from 'types/prettify';
 import { prettify } from '@prettify/model';
 import { parse } from '@parser/parse';
 import { StripEnd } from '@utils/regex';
-import { is, repeatChar, ws } from '@utils/helpers';
+import { getTagName, is, repeatChar, ws } from '@utils/helpers';
 import { cc, WSP, NIL, NWL } from '@utils/chars';
+import { grammar } from '@options/grammar';
 
 /* -------------------------------------------- */
 /* MARKUP BEAUTIFICATION                        */
@@ -145,9 +146,7 @@ prettify.beautify.markup = function (options: Options) {
     /**
      * The newline / spacing store reference
      */
-    const level = prettify.start > 0
-      ? Array(prettify.start).fill(0, 0, prettify.start)
-      : [];
+    const level = prettify.start > 0 ? Array(prettify.start).fill(0, 0, prettify.start) : [];
 
     /**
      * Next Index
@@ -963,6 +962,64 @@ prettify.beautify.markup = function (options: Options) {
     };
 
     /**
+     * Liquid Tag
+     *
+     * Applied indentation to the content of `{% liquid %}`
+     * tag tokens. Employs its own level alogirthm.
+     */
+    function liquidtag (indent: string, token: string[]) {
+
+      let idx = 1;
+      let name = NIL;
+      let toke = NIL;
+      let ind = indent;
+
+      do {
+
+        toke = token[idx].trimStart();
+
+        if (idx === token.length - 1) {
+          token[idx] = indent.slice(2) + toke;
+          break;
+        }
+
+        if (toke.indexOf(WSP) > -1) {
+          name = toke.slice(0, toke.indexOf(WSP));
+        } else {
+          name = toke.trimEnd();
+        }
+
+        if (grammar.liquid.tags.has(name)) {
+
+          token[idx] = ind + toke;
+          ind += repeatChar(options.indentSize);
+
+        } else if (grammar.liquid.else.has(name)) {
+
+          console.log(JSON.stringify(ind));
+          token[idx] = ind.slice(options.indentSize) + toke;
+
+        } else if (toke.startsWith('end')) {
+
+          ind = ind.slice(options.indentSize);
+          token[idx] = ind + toke;
+
+        } else {
+
+          token[idx] = ind + toke;
+
+        }
+
+        idx = idx + 1;
+
+      } while (idx < token.length);
+
+      data.token[a] = token.join(NWL);
+      console.log(token);
+
+    }
+
+    /**
      * Line Breaks
      *
      * Used in beautification of Liquid operator tokens,
@@ -990,6 +1047,8 @@ prettify.beautify.markup = function (options: Options) {
       let ind = trims
         ? repeatChar(offset * options.indentSize)
         : repeatChar(offset * options.indentSize - 1);
+
+      if (getTagName(data.token[a]) === 'liquid') return liquidtag(ind, token);
 
       do {
 
@@ -1145,11 +1204,7 @@ prettify.beautify.markup = function (options: Options) {
 
     function isLineBreak (idx: number) {
 
-      return (
-        type.is(idx, 'template') &&
-        data.token[idx].indexOf(lf) > 0 &&
-        /{%-?\s*\bliquid/.test(data.token[idx]) === false
-      );
+      return (type.is(idx, 'template') && data.token[idx].indexOf(lf) > 0);
 
     }
 
@@ -1389,10 +1444,9 @@ prettify.beautify.markup = function (options: Options) {
             level[a - 1] = indent - 1;
 
             if (type.is(next, 'template_end')) {
-
               level[a - 1] = indent - 1;
-
             }
+
             // else {
             // level[a - 1] = indent - 1;
             // }
