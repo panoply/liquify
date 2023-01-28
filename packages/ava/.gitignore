@@ -1,6 +1,0 @@
-# DIRECTORIES
-# --------------------
-node_modules/
-package/
-!tests/**
-/tests/
