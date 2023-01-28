@@ -60,7 +60,6 @@
   "dependencies": {
     "@accede-web/tablist": "^2.0.1",
     "@liquify/moloko": "workspace:*",
-    "@liquify/prettify": "workspace:0.5.2-beta.1",
     "countup.js": "^2.3.2",
     "freezeframe": "^5.0.2",
     "mergerino": "^0.4.0",

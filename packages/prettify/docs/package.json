@@ -1,0 +1,85 @@
+{
+  "name": "@prettify/docs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Prettify Documentation",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "dev": "rm -rf public && concurrently \"pnpm run js:watch\" \"pnpm run sass:watch\" \"pnpm run 11ty:watch\"",
+    "build": "rm -rf public && pnpm run js:build && pnpm run sass:build && pnpm run 11ty:build && pnpm run postbuild",
+    "postbuild": "postcss --config scripts/postcss.config.cjs public/style.css -r --no-map && rm -rf public/style.css.map",
+    "netlify:serve": "netlify dev -c \"eleventy --config=scripts/eleventy.cjs --watch --serve --watch\" --targetPort 8080",
+    "11ty:watch": "eleventy --config=scripts/eleventy.cjs --serve --watch",
+    "11ty:build": "eleventy --config=scripts/eleventy.cjs",
+    "js:build": "esbuild site/app/index.ts --outfile=public/bundle.min.js --format=esm --bundle --minify",
+    "js:watch": "esbuild site/app/index.ts --outfile=public/bundle.min.js --format=esm --bundle --watch",
+    "sass:build": "sass --load-path=node_modules/ site/sass/stylesheet.scss public/style.css --no-source-map",
+    "sass:watch": "sass --load-path=node_modules/ site/sass/stylesheet.scss public/style.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "stylelint": {
+    "extends": [
+      "@sissel/stylelint-config"
+    ],
+    "ignoreFiles": [
+      "public",
+      "node_modules"
+    ]
+  },
+  "eslintConfig": {
+    "ignorePatterns": [
+      "index.js",
+      "docs/public"
+    ],
+    "extends": "@brixtol/eslint-config",
+    "rules": {
+      "no-prototype-builtins": "off",
+      "multiline-ternary": "off"
+    }
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@brixtol/bootstrap"
+      ]
+    }
+  },
+  "dependencies": {
+    "@accede-web/tablist": "^2.0.1",
+    "@brixtol/bootstrap": "^1.4.3",
+    "@hotwired/stimulus": "^3.2.1",
+    "@panoply/viewports": "^0.0.3",
+    "relapse": "^0.5.0",
+    "spx": "0.0.4-beta.1",
+    "stickybits": "^3.7.11"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^1.0.2",
+    "@11ty/eleventy-navigation": "^0.3.5",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^4.2.0",
+    "@brixtol/browserslist-config": "^1.1.0",
+    "@brixtol/eslint-config": "^1.2.5",
+    "@fullhuman/postcss-purgecss": "^5.0.0",
+    "@panoply/11ty": "^0.1.0",
+    "@sardine/eleventy-plugin-tinyhtml": "^0.2.0",
+    "@sissel/stylelint-config": "^1.0.0",
+    "@types/browser-sync": "^2.26.3",
+    "@types/markdown-it": "^12.2.3",
+    "@types/prismjs": "^1.26.0",
+    "autoprefixer": "^10.4.13",
+    "concurrently": "^7.6.0",
+    "cssnano": "^5.1.14",
+    "eleventy-plugin-svg-sprite": "^2.1.0",
+    "esbuild": "^0.17.0",
+    "markdown-it": "^13.0.1",
+    "markdown-it-anchor": "^8.6.6",
+    "netlify-cli": "^12.7.2",
+    "postcss": "^8.4.21",
+    "postcss-cli": "^10.1.0",
+    "sass": "^1.57.1"
+  },
+  "optionalDependencies": {
+    "stylelint": "^14.16.1"
+  }
+}

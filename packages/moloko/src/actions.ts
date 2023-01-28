@@ -1,16 +1,16 @@
 import { Ace } from '@types';
-import prettify, { Options as PrettifyOptions, Language } from '@liquify/prettify';
-import { attrs } from '@attrs';
+import esthetic, { Rules, Language } from 'esthetic';
+import { attrs, commands } from '@attrs';
 import { language } from '@store';
 import m from 'mithril';
 import './build/moloko.css';
 
 export async function newMode () {
 
-  const options = prettify.language.reference(attrs.language as any);
+  const options = esthetic.language(attrs.language as any);
 
   try {
-    const value = await prettify.format(attrs.input.getValue(), options);
+    const value = await esthetic.format(attrs.input.getValue(), options);
     attrs.output.setValue(value);
   } catch (text) {
     return attrs.output.setValue(text);
@@ -28,7 +28,7 @@ function onChangeTest (input: string, options: Language) {
     attrs.language = options.language as any;
     attrs.languageName = options.languageName;
 
-    prettify.format(input, options).then(value => {
+    esthetic[options.language](input).then(value => {
 
       attrs.output.setValue(value);
 
@@ -41,24 +41,26 @@ function onChangeTest (input: string, options: Language) {
  * onChange Event
  *
  * Invoked for every document change, passes input
- * to Prettify and updates the output content.
+ * to esthetic and updates the output content.
  */
 export function onChange (delta: Ace.Delta) {
 
   const input = attrs.input.getValue();
 
   if (delta.action === 'insert' && delta.lines.length > 3 && attrs.autoDetect === true) {
-    const lang = prettify.language(input);
-    if (lang.language !== attrs.language) return onChangeTest(input, lang);
+    // const lang = esthetic.language(input);
+    // if (lang.language !== attrs.language) return onChangeTest(input, lang);
   }
 
-  const options = prettify.language.reference(attrs.language as any);
+  const value = esthetic.format.sync(input, {
+    language: 'liquid'
+  });
 
-  prettify.format(input, options).then(value => {
+  // esthetic[attrs.language](input).then(value => {
 
-    attrs.output.setValue(value);
+  attrs.output.setValue(value);
 
-  }).catch(error => attrs.output.setValue(error));
+  // }).catch(error => attrs.output.setValue(error));
 
 }
 
@@ -68,15 +70,9 @@ export function onChange (delta: Ace.Delta) {
  * Invokes beautification, uses the editors input
  * and update the output content.
  */
-export function beautify (options: PrettifyOptions) {
+export function beautify (options: Rules) {
 
-  const { language, languageName, lexer } = prettify.language.reference(attrs.language as any);
-
-  options.language = language;
-  options.languageName = languageName;
-  options.lexer = lexer;
-
-  prettify.format(attrs.input.getValue(), options).then((value) => {
+  esthetic[attrs.language](attrs.input.getValue(), options).then((value) => {
 
     attrs.output.setValue(value);
 
@@ -96,6 +92,31 @@ export function inputEditor (editor: Ace.Editor) {
   editor.container.style.borderRight = '0.01rem solid #666';
   editor.container.style.zIndex = '100';
   editor.renderer.$cursorLayer.element.style.opacity = '1';
+
+  editor.commands.addCommand({
+    exec (editor) {
+
+      const value = esthetic.format.sync(editor.getValue(), {
+        language: 'liquid',
+        liquid: {
+          indentAttributes: true
+        },
+        markup: {
+          forceAttribute: true,
+          forceIndent: true
+        }
+      });
+
+      // esthetic[attrs.language](input).then(value => {
+
+      attrs.output.setValue(value);
+    },
+    name: 'save',
+    bindKey: {
+      win: 'Ctrl-S',
+      mac: 'Command-S'
+    }
+  });
 
   // RENDERER
   editor.renderer.setScrollMargin(15, 15, 0, 0);

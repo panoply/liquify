@@ -1,6 +1,6 @@
 # @liquify/ava
 
-An [AVA](https://github.com/avajs/ava) test runner extension pack for projects contained within the [Liquify](https://liquify.dev) monorepo workspace. This module provides test utilities which help alleviate some of the complexities involved with testing AST structures in projects like [@liquify/liquid-parser](https://github.com/panoply/liquify/tree/next/packages/parser), [@liquify/prettify](https://github.com/panoply/liquify/tree/next/packages/prettify) and more!
+An [AVA](https://github.com/avajs/ava) test runner extension pack for projects contained within the [Liquify](https://liquify.dev) monorepo workspace. This module provides test utilities which help alleviate some of the complexities involved with testing AST structures in projects like [@liquify/liquid-parser](https://github.com/panoply/liquify/tree/next/packages/parser), [Æsthetic](https://github.com/panoply/liquify/tree/next/packages/prettify) and more!
 
 **The package is designed for usage on projects contained within the [Liquify](https://liquify.dev) monorepo workspace.**
 
@@ -30,7 +30,7 @@ Add the following configuration to `tsconfig.json` files.
       "@liquify/ava/parser": ["./node_modules/@liquify/ava/package/parser.d.ts"],
 
       // Reference the declaration when importing @liquify/ava/prettify
-      "@liquify/ava/prettify": ["./node_modules/@liquify/ava/package/prettify.d.ts"]
+      "@liquify/ava/esthetic": ["./node_modules/@liquify/ava/package/esthetic.d.ts"]
     }
   }
 }
@@ -38,7 +38,7 @@ Add the following configuration to `tsconfig.json` files.
 
 # Overview
 
-The module provides various import files with exposed utilities as named exports. The Liquify monorepo workspace contains several different packages, each of which differ in terms their function and contribution to the project. You should consult the **readme** contained in the `tests` directory of each package for additional information for the test setups.
+The module provides various import files with exposed utilities as named exports. The Liquify monorepo workspace contains several different packages, each of which differ in terms of their function and contribution to the project. You should consult the **readme** contained in the `tests` directory of each package for additional information on the test setups.
 
 The import will pertain to the package it's leveraged by. Despite sharing identical naming conventions, the named exports of each import perform vastly different operations.
 
@@ -47,8 +47,8 @@ The import will pertain to the package it's leveraged by. Despite sharing identi
   - [dev](#dev--liquifyavaparser)
   - [forSnippet](#forsnippet--liquifyavaparser)
   - [forSample](#forsample--liquifyavaparser)
-- [@liquify/ava/prettify](#liquifyavaprettify)
-  - [dev](#d)
+- [@liquify/ava/esthetic](#liquifyavaesthetic)
+  - [dev](#dev)
   - [forSnippet](#forsnippet--liquifyavaparser)
   - [forSample](#forsample--liquifyavaparser)
 
@@ -63,6 +63,15 @@ The module exposes a bin executable using the name `tests` and when invoked will
   }
 }
 ```
+
+### Features
+
+The CLI allows for some refined control over test execution. The choice prompts allow for cherry-picking test files and containing tests via generating appropriate targets using AVA's` match=''` flag. The CLI exposes the following sugars:
+
+- Run all tests in watch mode within a test file
+- Run all tests within a test file
+- Run a specific test within a test file.
+- Run a specific test within a test file in watch mode.
 
 # @liquify/ava/parser
 
@@ -163,27 +172,27 @@ test('Some Test', t => {
 });
 ```
 
-# @liquify/ava/prettify
+# @liquify/ava/esthetic
 
-The `prettify` import is used within the [@liquify/prettify](#) package. The utilities provided in this import module are designed for exhaustive and extensive testing of code formatting.
+The `esthetic` import is used within the [@liquify/esthetic](#) package. The utilities provided in this import module are designed for exhaustive and extensive testing of code formatting.
 
-## Dev ~ @liquify/ava/prettify
+## Dev ~ @liquify/ava/esthetic
 
-The `dev` export is used for development mode. Development mode for Prettify consists of parsing an external `.txt` file and providing several utilities for inspecting the parse tree.
+The `dev` export is used for development mode. Development mode for esthetic consists of parsing an external `.txt` file and providing several utilities for inspecting the beautified result.
 
-> By default, the `dev` export will parse the containing `dev.txt` file existing in the root of the `prettify/tests ` directory.
+> By default, the `dev` export will parse the containing `dev.txt` file existing in the root of the `esthetic/tests ` directory.
 
 <!--prettier-ignore-->
 ```js
 import test from 'ava';
-import { dev } from '@liquify/ava/prettify';
-import prettify from '@liquify/prettify';
+import { dev } from '@liquify/ava/esthetic';
+import esthetic from '@liquify/esthetic';
 
 test('develop', async t => {
 
   await dev(t)(async (source) => {
 
-    const output = await prettify.format(source, {
+    const output = await esthetic.format(source, {
       language: 'liquid',
       wrap: 0,
       markup: {
@@ -198,10 +207,11 @@ test('develop', async t => {
     });
 
     return {
+      inspect: true,
       repeat: 4,
       source: output,
       logger: false,
-      finish: () => t.log(output)
+      finish: () => t.log(output) // same as setting inspect to true
     };
 
   })
@@ -209,14 +219,28 @@ test('develop', async t => {
 });
 ```
 
-## getSample ~ @liquify/ava/prettify
+### Returned Object
+
+This `dev` test export requires an object be returned and accepts the following options:
+
+| Property  | Description                                                                               |
+| --------- | ----------------------------------------------------------------------------------------- |
+| `inspect` | Whether or not to log the `output` result after formatting completes                      |
+| `repeat`  | Repeats the test using the `output` as source. Used to simulate an onSave in text editors |
+| `source`  | Reference to the provided `output` returned by Æsthetic after beautification              |
+| `logger`  | An optional setting for logging the `output` for each `repeat` run                        |
+| `finish`  | A callback that will invoke after the beautification cycle concludes.                     |
+
+> The `inspect` and `logger` options are similar, but when `logger` is enabled (ie: `true`) **inspect** will not execute and instead the final log output will be handled by the **logger** operation in the repeat cycle.
+
+## getSample ~ @liquify/ava/esthetic
 
 The `getSample` utility resolves a sample file and returns it's source. It is a simple and trivial helper which merely resolves an external file and prints output to the terminal console. The method returns a function with 2 parameters. The first (`source`) contains the contents of the sample file as a string, the second **optional** parameter `highlight` will provide syntax highlighting in the CLI.
 
 <!--prettier-ignore-->
 ```js
 import test from 'ava'
-import { getSample  } from '@liquify/ava/prettify';
+import { getSample  } from '@liquify/ava/esthetic';
 
 test('x', async t => {
 
@@ -238,18 +262,18 @@ test('x', async t => {
 
 ```
 
-## forSample ~ @liquify/ava/prettify
+## forSample ~ @liquify/ava/esthetic
 
 The `forSample` utility resolves a list of sample files. It will return the code snippet and description in the callback function hook. This utility is great for running repeated test cases with a persisted set of rules to ensure the output is the same.
 
 ##### Callback
 
-The callback function returns 3 parameters and is called in an iterable manner. The first parameter is the content contained in the sample file provided as a _string_ type that you can pass to Prettify. The second is label generator for AVA snapshot reports that will stringify the rule options that the assertion ran and inject them into the markdown reports. The label parameter is a function that contains a getter, so you can optionally pass in the rules you've tested against.
+The callback function returns 3 parameters and is called in an iterable manner. The first parameter is the content contained in the sample file provided as a _string_ type that you can pass to esthetic. The second is label generator for AVA snapshot reports that will stringify the rule options that the assertion ran and inject them into the markdown reports. The label parameter is a function that contains a getter, so you can optionally pass in the rules you've tested against.
 
 <!--prettier-ignore-->
 ```js
 import test from 'ava'
-import { forSample  } from '@liquify/ava/prettify';
+import { forSample  } from '@liquify/ava/esthetic';
 
 test('x', async t => {
 
@@ -274,21 +298,21 @@ test('x', async t => {
 });
 ```
 
-## forRule ~ @liquify/ava/prettify
+## forRule ~ @liquify/ava/esthetic
 
-The `forRule` utility is designed for usage within [@liquify/prettify](https://github.com/panoply/liquify/tree/next/packages/prettify). The method will resolve samples and pass different beautification rules and a second argument. This utility exposes several features for working with code snippet samples.
+The `forRule` utility is designed for usage within [esthetic](https://github.com/panoply/liquify/tree/next/packages/esthetic). The method will resolve samples and pass different beautification rules and a second argument. This utility exposes several features for working with code snippet samples.
 
 The function is curried, the first caller expects the sample directory relative path to be provided and also accepts a 2nd parameter that can infer a `lexer` target. The returning caller expects 2 parameters. The first parameter can be either an _array_ list of options or _object_ type map who's `keys` are the sample filenames contained in the directory provided in the first argument and the value an _array_ list of lexer of options to run on each sample. The second parameter is a function callback that will be invoked for each rule (option) provided by the first argument.
 
 ##### Callback
 
-The callback function returns 3 parameters and is called in an iterable manner. The first parameter is the content contained in the sample file provided as a _string_ type that you can pass to Prettify. The second is the rule value and the third parameter is a label generator for AVA snapshot reports that will stringify the rule options that the assertion ran and inject them into the markdown reports.
+The callback function returns 3 parameters and is called in an iterable manner. The first parameter is the content contained in the sample file provided as a _string_ type that you can pass to esthetic. The second is the rule value and the third parameter is a label generator for AVA snapshot reports that will stringify the rule options that the assertion ran and inject them into the markdown reports.
 
 <!--prettier-ignore-->
 ```js
 import test from 'ava'
-import { forRule  } from '@liquify/ava/prettify';
-import prettify from '@liquify/prettify';
+import { forRule  } from '@liquify/ava/esthetic';
+import esthetic from 'esthetic';
 
 test('x', async t => {
 

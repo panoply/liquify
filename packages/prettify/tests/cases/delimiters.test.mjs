@@ -77,7 +77,12 @@ test('Liquid delimiter trims strip', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, { language: 'liquid' });
+    const actual = prettify.format.sync(source, {
+      language: 'liquid',
+      liquid: {
+        delimiterTrims: 'strip'
+      }
+    });
 
     t.is(actual, expect);
 

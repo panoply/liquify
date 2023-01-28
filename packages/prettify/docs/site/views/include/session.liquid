@@ -1,0 +1,95 @@
+{%- if page.url == '/' -%}
+  {%- assign is_open = 'false' -%}
+  {%- assign hidden = 'false' -%}
+  {%- assign drawer = '' -%}
+{%- else -%}
+  {%- assign is_open = 'true' -%}
+  {%- assign hidden = 'true' -%}
+  {%- assign drawer = 'drawer-active' -%}
+{%- endif -%}
+
+<aside
+  id="session"
+  data-controller="drawer"
+  class="drawer-panel drawer-right {{ drawer }} session vh-100 bd-left">
+
+  <div data-controller="session" class="w-100">
+
+    <div data-controller="tabs" class="tabs">
+
+      <nav data-tabs-target="tab" role="tablist" class="row g-0 session-tabs">
+        <button
+          class="btn col-6 rad-0"
+          aria-controls="store"
+          aria-selected="true"
+          role="tab"
+          type="button">
+          Session
+        </button>
+        <button
+          class="btn col-6 rad-0"
+          aria-controls="logs"
+          aria-selected="false"
+          role="tab"
+          type="button">
+          Store
+        </button>
+      </nav>
+
+      <div id="store" role="tabpanel" aria-hidden="false" class="session-details">
+
+        <div class="memory bd-bottom px-3 py-4">
+          <div class="row">
+            <div class="col-2 fs-sm upper">Cache</div>
+            <div class="col fs-sm fc-pink" data-session-target="memory"></div>
+          </div>
+          <div class="row">
+            <div class="col-2 fs-sm upper">Visits</div>
+            <div class="col fs-sm fc-pink" data-session-target="visits"></div>
+          </div>
+        </div>
+
+        <div class="relapse" data-controller="accordion" data-relapse-persist="false">
+
+          {%- assign tabs = 'pages,snapshots,history' | split: ',' -%}
+
+          {% for item in tabs %}
+
+            <button class="relapse-btn bg-black d-flex jc-between ac-center upcase py-2 px-3 {% if item ==
+                'pages' %}initial{% endif %}">
+              {%- if item == 'history' -%}
+                <span>{{ item }} API</span>
+              {%- else -%}
+                <span>{{ item }}</span>
+              {%- endif -%}
+
+              {% svg "plus-square", 'icon icon-close' %}
+              {% svg "minus-square", 'icon icon-open' %}
+            </button>
+
+            <div class="relapse-fold">
+              <div id="{{ item }}" class="px-2 py-4" data-session-target="{{ item }}"></div>
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+      <div id="logs" role="tabpanel" aria-hidden="true" class="session-log">
+
+        {%- assign logs = 'active, action, logs' | split: ',' -%}
+
+        {% for item in logs %}
+
+          <div class="d-flex {{ item }} bd-bottom" data-session-target="{{ item }}">
+            {{ item }}
+          </div>
+
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</aside>

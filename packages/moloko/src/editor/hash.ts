@@ -8,6 +8,8 @@ import lz from 'lz-string';
  */
 export function encode () {
 
+  return;
+
   const o: Hash = Object.create(null);
 
   o.options = store.options;

@@ -1,12 +1,12 @@
 import { Editor } from './types/editor';
-import type Prettify from '@liquify/prettify';
-import type { Options as PrettifyOptions } from '@liquify/prettify';
+import type Esthetic from 'esthetic';
+import type { Rules } from 'esthetic';
 import { Options, Languages, Paths, Attrs, ISamples } from './types/moloko';
 export * as Ace from './types/editor';
 export * from './types/moloko';
 
 /**
- * **Moloko Editor 🥛**
+ * **🥛 MOLOKO**
  *
  * Liquid text editor built atop of Ace.
  */
@@ -19,17 +19,17 @@ declare const moloko: {
    */
   mount(element: Element | HTMLElement, options?: Options): Promise<Editor>
   /**
-   * **Prettify 💅**
+   * **ÆSTHETIC**
    *
    * Returns the Prettify instance used by the editor. If `options.format` is
    * `false` then `null` is returned.
    */
-  prettify: typeof Prettify;
+  esthetic: typeof Esthetic;
   /**
    * Invoke programmatic beautification on the current active file.
    * This function expects beautification rules to be passed.
    */
-  beautify(rules: PrettifyOptions): typeof Prettify;
+  beautify(rules: Rules): typeof Esthetic;
   /**
    * Toggles pane views
    */

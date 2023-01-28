@@ -1,15 +1,15 @@
-@import "./moloko";
+@import './moloko';
 
 .ace_folding-enabled > .ace_gutter-cell {
   color: #444;
 }
-
 
 .ace-potion {
   color: #f8f8f2;
   white-space: pre-wrap;
   text-shadow: none;
   background-color: #0e0e0e;
+  font-weight: 100;
   -webkit-font-smoothing: antialiased;
 
   .ace_gutter {
@@ -21,7 +21,6 @@
     width: 0.01rem;
     background: #ffffff15;
   }
-
 
   .ace_cursor {
     border-left: 1px solid #f8f8f0 !important;
@@ -73,24 +72,28 @@
   }
 
   .ace_meta.ace_tag {
-
-    &.ace_tag-name.ace_xml { color: #ff93bc; }
+    &.ace_tag-name.ace_xml {
+      color: #ff93bc;
+    }
 
     &.ace_punctuation {
       &.ace_tag-open.ace_xml,
       &.ace_end-tag-open.ace_xml,
-      &.ace_tag-close.ace_xml { color: #becaff; }
+      &.ace_tag-close.ace_xml {
+        color: #becaff;
+      }
     }
   }
 
   .ace_keyword {
     &.ace_operator {
-      &.ace_attribute-equals.ace_xml { color: #ff93bc; }
+      &.ace_attribute-equals.ace_xml {
+        color: #ff93bc;
+      }
     }
   }
 
   .ace_entity {
-
     &.ace_name.ace_function {
       color: #9ee34f;
     }
@@ -148,7 +151,6 @@
   }
 
   .ace_support {
-
     &.ace_class,
     &.ace_type {
       color: #66d9ef;
@@ -175,11 +177,9 @@
     }
   }
 
-
   .ace_variable.ace_language {
     color: #ffab40;
   }
-
 
   .ace_keyword + .ace_punctuation.ace_operator {
     color: #888;
@@ -194,7 +194,6 @@
   }
 
   .ace_paren {
-
     &.ace_lparen,
     &.ace_rparen {
       color: #888;

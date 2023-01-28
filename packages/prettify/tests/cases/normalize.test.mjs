@@ -24,7 +24,7 @@ test('Spacing in object expressions', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       liquid: {
         normalizeSpacing: true
@@ -81,7 +81,7 @@ test('Spacing in control operators', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       liquid: {
         normalizeSpacing: true
@@ -121,7 +121,7 @@ test('Spacing in filter expressions', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       liquid: {
         normalizeSpacing: true
@@ -160,7 +160,7 @@ test('Spacing in assignment', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       liquid: {
         normalizeSpacing: true
@@ -189,7 +189,7 @@ test('Spacing in arguments', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       liquid: {
         normalizeSpacing: true
@@ -222,7 +222,7 @@ test('Spacing in parameters', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       liquid: {
         normalizeSpacing: true
@@ -271,7 +271,7 @@ test('Spacing skipping strings', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       liquid: {
         normalizeSpacing: true

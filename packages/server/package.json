@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "@liquify/liquid-parser": "workspace:*",
-    "@liquify/prettify": "workspace:*",
     "@vscode/emmet-helper": "^2.8.4",
     "fs-extra": "^10.1.0",
     "indent-string": "^5.0.0",

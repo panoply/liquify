@@ -1,0 +1,48 @@
+header {
+  position: fixed;
+  //background-color: $white;
+  z-index: 100;
+  display: flex;
+
+  right: 0;
+  height: 52px;
+  font-size: 1.075rem;
+  //letter-spacing: 00.06rem;
+  //box-shadow: $box-shadow;
+
+  //background-color: rgb(15 15 15 / 56.2%);
+
+  // backdrop-filter: blur(15px);
+}
+
+.navbar {
+  width: 100%;
+  // margin-right:  33.3%;
+
+  .icon-github {
+    width: 25px;
+    height: 25px;
+  }
+
+  .off {
+    color: $gray-600;
+  }
+  a {
+    font-weight: 500;
+    color: $pink;
+    margin-right: 15px;
+
+    &.mr {
+      margin-right: 0;
+    }
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+      Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI',
+      Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+      'Segoe UI Emoji', 'Segoe UI Symbol';
+
+    .icon-logo {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}

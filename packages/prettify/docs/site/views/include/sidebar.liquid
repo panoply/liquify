@@ -1,0 +1,71 @@
+{%- if page.url == '/' -%}
+  {%- assign is_open = 'false' -%}
+  {%- assign hidden = 'false' -%}
+  {%- assign active = '' -%}
+{%- else -%}
+  {%- assign is_open = 'true' -%}
+  {%- assign hidden = 'true' -%}
+  {%- assign active = 'drawer-active' -%}
+{%- endif -%}
+
+<div data-controller="sticky">
+  <aside
+    id="sidebar"
+    class="drawer-panel drawer-left {{ drawer }} sidebar vh-100 br"
+    data-controller="drawer">
+
+    <div class="container-fluid g-0">
+
+      <form class="p-4">
+        <input
+          class="form-input form-input-sm rad-1"
+          type="search"
+          placeholder="Search...">
+      </form>
+
+
+      <nav class="accordion mt-3 mb-2 bx-0" data-controller="accordion">
+
+        {%- assign pages = collections.all | sorting -%}
+
+        {%- for link in pages %}
+
+          {%- unless link.data.title and link.data.sidebar -%}
+            {%- continue -%}
+          {%- endunless -%}
+
+          {%- capture initial -%}
+            {%- if page.url == link.url -%}initial{%- endif -%}
+          {%- endcapture -%}
+
+          <a class="accordion-btn px-3 py-2 {{ initial }}" href="{{- link.url }}">
+            {{ link.data.title }}
+          </a>
+
+          <div class="accordion-fold bt bg-gray {% if page.url == link.url %}expanded{%- endif -%}">
+            <ul class="py-4 px-2  ml-0" id="{{- link.data.title | slugify -}}">
+              {%- for item in link.data.sidebar %}
+                <li class="pt-1 pl-3">
+
+                  <a href="{{ item | slugify | prepend: '#' }}">
+
+                    {%- if item contains 'data-' -%}
+                      {{- item | replace: '-', '<span class="fc-gray">–</span>' -}}
+                    {%- elsif item contains 'spx:' -%}
+                      {{- item | replace: ':', '<span class="fc-gray">:</span>' -}}
+                    {%- else -%}
+                      {{- item -}}
+                    {%- endif -%}
+
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+
+        {%- endfor -%}
+
+      </nav>
+    </div>
+  </aside>
+</div>

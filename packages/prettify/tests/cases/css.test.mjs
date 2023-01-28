@@ -1,65 +1,43 @@
 import test from 'ava';
-import { forAssert, forRules, css } from '@liquify/ava/prettify';
+import { forAssert, forRules, css, liquid } from '@liquify/ava/prettify';
 import prettify from '@liquify/prettify';
 
-test('Liquid infused selectors', t => {
+test('Structure Test:  Liquid infused selectors', t => {
 
-  forAssert([
-    [
-      css`
+  forRules([
+    css`
 
-        /* Space should be respected at grid */
+      /* Space should be respected at grid */
 
-        .image-grid-{{ respect.spacing }} .grid {
-          color: #111;
-        }
+      .image-grid-{{ respect.spacing }} .grid {
+        color: #111;
+      }
 
-      `,
-      css`
+    `,
+    css`
 
-        /* Space should be respected at grid */
-        .image-grid-{{ respect.spacing }} .grid {
-          color: #111;
-        }
+      /* Template infused class should be preserved */
 
-      `
-    ],
-    [
-      css`
+      .image-grid-{{ respect.spacing }}-class {
+        color: #111;
+      }
 
-        /* Template infused class should be preserved */
-
-        .image-grid-{{ respect.spacing }}-class {
-          color: #111;
-        }
-
-      `,
-      css`
-
-        /* Template infused class should be preserved */
-
-        .image-grid-{{ respect.spacing }}-class {
-          color: #111;
-        }
-
-      `
-    ]
-  ])(function (source, expect) {
-
-    const output = prettify.formatSync(source, {
+    `
+  ])(
+    {
       language: 'css'
+    }
+  )(function (source, rules) {
 
-    });
+    const output = prettify.format.sync(source, rules);
 
-    t.deepEqual(output, expect);
-
-    // t.log(output);
+    t.deepEqual(output, source);
 
   });
 
 });
 
-test('Attribute selectors expressions', t => {
+test('Structure Test: Attribute selectors expressions', t => {
 
   forAssert([
     [
@@ -110,7 +88,7 @@ test('Attribute selectors expressions', t => {
     ]
   ])(function (source, expect) {
 
-    const output = prettify.formatSync(source, {
+    const output = prettify.format.sync(source, {
       language: 'css'
 
     });
@@ -123,129 +101,87 @@ test('Attribute selectors expressions', t => {
 
 });
 
-test('Complex pseudo selectors', t => {
+test('Structure Test: Complex pseudo selectors', t => {
 
-  forAssert([
-    [
-      css`
+  forRules([
 
-        /* Isolated pseudo selector with webkit property */
+    css`
 
-        ::-webkit-search-decoration { -webkit-appearance: none;      }
+      /* Isolated pseudo selector with webkit property */
 
-      `,
-      css`
+      ::-webkit-search-decoration {
+        -webkit-appearance: none;
+      }
 
-        /* Isolated pseudo selector with webkit property */
+    `
+    ,
+
+    css`
+
+      /* multiple pseudo selector stacking */
+
+      ::-webkit-datetime-edit-fields-wrapper,
+      ::-webkit-datetime-edit-text,
+      ::-webkit-datetime-edit-minute,
+      ::-webkit-datetime-edit-hour-field,
+      ::-webkit-datetime-edit-day-field,
+      ::-webkit-datetime-edit-month-field,
+      ::-webkit-datetime-edit-year-field {
+        padding: 0;
+      }
+
+    `
+    ,
+    css`
+
+      /* multiple "not" selector chaining */
+
+      [list]:not([type=datetime-local]):not([type=month])::-webkit-calendar-picker-indicator {
+        display: none !important;
+      }
+
+    `
+    ,
+    css`
+
+      /* media query pseudo selector nesting */
+
+      @media (prefers-reduced-motion: no-preference) {
+
+        :root {
+          scroll-behavior: smooth;
+        }
 
         ::-webkit-search-decoration {
           -webkit-appearance: none;
         }
 
-      `
-    ],
-    [
-      css`
+      }
 
-        /* multiple pseudo selector stacking */
+    `
 
-        ::-webkit-datetime-edit-fields-wrapper, ::-webkit-datetime-edit-text,
-        ::-webkit-datetime-edit-minute, ::-webkit-datetime-edit-hour-field,
-        ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-month-field,
-        ::-webkit-datetime-edit-year-field {
-          padding: 0;
-        }
+  ])(
+    {
+      language: 'css',
+      style: {
+        atRuleSpace: true
+      }
+    }
+  )(function (source, rules) {
 
-      `,
-      css`
+    const output = prettify.format.sync(source, rules);
 
-        /* multiple pseudo selector stacking */
-
-        ::-webkit-datetime-edit-fields-wrapper,
-        ::-webkit-datetime-edit-text,
-        ::-webkit-datetime-edit-minute,
-        ::-webkit-datetime-edit-hour-field,
-        ::-webkit-datetime-edit-day-field,
-        ::-webkit-datetime-edit-month-field,
-        ::-webkit-datetime-edit-year-field {
-          padding: 0;
-        }
-
-      `
-    ],
-    [
-      css`
-
-        /* multiple "not" selector chaining */
-
-        [list]:not([type=datetime-local]):not([type=month])::-webkit-calendar-picker-indicator {
-          display: none !important;
-        }
-
-      `,
-      css`
-
-        /* multiple "not" selector chaining */
-
-        [list]:not([type=datetime-local]):not([type=month])::-webkit-calendar-picker-indicator {
-          display: none !important;
-        }
-
-      `
-    ],
-    [
-
-      css`
-
-        /* media query pseudo selector nesting */
-
-        @media (prefers-reduced-motion: no-preference) {
-
-        :root { scroll-behavior: smooth; }
-
-        ::-webkit-search-decoration { -webkit-appearance: none; }
-
-        }
-
-      `,
-      css`
-
-        /* media query pseudo selector nesting */
-
-        @media (prefers-reduced-motion: no-preference) {
-
-          :root {
-            scroll-behavior: smooth;
-          }
-
-          ::-webkit-search-decoration {
-            -webkit-appearance: none;
-          }
-
-        }
-
-      `
-    ]
-  ])(function (source, expect) {
-
-    const output = prettify.formatSync(source, { language: 'css' });
-
-    t.deepEqual(output, expect);
+    t.deepEqual(output, source);
 
   });
 
 });
 
-test('CSS variable expressions', async t => {
+test('Structure Test: CSS variable expressions with Liquid infusion', async t => {
 
-  forAssert([
-    [
-      css`
+  forRules([
 
-      :root { --main-bg-color: brown;--my-background: #fff; --my-var: 0.985rem;}
-
-      `,
-      css`
+    css`
 
       :root {
         --main-bg-color: brown;
@@ -253,28 +189,36 @@ test('CSS variable expressions', async t => {
         --my-var: 0.985rem;
       }
 
-      `
-    ],
-    [
-      css`
+    `
+    ,
+    css`
 
       :root {
         --font-body-family: {{ settings.type_body_font.family }};
       }
 
-      `,
-      css`
+    `
+    ,
+
+    liquid`
 
       :root {
-        --font-body-family: {{ settings.type_body_font.family }};
+        --{{ settings.type_body_font.family }}-main: brown;
+        --my-background: #fff;
+        --my-var-{{ settings.type_body_font.family }}: 0.985rem;
       }
-      `
-    ]
-  ])(function (source, expect) {
 
-    const actual = prettify.formatSync(source, { language: 'css' });
+    `
 
-    t.deepEqual(actual, expect);
+  ])(
+    {
+      language: 'css'
+    }
+  )(function (source, rules) {
+
+    const actual = prettify.format.sync(source, rules);
+
+    t.deepEqual(actual, source);
 
   });
 
@@ -355,7 +299,7 @@ test('Sorting selector names', t => {
     ]
   )(function (source, rules, label) {
 
-    const snapshot = prettify.formatSync(source, rules);
+    const snapshot = prettify.format.sync(source, rules);
 
     t.snapshot(snapshot, label);
 
@@ -414,7 +358,7 @@ test('Sorting class properties', t => {
     ]
   )(function (source, rules, label) {
 
-    const snapshot = prettify.formatSync(source, rules);
+    const snapshot = prettify.format.sync(source, rules);
 
     t.snapshot(snapshot, label);
 

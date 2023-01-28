@@ -81,6 +81,7 @@
               "if",
               "raw",
               "tablerow",
+              "liquid",
               "unless",
               "schema",
               "style",
@@ -89,6 +90,11 @@
               "javascript"
             ]
           }
+        },
+        "indentAttributes": {
+          "default": false,
+          "type": "boolean",
+          "markdownDescription": "./descriptions/format/liquid/indentAttributes.md"
         },
         "lineBreakSeparator": {
           "default": "default",
@@ -169,6 +175,11 @@
           "default": false,
           "markdownDescription": "./descriptions/format/liquid/commentNewline.md"
         },
+        "delimiterForce": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "./descriptions/format/markup/delimiterForce.md"
+        },
         "forceLeadAttribute": {
           "type": "boolean",
           "default": false,
@@ -184,15 +195,20 @@
           "default": false,
           "markdownDescription": "./descriptions/format/markup/forceAttribute.md"
         },
-        "ignoreScripts": {
+        "ignoreJS": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "./descriptions/format/markup/ignoreScripts.md"
+          "markdownDescription": "./descriptions/format/markup/ignoreJS.md"
         },
-        "ignoreStyles": {
+        "ignoreJSON": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "./descriptions/format/markup/ignoreStyles.md"
+          "markdownDescription": "./descriptions/format/markup/ignoreJSON.md"
+        },
+        "ignoreCSS": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "./descriptions/format/markup/ignoreCSS.md"
         },
         "preserveText": {
           "type": "boolean",

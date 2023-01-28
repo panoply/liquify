@@ -1,0 +1,141 @@
+---
+title: 'Rules | Liquid - Comment Indent'
+layout: docs.liquid
+permalink: '/rules/liquid/commentIndent/index.html'
+order: 3
+sidebar:
+  - 'HTML'
+  - 'Liquid'
+  - 'CSS'
+  - 'SCSS'
+  - 'LESS'
+  - 'JSON'
+  - 'JavaScript'
+  - 'TypeScript'
+  - 'JSX'
+  - 'TSX'
+---
+
+<div class="row ai-center jc-between mb-2">
+  <div class="col-auto">
+    <h2 class="my-0">Comment Indent</h2>
+  </div>
+  <div class="col-auto">
+    <code>commentIndent</code>
+  </div>
+</div>
+Applies single indentation to containing content of Liquid comments. Liquid line type comments are currently not supported by this rule. Only block type Liquid tokens will be handled. Liquid line type comments are currently not supported by this rule. Only block type Liquid tokens will be handled.
+
+<div class="row py-4">
+  <div class="col-2">
+    <strong>🎀&nbsp;&nbsp;Language</strong>
+  </div>
+  <div class="col-10">
+    <code>liquid</code>
+  </div>
+  <div class="col-2">
+    <strong>💁🏽‍♀️&nbsp;&nbsp;Recommended</strong>
+  </div>
+  <div class="col-10">
+    <code>true</code>
+  </div>
+  <div class="col-2">
+    <strong>⚙️&nbsp;&nbsp;Default:</strong>
+  </div>
+  <div class="col-10">
+    <code>false</code>
+  </div>
+</div>
+
+<h4>Example</h4>
+
+Below is an example of how this rule works if it's enabled, ie: `true`. By default, comment contents do not apply indentation. Notice how the inner content appears at the same starting points of the start and end tags.
+
+<div class="row">
+
+  <div class="col">
+    <h5>Before</h5>
+  </div>
+  <div class="col">
+    <h5>After</h5>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col">
+
+
+    {% highlight liquid %}
+
+      {% comment %}
+      I am not indented
+      {% endcomment %}
+
+      <div>
+
+        {% comment %}
+        I am not indented
+        {% endcomment %}
+        <nav>
+          <ul>
+
+            {% comment %}
+            I am not indented
+            {% endcomment %}
+            <li>Foo</li>
+          </ul>
+        </nav>
+      </div>
+
+    {% endhighlight %}
+
+  </div>
+  <div class="col">
+
+    {% highlight liquid %}
+
+      {% comment %}
+      I am not indented
+      {% endcomment %}
+
+      <div>
+
+        {% comment %}
+        I am not indented
+        {% endcomment %}
+        <nav>
+          <ul>
+
+            {% comment %}
+            I am not indented
+            {% endcomment %}
+            <li>Foo</li>
+          </ul>
+        </nav>
+      </div>
+
+    {% endhighlight %}
+
+  </div>
+
+</div>
+
+
+<h4>Definition</h4>
+<p>
+  This is a
+  <code>liquid</code>
+  formatting rule and can be defined on the
+  <code>liquid</code>
+  language key.
+</p>
+
+{% # @prettify-ignore-next %}
+{% highlight json %}
+{
+  "liquid": {
+    "commentIndent": false
+  }
+}
+{% endhighlight %}

@@ -1,0 +1,24 @@
+.accordion {
+  position: relative;
+  border-top: none;
+  border-right: none;
+
+  &-fold {
+    background-color: $gray-100;
+    border-top: $border-width $gray-300 solid;
+  }
+
+  &-btn.opened,
+  &-btn.focused {
+    color: $black;
+  }
+
+  &-btn {
+    padding: 10px 20px;
+
+    &:hover,
+    &:focus {
+      color: $gray-700;
+    }
+  }
+}

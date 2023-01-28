@@ -1,6 +1,6 @@
 {
   "name": "@liquify/ava",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "AVA Test runner extension pack for projects contained in the Liquify monorepo workspace.",
   "author": {
     "name": "Νίκος Σαβίδης",
@@ -20,12 +20,12 @@
       "node": "./package/parser.cjs",
       "default": "./package/parser.js"
     },
-    "./prettify": {
-      "types": "./package/prettify.d.ts",
-      "require": "./package/prettify.cjs",
-      "import": "./package/prettify.js",
-      "node": "./package/prettify.cjs",
-      "default": "./package/prettify.js"
+    "./esthetic": {
+      "types": "./package/esthetic.d.ts",
+      "require": "./package/esthetic.cjs",
+      "import": "./package/esthetic.js",
+      "node": "./package/esthetic.cjs",
+      "default": "./package/esthetic.js"
     }
   },
   "private": false,
@@ -47,7 +47,7 @@
     "entry": [
       "./src/cli.ts",
       "./src/parser.ts",
-      "./src/prettify.ts"
+      "./src/esthetic.ts"
     ],
     "outDir": "package",
     "clean": true,
@@ -55,7 +55,7 @@
     "dts": {
       "entry": [
         "./src/parser.ts",
-        "./src/prettify.ts"
+        "./src/esthetic.ts"
       ],
       "resolve": true
     },
@@ -64,7 +64,7 @@
       "cli-highlight",
       "fs-extra",
       "ava",
-      "@liquify/prettify",
+      "esthetic",
       "@liquify/liquid-parser"
     ],
     "splitting": false,
@@ -89,7 +89,6 @@
     "@liquify/eslint-config": "workspace:*",
     "@liquify/liquid-parser": "workspace:*",
     "@liquify/prettier-config": "workspace:*",
-    "@liquify/prettify": "workspace:*",
     "@liquify/tsconfig": "workspace:*",
     "@types/node": "^18.11.9",
     "@types/prompts": "^2.4.1",
@@ -102,6 +101,7 @@
   "dependencies": {
     "chalk": "^5.1.2",
     "cli-highlight": "^2.1.11",
+    "esthetic": "workspace:*",
     "minimist": "^1.2.7",
     "prompts": "^2.4.2"
   }

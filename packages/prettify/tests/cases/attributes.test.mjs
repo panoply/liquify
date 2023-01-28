@@ -49,7 +49,7 @@ test.serial('Liquid structure variations', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, { language: 'liquid' });
+    const actual = prettify.format.sync(source, { language: 'liquid' });
 
     t.is(actual, expect);
 
@@ -91,10 +91,11 @@ test.serial('Liquid chaining and whitespace breaks', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       markup: {
-        forceAttribute: false
+        forceAttribute: false,
+        indentAttributes: false
       }
     });
 
@@ -235,7 +236,7 @@ test.serial('Liquid structure preservation', t => {
     }
   )(function (source, rules, label) {
 
-    const snapshot = prettify.formatSync(source, rules);
+    const snapshot = prettify.format.sync(source, rules);
 
     t.snapshot(snapshot, label);
 
@@ -318,7 +319,7 @@ test.serial('Liquid delimiter handling', t => {
     }
   )(function (source, rules, label) {
 
-    const snapshot = prettify.formatSync(source, rules);
+    const snapshot = prettify.format.sync(source, rules);
 
     //  console.log(snapshot);
     t.snapshot(snapshot, label);
@@ -355,7 +356,7 @@ test.serial('Casing rule cases', t => {
     ]
   )(function (source, rules, label) {
 
-    const snapshot = prettify.formatSync(source, rules);
+    const snapshot = prettify.format.sync(source, rules);
 
     t.snapshot(snapshot, label);
 
@@ -418,7 +419,7 @@ test.serial('Quote conversion within values', t => {
     ]
   )(function (source, rules, label) {
 
-    const snapshot = prettify.formatSync(source, rules);
+    const snapshot = prettify.format.sync(source, rules);
 
     t.snapshot(snapshot, label);
 
@@ -468,7 +469,7 @@ test.serial('Sorting alphabetically', t => {
     ]
   )(function (source, rules, label) {
 
-    const snapshot = prettify.formatSync(source, rules);
+    const snapshot = prettify.format.sync(source, rules);
 
     t.snapshot(snapshot, label);
 
@@ -533,7 +534,7 @@ test.serial('Sorting using sort list', t => {
     ]
   )(function (source, rules, label) {
 
-    const snapshot = prettify.formatSync(source, rules);
+    const snapshot = prettify.format.sync(source, rules);
 
     t.snapshot(snapshot, label);
 
@@ -559,7 +560,7 @@ test.serial('Sorting excluded when Liquid attributes', t => {
     ]
   )(function (source, expect) {
 
-    const actual = prettify.formatSync(source, {
+    const actual = prettify.format.sync(source, {
       language: 'liquid',
       markup: {
         attributeSort: true,
@@ -569,6 +570,125 @@ test.serial('Sorting excluded when Liquid attributes', t => {
     });
 
     t.is(actual, expect);
+
+  });
+});
+
+test.serial('Indenting attributes contained in Liquid block tags', t => {
+
+  forRules(
+    [
+      liquid`
+
+      {% # Indenting controls %}
+
+      <div>
+
+      <main
+
+      class="x"
+      id="indentation"
+
+      {% if condition_1 %}
+      data-a="1"
+      data-b="2"
+      {% else %}
+      data-c="3"
+      data-d="4"
+      {% endif %}
+      data-e="5"
+      data-f="6"
+
+      {% unless xxx %}
+      data-g="7"
+      data-h="8"
+      {% endunless %}
+
+      >
+
+      Hello World
+
+      </main>
+
+      </div>`
+      ,
+
+      liquid`
+
+      {% # Deeply nested indentations %}
+
+      <div>
+
+      <main
+
+      class="x"
+      id="indentation"
+
+      {% if level_1 %}
+      data-a="1"
+      data-b="2"
+      {% else %}
+      data-c="3"
+      data-d="4"
+
+      {% if level_2 %}
+      data-e="5"
+      data-f="6"
+
+      {% unless level_3 %}
+      data-g="7"
+      data-h="8"
+
+      {% for i in level_4 %}
+
+      data-i="{{ i }}"
+
+      {% endfor %}
+
+      {% endunless %}
+
+      {% endif %}
+
+      {% endif %}
+
+
+
+      >
+
+      Hello World
+
+      </main>
+
+      </div>`
+    ]
+  )(
+    [
+      {
+        language: 'liquid',
+        liquid: {
+          indentAttributes: true
+        },
+        markup: {
+          forceAttribute: true
+        }
+      },
+      {
+        language: 'liquid',
+        liquid: {
+          indentAttributes: true
+        },
+        markup: {
+          forceAttribute: true
+        }
+      }
+    ]
+  )(function (source, rules, label) {
+
+    const snapshot = prettify.format.sync(source, rules);
+
+    // t.log(snapshot);
+
+    t.snapshot(snapshot, label);
 
   });
 });

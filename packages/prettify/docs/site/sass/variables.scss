@@ -1,0 +1,182 @@
+/* -------------------------------------------- */
+/* VARIABLE PREFIX                              */
+/* -------------------------------------------- */
+
+$variable-prefix: null;
+
+/* -------------------------------------------- */
+/* EDITABLE OPTIONS                             */
+/* -------------------------------------------- */
+
+$enable-rfs: true;
+
+/* -------------------------------------------- */
+/* PALETTE                                      */
+/* -------------------------------------------- */
+
+$white: #fff;
+$black: #0d0d0d;
+$blue: #0d6efd;
+$indigo: #6610f2;
+$purple: #a77afe;
+$pink: #ef3b7d;
+$salmon: #ff8ab0;
+$red: #dc3545;
+$orange: #ef8c39;
+$yellow: #ffe77a;
+$green: #c2ff49;
+$teal: #20c997;
+$cyan: #7ef0ff;
+$sea: #8bd3fd;
+
+/* -------------------------------------------- */
+/* GRAYS                                        */
+/* -------------------------------------------- */
+
+$gray-100: #f8f9fa;
+$gray-200: #f3f4f5; // FONT COLOUR
+$gray-300: #e1e1e8;
+$gray-400: #c4c8cc;
+$gray-500: #a4a6a8;
+$gray-600: #999999;
+$gray-700: #212529;
+$gray-800: #282a36; // CODE BACKGROUND
+$gray-900: #121212;
+
+/* -------------------------------------------- */
+/* BACKGROUND COLORS                            */
+/* -------------------------------------------- */
+
+$background-colors: (
+  'ivory': $gray-200,
+  'black': $black,
+  'gray': $gray-100,
+  'cyan': $cyan,
+  'ebony': $gray-800
+);
+
+/* -------------------------------------------- */
+/* BORDER COLORS                                */
+/* -------------------------------------------- */
+
+// $border-color: $gray-400;
+
+/* -------------------------------------------- */
+/* FONT COLORS                                  */
+/* -------------------------------------------- */
+
+$font-colors: (
+  'black': $black,
+  'white': $gray-200,
+  'gray': $gray-500,
+  'red': $red,
+  'yellow': $yellow,
+  'cyan': $cyan,
+  'green': $green,
+  'purple': $purple,
+  'pink': $pink
+);
+
+/* -------------------------------------------- */
+/* SPACING                                      */
+/* -------------------------------------------- */
+
+$spacer: 1rem;
+
+/* -------------------------------------------- */
+/* GRID                                         */
+/* -------------------------------------------- */
+
+$grid-columns: 12;
+$grid-gutter-width: 1.5rem;
+$grid-row-columns: 6;
+
+/* -------------------------------------------- */
+/* GRID > BREAKPOINTS                           */
+/* -------------------------------------------- */
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+/* -------------------------------------------- */
+/* GRID > MAX-WIDTHS                            */
+/* -------------------------------------------- */
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1000px,
+  xxl: 1320px
+);
+
+/* -------------------------------------------- */
+/* BODY                                         */
+/* -------------------------------------------- */
+
+$body-bg: $white;
+$body-color: $gray-900;
+
+/* -------------------------------------------- */
+/* BORDER                                       */
+/* -------------------------------------------- */
+
+$border-width: 0.01rem;
+
+/* -------------------------------------------- */
+/* FONT FAMILY                                  */
+/* -------------------------------------------- */
+
+// stylelint-disable
+
+$font-family-base: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+  Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI',
+  Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  'Segoe UI Symbol';
+
+$font-family-heading: $font-family-base;
+$font-family-code: SFMono-Regular, Menlo, Monaco, 'Courier New',
+  Courier, monospace;
+
+// stylelint-enable
+
+/* -------------------------------------------- */
+/* FONT SIZES                                   */
+/* -------------------------------------------- */
+
+$font-size-base: 1rem;
+
+$font-size-xs: $font-size-base * 0.625; // 0.6875rem
+$font-size-md: 0.901rem; // 0.7771rem
+$font-size-sm: $font-size-base * 0.775; // 0.8525rem
+$font-size-lg: $font-size-base * 1.25; // 1.375rem
+
+/* -------------------------------------------- */
+/* FONT HEADINGS                                */
+/* -------------------------------------------- */
+
+$headings-letter-spacing: $letter-spacing-heading;
+$headings-font-family: $font-family-heading;
+$headings-margin-bottom: $spacer * 0.5;
+$headings-font-style: null;
+$headings-font-weight: 500;
+$headings-line-height: 1.5;
+$headings-color: null;
+$headings-uppercase: false;
+
+$h1-font-size: $font-size-base * 2.2;
+$h2-font-size: $font-size-base * 2;
+$h3-font-size: $font-size-base * 1.75;
+$h4-font-size: $font-size-base * 1.5;
+$h5-font-size: $font-size-base * 1.25;
+$h6-font-size: $font-size-base;
+
+/* -------------------------------------------- */
+/* PARAGRAPH                                    */
+/* -------------------------------------------- */

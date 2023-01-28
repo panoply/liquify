@@ -80,33 +80,34 @@ export const Editor: m.Component<Attrs> = {
 
     attrs.editor = new Split(dom, 'ace/theme/potion', 2);
 
-    if (store.options.hash && attrs.hash) {
+    // if (store.options.hash && attrs.hash) {
 
-      const text = hash.decode(attrs.hash);
-      const mode = await store.language(text.language);
+    //  // const text = hash.decode(attrs.hash);
+    //  // const mode = await store.language(text.language);
 
-      attrs.input = ace.createEditSession(text.input, mode);
-      attrs.output = ace.createEditSession(text.output, mode);
-      attrs.language = text.language;
-      attrs.autoDetect = text.autoDetect;
-      attrs.sample = text.sample;
-      attrs.languageName = text.languageName;
-      attrs.stats = text.stats;
-      attrs.mode = text.mode;
+    //   attrs.input = ace.createEditSession(text.input, mode);
+    //   attrs.output = ace.createEditSession(text.output, mode);
+    //   attrs.language = text.language;
+    //   attrs.autoDetect = text.autoDetect;
+    //   attrs.sample = text.sample;
+    //   attrs.languageName = text.languageName;
+    //   attrs.stats = text.stats;
+    //   attrs.mode = text.mode;
 
-    } else {
+    // } else {
 
-      const mode = await store.language(attrs.language);
+    const mode = await store.language(attrs.language);
 
-      attrs.input = ace.createEditSession('', mode);
-      attrs.output = ace.createEditSession('', mode);
+    attrs.input = ace.createEditSession('', mode);
+    attrs.output = ace.createEditSession('', mode);
 
-      if (store.options.hash) hash.encode();
+    if (store.options.hash) hash.encode();
 
-    }
+    // }
 
     toggleViews(attrs.pane);
 
+    //  toggleViews('editor');
     attrs.ready = true;
 
   },

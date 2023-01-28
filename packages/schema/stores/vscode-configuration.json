@@ -10,14 +10,6 @@
       "enum": ["standard", "shopify", "11ty", "jekyll"],
       "markdownDescription": "./descriptions/vscode/engine.md"
     },
-    "liquid.languageParticipants": {
-      "type": "array",
-      "default": [],
-      "markdownDescription": "./descriptions/vscode/languageParticipants.md",
-      "items": {
-        "type": "string"
-      }
-    },
     "liquid.files.locales": {
       "type": "string",
       "markdownDescription": "./descriptions/vscode/files/locales.md"

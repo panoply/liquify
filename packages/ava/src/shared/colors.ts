@@ -108,7 +108,7 @@ export const DEFAULT_THEME = {
   /**
    * name of an XML tag, the first word in an s-expression
    */
-  name: (code) => {
+  name: (code: string) => {
 
     if (/(end)?comment/.test(code)) {
       return chalk.gray(code);
@@ -176,27 +176,27 @@ export const DEFAULT_THEME = {
   /**
    * tag selector in CSS
    */
-  'selector-tag': chalk.white,
+  'selector-tag': chalk.hex('#e75378'),
 
   /**
    * #id selector in CSS
    */
-  'selector-id': chalk.white,
+  'selector-id': chalk.hex('#9EE34F'),
 
   /**
    * .class selector in CSS
    */
-  'selector-class': chalk.white,
+  'selector-class': chalk.hex('#9EE34F'),
 
   /**
    * [attr] selector in CSS
    */
-  'selector-attr': chalk.white,
+  'selector-attr': chalk.hex('#9EE34F'),
 
   /**
    * :pseudo selector in CSS
    */
-  'selector-pseudo': chalk.white,
+  'selector-pseudo': chalk.hex('#9EE34F'),
 
   /**
    * tag of a template language
@@ -294,22 +294,50 @@ function keyword (token: string) {
 
   if (/comment|endcomment/.test(token)) return chalk.gray(esc(token));
 
+  if (/\s*#/.test(token)) return chalk.gray(esc(token));
+
   return chalk.hex('#ef3b7d')(token);
 
+}
+
+function selector (tokens: string) {
+
+  return tokens
+    .replace(/(?<=\s{2,})[a-zA-Z0-9][a-zA-Z0-9_-]+/g, v => chalk.hex('#ef3b7d')(esc(v)))
+    .replace(/\B[#.][a-zA-Z#_.-]+/g, v => chalk.hex('#9EE34F')(esc(v)));
+
+}
+
+function cssprops (tokens: string) {
+
+  return tokens.replace(/(?<=\s+)[a-zA-Z-]+(?=:)/g, v => chalk.hex('#81D4FA')(esc(v)));
+
+}
+
+function style (content: string) {
+
+  content = content
+    .replace(/^.*?(?={)/gm, selector)
+    .replace(/(?<={)[\s\S]+?(?=})/g, cssprops)
+    .replace(/--[a-zA-Z0-9_-]+/g, v => chalk.whiteBright(esc(v)))
+    .replace(/(?<=[:]\s)[a-z]+(?=;)/g, v => chalk.yellowBright(esc(v)))
+    .replace(/\s(\d+|\d+[a-z]+)/g, v => chalk.magenta(esc(v)));
+
+  return content;
 }
 
 export function colors (content: string, options: HighlightOptions = {}) {
 
   Object.assign<HighlightOptions, HighlightOptions>(options, {
     theme: DEFAULT_THEME,
-    language: 'html'
+    language: 'html',
+    ignoreIllegals: true
   });
 
   const syntax = highlight(content, options);
+  const embeds = syntax.replace(/(?<={%-?\s*style\s*-?%})[\s\S]+?(?={%-?\s*endstyle\s*-%})/g, style);
 
-  if (options.language !== 'html') return syntax;
-
-  return syntax
+  return embeds
     .replace(/(?<={%-?)[\s\S]*?(?=-?%})/g, tags)
     .replace(/(?<={{)[\s\S]*?(?=}})/g, objects)
     .replace(/{{-|{%-|{{|{%|}}|%}|-}}|-%}/g, delimiters);

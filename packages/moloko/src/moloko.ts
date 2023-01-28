@@ -1,5 +1,5 @@
 import type { Options } from '@types';
-import prettify from '@liquify/prettify';
+import esthetic from 'esthetic';
 import { Editor } from '@editor';
 import { Footer } from '@footer';
 import { attrs, basePath } from '@attrs';
@@ -18,12 +18,12 @@ export { beautify, toggleViews as pane } from '@actions';
 ace.config.set('useWorker', true);
 ace.config.set('packaged', true);
 
-prettify.format.after(() => {
-  attrs.stats.prettifyTime = `Formatted&nbsp;in&nbsp;${prettify.format.stats.time}ms`;
-  attrs.stats.languageName = prettify.format.stats.language;
-  attrs.stats.characterLength = `${(prettify.format.stats.chars || 0).toLocaleString('en-US')} Characters`;
-  attrs.stats.sizeOfFile = prettify.format.stats.size as any;
-});
+// esthetic.on('format', function () {
+//   attrs.stats.prettifyTime = `Formatted&nbsp;in&nbsp;${esthetic.stats.time}ms`;
+//   attrs.stats.languageName = esthetic.stats.language;
+//   attrs.stats.characterLength = `${(esthetic.stats.chars || 0).toLocaleString('en-US')} Characters`;
+//   attrs.stats.sizeOfFile = esthetic.stats.size as any;
+// });
 
 export function state () {
 
@@ -78,21 +78,21 @@ async function settings (opts: Options): Promise<Options> {
 
   await import(paths.themes[config.theme]);
 
-  prettify.options({
+  esthetic.rules({
     wrap: 80,
     indentSize: 2
   });
 
-  prettify.format.after(() => {
-    m.redraw();
-    hash.encode();
-  });
+  // esthetic.on('format', function () {
+  //   m.redraw();
+  //   hash.encode();
+  // });
 
-  prettify.options.listen((rules) => {
-    attrs.editor.getEditor(attrs.idx).setPrintMarginColumn(rules.wrap);
-    attrs.languageName = rules.languageName;
-    hash.encode();
-  });
+  // esthetic.on('rules', (rules) => {
+  //   attrs.editor.getEditor(attrs.idx).setPrintMarginColumn(rules.wrap);
+  //   attrs.languageName = rules.languageName;
+  //   hash.encode();
+  // });
 
   return config;
 
@@ -104,11 +104,11 @@ async function settings (opts: Options): Promise<Options> {
  */
 async function configure (opts: Options) {
 
-  if (window.location.hash.charCodeAt(1) === 77 && window.location.hash.charCodeAt(2) === 61) {
-    attrs.hash = window.location.hash.slice(3);
-  } else {
-    attrs.hash = null;
-  }
+  // if (window.location.hash.charCodeAt(1) === 77 && window.location.hash.charCodeAt(2) === 61) {
+  //   attrs.hash = window.location.hash.slice(3);
+  // } else {
+  //   attrs.hash = null;
+  // }
 
   return settings(opts);
 

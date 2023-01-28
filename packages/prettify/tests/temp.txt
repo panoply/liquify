@@ -1,0 +1,62 @@
+else if (isLiquidStart(value) && (
+              (
+                rules.liquid.valueForce === 'always' || (
+                  (rules.liquid.valueForce === 'intent' || rules.liquid.valueForce === 'wrap') &&
+                  rules.wrap > 0 &&
+                  Math.abs(a - parse.character) >= rules.wrap
+                )
+              ) || (
+                value.indexOf(NWL) > 0 && (
+                  rules.liquid.valueForce === 'newline' ||
+                  rules.liquid.valueForce === 'intent'
+                )
+              )
+            ) && (
+              u.is(value[0], cc.DQO) ||
+              u.is(value[0], cc.SQO)
+            )) {
+
+              parse.attributes.set(begin, grammar.html.voids.has(record.stack));
+
+              push(record, {
+                token: `${name}=${sq > -1 ? "'" : '"'}`,
+                types: 'attribute'
+              });
+
+              // const before = parse.count + 1;
+
+              if (idx + 1 === len) {
+                console.log(value);
+                const x = markup(value.slice(1, -1));
+                console.log(x);
+                data.token[parse.count] = `${data.token[parse.count]}${sq > -1 ? "'" : '"'}`;
+                break;
+              }
+
+              if (rules.markup.forceIndent === true) {
+
+                const q = value.lastIndexOf(value[0]);
+
+                if (u.is(value[q], cc.DQO) || u.is(value[q], cc.SQO)) {
+                  markup(value.slice(1, q));
+                  data.token[parse.count] = `${data.token[parse.count]}${sq > -1 ? "'" : '"'}`;
+                } else {
+                  markup(value.slice(1));
+                }
+              } else {
+
+                markup(value.slice(1));
+
+              }
+
+              record.types = 'attribute';
+              record.stack = stack;
+              record.begin = begin;
+
+              // for (let x = before; x < parse.count; x++) {
+              //   if (data.types[x].indexOf('liquid') > -1) {
+              //     data.token[x] = '  ' + data.token[x];
+              //   }
+              // }
+
+            }

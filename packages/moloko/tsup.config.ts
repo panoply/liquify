@@ -86,7 +86,7 @@ export default defineConfig([
     noExternal: [
       'lz-string',
       'mithril',
-      '@liquify/prettify'
+      'esthetic'
     ],
     skipNodeModulesBundle: false,
     treeshake: 'smallest',
