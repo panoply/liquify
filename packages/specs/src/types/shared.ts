@@ -55,8 +55,34 @@ export declare type Templates = (
 export declare type Pattern = string | RegExp | [number, number]
 
 /* -------------------------------------------- */
+/* DESCRIPTIONS                                 */
+/* -------------------------------------------- */
+
+export declare interface Descriptions {
+  /**
+   * Summary
+   *
+   * This is a basic descriptive which describes the object.
+   * The `description` property is where markdown descriptions exist.
+   *
+   * @default undefined
+   */
+  summary?: string;
+  /**
+   * Description
+   *
+   * A detailed description of this reference that can include code examples. This
+   * is where you'd place **markdown** expressive information about the object.
+   *
+   * @default undefined
+   */
+  description?: string ;
+}
+
+/* -------------------------------------------- */
 /* REFERENCE                                    */
 /* -------------------------------------------- */
+
 export declare interface References {
   /**
    * The name of the Liquid Variation

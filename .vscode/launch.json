@@ -15,36 +15,7 @@
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode",
-        "${workspaceRoot}/tests/environments/playground"
-      ]
-    },
-    {
-      "type": "extensionHost",
-      "request": "launch",
-      "name": "Shopify",
-      "runtimeExecutable": "${execPath}",
-      "env": {
-        "SERVER_PATH": "${workspaceFolder}"
-      },
-      "outFiles": [
-        "${workspaceFolder}/packages/vscode/package/*.js"
-      ],
-      "args": [
-        "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode",
-        "${workspaceRoot}/tests/environments/shopify"
-      ]
-    },
-    {
-      "name": "Environment",
-      "type": "node",
-      "request": "attach",
-      "port": 6008,
-      "restart": true,
-      "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/packages/server/package/server.js",
-        "${workspaceFolder}/packages/server/package/server.js.map"
+        "${workspaceRoot}/tests"
       ]
     },
     {
@@ -62,14 +33,6 @@
     }
   ],
   "compounds": [
-    {
-      "name": "Shopify Environment",
-      "configurations": [
-        "Shopify",
-        "Environment"
-      ],
-      "stopAll": true
-    },
     {
       "name": "Client + Server",
       "configurations": [

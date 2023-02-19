@@ -1,6 +1,6 @@
 
 import { INode } from '../tree/typings';
-import { q } from '@liquify/liquid-language-specs';
+import { q } from '@liquify/specs';
 
 /**
  * Returns the last known character code of the `from` offset position.

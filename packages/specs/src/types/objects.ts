@@ -1,45 +1,70 @@
-import { References } from './shared';
+import { References, Descriptions } from './shared';
 import { Type } from '../utils/enums';
 import { Types } from './types';
 
 /* OBJECT PROPERTY EXPORT --------------------- */
 
-export declare interface IProperty {
+export declare interface IProperty extends Descriptions {
   /**
-   * Description
+   * Deprecated
    *
-   * Description of thes property value used by this object
+   * Is this object deprecated?
+   *
+   * @default false
    */
-  readonly description?: string;
+  deprecated?: boolean;
   /**
-   * Object
+   * Scope
    *
-   * Point to an object in the spec this array contains
+   * Point to an object in the spec for which this property
+   * will implement. This is typically used when `type` is `array`,
+   * but can also be used for circular referenced objects.
+   *
+   * @default undefined
    */
-  readonly items?: string | Types.Basic
+  scope?: string;
+  /**
+   * Items
+   *
+   * When type is `array` and the object property does have a `scope`
+   * but each entry in the array has known type, it can be defined here.
+   *
+   * @default undefined
+   */
+  items?: string | Types.Basic
   /**
    * Type
    *
    * The Typeof object value
    */
-  readonly type: Type | Types.Basic;
+  type: Type | Types.Basic;
+  /**
+   * Literals
+   *
+   * A known value list which will be returned by this property.
+   * Say for example, the values that will be returns will either
+   * be `foo` or `bar` then you'd provide them here.
+   *
+   * @default undefined
+   */
+  literal?: string[] | undefined
   /**
    * Reference
    *
    * Documentation References
    */
-  readonly reference?: References;
+  reference?: References;
   /**
    * Properties
    *
    * Property value contains additional properties, eg: `{{ object.prop1.prop2 }}`
    */
-  readonly properties?: { [name: string]: IProperty; };
+  properties?: { [name: string]: IProperty; };
 }
 
 /* OBJECT ITERFACE EXPORT --------------------- */
 
-export declare interface IObject {
+export declare interface IObject extends Descriptions {
   /**
    * Type
    *
@@ -47,79 +72,91 @@ export declare interface IObject {
    *
    * @default 'object'
    */
-  readonly type?: Type | Types.Basic;
-  /**
-   * Description
-   *
-   * Description of this object
-   *
-   * @default undefined
-   */
-  readonly description?: string;
+  type?: Type | Types.Basic;
   /**
    * Reference
    *
    * Documentation References
    */
-  readonly reference?: References;
-  /**
-   * Singular
-   *
-   * Object tags will always be singular tags, enforces `true`
-   *
-   * @default true
-   */
-  readonly singular?: true;
+  reference?: References;
   /**
    * Does this tag accept filters
    *
    * @default true
    */
-  readonly filters?: boolean;
+  filters?: boolean;
   /**
-   * Does this tag accept whitespace trim dashes?
+   * Template
    *
-   * @default true
+   * List of template files which the object is accessible.
+   *
+   * @default []
    */
-  readonly trims?: boolean;
+  template?: string[]
   /**
-   * The object is a global accessible object
+   * The object is a global accessible object. This simply means that
+   * the object can be used at any point across the workspace. When the
+   * value is `false` then the object must meet certain conditions, like
+   * (for example) the current `template` or `scope`
    *
    * @default false
    */
-  readonly global?: boolean;
-  /**
-   * Const
-   *
-   * Whether or not this object is a content or constant value
-   *
-   * @default false
-   */
-  readonly const?: boolean;
-  /**
-   * Deprecated
-   *
-   * Is this object tag deprecated?
-   *
-   * @default false
-   */
-  readonly deprecated?: boolean;
+  global?: boolean;
   /**
    * Scope
    *
-   * Object is only accessible within tag based scope. Define
+   * Point to an object in the spec for which this object
+   * will implement. This is typically used when `type` is `array`,
+   * but can also be used for circular referenced objects.
+   *
+   * @default undefined
+   */
+  scope?: string;
+  /**
+   * Const
+   *
+   * Whether or not this object is a content or constant value. When an
+   * object is defined as constant, it denotes that it cannot be used in
+   * filters not apply any form of augmentation. An example of a `const`
+   * type is the `content_for_header` object in the Shopify variation.
+   *
+   * @default false
+   */
+  const?: boolean;
+  /**
+   * Literals
+   *
+   * A known value list which will be returned by this property.
+   * Say for example, the values that will be returns will either
+   * be `foo` or `bar` then you'd provide them here.
+   *
+   * @default undefined
+   */
+  literal?: string[] | undefined
+  /**
+   * Deprecated
+   *
+   * Is this object deprecated?
+   *
+   * @default false
+   */
+  deprecated?: boolean;
+  /**
+   * Parents
+   *
+   * Object is only accessible within this scope. Define
    * the tags wherein the object is allowed.
    *
    * @default []
    */
-  readonly scope?: string[]
+  parent?: string[]
   /**
    * Properties
    *
    * List of property values this tag object supports, recursively
    * supply properties for deep nested objects.
    */
-  readonly properties?: {
+  properties?: {
     [name: string]: IProperty;
   };
 }

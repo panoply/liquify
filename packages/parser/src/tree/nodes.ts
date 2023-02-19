@@ -3,7 +3,7 @@
 import { Range } from 'vscode-languageserver-textdocument';
 import { AST } from './ast';
 import { findFirst } from '../parser/utils';
-import { Type } from '@liquify/liquid-language-specs';
+import { Type } from '@liquify/specs';
 import { NodeKind, TagType, NodeLanguage, NodeType, CharCode as c } from '../lexical';
 import { INode } from './typings';
 

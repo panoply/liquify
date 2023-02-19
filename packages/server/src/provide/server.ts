@@ -5,7 +5,7 @@ import { readFileSync, readdirSync, existsSync } from 'fs';
 import { basename, resolve, join, normalize } from 'path';
 import stripJSONC from 'strip-json-comments';
 import { Config } from 'provide/config';
-import prettify, { Options } from '@liquify/prettify';
+import esthetic, { Rules } from 'esthetic';
 
 export class LiquidServer extends Config {
 
@@ -105,7 +105,7 @@ export class LiquidServer extends Config {
 
   private setFormatConfig (settings) {
 
-    this.formatting.prettify = prettify.options.rules;
+    this.formatting.prettify = esthetic.rules();
 
   }
 

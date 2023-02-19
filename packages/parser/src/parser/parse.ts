@@ -1,6 +1,6 @@
-import { $, q, Type } from '@liquify/liquid-language-specs';
+import { $, q, Type } from '@liquify/specs';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
-import { NodeKind, NodeLanguage, TokenType, NodeType, ParseError, CharCode } from '../lexical';
+import { NodeKind, NodeLanguage, TokenType, NodeType, ParseError } from '../lexical';
 import { AST } from '../tree/ast';
 import { Node } from '../tree/nodes';
 import { Embed } from '../tree/embed';
@@ -544,6 +544,8 @@ export function parse (document: AST): AST {
       case TokenType.ObjectProperty:
       case TokenType.ObjectPropertyNumber:
 
+        console.log($.liquid);
+
         if (token === TokenType.ObjectPropertyNumber) {
 
           const prev = last(node.objects[object]);
@@ -569,7 +571,7 @@ export function parse (document: AST): AST {
 
         if (node.type === Type.iteration) {
 
-          node.scope[scope] = $.liquid.object?.items;
+          node.scope[scope] = $.liquid.object?.scope;
 
           if (!q.isObjectType(Type.array)) {
             document.warning(ParseError.InvalidIterationType);

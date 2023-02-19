@@ -1,6 +1,6 @@
 import * as specification from '../data';
 import { Tag, Filter, Argument, Value, Completions, ScopeMapValue, IObject } from '../';
-import { CompletionItemKind } from 'vscode-languageserver-types';
+import { CompletionItemKind, CompletionItem } from 'vscode-languageserver-types';
 import { Engine, Within, Errors, Type, Scopes } from '../../utils/enums';
 import { documentation, filterCompletions } from '../../utils/signature';
 import { isNumber } from '../../utils/typeof';
@@ -341,7 +341,7 @@ export function setCompletions (): Completions {
         description,
         reference,
         deprecated = false,
-        singular = false,
+        singleton = false,
         snippet = '$1',
         parents = []
       }
@@ -349,10 +349,10 @@ export function setCompletions (): Completions {
       label,
       deprecated,
       kind: CompletionItemKind.Keyword,
-      documentation: documentation(description, reference),
+      documentation: documentation(description as string, reference),
       data: {
         snippet,
-        singular,
+        singleton,
         parents
       }
     })
@@ -382,14 +382,16 @@ export function setCompletions (): Completions {
       label,
       {
         description,
-        reference,
         deprecated = false
       }
-    ]) => ({
+    ]): CompletionItem => ({
       label,
       deprecated,
-      documentation: documentation(description, reference),
-      data: { }
+      documentation: {
+        kind: 'markdown',
+        value: description
+      },
+      data: {}
     })
   );
 
@@ -540,9 +542,15 @@ export function isProperty (token: string): boolean {
   if (!prop) return false;
   if (scope) liquid.variable.value = prop;
 
-  liquid.object = prop;
+  if (prop?.scope) {
 
-  return true;
+    return setObject(prop.scope);
+
+  } else {
+    liquid.object = prop;
+    return true;
+  }
+
 }
 
 /**

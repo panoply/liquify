@@ -18,7 +18,7 @@ test('develop', async t => {
     );
 
     // THIS IS AST
-    // console.log(doc);
+    console.log(doc);
 
     // THIS IS A NODE
     // console.log(doc.getNodeAt(300));
@@ -27,7 +27,7 @@ test('develop', async t => {
     console.log(doc.errors);
 
     // THIS RETURNS THE STRING OF ERROR DETERMINED
-    console.log(doc.getText(doc.errors[0].range));
+    // console.log(doc.getText(doc.errors[0].range));
 
   });
 

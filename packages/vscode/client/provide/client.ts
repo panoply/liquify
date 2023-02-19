@@ -13,14 +13,14 @@ function getReleaseNotes () {
   commands.executeCommand('markdown.showPreview', uri);
 }
 
-export function LiquidClient (_context: ExtensionContext): LanguageClient {
+export function LiquidClient (context: ExtensionContext): LanguageClient {
 
   commands.registerCommand('liquid.releaseNotes', getReleaseNotes);
 
   /**
    * Server Module Path
    */
-  const module = join(process.cwd(), 'packages/server/package/server.js');
+  const module = context.asAbsolutePath('../../' + join(process.cwd(), '/packages/server/package/server.js'));
 
   /**
    * Language Server Name

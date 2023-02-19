@@ -1,4 +1,4 @@
-import { References } from './shared';
+import { References, Descriptions } from './shared';
 import { Type } from '../utils/enums';
 import { Types } from './types';
 import { Arguments, Parameter } from './arguments';
@@ -19,7 +19,7 @@ export declare type Languages = (
 
 /* TAG SPECIFICATIONS ------------------------- */
 
-export declare interface Tag {
+export declare interface Tag extends Descriptions {
   /**
    * Type
    *
@@ -28,13 +28,13 @@ export declare interface Tag {
    */
   readonly type: Type | Types.Tag,
   /**
-   * Singular
+   * Singleton
    *
-   * Is this tag singular, ie: does not require an `{% endtag %}`
+   * Is this tag a singleton. Singleton tags do not require an `{% endtag %}`
    *
    * @default false
    */
-  readonly singular?: boolean;
+  readonly singleton?: boolean;
   /**
    * Unique
    *
@@ -53,14 +53,6 @@ export declare interface Tag {
    * @default undefined
    */
   readonly snippet?: string;
-  /**
-   * Description
-   *
-   * Description of this tag
-   *
-   * @default undefined
-   */
-  readonly description?: string;
   /**
    * Reference
    *
@@ -89,20 +81,11 @@ export declare interface Tag {
    *
    * **IMPORTANT**
    *
-   * Tag must not be `singular`
+   * Tag must not be `singleton`
    *
-   * @default true
+   * @default undefined
    */
   readonly language?: Languages;
-  /**
-   * Trims
-   *
-   * Whether or not the tag accepts whitespace dash trims. When `undefined`
-   * the parser will assume `true`
-   *
-   * @default true
-   */
-  readonly trims?: boolean;
   /**
    * Deprecated
    *
@@ -112,10 +95,20 @@ export declare interface Tag {
    */
   readonly deprecated?: boolean;
   /**
+   * Template
+   *
+   * List of template files which the tag can only be made accessible.
+   * By default, tags are available in all templates. When entries are
+   * are defined on this value then tags will only be made available in
+   * these specific templates.
+   *
+   * @default undefined
+   */
+  readonly template?: string[] | undefined;
+  /**
    * Parents
    *
-   * When the tag is available within the scope of
-   * a specific object and/or tag.
+   * When the tag is available within the scope of a specific object and/or tag.
    *
    * @default undefined
    */
@@ -123,8 +116,7 @@ export declare interface Tag {
   /**
    * Children
    *
-   * When a tag requires children to be contained
-   * within, list them here.
+   * When a tag requires children to be contained within, list them here.
    *
    * @default undefined
    */

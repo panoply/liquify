@@ -5,15 +5,15 @@ import { mark, stop } from 'marky';
 import {
   DidChangeConfigurationNotification,
   TextDocumentSyncKind,
-  createConnection,
-  DocumentDiagnosticParams,
-  CancellationToken,
-  DocumentDiagnosticReportKind,
-  Connection,
-  TextDocuments,
-  TextDocument,
-  Diagnostic,
-  DocumentDiagnosticReport
+  createConnection
+  // DocumentDiagnosticParams,
+  // CancellationToken,
+  // DocumentDiagnosticReportKind,
+  // Connection,
+  // TextDocuments,
+  // TextDocument,
+  // Diagnostic,
+  // DocumentDiagnosticReport
 
 } from 'vscode-languageserver/node';
 
@@ -55,6 +55,9 @@ connection.onInitialize(initializeParams => {
     },
     completionProvider: {
       resolveProvider: true,
+      completionItem: {
+        labelDetailsSupport: true
+      },
       triggerCharacters: [
         ' ',
         '"',

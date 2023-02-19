@@ -1,4 +1,4 @@
-import { $, q, Type, Within, Errors } from '@liquify/liquid-language-specs';
+import { $, q, Type, Within, Errors } from '@liquify/specs';
 import { TokenType } from '../lexical/tokens';
 import { ScanState, ScanCache } from '../lexical/state';
 import { ParseError } from '../lexical/errors';
@@ -555,7 +555,7 @@ function Scan (): number {
 
           state = ScanState.VariableIdentifier;
 
-          if ($.liquid.tag?.singular) {
+          if ($.liquid.tag?.singleton) {
             ender = ScanState.BeforeSingularTagClose;
             return TokenType.SingularTagName;
           } else {
@@ -571,7 +571,7 @@ function Scan (): number {
 
           state = ScanState.Control;
 
-          if ($.liquid.tag?.singular) {
+          if ($.liquid.tag?.singleton) {
             ender = ScanState.BeforeSingularTagClose;
             return TokenType.SingularTagName;
           } else {
@@ -586,7 +586,7 @@ function Scan (): number {
 
           state = ScanState.Argument;
 
-          if ($.liquid.tag?.singular) {
+          if ($.liquid.tag?.singleton) {
             ender = ScanState.BeforeSingularTagClose;
             return TokenType.SingularTagName;
           } else {
@@ -611,7 +611,7 @@ function Scan (): number {
 
           state = ScanState.Iteration;
 
-          if ($.liquid.tag?.singular) {
+          if ($.liquid.tag?.singleton) {
             ender = ScanState.BeforeSingularTagClose;
             return TokenType.SingularTagName;
           } else {

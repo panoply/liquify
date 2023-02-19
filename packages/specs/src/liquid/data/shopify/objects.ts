@@ -1,3323 +1,4364 @@
 import { Objects } from '../..';
 
-/**
- * Liquid Shopify Spec: Tags
- */
 export const objects: Objects = {
-  additional_checkout_buttons: {
-    description: "Returns true if a merchant's store has any payment providers with offsite checkouts, such as PayPal Express Checkout. Use additional_checkout_buttons to check whether these gateways exist, and content_for_additional_checkout_buttons to show the additional buttons.",
-    global: true,
-    type: 'boolean',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/en/themes/liquid/objects#additional-checkout-buttons'
-    }
-  },
-  address: {
-    description: "The address object contains information entered by a customer in Shopify's checkout pages.",
+  media: {
+    summary: 'An abstract media object that can represent the following object types:\n\n- [`image`](/docs/api/liquid/objects/image)\n- [`model`](/docs/api/liquid/objects/model)\n- [`video`](/docs/api/liquid/objects/video)\n- [`external_video`](/docs/api/liquid/objects/external_video)',
+    description: 'An abstract media object that can represent the following object types:\n\n- [`image`](/docs/api/liquid/objects/image)\n- [`model`](/docs/api/liquid/objects/model)\n- [`video`](/docs/api/liquid/objects/video)\n- [`external_video`](/docs/api/liquid/objects/external_video) The `media` object can be returned by the [`product.media` array](/docs/api/liquid/objects/product#product-media) or a\n[`file_reference` metafield](/apps/metafields/types).\n\nYou can use [media filters](/docs/api/liquid/filters/media-filters) to generate URLs and media displays. To learn about how\nto use media in your theme, refer to [Support product media](/themes/product-merchandising/media/support-media).\n\n> Note:\n> Each media type has unique properties in addition to the general `media` properties. To learn about these\n> additional properties, refer to the reference for each type.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/media',
     type: 'object',
     properties: {
-      province_code: {
-        description: 'Returns the abbreviated value of the Province/State field of the address.',
-        type: 'string'
-      },
-      street: {
-        description: 'Returns the combined values of the Address1 and Address2 fields of the address.',
-        type: 'string'
-      },
-      url: {
-        description: 'Returns the relative URL of the address.',
-        type: 'string'
-      },
-      address1: {
-        description: 'Returns the value of the Address1 field of the address.',
-        type: 'string'
-      },
-      address2: {
-        description: 'Returns the value of the Address2 field of the address.',
-        type: 'string'
-      },
-      city: {
-        description: 'Returns the value of the City field of the address.',
-        type: 'string'
-      },
-      company: {
-        description: 'Returns the value of the Company field of the address.',
-        type: 'string'
-      },
-      country_code: {
-        description: 'Returns the value of the Country field of the address in ISO 3166-2 standard format.',
-        type: 'string'
-      },
-      country: {
-        description: 'Returns the value of the Country field of the address.',
-        type: 'string'
-      },
-      first_name: {
-        description: 'Returns the value of the First Name field of the address.',
-        type: 'string'
-      },
-      last_name: {
-        description: 'Returns the value of the Last Name field of the address.',
-        type: 'string'
-      },
-      phone: {
-        description: 'Returns the value of the Phone field of the address.',
-        type: 'string'
-      },
-      zip: {
-        description: 'Returns the value of the Postal/Zip field of the address.',
-        type: 'string'
-      },
-      province: {
-        description: 'Returns the value of the Province/State field of the address.',
-        type: 'string'
-      },
-      name: {
-        description: 'Returns the values of the First Name and Last Name fields of the address.',
-        type: 'string'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/en/themes/liquid/objects/address'
-    }
-  },
-  all_country_option_tags: {
-    type: 'array',
-    description: "The all_country_option_tags object creates an <option> tag for each country. An attribute called data-provinces is set for each <option>, and contains a JSON-encoded array of the country's subregions. If a country doesn't have any subregions, then an empty array is set for its data-provinces attribute.",
-    filters: false,
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#all_products'
-    }
-  },
-  all_products: {
-    type: 'array',
-    description: 'Returns a list of all the products in your store. You can use all_products to access products by their handles.',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#all_products'
-    }
-  },
-  article: {
-    description: 'Returns a list of all the blog articles in a store.',
-    type: 'object',
-    properties: {
-      tags: {
-        description: 'Returns all the tags for the article.',
-        type: 'array'
-      },
-      user: {
-        description: "Returns an object with information about the article's author.",
-        type: 'object',
-        properties: {
-          bio: {
-            description: 'Returns the bio of the author of the article.',
-            type: 'string'
-          },
-          email: {
-            description: 'Returns the email of the author of the article.',
-            type: 'string'
-          },
-          first_name: {
-            description: 'Returns the first name of the author of the article.',
-            type: 'string'
-          },
-          homepage: {
-            description: 'Returns the home page of the article author.',
-            type: 'string'
-          },
-          image: {
-            description: 'Returns the image object of the author of the article.',
-            type: 'object',
-            properties: {
-              alt: {
-                description: "Returns the article image's alt text.",
-                type: 'string'
-              },
-              src: {
-                description: 'Returns the relative URL to the article image.',
-                type: 'string'
-              }
-            }
-          },
-          last_name: {
-            description: 'Returns the last name of the author of the article.',
-            type: 'string'
-          },
-          account_owner: {
-            description: 'Returns true if the author of the article is the account owner of the store. Returns false if the author is not the account owner.',
-            type: 'string'
-          }
-        }
-      },
-      excerpt_or_content: {
-        description: 'Returns article.excerpt of the article if it exists. Returns article.content if an excerpt does not exist for the article.',
-        type: 'string'
-      },
-      image: {
-        description: "Returns the article's image object.",
-        type: 'object',
-        properties: {
-          alt: {
-            description: "Returns the article image's alt text.",
-            type: 'string'
-          },
-          src: {
-            description: 'Returns the relative URL to the article image.',
-            type: 'string'
-          }
-        }
-      },
-      content: {
-        type: 'string',
-        description: 'Returns the content of the article.'
-      },
-      excerpt: {
-        type: 'string',
-        description: 'Returns the excerpt of the article.'
-      },
-      author: {
-        type: 'string',
-        description: "Returns the full name of the article's author."
-      },
-      handle: {
-        type: 'string',
-        description: 'Returns the handle of the article.'
-      },
       id: {
         type: 'number',
-        description: 'Returns the id of the article.'
-      },
-      comments_count: {
-        type: 'number',
-        description: 'Returns the number of published comments for the article.'
-      },
-      comments: {
-        type: 'array',
-        description: 'Returns the published comments of the article. Returns an empty array if comments are disabled.'
-      },
-      url: {
-        description: 'Returns the relative URL of the article.',
-        type: 'string'
-      },
-      comment_post_url: {
-        description: 'Returns the relative URL where POST requests are sent to when creating new comments.',
-        type: 'string'
-      },
-      created_at: {
-        description: 'Returns the timestamp of when the article was created. Use the date filter to format the timestamp.',
-        type: 'string'
-      },
-      title: {
-        description: 'Returns the title of the article.',
-        type: 'string'
-      },
-      comments_enabled: {
-        description: 'Returns true if comments are enabled. Returns false if comments are disabled.',
-        type: 'boolean'
-      },
-      moderated: {
-        description: 'Returns true if the blog that the article belongs to is set to moderate comments. Returns false if the blog is not moderated.',
-        type: 'boolean'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects#articles'
-    }
-  },
-  block: {
-    description: 'A block represents the content and settings of a single block in an array of section blocks. The block object can be accessed in a section file by looping through section.blocks.',
-    type: 'object',
-    properties: {
-      shopify_attributes: {
-        type: 'string',
-        description: "Returns a string representing the block's attributes."
-      },
-      id: {
-        type: 'number',
-        description: 'Returns a unique ID dynamically generated by Shopify.'
-      },
-      settings: {
-        type: 'object',
-        description: "Returns an object of the block settings set in the theme editor. Retrieve setting values by referencing the setting's unique id."
-      },
-      type: {
-        type: 'string',
-        description: "Returns the type defined in the block's schema. This is useful for displaying different markup based on the block.type."
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/en/themes/liquid/objects/block'
-    }
-  },
-  blog: {
-    description: 'Blog object',
-    type: 'object',
-    properties: {
-      tags: {
-        description: 'Returns all tags in a blog. Similar to all_tags, but only returns tags of articles that are in the filtered view.',
-        type: 'array'
-      },
-      all_tags: {
-        description: 'Returns all tags of all articles of a blog. This includes tags of articles that are not in the current pagination view.',
-        type: 'array'
-      },
-      articles: {
-        description: 'Returns an array of all articles in a blog.',
-        type: 'array'
-      },
-      handle: {
-        description: 'Returns the handle of the blog.',
-        type: 'string'
-      },
-      id: {
-        description: 'Returns the id of the blog.',
-        type: 'number'
-      },
-      next_article: {
-        description: 'Returns the next (older) article. Returns nil if there is no next article.',
-        type: 'string'
-      },
-      previous_article: {
-        description: 'Returns the previous (newer) article. Returns nil if there is no next article.',
-        type: 'string'
-      },
-      link: {
-        description: 'Returns the relative URL of the blog.',
-        type: 'string'
-      },
-      title: {
-        description: 'Returns the title of the blog.',
-        type: 'string'
-      },
-      articles_count: {
-        description: 'Returns the total number of articles in a blog. This total does not include hidden articles.',
-        type: 'number'
-      },
-      comments_enabled: {
-        description: 'Returns true if comments are enabled, or false if they are disabled.',
-        type: 'boolean'
-      },
-      moderated: {
-        description: 'Returns true if comments are moderated, or false if they are not moderated.',
-        type: 'boolean'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#blogs'
-    }
-  },
-  canonical_url: {
-    type: 'object',
-    description: "Returns the canonical URL of the current page. A page's canonical URL is the page's default URL without any URL parameters. For products and variants, the canonical URL is the default product page with no collection or variant selected.",
-    filters: false,
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#canonical_url'
-    }
-  },
-  cart: {
-    type: 'object',
-    description: 'Cart object',
-    properties: {
-      attributes: {
-        type: 'string',
-        description: 'Cart attributes allow the capturing of more information on the cart page.'
-      },
-      items: {
-        type: 'array',
-        description: 'Returns all of the line items in the cart.'
-      },
-      cart_level_discount_applications: {
-        type: 'array',
-        description: 'Returns an array of any cart-specific discount applications for the cart.'
-      },
-      discount_applications: {
-        description: 'Returns an array of discount applications for the cart.',
-        type: 'array'
-      },
-      currency: {
-        type: 'string',
-        description: "Returns the currency of the cart. If your store uses multi-currency, then the cart.currency is the same as the customer's local (presentment) currency. Otherwise, the cart currency is the same as your store currency."
-      },
-      item_count: {
-        description: 'Returns the number of items inside the cart.',
-        type: 'number'
-      },
-      original_total_price: {
-        description: 'Returns the subtotal of the cart before any discounts have been applied.',
-        type: 'number'
-      },
-      items_subtotal_price: {
-        description: "Returns the sum of the cart's line-item prices after any line-item discount. The subtotal doesn't include taxes (unless taxes are included in the prices), cart discounts, or shipping costs.",
-        type: 'number'
-      },
-      total_discount: {
-        description: 'Returns the total of all discounts (the amount saved) for the cart.',
-        type: 'number'
-      },
-      total_price: {
-        description: 'Returns the total price of all of the items in the cart after discounts have been applied.',
-        type: 'number'
-      },
-      total_weight: {
-        description: 'Returns the total weight of all of the items in the cart.',
-        type: 'number'
-      },
-      note: {
-        description: 'cart.note allows the capturing of more information on the cart page.',
-        type: 'string'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#canonical_url'
-    }
-  },
-  checkout: {
-    type: 'object',
-    filters: false,
-    description: 'The checkout object can be accessed in the order status page of the checkout. Shopify Plus merchants can also access properties of the checkout object in the checkout.liquid layout file.',
-    properties: {
-      applied_gift_cards: {
-        type: 'object',
-        description: 'Returns the gift cards applied to the checkout.'
-      },
-      attributes: {
-        type: 'object',
-        description: 'Returns the attributes of the checkout, that were captured in the cart.'
-      },
-      billing_address: {
-        type: 'string',
-        description: 'Returns the billing address of the checkout.'
-      },
-      buyer_accepts_marketing: {
-        type: 'boolean',
-        description: 'Returns whether the buyer accepted the newsletter during the checkout.'
-      },
-      cart_level_discount_applications: {
-        type: 'array',
-        description: 'Returns an array of any cart-specific discount applications for the checkout.',
-        items: 'discount-application'
-      },
-      currency: {
-        type: 'string',
-        description: 'Returns the currency of the checkout.'
-      },
-      customer: {
-        type: 'object',
-        description: 'Returns the customer associated with the checkout.'
-      },
-      discount_applications: {
-        type: 'array',
-        description: 'Returns an array of discount applications for a checkout.',
-        items: 'discount-application'
-      },
-      discounts_amount: {
-        type: 'number',
-        description: 'Returns the sum of the amount of the discounts applied to the checkout.'
-      },
-      discounts_savings: {
-        type: 'number',
-        description: 'Returns the sum of the savings of the discounts applied to the checkout. The negative opposite of discounts_amount.'
-      },
-      email: {
-        type: 'string',
-        description: 'Returns the email used during the checkout.'
-      },
-      gift_cards_amount: {
-        type: 'number',
-        description: 'Returns the amount paid in gift cards of the checkout.'
-      },
-      id: {
-        type: 'number',
-        description: 'Returns the id of the checkout.'
-      },
-      line_items: {
-        type: 'array',
-        description: 'Returns all the line items of the checkout.',
-        items: 'line_items'
-      },
-      line_items_subtotal_price: {
-        type: 'number',
-        description: 'Returns the sum of the cart\'s line item prices after any line item discounts. '
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the name of the checkout.'
-      },
-      note: {
-        type: 'string',
-        description: 'Returns the note of the checkout.'
-      },
-      order: {
-        type: 'object',
-        description: 'Returns the order created by the checkout. '
-      },
-      order_id: {
-        type: 'number',
-        description: 'Returns the id of the order created by the checkout.'
-      },
-      order_name: {
-        type: 'string',
-        description: 'Returns the name of the order created by the checkout.'
-      },
-      order_number: {
-        type: 'number',
-        description: 'Returns the number of the order created by the checkout.'
-      },
-      requires_shipping: {
-        type: 'boolean',
-        description: 'Returns whether the checkout as a whole requires shipping, that is whether any of the line items require shipping.'
-      },
-      shipping_address: {
-        type: 'string',
-        description: 'Returns the shipping address of the checkout.'
-      },
-      shipping_method: {
-        type: 'string',
-        description: 'Returns the shipping method of the checkout.'
-      },
-      shipping_methods: {
-        type: 'array',
-        description: 'Returns an array of shipping methods of the checkout.',
-        items: 'shipping_methods'
-      },
-      shipping_price: {
-        type: 'number',
-        description: 'Returns the shipping price of the checkout.'
-      },
-      tax_lines: {
-        type: 'array',
-        description: 'Returns all the tax lines of the checkout.',
-        items: 'tax_lines'
-      },
-      tax_price: {
-        type: 'string',
-        description: 'Returns the tax price of the checkout, whether the taxes are included or not in the prices.'
-      },
-      total_price: {
-        type: 'number',
-        description: 'Returns the total price of the checkout.'
-      },
-      transactions: {
-        type: 'array',
-        description: 'Returns an array of transactions from the checkout.',
-        items: 'transactions'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/checkout'
-    }
-  },
-  collection: {
-    type: 'object',
-    filters: false,
-    description: 'Returns a collection',
-    properties: {
-      all_tags: {
-        description: 'Returns a list of all product tags in a collection. collection.all_tags will return the full list of tags even when the collection view is filtered. collection.all_tags will return at most 1,000 tags',
-        type: 'array'
-      },
-      all_types: {
-        description: 'Returns a list of all product types in a collection',
-        type: 'array'
-      },
-      all_vendors: {
-        description: 'Returns a list of all product vendors in a collection.',
-        type: 'array'
-      },
-      products: {
-        description: 'Returns all of the products in a collection. You can show a maximum of 50 products per page. Use the paginate tag to choose how many products are shown per page',
-        type: 'array',
-        items: 'product'
-      },
-      sort_options: {
-        description: 'Returns an array of sorting options for the collection',
-        type: 'array'
-      },
-      id: {
-        description: 'Returns the ID number of the collection.',
-        type: 'number'
-      },
-      link: {
-        description: 'Returns the URL of the collection',
-        type: 'string'
-      },
-      handle: {
-        description: "Returns the collection's handle",
-        type: 'string'
-      },
-      published_at: {
-        description: "Returns the date and time when the collection was published. You can set this information on the collection's page in your Shopify admin by the Set publish date calendar icon. You can use a date filter to format the date",
-        type: 'string'
-      },
-      description: {
-        description: 'Returns the description of the collection',
-        type: 'string'
-      },
-      image: {
-        description: 'Returns the image of the collection',
-        type: 'string'
-      },
-      template_suffix: {
-        description: 'Returns the name of the custom collection template assigned to the `collection`, without the collection. prefix or the `.liquid` extension. Returns `nil` if a custom template is not assigned to the collection.',
-        type: 'string'
-      },
-      next_product: {
-        description: 'Returns the next product in the collection. Returns `nil` if there is no next product',
-        type: 'string'
-      },
-      products_count: {
-        description: 'Returns the number of products in a collection that match the current view. For example, if you are viewing a collection filtered by tag, collection.`products_count` will return the number of products that match the chosen tag.',
-        type: 'number'
-      },
-      all_products_count: {
-        description: 'Returns the number of products in a collection. collection.all_products_count will return the total number of products even when the collection view is filtered.',
-        type: 'number'
-      },
-      previous_product: {
-        description: 'Returns the previous product in the collection. Returns `nil` if there is no previous product.',
-        type: 'string'
-      },
-      current_type: {
-        description: 'Returns the product type on a `/collections/types?q=TYPE` collection page. For example, you may be on the automatic Shirts collection, which lists all products of type ‘shirts’ in the store: `myshop.shopify.com/collections/types?q=Shirts`',
-        type: 'string'
-      },
-      sort_by: {
-        description: 'Returns the sort order applied to the collection by the `sort_by` URL parameter. When there is no `sort_by` URL parameter, the value is null.',
-        type: 'string'
-      },
-      default_sort_by: {
-        description: 'Returns the sort order of the collection, which is set in the collection pages of the Admin',
-        type: 'string'
-      },
-      tags: {
-        description: 'Returns the tags of products in a collection that match the current view. For example, if you are viewing a collection filtered by tag, `collection.tags` will return the tags for the products that match the current filter',
-        type: 'array'
-      },
-      title: {
-        description: 'Returns the title of the collection',
-        type: 'string'
-      },
-      current_vendor: {
-        description: 'Returns the vendor name on a `/collections/vendors?q=VENDOR` collection page. For example, you may be on the automatic Shopify collection, which lists all products with vendor ‘shopify’ in the store: `myshop.shopify.com/collections/vendors?q=Shopify`',
-        type: 'string'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#collection'
-    }
-  },
-  collections: {
-    type: 'array',
-    description: 'Returns a list of all of the collections in a store',
-    filters: false,
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#collections'
-    }
-  },
-  color: {
-    type: 'object',
-    filters: false,
-    description: 'The color object is returned from color type settings',
-    properties: {
-      alpha: {
-        type: 'number',
-        description: 'Returns the alpha component of the color, which is a decimal number between 0 and 1.'
-      },
-      blue: {
-        type: 'number',
-        description: 'Returns the blue component of the color, which is a number between 0 and 255.'
-      },
-      green: {
-        type: 'number',
-        description: 'Returns the green component of the color, which is a number between 0 and 255.'
-      },
-      hue: {
-        type: 'number',
-        description: 'Returns the hue component of the color, which is a number between 0 and 360.'
-      },
-      lightness: {
-        type: 'number',
-        description: 'Returns the lightness component of the color, which is a number between 0 and 100.'
-      },
-      red: {
-        type: 'number',
-        description: 'Returns the red component of the color, which is a number between 0 and 255.'
-      },
-      saturation: {
-        type: 'number',
-        description: 'Returns the saturation component of the color, which is a number between 0 and 100.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/color'
-    }
-  },
-  comment: {
-    type: 'object',
-    filters: false,
-    description: 'Article Comment',
-    properties: {
-      link: {
-        type: 'string',
-        description: 'Returns the URL of the article with `comment.id` appended to it. This is so the page will automatically scroll to the comment'
-      },
-      author: {
-        description: 'Returns the author of the comment',
-        type: 'string'
-      },
-      content: {
-        description: 'Returns the content of the comment',
-        type: 'string'
-      },
-      email: {
-        type: 'string',
-        description: "Returns the e-mail address of the comment's author"
-      },
-      id: {
-        type: 'number',
-        description: 'Returns the id (unique identifier) of the comment'
-      },
-      status: {
-        type: 'string',
-        description: 'Returns the status of the comment'
-      },
-      created_at: {
-        type: 'string',
-        description: 'Returns the timestamp of when the comment was submitted. Use the `date` filter to convert the timestamp into a more readable format'
-      },
-      updated_at: {
-        type: 'string',
-        description: "Returns the timestamp of when the comment's status was last changed. For example, the timestamp of when a comment was approved by the article's author. Use the `date` filter to convert the timestamp into a more readable format"
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects/comment'
-    }
-  },
-  content_for_additional_checkout_buttons: {
-    type: 'constant',
-    description: 'Returns checkout buttons for any active payment providers with offsite checkouts. The "additional_checkout_buttons" and "content_for_additional_checkout_buttons" are used in many Shopify themes.',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects#content_for_additional_checkout_buttons'
-    }
-  },
-  content_for_header: {
-    type: 'constant',
-    description: 'The content_for_header object is required in theme.liquid. It must be placed inside the HTML <head> tag. It dynamically loads all scripts required by Shopify into the document head. These scripts include Shopify analytics, Google Analytics, and scripts required for Shopify apps.',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/en/themes/liquid/objects#content-objects'
-    }
-  },
-  content_for_index: {
-    type: 'constant',
-    description: 'The content_for_index object contains the content of dynamic sections to be rendered on the home page. This object must be included in templates/index.liquid.',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/en/themes/liquid/objects#content-for-index'
-    }
-  },
-  content_for_layout: {
-    type: 'constant',
-    description: 'The content_for_layout object is required in theme.liquid. It must be placed inside the HTML <body> tag. It dynamically loads content generated by other templates such as index.liquid or product.liquid.',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/en/themes/liquid/objects#content-for-layout'
-    }
-  },
-  country: {
-    type: 'object',
-    filters: false,
-    description: 'The country object has the following attributes:',
-    properties: {
-      currency: {
-        type: 'object',
-        description: 'Returns the currency used in the country.'
-      },
-      iso_code: {
-        type: 'string',
-        description: 'Returns the ISO code of the country. For example, US or FR for United States or France.'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the name of the country. For example, United States or France.'
-      },
-      unit_system: {
-        type: 'string',
-        description: 'Returns the unit system of the country. Can be either imperial or metric'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/country'
-    }
-  },
-  country_option_tags: {
-    type: 'constant',
-    description: "The country_option_tags object creates an <option> tag for each country that is included as a shipping zone on the Shipping page of the admin. An attribute called data-provinces is set for each <option>, and contains a JSON-encoded array of the country's subregions. If a country doesn't have any subregions, then an empty array is set for its data-provinces attribute",
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/en/themes/liquid/objects/country-option-tags'
-    }
-  },
-  currency: {
-    description: 'The currency object',
-    filters: false,
-    type: 'object',
-    trims: false,
-    properties: {
-      iso_code: {
-        type: 'string',
-        description: 'Returns the ISO code of the currency (for example `USD` or `EUR`).'
-      },
-      symbol: {
-        type: 'string',
-        description: "Returns the currency's symbol (for example, `$` or `€`)."
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the name of the currency (for example United States dollars or Euro).'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/en/themes/liquid/objects/country-option-tags'
-    }
-  },
-  current_page: {
-    type: 'number',
-    scope: [ 'paginate' ],
-    description: 'current_page returns the number of the page you are on when browsing through paginated content. It can be used outside the paginate block',
-    filters: false,
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#collections'
-    }
-  },
-  current_tags: {
-    type: 'array',
-    description: 'Product tags are used to filter a collection to only show products that contain a specific product tag. Similarly, article tags are used to filter a blog to only show products that contain a specific article tag. The current_tags variable is an array that contains all tags that are being used to filter a collection or blog.',
-    filters: false,
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/current-tags'
-    }
-  },
-  customer: {
-    type: 'object',
-    description: 'The customer object contains information about a customer who has a customer account',
-    trims: false,
-    properties: {
-      accepts_marketing: {
-        description: 'Returns `true` if the customer accepts marketing, returns `false` if the customer does not',
-        type: 'boolean'
-      },
-      addresses: {
-        description: 'Returns an array of all addresses associated with a customer',
-        type: 'array'
-      },
-      orders: {
-        description: 'Returns an array of all orders placed by the customer',
-        type: 'array'
-      },
-      default_address: {
-        description: 'Returns the default customer_address',
-        type: 'string'
-      },
-      email: {
-        description: 'Returns the email address of the customer',
-        type: 'string'
-      },
-      first_name: {
-        description: 'Returns the first name of the customer',
-        type: 'string'
-      },
-      name: {
-        description: 'Returns the full name of the customer',
-        type: 'string'
-      },
-      id: {
-        description: 'Returns the id of the customer',
-        type: 'number'
-      },
-      last_name: {
-        description: 'Returns the last name of the customer',
-        type: 'string'
-      },
-      last_order: {
-        description: 'Returns the last order placed by the customer, not including test orders',
-        type: 'string'
-      },
-      tags: {
-        description: 'Returns the list of tags associated with the customer',
-        type: 'array'
-      },
-      addresses_count: {
-        description: 'Returns the number of addresses associated with a customer',
-        type: 'number'
-      },
-      phone: {
-        description: 'Returns the phone number of the customer',
-        type: 'string'
-      },
-      total_spent: {
-        description: 'Returns the total amount spent on all orders',
-        type: 'string'
-      },
-      orders_count: {
-        description: 'Returns the total number of orders a customer has placed',
-        type: 'number'
-      },
-      has_account: {
-        description: 'Returns true if the email associated with an order is also tied to a customer account. Returns `false` if it is not. Helpful in email templates',
-        type: 'boolean'
-      },
-      tax_exempt: {
-        description: 'Returns whether or not the customer is exempt from taxes',
-        type: 'boolean'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/customer'
-    }
-  },
-  customer_address: {
-    description: 'The currency object',
-    type: 'object',
-    trims: false,
-    properties: {
-      province_code: {
-        type: 'string',
-        description: 'Returns the abbreviated value of the Province/State field of the address'
-      },
-      street: {
-        type: 'string',
-        description: 'Returns the combined values of the Address1 and Address2 fields of the address'
-      },
-      id: {
-        type: 'number',
-        description: 'Returns the id of customer address'
-      },
-      address1: {
-        type: 'string',
-        description: 'Returns the value of the Address1 field of the address'
-      },
-      address2: {
-        type: 'string',
-        description: 'Returns the value of the Address2 field of the address'
-      },
-      city: {
-        type: 'string',
-        description: 'Returns the value of the City field of the address'
-      },
-      company: {
-        type: 'string',
-        description: 'Returns the value of the Company field of the address'
-      },
-      country_code: {
-        type: 'string',
-        description: 'Returns the value of the Country field of the address in ISO 3166-2 standard format'
-      },
-      country: {
-        type: 'string',
-        description: 'Returns the value of the Country field of the address'
-      },
-      first_name: {
-        type: 'string',
-        description: 'Returns the value of the First Name field of the address'
-      },
-      last_name: {
-        type: 'string',
-        description: 'Returns the value of the Last Name field of the address'
-      },
-      phone: {
-        type: 'string',
-        description: 'Returns the value of the Phone field of the address'
-      },
-      zip: {
-        type: 'string',
-        description: 'Returns the value of the Postal/Zip field of the address'
-      },
-      province: {
-        type: 'string',
-        description: 'Returns the value of the Province/State field of the address'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/customer-address'
-    }
-  },
-  discount_allocation: {
-    type: 'object',
-    trims: false,
-    description: 'The `discount_allocation` object contains all of the information about how a particular discount affects a line item and how the price reduces. The object can be accessed on customer order and notification templates. **Shopify Plus** merchants can also access properties of the `discount_allocation` object in the `checkout.liquid` layout file.',
-    properties: {
-      discount_application: {
-        type: 'string',
-        description: 'The discount application that allocates the amount on the line item'
-      },
-      amount: {
-        type: 'number',
-        description: 'The discounted amount on a line item by a particular discount'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/discount-allocation'
-    }
-  },
-  discount_application: {
-    type: 'object',
-    trims: false,
-    description: 'The `discount_application` object captures the intent of a `discount applied` on an order. The object can be accessed on customer order and notification templates. **Shopify Plus** merchants can also access properties of the discount_allocation object in the checkout.liquid layout file.',
-    properties: {
-      target_selection: {
-        type: 'string',
-        description: 'Describes how a discount selects line items in the cart to be discounted'
-      },
-      target_type: {
-        type: 'string',
-        description: 'Describes the type of item that a discount applies to. `target_type` has the following possible values, line_item or shipping_line'
-      },
-      title: {
-        type: 'string',
-        description: 'The customer-facing name of the discount. For example, `Welcome10` or `CBBWQQAKYBYY`'
-      },
-      total_allocated_amount: {
-        type: 'number',
-        description: 'The total amount that the price of an order is reduced by the discount'
-      },
-      type: {
-        type: 'string',
-        description: 'The type of the discount. type has the following possible values:\n\n- automatic\n- manual\n-discount_code\n-script'
-      },
-      value: {
-        type: 'number',
-        description: 'The value of the discount.'
-      },
-      value_type: {
-        type: 'string',
-        description: 'The value type of the discount. value_type has the following possible values:\n\n- fixed_amount\n- percentagel'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/discount-application'
-    }
-  },
-  external_video: {
-    type: 'object',
-    description: "The external_video object can be accessed from the product object's media attribute. It contains information about a YouTube video associated with a product",
-    properties: {
-      external_id: {
-        type: 'number',
-        description: 'Returns the ID of the YouTube video'
-      },
-      alt: {
-        type: 'string',
-        description: 'Returns the alt tag of the video set on the product details page of the Shopify admin'
-      },
-      aspect_ratio: {
-        type: 'string',
-        description: 'Returns the aspect ratio of the YouTube video'
-      },
-      id: {
-        type: 'number',
-        description: 'Returns the media_id of the external video.'
-      },
-      video_host: {
-        type: 'string',
-        description: 'Returns the name of the video host (youtube).'
+        description: 'The ID of the media.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/media#id)'
       },
       position: {
-        type: 'string',
-        description: "Returns the position of the external_video in the product object's media array."
+        type: 'number',
+        description: 'The position of the media in the [`product.media` array](/docs/api/liquid/objects/product#product-media). If the source is a [`file_reference` metafield](/apps/metafields/types), then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/media#position)'
       },
       media_type: {
         type: 'string',
-        description: "Returns the type of the object (external_video). This can be used to filter the product object's media array."
+        description: "The media type.\n\n#### Example\n\nYou can use the `media_type` property with the [`where` filter](/docs/api/liquid/filters/where) to filter the [`product.media` array](/docs/api/liquid/objects/product#product-media) for all media of a desired type.\n\n```liquid\n{% assign images = product.media | where: 'media_type', 'image' %}\n\n{% for image in images %}\n  {{- image | image_url: width: 300 | image_tag }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/media#media_type)",
+        literal: [
+          'image',
+          'model',
+          'video',
+          'external_video'
+        ]
+      },
+      preview_image: {
+        type: 'object',
+        description: "A preview image of the media.\n\n\n> Note:\n> Preview images don't have an ID attribute.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/media#preview_image)",
+        scope: 'image'
+      },
+      alt: {
+        type: 'string',
+        description: 'The alt text of the media.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/media#alt)'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/external-video'
+    }
+  },
+  address: {
+    summary: 'An address, such as a customer address or order shipping address.',
+    description: 'An address, such as a customer address or order shipping address.\n\n\n> Tip:\n> Use the [`format_address` filter](/docs/api/liquid/filters/format_address) to output an address according to its locale.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address',
+    type: 'object',
+    properties: {
+      company: {
+        type: 'string',
+        description: 'The company of the address. If no company is specified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#company)'
+      },
+      phone: {
+        type: 'string',
+        description: 'The phone number of the address. If no phone number is specified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#phone)'
+      },
+      first_name: {
+        type: 'string',
+        description: 'The first name of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#first_name)'
+      },
+      last_name: {
+        type: 'string',
+        description: 'The last name of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#last_name)'
+      },
+      name: {
+        type: 'string',
+        description: 'A combination of the first and last names of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#name)'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL for the address.\n\n\n> Note:\n> This only applies to customer addresses.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#url)'
+      },
+      summary: {
+        type: 'string',
+        description: 'A summary of the address, including the following properties:\n\n- First and last name\n- First and second lines\n- City\n- Province\n- Country\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#summary)'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#id)'
+      },
+      address1: {
+        type: 'string',
+        description: 'The first line of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#address1)'
+      },
+      address2: {
+        type: 'string',
+        description: 'The second line of the address. If no second line is specified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#address2)'
+      },
+      city: {
+        type: 'string',
+        description: 'The city of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#city)'
+      },
+      zip: {
+        type: 'string',
+        description: 'The zip or postal code of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#zip)'
+      },
+      country_code: {
+        type: 'string',
+        description: 'The country of the address in [ISO 3166-1 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#country_code)'
+      },
+      province_code: {
+        type: 'string',
+        description: "The province of the address in [ISO 3166-2 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html).\n\n\n> Note:\n> The value doesn't include the preceding [ISO 3166-1](https://www.iso.org/glossary-for-iso-3166.html) country code.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#province_code)"
+      },
+      country: {
+        type: 'object',
+        description: 'The country of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#country)',
+        scope: 'country'
+      },
+      street: {
+        type: 'string',
+        description: 'A combination of the first and second lines of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#street)'
+      },
+      province: {
+        type: 'string',
+        description: 'The province of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/address#province)'
+      }
+    }
+  },
+  collections: {
+    summary: 'All of the [collections](/docs/api/liquid/objects/collection) on a store.',
+    global: true,
+    description: 'All of the [collections](/docs/api/liquid/objects/collection) on a store.\n\n#### Example\n\nYou can iterate over `collections` to build a collection list.\n\n```liquid\n{% for collection in collections %}\n  {{- collection.title | link_to: collection.url }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collections',
+    type: 'array',
+    scope: 'collection'
+  },
+  pages: {
+    summary: 'All of the [pages](/docs/api/liquid/objects/page) on a store.',
+    global: true,
+    description: "All of the [pages](/docs/api/liquid/objects/page) on a store.\n\n#### \n\nYou can access a specific page through the `pages` object using the page's [handle](/docs/api/liquid/basics#handles).\n\n```liquid\n{{ pages.contact.title }}\n{{ pages['about-us'].title }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/pages",
+    type: 'array',
+    scope: 'page'
+  },
+  all_products: {
+    summary: 'All of the products on a store.',
+    global: true,
+    description: "All of the products on a store.\n\n\n> Note:\n> The `all_products` object has a limit of 20 unique handles per page. If you want more than 20 products,\nthen consider using a collection instead.\n\n#### \n\nYou can use `all_products` to access a product by its [handle](/docs/api/liquid/basics#handles). If the product isn't found, then `nil` is returned.\n```liquid\n{{ all_products['love-potion'].title }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/all_products",
+    type: 'array',
+    scope: 'product'
+  },
+  app: {
+    summary: 'An app. This object is usually used to access app-specific information for use with [theme app extensions](/apps/online-store/theme-app-extensions).',
+    description: 'An app. This object is usually used to access app-specific information for use with [theme app extensions](/apps/online-store/theme-app-extensions).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/app',
+    type: 'object',
+    properties: {
+      metafields: {
+        type: 22,
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) that are [owned by the app](/apps/metafields/app-owned).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/app#metafields)'
+      }
+    }
+  },
+  discount: {
+    summary: 'A discount applied to a cart, line item, or order.',
+    deprecated: true,
+    description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because not all discount types and details are captured.\n\nThe `discount` object has been replaced by the [`discount_allocation`](/docs/api/liquid/objects/discount_allocation) and\n[`discount_application`](/docs/api/liquid/objects/discount_application) objects.\n\n---\nA discount applied to a cart, line item, or order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount',
+    type: 'object',
+    properties: {
+      amount: {
+        type: 'number',
+        description: "The amount of the discount in the currency's subunit.\n\n\n> Note:\n> This is the same value as [`discount.total_amount`](/docs/api/liquid/objects/discount#discount-total_amount).\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount#amount)",
+        deprecated: true
+      },
+      total_amount: {
+        type: 'number',
+        description: "The amount of the discount in the currency's subunit.\n\n\n> Note:\n> This is the same value as [`discount.amount`](/docs/api/liquid/objects/discount#discount-amount).\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount#total_amount)",
+        deprecated: true
+      },
+      code: {
+        type: 'string',
+        description: 'The customer-facing name of the discount.\n\n\n> Note:\n> This is the same value as [`discount.title`](/docs/api/liquid/objects/discount#discount-title).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount#code)',
+        deprecated: true
+      },
+      title: {
+        type: 'string',
+        description: 'The customer-facing name of the discount.\n\n\n> Note:\n> This is the same value as [`discount.code`](/docs/api/liquid/objects/discount#discount-code).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount#title)',
+        deprecated: true
+      },
+      type: {
+        type: 'string',
+        description: 'The type of the discount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount#type)',
+        deprecated: true,
+        literal: [
+          'FixedAmountDiscount',
+          'PercentageDiscount',
+          'ShippingDiscount'
+        ]
+      },
+      savings: {
+        type: 'number',
+        description: "The amount of the discount as a negative value, in the currency's subunit.\n\n\n> Note:\n> This is the same value as [`discount.total_savings`](/docs/api/liquid/objects/discount#discount-total_savings).\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount#savings)",
+        deprecated: true
+      },
+      total_savings: {
+        type: 'number',
+        description: "The amount of the discount as a negative value, in the currency's subunit.\n\n\n> Note:\n> This is the same value as [`discount.savings`](/docs/api/liquid/objects/discount#discount-savings).\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount#total_savings)",
+        deprecated: true
+      }
+    }
+  },
+  articles: {
+    summary: 'All of the articles across the blogs in the store.',
+    global: true,
+    description: "All of the articles across the blogs in the store.\n\n#### \n\nYou can use `articles` to access an article by its [handle](/docs/api/liquid/basics#handles).\n\n```liquid\n{% assign article = articles['potion-notions/new-potions-for-spring'] %}\n{{ article.title | link_to: article.url }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/articles",
+    type: 'array',
+    scope: 'article'
+  },
+  article: {
+    summary: 'An article, or [blog post](https://help.shopify.com/manual/online-store/blogs/writing-blogs), in a blog.',
+    description: 'An article, or [blog post](https://help.shopify.com/manual/online-store/blogs/writing-blogs), in a blog.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article',
+    type: 'object',
+    properties: {
+      image: {
+        type: 'object',
+        description: 'The featured image for the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#image)',
+        scope: 'image'
+      },
+      author: {
+        type: 'string',
+        description: 'The full name of the author of the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#author)'
+      },
+      metafields: {
+        type: 'any',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the article.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#metafields)'
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#handle)'
+      },
+      id: {
+        type: 'string',
+        description: 'The ID of the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#id)'
+      },
+      title: {
+        type: 'string',
+        description: 'The title of the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#title)'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#url)'
+      },
+      template_suffix: {
+        type: 'string',
+        description: "The name of the [custom template](/themes/architecture/templates#alternate-templates) assigned to the article. The name doesn't include the `article.` prefix, or the file extension (`.json` or `.liquid`).\n\n If a custom template isn't assigned to the article, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#template_suffix)"
+      },
+      created_at: {
+        type: 'string',
+        description: 'A timestamp for when the article was created.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#created_at)'
+      },
+      published_at: {
+        type: 'string',
+        description: 'A timestamp for when the article was published.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#published_at)'
+      },
+      updated_at: {
+        type: 'string',
+        description: 'A timestamp for when the article was updated.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#updated_at)'
+      },
+      'moderated?': {
+        type: 'boolean',
+        description: 'Returns `true` if the blog that the article belongs to is set to [moderate comments](https://help.shopify.com/manual/online-store/blogs/managing-comments).\nReturns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#moderated?)'
+      },
+      comments: {
+        type: 'array',
+        description: 'The published comments for the article. Returns an empty array if comments are disabled.\n\n> Tip:\n> Use the [paginate](/docs/api/liquid/tags/paginate) tag to choose how many comments to show at once, up to a limit of 50.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#comments)',
+        scope: 'comment'
+      },
+      comments_count: {
+        type: 'number',
+        description: 'The number of published comments for the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#comments_count)'
+      },
+      'comments_enabled?': {
+        type: 'boolean',
+        description: 'Returns `true` if comments are enabled. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#comments_enabled?)'
+      },
+      comment_post_url: {
+        type: 'string',
+        description: 'The relative URL where POST requests are sent when creating new comments.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#comment_post_url)'
+      },
+      content: {
+        type: 'string',
+        description: 'The content of the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#content)'
+      },
+      excerpt: {
+        type: 'string',
+        description: 'The excerpt of the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#excerpt)'
+      },
+      excerpt_or_content: {
+        type: 'string',
+        description: 'Returns the article [excerpt](/docs/api/liquid/objects/article#article-excerpt) if it exists. Returns the article\n[content](/docs/api/liquid/objects/article#article-content) if no excerpt exists.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#excerpt_or_content)'
+      },
+      tags: {
+        type: 'array',
+        description: 'The tags applied to the article.\n\n#### Example\n\nWhen looping through `article.tags`, you can print how many times a tag is used with `tag.total_count`. This number shows visitors how many blog posts have been tagged with a particular tag.\n\n```liquid\n{% for tag in article.tags -%}\n  {{ tag }} ({{ tag.total_count }})\n{%- endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#tags)'
+      },
+      user: {
+        type: 'object',
+        description: 'The user associated with the author of the article.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/article#user)',
+        scope: 'user'
+      }
+    }
+  },
+  block: {
+    summary: 'The content and settings of a [section block](/themes/architecture/sections/section-schema#blocks).',
+    description: 'The content and settings of a [section block](/themes/architecture/sections/section-schema#blocks). Sections and blocks are reusable modules of content that make up [templates](/themes/architecture/templates).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/block',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'string',
+        description: 'The ID of the block. The ID is dynamically generated by Shopify.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/block#id)'
+      },
+      settings: {
+        type: 'any',
+        description: 'The [settings](/themes/architecture/sections/section-schema#blocks) of the block. To learn about how to access settings, refer to [Access settings](/themes/architecture/settings#access-settings). To learn which input settings can be applied to the `type` property within settings, refer to [Input settings](/themes/architecture/settings/input-settings).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/block#settings)'
+      },
+      type: {
+        type: 'string',
+        description: "The type of the block. The type is a free-form string that's defined in the [block's schema](/themes/architecture/sections/section-schema#blocks).\nYou can use the type as an identifier. For example, you might display different markup based on the block type.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/block#type)"
+      },
+      shopify_attributes: {
+        type: 'string',
+        description: "The data attributes for the block for use in the theme editor. The theme editor's [JavaScript API](/themes/architecture/sections/integrate-sections-with-the-theme-editor#section-and-block-javascript-events)\nuses the data attributes to identify blocks and listen for events. No value for `block.shopify_attributes` is returned\noutside the theme editor.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/block#shopify_attributes)"
+      }
+    }
+  },
+  blogs: {
+    summary: 'All of the blogs in the store.',
+    global: true,
+    description: 'All of the blogs in the store.\n\n#### \n\nYou can use `blogs` to access a blog by its [handle](/docs/api/liquid/basics#handles).\n\n```liquid\n{% for article in blogs.potion-notions.articles %}\n  {{- article.title | link_to: article.url }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blogs',
+    type: 'array',
+    scope: 'blog'
+  },
+  blog: {
+    summary: 'Information about a specific [blog](https://help.shopify.com/manual/online-store/blogs/adding-a-blog) in the store.',
+    description: 'Information about a specific [blog](https://help.shopify.com/manual/online-store/blogs/adding-a-blog) in the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: 'The ID of the blog.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#id)'
+      },
+      title: {
+        type: 'string',
+        description: 'The title of the blog.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#title)'
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the blog.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#handle)'
+      },
+      articles: {
+        type: 'array',
+        description: 'The articles in the blog.\n\n\n> Tip:\n> Use the [paginate](/docs/api/liquid/tags/paginate) tag to choose how many articles to show per page, up to a limit of 50.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#articles)',
+        scope: 'article'
+      },
+      articles_count: {
+        type: 'number',
+        description: "The total number of articles in the blog. This total doesn't include hidden articles.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#articles_count)"
+      },
+      metafields: {
+        type: 'array',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the blog.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#metafields)',
+        scope: 'metafield'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the blog.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#url)'
+      },
+      template_suffix: {
+        type: 'string',
+        description: "The name of the [custom template](/themes/architecture/templates#alternate-templates) assigned to the blog. The name doesn't include the `blog.` prefix, or the file extension (`.json` or `.liquid`).\n\n If a custom template isn't assigned to the blog, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#template_suffix)"
+      },
+      all_tags: {
+        type: 'array',
+        description: "All of the tags on the articles in the blog. This includes tags of articles that aren't in the current pagination view.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#all_tags)"
+      },
+      tags: {
+        type: 'array',
+        description: 'A list of all of the tags on all of the articles in the blog.\n\nUnlike [`blog.all_tags`](/docs/api/liquid/objects/blog#blog-all_tags), this property only returns tags of articles that are in the\nfiltered view.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#tags)'
+      },
+      'comments_enabled?': {
+        type: 'boolean',
+        description: 'Returns `true` if comments are enabled for the blog. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#comments_enabled?)'
+      },
+      'moderated?': {
+        type: 'boolean',
+        description: 'Returns `true` if the blog is set to\n[moderate comments](https://help.shopify.com/manual/online-store/blogs/managing-comments). Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#moderated?)'
+      },
+      next_article: {
+        type: 'object',
+        description: 'The next (older) article in the blog. Returns `nil` if there is no next article.\n\nThis property can be used on the [article page](/themes/architecture/templates/article) to output `next` links.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#next_article)',
+        scope: 'article'
+      },
+      previous_article: {
+        type: 'object',
+        description: 'The previous (newer) article in the blog. Returns `nil` if there is no previous article.\n\nThis property can be used on the [article page](/themes/architecture/templates/article) to output `previous` links.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/blog#previous_article)',
+        scope: 'article'
+      }
+    }
+  },
+  cart: {
+    summary: 'A customer’s cart.',
+    global: true,
+    description: 'A customer’s cart.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart',
+    type: 'object',
+    properties: {
+      requires_shipping: {
+        type: 'boolean',
+        description: 'Returns `true` if any of the products in the cart require shipping. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#requires_shipping)'
+      },
+      note: {
+        type: 'string',
+        description: 'Additional information captured with the cart. To learn more about capturing cart notes, refer to the [`cart` template](/themes/architecture/templates/cart#support-cart-notes-and-attributes).\n\n#### Example\n\nTo capture a cart note, include an HTML input such as a `<textarea>` with an attribute of `name="note"` within the cart `<form>`.\n\n```liquid\n<label>Gift note:</label>\n<textarea name="note"></textarea>\n```\n\n> Note:\n> There can only be one instance of `{{ cart.note }}` on the cart page. If there are multiple instances,\n> then the one that comes latest in the Document Object Model (DOM) will be submitted with the form.\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#note)'
+      },
+      item_count: {
+        type: 'number',
+        description: 'The number of items in the cart.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#item_count)'
+      },
+      total_price: {
+        type: 'number',
+        description: "The total price of all of the items in the cart in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#total_price)"
+      },
+      checkout_charge_amount: {
+        type: 'number',
+        description: "The amount that the customer will be charged at checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#checkout_charge_amount)"
+      },
+      original_total_price: {
+        type: 'number',
+        description: "The total price of all of the items in the cart in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#original_total_price)"
+      },
+      items_subtotal_price: {
+        type: 'number',
+        description: "The total price of all of the items in the cart in the currency's subunit, after any line item discounts. This\ndoesn't include taxes (unless taxes are included in the prices), cart discounts, or shipping costs. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#items_subtotal_price)"
+      },
+      total_discount: {
+        type: 'number',
+        description: "The total amount of all discounts (the amount saved) for the cart in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#total_discount)"
+      },
+      items: {
+        type: 'array',
+        description: 'The line items in the cart.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#items)',
+        scope: 'line_item'
+      },
+      'empty?': {
+        type: 'boolean',
+        description: "Returns `true` if there are no items in the cart. Return's `false` if there are.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#empty?)"
+      },
+      currency: {
+        type: 22,
+        description: "The currency of the cart. If the store uses multi-currency, then this is the same as the customer's local\n(presentment) currency. Otherwise, it's the same as the store currency.\n\n> Tip:\n> You can output the store's available currencies using [`shop.enabled_currencies`](/docs/api/liquid/objects/shop#shop-enabled_currencies).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#currency)"
+      },
+      total_weight: {
+        type: 'number',
+        description: 'The total weight of all of the items in the cart.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#total_weight)'
+      },
+      discount_applications: {
+        type: 'array',
+        description: 'The discount applications for the cart.\n\n#### Example\n\n```liquid\n{% for discount_application in cart.discount_applications %}\n  Discount name: {{ discount_application.title }}\n  Savings: -{{ discount_application.total_allocated_amount | money }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#discount_applications)',
+        scope: 'discount_application'
+      },
+      attributes: {
+        type: 'any',
+        description: "Additional attributes entered by the customer with the cart. To learn more about capturing cart attributes, refer to the [`cart` template](/themes/architecture/templates/cart#support-cart-notes-and-attributes).\n\n#### Example\n\nTo capture a cart attribute, include an HTML input with an attribute of `name=\"attributes[attribute-name]\"` within the cart `<form>`.\n\n```liquid\n<label>What do you want engraved on your cauldron?</label>\n<input type=\"text\" name=\"attributes[cauldron-engraving]\" value=\"{{ cart.attributes.cauldron-engraving }}\" />\n```\n\n> Tip:\n> You can add a double underscore `__` prefix to an attribute name to make it private. Private attributes behave like other cart attributes, except that they can't be read from Liquid or the Ajax API.\n> You can use them for data that doesn't affect the page rendering, which allows for more effective page caching.\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#attributes)"
+      },
+      cart_level_discount_applications: {
+        type: 'array',
+        description: 'The cart-specific discount applications for the cart.\n\n#### Example\n\n```liquid\n{% for discount_application in cart.cart_level_discount_applications %}\n  Discount name: {{ discount_application.title }}\n  Savings: -{{ discount_application.total_allocated_amount | money }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#cart_level_discount_applications)',
+        scope: 'discount_application'
+      },
+      discounts: {
+        type: 'array',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because not all discount types and details are available.\n\nThe `cart.discounts` property has been replaced by [`cart.discount_applications`](/docs/api/liquid/objects/cart#cart-discount_applications).\n\n---\nThe discounts applied to the cart.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#discounts)',
+        scope: 'discount'
+      },
+      taxes_included: {
+        type: 'boolean',
+        description: 'Returns `true` if taxes are included in the prices of products in the cart. Returns `false` if not. This can be set in a store’s [tax settings](https://www.shopify.com/admin/settings/taxes).\n\nIf the store includes or exclude tax [based on the customer’s country](https://help.shopify.com/manual/taxes/location#include-or-exclude-tax-based-on-your-customers-country),\nthen the value reflects the tax requirements of the customer’s country.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/cart#taxes_included)'
+      }
+    }
+  },
+  collection: {
+    summary: 'A [collection](https://help.shopify.com/manual/products/collections) in a store.',
+    description: 'A [collection](https://help.shopify.com/manual/products/collections) in a store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection',
+    type: 'object',
+    properties: {
+      metafields: {
+        type: 'array',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the collection.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#metafields)',
+        scope: 'metafield'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the collection.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#id)'
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the collection.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#handle)'
+      },
+      title: {
+        type: 'string',
+        description: 'The title of the collection.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#title)'
+      },
+      description: {
+        type: 'string',
+        description: 'The description of the collection.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#description)'
+      },
+      template_suffix: {
+        type: 'string',
+        description: "The name of the [custom template](/themes/architecture/templates#alternate-templates) assigned to the collection. The name doesn't include the `collection.` prefix, or the file extension (`.json` or `.liquid`).\n\n If a custom template isn't assigned to the collection, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#template_suffix)"
+      },
+      current_vendor: {
+        type: 'string',
+        description: 'The vendor name on a vendor collection page. You can query for products from a certain vendor at the `/collections/vendors` URL\nwith a query parameter in the format of `?q=[vendor]`, where `[vendor]` is your desired product vendor.\n\n> Tip:\n> The query value is case-insensitive, so `apparelco` is equivalent to `ApparelCo` or `APPARELCO`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#current_vendor)'
+      },
+      current_type: {
+        type: 'string',
+        description: 'The product type on a product type collection page. You can query for products of a certain type at the `/collections/types` URL\nwith a query parameter in the format of `?q=[type]`, where `[type]` is your desired product type.\n\n> Tip:\n> The query value is case-insensitive, so `shirts` is equivalent to `Shirts` or `SHIRTS`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#current_type)'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the collection.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#url)'
+      },
+      published_at: {
+        type: 'string',
+        description: 'A timestamp for when the collection was published.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#published_at)'
+      },
+      image: {
+        type: 'object',
+        description: "The image for the collection. This image is added on the collection's page in the Shopify admin.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#image)",
+        scope: 'image'
+      },
+      sort_options: {
+        type: 'array',
+        description: 'The available sorting options for the collection.\n\n#### Example\n\n```liquid\n{%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}\n\n<select>\n{%- for option in collection.sort_options %}\n  <option\n    value="{{ option.value }}"\n    {%- if option.value == sort_by %}\n      selected="selected"\n    {%- endif %}\n  >\n    {{ option.name }}\n  </option>\n{% endfor -%}\n</select>\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#sort_options)',
+        scope: 'sort_option'
+      },
+      sort_by: {
+        type: 'string',
+        description: "The sort order applied to the collection by the `sort_by` URL parameter. If there's no `sort_by` URL parameter, then the value is `nil`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#sort_by)"
+      },
+      default_sort_by: {
+        type: 'string',
+        description: "The default sort order of the collection. This is set on the collection's page in the Shopify admin.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#default_sort_by)",
+        literal: [
+          'manual',
+          'best-selling',
+          'title-ascending',
+          'price-ascending',
+          'price-descending',
+          'created-ascending',
+          'created-descending'
+        ]
+      },
+      next_product: {
+        type: 'object',
+        description: "The next product in the collection. Returns `nil` if there's no next product. This property can be used on the [product page](/themes/architecture/templates/product) to output `next` links.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#next_product)",
+        scope: 'product'
+      },
+      previous_product: {
+        type: 'object',
+        description: "The previous product in the collection. Returns `nil` if there's no previous product. This property can be used on the [product page](/themes/architecture/templates/product) to output `previous` links.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#previous_product)",
+        scope: 'product'
+      },
+      products_count: {
+        type: 'number',
+        description: 'The total number of products in the current view of the collection.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#products_count)'
+      },
+      products: {
+        type: 'array',
+        description: 'All of the products in the collection.\n\n\n> Tip:\n> Use the [paginate](/docs/api/liquid/tags/paginate) tag to choose how many products to show per page, up to a limit of 50.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#products)',
+        scope: 'product'
+      },
+      all_products_count: {
+        type: 'number',
+        description: 'The total number of products in a collection. This includes products that have been filtered out of the current view.\n\n> Tip:\n> To display the number of products in a filtered collection, use [`collection.products_count`](/docs/api/liquid/objects/collection#collection-products_count).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#all_products_count)'
+      },
+      all_tags: {
+        type: 'array',
+        description: 'All of the tags applied to the products in the collection. This includes tags for products that have been filtered out of the current view.\nA maximum of 1,000 tags can be returned.\n\n> Tip:\n> To display the tags that are currently applied, use [`collection.tags`](/docs/api/liquid/objects/collection#collection-tags).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#all_tags)'
+      },
+      tags: {
+        type: 'array',
+        description: "The tags that are currently applied to the collection. This doesn't include tags for products that have been filtered out of the current view.\nReturns `nil` if no tags have been applied, or all products with tags have been filtered out of the current view.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#tags)"
+      },
+      all_types: {
+        type: 'array',
+        description: 'All of the product types in a collection.\n\n#### Example\n\nUse the [`link_to_type`](/docs/api/liquid/filters/link_to_type) filter to create links to the product types in a collection.\n\n```liquid\n{% for product_type in collection.all_types -%}\n  {{- product_type | link_to_type }}\n{%- endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#all_types)'
+      },
+      all_vendors: {
+        type: 'array',
+        description: 'All of the product vendors in a collection.\n\n#### Example\n\nUse the [`link_to_vendor`](/docs/api/liquid/filters/link_to_vendor) filter to create links to the vendors in a collection.\n\n```liquid\n{% for product_vendor in collection.all_vendors %}\n  {{- product_vendor | link_to_vendor }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#all_vendors)'
+      },
+      filters: {
+        type: 'array',
+        description: 'The [storefront filters](https://help.shopify.com/manual/online-store/themes/customizing-themes/storefront-filters) that\nhave been set up on the collection. Only filters relevant to the current collection are returned. Filters will be empty for collections that contain over 1000 products.\n\nTo learn about supporting filters in your theme, refer to [Support storefront filtering](/themes/navigation-search/filtering/storefront-filtering/support-storefront-filtering).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#filters)',
+        scope: 'filter'
+      },
+      featured_image: {
+        type: 'object',
+        description: "The featured image for the collection. The default is the [collection image](/docs/api/liquid/objects/collection#collection-image). If this image isn't available, then\nShopify falls back to the featured image of the first product in the collection. If the first product in the collection\ndoesn't have a featured image, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/collection#featured_image)",
+        scope: 'image'
+      }
+    }
+  },
+  color: {
+    summary: 'A color from a [`color` setting](/themes/architecture/settings/input-settings#color).',
+    description: 'A color from a [`color` setting](/themes/architecture/settings/input-settings#color).\n\n\n> Tip:\n> Use [color filters](/docs/api/liquid/filters/color-filters) to modify or extract properties of a `color` object.\n\n#### Example\n\nWhen a color setting is referenced directly, the hexidecimal color code is returned.\n\n```liquid\n{{ settings.colors_accent_2 }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color',
+    type: 'object',
+    properties: {
+      red: {
+        type: 'number',
+        description: 'The red component of the color, which is a number between 0 and 255.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#red)'
+      },
+      green: {
+        type: 'number',
+        description: 'The green component of the color, which is a number between 0 and 255.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#green)'
+      },
+      blue: {
+        type: 'number',
+        description: 'The blue component of the color, which is a number between 0 and 255.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#blue)'
+      },
+      rgb: {
+        type: 'string',
+        description: 'The red, green, and blue values of the color, represented as a space-separated string.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#rgb)'
+      },
+      rgba: {
+        type: 'string',
+        description: 'The red, green, blue, and alpha values of the color, represented as a\nspace-separated string, with a slash before the alpha channel.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#rgba)'
+      },
+      hue: {
+        type: 'number',
+        description: 'The hue component of the color, which is a number between 0 and 360.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#hue)'
+      },
+      saturation: {
+        type: 'number',
+        description: 'The saturation component of the color, which is a number between 0 and 100.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#saturation)'
+      },
+      lightness: {
+        type: 'number',
+        description: 'The lightness component of the color, which is a number between 0 and 100.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#lightness)'
+      },
+      alpha: {
+        type: 'number',
+        description: 'The alpha component of the color, which is a decimal number between 0.0 and 1.0.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/color#alpha)'
+      }
+    }
+  },
+  company_address: {
+    summary: 'The address of a company location.',
+    description: 'The address of a company location. To learn about B2B in themes, refer to [Support B2B customers in your theme](/themes/pricing-payments/b2b).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address',
+    type: 'object',
+    properties: {
+      attention: {
+        type: 'string',
+        description: 'The attention line of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#attention)'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#id)'
+      },
+      address1: {
+        type: 'string',
+        description: 'The first line of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#address1)'
+      },
+      address2: {
+        type: 'string',
+        description: 'The second line of the address. If no second line is specified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#address2)'
+      },
+      city: {
+        type: 'string',
+        description: 'The city of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#city)'
+      },
+      zip: {
+        type: 'string',
+        description: 'The zip or postal code of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#zip)'
+      },
+      country_code: {
+        type: 'string',
+        description: 'The country of the address in [ISO 3166-1 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#country_code)'
+      },
+      province_code: {
+        type: 'string',
+        description: "The province of the address in [ISO 3166-2 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html).\n\n\n> Note:\n> The value doesn't include the preceding [ISO 3166-1](https://www.iso.org/glossary-for-iso-3166.html) country code.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#province_code)"
+      },
+      country: {
+        type: 'object',
+        description: 'The country of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#country)',
+        scope: 'country'
+      },
+      street: {
+        type: 'string',
+        description: 'A combination of the first and second lines of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#street)'
+      },
+      province: {
+        type: 'string',
+        description: 'The province of the address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_address#province)'
+      }
+    }
+  },
+  company: {
+    summary: 'A company that a [customer](/docs/api/liquid/objects/customer) is purchasing for.',
+    description: 'A company that a [customer](/docs/api/liquid/objects/customer) is purchasing for. To learn about B2B in themes, refer to [Support B2B customers in your theme](/themes/pricing-payments/b2b).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: 'The ID of the company.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company#id)'
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the company.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company#name)'
+      },
+      available_locations: {
+        type: 'array',
+        description: 'The company locations that the current customer has access to, or can interact with.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company#available_locations)',
+        scope: 'company_location'
+      }
+    }
+  },
+  company_location: {
+    summary: 'A location of the [company](/docs/api/liquid/objects/company) that a [customer](/docs/api/liquid/objects/customer) is purchasing for.',
+    description: 'A location of the [company](/docs/api/liquid/objects/company) that a [customer](/docs/api/liquid/objects/customer) is purchasing for. To learn about B2B in themes, refer to [Support B2B customers in your theme](/themes/pricing-payments/b2b).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_location',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: 'The ID of the location.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_location#id)'
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the location.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_location#name)'
+      },
+      url_to_set_as_current: {
+        type: 'string',
+        description: 'The URL to set the location as the current location for the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_location#url_to_set_as_current)'
+      },
+      'current?': {
+        type: 'boolean',
+        description: 'Returns `true` if the location is currently selected. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_location#current?)'
+      },
+      company: {
+        type: 'object',
+        description: 'The company that the location is associated with.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_location#company)',
+        scope: 'company'
+      },
+      shipping_address: {
+        type: 'object',
+        description: 'The address of the location.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_location#shipping_address)',
+        scope: 'company_address'
+      },
+      tax_registration_id: {
+        type: 'number',
+        description: 'The tax ID of the location.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/company_location#tax_registration_id)'
+      }
+    }
+  },
+  content_for_header: {
+    summary: 'Dynamically returns all scripts required by Shopify.',
+    const: true,
+    global: true,
+    description: "Dynamically returns all scripts required by Shopify. Include the `content_for_header` object in your [layout files](/themes/architecture/layouts) between the `<head>` and\n`</head>` HTML tags.\n\nYou shouldn't try to modify or parse the `content_for_header` object because the contents are subject to change, which can\nchange the behaviour of your code.\n\n> Note:\n> The `content_for_header` object is required in `theme.liquid`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/content_for_header"
+  },
+  country: {
+    summary: "A country supported by the store's localization options.",
+    description: "A country supported by the store's localization options. To learn how to use the `country` object to offer localization options in your theme,\nrefer to [Support multiple currencies and languages](/themes/internationalization/multiple-currencies-languages).\n\n#### Example\n\nWhen the country object is referenced directly, `country.name` is returned.\n\n```liquid\n{% for country in localization.available_countries -%}\n  {{ country }}\n{%- endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/country",
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        description: 'The name of the country.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/country#name)'
+      },
+      iso_code: {
+        type: 'string',
+        description: 'The ISO code of the country in [ISO 3166-1 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/country#iso_code)'
+      },
+      unit_system: {
+        type: 'string',
+        description: 'The unit system of the country.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/country#unit_system)',
+        literal: [
+          'imperial',
+          'metric'
+        ]
+      },
+      currency: {
+        type: 'object',
+        description: 'The currency used in the country.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/country#currency)',
+        scope: 'currency'
+      }
+    }
+  },
+  currency: {
+    summary: 'Information about a currency, like the ISO code and symbol.',
+    description: 'Information about a currency, like the ISO code and symbol.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/currency',
+    type: 'object',
+    properties: {
+      iso_code: {
+        type: 'string',
+        description: 'The [ISO code](https://www.iso.org/iso-4217-currency-codes.html) of the currency.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/currency#iso_code)'
+      },
+      symbol: {
+        type: 'string',
+        description: 'The symbol of the currency.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/currency#symbol)'
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the currency.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/currency#name)'
+      }
+    }
+  },
+  customer: {
+    summary: 'A [customer](https://help.shopify.com/manual/customers) of the store.',
+    global: true,
+    description: "A [customer](https://help.shopify.com/manual/customers) of the store. The `customer` object is directly accessible globally when a customer is logged in to their account. It's also defined in\nthe following contexts:\n\n- The [`customers/account` template](/themes/architecture/templates/customers-account)\n- The [`customers/addresses` template](/themes/architecture/templates/customers-addresses)\n- The [`customers/order` template](/themes/architecture/templates/customers-order)\n- When accessing [`checkout.customer`](/docs/api/liquid/objects/checkout#checkout-customer)\n- When accessing [`gift_card.customer`](/docs/api/liquid/objects/gift_card#gift_card-customer)\n- When accessing [`order.customer`](/docs/api/liquid/objects/order#order-customer)\n\nOutside of the above contexts, if the customer isn't logged into their account, the `customer` object returns `nil`.\n\n#### Example\n\nWhen using the `customer` object outside of customer-specific templates or objects that specifically return a customer, you should check whether the `customer` object is defined.\n\n```liquid\n{% if customer %}\n  Hello, {{ customer.first_name }}!\n{% endif %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer",
+    type: 'object',
+    properties: {
+      first_name: {
+        type: 'string',
+        description: 'The first name of the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#first_name)'
+      },
+      last_name: {
+        type: 'string',
+        description: 'The last name of the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#last_name)'
+      },
+      orders_count: {
+        type: 'number',
+        description: 'The total number of orders that the customer has placed.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#orders_count)'
+      },
+      total_spent: {
+        type: 'number',
+        description: "The total amount that the customer has spent on all orders in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#total_spent)"
+      },
+      orders: {
+        type: 'array',
+        description: 'All of the orders placed by the customer.\n\n\n> Tip:\n> Use the [paginate](/docs/api/liquid/tags/paginate) tag to choose how many orders to show at once, up to a limit of 20.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#orders)',
+        scope: 'order'
+      },
+      last_order: {
+        type: 'object',
+        description: 'The last order placed by the customer, not including test orders.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#last_order)',
+        scope: 'order'
+      },
+      name: {
+        type: 'string',
+        description: 'The full name of the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#name)'
+      },
+      email: {
+        type: 'string',
+        description: 'The email of the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#email)'
+      },
+      phone: {
+        type: 'string',
+        description: 'The phone number of the customer. This phone number is only populated if the customer checks out using a phone number during checkout, opts in to SMS\nnotifications, or if the merchant has manually entered it.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#phone)'
+      },
+      has_account: {
+        type: 'boolean',
+        description: "Returns `true` if the email associated with the customer is tied to a\n[customer account](https://help.shopify.com/manual/customers/customer-accounts). Returns `false` if not. A customer can complete a checkout without making an account with the store. If the customer\ndoesn't have an account with the store, then `customer.has_account` is `false` at checkout.\n\nDuring the checkout process, if the customer has an account with the store and enters an email associated\nwith an account, then `customer.has_account` is `true`. The email is associated with the account regardless\nof whether the customer has logged into their account.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#has_account)"
+      },
+      accepts_marketing: {
+        type: 'boolean',
+        description: 'Returns `true` if the customer accepts marketing. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#accepts_marketing)'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#id)'
+      },
+      tags: {
+        type: 'array',
+        description: 'The tags associated with the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#tags)'
+      },
+      default_address: {
+        type: 'object',
+        description: 'The default address of the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#default_address)',
+        scope: 'address'
+      },
+      addresses: {
+        type: 'array',
+        description: 'All of the addresses associated with the customer.\n\n\n> Tip:\n> Use the [paginate](/docs/api/liquid/tags/paginate) tag to choose how many addresses to show at once, up to a limit of 20.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#addresses)',
+        scope: 'address'
+      },
+      addresses_count: {
+        type: 'number',
+        description: 'The number of addresses associated with the customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#addresses_count)'
+      },
+      tax_exempt: {
+        type: 'boolean',
+        description: 'Returns `true` if the customer is exempt from taxes. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#tax_exempt)'
+      },
+      'b2b?': {
+        type: 'boolean',
+        description: 'Returns `true` if the customer is a B2B customer. Returns `false` if not. To learn about B2B in themes, refer to [Support B2B customers in your theme](/themes/pricing-payments/b2b).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#b2b?)'
+      },
+      company_available_locations: {
+        type: 'array',
+        description: 'The company locations that the customer has access to, or can interact with. To learn about B2B in themes, refer to [Support B2B customers in your theme](/themes/pricing-payments/b2b).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#company_available_locations)',
+        scope: 'company_location'
+      },
+      current_location: {
+        type: 'object',
+        description: 'The currently selected company location. To learn about B2B in themes, refer to [Support B2B customers in your theme](/themes/pricing-payments/b2b).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#current_location)',
+        scope: 'company_location'
+      },
+      current_company: {
+        type: 'object',
+        description: 'The company that the customer is purchasing for. To learn about B2B in themes, refer to [Support B2B customers in your theme](/themes/pricing-payments/b2b).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/customer#current_company)',
+        scope: 'company'
+      }
+    }
+  },
+  discount_allocation: {
+    summary: 'Information about how a discount affects an item.',
+    description: 'Information about how a discount affects an item. To learn about how to display discounts in your theme, refer to [Discounts](/themes/pricing-payments/discounts).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_allocation',
+    type: 'object',
+    properties: {
+      discount_application: {
+        type: 'object',
+        description: 'The discount application that applies the discount to the item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_allocation#discount_application)',
+        scope: 'discount_application'
+      },
+      amount: {
+        type: 'number',
+        description: "The amount that the item is discounted by in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_allocation#amount)"
+      }
+    }
+  },
+  discount_application: {
+    summary: 'Information about the intent of a discount.',
+    description: 'Information about the intent of a discount. To learn about how to display discounts in your theme, refer to [Discounts](/themes/pricing-payments/discounts).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_application',
+    type: 'object',
+    properties: {
+      total_allocated_amount: {
+        type: 'number',
+        description: "The total amount of the discount in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_application#total_allocated_amount)"
+      },
+      title: {
+        type: 'string',
+        description: 'The customer-facing name of the discount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_application#title)'
+      },
+      value: {
+        type: 'number',
+        description: "The value of the discount. How this value is interpreted depends on the [value type](/docs/api/liquid/objects/discount_application#discount_application-value_type) of the\ndiscount. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `fixed_amount` | The amount of the discount in the currency's subunit. |\n| `percentage` | The percent amount of the discount. |\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_application#value)"
+      },
+      target_selection: {
+        type: 'string',
+        description: "The selection method for line items or shipping lines to be discounted.\n\n\n> Note:\n> Whether the selection method applies to line items or shipping lines depends on the discount's\n> [target type](/docs/api/liquid/objects/discount_application#discount_application-target_type).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_application#target_selection)",
+        literal: [
+          'all',
+          'entitled',
+          'explicit'
+        ]
+      },
+      type: {
+        type: 'string',
+        description: 'The type of the discount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_application#type)',
+        literal: [
+          'automatic',
+          'discount_code',
+          'manual',
+          'script'
+        ]
+      },
+      value_type: {
+        type: 'string',
+        description: 'The value type of the discount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_application#value_type)',
+        literal: [
+          'fixed_amount',
+          'percentage'
+        ]
+      },
+      target_type: {
+        type: 'string',
+        description: 'The type of item that the discount applies to.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/discount_application#target_type)',
+        literal: [
+          'line_item',
+          'shipping_line'
+        ]
+      }
+    }
+  },
+  external_video: {
+    summary: 'Information about an external video from YouTube or Vimeo.',
+    description: 'Information about an external video from YouTube or Vimeo.\n\n\n> Tip:\n> Use the [`external_video_tag` filter](/docs/api/liquid/filters/external_video_tag) to output the video in an\n> HTML `<iframe>` tag. Use the [`external_video_url` filter](/docs/api/liquid/filters/external_video_url) to specify parameters\n> for the external video player.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video',
+    type: 'object',
+    properties: {
+      external_id: {
+        type: 'string',
+        description: 'The ID of the video from its external source.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video#external_id)'
+      },
+      aspect_ratio: {
+        type: 'number',
+        description: 'The aspect ratio of the video as a decimal.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video#aspect_ratio)'
+      },
+      host: {
+        type: 'string',
+        description: 'The service that hosts the video.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video#host)',
+        literal: [
+          'youtube',
+          'vimeo'
+        ]
+      },
+      alt: {
+        type: 'string',
+        description: 'The alt text of the external video.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video#alt)'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the external video.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video#id)'
+      },
+      media_type: {
+        type: 'string',
+        description: "The media type of the external video. Always returns `external_video`.\n\n#### Example\n\nYou can use the `media_type` property with the [`where` filter](/docs/api/liquid/filters/where) to filter the [`product.media` array](/docs/api/liquid/objects/product#product-media) for all media of a desired type.\n\n```liquid\n{% assign external_videos = product.media | where: 'media_type', 'external_video' %}\n\n{% for external_video in external_videos %}\n  {{- external_video | external_video_tag }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video#media_type)"
+      },
+      position: {
+        type: 'number',
+        description: 'The position of the external video in the [`product.media`](/docs/api/liquid/objects/product#product-media) array.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video#position)'
+      },
+      preview_image: {
+        type: 'object',
+        description: "A preview image of the media.\n\n\n> Note:\n> Preview images don't have an ID attribute.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/external_video#preview_image)",
+        scope: 'image'
+      }
+    }
+  },
+  filter: {
+    summary: 'A [storefront filter](https://help.shopify.com/manual/online-store/themes/customizing-themes/storefront-filters).',
+    description: 'A [storefront filter](https://help.shopify.com/manual/online-store/themes/customizing-themes/storefront-filters). To learn about supporting filters in your theme, refer to [Support storefront filtering](/themes/navigation-search/filtering/storefront-filtering/support-storefront-filtering).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter',
+    type: 'object',
+    properties: {
+      param_name: {
+        type: 'string',
+        description: 'The URL parameter for the filter. For example, `filter.v.option.color`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#param_name)'
+      },
+      label: {
+        type: 'string',
+        description: 'The customer-facing label for the filter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#label)'
+      },
+      type: {
+        type: 'string',
+        description: 'The type of the filter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#type)',
+        literal: [
+          'boolean',
+          'list',
+          'price_range'
+        ]
+      },
+      active_values: {
+        type: 'array',
+        description: 'The values of the filter that are currently active.\n\nThe array can have values only for `boolean` and `list` type filters.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#active_values)',
+        scope: 'filter_value'
+      },
+      inactive_values: {
+        type: 'array',
+        description: 'The values of the filter that are currently inactive. The array can have values only for `boolean` and `list` type filters.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#inactive_values)',
+        scope: 'filter_value'
+      },
+      values: {
+        type: 'array',
+        description: 'The values of the filter.\n\nThe array can have values only for `boolean` and `list` type filters.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#values)',
+        scope: 'filter_value'
+      },
+      false_value: {
+        type: 'object',
+        description: 'The `false` filter value.\n\nReturns a value only for `boolean` type filters. Returns `nil` for other types.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#false_value)',
+        scope: 'filter_value'
+      },
+      true_value: {
+        type: 'object',
+        description: 'The `true` filter value.\n\nReturns a value only for `boolean` type filters. Returns `nil` for other types.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#true_value)',
+        scope: 'filter_value'
+      },
+      max_value: {
+        type: 'object',
+        description: 'The highest filter value.\n\nReturns a value only for `price_range` type filters. Returns `nil` for other types.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#max_value)',
+        scope: 'filter_value'
+      },
+      min_value: {
+        type: 'object',
+        description: 'The lowest filter value.\n\nReturns a value only for `price_range` type filters. Returns `nil` for other types.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#min_value)',
+        scope: 'filter_value'
+      },
+      range_max: {
+        type: 'number',
+        description: 'The highest product price within the collection or search results.\n\nReturns a value only for `price_range` type filters. Returns `nil` for other types.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#range_max)'
+      },
+      url_to_remove: {
+        type: 'string',
+        description: 'The current page URL with the URL parameter related to the filter removed.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter#url_to_remove)'
+      }
+    }
+  },
+  filter_value: {
+    summary: 'A specific value of a filter.',
+    description: 'A specific value of a filter. To learn about supporting filters in your theme, refer to [Support storefront filtering](/themes/navigation-search/filtering/storefront-filtering/support-storefront-filtering).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter_value',
+    type: 'object',
+    properties: {
+      param_name: {
+        type: 'string',
+        description: "The URL parameter for the parent filter of the filter value. For example, `filter.v.option.color`.\n\nFilters of type `price_range` include an extra component depending on whether the filter value is for the filter's\n`min_value` or `max_value`. The following table outlines the URL parameter for each:\n\n| Value type | URL parameter |\n| --- | --- |\n| `min_value` | `filter.v.price.lte` |\n| `max_value` | `filter.v.price.gte` |\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter_value#param_name)"
+      },
+      value: {
+        type: 'string',
+        description: 'The value.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter_value#value)'
+      },
+      active: {
+        type: 'boolean',
+        description: 'Returns `true` if the value is currently active. Returns `false` if not.\n\nCan only return `true` for filters of type `boolean` or `list`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter_value#active)'
+      },
+      count: {
+        type: 'number',
+        description: 'The number of results related to the filter value.\n\nReturns a value only for `boolean` and `list` type filters. Returns `nil` for `price_range` type filters.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter_value#count)'
+      },
+      label: {
+        type: 'string',
+        description: 'The customer-facing label for the filter value. For example, `Red` or `Rouge`.\n\nReturns a value only for `boolean` and `list` type filters. Returns `nil` for `price_range` type filters.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter_value#label)'
+      },
+      url_to_add: {
+        type: 'string',
+        description: 'The current page URL with the filter value parameter added.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter_value#url_to_add)'
+      },
+      url_to_remove: {
+        type: 'string',
+        description: 'The current page URL with the filter value parameter removed.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/filter_value#url_to_remove)'
+      }
+    }
+  },
+  focal_point: {
+    summary: 'The focal point for an image.',
+    description: "The focal point for an image. The focal point will remain visible when the image is cropped by the\ntheme. [Learn more about supporting focal points in your theme](https://shopify.dev/themes/architecture/settings/input-settings#image-focal-points).\n\n> Tip:\n> Use the [`image_tag`](/docs/api/liquid/filters/image_tag) filter to automatically apply focal point settings to an\n> image on the storefront. This applies the focal point using the `object-position` CSS property.\n\n#### Example\n\nWhen a `focal_point` object is referenced directly, the coordinates are returned as a string, in the format `X% Y%`.\n\n```liquid\n{{ images['potions-header.png'].presentation.focal_point }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/focal_point",
+    type: 'object',
+    properties: {
+      x: {
+        type: 'number',
+        description: 'The horizontal position of the focal point, as a percent of the image width. Returns `50` if no focal point is set.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/focal_point#x)'
+      },
+      y: {
+        type: 'number',
+        description: 'The vertical position of the focal point, as a percent of the image height. Returns `50` if no focal point is set.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/focal_point#y)'
+      }
     }
   },
   font: {
+    summary: 'A font from a [`font_picker` setting](/themes/architecture/settings/input-settings#font_picker).',
+    description: 'A font from a [`font_picker` setting](/themes/architecture/settings/input-settings#font_picker). You can use the `font` object in Liquid [assets](/themes/architecture#assets) or inside a [`style` tag](/docs/api/liquid/tags/style)\nto apply font setting values to theme CSS.\n\n> Tip:\n> Use [font filters](/docs/api/liquid/filters/font-filters) to modify properties of the `font` object, load the font,\n> or obtain font variants.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/font',
     type: 'object',
-    description: 'The font object is used to access the font_picker settings. It can be accessed via the global settings object',
     properties: {
-      variants: {
-        description: "Returns all of the variants within the font's family. Each of the variants is also a font object",
-        type: 'array'
-      },
       family: {
-        description: "Returns the font's name",
-        type: 'string'
-      },
-      baseline_ratio: {
         type: 'string',
-        description: 'Returns the position of the baseline within the em box (measured from the bottom). You can learn more about baseline ratios in the Plumber SASS documentation'
-      },
-      style: {
-        description: 'Returns the selected font style',
-        type: 'string'
-      },
-      weight: {
-        description: 'Returns the selected font weight',
-        type: 'string'
+        description: 'The family name of the font.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/font#family)'
       },
       fallback_families: {
-        description: 'Returns the suggested fallback font families',
-        type: 'string'
+        type: 'string',
+        description: 'The fallback families of the font.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/font#fallback_families)'
+      },
+      baseline_ratio: {
+        type: 'number',
+        description: 'The baseline ratio of the font as a decimal.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/font#baseline_ratio)'
+      },
+      weight: {
+        type: 'number',
+        description: 'The weight of the font.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/font#weight)'
+      },
+      style: {
+        type: 'string',
+        description: 'The style of the font.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/font#style)'
+      },
+      variants: {
+        type: 'array',
+        description: 'The variants in the family of the font.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/font#variants)',
+        scope: 'font'
+      },
+      'system?': {
+        type: 'boolean',
+        description: 'Returns `true` if the font is a system font. Returns `false` if not.\n\n\n> Tip:\n> You can use this property to determine whether you need to include a corresponding [font-face](/docs/api/liquid/filters/font_face)\n> declaration for the font.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/font#system?)'
       }
     }
   },
   form: {
+    summary: 'Information about a form created by a [`form` tag](/docs/api/liquid/tags/form).',
+    description: 'Information about a form created by a [`form` tag](/docs/api/liquid/tags/form).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form',
     type: 'object',
-    description: 'The form object is used within the form tag. It contains attributes of its parent form.',
-    filters: false,
-    scope: [ 'form' ],
     properties: {
+      errors: {
+        type: 'object',
+        description: 'Any errors from the form. If there are no errors, then `nil` is returned.\n\n> Tip:\n> You can apply the [`default_errors` filter](/docs/api/liquid/filters/default_errors) to `form.errors` to output default\n> error messages without having to loop through the array.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#errors)',
+        scope: 'form_errors'
+      },
       address1: {
         type: 'string',
-        description: 'Returns the first address line associated with the address. Exclusive to form tags with the "address" parameter.'
+        description: 'The first address line associated with the address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#address1)'
       },
       address2: {
         type: 'string',
-        description: 'Returns the second address line associated with the address, if it exists. Exclusive to form tags with the "address" parameter.'
+        description: 'The second address line associated with the address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#address2)'
       },
       author: {
         type: 'string',
-        description: 'Returns the name of the author of the blog article comment. Exclusive to form tags with the "article" parameter.'
+        description: 'The name of the author of the article comment. This property is exclusive to the [`new_comment` form](/docs/api/liquid/tags/form#form-new_comment).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#author)'
       },
       body: {
         type: 'string',
-        description: 'Returns the content of the blog article comment. Exclusive to form tags with the "article" parameter.'
+        description: 'The content of the contact submission or article comment. This property is exclusive to the [`contact`](/docs/api/liquid/tags/form#form-contact) and [`new_comment`](/docs/api/liquid/tags/form#form-new_comment)\nforms.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#body)'
       },
       city: {
         type: 'string',
-        description: 'Returns the city associated with the address. Exclusive to form tags with the "address" parameter.'
+        description: 'The city associated with the address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#city)'
       },
       company: {
         type: 'string',
-        description: 'Returns the company name associated with the address, if it exists. Exclusive to form tags with the "address" parameter.'
+        description: 'The company associated with the address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#company)'
       },
       country: {
         type: 'string',
-        description: 'Returns the country associated with the address. Exclusive to form tags with the "address" parameter.'
+        description: 'The country associated with the address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#country)'
       },
       email: {
         type: 'string',
-        description: "Returns the email of the blog article comment's author. Exclusive to form tags with the \"article\" parameter."
-      },
-      errors: {
-        type: 'array',
-        description: 'Returns an array of strings if the form was not submitted successfully. The strings returned depend on which fields of the form were left empty or contained errors. Possible values are:\n\n- author\n- body\n- email\n- form\n'
+        description: 'The email associated with the form. This property is exclusive to the following forms:\n\n- [`contact`](/docs/api/liquid/tags/form#form-contact)\n- [`create_customer`](/docs/api/liquid/tags/form#form-create_customer)\n- [`customer`](/docs/api/liquid/tags/form#form-customer)\n- [`customer_login`](/docs/api/liquid/tags/form#form-customer_login)\n- [`new_comment`](/docs/api/liquid/tags/form#form-new_comment)\n- [`recover_customer_password`](/docs/api/liquid/tags/form#form-recover_customer_password)\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#email)'
       },
       first_name: {
         type: 'string',
-        description: 'Returns the first name associated with the address. Exclusive to form tags with the "address" parameter.'
+        description: 'The first name associated with the customer or address. This property is exclusive to the [`create_customer`](/docs/api/liquid/tags/form#form-create_customer) and\n[`customer_address`](/docs/api/liquid/tags/form#form-customer_address) forms.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#first_name)'
       },
       id: {
-        type: 'number',
-        description: 'Returns the id (unique identifier) of the form.'
+        type: 'string',
+        description: 'The ID of the form.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#id)'
       },
       last_name: {
         type: 'string',
-        description: 'Returns the last name associated with the address. Exclusive to form tags with the "address" parameter.'
+        description: 'The last name associated with the customer or address. This property is exclusive to the [`create_customer`](/docs/api/liquid/tags/form#form-create_customer) and\n[`customer_address`](/docs/api/liquid/tags/form#form-customer_address) forms.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#last_name)'
       },
       password_needed: {
         type: 'boolean',
-        description: 'Used only for form tags with the "customer_login" parameter. The form.password_needed attribute always returns true.'
+        description: 'Returns `true`. This property is exclusive to the [`customer_login` form](/docs/api/liquid/tags/form#form-customer_login).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#password_needed)'
       },
       phone: {
         type: 'string',
-        description: 'Returns the telephone number associated with the address, if it exists. Exclusive to form tags with the "address" parameter.'
+        description: 'The phone number associated with the address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#phone)'
       },
       'posted_successfully?': {
         type: 'boolean',
-        description: 'Returns true if the form was submitted successfully, or false if the form contained errors. All forms but the address form set that property. The address form is always submitted successfully.'
+        description: 'Returns `true` if the form was submitted successfully. Returns `false` if there were errors.\n\n\n> Note:\n> The [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address) always returns `true`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#posted_successfully?)'
       },
       province: {
         type: 'string',
-        description: 'Returns the province or state associated with the address. Exclusive to form tags with the "address" parameter.'
+        description: 'The province associated with the address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#province)'
       },
       set_as_default_checkbox: {
-        type: 'constant',
-        description: "Renders an HTML checkbox that can submit the current form as the customer's default address. Exclusive to form tags with the \"address\" parameter"
+        type: 'string',
+        description: "Renders an HTML checkbox that can submit the address as the customer's default address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#set_as_default_checkbox)"
       },
       zip: {
         type: 'string',
-        description: 'Returns the zip code or postal code associated with the address. Exclusive to form tags with the "address" parameter.'
+        description: 'The zip or postal code associated with the address. This property is exclusive to the [`customer_address` form](/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form#zip)'
+      }
+    }
+  },
+  fulfillment: {
+    summary: 'An order [fulfillment](https://help.shopify.com/manual/orders/fulfillment), which includes information like the line items\nbeing fulfilled and shipment tracking.',
+    description: 'An order [fulfillment](https://help.shopify.com/manual/orders/fulfillment), which includes information like the line items\nbeing fulfilled and shipment tracking.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/fulfillment',
+    type: 'object',
+    properties: {
+      created_at: {
+        type: 'string',
+        description: 'A timestamp for when the fulfillment was created.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/fulfillment#created_at)'
+      },
+      item_count: {
+        type: 'number',
+        description: 'The number of items in the fulfillment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/fulfillment#item_count)'
+      },
+      fulfillment_line_items: {
+        type: 'array',
+        description: 'The line items in the fulfillment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/fulfillment#fulfillment_line_items)',
+        scope: 'line_item'
+      },
+      tracking_company: {
+        type: 'string',
+        description: 'The name of the fulfillment service.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/fulfillment#tracking_company)'
+      },
+      tracking_number: {
+        type: 'string',
+        description: "The fulfillment's tracking number. If there's no tracking number, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/fulfillment#tracking_number)"
+      },
+      tracking_url: {
+        type: 'string',
+        description: "The URL for the fulfillment's tracking number. If there's no tracking number, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/fulfillment#tracking_url)"
+      }
+    }
+  },
+  generic_file: {
+    summary: 'A file from a `file_reference` type [metafield](/docs/api/liquid/objects/metafield) that is neither an image or video.',
+    description: 'A file from a `file_reference` type [metafield](/docs/api/liquid/objects/metafield) that is neither an image or video.\n\n\n> Tip:\n> To learn about metafield types, refer to [Metafield types](/apps/metafields/types).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/generic_file',
+    type: 'object',
+    properties: {
+      url: {
+        type: 'string',
+        description: 'The [CDN URL](/themes/best-practices/performance/platform#shopify-cdn) for the file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/generic_file#url)'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/generic_file#id)'
+      },
+      media_type: {
+        type: 'string',
+        description: 'The media type of the model. Always returns `generic_file`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/generic_file#media_type)'
+      },
+      preview_image: {
+        type: 'object',
+        description: 'A preview image for the file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/generic_file#preview_image)',
+        scope: 'image'
+      },
+      position: {
+        type: 'number',
+        description: 'The position of the media in the [`product.media` array](/docs/api/liquid/objects/product#product-media). If the source is a [`file_reference` metafield](/apps/metafields/types), then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/generic_file#position)'
+      },
+      alt: {
+        type: 'string',
+        description: 'The alt text of the media.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/generic_file#alt)'
+      }
+    }
+  },
+  gift_card: {
+    summary: "A [gift card](https://help.shopify.com/manual/products/gift-card-products) that's been issued to a customer.",
+    description: "A [gift card](https://help.shopify.com/manual/products/gift-card-products) that's been issued to a customer.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card",
+    type: 'object',
+    properties: {
+      balance: {
+        type: 'number',
+        description: "The remaining balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#balance)"
+      },
+      code: {
+        type: 'string',
+        description: 'The code used to redeem the gift card.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#code)'
+      },
+      currency: {
+        type: 'string',
+        description: 'The [ISO code](https://www.iso.org/iso-4217-currency-codes.html) of the currency that the gift card was issued in.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#currency)'
+      },
+      customer: {
+        type: 'object',
+        description: 'The customer associated with the gift card.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#customer)',
+        scope: 'customer'
+      },
+      enabled: {
+        type: 'boolean',
+        description: 'Returns `true` if the gift card is enabled. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#enabled)'
+      },
+      expired: {
+        type: 'boolean',
+        description: 'Returns `true` if the gift card is expired. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#expired)'
+      },
+      expires_on: {
+        type: 'string',
+        description: 'A timestamp for when the gift card expires. If the gift card never expires, then `nil` is returned.\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#expires_on)'
+      },
+      initial_value: {
+        type: 'number',
+        description: "The initial balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#initial_value)"
+      },
+      url: {
+        type: 'string',
+        description: 'The URL to view the gift card. This URL is on the `checkout.shopify.com` domain.\n\n\n> Tip:\n> The page at this URL is rendered through the [`gift_card.liquid` template](/themes/architecture/templates/gift-card-liquid)\n> of the theme.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#url)'
+      },
+      template_suffix: {
+        type: 'string',
+        description: "The name of the [custom template](/themes/architecture/templates#alternate-templates) assigned to the gift card. The name doesn't include the `gift_card.` prefix, or the `.liquid` file extension.\n\n If a custom template isn't assigned to the gift card, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#template_suffix)"
+      },
+      properties: {
+        type: 'array',
+        description: "The [line item properties](/docs/api/liquid/objects/line_item#line_item-properties) assigned to the gift card. If there aren't any line item properties, then an [`EmptyDrop`](/docs/api/liquid/basics#emptydrop) is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#properties)",
+        scope: 'untyped'
+      },
+      qr_identifier: {
+        type: 'string',
+        description: 'A string used to generate a QR code for the gift card.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#qr_identifier)'
+      },
+      pass_url: {
+        type: 'string',
+        description: 'The URL to download the gift card as an Apple Wallet Pass.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#pass_url)'
+      },
+      product: {
+        type: 'object',
+        description: 'The product associated with the gift card.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#product)',
+        scope: 'product'
+      },
+      last_four_characters: {
+        type: 'string',
+        description: 'The last 4 characters of the code used to redeem the gift card.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/gift_card#last_four_characters)'
+      }
+    }
+  },
+  image: {
+    summary: 'An image, such as a product or collection image.',
+    description: "An image, such as a product or collection image. To learn about the image formats that Shopify supports, visit the [Shopify Help Center](https://help.shopify.com/manual/online-store/images/theme-images#image-formats).\n\n> Tip:\n> Use the [`image_url`](/docs/api/liquid/filters/image_url) and [`image_tag`](/docs/api/liquid/filters/image_tag) filters to display\n> images on the storefront.\n\n#### Example\n\nWhen an `image` object is referenced directly, the image's relative URL path is returned.\n\n```liquid\n{{ product.featured_image }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image",
+    type: 'object',
+    scope: 'image',
+    properties: {
+      presentation: {
+        type: 'object',
+        description: 'The presentation settings for the image.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#presentation)',
+        scope: 'image_presentation'
+      },
+      src: {
+        type: 'string',
+        description: 'The relative URL of the image.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#src)'
+      },
+      width: {
+        type: 'number',
+        description: 'The width of the image in pixels.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#width)'
+      },
+      height: {
+        type: 'number',
+        description: 'The height of the image in pixels.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#height)'
+      },
+      aspect_ratio: {
+        type: 'number',
+        description: 'The aspect ratio of the image as a decimal.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#aspect_ratio)'
+      },
+      alt: {
+        type: 'string',
+        description: 'The alt text of the image.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#alt)'
+      },
+      'attached_to_variant?': {
+        type: 'boolean',
+        description: 'Returns `true` if the image is associated with a variant. Returns `false` if not. The `attached_to_variant?` property is only available for images accessed through the following sources:\n\n- [`product.featured_image`](/docs/api/liquid/objects/product#product-featured_image)\n- [`product.images`](/docs/api/liquid/objects/product#product-images)\n\nIf you reference this property on an image from another source, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#attached_to_variant?)'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the image. If you reference the `id` property for preview images of [`generic_file`](/docs/api/liquid/objects/generic_file) or\n[`media`](/docs/api/liquid/objects/media) objects, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#id)'
+      },
+      media_type: {
+        type: 'string',
+        description: "The media type of the image. Always returns `image`. The `media_type` property is only available for images accessed through the following sources:\n\n- [`product.media`](/docs/api/liquid/objects/product#product-media)\n- [`file_reference` type metafields](/apps/metafields/types#supported-types)\n\nIf you reference this property on an image from another source, then `nil` is returned.\n\n#### Example\n\nYou can use the `media_type` property with the [`where` filter](/docs/api/liquid/filters/where) to filter the [`product.media` array](/docs/api/liquid/objects/product#product-media) for all media of a desired type.\n\n```liquid\n{% assign images = product.media | where: 'media_type', 'image' %}\n\n{% for image in images %}\n  {{- image | image_url: width: 300 | image_tag }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#media_type)"
+      },
+      position: {
+        type: 'number',
+        description: 'The position of the image in the [`product.images`](/docs/api/liquid/objects/product#product-images) or [`product.media`](/docs/api/liquid/objects/product#product-media)\narray. The `position` property is only available for images that are associated with a product. If you reference this property\non an image from another source, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#position)'
+      },
+      preview_image: {
+        type: 'object',
+        description: 'A preview image for the image. The `preview_image` property is only available for images accessed through the following sources:\n\n- [`product.featured_media`](/docs/api/liquid/objects/product#product-featured_media)\n- [`product.media`](/docs/api/liquid/objects/product#product-media)\n- [`file_reference` type metafields](/apps/metafields/types#supported-types)\n\nIf you reference this property on an image from another source, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#preview_image)',
+        scope: 'image'
+      },
+      product_id: {
+        type: 'number',
+        description: 'The ID of the product that the image is associated with. The `product_id` property is only available for images associated with a product. If you reference this property on\nan image from another source, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#product_id)'
+      },
+      variants: {
+        type: 'array',
+        description: 'The product variants that the image is associated with. The `variants` property is only available for images accessed through the following sources:\n\n- [`product.featured_image`](/docs/api/liquid/objects#product-featured_image)\n- [`product.images`](/docs/api/liquid/objects/product#product-images)\n\nIf you reference this property on an image from another source, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image#variants)',
+        scope: 'variant'
+      }
+    }
+  },
+  image_presentation: {
+    summary: 'The presentation settings for an image.',
+    description: 'The presentation settings for an image.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image_presentation',
+    type: 'object',
+    properties: {
+      focal_point: {
+        type: 'object',
+        description: 'The focal point for the image.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/image_presentation#focal_point)',
+        scope: 'focal_point'
+      }
+    }
+  },
+  images: {
+    summary: 'All of the [images](/docs/api/liquid/objects/image) that have been [uploaded](https://help.shopify.com/manual/online-store/images/theme-images#upload-images)\nto a store.',
+    global: true,
+    description: "All of the [images](/docs/api/liquid/objects/image) that have been [uploaded](https://help.shopify.com/manual/online-store/images/theme-images#upload-images)\nto a store.\n\n#### \n\nYou can access images from the `images` array by their filename.\n\n```liquid\n{{ images['potions-header.png'] | image_url: width: 300 | image_tag }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/images",
+    type: 'array',
+    scope: 'image'
+  },
+  line_item: {
+    summary: 'A line in a cart, checkout, or order. Each line item represents a product variant.',
+    description: 'A line in a cart, checkout, or order. Each line item represents a product variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: "The ID of the line item. The ID differs depending on the context. The following table outlines the possible contexts and their associated values:\n\n| Context | Value |\n| --- | --- |\n| [`cart.items`](/docs/api/liquid/objects/cart#cart-items) | The ID of the line item's variant.<br><br>This ID isn't unique, and can be shared by multiple items with the same variant. |\n| [`checkout.line_items`](/docs/api/liquid/objects/checkout#checkout-line_items) | A temporary unique hash generated for the checkout. |\n| [`order.line_items`](/docs/api/liquid/objects/order#order-line_items) | A unique integer ID. |\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#id)"
+      },
+      quantity: {
+        type: 'number',
+        description: 'The quantity of the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#quantity)'
+      },
+      price: {
+        type: 'number',
+        description: "⚠️ **DEPRECATED** ⚠️\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.price` property has been replaced by [`line_item.final_price`](/docs/api/liquid/objects/line_item#line_item-final_price).\n\n---\nThe price of the line item in the currency's subunit. This includes any discounts from [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#price)"
+      },
+      line_price: {
+        type: 'number',
+        description: "⚠️ **DEPRECATED** ⚠️\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.line_price` property has been replaced by [`line_item.final_line_price`](/docs/api/liquid/objects/line_item#line_item-final_line_price).\n\n---\nThe combined price, in the currency's subunit, of all of the items in a line item. This includes any discounts from [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is equal to `line_item.price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#line_price)"
+      },
+      total_discount: {
+        type: 'number',
+        description: "⚠️ **DEPRECATED** ⚠️\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.total_discount` property has been replaced by [`line_item.line_level_total_discount`](/docs/api/liquid/objects/line_item#line_item-line_level_total_discount).\n\n---\nThe total amount, in the currency's subunit, of any discounts applied to the line item by [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#total_discount)"
+      },
+      discount_allocations: {
+        type: 'array',
+        description: 'The discount allocations that apply to the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#discount_allocations)',
+        scope: 'discount_allocation'
+      },
+      final_price: {
+        type: 'number',
+        description: "The price of the line item in the currency's subunit. This includes any line-level discounts. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#final_price)"
+      },
+      final_line_price: {
+        type: 'number',
+        description: "The combined price, in the currency's subunit, of all of the items in the line item. This includes any line-level discounts. The value is equal to `line_item.final_price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#final_line_price)"
+      },
+      variant_id: {
+        type: 'number',
+        description: "The [ID](/docs/api/liquid/objects/variant#variant-id) of the line item's variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#variant_id)"
+      },
+      product_id: {
+        type: 'number',
+        description: "The [ID](/docs/api/liquid/objects/product#product-id) of the line item's product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#product_id)"
+      },
+      product: {
+        type: 'object',
+        description: 'The product associated with the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#product)',
+        scope: 'product'
+      },
+      variant: {
+        type: 'object',
+        description: 'The variant associated with the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#variant)',
+        scope: 'variant'
+      },
+      tax_lines: {
+        type: 'array',
+        description: 'The tax lines for the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#tax_lines)',
+        scope: 'tax_line'
+      },
+      fulfillment: {
+        type: 'object',
+        description: 'The fulfillment of the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#fulfillment)',
+        scope: 'fulfillment'
+      },
+      successfully_fulfilled_quantity: {
+        type: 'number',
+        description: 'The number of items from the line item that have been successfully fulfilled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#successfully_fulfilled_quantity)'
+      },
+      fulfillment_service: {
+        type: 'string',
+        description: "The [fulfillment service](https://help.shopify.com/manual/shipping/understanding-shipping/dropshipping-and-fulfillment-services)\nfor the vartiant associated with the line item. If there's no fulfillment service, then `manual` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#fulfillment_service)"
+      },
+      properties: {
+        type: 'array',
+        description: "The properties of the line item. You can add, or allow customers to add, custom information to a line item with line item properties.\n\nLine item properties consist of a name and value pair. They can be captured with the following methods:\n\n- [A custom input inside a product form](/themes/architecture/templates/product#line-item-properties)\n- [The AJAX Cart API](/api/ajax/reference/cart#add-line-item-properties)\n\n> Tip:\n> To learn about how to display captured properties, refer to [Display line item properties](/themes/architecture/templates/cart#display-line-item-properties).\n\n#### Example\n\nTo capture line item properties inside the [product form](/docs/api/liquid/tags/form#form-product), you need to include an input, for each property. Each  input needs a unique `name` attribute. Use the following format:\n\n```\nname=\"properties[property-name]\"\n```\n\nThe value of the input is captured as the value of the property.\n\nFor example, you can use the following code to capture custom engraving text for a product:\n\n```liquid\n{% form 'product', product %}\n  ...\n  <label for=\"engravingText\">Engraving<label>\n  <input type=\"text\" id=\"engravingText\" name=\"properties[Engraving]\">\n  ...\n{% endform %}\n```\n\n> Tip:\n> You can add an underscore to the beginning of a property name to hide it from customers at checkout. For example,\n> `properties[_hiddenPropertyName]`.\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#properties)",
+        scope: 'untyped'
+      },
+      unit_price_measurement: {
+        type: 'object',
+        description: 'The unit price measurement of the line item.\n\n\n> Note:\n> Unit prices are available only to stores located in Germany or France.\n\nTo learn about how to display unit prices in your theme, refer to [Unit pricing](/themes/pricing-payments/unit-pricing).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#unit_price_measurement)',
+        scope: 'unit_price_measurement'
+      },
+      unit_price: {
+        type: 'number',
+        description: "The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)\n of the line item in the currency's subunit. The price reflects any discounts that are applied to the line item. The value is output in the customer's local\n(presentment) currency.\n\n> Note:\n> Unit prices are available only to stores located in Germany and France.\n\nTo learn about how to display unit prices in your theme, refer to [Unit pricing](/themes/pricing-payments/unit-pricing).\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#unit_price)"
+      },
+      sku: {
+        type: 'string',
+        description: 'The [sku](/docs/api/liquid/objects/variant#variant-sku) of the variant associated with the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#sku)'
+      },
+      message: {
+        type: 'string',
+        description: "Information about the discounts that have affected the line item. The following table outlines what's returned depending on the number of discounts affecting the line item:\n\n| Number of discounts | Value |\n| --- | --- |\n| 0 | `nil` |\n| 1 | The [title](/docs/api/liquid/objects/discount_application#discount_application-title) of the discount. |\n| More than 1 | A Shopify generated string noting how many discounts have been applied. |\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#message)"
+      },
+      vendor: {
+        type: 'string',
+        description: 'The vendor of the variant associated with the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#vendor)'
+      },
+      title: {
+        type: 'string',
+        description: "The title of the line item. The title is a combination of `line_item.product.title` and `line_item.variant.title`, separated\nby a hyphen. In most contexts, the line item title appears in the customer's preferred language. However, in the context of an\n[order](/docs/api/liquid/objects/order), the line item title appears in the language that the customer checked out in.\n\n#### Line item title history\n\nWhen referencing line item, product, and variant titles in the context of an order, the following changes might result\nin a different output than you expect:\n\n- A product or variant being deleted\n- A product or variant title being edited\n\nWhen `line_item.title` is referenced for an order, the line item title at the time of the order is returned.\nHowever, when `line_item.product.title` and `line_item.variant.title` are referenced, the current value for\neach title is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#title)"
+      },
+      taxable: {
+        type: 'boolean',
+        description: 'Returns `true` if taxes should be charged on the line item. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#taxable)'
+      },
+      original_price: {
+        type: 'number',
+        description: "The price of the line item in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#original_price)"
+      },
+      original_line_price: {
+        type: 'number',
+        description: "The combined price of all of the items in a line item in the currency's subunit, before any discounts have been applied. The value is equal to `line_item.original_price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#original_line_price)"
+      },
+      line_level_total_discount: {
+        type: 'number',
+        description: "The total amount of any discounts applied to the line item in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#line_level_total_discount)"
+      },
+      line_level_discount_allocations: {
+        type: 'array',
+        description: 'The discount allocations that apply directly to the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#line_level_discount_allocations)',
+        scope: 'discount_allocation'
+      },
+      discounts: {
+        type: 'array',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because not all discount types and details are available.\n\nThe `line_item.discounts` property has been replaced by [`line_item.discount_allocations`](/docs/api/liquid/objects/line_item#line_item-discount_allocations).\n\n---\nThe discounts applied to the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#discounts)',
+        scope: 'discount'
+      },
+      gift_card: {
+        type: 'boolean',
+        description: 'Returns `true` if the product associated with the line item is a gift card. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#gift_card)'
+      },
+      requires_shipping: {
+        type: 'boolean',
+        description: 'Returns `true` if the variant associated with the line item requires shipping. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#requires_shipping)'
+      },
+      options_with_values: {
+        type: 'array',
+        description: "The name and value pairs for each option of the variant associated with the line item.\n\n\n> Note:\n> The array is never empty because variants with no options still have a default option. Because of this, you should use\n> `line_item.product.has_only_default_variant` to check whether there's any information to output.\n\n#### Example\n\n```liquid\n{% for item in cart.items %}\n<div class=\"cart__item\">\n  <p class=\"cart__item-title\">\n    {{ item.title }}\n  </p>\n\n  {%- unless item.product.has_only_default_variant %}\n  <ul>\n    {% for option in item.options_with_values -%}\n    <li>{{ option.name }}: {{ option.value }}</li>\n    {%- endfor %}\n  </ul>\n  {% endunless %}\n</div>\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#options_with_values)",
+        scope: 'untyped'
+      },
+      key: {
+        type: 'string',
+        description: 'The key of the line item. Line item keys are unique identifiers that consist of the following components separated by a colon:\n\n- The ID of the variant associated with the line item\n- A hash of the properties of the line item, even if there are no properties\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#key)'
+      },
+      grams: {
+        type: 'number',
+        description: "The weight of the line item in the store's [default weight unit](https://help.shopify.com/manual/intro-to-shopify/initial-setup/setup-business-settings#set-or-change-your-stores-default-weight-unit).\n\n\n> Tip:\n> Use this property with the [`weight_with_unit` filter](/docs/api/liquid/filters/weight_with_unit) to format the weight.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#grams)"
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the variant associated with the line item.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#url)'
+      },
+      url_to_remove: {
+        type: 'string',
+        description: 'A URL to remove the line item from the cart.\n\n\n> Tip:\n> To learn more about how to use this property in your theme, refer to [Remove line items from the cart](/themes/architecture/templates/cart#remove-line-items-from-the-cart).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#url_to_remove)'
+      },
+      image: {
+        type: 'object',
+        description: "The image of the line item. The image can come from one of the following sources:\n\n- The image of the variant associated with the line item\n- The featured image of the product associated with the line item, if there's no variant image\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#image)",
+        scope: 'image'
+      },
+      selling_plan_allocation: {
+        type: 'object',
+        description: "The selling plan allocation of the line item. If the line item doesn't have a selling plan allocation, then `nil` is returned. #### Availability of selling plan information\n\nThe following properties aren't available when referencing selling plan information through an\n[order's line items](/docs/api/liquid/objects/order#order-line_items):\n\n- [`selling_plan_allocation.compare_at_price`](/docs/api/liquid/objects/selling_plan_allocation#selling_plan_allocation-compare_at_price)\n- [`selling_plan_allocation.price_adjustments`](/docs/api/liquid/objects/selling_plan_allocation#selling_plan_allocation-price_adjustments)\n- [`selling_plan_allocation.selling_plan.group_id`](/docs/api/liquid/objects/selling_plan#selling_plan-group_id)\n- [`selling_plan_allocation.selling_plan.options`](/docs/api/liquid/objects/selling_plan#selling_plan-options)\n- [`selling_plan_allocation.selling_plan.price_adjustments`](/docs/api/liquid/objects/selling_plan#selling_plan-price_adjustments)\n- [`selling_plan_allocation.selling_plan_group_id`](/docs/api/liquid/objects/selling_plan_allocation#selling_plan_allocation-selling_plan_group_id)\n\n> Tip:\n> If you need to show selling plan information post-purchase, then you should use [`selling_plan.name`](/docs/api/liquid/objects/selling_plan#selling_plan-name).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/line_item#selling_plan_allocation)",
+        scope: 'selling_plan_allocation'
+      }
+    }
+  },
+  link: {
+    summary: 'A link in a [menu](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus).',
+    description: 'A link in a [menu](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus). To learn about how to implement navigation in a theme, refer to [Add navigation to your theme](/themes/navigation-search/navigation).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link',
+    type: 'object',
+    properties: {
+      active: {
+        type: 'boolean',
+        description: "Returns `true` if the link is active. Returns `false` if not. A link is considered to be active if the current URL path matches, or contains, the link's [url](/docs/api/liquid/objects/link#link-url).\nFor example, if the current URL path is `/blog/potion-notions/new-potions-for-spring`, then the following link URLs\nwould be considered active:\n\n- `/blog/potion-notions/new-potions-for-spring`\n- `/blog/potion-notions`\n\n> Tip:\n> The `link.active` property is useful for menu designs that highlight when top-level navigation categories are being\n> viewed. For example, if a customer is viewing an article from the \"Potion notions\" blog, then the \"Potion notions\" link\n> is highlighted in the menu.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#active)"
+      },
+      current: {
+        type: 'boolean',
+        description: 'Returns `true` if the current URL path matches the [URL](/docs/api/liquid/objects/link#link-url) of the link. Returns `false` if not.\n\n\n> Note:\n> URL parameters are ignored when determining a match.\n>\n> Product URLs [within the context of a collection](/docs/api/liquid/filters/within) are treated as equal to a standard product\n> URL for the same product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#current)'
+      },
+      child_active: {
+        type: 'boolean',
+        description: "Returns `true` if a link's child link is active. Returns `false` if not. A link is considered to be active if the current URL path matches, or contains, the [URL](/docs/api/liquid/objects/link#link-url) of\nthe link.\n\nFor example, if the current URL path is `/blog/potion-notions/new-potions-for-spring`, then the following link URLs\nwould be considered active:\n\n- `/blog/potion-notions/new-potions-for-spring`\n- `/blog/potion-notions`\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#child_active)"
+      },
+      child_current: {
+        type: 'boolean',
+        description: "Returns `true` if current URL path matches a link's child link [URL](/docs/api/liquid/objects/link#link-url). Returns `false` if not.\n\n\n> Note:\n> URL parameters are ignored when determining a match.\n>\n> Product URLs [within the context of a collection](/docs/api/liquid/filters/within) and standard product URLs are treated\n> the same.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#child_current)"
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the link.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#handle)'
+      },
+      links: {
+        type: 'array',
+        description: 'The child links of the link.\n\n#### Example\n\n```liquid\n{% for link in linklists.main-menu.links -%}\n  {% if link.links.size > 0 -%}\n    - {{ link.title }} ({{ link.links.size }} children)<br>\n  {%- else -%}\n    - {{ link.title }}<br>\n  {%- endif %}\n{%- endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#links)',
+        scope: 'link'
+      },
+      object: {
+        type: 'any',
+        description: 'The object associated with the link. The object can be one of the following:\n\n- [`article`](/docs/api/liquid/objects/article)\n- [`blog`](/docs/api/liquid/objects/blog)\n- [`collection`](/docs/api/liquid/objects/collection)\n- [`page`](/docs/api/liquid/objects/page)\n- [`policy`](/docs/api/liquid/objects/policy)\n- [`product`](/docs/api/liquid/objects/product)\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#object)'
+      },
+      title: {
+        type: 'string',
+        description: 'The title of the link.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#title)'
+      },
+      type: {
+        type: 'string',
+        description: 'The type of the link.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#type)',
+        literal: [
+          'article_link',
+          'blog_link',
+          'catalog_link',
+          'collection_link',
+          'collections_link',
+          'frontpage_link',
+          'http_link',
+          'page_link',
+          'policy_link',
+          'product_link',
+          'search_link'
+        ]
+      },
+      levels: {
+        type: 'number',
+        description: 'The number of nested levels under the link.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#levels)'
+      },
+      url: {
+        type: 'string',
+        description: 'The URL of the link.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/link#url)'
+      }
+    }
+  },
+  linklists: {
+    summary: 'All of the [menus](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus) in a store.',
+    global: true,
+    description: "All of the [menus](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus) in a store.\n\n#### \n\nYou can access a specific menu through the `linklists` object using the menu's [handle](/docs/api/liquid/basics#handles).\n\n```liquid\n<!-- Main menu -->\n{% for link in linklists.main-menu.links -%}\n  {{ link.title | link_to: link.url }}\n{%- endfor %}\n\n<!-- Footer menu -->\n{% for link in linklists['footer'].links -%}\n  {{ link.title | link_to: link.url }}\n{%- endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/linklists",
+    type: 'array',
+    scope: 'linklist'
+  },
+  linklist: {
+    summary: 'A [menu](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus) in a store.',
+    description: 'A [menu](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus) in a store. To learn about how to implement navigation in a theme, refer to [Add navigation to your theme](/themes/navigation-search/navigation).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/linklist',
+    type: 'object',
+    properties: {
+      links: {
+        type: 'array',
+        description: 'The links in the menu.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/linklist#links)',
+        scope: 'link'
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the menu.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/linklist#handle)'
+      },
+      levels: {
+        type: 'number',
+        description: "The number of nested levels in the menu.\n\n\n> Note:\n> There's a maximum of 3 levels.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/linklist#levels)"
+      },
+      title: {
+        type: 'string',
+        description: 'The title of the menu.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/linklist#title)'
       }
     }
   },
   forloop: {
-    scope: [ 'for' ],
+    summary: 'Information about a parent [`for` loop](/docs/api/liquid/tags/for).',
+    description: 'Information about a parent [`for` loop](/docs/api/liquid/tags/for).\n\n#### Example\n\n```liquid\n{% for page in pages -%}\n  {%- if forloop.length > 0 -%}\n    {{ page.title }}{% unless forloop.last %}, {% endunless -%}\n  {%- endif -%}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop',
     type: 'object',
-    description: 'The forloop object contains attributes of its parent for loop.',
-    filters: false,
     properties: {
-      rindex: {
-        description: 'Returns `forloop.index` in reverse order.',
-        type: 'number'
+      length: {
+        type: 'number',
+        description: 'The total number of iterations in the loop.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop#length)'
       },
-      rindex0: {
-        description: 'Returns `forloop.index0` in reverse order.',
-        type: 'number'
-      },
-      index0: {
-        description: 'Returns the current index of the for loop, starting at 0.',
-        type: 'number'
+      parentloop: {
+        type: 'object',
+        description: "The parent `forloop` object. If the current `for` loop isn't nested inside another `for` loop, then `nil` is returned.\n\n#### Example\n\n```liquid\n{% for i in (1..3) -%}\n  {% for j in (1..3) -%}\n    {{ forloop.parentloop.index }} - {{ forloop.index }}\n  {%- endfor %}\n{%- endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop#parentloop)",
+        scope: 'forloop'
       },
       index: {
-        description: 'Returns the current index of the for loop, starting at 1.',
-        type: 'number'
+        type: 'number',
+        description: 'The 1-based index of the current iteration.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop#index)'
       },
-      length: {
-        description: 'Returns the number of iterations of the loop.',
-        type: 'number'
+      index0: {
+        type: 'number',
+        description: 'The 0-based index of the current iteration.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop#index0)'
+      },
+      rindex: {
+        type: 'number',
+        description: 'The 1-based index of the current iteration, in reverse order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop#rindex)'
+      },
+      rindex0: {
+        type: 'number',
+        description: 'The 0-based index of the current iteration, in reverse order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop#rindex0)'
       },
       first: {
-        description: "Returns true if it's the first iteration of the for loop. Returns false if it is not the first iteration.",
-        type: 'boolean'
+        type: 'boolean',
+        description: 'Returns `true` if the current iteration is the first. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop#first)'
       },
       last: {
-        description: "Returns true if it's the last iteration of the for loop. Returns false if it is not the last iteration.",
-        type: 'boolean'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/for-loops'
-    }
-  },
-  fulfillment: {
-    type: 'object',
-    description: 'The fulfillment object',
-    properties: {
-      fulfillment_line_items: {
-        type: 'array',
-        description: 'Returns an array of all line items and their quantity included in the fulfillment. Any line items that have already been fulfilled, or are yet to be fulfilled, will not be included in the array.'
-      },
-      item_count: {
-        type: 'array',
-        description: 'Returns the total number of items included in the fulfillment.'
-      },
-      tracking_company: {
-        type: 'string',
-        description: 'Returns the name of the fulfillment service.'
-      },
-      tracking_number: {
-        type: 'string',
-        description: "Returns a fulfillment's tracking number, if it exists."
-      },
-      tracking_url: {
-        type: 'string',
-        description: 'Returns the URL for a tracking number.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/fulfillment'
-    }
-  },
-  gift_card: {
-    type: 'object',
-    description: 'The gift_card object can be accessed in the following templates: 1. The Gift card created email notification template Email Notifications > Gift card created.2. The gift_card.liquid template.',
-    properties: {
-      balance: {
-        type: 'number',
-        description: 'Returns the amount of money remaining on the gift card.'
-      },
-      code: {
-        type: 'number',
-        description: 'Returns the code that was used to redeem the gift card.'
-      },
-      currency: {
-        type: 'string',
-        description: 'Returns the currency that the card was issued in. This currency is the currency of the store.'
-      },
-      customer: {
-        type: 'string',
-        description: 'Returns the customer variable of the customer that the gift card is assigned to.'
-      },
-      enabled: {
         type: 'boolean',
-        description: 'Returns true if the card is enabled, or false if the card is disabled.'
-      },
-      expired: {
-        type: 'boolean',
-        description: 'Returns true if the card is expired, or false if the card is not.'
-      },
-      expires_on: {
-        type: 'string',
-        description: 'Returns the expiration date of the gift card'
-      },
-      initial_value: {
-        type: 'number',
-        description: 'Returns the initial amount of money on the gift card'
-      },
-      last_four_characters: {
-        type: 'number',
-        description: 'Returns the last four characters of the code that was used to redeem the gift card.'
-      },
-      properties: {
-        type: 'array',
-        description: 'Returns the line item properties assigned to the gift card when it was added to the cart.',
-        items: 'line_item'
-      },
-      product: {
-        type: 'object',
-        description: 'Returns the product associated with the purchased gift card, or returns nothing if there is no associated product.'
-      },
-      url: {
-        type: 'string',
-        description: 'Returns the unique URL that links to the gift card\'s page on the shop'
+        description: 'Returns `true` if the current iteration is the last. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/forloop#last)'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/gift-card'
-    }
-  },
-  group: {
-    type: 'object',
-    filters: false,
-    description: 'The group object contains information about each default rule set in the robots object for the robots.txt file.',
-    properties: {
-      rules: {
-        type: 'object',
-        description: 'Returns of a list of rule objects for each rule in the group.'
-      },
-      sitemap: {
-        type: 'object',
-        description: 'Returns the group\'s sitemap object. If the group doesn\'t require a sitemap, then this returns blank.'
-      },
-      user_agent: {
-        type: 'object',
-        description: 'Returns the group\'s user_agent object.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/group'
-    }
-  },
-  handle: {
-    type: 'string',
-    global: true,
-    description: 'Returns the handle of the page that is being viewed',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#handle'
-    }
-  },
-  image: {
-    type: 'object',
-    description: 'The image object returns information about an image.',
-    properties: {
-      variants: {
-        description: 'Returns an array of attributes for the variant that the image is associated with.',
-        type: 'array'
-      },
-      alt: {
-        description: 'Returns the alt tag of the image, set in the Products page of the Admin.',
-        type: 'string'
-      },
-      aspect_ratio: {
-        type: 'string',
-        description: 'Returns the aspect ratio (width / height) of the image.'
-      },
-      height: {
-        type: 'number',
-        description: 'Returns the height of the image in pixels.'
-      },
-      product_id: {
-        description: "Returns the id of the image's product.",
-        type: 'number'
-      },
-      id: {
-        description: 'Returns the id of the image.',
-        type: 'number'
-      },
-      position: {
-        type: 'number',
-        description: 'Returns the position of the image, starting at 1. This is the same as outputting forloop.index.'
-      },
-      src: {
-        type: 'string',
-        description: 'Returns the relative path of the product image. This is the same as outputting "{{ image }}".'
-      },
-      width: {
-        type: 'number',
-        description: 'Returns the width of the image in pixels.'
-      },
-      attached_to_variant: {
-        type: 'boolean',
-        description: 'Returns true if the image has been associated with a variant. Returns false otherwise. This can be used in cases where you want to create a gallery of images that are not associated with variants.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#image'
-    }
-  },
-  line_item: {
-    type: 'object',
-    description: 'A line_item represents a single line in the shopping cart. There is one line item for each distinct product variant in the cart. The line_item object can be accessed in all Liquid templates via cart.items',
-    properties: {
-      discount_allocations: {
-        type: 'array',
-        description: 'Returns a list of all discount allocations containing the discounted amount and the reference to the parent discount application. line_item.discount_allocations is available on line items in carts, checkouts, orders, and draft orders.'
-      },
-      final_line_price: {
-        type: 'number',
-        description: 'Returns the combined price of all the items in the line item. This is equal to line_item.final_price times line_item.quantity.'
-      },
-      final_price: {
-        type: 'number',
-        description: 'Returns the price of the line item including all line level discount amounts.'
-      },
-      fulfillment: {
-        type: 'string',
-        description: 'Returns the fulfillment of the line item.'
-      },
-      fulfillment_service: {
-        type: 'string',
-        description: "Returns the fulfillment service associated with the line item's variant. Line items that have no fulfillment service will return manual."
-      },
-      gift_card: {
-        type: 'boolean',
-        description: "Returns true if the line item's product is a gift card, or false if it is not."
-      },
-      grams: {
-        type: 'number',
-        description: 'Returns the weight of the line item. Use the weight_with_unit filter to format the weight.'
-      },
-      image: {
-        type: 'string',
-        description: "Returns the line item's image."
-      },
-      key: {
-        type: 'number',
-        description: "Returns the line item key, a unique identifier for the line item. The line item key is constructed from the line item's variant ID plus a hash of the line item's properties, even if the item has no additional properties."
-      },
-      line_level_discount_allocations: {
-        type: 'array',
-        description: 'Returns a list of line-specific discount allocations containing the discounted amount and the reference to the parent discount application.'
-      },
-      line_level_total_discount: {
-        type: 'array',
-        description: "Returns the total amount of all discounts applied to the line item specifically. This doesn't include discounts that are added to the cart."
-      },
-      message: {
-        type: 'string',
-        description: 'Returns the discount message if a script has applied a discount to the line item.'
-      },
-      options_with_values: {
-        type: 'array',
-        description: "Returns an array of selected values from the item's product options."
-      },
-      original_line_price: {
-        type: 'number',
-        description: 'Returns the combined price of the quantity of items included in the line, before discounts were applied.'
-      },
-      original_price: {
-        type: 'number',
-        description: 'Returns the original price of the line item before discounts were applied.'
-      },
-      product: {
-        type: 'object',
-        description: 'Returns the product of the line item.'
-      },
-      product_id: {
-        type: 'number',
-        description: "Returns the ID of the line item's product."
-      },
-      properties: {
-        type: 'array',
-        description: 'line_item.properties returns an array of custom information for an item that has been added to the cart.'
-      },
-      quantity: {
-        type: 'number',
-        description: 'Returns the quantity of the line item.'
-      },
-      requires_shipping: {
-        type: 'boolean',
-        description: 'Returns true if the variant of the line item requires shipping, or false if it does not.'
-      },
-      selling_plan_allocation: {
-        type: 'object',
-        description: 'Returns a selling_plan_allocation object when the line item contains a selling plan.'
-      },
-      sku: {
-        type: 'number',
-        description: "Returns the SKU (stock keeping unit) of the line item's variant."
-      },
-      successfully_fulfilled_quantity: {
-        type: 'number',
-        description: 'Returns the successfully fulfilled quantity of the line item.'
-      },
-      taxable: {
-        type: 'boolean',
-        description: "Returns true if taxes are charged on the line item's variant, or false if they are not."
-      },
-      title: {
-        type: 'string',
-        description: "Returns the title of the line item. line_item.title combines both the line item's product.title and the line item's variant.title, separated by a hyphen."
-      },
-      unit_price: {
-        type: 'number',
-        description: 'Returns the unit price of the line item. The price reflects any discounts that are applied to the line item.'
-      },
-      unit_price_measurement: {
-        type: 'object',
-        description: 'Returns a unit_price_measurement object for the line item.'
-      },
-      url: {
-        type: 'string',
-        description: "Returns the relative URL of the line item's variant. The relative URL does not include your store's root URL (mystore.myshopify.com)."
-      },
-      variant: {
-        type: 'object',
-        description: 'Returns the variant of the line item.'
-      },
-      variant_id: {
-        type: 'number',
-        description: "Returns the ID of the line item's variant."
-      },
-      vendor: {
-        type: 'object',
-        description: "Returns the vendor of the line item's product."
-      },
-      id: {
-        type: 'number',
-        description: "Returns the line item's ID."
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/line_item'
-    }
-  },
-  link: {
-    type: 'object',
-    scope: [ 'linklist' ],
-    description: 'The link object cannot be invoked on its own. It must be invoked inside a linklist.',
-    properties: {
-      active: {
-        type: 'boolean',
-        description: 'Returns true if the link is active, or false if the link is inactive'
-      },
-      child_active: {
-        type: 'boolean',
-        description: 'Similar to `link.active`, but returns true if a child link of the parent link is active, or false if no child links of the parent link are active.'
-      },
-      child_current: {
-        type: 'boolean',
-        description: 'Returns `true` if a child link has a link object with link.current equal to `true`. Returns `false` if no child links have a link object with link.current equal to `true`.'
-      },
-      current: {
-        type: 'boolean',
-        description: "Returns `true` if the page content associated with the `link` is considered a match to the current page. Returns `false` if the content isn't considered a match"
-      },
-      levels: {
-        type: 'number',
-        description: 'Returns the number of nested levels that a link contains.'
-      },
-      links: {
-        type: 'array',
-        description: 'Returns an array of the child links associated with the parent link.'
-      },
-      items: {
-        type: 'object',
-        description: 'Returns the variable associated to the link. The possible types are: product, collection, page, blog.'
-      },
-      title: {
-        type: 'string',
-        description: 'Returns the title of the link'
-      },
-      type: {
-        type: 'string',
-        description: 'Returns the type of the link. The possible values are:\n\n- collection_link\n- product_link\n- page_link\n- blog_link\n- relative_link\n- http_link'
-      },
-      url: {
-        type: 'string',
-        description: 'Returns the URL of the link.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects/link'
-    }
-  },
-  linklist: {
-    type: 'object',
-    description: 'linklist objects appear as ‘menus’ in the Navigation page of the Shopify admin.',
-    properties: {
-      handle: {
-        type: 'string',
-        description: 'Returns the handle of the linklist.'
-      },
-      levels: {
-        type: 'number',
-        description: 'Returns the number of nested levels that a linklist contains.'
-      },
-      links: {
-        type: 'array',
-        description: 'Returns an array of links in the linklist.'
-      },
-      title: {
-        type: 'string',
-        description: 'Returns the title of the linklist'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects/linklist'
-    }
-  },
-  localization: {
-    type: 'object',
-    description: 'The localization object has the following attributes:',
-    scope: [ 'form' ],
-    properties: {
-      available_countries: {
-        type: 'array',
-        description: 'Returns a list of country objects for each country that the store supports.',
-        items: 'country'
-      },
-      available_languages: {
-        type: 'array',
-        description: 'Returns a list of shop_locale objects for each language that the currently selected country supports.',
-        items: 'shop_locale'
-      },
-      country: {
-        type: 'object',
-        description: 'Returns the country object for the currently selected country.'
-      },
-      language: {
-        type: 'object',
-        description: 'Returns the shop_locale object for the currently selected language.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/localization'
-    }
-  },
-  images: {
-    type: 'object',
-    description: 'Allows you to access any image in a store by its filename',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#images'
-    }
-  },
-  linklists: {
-    type: 'array',
-    description: 'Returns a list of all the menus (link lists) in your store. You can use linklists to access your link lists with their handles.',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#linklists'
-    }
-  },
-  page: {
-    type: 'object',
-    description: 'The page object has the following attributes',
-    properties: {
-      author: {
-        type: 'string',
-        description: 'Returns the author of a page.'
-      },
-      content: {
-        type: 'string',
-        description: 'Returns the content of a page.'
-      },
-      handle: {
-        type: 'string',
-        description: 'Returns the handle of the page.'
-      },
-      id: {
-        type: 'string',
-        description: 'Returns the id of the page.'
-      },
-      published_at: {
-        type: 'string',
-        description: 'Returns the timestamp of when the page was created. Use the date filter to format the timestamp.'
-      },
-      template_suffix: {
-        type: 'string',
-        description: 'Returns the name of the custom page template assigned to the page, without the page.'
-      },
-      title: {
-        type: 'string',
-        description: 'Returns the title of a page.'
-      },
-      url: {
-        type: 'string',
-        description: 'Returns the relative URL of the page.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/page'
-    }
-  },
-  page_description: {
-    type: 'string',
-    description: 'Returns the description of a page set in its respective section in the admin',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#page_description'
-    }
-  },
-  page_image: {
-    type: 'string',
-    description: 'An image to be shown in search engine listings and social media previews for the current page.\n\nThe resource\'s featured image for product and collection pages, and blog posts, is used. For all other pages, or pages where there\'s no featured image, the social sharing image is used.\n\nOpen Graph fallback tags\n\nIf a theme doesn\'t include og:image tags for a page, then Shopify automatically generates the following tags using the page_image object:\n\n- og:image\n- og:image:secure_url\n- og:image:width-\n- og:image:height',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#page_image'
-    }
-  },
-  page_title: {
-    type: 'string',
-    description: 'The `page_title` object can be used to specify the title of page for search engine listings and social media previews.',
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#page_title'
-    }
-  },
-  product: {
-    type: 'object',
-    description: 'Product object',
-    properties: {
-      collections: {
-        type: 'array',
-        items: 'string',
-        description: 'Returns an array of all of the collections that a product belongs to, except any collections that are not available on the sales channel being used.'
-      },
-      tags: {
-        type: 'array',
-        items: 'string',
-        description: "Returns an array of all of the product's tags. The tags are returned in alphabetical order."
-      },
-      images: {
-        type: 'array',
-        items: 'string',
-        description: "Returns an array of the product's images. Use the img_url filter to link to the product image on Shopify's content delivery network (CDN)."
-      },
-      options: {
-        type: 'array',
-        items: 'string',
-        description: "Returns an array of the product's option names."
-      },
-      options_with_values: {
-        type: 'array',
-        items: 'product_options',
-        description: "Returns an array of the product's options."
-      },
-      variants: {
-        type: 'array',
-        items: 'string',
-        description: "Returns an array of the product's variants."
-      },
-      content: {
-        type: 'string',
-        description: 'Returns the description of the product. Alias for product.description.'
-      },
-      description: {
-        type: 'string',
-        description: 'Returns the description of the product.'
-      },
-      handle: {
-        type: 'string',
-        description: 'Returns the handle of a product.'
-      },
-      compare_at_price_max: {
-        type: 'number',
-        description: 'Returns the highest compare at price.'
-      },
-      price_max: {
-        type: 'number',
-        description: 'Returns the highest price of the product.'
-      },
-      id: {
-        type: 'number',
-        description: 'Returns the id of the product.'
-      },
-      compare_at_price_min: {
-        type: 'number',
-        description: 'Returns the lowest compare at price.'
-      },
-      price: {
-        type: 'number',
-        description: "Returns the lowest price of all the product's variants. This attribute is the same as product.price_min."
-      },
-      price_min: {
-        type: 'number',
-        description: 'Returns the lowest price of the product.'
-      },
-      template_suffix: {
-        type: 'string',
-        description: 'Returns the name of the custom product template assigned to the product, without the product. prefix nor the .liquid extension. Returns nil if a custom template is not assigned to the product.'
-      },
-      featured_image: {
-        type: 'string',
-        description: "Returns the relative URL of the product's featured image."
-      },
-      type: {
-        type: 'string',
-        description: 'Returns the relative URL of the product.'
-      },
-      title: {
-        type: 'string',
-        description: 'Returns the title of the product.'
-      },
-      selected_variant: {
-        type: 'object',
-        description: 'Returns the variant object of the _currently selected_ variant if there is a valid `?variant=parameter` in the URL. Returns nil if there is not.'
-      },
-      selected_or_first_available_variant: {
-        type: 'object',
-        description: 'Returns the variant object of the _currently selected_ variant if there is a valid `?variant=parameter` parameter in the URL. If there is no selected variant, the first available variant is returned. In order for a variant to be available, its `variant.inventory_quantity` must be greater than zero or `variant.inventory_policy` must be set to continue. A variant with no `inventory_management` is considered available.'
-      },
-      first_available_variant: {
-        type: 'object',
-        description: 'Returns the variant object of the first product variant that is available for purchase. In order for a variant to be available, its variant.inventory_quantity must be greater than zero or variant.inventory_policy must be set to continue. A variant with no inventory_policy is considered available.'
-      },
-      vendor: {
-        type: 'string',
-        description: 'Returns the vendor of the product.'
-      },
-      available: {
-        type: 'boolean',
-        description: "Returns true if a product is available for purchase. Returns `false` if all of the products variants' inventory_quantity values are zero or less, and their `inventory_policy` is not set to \"_Allow users to purchase this item, even if it is no longer in stock._\""
-      },
-      compare_at_price_varies: {
-        type: 'boolean',
-        description: 'Returns true if the compare_at_price_min is different from the compare_at_price_max. Returns false if they are the same.'
-      },
-      has_only_default_variant: {
-        type: 'boolean',
-        description: 'Returns true if the product only has the default variant. This lets you determine whether to show a variant picker in your product forms.'
-      },
-      price_varies: {
-        type: 'boolean',
-        description: "Returns true if the product's variants have varying prices. Returns false if all of the product's variants have the same price."
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://help.shopify.com/themes/liquid/objects#product'
-    }
-  },
-  product_options: {
-    type: 'object',
-    description: 'The product_option object is available for each option in a product options array. The product options array is accessible via product.options_with_values.',
-    properties: {
-      name: {
-        type: 'string',
-        description: 'Returns the product option\'s name'
-      },
-      position: {
-        type: 'number',
-        description: 'Returns the product option\'s position in the product options array.'
-      },
-      selected_value: {
-        type: 'string',
-        description: 'Returns the currently selected value for this product option.'
-      },
-      values: {
-        type: 'array',
-        items: 'options_with_values',
-        description: 'Returns an array of possible values for this product option.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/product_option'
-    }
-  },
-  location: {
-    type: 'object',
-    description: 'This object allows you access store location information using Liquid.',
-    properties: {
-      address: {
-        type: 'string',
-        description: 'Returns the address object corresponding to this location.'
-      },
-      id: {
-        type: 'string',
-        description: 'Returns the ID of the location.'
-      },
-      latitude: {
-        type: 'string',
-        description: 'Returns the latitude associated to the location. It will return null if the address is not verified.'
-      },
-      longitude: {
-        type: 'string',
-        description: 'Returns the longitude associated with the location. It will return null if the address is not verified.'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the name of location.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/location'
-    }
-  },
-  order: {
-    description: "You can access the order object in a theme's Liquid templates with \"customer.orders\"",
-    type: 'object',
-    properties: {
-      attributes: {
-        description: "Returns the custom cart attributes for the order, if there are any. You can add as many custom attributes to your cart as you like.\n\nWhen you're looping through attributes, use \"{{ attribute | first }}\" to get the name of the attribute, and \"{{ attribute | last }}\" to get its value.",
-        type: 'array'
-      },
-      billing_address: {
-        description: 'Returns the billing address of the order.',
-        type: 'string'
-      },
-      cancelled: {
-        description: 'Returns true if an order is canceled, or false if it is not.',
-        type: 'string'
-      },
-      cancelled_at: {
-        description: 'Returns the timestamp of when an order was canceled. Use the date filter to format the timestamp.',
-        type: 'string'
-      },
-      cancel_reason: {
-        description: 'Returns one of the following cancellation reasons, if an order was canceled:\n\n-items unavailable\n- fraudulent order\n- customer changed/cancelled order\n- other\n',
-        type: 'string'
-      },
-      cancel_reason_label: {
-        description: "Returns the translated output of an order's order.cancel_reason.",
-        type: 'string'
-      },
-      cart_level_discount_applications: {
-        description: 'Returns an array of order-specific discount applications for an order.',
-        type: 'array'
-      },
-      created_at: {
-        description: 'Returns the timestamp of when an order was created. Use the date filter to format the timestamp.',
-        type: 'string'
-      },
-      customer: {
-        description: 'Returns the customer associated with the order.',
-        type: 'string'
-      },
-      customer_url: {
-        description: 'Returns a unique URL that the customer can use to access the order.',
-        type: 'string'
-      },
-      discount_applications: {
-        description: 'Returns an array of discount applications for an order.',
-        type: 'string'
-      },
-      email: {
-        description: 'Returns the email address associated with an order, if it exists.',
-        type: 'string'
-      },
-      financial_status: {
-        description: 'Returns the financial status of an order. The possible values are:\n\n- pending\n- authorized\n- paid\n- partially_paid\n- refunded\n- partially_refunded\n- voided',
-        type: 'string'
-      },
-      financial_status_label: {
-        description: "Returns the translated output of an order's \"financial_status\".",
-        type: 'string'
-      },
-      fulfillment_status: {
-        description: 'Returns the fulfillment status of an order.',
-        type: 'string'
-      },
-      fulfillment_status_label: {
-        description: "Returns the translated output of an order's fulfillment_status.",
-        type: 'string'
-      },
-      line_items: {
-        description: 'Returns an array of line items for the order.',
-        type: 'array'
-      },
-      line_items_subtotal_price: {
-        description: "Returns the sum of the order's line-item prices after any line item discounts have been applied. The subtotal amount doesn't include cart discounts, taxes (unless taxes are included in the prices), or shipping costs.",
-        type: 'string'
-      },
-      location: {
-        description: '(POS only) Returns the physical location of the order. You can configure locations in the Locations settings of your Shopify admin.',
-        type: 'string'
-      },
-      name: {
-        description: 'Returns the name of the order in the format set in the Standards and formats section of the General settings of your Shopify admin.',
-        type: 'string'
-      },
-      note: {
-        description: 'Returns the note associated with a customer order.',
-        type: 'string'
-      },
-      order_number: {
-        description: 'Returns the integer representation of the order name.',
-        type: 'number'
-      },
-      order_status_url: {
-        description: 'Returns the unique URL for the order status page of the order.',
-        type: 'string'
-      },
-      phone: {
-        description: 'Returns the phone number associated with an order, if it exists.',
-        type: 'string'
-      },
-      shipping_address: {
-        description: 'Returns the shipping address of the order.',
-        type: 'string'
-      },
-      shipping_methods: {
-        description: 'Returns an array of shipping_method variables from the order.',
-        type: 'string'
-      },
-      shipping_price: {
-        description: 'Returns the shipping price of an order.',
-        type: 'string'
-      },
-      subtotal_price: {
-        description: "Returns the subtotal price of all the items in the order after both line-item and cart discounts have been applied. The subtotal doesn't include taxes (unless taxes are included in the prices) or shipping costs.",
-        type: 'string'
-      },
-      tags: {
-        description: "Returns an array of all of the order's tags. The tags are returned in alphabetical order.",
-        type: 'array'
-      },
-      tax_lines: {
-        description: 'Returns an array of tax_line variables for an order.',
-        type: 'string'
-      },
-      tax_price: {
-        description: "Returns the order's tax price.",
-        type: 'string'
-      },
-      total_discounts: {
-        description: 'Returns the total value of all discounts applied to the order.',
-        type: 'string'
-      },
-      total_net_amount: {
-        description: 'Returns the net amount of the order.\n\nThe "order.total_net_amount" is calculated after refunds are applied. The value is equivalent to "order.total_price minus" "order.total_refunded_amount".',
-        type: 'string'
-      },
-      total_price: {
-        description: 'Returns the total price of an order.\n\nThe "order.total_price amount" is calculated before refunds are applied. To get the value of refunds, use the "order.total_refunded_amount property."',
-        type: 'string'
-      },
-      total_refunded_amount: {
-        description: 'Returns the total refunded amount of an order.',
-        type: 'string'
-      },
-      transactions: {
-        description: 'Returns an array of transactions from the order.',
-        type: 'array'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/order'
-    }
-  },
-  recommendations: {
-    type: 'object',
-    description: 'The recommendations object provides product recommendations that are related to a given product, based on data from sales, product descriptions, and relations between products and collections.',
-    properties: {
-      performed: {
-        type: 'boolean',
-        description: 'Returns true if the recommendations object is referenced inside a theme section that is rendered through the recommendations endpoint with valid parameters:'
-      },
-      products_count: {
-        type: 'number',
-        description: 'Returns the number of product recommendations, or returns 0 if recommendations.performed is false.'
-      },
-      products: {
-        type: 'array',
-        items: 'product',
-        description: 'Returns product recommendations.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/recommendations'
-    }
-  },
-  request: {
-    type: 'object',
-    description: 'The request object returns information about the URL used to access your store and the page being accessed.',
-    properties: {
-      design_mode: {
-        type: 'boolean',
-        description: 'Whether the request is being made from the theme editor.'
-      },
-      host: {
-        type: 'string',
-        description: 'You can use request.host to check which domain a customer is visiting from.'
-      },
-      locale: {
-        type: 'string',
-        description: 'Returns the shop_locale of the current request.'
-      },
-      path: {
-        type: 'string',
-        description: 'Returns the path to the current page.'
-      },
-      page_type: {
-        type: 'string',
-        description: 'Returns the type of the current page.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/request'
-    }
-  },
-  robots: {
-    type: 'object',
-    description: 'The request object returns information about the URL used to access your store and the page being accessed.',
-    properties: {
-      default_groups: {
-        type: 'array',
-        items: 'group',
-        description: 'Returns a list of group objects for each group of rules.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/robots'
-    }
-  },
-  routes: {
-    type: 'object',
-    description: 'You can use the routes object to generate dynamic URLs to your storefront.',
-    properties: {
-      root_url: {
-        type: 'string',
-        description: 'Returns the base URL of the shop.'
-      },
-      account_url: {
-        type: 'string',
-        description: 'Returns the URL for the account page.'
-      },
-      account_login_url: {
-        type: 'string',
-        description: 'Returns the URL for the account login page.'
-      },
-      account_logout_url: {
-        type: 'string',
-        description: 'Returns the URL to log the customer out of their account.'
-      },
-      account_register_url: {
-        type: 'string',
-        description: 'Returns the URL for the account registration page.'
-      },
-      account_addresses_url: {
-        type: 'string',
-        description: 'Returns the URL for the page where the customer can manage the addresses associated with their account.'
-      },
-      collections_url: {
-        type: 'string',
-        description: 'Returns the URL for the collections page.'
-      },
-      all_products_collection_url: {
-        type: 'string',
-        description: 'Returns the URL for the collection that contains all of the products in the shop.'
-      },
-      search_url: {
-        type: 'string',
-        description: 'Returns the search URL.'
-      },
-      cart_url: {
-        type: 'string',
-        description: 'Returns the cart URL.'
-      },
-      cart_add_url: {
-        type: 'string',
-        description: 'Returns the URL that accepts items to be added to a cart.'
-      },
-      cart_change_url: {
-        type: 'string',
-        description: 'Returns the URL that allows you to change the quantity of an item.'
-      },
-      cart_clear_url: {
-        type: 'string',
-        description: 'Returns the URL that allows you to clear the cart.'
-      },
-      cart_update_url: {
-        type: 'string',
-        description: 'Returns the URL that allows you to update the quantity of an item.'
-      },
-      product_recommendations_url: {
-        type: 'string',
-        description: 'Returns the URL that serves product recommendations.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/routes'
-    }
-  },
-  rule: {
-    type: 'object',
-    description: 'The rule object returns an individual rule for the robots.txt file',
-    properties: {
-      directive: {
-        type: 'string',
-        description: 'Returns the rule directive, which can be either Allow to allow crawlers to access the specified URL, or Disallow to block them.'
-      },
-      value: {
-        type: 'string',
-        description: 'Returns the associated URL path for the rule.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/rule'
-    }
-  },
-  script: {
-    type: 'object',
-    description: 'script objects contain information about the Shopify Scripts published in your store.',
-    properties: {
-      id: {
-        type: 'number',
-        description: 'Returns the script\'s ID.'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the script\'s name.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/script'
-    }
-  },
-  scripts: {
-    type: 'object',
-    description: 'The active scripts, of each script type, on the store.\n\nThere can be only one active script of each type. Currently, the only type accessible in Liquid is `cart_calculate_line_items.`',
-    properties: {
-      id: {
-        type: 'number',
-        description: 'Returns the script\'s ID.'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the script\'s name.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/script'
-    }
-  },
-  search: {
-    type: 'object',
-    description: 'The search object has the following attributes:',
-    properties: {
-      performed: {
-        type: 'boolean',
-        description: 'Returns true if an HTML form with the attribute action="/search" was submitted successfully.'
-      },
-      results: {
-        type: 'array',
-        description: 'Returns an array of matching search result items.'
-      },
-      results_count: {
-        type: 'number',
-        description: 'Returns the number of results found.'
-      },
-      terms: {
-        type: 'string',
-        description: 'Returns the string that was entered in the search input box.'
-      },
-      types: {
-        type: 'array',
-        description: 'Returns an array of strings representing the types the search was performed on. '
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/search'
-    }
-  },
-  section: {
-    description: "The section object lets you access a section's properties and setting values.",
-    type: 'object',
-    properties: {
-      blocks: {
-        description: "Returns an array of the section's blocks.",
-        type: 'array'
-      },
-      id: {
-        description: "For static sections, returns the section's file name without \".liquid\". For dynamic sections, returns a dynamically generated ID.",
-        type: 'number'
-      },
-      settings: {
-        description: "Returns an object of the section settings set in the theme editor. Retrieve setting values by referencing the setting's unique id.",
-        type: 'object'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/section'
-    }
-  },
-  selling_plan: {
-    type: 'object',
-    description: 'The selling_plan object captures the intent of a selling plan applied on a line item.',
-    properties: {
-      description: {
-        type: 'string',
-        description: 'Returns the selling plan\'s description.'
-      },
-      group_id: {
-        type: 'number',
-        description: 'The unique ID of the selling_plan_group that the selling plan belongs to.'
-      },
-      id: {
-        type: 'number',
-        description: 'The unique ID of the selling plan.'
-      },
-      name: {
-        type: 'string',
-        description: 'The selling plan\'s name.'
-      },
-      options: {
-        type: 'array',
-        description: 'An array of selling_plan_option objects that contain information about the selling plan\'s value for a particular selling_plan_group_option.'
-      },
-      price_adjustments: {
-        type: 'array',
-        description: 'An array of selling_plan_price_adjustment objects.'
-      },
-      recurring_deliveries: {
-        type: 'number',
-        description: 'Returns true when the selling plan includes multiple recurring deliveries'
-      },
-      selected: {
-        type: 'boolean',
-        description: 'Returns true if the selling plan\'s ID is identified by the selling_plan URL parameter.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/selling-plan'
-    }
-  },
-  selling_plan_allocation: {
-    type: 'object',
-    description: 'Information about how a specific selling plan affects a line item.',
-    properties: {
-      checkout_charge_amount: {
-        type: 'string',
-        description: 'The amount that the customer will be charged at checkout in the currency\'s subunit. The value is output in the customer\'s local (presentment) currency.'
-      },
-      compare_at_price: {
-        type: 'number',
-        description: 'The compare at price of the selling plan allocation in the currency\'s subunit. The value of the compare at price is the line item\'s price without the selling plan applied. If the price and compare at price are equal, then nil is returned.\n\nThe value is output in the customer\'s local (presentment) currency.'
-      },
-      per_delivery_price: {
-        type: 'number',
-        description: 'The price for each delivery in the selling plan in the currency\'s subunit.\n\nIf a selling plan includes multiple deliveries, then the `per_delivery_price` is the price divided by the number of deliveries.\n\nThe value is output in the customer\'s local (presentment) currency.'
-      },
-      price: {
-        type: 'number',
-        description: 'The price of the selling plan allocation in the currency\'s subunit.\n\nThe value is output in the customer\'s local (presentment) currency.'
-      },
-      price_adjustments: {
-        type: 'array',
-        items: 'selling_plan_price_adjustment',
-        description: 'The selling plan allocation price adjustments.\n\nThe maximum length of the array is two. If the associated selling plan doesn\'t create any price adjustments, then the array is empty.\n\nEach `selling_plan_allocation_price_adjustment` maps to a `selling_plan_price_adjustment` in the selling_plan.`price_adjustments` array. The selling_plan.price_adjustments array contains the intent of the selling plan, and the `selling_plan_allocation.price_adjustments` array contains the resulting money amounts.'
-      },
-      remaining_balance_charge_amount: {
-        type: 'number',
-        description: 'The remaining amount for the customer to pay, in the currency\'s subunit.\n\nThe value is output in the customer\'s local (presentment) currency.'
-      },
-      selling_plan: {
-        type: 'object',
-        items: 'selling_plan',
-        description: 'The selling plan that created the allocation.'
-      },
-      selling_plan_group_id: {
-        type: 'string',
-        description: 'The ID of the `selling_plan_group` that the selling plan of the allocation belongs to.'
-      },
-      unit_price: {
-        type: 'number',
-        description: 'The unit price of the variant associated with the selling plan, in the currency\'s subunit. If the variant doesn\'t have a unit price, then `nil` is returned.\n\nThe value is output in the customer\'s local (presentment) currency.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#selling_plan_allocation'
-    }
-  },
-  selling_plan_allocation_price_adjustment: {
-    type: 'object',
-    description: 'The resulting price from the intent of the associated selling_plan_price_adjustment.\n\nTo learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).',
-    properties: {
-      position: {
-        type: 'number',
-        description: 'The 1-based index of the price adjustment in the `selling_plan_allocation.price_adjustments` array.'
-      },
-      price: {
-        type: 'number',
-        description: 'The price that will be charged for the price adjustment\'s lifetime, in the currency\'s subunit.\n\nThe value is output in the customer\'s local (presentment) currency.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#selling_plan_allocation_price_adjustment'
-    }
-  },
-  selling_plan_checkout_charge: {
-    type: 'object',
-    description: 'Information about how a specific [selling plan](https://shopify.dev/apps/subscriptions/selling-plans) affects the amount that a customer needs to pay for a line item at checkout.\n\nTo learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).',
-    properties: {
-      value: {
-        type: 'number',
-        description: 'The value of the checkout charge. How this value is interpreted depends on the value type of the checkout charge. The following outlines what the value represents for each value type:\n\n`percentage`\n\nThe percent amount of the original price that the customer needs to pay.\n\nFor example, if the value is `50`, then the customer needs to pay 50% of the original price.\n\n`price`\n\nThe amount that the customer needs to pay in the currency\'s subunit.'
-      },
-      value_type: {
-        type: 'string',
-        description: 'The value type of the checkout charge.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#selling_plan_checkout_charge'
-    }
-  },
-  selling_plan_group: {
-    type: 'object',
-    description: 'Information about how a specific [selling plan](https://shopify.dev/apps/subscriptions/selling-plans) affects the amount that a customer needs to pay for a line item at checkout.\n\nTo learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).',
-    properties: {
-      app_id: {
-        type: 'number',
-        description: 'An optional string provided by an app to identify selling plan groups created by that app. If the app doesn\'t provide a value, then `nil` is returned.'
-      },
-      id: {
-        type: 'number',
-        description: 'The ID of the selling plan group.'
-      },
-      name: {
-        type: 'string',
-        description: 'The name of the selling plan group.'
-      },
-      options: {
-        type: 'array',
-        items: 'selling_plan_group_option',
-        description: 'The selling plan group options.'
-      },
-      selling_plan_selected: {
-        type: 'boolean',
-        description: 'Returns `true` if the currently selected selling plan is part of the selling plan group. Returns `false` if not.\n\n**Note:** The selected selling plan is determined by the `selling_plan` URL parameter.'
-      },
-      selling_plans: {
-        type: 'array',
-        items: 'selling_plan',
-        description: 'The selling plans in the group.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#selling_plan_group'
-    }
-  },
-  selling_plan_group_option: {
-    type: 'object',
-    description: 'Information about a specific option in a [selling plan group](https://shopify.dev/api/liquid/objects#selling_plan_group).',
-    properties: {
-      name: {
-        type: 'string',
-        description: 'The name of the option.'
-      },
-      position: {
-        type: 'number',
-        description: 'The 1-based index of the option in the [`selling_plan_group.options`](https://shopify.dev/api/liquid/objects#selling_plan_group-options) array.'
-      },
-      selected_value: {
-        type: 'string',
-        description: 'The option value of the currently selected selling plan. If no selling plan is currently selected, then `nil` is returned.\n\n**Note** The selected selling plan is determined by the `selling_plan` URL parameter.'
-      },
-      values: {
-        type: 'array',
-        items: 'string',
-        description: 'The values of the option.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#selling_plan_group_option'
-    }
-  },
-  selling_plan_option: {
-    type: 'object',
-    description: 'Information about a selling plan\'s value for a specific [selling_plan_group_option](https://shopify.dev/api/liquid/objects#selling_plan_group_option).\n\nTo learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).',
-    properties: {
-      name: {
-        type: 'string',
-        description: 'The name of the associated `selling_plan_group_option`.'
-      },
-      position: {
-        type: 'number',
-        description: 'The 1-based index of the selling plan option in the associated [`selling_plan_group.options`](https://shopify.dev/api/liquid/objects#selling_plan_group-options) array.'
-      },
-      value: {
-        type: 'string',
-        description: 'The value of the selling plan option.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#selling_plan_option'
-    }
-  },
-  selling_plan_price_adjustment: {
-    type: 'object',
-    description: 'Information about how a selling plan changes the price of a variant for a given period of time.\n\nTo learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).',
-    properties: {
-      order_count: {
-        type: 'string',
-        description: 'The number of orders that the price adjustment applies to.'
-      },
-      position: {
-        type: 'number',
-        description: 'The 1-based index of the price adjustment in the [`selling_plan.price_adjustments`](https://shopify.dev/api/liquid/objects#selling_plan-price_adjustments) array.'
-      },
-      value: {
-        type: 'string',
-        description: 'The value of the price adjustment as a decimal. How this value is interpreted depends on the [value type](https://shopify.dev/api/liquid/objects#selling_plan_price_adjustment-value_type) of the price adjustment.'
-      },
-      value_type: {
-        type: 'string',
-        description: 'The type of price adjustment.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#selling_plan_price_adjustment'
-    }
-  },
-  settings: {
-    type: 'object',
-    description: 'Allows you to access all of the theme\'s settings from the [settings_schema.json](https://shopify.dev/themes/architecture/config/settings-schema-json) file.'
-  },
-  shipping_method: {
-    type: 'object',
-    description: 'The shipping_method object has the following attributes:',
-    properties: {
-      handle: {
-        type: 'string',
-        description: 'Returns the handle of the shipping method.'
-      },
-      original_price: {
-        type: 'number',
-        description: 'Returns the original price of the shipping method before discounts were applied.'
-      },
-      price: {
-        type: 'number',
-        description: 'Returns the price of the shipping method.'
-      },
-      title: {
-        type: 'string',
-        description: 'Returns the title of the shipping method.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/shipping_method'
-    }
-  },
-  shop: {
-    type: 'object',
-    description: 'The shop object',
-    properties: {
-      address: {
-        type: 'object',
-        description: 'You can add attributes to shop.address to return information about a shop\'s address.'
-      },
-      collections_count: {
-        type: 'number',
-        description: 'Returns the number of collections in a shop.'
-      },
-      currency: {
-        type: 'string',
-        description: 'Returns the store currency (in ISO 4217 format.)'
-      },
-      customer_accounts_enabled: {
-        type: 'boolean',
-        description: 'Returns true when a customer account is required to complete a checkout.'
-      },
-      customer_accounts_optional: {
-        type: 'boolean',
-        description: 'Returns true when a customer account is optional to complete a checkout. Otherwise, returns false.'
-      },
-      description: {
-        type: 'string',
-        description: 'Returns the description of the store.'
-      },
-      domain: {
-        type: 'string',
-        description: 'Returns the primary domain of the shop.'
-      },
-      email: {
-        type: 'string',
-        description: 'Returns the shop\'s email address.'
-      },
-      enabled_currencies: {
-        type: 'object',
-        description: 'Returns the list of currency objects that the store accepts.'
-      },
-      enabled_payment_types: {
-        type: 'array',
-        description: 'Returns an array of the shop\'s accepted credit cards, cryptocurrencies, and other payment types.'
-      },
-      id: {
-        type: 'number',
-        description: 'Returns the shop\'s ID.'
-      },
-      metafields: {
-        type: 'array',
-        description: 'Returns the shop\'s metafields.'
-      },
-      money_format: {
-        type: 'string',
-        description: 'Returns a string that is used by Shopify to format money without showing the currency.'
-      },
-      money_with_currency_format: {
-        type: 'string',
-        description: 'Returns a string that is used by Shopify to format money while also displaying the currency.'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the shop\'s name.'
-      },
-      password_message: {
-        type: 'string',
-        description: 'Returns the shop\'s password page message.'
-      },
-      permanent_domain: {
-        type: 'string',
-        description: 'Returns the .myshopify.com URL of a shop.'
-      },
-      phone: {
-        type: 'string',
-        description: 'Returns the shop\'s phone number.'
-      },
-      policies: {
-        type: 'array',
-        description: 'Returns an array of your shop\'s policy objects.',
-        items: 'policy'
-      },
-      privacy_policy: {
-        type: 'object',
-        description: 'Returns a policy object for your store\'s privacy policy.'
-      },
-      published_locales: {
-        type: 'array',
-        description: 'Returns an array of shop_locale objects.',
-        items: 'shop_locale'
-      },
-      refund_policy: {
-        type: 'object',
-        description: 'Returns a policy object for your store\'s refund policy.'
-      },
-      shipping_policy: {
-        type: 'object',
-        description: 'Returns a policy object for your store\'s shipping policy.'
-      },
-      subscription_policy: {
-        type: 'object',
-        description: 'Returns a policy object for your store\'s subscription policy.'
-      },
-      terms_of_service: {
-        type: 'object',
-        description: 'Returns a policy object for your store\'s terms of service.'
-      },
-      products_count: {
-        type: 'object',
-        description: 'Returns the number of products in a shop.'
-      },
-      secure_url: {
-        type: 'string',
-        description: 'Returns the full URL of a shop prepended by the https protocol.'
-      },
-      types: {
-        type: 'array',
-        description: 'Returns an array of all unique product types in a shop.',
-        items: 'product_type'
-      },
-      url: {
-        type: 'string',
-        description: 'Returns the full URL of a shop.'
-      },
-      vendors: {
-        type: 'array',
-        description: 'Returns an array of all unique vendors in a shop.',
-        items: 'product_vendor'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/shop'
-    }
-  },
-  shop_locale: {
-    type: 'object',
-    description: 'A shop_local is an element of the shop.published_locales array',
-    properties: {
-      endonym_name: {
-        type: 'string',
-        description: 'Returns the locale endonym name.'
-      },
-      iso_code: {
-        type: 'string',
-        description: 'Returns the locale code.'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the locale name.'
-      },
-      primary: {
-        type: 'boolean',
-        description: 'Returns true when the locale is the shop\'s primary locale. '
-      },
-      root_url: {
-        type: 'string',
-        description: 'Returns the root relative URL of the locale.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/shop-locale'
-    }
-  },
-  sitemap: {
-    type: 'object',
-    description: 'The sitemap object returns the sitemap for a specific group in the robots.txt file.',
-    properties: {
-      directive: {
-        type: 'object',
-        description: 'Returns Sitemap.'
-      },
-      value: {
-        type: 'string',
-        description: 'Returns the URL that the sitemap is hosted at.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/sitemap'
-    }
-  },
-  sort_option: {
-    type: 'object',
-    description: 'A sort option for a collection or search results page.',
-    properties: {
-      name: {
-        type: 'string',
-        description: 'The customer-facing name of the sort option. The name can be edited by merchants in the [language editor](https://help.shopify.com/manual/online-store/themes/customizing-themes/language/change-wording).'
-      },
-      value: {
-        type: 'string',
-        description: 'The value of the sort option. This value is used when assigning the [`collection.sort_by`](https://shopify.dev/api/liquid/objects#collection-sort_by) and [`search.sort_by`](https://shopify.dev/api/liquid/objects#search-sort_by) parameters.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#sort_option'
-    }
-  },
-  store_availability: {
-    type: 'object',
-    description: 'The store_availability object is used to show what variants are stocked at physical store locations, regardless of the current stock level.',
-    properties: {
-      available: {
-        type: 'boolean',
-        description: 'Returns true if the variant has stock.'
-      },
-      location: {
-        type: 'object',
-        description: 'Returns the location object that the variant is stocked at.'
-      },
-      pick_up_enabled: {
-        type: 'boolean',
-        description: 'Returns true if the variant is stocked at a location that has pickup enabled.'
-      },
-      pick_up_time: {
-        type: 'string',
-        description: 'Returns the amount of time it takes for pickup to be ready (Example: Usually ready in 24 hours).'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/storeavailability'
     }
   },
   tablerowloop: {
+    summary: 'Information about a parent [`tablerow` loop](/docs/api/liquid/tags/tablerow).',
+    description: 'Information about a parent [`tablerow` loop](/docs/api/liquid/tags/tablerow).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop',
     type: 'object',
-    scope: [ 'tablerow' ],
-    description: 'Information about a parent [tablerow](https://shopify.dev/api/liquid/tags#tablerow) loop.',
     properties: {
-      col: {
-        type: 'number',
-        description: 'The 1-based index of the current column.'
-      },
-      col0: {
-        type: 'number',
-        description: 'The 0-based index of the current column.'
-      },
-      col_first: {
-        type: 'boolean',
-        description: 'Returns `true` if the current column is the first in the row. Returns `false` if not.'
-      },
-      col_last: {
-        type: 'boolean',
-        description: 'Returns `true` if the current column is the last in the row. Returns `false` if not.'
-      },
-      first: {
-        type: 'boolean',
-        description: 'Returns `true` if the current iteration is the first. Returns `false` if not.'
-      },
-      index: {
-        type: 'number',
-        description: 'The 1-based index of the current iteration.'
-      },
-      index0: {
-        type: 'number',
-        description: 'The 0-based index of the current iteration.'
-      },
-      last: {
-        type: 'boolean',
-        description: 'Returns `true` if the current iteration is the last. Returns `false` if not.'
-      },
       length: {
         type: 'number',
-        description: 'The total number of iterations in the loop.'
+        description: 'The total number of iterations in the loop.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#length)'
       },
-      rindex: {
+      col: {
         type: 'number',
-        description: 'The 1-based index of the current iteration, in reverse order.'
-      },
-      rindex0: {
-        type: 'number',
-        description: 'The 0-based index of the current iteration, in reverse order.'
+        description: 'The 1-based index of the current column.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#col)'
       },
       row: {
         type: 'number',
-        description: 'The 1-based index of current row.'
+        description: 'The 1-based index of current row.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#row)'
+      },
+      index: {
+        type: 'number',
+        description: 'The 1-based index of the current iteration.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#index)'
+      },
+      index0: {
+        type: 'number',
+        description: 'The 0-based index of the current iteration.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#index0)'
+      },
+      col0: {
+        type: 'number',
+        description: 'The 0-based index of the current column.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#col0)'
+      },
+      rindex: {
+        type: 'number',
+        description: 'The 1-based index of the current iteration, in reverse order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#rindex)'
+      },
+      rindex0: {
+        type: 'number',
+        description: 'The 0-based index of the current iteration, in reverse order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#rindex0)'
+      },
+      first: {
+        type: 'boolean',
+        description: 'Returns `true` if the current iteration is the first. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#first)'
+      },
+      last: {
+        type: 'boolean',
+        description: 'Returns `true` if the current iteration is the last. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#last)'
+      },
+      col_first: {
+        type: 'boolean',
+        description: 'Returns `true` if the current column is the first in the row. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#col_first)'
+      },
+      col_last: {
+        type: 'boolean',
+        description: 'Returns `true` if the current column is the last in the row. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tablerowloop#col_last)'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/tags#tablerow'
     }
   },
-  tax_line: {
+  localization: {
+    summary: 'Information about the countries and languages that are available on a store.',
+    global: true,
+    description: 'Information about the countries and languages that are available on a store. The `localization` object can be used in a [localization form](/docs/api/liquid/tags/form#form-localization).\n\nTo learn about how to offer localization options in your theme, refer to [Support multiple currencies and languages](/themes/internationalization/multiple-currencies-languages).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/localization',
     type: 'object',
-    description: 'The tax_line object has the following',
     properties: {
-      price: {
-        type: 'number',
-        description: 'Returns the amount of the tax.'
+      available_countries: {
+        type: 'array',
+        description: 'The countries that are available on the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/localization#available_countries)',
+        scope: 'country'
       },
-      rate: {
-        type: 'number',
-        description: 'Returns the rate of the tax in decimal notation.'
+      available_languages: {
+        type: 'array',
+        description: 'The languages that are available on the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/localization#available_languages)',
+        scope: 'shop_locale'
       },
-      rate_percentage: {
-        type: 'string',
-        description: 'Returns the rate of the tax in percentage format.'
-      },
-      title: {
-        type: 'string',
-        description: 'Returns the title of the tax.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/tax_line'
-    }
-  },
-  template: {
-    type: 'object',
-    description: 'Referencing just template returns the name of the template used to render the current page, with the .liquid extension omitted.',
-    properties: {
-      directory: {
-        type: 'string',
-        description: 'Returns the name of the template\'s parent directory'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the template\'s name without the template\'s custom suffix, if it exists.'
-      },
-      suffix: {
-        type: 'string',
-        description: 'Returns the name of the custom template without the template.name prefix or the .liquid extension. '
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/template'
-    }
-  },
-  theme: {
-    type: 'object',
-    deprecated: true,
-    description: 'The theme object contains information about a store\'s published theme.',
-    properties: {
-      id: {
-        type: 'string',
-        description: 'Returns the theme\'s ID.'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the name of the theme.'
-      }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/theme'
-    }
-  },
-  transaction: {
-    type: 'object',
-    description: '',
-    properties: {
-      amount: {
-        type: 'string',
-        description: 'Returns the amount of the transaction.'
-      },
-      created_at: {
-        type: 'number',
-        description: 'Returns the timestamp of when the transaction was created.'
-      },
-      gateway: {
-        type: 'string',
-        description: 'Returns the name of the payment provider used for the transaction.'
-      },
-      id: {
-        type: 'number',
-        description: 'Returns a unique numeric identifier for the transaction.'
-      },
-      kind: {
-        type: 'string',
-        description: 'Returns the type of transaction.'
-      },
-      name: {
-        type: 'string',
-        description: 'Returns the name of the transaction.'
-      },
-      payment_details: {
+      country: {
         type: 'object',
-        description: 'The payment_details object contains additional properties related to the payment method used in the transaction.'
+        description: 'The currently selected country on the storefront.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/localization#country)',
+        scope: 'country'
       },
-      receipt: {
-        type: 'string',
-        description: 'Returns text with information from the payment provider about the payment receipt. This includes whether the payment was a test case and an authorization code if one was included in the transaction.'
-      },
-      status: {
-        type: 'string',
-        description: 'Returns the status of the transaction.'
-      },
-      status_label: {
-        type: 'string',
-        description: 'Returns the translated output of a transaction\'s status.'
+      language: {
+        type: 'object',
+        description: 'The currently selected language on the storefront.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/localization#language)',
+        scope: 'shop_locale'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects/transaction'
     }
   },
-  transaction_payment_details: {
+  location: {
+    summary: 'A store [location](https://help.shopify.com/manual/locations).',
+    description: 'A store [location](https://help.shopify.com/manual/locations).\n\n\n> Tip:\n> The `location` object is defined only if one or more locations has [local pickup](https://help.shopify.com/manual/shipping/setting-up-and-managing-your-shipping/local-methods/local-pickup)\n> enabled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/location',
     type: 'object',
-    description: 'Information about the payment methods used for a transaction.',
     properties: {
-      credit_card_company: {
-        type: 'string',
-        description: 'The name of the company that issued the credit card used for the transaction.'
-      },
-      credit_card_number: {
-        type: 'string',
-        description: 'The credit card number used for the transaction.'
-      }
-
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#transaction_payment_details'
-    }
-  },
-  unit_price_measurement: {
-    type: 'object',
-    description: 'Information about how units of a product variant are measured. It\'s used to calculate [unit prices](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product).\n\n**Note** Unit prices are available only to stores located in Germany and France.',
-    properties: {
-      measured_type: {
-        type: 'string',
-        description: 'The type of unit measurement.\n\n**Possible Values**\n\n- `volume`\n- `weight`\n - `dimension`'
-      },
-      quantity_unit: {
+      id: {
         type: 'number',
-        description: 'The unit of measurement used to measure the [`quantity_value`](https://shopify.dev/api/liquid/objects#unit_price_measurement-quantity_value).'
+        description: "The location's ID.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/location#id)"
       },
-      quantity_value: {
+      name: {
+        type: 'string',
+        description: "The location's name.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/location#name)"
+      },
+      address: {
+        type: 'object',
+        description: "The location's address.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/location#address)",
+        scope: 'address'
+      },
+      latitude: {
         type: 'number',
-        description: 'The quantity of the unit.'
+        description: "The latitude of the location's address. If the location's address isn't verified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/location#latitude)"
       },
-      reference_unit: {
-        type: 'string',
-        description: 'The unit of measurement used to measure the [`reference_value`](https://shopify.dev/api/liquid/objects#unit_price_measurement-reference_value).'
+      longitude: {
+        type: 'number',
+        description: "The longitude of the location's address. If the location's address isn't verified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/location#longitude)"
       },
-      reference_value: {
-        type: 'string',
-        description: 'The quantity of the unit for the base unit price.'
+      metafields: {
+        type: 'any',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the location.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/location#metafields)'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#unit_price_measurement'
     }
   },
-  user_agent: {
+  measurement: {
+    summary: 'A measurement from one of the following metafield types:\n\n- `dimension`\n- `volume`\n- `weight`',
+    description: 'A measurement from one of the following metafield types:\n\n- `dimension`\n- `volume`\n- `weight`\n\n\n> Tip:\n> To learn about metafield types, refer to [Metafield types](/apps/metafields/types).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/measurement',
     type: 'object',
-    description: 'The user_agent object returns the user-agent, which is the name of the crawler, for a specific group in the robots.txt file.',
     properties: {
-      directive: {
+      type: {
         type: 'string',
-        description: 'Returns User-agent.'
+        description: 'The measurement type.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/measurement#type)',
+        literal: [
+          'dimension',
+          'volume',
+          'weight'
+        ]
       },
       value: {
+        type: 'number',
+        description: 'The measurement value.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/measurement#value)'
+      },
+      unit: {
         type: 'string',
-        description: 'Returns the user-agent name.'
+        description: 'The measurement unit.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/measurement#unit)'
+      }
+    }
+  },
+  metafield: {
+    summary: 'A [metafield](/apps/metafields) attached to a parent object.',
+    description: "A [metafield](/apps/metafields) attached to a parent object. To learn about how to access a metafield on a specific object, refer to [Access metafields](/docs/api/liquid/objects/metafield#metafield-access-metafields).\n\nMetafields support [multiple data types](/apps/metafields/types), which determine the kind of information that's stored\nin the metafield. You can also output the metafield content in a type-specific format using\n[metafield filters](/docs/api/liquid/filters/metafield-filters).\n\n> Note:\n> You can't create metafields in Liquid. Metafields can be created in only the following ways:\n>\n> - [In the Shopify admin](https://help.shopify.com/manual/metafields)\n> - [Through an app](https://shopify.dev/apps/metafields)\n\n> Note:\n> Metafields of type `integer`, `json_string`, and `string` are older implementations that don't have the properties\n  noted on this page, and aren't compatible with metafield filters. To learn more, refer to [Deprecated metafields](/docs/api/liquid/objects/metafield#metafield-deprecated-metafields).\n\n#### Example\n\nThe access path for metafields consists of two layers:\n\n- namespace - A grouping of metafields to prevent conflicts.\n- key - The metafield name.\n\nGiven this, you can access the metafield object with the following syntax:\n\n```liquid\n{{ resource.metafields.namespace.key }}\n```\n\n```liquid\nType: {{ product.metafields.information.directions.type }}\nValue: {{ product.metafields.information.directions.value }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metafield",
+    type: 'object',
+    properties: {
+      value: {
+        type: 'any',
+        description: "The value of the metafield. The following table outlines the value format for each metafield type:\n\n<table>\n  <thead>\n    <tr>\n      <th>Type</th>\n      <th>Returned format</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>\n        <code>single_line_text_field</code><br><br>\n        <code>multi_line_text_field</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/basics#string\">A string</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>product_reference</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/objects/product\">A product object</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>collection_reference</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/objects/collection\">A collection object</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>variant_reference</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/objects/variant\">A variant object</a></td>\n    </tr>\n    <tr>\n      <td>\n       <code>page_reference</code>\n     </td>\n     <td><a href=\"/docs/api/liquid/objects/page\">A page object</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>file_reference</code>\n     </td>\n     <td>\n       <a href=\"/docs/api/liquid/objects/generic-file\">A generic_file object</a><br><br>\n       <a href=\"/docs/api/liquid/objects/media\">A media object (images and videos only)</a>\n     </td>\n    </tr>\n    <tr>\n      <td>\n        <code>number_integer</code><br><br>\n        <code>number_decimal</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/basics#number\">A number</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>date</code><br><br>\n        <code>date_time</code>\n      </td>\n      <td>A date string. To format the string, use the <a href=\"/docs/api/liquid/filters/date\">date</a> filter.</td>\n    </tr>\n    <tr>\n      <td>\n        <code>url_reference</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/basics#string\">A url string</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>json</code>\n      </td>\n      <td><a href=\"https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON\">A JSON object</a></td>\n    </tr>\n    <tr>\n      <td>\n       <code>boolean</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/basics#boolean\">A boolean</a></td>\n    <tr>\n      <td>\n        <code>color</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/objects/color\">A color object</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>weight</code><br><br>\n        <code>volume</code><br><br>\n        <code>dimension</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/objects/measurement\">A measurement object</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>rating</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/objects/rating\">A rating object</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>list</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/basics#array\">An array of objects, numbers, or strings, depending on the list type</a></td>\n    </tr>\n    <tr>\n      <td>\n        <code>money</code>\n      </td>\n      <td><a href=\"/docs/api/liquid/objects/money\">A money object, displayed in the customer's local (presentment) currency.</a></td>\n    </tr>\n  </tbody>\n</table>\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metafield#value)"
+      },
+      type: {
+        type: 'string',
+        description: 'The [type](/apps/metafields/types) of the metafield.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metafield#type)',
+        literal: [
+          'single_line_text_field',
+          'multi_line_text_field',
+          'product_reference',
+          'collection_reference',
+          'variant_reference',
+          'page_reference',
+          'file_reference',
+          'number_integer',
+          'number_decimal',
+          'date',
+          'date_time',
+          'url_reference',
+          'json',
+          'boolean',
+          'color',
+          'weight',
+          'volume',
+          'dimension',
+          'rating',
+          'list',
+          'money'
+        ]
+      },
+      'list?': {
+        type: 'boolean',
+        description: 'Returns `true` if the metafield is a list type. Returns `false` if not.\n\n\n> Tip:\n> To learn about metafield types, refer to [Metafield types](/apps/metafields/types).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metafield#list?)'
+      }
+    }
+  },
+  metaobject_definition: {
+    summary: 'A `metaobject_definition` defines the structure of a metaobject type for the store, which consists of\na merchant-defined set of [field definitions](https://help.shopify.com/en/manual/metafields/metafield-definitions).',
+    description: 'A `metaobject_definition` defines the structure of a metaobject type for the store, which consists of\na merchant-defined set of [field definitions](https://help.shopify.com/en/manual/metafields/metafield-definitions). One or more corresponding [`metaobject`](/docs/api/liquid/objects#metaobject) objects contain values for\nthe fields specified in the metaobject definition.\n\n#### Example\n\nIf a metaobject definition has multiple metaobject entries, then you can loop over them using the `values` property.\nFor example, you can display the field `author` for each metaobject using the following `forloop`:\n\n```liquid\n{% for testimonial in shop.metaobjects.testimonials.values %}\n  {{ testimonial.author.value }}\n{% endfor %}\n```\n\n> Note:\n> When the [`publishable` capability](/apps/data-extensions/metaobjects/capabilities) is enabled, loops return only metaobjects with a status of `active`. Metaobjects with a status of `draft` are skipped.\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject_definition',
+    type: 'object',
+    properties: {
+      values: {
+        type: 'array',
+        description: 'The [metaobjects](/docs/api/liquid/objects#metaobject) that follow the definition.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject_definition#values)',
+        scope: 'metaobject'
+      },
+      values_count: {
+        type: 'number',
+        description: 'The total number of entries for the metaobject definition.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject_definition#values_count)'
+      }
+    }
+  },
+  metaobject: {
+    summary: 'A metaobject entry, which includes the values for a set of [fields](/docs/api/liquid/objects#metafield).\nThe set is defined by the parent [`metaobject_definition`](/docs/api/liquid/objects#metaobject_definition).',
+    description: "A metaobject entry, which includes the values for a set of [fields](/docs/api/liquid/objects#metafield).\nThe set is defined by the parent [`metaobject_definition`](/docs/api/liquid/objects#metaobject_definition).\n\n#### Example\n\nThe access path for a metaobject consists of two layers:\n\n- type - The type of the parent metaobject definition.\n- handle - The unique [handle](/docs/api/liquid/basics#handles) of the metaobject.\n\nGiven this, you can access a metaobject with the following syntax:\n\n```liquid\n{{ shop.metaobjects.type.handle }}\n```\n\nYou can also use square bracket notation:\n\n```liquid\n{{ shop.metaobjects['type']['handle'] }}\n```\n\nA metaobjects's field values can be accessed using the key of the desired field:\n\n```liquid\n{{ shop.metaobjects.testimonials.homepage.title }}\n{{ shop.metaobjects['highlights']['washable'].image.value }}\n```\n\n> Note:\n> When the [`publishable` capability](/apps/data-extensions/metaobjects/capabilities) is enabled, a metaobject can only be accessed if its status is `active`.  If its status is `draft`, then the return value is `nil`.\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject",
+    type: 'object',
+    properties: {
+      system: {
+        type: 'object',
+        description: 'Basic information about the metaobject. These properties are grouped under the `system` object to avoid collisions between system property names and user-defined metaobject fields.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject#system)',
+        scope: 'metaobject_system'
+      }
+    }
+  },
+  metaobject_system: {
+    summary: 'Basic information about a [`metaobject`](/api/liquid/objects#metaobject). These properties are grouped under the `system` object to avoid collisions between system property names and user-defined metaobject fields.',
+    description: "Basic information about a [`metaobject`](/api/liquid/objects#metaobject). These properties are grouped under the `system` object to avoid collisions between system property names and user-defined metaobject fields.\n\n#### Example\n\nYou can access the `metaobject_system` object and its properties through the metaobject's `system` property. You can use the following syntax:\n\n```liquid\n{{ shop.metaobjects.testimonials[\"home_page\"].system.id }}\n```\n\nYou can also access `metaobject_system` properties when iterating over a list of metaobjects:\n\n```liquid\n{% for metaobject in product.metafields.custom.mixed_metaobject_list.value %}\n  {% if metaobject.system.type == \"testimonial\" %}\n    {% render 'testimonial' with metaobject as testimonial  %}\n  {% else %}\n    {{ metaobject.system.handle }}\n  {% endif %}\n{% endfor %}\n```\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject_system",
+    type: 'object',
+    properties: {
+      type: {
+        type: 'string',
+        description: "The type of the metaobject definition. This is a free-form string that's defined when the metaobject definition is created.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject_system#type)"
+      },
+      handle: {
+        type: 'string',
+        description: 'The unique [handle](/api/liquid/basics#handles) of the metaobject.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject_system#handle)'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the metaobject.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/metaobject_system#id)'
       }
     }
   },
   model: {
+    summary: 'A 3D model uploaded as product media.',
+    description: 'A 3D model uploaded as product media.\n\n\n> Tip:\n> Use the [`model_viewer_tag` filter](/docs/api/liquid/filters/model_viewer_tag) to output a [Google model viewer component](https://modelviewer.dev)\n> for the model.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model',
     type: 'object',
-    description: 'The model object contains information about a 3D model uploaded from the product details page in the Shopify admin.',
     properties: {
+      sources: {
+        type: 'array',
+        description: 'The source files for the model.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model#sources)',
+        scope: 'model_source'
+      },
       alt: {
         type: 'string',
-        description: 'Returns the alt tag of the model set on the product details page of the Shopify admin.'
+        description: 'The alt text of the model.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model#alt)'
       },
       id: {
-        type: 'string',
-        description: 'Returns the media_id of the model.'
+        type: 'number',
+        description: 'The ID of the model.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model#id)'
       },
       media_type: {
-        type: 'object',
-        description: 'Returns the type of the object (model).'
+        type: 'string',
+        description: "The media type of the model. Always returns `model`.\n\n#### Example\n\nYou can use the `media_type` property with the [`where` filter](/docs/api/liquid/filters/where) to filter the [`product.media` array](/docs/api/liquid/objects/product#product-media) for all media of a desired type.\n\n```liquid\n{% assign models = product.media | where: 'media_type', 'model' %}\n\n{% for model in models %}\n  {{- model | model_viewer_tag }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model#media_type)"
       },
       position: {
         type: 'number',
-        description: "Returns the position of the model in the product object's media array"
+        description: 'The position of the model in the [`product.media`](/docs/api/liquid/objects/product#product-media) array.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model#position)'
       },
       preview_image: {
-        type: 'string',
-        description: 'Returns a preview image for the model.'
-      },
-      sources: {
-        type: 'array',
-        description: 'Returns an array of model source objects.'
+        type: 'object',
+        description: 'A preview image for the model.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model#preview_image)',
+        scope: 'image'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/model'
     }
   },
   model_source: {
+    summary: 'A model source file.',
+    description: 'A model source file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model_source',
     type: 'object',
-    description: 'The model_source object contains information about the source files for a    model associated with a product.',
     properties: {
-      mime_type: {
-        type: 'string',
-        description: 'Returns the MIME type of the model source file.'
-      },
       format: {
         type: 'string',
-        description: 'Returns the format of the model source file.'
+        description: 'The format of the model source file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model_source#format)'
+      },
+      mime_type: {
+        type: 'string',
+        description: 'The [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) of the model source file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model_source#mime_type)'
       },
       url: {
         type: 'string',
-        description: 'Returns the URL of the model source file.'
+        description: 'The [CDN URL](/themes/best-practices/performance/platform#shopify-cdn) of the model source file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/model_source#url)'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/model-source'
     }
   },
-  media: {
+  money: {
+    summary: "A money value, in the the customer's local (presentment) currency.",
+    description: "A money value, in the the customer's local (presentment) currency.\n\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n#### Example\n\nWhen a money object is referenced directly, the money value in cents is returned.\n\n```liquid\n{{ product.metafields.details.price_per_100g.value }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/money",
     type: 'object',
-    description: 'The media object represents an object returned in a product.media array.',
     properties: {
-      alt: {
+      currency: {
+        type: 'object',
+        description: "The customer's local (presentment) currency.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/money#currency)",
+        scope: 'currency'
+      }
+    }
+  },
+  order: {
+    summary: 'An [order](https://help.shopify.com/manual/orders).',
+    description: 'An [order](https://help.shopify.com/manual/orders).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order',
+    type: 'object',
+    properties: {
+      discounts: {
+        type: 'object',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because not all discount types and details are captured.\n\nThe `order.discounts` property has been replaced by [`order.discount_applications`](/docs/api/liquid/objects/order#order-discount_applications).\n\n---\nThe discounts on the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#discounts)',
+        scope: 'discount'
+      },
+      attributes: {
+        type: 'any',
+        description: 'The attributes on the order. If there are no attributes on the order, then `nil` is returned.\n> Tip:\n> Attributes are [collected with the cart](https://shopify.dev/themes/architecture/templates/cart#support-cart-notes-and-attributes).\n\n#### Example\n\n```liquid\n<ul>\n  {% for attribute in order.attributes -%}\n    <li><strong>{{ attribute.first }}:</strong> {{ attribute.last }}</li>\n  {%- endfor %}\n</ul>\n```\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#attributes)'
+      },
+      cancel_reason: {
         type: 'string',
-        description: 'Returns the alt tag of the media'
+        description: 'The reason that the order was cancelled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#cancel_reason)',
+        literal: [
+          'customer',
+          'declined',
+          'fraud',
+          'inventory',
+          'other'
+        ]
+      },
+      cancel_reason_label: {
+        type: 'string',
+        description: 'The localized version of the [cancellation reason](/docs/api/liquid/objects/order#order-cancel_reason) for the order.\n\n\n> Tip:\n> Use this property to output the cancellation reason on the storefront.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#cancel_reason_label)'
+      },
+      cancelled: {
+        type: 'boolean',
+        description: 'Returns `true` if the order was cancelled. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#cancelled)'
+      },
+      cancelled_at: {
+        type: 'string',
+        description: 'A timestamp for when the order was cancelled.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#cancelled_at)'
+      },
+      cart_level_discount_applications: {
+        type: 'array',
+        description: 'The discount applications that apply at the order level.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#cart_level_discount_applications)',
+        scope: 'discount_application'
+      },
+      created_at: {
+        type: 'string',
+        description: 'A timestamp for when the order was created.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#created_at)'
+      },
+      total_duties: {
+        type: 'number',
+        description: "The sum of all duties applied to the line items in the order in the currency's subunit. If there are no duties, then `nil` is returned. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#total_duties)"
+      },
+      customer_url: {
+        type: 'string',
+        description: 'The URL for the customer to view the order in their account.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#customer_url)'
+      },
+      customer: {
+        type: 'object',
+        description: 'The customer that placed the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#customer)',
+        scope: 'customer'
+      },
+      discount_applications: {
+        type: 'array',
+        description: 'All of the discount applications for the order and its line items.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#discount_applications)',
+        scope: 'discount_application'
+      },
+      total_discounts: {
+        type: 'number',
+        description: "The total amount of all discounts applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#total_discounts)"
+      },
+      total_net_amount: {
+        type: 'number',
+        description: "The net amount of the order in the currency's subunit. The amount is calculated after refunds are applied, so is equal to `order.total_price` minus `order.total_refunded_amount`.\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#total_net_amount)"
+      },
+      tax_price: {
+        type: 'number',
+        description: "The total amount of taxes applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#tax_price)"
+      },
+      total_refunded_amount: {
+        type: 'number',
+        description: "The total amount that's been refunded from the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#total_refunded_amount)"
+      },
+      email: {
+        type: 'string',
+        description: "The email that's associated with the order. If no email is associated with the order, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#email)"
+      },
+      financial_status: {
+        type: 'string',
+        description: "The order's financial status.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#financial_status)",
+        literal: [
+          'authorized',
+          'expired',
+          'paid',
+          'partially_paid',
+          'partially_refunded',
+          'pending',
+          'refunded',
+          'unpaid',
+          'voided'
+        ]
+      },
+      financial_status_label: {
+        type: 22,
+        description: 'The localized version of the [financial status](/docs/api/liquid/objects/order#order-financial_status) of the order.\n\n\n> Tip:\n> Use this property to output the financial status on the storefront.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#financial_status_label)'
+      },
+      fulfillment_status: {
+        type: 'string',
+        description: 'The fulfillment status of the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#fulfillment_status)'
+      },
+      fulfillment_status_label: {
+        type: 'string',
+        description: 'The localized version of the [fulfillment status](/docs/api/liquid/objects/order#order-fulfillment_status) of the order.\n\n\n> Tip:\n> Use this property to output the fulfillment status on the storefront.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#fulfillment_status_label)',
+        literal: [
+          'complete',
+          'fulfilled',
+          'partial',
+          'restocked',
+          'unfulfilled'
+        ]
+      },
+      id: {
+        type: 'string',
+        description: 'The ID of the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#id)'
+      },
+      metafields: {
+        type: 'any',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the order.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#metafields)'
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#name)'
+      },
+      note: {
+        type: 'string',
+        description: "The note on the order. If there's no note on the order, then `nil` is returned.\n> Tip:\n> Notes are [collected with the cart](https://shopify.dev/themes/architecture/templates/cart#support-cart-notes-and-attributes).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#note)"
+      },
+      order_number: {
+        type: 'number',
+        description: 'The integer representation of the order [name](/docs/api/liquid/objects/order#order-name).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#order_number)'
+      },
+      order_status_url: {
+        type: 'string',
+        description: 'The URL for the [order status page](https://help.shopify.com/manual/orders/status-tracking) for the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#order_status_url)'
+      },
+      customer_order_url: {
+        type: 'string',
+        description: 'The URL for the new order details page. The new customer accounts includes a list of Buyers Orders and an Order Details View.\nThis liquid function exposes a URL to a specific Orders Details in new customer accounts.\n[Setup process for the new order details page](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts)\ncan be found in the help center.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#customer_order_url)'
+      },
+      phone: {
+        type: 'string',
+        description: 'The phone number associated with the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#phone)'
+      },
+      shipping_address: {
+        type: 'object',
+        description: 'The shipping address of the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#shipping_address)',
+        scope: 'address'
+      },
+      billing_address: {
+        type: 'object',
+        description: 'The billing address of the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#billing_address)',
+        scope: 'address'
+      },
+      tags: {
+        type: 'array',
+        description: 'The [tags](https://help.shopify.com/manual/shopify-admin/productivity-tools/using-tags) on the order. The tags are returned in alphabetical order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#tags)'
+      },
+      tax_lines: {
+        type: 'array',
+        description: 'The tax lines on the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#tax_lines)',
+        scope: 'tax_line'
+      },
+      transactions: {
+        type: 'array',
+        description: 'The transactions of the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#transactions)',
+        scope: 'transaction'
+      },
+      line_items: {
+        type: 'array',
+        description: 'The line items in the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#line_items)',
+        scope: 'line_item'
+      },
+      subtotal_line_items: {
+        type: 'array',
+        description: 'The non-tip line items in the order.\n\n\n> Note:\n> These line items are used to calculate the the [subtotal price](/docs/api/liquid/objects/order#order-subtotal_price).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#subtotal_line_items)',
+        scope: 'line_item'
+      },
+      item_count: {
+        type: 'number',
+        description: 'The number of items in the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#item_count)'
+      },
+      shipping_methods: {
+        type: 'array',
+        description: 'The shipping methods for the order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#shipping_methods)',
+        scope: 'shipping_method'
+      },
+      line_items_subtotal_price: {
+        type: 'number',
+        description: "The sum of the prices of all of the line items in the order in the currency's subunit, after any line item discounts have\nbeen applied. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#line_items_subtotal_price)"
+      },
+      subtotal_price: {
+        type: 'number',
+        description: "The sum of the prices of the [subtotal line items](/docs/api/liquid/objects/order#order-subtotal_line_items) in the currency's subunit, after any line item or\ncart discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#subtotal_price)"
+      },
+      total_price: {
+        type: 'number',
+        description: "The total price of the order in the currency's subunit.\n\n\n> Note:\n> The total price is calculated before refunds are applied. Use [`order.total_net_amount`](/docs/api/liquid/objects/order#order-total_net_amount)\n> to output the total minus any refunds.\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#total_price)"
+      },
+      shipping_price: {
+        type: 'number',
+        description: "The shipping price of the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/order#shipping_price)"
+      }
+    }
+  },
+  page: {
+    summary: 'A [page](https://help.shopify.com/manual/online-store/themes/theme-structure/pages) on a store.',
+    description: 'A [page](https://help.shopify.com/manual/online-store/themes/theme-structure/pages) on a store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: 'The ID of the page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#id)'
+      },
+      author: {
+        type: 'string',
+        description: 'The author of the page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#author)'
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#handle)'
+      },
+      title: {
+        type: 'string',
+        description: 'The title of the page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#title)'
+      },
+      template_suffix: {
+        type: 'string',
+        description: "The name of the [custom template](/themes/architecture/templates#alternate-templates) assigned to the page. The name doesn't include the `page.` prefix, or the file extension (`.json` or `.liquid`).\n\n If a custom template isn't assigned to the page, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#template_suffix)"
+      },
+      content: {
+        type: 'string',
+        description: 'The content of the page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#content)'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#url)'
+      },
+      metafields: {
+        type: 'any',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the page.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#metafields)'
+      },
+      published_at: {
+        type: 'string',
+        description: 'A timestamp for when the page was published.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page#published_at)'
+      }
+    }
+  },
+  paginate: {
+    summary: 'Information about the pagination inside a set of [`paginate` tags](/docs/api/liquid/tags/paginate).',
+    description: 'Information about the pagination inside a set of [`paginate` tags](/docs/api/liquid/tags/paginate).\n\n\n> Tip:\n> Use the [`default_pagination` filter](/docs/api/liquid/filters/default_pagination) to output pagination links.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate',
+    type: 'object',
+    properties: {
+      page_size: {
+        type: 'number',
+        description: 'The number of items displayed per page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#page_size)'
+      },
+      current_offset: {
+        type: 'number',
+        description: 'The total number of items on pages previous to the current page. For example, if you show 5 items per page and are on page 3, then the value of `paginate.current_offset` is 10.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#current_offset)'
+      },
+      current_page: {
+        type: 'number',
+        description: 'The page number of the current page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#current_page)'
+      },
+      items: {
+        type: 'number',
+        description: 'The total number of items to be paginated. For example, if you paginate a collection of 120 products, then the value of `paginate.items` is 120.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#items)'
+      },
+      parts: {
+        type: 'array',
+        description: 'The pagination parts. Pagination parts are used to build pagination navigation.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#parts)',
+        scope: 'part'
+      },
+      next: {
+        type: 'object',
+        description: 'The pagination part to go to the next page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#next)',
+        scope: 'part'
+      },
+      previous: {
+        type: 'object',
+        description: 'The pagination part to go to the previous page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#previous)',
+        scope: 'part'
+      },
+      pages: {
+        type: 'number',
+        description: 'The total number of pages.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#pages)'
+      },
+      page_param: {
+        type: 'string',
+        description: 'The URL parameter denoting the pagination. The default value is `page`.\n\nIf you paginate over an array defined in a setting or a metafield list type, then a unique key is appended to page to allow the paginated list to\noperate independently from other lists on the page. For example, a paginated list defined in a setting might use the key\n`page_a9e329dc`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/paginate#page_param)'
+      }
+    }
+  },
+  predictive_search: {
+    summary: 'Information about the results from a predictive search query through the\n[Predictive Search API](/api/ajax/reference/predictive-search#get-locale-search-suggest).',
+    description: 'Information about the results from a predictive search query through the\n[Predictive Search API](/api/ajax/reference/predictive-search#get-locale-search-suggest).\n\n\n> Note:\n> The `predictive_search` object returns results only when rendered in a section using the Predictive Saerch API and the\n[Section Rendering API](/api/section-rendering). To learn about how to include predictive search in your theme,\n> refer to [Add predictive search to your theme](/themes/navigation-search/search/predictive-search).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search',
+    type: 'object',
+    properties: {
+      performed: {
+        type: 'boolean',
+        description: "Returns `true` when being referenced inside a section that's been rendered using the Predictive Search API and\nthe Section Rendering API. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search#performed)"
+      },
+      resources: {
+        type: 'object',
+        description: 'The resources associated with the query. You can check whether any resources of a specific type were returned using the [`size` filter](/docs/api/liquid/filters/size).\n\n```liquid\n{% if predictive_search.resources.articles.size > 0 %}\n  {% for article in predictive_search.resources.articles %}\n    {{ article.title }}\n  {% endfor %}\n{% endif %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search#resources)',
+        scope: 'predictive_search_resources'
+      },
+      terms: {
+        type: 'string',
+        description: 'The entered search terms.\n\n\n> Tip:\n> Use the [`highlight` filter](/docs/api/liquid/filters/highlight) to highlight the search terms in search results content.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search#terms)'
+      },
+      types: {
+        type: 'array',
+        description: 'The object types that the search was performed on. Searches can be performed on the following object types:\n\n- [`article`](/docs/api/liquid/objects/article)\n- [`collection`](/docs/api/liquid/objects/collection)\n- [`page`](/docs/api/liquid/objects/page)\n- [`product`](/docs/api/liquid/objects/product)\n\n> Note:\n> The types are determined by the [`types` query parameter](/api/ajax/reference/predictive-search#query-parameters).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search#types)'
+      }
+    }
+  },
+  selling_plan_price_adjustment: {
+    summary: 'Information about how a selling plan changes the price of a variant for a given period of time.',
+    description: 'Information about how a selling plan changes the price of a variant for a given period of time. To learn about how to support selling plans in your theme, refer to [Purchase options](/themes/pricing-payments/purchase-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment',
+    type: 'object',
+    properties: {
+      order_count: {
+        type: 'number',
+        description: 'The number of orders that the price adjustment applies to.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment#order_count)'
+      },
+      position: {
+        type: 'number',
+        description: 'The 1-based index of the price adjustment in the [`selling_plan.price_adjustments` array](/docs/api/liquid/objects/selling_plan#selling_plan-price_adjustments).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment#position)'
+      },
+      value_type: {
+        type: 'string',
+        description: 'The type of price adjustment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment#value_type)',
+        literal: [
+          'percentage',
+          'fixed_amount',
+          'price'
+        ]
+      },
+      value: {
+        type: 'number',
+        description: "The value of the price adjustment as a decimal. How this value is interpreted depends on the [value type](/docs/api/liquid/objects/selling_plan_price_adjustment#selling_plan_price_adjustment-value_type) of\nthe price adjustment. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `fixed_amount` | The amount that the original price is being adjusted by, in the currency's subunit. |\n| `percentage` | The percent amount that the original price is being adjusted by. |\n| `price` | The adjusted amount in the currency's subunit. |\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment#value)"
+      }
+    }
+  },
+  product: {
+    summary: 'A [product](https://help.shopify.com/manual/products) in the store.',
+    description: 'A [product](https://help.shopify.com/manual/products) in the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product',
+    type: 'object',
+    properties: {
+      variants: {
+        type: 'array',
+        description: 'The variants of the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#variants)',
+        scope: 'variant'
+      },
+      images: {
+        type: 'array',
+        description: 'The images attached to the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#images)',
+        scope: 'image'
+      },
+      metafields: {
+        type: 'any',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the product.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#metafields)'
+      },
+      options_with_values: {
+        type: 'array',
+        description: 'The options on the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#options_with_values)',
+        scope: 'product_option'
       },
       id: {
         type: 'number',
-        description: 'Returns the ID of the media.'
+        description: 'The ID of the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#id)'
       },
-      media_type: {
+      title: {
+        type: 'string',
+        description: 'The title of the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#title)'
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#handle)'
+      },
+      template_suffix: {
+        type: 'string',
+        description: "The name of the [custom template](/themes/architecture/templates#alternate-templates) of the product. The name doesn't include the `product.` prefix, or the file extension (`.json` or `.liquid`).\n\nIf a custom template isn't assigned to the product, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#template_suffix)"
+      },
+      vendor: {
+        type: 'string',
+        description: 'The vendor of the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#vendor)'
+      },
+      description: {
+        type: 'string',
+        description: 'The description of the product.\n\n\n> Note:\n> This is the same value as [`product.content`](/docs/api/liquid/objects/product#product-content).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#description)'
+      },
+      content: {
+        type: 'string',
+        description: 'The description of the product.\n\n\n> Note:\n> This is the same value as [`product.description`](/docs/api/liquid/objects/product#product-description).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#content)'
+      },
+      featured_image: {
         type: 'object',
-        description: 'Returns the media type of the object.'
+        description: 'The first (featured) image attached to the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#featured_image)',
+        scope: 'image'
+      },
+      featured_media: {
+        type: 'object',
+        description: 'The first (featured) media attached to the product.\n\n\n> Tip:\n> You can use [media filters](/docs/api/liquid/filters/media-filters) to output media URLs and displays. To learn about how\n> to include media in your theme, refer to [Support product media](/themes/product-merchandising/media/support-media).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#featured_media)',
+        scope: 'media'
+      },
+      media: {
+        type: 'array',
+        description: 'The media attached to the product, sorted by the date it was added to the product.\n\n\n> Tip:\n> You can use [media filters](/docs/api/liquid/filters/media-filters) to output media URLs and displays. To learn about how\n> to include media in your theme, refer to [Support product media](/themes/product-merchandising/media/support-media).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#media)',
+        scope: 'media'
+      },
+      price_min: {
+        type: 'number',
+        description: "The lowest price of any variants of the product in the currency's subunit.\n\n\n> Note:\n> This is the same value as [`product.price`](/docs/api/liquid/objects/product#product-price).\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#price_min)"
+      },
+      price: {
+        type: 'number',
+        description: "The lowest price of any variants of the product in the currency's subunit.\n\n\n> Note:\n> This is the same value as [`product.price_min`](/docs/api/liquid/objects/product#product-price_min).\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#price)"
+      },
+      price_max: {
+        type: 'number',
+        description: "The highest price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#price_max)"
+      },
+      price_varies: {
+        type: 'boolean',
+        description: "Returns `true` if the product's variant prices vary. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#price_varies)"
+      },
+      selected_or_first_available_variant: {
+        type: 'object',
+        description: 'The currently selected or first available variant of the product.\n\n\n> Note:\n> The selected variant is determined by the `variant` URL parameter. The `selected_variant` parameter is available on product pages only.\n\nFor a variant to be available, it needs to meet one of the following criteria:\n\n- The `variant.inventory_quantity` is greater than 0.\n- The `variant.inventory_policy` is set to `continue`.\n- The `variant.inventory_management` is `nil`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#selected_or_first_available_variant)',
+        scope: 'variant'
+      },
+      collections: {
+        type: 'array',
+        description: "The collections that the product belongs to.\n\n\n> Note:\n> Collections that aren't [available](https://help.shopify.com/manual/products/collections/make-collections-available) on\n> the Online Store sales channel aren't included.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#collections)",
+        scope: 'collection'
+      },
+      selected_variant: {
+        type: 'object',
+        description: 'The currently selected variant of the product. If no variant is currently selected, then `nil` is returned.\n\n> Note:\n> The selected variant is determined by the `variant` URL parameter. This URL parameter is available on product pages URLs only.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#selected_variant)',
+        scope: 'variant'
+      },
+      first_available_variant: {
+        type: 'object',
+        description: 'The first available variant of the product. For a variant to be available, it needs to meet one of the following criteria:\n\n- The `variant.inventory_quantity` is greater than 0.\n- The `variant.inventory_policy` is set to `continue`.\n- The `variant.inventory_management` is `nil`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#first_available_variant)',
+        scope: 'variant'
+      },
+      available: {
+        type: 'boolean',
+        description: 'Returns `true` if at least one of the variants of the product is available. Returns `false` if not. For a variant to be available, it needs to meet one of the following criteria:\n\n- The `variant.inventory_quantity` is greater than 0.\n- The `variant.inventory_policy` is set to `continue`.\n- The `variant.inventory_management` is `nil`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#available)'
+      },
+      options: {
+        type: 'array',
+        description: 'The option names of the product.\n\n#### Example\n\nYou can use the [`size` filter](/docs/api/liquid/filters/size) with dot notation to determine how many options a product has.\n\n```liquid\n{% if product.options.size > 0 -%}\n  {% for option in product.options -%}\n    - {{ option }}\n  {%- endfor %}\n{%- endif %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#options)'
+      },
+      type: {
+        type: 'string',
+        description: 'The type of the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#type)'
+      },
+      compare_at_price_min: {
+        type: 'number',
+        description: "The lowest **compare at** price of any variants of the product in the currency's subunit. This is the same as\n`product.compare_at_price`. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#compare_at_price_min)"
+      },
+      compare_at_price_max: {
+        type: 'number',
+        description: "The highest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#compare_at_price_max)"
+      },
+      compare_at_price: {
+        type: 'number',
+        description: "The lowest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#compare_at_price)"
+      },
+      compare_at_price_varies: {
+        type: 'boolean',
+        description: 'Returns `true` if the variant **compare at** prices of the product vary. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#compare_at_price_varies)'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the product.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#url)'
+      },
+      tags: {
+        type: 'array',
+        description: 'The [tags](https://help.shopify.com/manual/shopify-admin/productivity-tools/using-tags) of the product.\n\n\n> Note:\n> The tags are returned in alphabetical order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#tags)'
+      },
+      published_at: {
+        type: 'string',
+        description: 'A timestamp for when the product was published.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#published_at)'
+      },
+      created_at: {
+        type: 'string',
+        description: 'A timestamp for when the product was created.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#created_at)'
+      },
+      options_by_name: {
+        type: 'any',
+        description: "Allows you to access a specific [product option](/docs/api/liquid/objects/product_option) by its name.\n\n#### Example\n\nWhen accessing a specific option, the name is case-insensitive.\n```liquid\n<label>\n  Strength\n  <select>\n    {%- for value in product.options_by_name['strength'].values %}\n    <option>{{ value }}</option>\n    {%- endfor %}\n  </select>\n</label>\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#options_by_name)"
+      },
+      has_only_default_variant: {
+        type: 'boolean',
+        description: "Returns `true` if the product doesn't have any options. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#has_only_default_variant)"
+      },
+      requires_selling_plan: {
+        type: 'boolean',
+        description: 'Returns `true` if all of the variants of the product require a selling plan. Returns `false` if not.\n\n\n> Note:\n> A variant requires a selling plan if [`variant.requires_selling_plan`](/docs/api/liquid/objects/variant#variant-requires_selling_plan)\n> is `true`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#requires_selling_plan)'
+      },
+      selling_plan_groups: {
+        type: 'array',
+        description: 'The selling plan groups that the variants of the product are included in.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#selling_plan_groups)',
+        scope: 'selling_plan_group'
+      },
+      selected_selling_plan: {
+        type: 'object',
+        description: 'The currently selected selling plan. If no selling plan is selected, then `nil` is returned.\n\n> Note:\n> The selected selling plan is determined by the `selling_plan` URL parameter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#selected_selling_plan)',
+        scope: 'selling_plan'
+      },
+      selected_selling_plan_allocation: {
+        type: 'object',
+        description: 'The currently selected selling plan allocation for the currently selected variant. If no variant and selling plan are selected, then `nil` is returned.\n\n> Note:\n> The selected variant is determined by the `variant` URL parameter, and the selected selling plan is determined by the\n> `selling_plan` URL parameter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#selected_selling_plan_allocation)',
+        scope: 'selling_plan_allocation'
+      },
+      selected_or_first_available_selling_plan_allocation: {
+        type: 'object',
+        description: "The currently selected, or first available, selling plan allocation. The following logic is used to determine which selling plan allocation is returned:\n\n| Selling plan allocation | Return criteria |\n| --- | --- |\n| The currently selected allocation | Returned if a variant and selling plan are selected.<br><br>The selected variant is determined by the `variant` URL parameter, and the selected selling plan is determined by the `selling_plan` URL parameter. |\n| The first allocation on the first available variant | Returned if no allocation is currently selected. |\n| The first allocation on the first variant | Returned if no allocation is currently selected, and there are no available variants. |\n\nIf the product doesn't have any selling plans, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#selected_or_first_available_selling_plan_allocation)",
+        scope: 'selling_plan_allocation'
+      },
+      'gift_card?': {
+        type: 'boolean',
+        description: 'Returns `true` if the product is a gift card. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product#gift_card?)'
+      }
+    }
+  },
+  product_option: {
+    summary: 'A product option, such as size or color.',
+    description: 'A product option, such as size or color.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product_option',
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        description: 'The name of the product option.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product_option#name)'
       },
       position: {
-        type: 'object',
-        description: "Returns the position of the specific media object in the product object's media array."
+        type: 'number',
+        description: 'The 1-based index of the product option in the [`product.options_with_values` array](/docs/api/liquid/objects/product#product-options_with_values).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product_option#position)'
       },
-      preview_image: {
+      values: {
+        type: 'array',
+        description: 'The possible values for the product option.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product_option#values)'
+      },
+      selected_value: {
         type: 'string',
-        description: 'Returns a preview image for the media.'
+        description: 'The currently selected product option value. If no value is currently selected, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/product_option#selected_value)'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/media'
     }
   },
   variant: {
+    summary: 'A [product variant](https://help.shopify.com/manual/products/variants).',
+    description: 'A [product variant](https://help.shopify.com/manual/products/variants).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant',
+    type: 'object',
+    properties: {
+      metafields: {
+        type: 'any',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the variant.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#metafields)'
+      },
+      product: {
+        type: 'object',
+        description: 'The parent product of the variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#product)',
+        scope: 'product'
+      },
+      selected: {
+        type: 'boolean',
+        description: "Returns `true` if the variant is currently selected. Returns `false` if it's not.\n\n\n> Note:\n> The selected variant is determined by the `variant` URL parameter. This URL parameter is available on product pages URLs only.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#selected)"
+      },
+      matched: {
+        type: 'boolean',
+        description: "Returns `true` if the variant has been matched by a [storefront filter](https://shopify.dev/themes/navigation-search/filtering/storefront-filtering).\nReturns `false` if it hasn't.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#matched)"
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#id)'
+      },
+      title: {
+        type: 'string',
+        description: 'A concatenation of each variant option, separated by a `/`.\n\n#### Example\n\n```liquid\n{{ product.variants.first.title }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#title)'
+      },
+      quantity_rule: {
+        type: 'object',
+        description: 'Returns the specified quantity rule for the variant if one exists in the current customer context. Otherwise returns `min=1,max=nil,increment=1` if the variant does not have any quantity rule.\n\n\n> Note:\n> The default quantity rule is `min=1,max=null,increment=1`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#quantity_rule)',
+        scope: 'quantity_rule'
+      },
+      price: {
+        type: 'number',
+        description: "The price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#price)"
+      },
+      compare_at_price: {
+        type: 'number',
+        description: "The **compare at** price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#compare_at_price)"
+      },
+      selected_selling_plan_allocation: {
+        type: 'object',
+        description: 'The selected `selling_plan_allocation`. If no selling plan is selected, then `nil` is returned.\n\n> Note:\n> The selected selling plan is determined by the `selling_plan` URL parameter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#selected_selling_plan_allocation)',
+        scope: 'selling_plan_allocation'
+      },
+      selling_plan_allocations: {
+        type: 'array',
+        description: 'The `selling_plan_allocation` objects for the variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#selling_plan_allocations)',
+        scope: 'selling_plan_allocation'
+      },
+      sku: {
+        type: 'string',
+        description: 'The SKU of the variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#sku)'
+      },
+      barcode: {
+        type: 'string',
+        description: 'The barcode of the variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#barcode)'
+      },
+      available: {
+        type: 'boolean',
+        description: 'Returns `true` if the variant is available. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#available)'
+      },
+      options: {
+        type: 'string',
+        description: 'The values of the variant for each [product option](/docs/api/liquid/objects/product_option).\n\n#### Example\n\n```liquid\n{% for variant in product.variants -%}\n  {%- capture options -%}\n    {% for option in variant.options -%}\n      {{ option }}{%- unless forloop.last -%}/{%- endunless -%}\n    {%- endfor %}\n  {%- endcapture -%}\n  \n  {{ variant.id }}: {{ options }}\n{%- endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#options)'
+      },
+      option1: {
+        type: 'string',
+        description: "The value of the variant for the first product option. If there's no first product option, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#option1)"
+      },
+      option2: {
+        type: 'string',
+        description: "The value of the variant for the second product option. If there's no second product option, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#option2)"
+      },
+      option3: {
+        type: 'string',
+        description: "The value of the variant for the third product option. If there's no third product option, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#option3)"
+      },
+      url: {
+        type: 'string',
+        description: 'The URL of the variant. Variant URLs use the following structure:\n\n```\n/products/[product-handle]?variant=[variant-id]\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#url)'
+      },
+      weight_unit: {
+        type: 'string',
+        description: 'The unit for the weight of the variant.\n\n\n> Tip:\n> To output the weight of a variant in this unit, use this property, and the `variant.weight_in_unit` property, with the\n> [`weight_with_unit` filter](/docs/api/liquid/filters/weight_with_unit).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#weight_unit)'
+      },
+      weight_in_unit: {
+        type: 'number',
+        description: 'The weight of the variant in the unit specified by `variant.weight_unit`.\n\n\n> Tip:\n> To output this weight, use this property, and the `variant.weight_unit` property, with the [`weight_with_unit` filter](/docs/api/liquid/filters/weight_with_unit).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#weight_in_unit)'
+      },
+      weight: {
+        type: 'number',
+        description: "The weight of the variant in grams.\n\n\n> Tip:\n> Use the [`weight_with_unit` filter](/docs/api/liquid/filters/weight_with_unit) filter to format the weight in\n> [the store's format](https://www.shopify.com/admin/settings/general).\n>\n> Use `variant.weight_in_unit` to output the weight in the unit configured on the variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#weight)"
+      },
+      unit_price_measurement: {
+        type: 'object',
+        description: 'The unit price measurement of the variant.\n\n\n> Note:\n> Unit prices are available only to stores located in Germany and France.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#unit_price_measurement)',
+        scope: 'unit_price_measurement'
+      },
+      unit_price: {
+        type: 'number',
+        description: "The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)\nof the variant in the currency's subunit. The price reflects any discounts that are applied to the line item. The value is output in the customer's local\n(presentment) currency.\n\n> Note:\n> Unit prices are available only to stores located in Germany and France.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#unit_price)"
+      },
+      inventory_quantity: {
+        type: 'number',
+        description: "The inventory quantity of the variant. If inventory isn't tracked, then `0` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#inventory_quantity)"
+      },
+      inventory_management: {
+        type: 'string',
+        description: "The inventory management service of the variant. If inventory isn't tracked, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#inventory_management)"
+      },
+      inventory_policy: {
+        type: 'string',
+        description: "Whether the variant should continue to be sold when it's out of stock.\n\n\n> Tip:\n> To learn about why merchants might want to continue selling products when they're out of stock, visit the\n> [Shopify Help Center](https://help.shopify.com/manual/products/inventory/getting-started-with-inventory/selling-when-out-of-stock).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#inventory_policy)",
+        literal: [
+          'continue',
+          'deny'
+        ]
+      },
+      requires_shipping: {
+        type: 'boolean',
+        description: "Returns `true` if the variant requires shipping. Returns `false` if it doesn't.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#requires_shipping)"
+      },
+      taxable: {
+        type: 'boolean',
+        description: 'Returns `true` if taxes should be charged on the variant. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#taxable)'
+      },
+      featured_image: {
+        type: 'object',
+        description: 'The image attached to the variant.\n\n\n> Note:\n> This is the same value as [`variant.image`](/docs/api/liquid/objects/variant#variant-image).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#featured_image)',
+        scope: 'image'
+      },
+      image: {
+        type: 'object',
+        description: 'The image attached to the variant.\n\n\n> Note:\n> This is the same value as [`variant.featured_image`](/docs/api/liquid/objects/variant#variant-featured_image).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#image)',
+        scope: 'image'
+      },
+      featured_media: {
+        type: 'object',
+        description: 'The first media object attached to the variant.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#featured_media)',
+        scope: 'media'
+      },
+      incoming: {
+        type: 'boolean',
+        description: 'Returns `true` if the variant has incoming inventory. Returns `false` if not. Incoming inventory information is populated by [inventory transfers](https://help.shopify.com/manual/products/inventory/transfers).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#incoming)'
+      },
+      next_incoming_date: {
+        type: 'string',
+        description: 'The arrival date for the next incoming inventory of the variant. Incoming inventory information is populated by [inventory transfers](https://help.shopify.com/manual/products/inventory/transfers).\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the date.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#next_incoming_date)'
+      },
+      store_availabilities: {
+        type: 'array',
+        description: "The store availabilities for the variant. The array is defined in only the following cases:\n\n- `variant.selected` is `true`\n- The variant is the product's first available variant. For example, `product.first_available_variant` or `product.selected_or_first_available_variant`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#store_availabilities)",
+        scope: 'store_availability'
+      },
+      requires_selling_plan: {
+        type: 'boolean',
+        description: 'Returns `true` if the variant is set to require a `selling_plan` when being added to the cart. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/variant#requires_selling_plan)'
+      }
+    }
+  },
+  rating: {
+    summary: 'Information for a [`rating` type](/apps/metafields/types) metafield.',
+    description: 'Information for a [`rating` type](/apps/metafields/types) metafield.\n\n\n> Tip:\n> To learn about metafield types, refer to [Metafield types](/apps/metafields/types).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/rating',
+    type: 'object',
+    properties: {
+      rating: {
+        type: 'number',
+        description: 'The rating value.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/rating#rating)'
+      },
+      scale_min: {
+        type: 'number',
+        description: 'The minimum value of the rating scale.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/rating#scale_min)'
+      },
+      scale_max: {
+        type: 'number',
+        description: 'The maximum value of the rating scale.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/rating#scale_max)'
+      }
+    }
+  },
+  recommendations: {
+    summary: 'Product recommendations for a specific product based on sales data, product descriptions, and collection relationships.',
+    description: 'Product recommendations for a specific product based on sales data, product descriptions, and collection relationships. Product recommendations become more accurate over time as new orders and product data become available. To learn more about\nhow product recommendations are generated, refer to [Product recommendations](/themes/product-merchandising/recommendations).\n\n> Note:\n> The `recommendations` object returns products only when rendered in a section using the [Product Recommendations API](/api/ajax/reference/product-recommendations)\n> and the [Section Rendering API](/api/section-rendering). To learn about how to include product recommendations in your theme,\n> refer to [Show product recommendations](/themes/product-merchandising/recommendations/show-product-recommendations).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/recommendations',
+    type: 'object',
+    properties: {
+      'performed?': {
+        type: 'boolean',
+        description: "Returns `true` when being referenced inside a section that's been rendered using the Product Recommendations API and\nthe Section Rendering API. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/recommendations#performed?)"
+      },
+      products: {
+        type: 'array',
+        description: 'The recommended products. If `performed?` is `false`, then an [EmptyDrop](/docs/api/liquid/basics#emptydrop) is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/recommendations#products)',
+        scope: 'product'
+      },
+      products_count: {
+        type: 'number',
+        description: 'The number of recommended products. If `performed?` is `false`, then 0 is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/recommendations#products_count)'
+      },
+      intent: {
+        type: 'string',
+        description: 'The recommendation intent. If `performed?` is `false`, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/recommendations#intent)'
+      }
+    }
+  },
+  request: {
+    summary: 'Information about the current URL and the associated page.',
+    global: true,
+    description: 'Information about the current URL and the associated page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/request',
+    type: 'object',
+    properties: {
+      design_mode: {
+        type: 'boolean',
+        description: "Returns `true` if the request is being made from within the theme editor. Returns `false` if not. You can use `request.design_mode` to control theme behavior depending on whether the theme is being viewed in the editor.\nFor example, you can prevent session data from being tracked by tracking scripts in the theme editor.\n\n> Caution:\n> You shouldn't use `request.design_mode` to change customer-facing functionality. The theme editor preview should match\n> what the merchant's customers see on the live store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/request#design_mode)"
+      },
+      page_type: {
+        type: 'string',
+        description: 'The type of page being requested.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/request#page_type)',
+        literal: [
+          '404',
+          'article',
+          'blog',
+          'captcha',
+          'cart',
+          'collection',
+          'list-collections',
+          'customers/account',
+          'customers/activate_account',
+          'customers/addresses',
+          'customers/login',
+          'customers/order',
+          'customers/register',
+          'customers/reset_password',
+          'gift_card',
+          'index',
+          'page',
+          'password',
+          'policy',
+          'product',
+          'search'
+        ]
+      },
+      host: {
+        type: 'string',
+        description: 'The domain that the request is hosted on.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/request#host)'
+      },
+      origin: {
+        type: 'string',
+        description: 'The protocol and host of the request.\n\n#### Example\n\nYou can use `request.origin` with any object, object property, or filter that returns a relative URL to build a context-aware absolute URL.\n\n```liquid\n{{ product.selected_variant.url | default: product.url | prepend: request.origin }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/request#origin)'
+      },
+      path: {
+        type: 'string',
+        description: "The path of the request.\n\n\n> Note:\n> If the current path is for a page that doesn't exist, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/request#path)"
+      },
+      locale: {
+        type: 'object',
+        description: 'The locale of the request.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/request#locale)',
+        scope: 'shop_locale'
+      }
+    }
+  },
+  robots: {
+    summary: 'The default rule groups for the `robots.txt` file.',
+    description: 'The default rule groups for the `robots.txt` file.\n\n\n> Tip:\n> You can [customize the `robots.txt` file](/themes/seo/robots-txt) with the [`robots.txt.liquid` template](/themes/architecture/templates/robots-txt-liquid).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/robots',
+    type: 'object',
+    properties: {
+      default_groups: {
+        type: 'array',
+        description: 'The rule groups.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/robots#default_groups)',
+        scope: 'group'
+      }
+    }
+  },
+  group: {
+    summary: 'A group of rules for the `robots.txt` file.',
+    description: 'A group of rules for the `robots.txt` file.\n\n\n> Tip:\n> You can [customize the `robots.txt` file](/themes/seo/robots-txt) with the [`robots.txt.liquid` template](/themes/architecture/templates/robots-txt-liquid).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/group',
+    type: 'object',
+    properties: {
+      user_agent: {
+        type: 'object',
+        description: 'The user agent for the group.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/group#user_agent)',
+        scope: 'user_agent'
+      },
+      rules: {
+        type: 'array',
+        description: 'The rules in the group.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/group#rules)',
+        scope: 'rule'
+      },
+      sitemap: {
+        type: 'object',
+        description: "The sitemap for the group. If the group doesn't require a sitemap, then `blank` is returned.\n\nThe sitemap can be accessed at `/sitemap.xml`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/group#sitemap)",
+        scope: 'sitemap'
+      }
+    }
+  },
+  rule: {
+    summary: "A rule for the `robots.txt` file, which tells crawlers which pages can, or can't, be accessed.",
+    description: "A rule for the `robots.txt` file, which tells crawlers which pages can, or can't, be accessed. A rule consists of a directive, which can be either `Allow` or `Disallow`, and a value of the associated URL path.\n\nFor example:\n\n```\nDisallow: /policies/\n```\n\nYou can output a rule directly, instead of referencing each of its properties.\n\n> Tip:\n> You can [customize the `robots.txt` file](/themes/seo/robots-txt) with the [`robots.txt.liquid` template](/themes/architecture/templates/robots-txt-liquid).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/rule",
+    type: 'object',
+    properties: {
+      directive: {
+        type: 'string',
+        description: 'The directive of the rule.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/rule#directive)'
+      },
+      value: {
+        type: 'string',
+        description: 'The value of the rule.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/rule#value)'
+      }
+    }
+  },
+  routes: {
+    summary: 'Allows you to generate standard URLs for the storefront.',
+    global: true,
+    description: 'Allows you to generate standard URLs for the storefront. Using the `routes` object instead of hardcoding URLs helps ensure that your theme supports\n[multiple languages](/themes/internationalization/multiple-currencies-languages), as well as any possible changes in URL\nformat.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes',
+    type: 'object',
+    properties: {
+      root_url: {
+        type: 'string',
+        description: 'The index (home page) URL.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#root_url)'
+      },
+      account_url: {
+        type: 'string',
+        description: 'The [account page](https://help.shopify.com/manual/customers/customer-accounts) URL. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#account_url)'
+      },
+      account_login_url: {
+        type: 'string',
+        description: 'The [account login page](/themes/architecture/templates/customers-login) URL. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#account_login_url)'
+      },
+      account_logout_url: {
+        type: 'string',
+        description: 'The URL to log a customer out of their account. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#account_logout_url)'
+      },
+      account_recover_url: {
+        type: 'string',
+        description: 'The [password recovery page](/themes/architecture/templates/customers-reset-password) URL. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#account_recover_url)'
+      },
+      account_register_url: {
+        type: 'string',
+        description: 'The [account registration page](/themes/architecture/templates/customers-register) URL.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#account_register_url)'
+      },
+      account_addresses_url: {
+        type: 'string',
+        description: 'The [account addresses page](/themes/architecture/templates/customers-addresses) URL. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#account_addresses_url)'
+      },
+      collections_url: {
+        type: 'string',
+        description: 'The [collection list page](/themes/architecture/templates/list-collections) URL.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#collections_url)'
+      },
+      all_products_collection_url: {
+        type: 'string',
+        description: 'The all-products collection page URL. The all-products collection is automatically generated by Shopify and contains all products in the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#all_products_collection_url)'
+      },
+      search_url: {
+        type: 'string',
+        description: 'The [search page](/themes/architecture/templates/search) URL.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#search_url)'
+      },
+      predictive_search_url: {
+        type: 'string',
+        description: 'The [Predictive Search API](/api/ajax/reference/predictive-search) URL.\n\n\n> Tip:\n> To learn about how to support predictive search in your theme, refer to [Add predictive search to your theme](/themes/navigation-search/search/predictive-search).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#predictive_search_url)'
+      },
+      cart_url: {
+        type: 'string',
+        description: 'The [cart page](/themes/architecture/templates/cart) URL.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#cart_url)'
+      },
+      cart_add_url: {
+        type: 'string',
+        description: 'The URL for the [`/cart/add` Cart API endpoint](/api/ajax/reference/cart#post-locale-cart-add-js).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#cart_add_url)'
+      },
+      cart_change_url: {
+        type: 'string',
+        description: 'The URL for the [`/cart/change` Cart API endpoint](/api/ajax/reference/cart#post-locale-cart-change-js).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#cart_change_url)'
+      },
+      cart_clear_url: {
+        type: 'string',
+        description: 'The URL for the [`/cart/clear` Cart API endpoint](/api/ajax/reference/cart#post-locale-cart-clear-js).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#cart_clear_url)'
+      },
+      cart_update_url: {
+        type: 'string',
+        description: 'The URL for the [`/cart/update` Cart API endpoint](/api/ajax/reference/cart#post-locale-cart-update-js).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#cart_update_url)'
+      },
+      product_recommendations_url: {
+        type: 'string',
+        description: 'The [Product Recommendations API](https://shopify.dev/api/ajax/reference/product-recommendations) URL.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/routes#product_recommendations_url)'
+      }
+    }
+  },
+  script: {
+    summary: 'Information about a Shopify Script.',
+    description: 'Information about a Shopify Script.\n\n\n> Tip:\n> To learn more about Shopify Scripts and the Script Editor, visit the [Shopify Help Center](https://help.shopify.com/manual/checkout-settings/script-editor).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/script',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: 'The ID of the script.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/script#id)'
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the script.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/script#name)'
+      }
+    }
+  },
+  search: {
+    summary: 'Information about a storefront search query.',
+    description: 'Information about a storefront search query. To learn about storefront search and how to include it in your theme, refer to [Storefront search](/themes/navigation-search/search).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search',
+    type: 'object',
+    properties: {
+      terms: {
+        type: 'string',
+        description: 'The entered search terms.\n\n\n> Tip:\n> Use the [`highlight` filter](/docs/api/liquid/filters/highlight) to highlight the search terms in search result content.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#terms)'
+      },
+      filters: {
+        type: 'array',
+        description: 'The filters that have been set up on the search page. Only filters that are relevant to the current search results are returned. If the search results contain more than 1000\nproducts, then the array will be empty.\n\n> Tip:\n> To learn about how to set up filters in the admin, visit the [Shopify Help Center](https://help.shopify.com/manual/online-store/themes/customizing-themes/storefront-filters).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#filters)',
+        scope: 'filter'
+      },
+      performed: {
+        type: 'boolean',
+        description: 'Returns `true` if a search was successfully performed. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#performed)'
+      },
+      results: {
+        type: 'any',
+        description: "The search result items. An item can be an [`article`](/docs/api/liquid/objects/article), a [`page`](/docs/api/liquid/objects/page), or a\n[`product`](/docs/api/liquid/objects/product).\n\n> Tip:\n> Use the [paginate](/docs/api/liquid/tags/paginate) tag to choose how many results to show per page, up to a limit of 50.\n\n#### Example\n\nSearch results have an additional `object_type` property that returns the object type of the result.\n```liquid\n{% for item in search.results %}\n<!-- Result {{ forloop.index }}-->\n<h3>\n  {{ item.title | link_to: item.url }}\n</h3>\n\n{% if item.object_type == 'article' -%}\n  {%- comment -%}\n     'item' is an article\n     All article object properties can be accessed.\n  {%- endcomment -%}\n\n  {% if item.image -%}\n    <div class=\"result-image\">\n      <a href=\"{{ item.url }}\" title=\"{{ item.title | escape }}\">\n        {{ item | image_url: width: 100 | image_tag }}\n       </a>\n    </div>\n   {% endif %}\n{%- elsif item.object_type == 'page' -%}\n  {%- comment -%}\n    'item' is a page.\n     All page object properties can be accessed.\n  {%- endcomment -%}\n{%- else -%}\n  {%- comment -%}\n     'item' is a product.\n     All product object properties can be accessed.\n  {%- endcomment -%}\n\n  {%- if item.featured_image -%}\n    <div class=\"result-image\">\n       <a href=\"{{ item.url }}\" title=\"{{ item.title | escape }}\">\n         {{ item.featured_image | image_url: width: 100 | image_tag }}\n      </a>\n    </div>\n  {% endif %}\n{%- endif -%}\n\n<span>{{ item.content | strip_html | truncatewords: 40 | highlight: search.terms }}</span>\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#results)"
+      },
+      results_count: {
+        type: 'number',
+        description: 'The number of results.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#results_count)'
+      },
+      sort_options: {
+        type: 'array',
+        description: 'The available sorting options for the search results.\n\n#### Example\n\n```liquid\n{%- assign sort_by = search.sort_by | default: search.default_sort_by -%}\n\n<select>\n{%- for option in search.sort_options %}\n  <option\n    value="{{ option.value }}"\n    {%- if option.value == sort_by %}\n      selected="selected"\n    {%- endif %}\n  >\n    {{ option.name }}\n  </option>\n{% endfor -%}\n</select>\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#sort_options)',
+        scope: 'sort_option'
+      },
+      sort_by: {
+        type: 22,
+        description: "The sort order of the search results. This is determined by the `sort_by` URL parameter. If there's no `sort_by` URL parameter, then the value is `nil`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#sort_by)"
+      },
+      default_sort_by: {
+        type: 'string',
+        description: 'The default sort order of the search results, which is `relevance`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#default_sort_by)'
+      },
+      types: {
+        type: 'array',
+        description: 'The object types that the search was performed on. A search can be performed on the following object types:\n\n- [`article`](/docs/api/liquid/objects/article)\n- [`page`](/docs/api/liquid/objects/page)\n- [`product`](/docs/api/liquid/objects/product)\n\n> Note:\n> The types are determined by the `types` URL parameter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/search#types)'
+      }
+    }
+  },
+  section: {
+    summary: 'The properties and settings of a section.',
+    description: 'The properties and settings of a section.\n\n\n> Tip:\n> To learn about sections and using them in a theme, refer to [Sections](/themes/architecture/sections).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/section',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'string',
+        description: 'The ID of the section. The ID for sections included through [JSON templates](/themes/architecture/templates/json-templates) are dynamically\ngenerated by Shopify.\n\nThe ID for static sections is the section file name without the `.liquid` extension. For example, a `header.liquid`\nsection has an ID of `header`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/section#id)'
+      },
+      settings: {
+        type: 'any',
+        description: 'The [settings](https://shopify.dev/themes/architecture/sections/section-schema#settings) of the section. To learn about how to access settings, refer to [Access settings](/themes/architecture/settings#access-settings).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/section#settings)'
+      },
+      blocks: {
+        type: 'array',
+        description: 'The blocks of the section.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/section#blocks)',
+        scope: 'block'
+      }
+    }
+  },
+  selling_plan_allocation: {
+    summary: 'Information about how a specific [selling plan](/apps/subscriptions/selling-plans) affects a line item.',
+    description: 'Information about how a specific [selling plan](/apps/subscriptions/selling-plans) affects a line item. To learn about how to support selling plans in your theme, refer to [Purchase options](/themes/pricing-payments/purchase-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation',
+    type: 'object',
+    properties: {
+      price: {
+        type: 'number',
+        description: "The price of the selling plan allocation in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#price)"
+      },
+      compare_at_price: {
+        type: 'number',
+        description: "The **compare at** price of the selling plan allocation in the currency's subunit. The value of the **compare at** price is the line item's price without the selling plan applied. If the price and compare\nat price are equal, then `nil` is returned.\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#compare_at_price)"
+      },
+      price_adjustments: {
+        type: 'array',
+        description: "The selling plan allocation price adjustments. The maximum length of the array is two. If the associated selling plan doesn't create any price adjustments, then the\narray is empty.\n\nEach `selling_plan_allocation_price_adjustment` maps to a [`selling_plan_price_adjustment`](/docs/api/liquid/objects/selling_plan_price_adjustment)\nin the [`selling_plan.price_adjustments` array](/docs/api/liquid/objects/selling_plan#selling_plan-price_adjustments). The\n`selling_plan.price_adjustments` array contains the intent of the selling plan, and the\n`selling_plan_allocation.price_adjustments` array contains the resulting money amounts.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#price_adjustments)",
+        scope: 'selling_plan_allocation_price_adjustment'
+      },
+      unit_price: {
+        type: 'number',
+        description: "The [unit price](/docs/api/liquid/objects/variant#variant-unit_price) of the variant associated with the selling plan, in the currency's subunit. If the variant doesn't have a unit price, then `nil` is returned.\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#unit_price)"
+      },
+      per_delivery_price: {
+        type: 'number',
+        description: "The price for each delivery in the selling plan in the currency's subunit. If a selling plan includes multiple deliveries, then the `per_delivery_price` is the `price` divided by the number of\ndeliveries.\n\nThe value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#per_delivery_price)"
+      },
+      selling_plan: {
+        type: 'object',
+        description: 'The selling plan that created the allocation.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#selling_plan)',
+        scope: 'selling_plan'
+      },
+      selling_plan_group_id: {
+        type: 'string',
+        description: 'The ID of the [`selling_plan_group`](/docs/api/liquid/objects/selling_plan_group) that the selling plan of the allocation belongs to.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#selling_plan_group_id)'
+      },
+      checkout_charge_amount: {
+        type: 'number',
+        description: "The amount that the customer will be charged at checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#checkout_charge_amount)"
+      },
+      remaining_balance_charge_amount: {
+        type: 'number',
+        description: "The remaining amount for the customer to pay, in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation#remaining_balance_charge_amount)"
+      }
+    }
+  },
+  selling_plan_allocation_price_adjustment: {
+    summary: 'The resulting price from the intent of the associated [`selling_plan_price_adjustment`](/docs/api/liquid/objects/selling_plan_price_adjustment).',
+    description: 'The resulting price from the intent of the associated [`selling_plan_price_adjustment`](/docs/api/liquid/objects/selling_plan_price_adjustment). To learn about how to support selling plans in your theme, refer to [Purchase options](/themes/pricing-payments/purchase-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation_price_adjustment',
+    type: 'object',
+    properties: {
+      position: {
+        type: 'number',
+        description: 'The 1-based index of the price adjustment in the\n[`selling_plan_allocation.price_adjustments` array](/docs/api/liquid/objects/selling_plan_allocation#selling_plan_allocation-price_adjustments).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation_price_adjustment#position)'
+      },
+      price: {
+        type: 'number',
+        description: "The price that will be charged for the price adjustment's lifetime, in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation_price_adjustment#price)"
+      }
+    }
+  },
+  selling_plan_checkout_charge: {
+    summary: 'Information about how a specific [selling plan](/apps/subscriptions/selling-plans) affects the amount that a\ncustomer needs to pay for a line item at checkout.',
+    description: 'Information about how a specific [selling plan](/apps/subscriptions/selling-plans) affects the amount that a\ncustomer needs to pay for a line item at checkout. To learn about how to support selling plans in your theme, refer to [Purchase options](/themes/pricing-payments/purchase-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge',
+    type: 'object',
+    properties: {
+      value_type: {
+        type: 'string',
+        description: 'The value type of the checkout charge.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge#value_type)',
+        literal: [
+          'percentage',
+          'price'
+        ]
+      },
+      value: {
+        type: 'number',
+        description: "The value of the checkout charge. How this value is interpreted depends on the [value type](/docs/api/liquid/objects/selling_plan_checkout_charge#selling_plan_checkout_charge-value_type) of\nthe checkout charge. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `percentage` | The percent amount of the original price that the customer needs to pay.<br><br>For example, if the value is 50, then the customer needs to pay 50% of the original price. |\n| `price` | The amount that the customer needs to pay in the currency's subunit. |\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge#value)"
+      }
+    }
+  },
+  selling_plan: {
+    summary: 'Information about the intent of how a specific [selling plan](/apps/subscriptions/selling-plans) affects a line item.',
+    description: 'Information about the intent of how a specific [selling plan](/apps/subscriptions/selling-plans) affects a line item. To learn about how to support selling plans in your theme, refer to [Purchase options](/themes/pricing-payments/purchase-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: 'The ID of the selling plan.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#id)'
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the selling plan.\n\n\n> Note:\n> The name is shown at checkout with the line item summary.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#name)'
+      },
+      description: {
+        type: 'string',
+        description: 'The description of the selling plan.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#description)'
+      },
+      group_id: {
+        type: 'string',
+        description: 'The ID of the [`selling_plan_group`](/docs/api/liquid/objects/selling_plan_group) that the selling plan belongs to.\n\n\n> Note:\n> The name is shown at checkout with the line item summary.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#group_id)'
+      },
+      recurring_deliveries: {
+        type: 'boolean',
+        description: 'Returns `true` if the selling plan includes multiple deliveries. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#recurring_deliveries)'
+      },
+      options: {
+        type: 'array',
+        description: 'The selling plan options.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#options)',
+        scope: 'selling_plan_option'
+      },
+      price_adjustments: {
+        type: 'array',
+        description: "The selling plan price adjustments. The maximum length of the array is two. If the selling plan doesn't create any price adjustments, then the\narray is empty.\n\nEach `selling_plan_price_adjustment` maps to a [`selling_plan_allocation_price_adjustment`](/docs/api/liquid/objects/selling_plan_allocation_price_adjustment)\nin the [`selling_plan_allocation.price_adjustments` array](/docs/api/liquid/objects/selling_plan_allocation#selling_plan_allocation-price_adjustments).\nThe `selling_plan.price_adjustments` array contains the intent of the selling plan, and the\n`selling_plan_allocation.price_adjustments` contains the resulting money amounts.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#price_adjustments)",
+        scope: 'selling_plan_price_adjustment'
+      },
+      selected: {
+        type: 'boolean',
+        description: 'Returns `true` if the selling plan is currently selected. Returns `false` if not.\n\n\n> Note:\n> The selected selling plan is determined by the `selling_plan` URL parameter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#selected)'
+      },
+      checkout_charge: {
+        type: 'object',
+        description: 'The checkout charge of the selling plan.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan#checkout_charge)',
+        scope: 'selling_plan_checkout_charge'
+      }
+    }
+  },
+  selling_plan_group: {
+    summary: "Information about a specific group of [selling plans](/apps/subscriptions/selling-plans) that include any of a\nproduct's variants.",
+    description: "Information about a specific group of [selling plans](/apps/subscriptions/selling-plans) that include any of a\nproduct's variants. Selling plans are grouped based on shared [selling plan option names](/docs/api/liquid/objects/selling_plan_option#selling_plan_option-name).\n\nTo learn about how to support selling plans in your theme, refer to [Purchase options](/themes/pricing-payments/purchase-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group",
+    type: 'object',
+    properties: {
+      selling_plans: {
+        type: 'array',
+        description: 'The selling plans in the group.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group#selling_plans)',
+        scope: 'selling_plan'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the selling plan group.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group#id)'
+      },
+      name: {
+        type: 'number',
+        description: 'The name of the selling plan group.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group#name)'
+      },
+      app_id: {
+        type: 'string',
+        description: "An optional string provided by an app to identify selling plan groups created by that app. If the app doesn't provide a value, then `nil` is returned.\n\n> Tip:\n> You can use this property, with the [`where` filter](/docs/api/liquid/filters/where), to filter the\n> [`product.selling_plan_groups` array](/docs/api/liquid/objects/product#product-selling_plan_groups) for all selling plan groups\n> from a specific app.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group#app_id)"
+      },
+      options: {
+        type: 'array',
+        description: 'The selling plan group options.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group#options)',
+        scope: 'selling_plan_group_option'
+      },
+      selling_plan_selected: {
+        type: 'boolean',
+        description: 'Returns `true` if the currently selected selling plan is part of the selling plan group. Returns `false` if not.\n\n\n> Note:\n> The selected selling plan is determined by the `selling_plan` URL parameter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group#selling_plan_selected)'
+      }
+    }
+  },
+  selling_plan_group_option: {
+    summary: 'Information about a specific option in a [selling plan group](/docs/api/liquid/objects/selling_plan_group).',
+    description: 'Information about a specific option in a [selling plan group](/docs/api/liquid/objects/selling_plan_group).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option',
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        description: 'The name of the option.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option#name)'
+      },
+      position: {
+        type: 'number',
+        description: 'The 1-based index of the option in the [`selling_plan_group.options` array](/docs/api/liquid/objects/selling_plan_group#selling_plan_group-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option#position)'
+      },
+      values: {
+        type: 'array',
+        description: 'The values of the option.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option#values)'
+      },
+      selected_value: {
+        type: 'string',
+        description: 'The option value of the currently selected selling plan. If no selling plan is currently selected, then `nil` is returned.\n\n> Note:\n> The selected selling plan is determined by the `selling_plan` URL parameter.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option#selected_value)'
+      }
+    }
+  },
+  selling_plan_option: {
+    summary: "Information about a selling plan's value for a specific [`selling_plan_group_option`](/docs/api/liquid/objects/selling_plan_group_option).",
+    description: "Information about a selling plan's value for a specific [`selling_plan_group_option`](/docs/api/liquid/objects/selling_plan_group_option). To learn about how to support selling plans in your theme, refer to [Purchase options](/themes/pricing-payments/purchase-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_option",
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        description: 'The name of the associated `selling_plan_group_option`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_option#name)'
+      },
+      position: {
+        type: 'number',
+        description: 'The 1-based index of the selling plan option in the associated [`selling_plan_group.options` array](/docs/api/liquid/objects/selling_plan_group#selling_plan_group-options).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_option#position)'
+      },
+      value: {
+        type: 'string',
+        description: 'The value of the selling plan option. The value is one of the [`selling_plan_group_option.values`](/docs/api/liquid/objects/selling_plan_group_option#selling_plan_group_option-values).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/selling_plan_option#value)'
+      }
+    }
+  },
+  shipping_method: {
+    summary: 'Information about the shipping method for an order.',
+    description: 'Information about the shipping method for an order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shipping_method',
+    type: 'object',
+    properties: {
+      title: {
+        type: 'string',
+        description: "The title of the shipping method. In most contexts, the shipping method title appears in the customer's preferred language. However, in the context of an\n[order](/docs/api/liquid/objects/order), the shipping method title appears in the language that the customer checked out in.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shipping_method#title)"
+      },
+      original_price: {
+        type: 'number',
+        description: "The price of the shipping method in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shipping_method#original_price)"
+      },
+      price: {
+        type: 'number',
+        description: "The price of the shipping method in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shipping_method#price)"
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the shipping method.\n\n\n> Note:\n> The price of the shipping method is appended to handle.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shipping_method#handle)'
+      },
+      id: {
+        type: 'string',
+        description: 'The ID of the shipping method.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shipping_method#id)'
+      },
+      tax_lines: {
+        type: 'array',
+        description: 'The tax lines for the shipping method.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shipping_method#tax_lines)',
+        scope: 'tax_line'
+      },
+      discount_allocations: {
+        type: 'array',
+        description: 'The discount allocations that apply to the shipping method.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shipping_method#discount_allocations)',
+        scope: 'discount_allocation'
+      }
+    }
+  },
+  shop: {
+    summary: 'Information about the store, such as the store address, the total number of products, and various settings.',
+    global: true,
+    description: 'Information about the store, such as the store address, the total number of products, and various settings.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'string',
+        description: 'The ID of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#id)'
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#name)'
+      },
+      description: {
+        type: 'string',
+        description: 'The [description](https://help.shopify.com/manual/online-store/setting-up/preferences#edit-the-title-and-meta-description)\nof the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#description)'
+      },
+      enabled_currencies: {
+        type: 'array',
+        description: "The currencies that the store accepts.\n\n\n> Tip:\n> You can get the store's currency with [`shop.currency`](/docs/api/liquid/objects/shop#shop-currency).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#enabled_currencies)",
+        scope: 'currency'
+      },
+      published_locales: {
+        type: 'array',
+        description: 'The locales (languages) that are published on the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#published_locales)',
+        scope: 'shop_locale'
+      },
+      enabled_locales: {
+        type: 'array',
+        description: "⚠️ **DEPRECATED** ⚠️\nDeprecated because the name didn't make it clear that the returned locales were published.\n\nThe `shop.enabled_locales` property has been replaced by [`shop.published_locales`](/docs/api/liquid/objects/shop#shop-published_locales).\n\n---\nThe locales (languages) that are published on the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#enabled_locales)",
+        scope: 'shop_locale'
+      },
+      locale: {
+        type: 'object',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because this value is contextual to the request and not a property of the shop resource.\n\nThe `shop.locale` property has been replaced by [request.locale](/docs/api/liquid/objects/request#request-locale).\n\n---\nThe currently active locale (language).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#locale)',
+        scope: 'shop_locale'
+      },
+      url: {
+        type: 'string',
+        description: 'The full URL of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#url)'
+      },
+      email: {
+        type: 'string',
+        description: 'The [sender email](https://help.shopify.com/manual/intro-to-shopify/initial-setup/setup-your-email#change-your-sender-email-address)\nof the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#email)'
+      },
+      secure_url: {
+        type: 'string',
+        description: 'The full URL of the store, with an `https` protocol.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#secure_url)'
+      },
+      domain: {
+        type: 'string',
+        description: 'The primary domain of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#domain)'
+      },
+      permanent_domain: {
+        type: 'string',
+        description: 'The `.myshopify.com` domain of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#permanent_domain)'
+      },
+      phone: {
+        type: 'string',
+        description: 'The phone number of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#phone)'
+      },
+      password_message: {
+        type: 'string',
+        description: 'The password page message of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#password_message)'
+      },
+      address: {
+        type: 'object',
+        description: 'The address of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#address)',
+        scope: 'address'
+      },
+      customer_accounts_enabled: {
+        type: 'boolean',
+        description: 'Returns `true` if customer accounts are required to complete checkout. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#customer_accounts_enabled)'
+      },
+      customer_accounts_optional: {
+        type: 'boolean',
+        description: 'Returns `true` if customer accounts are optional to complete checkout. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#customer_accounts_optional)'
+      },
+      currency: {
+        type: 'object',
+        description: 'The currency of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#currency)',
+        scope: 'currency'
+      },
+      money_format: {
+        type: 'object',
+        description: 'The money format of the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#money_format)',
+        scope: 'currency'
+      },
+      money_with_currency_format: {
+        type: 'object',
+        description: 'The money format of the store with the currency included.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#money_with_currency_format)',
+        scope: 'currency'
+      },
+      metafields: {
+        type: 22,
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the store.\n\n\n> Tip:\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#metafields)'
+      },
+      enabled_payment_types: {
+        type: 'string',
+        description: "The accepted payment types on the store. The payment types are based on the store's enabled [payment providers](https://help.shopify.com/manual/payments) and\nthe customer's current region and currency.\n\n> Tip:\n> You can output an `svg` logo for each payment type with the [`payment_type_svg_tag` filter](/docs/api/liquid/filters/payment_type_svg_tag).\n> Alternatively, you can get the source URL for each `svg` with the [`payment_type_img_url` filter](/docs/api/liquid/filters/payment_type_img_url).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#enabled_payment_types)"
+      },
+      taxes_included: {
+        type: 'boolean',
+        description: "⚠️ **DEPRECATED** ⚠️\nDeprecated because whether or not prices have taxes included is dependent on the customer's country.\n\nThe `shop.taxes_included` property has been replaced by [cart.taxes_included](/docs/api/liquid/objects/cart#cart-taxes_included).\n\n---\nReturns `true` if prices include taxes. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#taxes_included)"
+      },
+      refund_policy: {
+        type: 'object',
+        description: 'The refund policy for the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#refund_policy)',
+        scope: 'policy'
+      },
+      shipping_policy: {
+        type: 'object',
+        description: 'The shipping policy for the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#shipping_policy)',
+        scope: 'policy'
+      },
+      privacy_policy: {
+        type: 'object',
+        description: 'The privacy policy for the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#privacy_policy)',
+        scope: 'policy'
+      },
+      terms_of_service: {
+        type: 'object',
+        description: 'The terms of service for the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#terms_of_service)',
+        scope: 'policy'
+      },
+      subscription_policy: {
+        type: 'object',
+        description: 'The subscription policy for the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#subscription_policy)',
+        scope: 'policy'
+      },
+      policies: {
+        type: 'array',
+        description: "The policies for the store. The policies are set in the store's [Policies settings](https://www.shopify.com/admin/settings/legal).\n\n#### Example\n\n```liquid\n<ul>\n{%- for policy in shop.policies %}\n  <li>{{ policy.title }}</li>\n{%- endfor %}\n</ul>\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#policies)",
+        scope: 'policy'
+      },
+      vendors: {
+        type: 'array',
+        description: 'All of the product vendors for the store.\n\n#### Example\n\n```liquid\n{% for vendor in shop.vendors %}\n  {{- vendor | link_to_vendor }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#vendors)'
+      },
+      types: {
+        type: 'array',
+        description: 'All of the product types in the store.\n\n#### Example\n\n```liquid\n{% for type in shop.types %}\n  {{- type | link_to_type }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#types)'
+      },
+      products_count: {
+        type: 'number',
+        description: 'The number of products in the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#products_count)'
+      },
+      collections_count: {
+        type: 'number',
+        description: 'The number of collections in the store.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#collections_count)'
+      },
+      accepts_gift_cards: {
+        type: 'boolean',
+        description: 'Returns `true` if the store accepts gift cards. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#accepts_gift_cards)'
+      },
+      metaobjects: {
+        type: 22,
+        description: 'All of the [metaobjects](/docs/api/liquid/objects/metaobject) of the store. Metaobjects can only be accessed by specifying their type and handle. For more information, refer to [Access metaobjects individually](/docs/api/liquid/objects#metaobject-access-metaobjects-individually).\n\nMetaobjects are created in the [Content](https://www.shopify.com/admin/content) page of the Shopify admin.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop#metaobjects)'
+      }
+    }
+  },
+  shop_locale: {
+    summary: 'A language in a store.',
+    description: 'A language in a store. To learn how to offer localization options in your theme, refer to [Support multiple currencies and languages](/themes/internationalization/multiple-currencies-languages).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop_locale',
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        description: "The name of the locale in the store's primary locale.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop_locale#name)"
+      },
+      endonym_name: {
+        type: 'string',
+        description: 'The name of the locale in the locale itself.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop_locale#endonym_name)'
+      },
+      iso_code: {
+        type: 'string',
+        description: 'The ISO code of the locale in [IETF language tag format](https://en.wikipedia.org/wiki/IETF_language_tag).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop_locale#iso_code)'
+      },
+      primary: {
+        type: 'boolean',
+        description: "Returns `true` if the locale is the store's primary locale. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop_locale#primary)"
+      },
+      root_url: {
+        type: 'string',
+        description: 'The relative root URL of the locale.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/shop_locale#root_url)'
+      }
+    }
+  },
+  policy: {
+    summary: 'A [store policy](https://help.shopify.com/manual/checkout-settings/refund-privacy-tos), such as a privacy or return policy.',
+    description: 'A [store policy](https://help.shopify.com/manual/checkout-settings/refund-privacy-tos), such as a privacy or return policy.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/policy',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'string',
+        description: 'The ID of the policy.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/policy#id)'
+      },
+      body: {
+        type: 'string',
+        description: 'The content of the policy.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/policy#body)'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the policy.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/policy#url)'
+      },
+      title: {
+        type: 'string',
+        description: 'The title of the policy.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/policy#title)'
+      }
+    }
+  },
+  store_availability: {
+    summary: "A variant's inventory information for a physical store location.",
+    description: "A variant's inventory information for a physical store location. If a location doesn't stock a variant, then there won't be a `store_availability` for that variant and location.\n\n> Note:\n> The `store_availability` object is defined only if one or more locations has [local pickup](https://help.shopify.com/manual/shipping/setting-up-and-managing-your-shipping/local-methods/local-pickup)\n> enabled.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/store_availability",
     type: 'object',
     properties: {
       available: {
         type: 'boolean',
-        description: 'Returns true if the variant is available for purchase, or false if it not. For a variant to be available, its variant.inventory_quantity must be greater than zero or variant.inventory_policy must be set to continue. A variant with no variant.inventory_management is also considered available.'
+        description: 'Returns `true` if the variant has available inventory at the location. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/store_availability#available)'
       },
-      barcode: {
+      pick_up_enabled: {
+        type: 'boolean',
+        description: 'Returns `true` if the location has pickup enabled. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/store_availability#pick_up_enabled)'
+      },
+      pick_up_time: {
         type: 'string',
-        description: "Returns the variant's barcode."
+        description: 'The amount of time that it takes for pickup orders to be ready at the location.\n\n\n> Tip:\n> This value can be configured in the Shopify admin. To learn more, visit the [Shopify Help Center](https://help.shopify.com/en/manual/sell-in-person/shopify-pos/order-management/local-pickup-for-online-orders#manage-preferences-for-a-local-pickup-location).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/store_availability#pick_up_time)'
       },
-      compare_at_price: {
-        type: 'string',
-        description: "Returns the variant's compare at price. Use a money filter to return the value in a monetary format."
-      },
-      featured_media: {
-        type: 'string',
-        description: 'Returns the first media item attached to the variant.'
-      },
-      id: {
-        description: "Returns the variant's unique ID.",
-        type: 'number'
-      },
-      image: {
-        description: 'Returns the image object associated with the variant.',
+      location: {
         type: 'object',
-        properties: {
-          alt: {
-            description: "Returns the image's alt text.",
-            type: 'string'
-          },
-          src: {
-            description: 'Returns the relative URL to the image.',
-            type: 'string'
-          }
-        }
-      },
-      incoming: {
-        type: 'boolean',
-        description: 'Returns true if the variant has incoming inventory.'
-      },
-      inventory_management: {
-        type: 'string',
-        description: "Returns the variant's inventory tracking service."
-      },
-      inventory_policy: {
-        type: 'string',
-        description: 'Returns the string continue if the "Allow users to purchase this item, even if it is no longer in stock." checkbox is checked in the variant options in the Admin. Returns deny if it is unchecked.'
-      },
-      inventory_quantity: {
-        type: 'number',
-        description: "Returns the variant's inventory quantity."
-      },
-      next_incoming_date: {
-        type: 'string',
-        description: 'Returns the date when the next incoming inventory will arrive.'
-      },
-      options: {
-        type: 'array',
-        description: "Returns an array of the variant's product option values."
-      },
-      option1: {
-        type: 'string',
-        description: "Returns the value of the variant's first product option."
-      },
-      option2: {
-        type: 'string',
-        description: "Returns the value of the variant's second product option."
-      },
-      option3: {
-        type: 'string',
-        description: "Returns the value of the variant's third product option."
-      },
-      price: {
-        type: 'string',
-        description: "Returns the variant's price. Use a money filter to return the value in a monetary format."
-      },
-      requires_shipping: {
-        type: 'boolean',
-        description: 'Returns true if the variant is set to require shipping.'
-      },
-      requires_selling_plan: {
-        type: 'boolean',
-        description: 'Returns true if the variant is set to require a selling_plan when added to the cart.'
-      },
-      selected: {
-        type: 'boolean',
-        description: 'Returns true if the variant is currently selected. The selected variant is based on the URL parameter variant.'
-      },
-      selected_selling_plan_allocation: {
-        type: 'number',
-        description: 'Returns a selling_plan_allocation object based on the URL parameter selling_plan.\n\nFor example, given the URL parameters "?variant=12345&selling_plan=8765", the selling plan allocation for the variant 12345 with a selling plan id of 8765 is returned.\n\nIf there is no selected selling plan allocation, then this property returns nil.'
-      },
-      selling_plan_allocations: {
-        type: 'array',
-        description: 'An array of selling_plan_allocation objects available for the variant.'
-      },
-      sku: {
-        type: 'string',
-        description: "Returns the variant's SKU."
-      },
-      store_availabilities: {
-        type: 'array',
-        description: 'Returns an array of store_availability objects if variant.selected is true.'
-      },
-      taxable: {
-        type: 'boolean',
-        description: 'Returns true if taxes are charged for the variant, or false if they are not.'
-      },
+        description: 'The location that the variant is stocked at.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/store_availability#location)',
+        scope: 'location'
+      }
+    }
+  },
+  tax_line: {
+    summary: 'Information about a tax line of a checkout or order.',
+    description: 'Information about a tax line of a checkout or order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tax_line',
+    type: 'object',
+    properties: {
       title: {
         type: 'string',
-        description: "Returns the concatenation of all the variant's product option values, joined by / characters."
+        description: 'The title of the tax.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tax_line#title)'
       },
-      unit_price: {
-        type: 'string',
-        description: 'Unit prices are available only to stores located in Germany or France.Returns the unit price of the product variant.\n\nThe price reflects any discounts that are applied to the line item.'
-      },
-      unit_price_measurement: {
-        type: 'object',
-        description: 'Returns a unit_price_measurement object for the product variant.'
-      },
-      url: {
-        type: 'string',
-        description: 'Returns a URL that is unique to only one product variant. The variant ID is used as the unique identifier.'
-      },
-      weight: {
+      price: {
         type: 'number',
-        description: "Returns the variant's weight in grams. Use the weight_with_unit filter to convert it to your store's weight format or the weight unit configured on the variant."
+        description: "The tax amount in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tax_line#price)"
       },
-      weight_unit: {
+      rate: {
         type: 'number',
-        description: 'Returns the unit for the weight configured on the variant. Works well paired with the weight_in_unit attribute and the weight_with_unit filter.'
+        description: 'The decimal value of the tax rate.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tax_line#rate)'
       },
-      weight_in_unit: {
+      rate_percentage: {
         type: 'number',
-        description: 'Returns the weight of the product converted to the unit configured on the variant. Works well paired with the weight_unit attribute and the weight_with_unit filter.'
+        description: 'The decimal value of the tax rate, as a percentage.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/tax_line#rate_percentage)'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/docs/themes/liquid/reference/objects/variant'
+    }
+  },
+  theme: {
+    summary: 'Information about the current theme.',
+    global: true,
+    deprecated: true,
+    description: "⚠️ **DEPRECATED** ⚠️\nDeprecated because the values of this object's properties are subject to change, so can't be relied on within the theme.\n\nIf you want to link to the theme editor for the published theme, then you can use the URL path `/admin/themes/current/editor`.\n\nWhile this object is deprecated in Liquid and shouldn't be used, you can still access it through the [REST Admin API](/api/admin-rest/current/resources/theme).\n\n---\nInformation about the current theme.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/theme",
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: 'The ID of the theme.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/theme#id)',
+        deprecated: true
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the theme.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/theme#name)',
+        deprecated: true
+      },
+      role: {
+        type: 'string',
+        description: 'The role of the theme.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/theme#role)',
+        deprecated: true,
+        literal: [
+          'main',
+          'unpublished',
+          'demo',
+          'development'
+        ]
+      }
+    }
+  },
+  settings: {
+    summary: "Allows you to access all of the theme's settings from the [`settings_schema.json` file](/themes/architecture/config/settings-schema-json).",
+    global: true,
+    description: "Allows you to access all of the theme's settings from the [`settings_schema.json` file](/themes/architecture/config/settings-schema-json).\n\n\n> Tip:\n> To learn about the available setting types, refer to [Input settings](/themes/architecture/settings/input-settings).\n\n#### Example\n\n```liquid\n{% if settings.favicon != blank %}\n  <link rel=\"icon\" type=\"image/png\" href=\"{{ settings.favicon | image_url: width: 32, height: 32 }}\">\n{% endif %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/settings"
+  },
+  template: {
+    summary: 'Information about the current template.',
+    global: true,
+    description: 'Information about the current template.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/template',
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        description: "The name of the template's [type](/themes/architecture/templates#template-types).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/template#name)",
+        literal: [
+          '404',
+          'article',
+          'blog',
+          'cart',
+          'collection',
+          'list-collections',
+          'customers/account',
+          'customers/activate_account',
+          'customers/addresses',
+          'customers/login',
+          'customers/order',
+          'customers/register',
+          'customers/reset_password',
+          'gift_card',
+          'index',
+          'page',
+          'password',
+          'product',
+          'search'
+        ]
+      },
+      suffix: {
+        type: 'string',
+        description: 'The custom name of an [alternate template](/themes/architecture/templates#alternate-templates). Returns `nil` if the default template is being used.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/template#suffix)'
+      },
+      directory: {
+        type: 'string',
+        description: "The name of the template's parent directory. Returns `nil` if the template's parent directory is `/templates`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/template#directory)"
+      }
+    }
+  },
+  transaction: {
+    summary: 'A transaction associated with a checkout or order.',
+    description: 'A transaction associated with a checkout or order.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'number',
+        description: 'The ID of the transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#id)'
+      },
+      name: {
+        type: 'string',
+        description: 'The name of the transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#name)'
+      },
+      status: {
+        type: 'string',
+        description: 'The status of the transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#status)',
+        literal: [
+          'success',
+          'pending',
+          'failure',
+          'error'
+        ]
+      },
+      created_at: {
+        type: 'string',
+        description: 'A timestamp of when the transaction was created.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#created_at)'
+      },
+      receipt: {
+        type: 'string',
+        description: 'Information from the payment provider about the payment receipt. This includes things like whether the payment was a test, or an authorization code if there was one.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#receipt)'
+      },
+      kind: {
+        type: 'string',
+        description: 'The type of transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#kind)',
+        literal: [
+          'authorization',
+          'capture',
+          'sale',
+          'void',
+          'refund'
+        ]
+      },
+      gateway: {
+        type: 'string',
+        description: 'The [handleized](/docs/api/liquid/basics#modifying-handles) name of the payment provider used for the transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#gateway)'
+      },
+      status_label: {
+        type: 'string',
+        description: 'The status of the transaction, translated based on the current locale.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#status_label)'
+      },
+      payment_details: {
+        type: 'object',
+        description: 'The transaction payment details.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#payment_details)',
+        scope: 'transaction_payment_details'
+      },
+      amount: {
+        type: 'string',
+        description: "The amount of the transaction in the currency's subunit. The amount is in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#amount)"
+      },
+      gateway_display_name: {
+        type: 'string',
+        description: 'The name of the payment provider used for the transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#gateway_display_name)'
+      },
+      'show_buyer_pending_payment_instructions?': {
+        type: 'boolean',
+        description: 'Whether the transaction is pending, and whether additional customer info is required to process the payment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#show_buyer_pending_payment_instructions?)'
+      },
+      buyer_pending_payment_notice: {
+        type: 'string',
+        description: 'A notice that contains instructions for the customer on how to complete their payment.\nThe messages are specific to the payment method used.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#buyer_pending_payment_notice)'
+      },
+      buyer_pending_payment_instructions: {
+        type: 'array',
+        description: 'A list of `pending_payment_instruction_input` header-value pairs, with payment method-specific details.\nThe customer can use these details to complete their purchase offline.\n\nIf the payment method doesn’t support pending payment instructions, then an empty array is returned.\n\n| Supported payment method | Expected Values |\n| --- | ----------- |\n| ShopifyPayments - Multibanco | [{header="Entity", value="12345"}, {header="Reference", value="999999999"}] |\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction#buyer_pending_payment_instructions)',
+        scope: 'pending_payment_instruction_input'
+      }
+    }
+  },
+  unit_price_measurement: {
+    summary: "Information about how units of a product variant are measured. It's used to calculate\n[unit prices](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product).",
+    description: "Information about how units of a product variant are measured. It's used to calculate\n[unit prices](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product).\n\n\n> Note:\n> Unit prices are available only to stores located in Germany and France.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement",
+    type: 'object',
+    properties: {
+      measured_type: {
+        type: 'string',
+        description: 'The type of unit measurement.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement#measured_type)',
+        literal: [
+          'volume',
+          'weight',
+          'dimension'
+        ]
+      },
+      quantity_value: {
+        type: 'number',
+        description: 'The quantity of the unit.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement#quantity_value)'
+      },
+      quantity_unit: {
+        type: 'string',
+        description: 'The unit of measurement used to measure the [`quantity_value`](/docs/api/liquid/objects/unit_price_measurement#unit_price_measurement-quantity_value).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement#quantity_unit)'
+      },
+      reference_value: {
+        type: 'number',
+        description: 'The quantity of the unit for the base unit price.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement#reference_value)'
+      },
+      reference_unit: {
+        type: 'string',
+        description: 'The unit of measurement used to measure the [`reference_value`](/docs/api/liquid/objects/unit_price_measurement#unit_price_measurement-reference_value).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement#reference_unit)'
+      }
+    }
+  },
+  user: {
+    summary: 'The author of a blog article.',
+    description: 'The author of a blog article.\n\n\n> Tip:\n> The information returned by the `user` object can be edited on the [**Account** page](https://www.shopify.com/admin/settings/account)\n> of the Shopify admin.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user',
+    type: 'object',
+    properties: {
+      account_owner: {
+        type: 'boolean',
+        description: 'Returns `true` if the author is the account owner of the store. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user#account_owner)'
+      },
+      bio: {
+        type: 'string',
+        description: "The bio associated with the author's account. If no bio is specified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user#bio)"
+      },
+      email: {
+        type: 'string',
+        description: "The email associated with the author's account.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user#email)"
+      },
+      first_name: {
+        type: 'string',
+        description: "The first name associated with the author's account.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user#first_name)"
+      },
+      homepage: {
+        type: 'string',
+        description: "The URL for the personal website associated with the author's account. If no personal website is specified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user#homepage)"
+      },
+      image: {
+        type: 'object',
+        description: "The image associated with the author's account. If no image is specified, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user#image)",
+        scope: 'image'
+      },
+      last_name: {
+        type: 'string',
+        description: "The last name associated with the author's account.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user#last_name)"
+      },
+      name: {
+        type: 'string',
+        description: "The first and last name associated with the author's account.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user#name)"
+      }
     }
   },
   video: {
+    summary: 'Information about a video uploaded as [product media](/docs/api/liquid/objects/product-media) or a [`file_reference` metafield](/apps/metafields/types).',
+    description: 'Information about a video uploaded as [product media](/docs/api/liquid/objects/product-media) or a [`file_reference` metafield](/apps/metafields/types).\n\n\n> Tip:\n> Use the [`video_tag` filter](/docs/api/liquid/filters/video_tag) to output the video in an HTML `<video>` tag.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video',
     type: 'object',
-    description: 'Information about a video uploaded as [product media](https://shopify.dev/api/liquid/objects#product-media) or a [`file_reference`](https://shopify.dev/apps/metafields/types) metafield',
     properties: {
-      alt: {
-        type: 'string',
-        description: 'The alt text of the video.'
-      },
-      aspect_ratio: {
-        type: 'number',
-        description: 'The aspect ratio of the video as a decimal.'
+      sources: {
+        type: 'array',
+        description: 'The source files for the video.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video#sources)',
+        scope: 'video_source'
       },
       duration: {
         type: 'number',
-        description: 'The duration of the video in milliseconds.'
+        description: 'The duration of the video in milliseconds.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video#duration)'
+      },
+      aspect_ratio: {
+        type: 'number',
+        description: 'The aspect ratio of the video as a decimal.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video#aspect_ratio)'
+      },
+      alt: {
+        type: 'string',
+        description: 'The alt text of the video.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video#alt)'
       },
       id: {
         type: 'number',
-        description: 'The ID of the video.'
+        description: 'The ID of the video.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video#id)'
       },
       media_type: {
         type: 'string',
-        description: 'The media type of the model. Always returns `video`.'
+        description: "The media type of the model. Always returns `video`.\n\n#### Example\n\nYou can use the `media_type` property with the [`where` filter](/docs/api/liquid/filters/where) to filter the [`product.media` array](/docs/api/liquid/objects/product#product-media) for all media of a desired type.\n\n```liquid\n{% assign videos = product.media | where: 'media_type', 'video' %}\n\n{% for video in videos %}\n  {{- video | video_tag }}\n{% endfor %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video#media_type)"
       },
       position: {
-        type: 'string',
-        description: 'The position of the video in the [product.media](https://shopify.dev/api/liquid/objects#product-media) array.'
+        type: 'number',
+        description: 'The position of the video in the [`product.media`](/docs/api/liquid/objects/product#product-media) array.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video#position)'
       },
       preview_image: {
         type: 'object',
-        items: 'image',
-        description: 'A preview image for the video.'
-      },
-      sources: {
-        type: 'array',
-        items: 'video_source',
-        description: 'The source files for the video.'
+        description: 'A preview image for the video.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video#preview_image)',
+        scope: 'image'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#video'
     }
   },
   video_source: {
+    summary: 'Information about the source files for a video.',
+    description: 'Information about the source files for a video.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video_source',
     type: 'object',
-    description: 'Information about the source files for a video.',
     properties: {
+      width: {
+        type: 'number',
+        description: 'The width of the video source file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video_source#width)'
+      },
       format: {
         type: 'string',
-        description: 'The format of the video source file.\n\n**Note** When mp4 videos are uploaded, Shopify generates an m3u8 file as an additional video source. An m3u8 file enables video players to leverage HTTP live streaming (HLS), resulting in an optimized video experience based on the user\'s internet connection.\n\n**Possible Values**\n\n- `mov`\n- `mp4`\n- `m3u8`'
+        description: "The format of the video source file.\n\n\n> Note:\n> When mp4 videos are uploaded, Shopify generates an m3u8 file as an additional video source. An m3u8 file enables video\n> players to leverage HTTP live streaming (HLS), resulting in an optimized video experience based on the user's internet\n> connection.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video_source#format)",
+        literal: [
+          'mov',
+          'mp4',
+          'm3u8'
+        ]
       },
       height: {
         type: 'number',
-        description: 'The height of the video source file.'
+        description: 'The height of the video source file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video_source#height)'
       },
       mime_type: {
-        type: 'string',
-        description: 'The [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) of the video source file.'
+        type: 'number',
+        description: 'The [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) of the video source file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video_source#mime_type)'
       },
       url: {
         type: 'string',
-        description: 'The [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) of the video source file.'
-      },
-      width: {
-        type: 'number',
-        description: 'The width of the video source file.'
+        description: 'The [CDN URL](/themes/best-practices/performance/platform#shopify-cdn) of the video source file.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/video_source#url)'
       }
-    },
-    reference: {
-      name: 'Shopify Liquid',
-      url: 'https://shopify.dev/api/liquid/objects#video_source'
+    }
+  },
+  additional_checkout_buttons: {
+    summary: 'Returns `true` if a store has any payment providers with offsite checkouts, such as PayPal Express Checkout.',
+    global: true,
+    description: 'Returns `true` if a store has any payment providers with offsite checkouts, such as PayPal Express Checkout. Use `additional_checkout_buttons` to check whether these payment providers exist, and\n[`content_for_additional_checkout_buttons`](/docs/api/liquid/objects/content_for_additional_checkout_buttons)\nto show the associated checkout buttons. To learn more about how to use these objects, refer to\n[Accelerated checkout](/themes/pricing-payments/accelerated-checkout).\n\n```liquid\n{% if additional_checkout_buttons %}\n  {{ content_for_additional_checkout_buttons }}\n{% endif %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/additional_checkout_buttons',
+    type: 'boolean'
+  },
+  all_country_option_tags: {
+    summary: 'Creates an `&lt;option&gt;` tag for each country.',
+    global: true,
+    description: "Creates an `&lt;option&gt;` tag for each country. An attribute called `data-provinces` is set for each `<option>`, and contains a JSON-encoded array of the\ncountry or region's subregions. If a country doesn't have any subregions, then an empty array is set for\nits `data-provinces` attribute.\n\n> Tip:\n> To return only the countries and regions included in the store's shipping zones, use the [`country_option_tags` object](/docs/api/liquid/objects/country_option_tags).\n\n#### \n\nYou can wrap the `all_country_option_tags` object in `<select>` tags to build a country option selector.\n\n```liquid\n<select name=\"country\">\n  {{ all_country_option_tags }}\n</select>\n```\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/all_country_option_tags",
+    type: 'string'
+  },
+  canonical_url: {
+    summary: 'The canonical URL for the current page.',
+    global: true,
+    description: "The canonical URL for the current page. To learn about canonical URLs, refer to [Google's documentation](https://support.google.com/webmasters/answer/139066?hl=en).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/canonical_url",
+    type: 'string'
+  },
+  checkout: {
+    summary: "A customer's checkout.",
+    description: "A customer's checkout.\n\n\n> Deprecated:\n> <p>The <code>checkout</code> object will be deprecated for the Information, Shipping, and Payment pages on August 13, 2024. Merchants who have customized these pages using <code>checkout.liquid</code> to <a href=\"https://help.shopify.com/manual/online-store/themes/theme-structure/extend/checkout-migration#migrate-to-checkout-extensibility\">upgrade to checkout extensibility</a> before August 13, 2024.</p>\n> <p>Learn <a href=\"/apps/checkout\">how to build checkout extensions</a> that extend the functionality of Shopify checkout.</p>\n\nYou can access the `checkout` object on the [order status page](https://help.shopify.com/manual/orders/status-tracking/customize-order-status).\n\nShopify Plus merchants can access the `checkout` object in the [`checkout.liquid` layout](/themes/architecture/layouts/checkout-liquid).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout",
+    type: 'object',
+    properties: {
+      applied_gift_cards: {
+        type: 'array',
+        description: 'The gift cards applied to the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#applied_gift_cards)',
+        scope: 'gift_card'
+      },
+      attributes: {
+        type: 'any',
+        description: 'Additional attributes entered by the customer with the [cart](/docs/api/liquid/objects/cart#cart-attributes). Shopify Plus merchants that have access to `checkout.liquid` can [capture attributes at checkout](/themes/architecture/layouts/checkout-liquid#capture-checkout-attributes).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#attributes)'
+      },
+      billing_address: {
+        type: 'object',
+        description: 'The billing address entered at checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#billing_address)',
+        scope: 'address'
+      },
+      buyer_accepts_marketing: {
+        type: 'boolean',
+        description: 'Returns `true` if the customer checks the email marketing subscription checkbox. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#buyer_accepts_marketing)'
+      },
+      cancelled: {
+        type: 'boolean',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because `false` is always returned.\n\n---\nReturns `true` if the checkout has been cancelled. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#cancelled)'
+      },
+      cart_level_discount_applications: {
+        type: 'array',
+        description: 'The cart-specific discount applications for the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#cart_level_discount_applications)',
+        scope: 'discount_application'
+      },
+      currency: {
+        type: 'string',
+        description: 'The [ISO code](https://www.iso.org/iso-4217-currency-codes.html) of the currency of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#currency)'
+      },
+      customer: {
+        type: 'object',
+        description: 'The customer associated with the checkout.\n&gt; Note:\n&gt; The `customer` object is available only on the Thank You and Order Status [pages](https://help.shopify.com/manual/orders/status-tracking).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#customer)',
+        scope: 'customer'
+      },
+      discount: {
+        type: 'object',
+        description: "⚠️ **DEPRECATED** ⚠️\nDeprecated because an unsaved discount doesn't exist on the [Order status page](https://help.shopify.com/manual/orders/status-tracking).\n\n---\nA discount applied to the checkout without being saved.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#discount)",
+        scope: 'discount'
+      },
+      discounts: {
+        type: 'array',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because not all discount types and details are captured.\n\nThe `checkout.discounts` property has been replaced by [`checkout.discount_applications`](/docs/api/liquid/objects/checkout#checkout-discount_applications).\n\n---\nThe discounts applied to the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#discounts)',
+        scope: 'discount'
+      },
+      discount_applications: {
+        type: 'array',
+        description: 'The discount applications for the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#discount_applications)',
+        scope: 'discount_application'
+      },
+      discounts_amount: {
+        type: 'array',
+        description: "The total amount of the discounts applied to the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#discounts_amount)",
+        scope: 'discount_application'
+      },
+      discounts_savings: {
+        type: 'array',
+        description: "The total amount of the discounts applied to the checkout in the currency's subunit, as a negative value. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#discounts_savings)",
+        scope: 'discount_application'
+      },
+      email: {
+        type: 'string',
+        description: 'The email associated with the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#email)'
+      },
+      financial_status: {
+        type: 'string',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because `nil` is always returned.\n\n---\nThe financial status of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#financial_status)'
+      },
+      fulfilled_at: {
+        type: 'string',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because `nil` is always returned.\n\n---\nA timestamp for the fulfullment of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#fulfilled_at)'
+      },
+      fulfilled_line_items: {
+        type: 'array',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because the array is always empty.\n\n---\nThe fulfilled line items from the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#fulfilled_line_items)',
+        scope: 'line_item'
+      },
+      fulfillment_status: {
+        type: 'string',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because `unfulfilled` is always returned.\n\n---\nThe fulfillment status of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#fulfillment_status)'
+      },
+      gift_cards_amount: {
+        type: 'string',
+        description: "The amount of the checkout price paid in gift cards. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#gift_cards_amount)"
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#id)'
+      },
+      line_items: {
+        type: 'array',
+        description: 'The line items of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#line_items)',
+        scope: 'line_item'
+      },
+      line_items_subtotal_price: {
+        type: 'number',
+        description: "The sum of the prices of all of the line items of the checkout in the currency's subunit, after any line item discounts\nhave been applied. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#line_items_subtotal_price)"
+      },
+      name: {
+        type: 'number',
+        description: 'The name of the checkout. This value is the same as [`checkout.id`](/docs/api/liquid/objects/checkout#checkout-id) with a `#` prepended to it.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#name)'
+      },
+      note: {
+        type: 'string',
+        description: 'Additional information entered by the customer with the [cart](/docs/api/liquid/objects/cart#cart-note).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#note)'
+      },
+      order: {
+        type: 'object',
+        description: "The order created by the checkout. Depending on the payment provider, the order might not have been created when the [Thank You page](https://help.shopify.com/en/manual/orders/status-tracking)\nis first viewed. In this case, `nil` is returned.\n> Note:\n> The `order` object isn't available on the Thank You page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#order)",
+        scope: 'order'
+      },
+      order_id: {
+        type: 'string',
+        description: 'The ID of the order created by the checkout. The value is the same as [`order.id`](/docs/api/liquid/objects/order#order-id).\n\nDepending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)\nis first viewed. In this case, `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#order_id)'
+      },
+      order_name: {
+        type: 'string',
+        description: 'The name of the order created by the checkout. The value is the same as [`order.name`](/docs/api/liquid/objects/order#order-name).\n\nDepending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)\nis first viewed. In this case, `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#order_name)'
+      },
+      order_number: {
+        type: 'string',
+        description: 'An integer representation of the name of the order created by the checkout. The value is the same as [`order.order_number`](/docs/api/liquid/objects/order#order-order_number).\n\nDepending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)\nis first viewed. In this case, `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#order_number)'
+      },
+      requires_shipping: {
+        type: 'boolean',
+        description: 'Returns `true` if any of the line items of the checkout require shipping. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#requires_shipping)'
+      },
+      shipping_address: {
+        type: 'object',
+        description: 'The shipping address of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#shipping_address)',
+        scope: 'address'
+      },
+      shipping_method: {
+        type: 'object',
+        description: 'The shipping method of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#shipping_method)',
+        scope: 'shipping_method'
+      },
+      shipping_price: {
+        type: 'number',
+        description: "The shipping price of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#shipping_price)"
+      },
+      tax_lines: {
+        type: 'array',
+        description: 'The tax lines for the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#tax_lines)',
+        scope: 'tax_line'
+      },
+      tax_price: {
+        type: 'number',
+        description: "The total tax amount of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#tax_price)"
+      },
+      total_price: {
+        type: 'number',
+        description: "The total price of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n> Tip:\n> Use [money filters](/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#total_price)"
+      },
+      transactions: {
+        type: 'array',
+        description: 'The transactions of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#transactions)',
+        scope: 'transaction'
+      },
+      unavailable_line_items: {
+        type: 'array',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because the array is always empty.\n\n---\nThe unavailable line items of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#unavailable_line_items)',
+        scope: 'line_item'
+      },
+      unfulfilled_line_items: {
+        type: 'array',
+        description: '⚠️ **DEPRECATED** ⚠️\nDeprecated because the array is always the same as [`checkout.line_items`](/docs/api/liquid/objects/checkout#checkout-line_items).\n\n---\nThe unfulfilled line items of the checkout.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/checkout#unfulfilled_line_items)',
+        scope: 'line_item'
+      }
+    }
+  },
+  comment: {
+    summary: 'An article comment.',
+    description: 'An article comment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment',
+    type: 'object',
+    properties: {
+      author: {
+        type: 'string',
+        description: 'The full name of the author of the comment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment#author)'
+      },
+      content: {
+        type: 'string',
+        description: 'The content of the comment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment#content)'
+      },
+      created_at: {
+        type: 'string',
+        description: 'A timestamp for when the comment was created.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment#created_at)'
+      },
+      email: {
+        type: 'string',
+        description: 'The email of he author of the comment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment#email)'
+      },
+      id: {
+        type: 'number',
+        description: 'The ID of the comment.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment#id)'
+      },
+      status: {
+        type: 'string',
+        description: 'The status of the comment. Always returns `published`. Outside of the Liquid context, the status of a comment can vary based on spam detection and whether blog comments are\nmoderated. However, only comments with a status of `published` are included in the [`article.comments` array](/docs/api/liquid/objects/article#article-comments).\n\n> Tip:\n> To learn more about blog comments, visit the [Shopify Help Center](https://help.shopify.com/manual/online-store/blogs/managing-comments).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment#status)'
+      },
+      updated_at: {
+        type: 'string',
+        description: 'A timestamp for when the status of the comment was last updated.\n\n\n> Tip:\n> Use the [`date` filter](/docs/api/liquid/filters/date) to format the timestamp.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment#updated_at)'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the article that the comment is associated with, with [`comment.id`](/docs/api/liquid/objects/comment#comment-id)\nappended.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/comment#url)'
+      }
+    }
+  },
+  content_for_additional_checkout_buttons: {
+    summary: 'Returns checkout buttons for any active payment providers with offsite checkouts.',
+    const: true,
+    global: true,
+    description: 'Returns checkout buttons for any active payment providers with offsite checkouts. Use [`additional_checkout_buttons`](/docs/api/liquid/objects/additional_checkout_buttons)\nto check whether these payment providers exist, and `content_for_additional_checkout_buttons`\nto show the associated checkout buttons. To learn more about how to use these objects, refer to\n[Accelerated checkout](/themes/pricing-payments/accelerated-checkout).\n\n```liquid\n{% if additional_checkout_buttons %}\n  {{ content_for_additional_checkout_buttons }}\n{% endif %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/content_for_additional_checkout_buttons',
+    type: 'string'
+  },
+  content_for_index: {
+    summary: 'Dynamically returns the content of [sections](/themes/architecture/sections) to be rendered on the home page.',
+    const: true,
+    global: true,
+    description: "Dynamically returns the content of [sections](/themes/architecture/sections) to be rendered on the home page. If you use a [Liquid index template](/themes/architecture/templates/index-template) (`templates/index.liquid`), then you must include `{{ content_for_index }}` in the template. This object can't be used in JSON index templates.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/content_for_index",
+    type: 'string'
+  },
+  content_for_layout: {
+    summary: 'Dynamically returns content based on the current [template](/themes/architecture/templates).',
+    const: true,
+    global: true,
+    description: 'Dynamically returns content based on the current [template](/themes/architecture/templates). Include the `content_for_layout` object in your [layout files](/themes/architecture/layouts) between the `<body>` and\n`</body>` HTML tags.\n\n> Note:\n> The `content_for_layout` object is required in `theme.liquid`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/content_for_layout',
+    type: 'string'
+  },
+  country_option_tags: {
+    summary: "Creates an `&lt;option&gt;` tag for each country and region that's included in a shipping zone on the [Shipping](https://www.shopify.com/admin/settings/shipping) page of the Shopify admin.",
+    global: true,
+    description: "Creates an `&lt;option&gt;` tag for each country and region that's included in a shipping zone on the [Shipping](https://www.shopify.com/admin/settings/shipping) page of the Shopify admin. An attribute called `data-provinces` is set for each `<option>`, and contains a JSON-encoded array of the\ncountry or region's subregions. If a country doesn't have any subregions, then an empty array is set for its\n`data-provinces` attribute.\n\n> Tip:\n> To return all countries and regions included in the store's shipping zones, use [`all_country_option_tags`](/docs/api/liquid/objects/all_country_option_tags).\n\n#### \n\nYou can wrap the `country_option_tags` object in `<select>` tags to build a country option selector.\n```liquid\n<select name=\"country\">\n  {{ country_option_tags }}\n</select>\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/country_option_tags",
+    type: 'string'
+  },
+  current_page: {
+    summary: 'The current page number.',
+    global: true,
+    description: 'The current page number. The `current_page` object has a value of 1 for non-paginated resources.\n\n#### \n\n```liquid\n{{ page_title }}{% unless current_page == 1 %} - Page {{ current_page }}{% endunless %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/current_page',
+    type: 'number'
+  },
+  current_tags: {
+    summary: 'The currently applied tags.',
+    description: 'The currently applied tags. You can [add tags](https://help.shopify.com/en/manual/shopify-admin/productivity-tools/using-tags) to articles and\nproducts. Article tags can be used to [filter a blog page](/themes/architecture/templates/blog#filter-articles-by-tag)\nto show only articles with specific tags. Similarly, product tags can be used to [filter a collection page](/themes/navigation-search/filtering/tag-filtering)\nto show only products with specific tags.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/current_tags',
+    type: 'array'
+  },
+  form_errors: {
+    summary: 'The error category strings for errors from a form created by a [`form` tag](/docs/api/liquid/tags/form).',
+    description: "The error category strings for errors from a form created by a [`form` tag](/docs/api/liquid/tags/form). The following table outlines the strings that can be returned and the reason that they would be:\n\n| Form property name | Return reason |\n| --- | --- |\n| `author` | There were issues with required name fields. |\n| `body` | There were issues with required text content fields. |\n| `email` | There were issues with required email fields. |\n| `form` | There were general issues with the form. |\n| `password` | There were issues with required password fields. |\n\n#### Example\n\nYou can output the name of the field related to the error, and the error message, by using the error as a key to access the `translated_fields` and `messages` properties.\n\n```liquid\n<ul>\n  {% for error in form.errors %}\n    <li>\n      {% if error == 'form' %}\n        {{ form.errors.messages[error] }}\n      {% else %}\n        {{ form.errors.translated_fields[error] }} - {{ form.errors.messages[error] }}\n      {% endif %}\n    </li>\n  {% endfor %}\n</ul>\n```\n\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form_errors",
+    type: 'object',
+    properties: {
+      messages: {
+        type: 'array',
+        description: 'The translated error messages for each value in the `form_errors` array. You can access a specific message in the array by using a specific error from the `form_errors` array as a key.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form_errors#messages)'
+      },
+      translated_fields: {
+        type: 'array',
+        description: 'The translated names for each value in the `form_errors` array. You can access a specific field in the array by using a specific error from the `form_errors` array as a key.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/form_errors#translated_fields)'
+      }
+    }
+  },
+  handle: {
+    summary: 'The [handle](/docs/api/liquid/basics#handles) of the resource associated with the current template.',
+    global: true,
+    description: 'The [handle](/docs/api/liquid/basics#handles) of the resource associated with the current template. The `handle` object will return a value only when the following templates are being viewed:\n\n- [article](/themes/architecture/templates/article)\n- [blog](/themes/architecture/templates/blog)\n- [collection](/themes/architecture/templates/collection)\n- [page](/themes/architecture/templates/page)\n- [product](/themes/architecture/templates/product)\n\nIf none of the above templates are being viewed, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/handle',
+    type: 'string'
+  },
+  page_description: {
+    summary: 'The meta description of the current page.',
+    global: true,
+    description: 'The meta description of the current page. The `page_description` object can be used to provide a brief description of a page for search engine listings and social\nmedia previews.\n\nTo learn about where to edit the meta description for a page, visit the [Shopify Help Center](https://help.shopify.com/manual/promoting-marketing/seo/adding-keywords#edit-the-title-and-meta-description-for-a-page).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page_description',
+    type: 'string'
+  },
+  page_image: {
+    summary: 'An image to be shown in search engine listings and social media previews for the current page.',
+    global: true,
+    description: "An image to be shown in search engine listings and social media previews for the current page. The resource's featured image for product and collection pages, and blog posts, is used. For all other pages, or pages where\nthere's no featured image, the [social sharing image](https://help.shopify.com/manual/online-store/images/showing-social-media-thumbnail-images?#setting-the-social-sharing-image-in-your-admin)\nis used.\n\n### Open Graph fallback tags\n\nThe `page_image` object can be used for creating [Open Graph](https://ogp.me/) `og:image` meta tags.\n\nIf a theme doesn't include `og:image` tags for a page, then Shopify automatically generates the following tags using the\n`page_image` object:\n\n- `og:image`\n- `og:image:secure_url`\n- `og:image:width`\n- `og:image:height`\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page_image",
+    type: 'object',
+    scope: 'image'
+  },
+  page_title: {
+    summary: 'The page title of the current page.',
+    global: true,
+    description: 'The page title of the current page. The `page_title` object can be used to specify the title of page for search engine listings and social media previews.\n\nTo learn about where to edit the title for a page, visit the [Shopify Help Center](https://help.shopify.com/manual/promoting-marketing/seo/adding-keywords#edit-the-title-and-meta-description-for-a-page).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/page_title',
+    type: 'string'
+  },
+  part: {
+    summary: 'A part in the navigation for pagination.',
+    description: 'A part in the navigation for pagination.\n\n#### Example\n\nYou can create a pagination navigation by iterating over each `part` of a [`paginate` object](/docs/api/liquid/objects/paginate).\n\n```liquid\n{% paginate collection.products by 5 -%}\n  {% for part in paginate.parts -%}\n    {% if part.is_link -%}\n      {{ part.title | link_to: part.url}}\n    {%- else -%}\n      <span>{{ part.title }}</span>\n    {% endif %}\n  {%- endfor %}\n{%- endpaginate %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/part',
+    type: 'object',
+    properties: {
+      is_link: {
+        type: 'boolean',
+        description: 'Returns `true` if the part is a link. Returns `false` if not.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/part#is_link)'
+      },
+      title: {
+        type: 'string',
+        description: 'The page number associated with the part.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/part#title)'
+      },
+      url: {
+        type: 'string',
+        description: 'The URL of the part. It consists of the current page URL path with the pagination parameter for the current part appended.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/part#url)'
+      }
+    }
+  },
+  pending_payment_instruction_input: {
+    summary: 'Header-value pairs that make up the list of payment information specific to the payment method.\nThis information can be be used by the customer to complete the transaction offline.',
+    description: 'Header-value pairs that make up the list of payment information specific to the payment method.\nThis information can be be used by the customer to complete the transaction offline.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/pending_payment_instruction_input',
+    type: 'object',
+    properties: {
+      header: {
+        type: 'string',
+        description: 'The header of the payment instruction.\nThese are payment method-specific. Example: "Entity" and "Reference" for Multibanco\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/pending_payment_instruction_input#header)'
+      },
+      value: {
+        type: 'string',
+        description: 'Contains the corresponding values to the headers of the payment instruction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/pending_payment_instruction_input#value)'
+      }
+    }
+  },
+  powered_by_link: {
+    summary: 'Creates an HTML link element that links to a localied version of `shopify.com`, based on the locale of the store.',
+    global: true,
+    description: 'Creates an HTML link element that links to a localied version of `shopify.com`, based on the locale of the store.\n\n#### \n\n```liquid\n{{ powered_by_link }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/powered_by_link'
+  },
+  predictive_search_resources: {
+    summary: 'Contains arrays of objects for each resource type that can be returned by a [predictive search query](/api/ajax/reference/predictive-search#get-locale-search-suggest).',
+    description: 'Contains arrays of objects for each resource type that can be returned by a [predictive search query](/api/ajax/reference/predictive-search#get-locale-search-suggest). You can check whether any resources of a specific type were returned using the [`size` filter](/docs/api/liquid/filters/size).\n\n```liquid\n{% if predictive_search.resources.articles.size > 0 %}\n  {% for article in predictive_search.resources.articles %}\n    {{ article.title }}\n  {% endfor %}\n{% endif %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources',
+    type: 'object',
+    properties: {
+      articles: {
+        type: 'array',
+        description: 'The articles associated with the query.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources#articles)',
+        scope: 'article'
+      },
+      collections: {
+        type: 'array',
+        description: 'The collections associated with the query.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources#collections)',
+        scope: 'collection'
+      },
+      pages: {
+        type: 'array',
+        description: 'The pages associated with the query.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources#pages)',
+        scope: 'page'
+      },
+      products: {
+        type: 'array',
+        description: 'The products associated with the query.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources#products)',
+        scope: 'product'
+      }
+    }
+  },
+  quantity_rule: {
+    summary: 'A variant order quantity rule (minimum, maximum, and increment). The default order variant quantity rule is `min=1,max=null,increment=1`.',
+    description: 'A variant order quantity rule (minimum, maximum, and increment). The default order variant quantity rule is `min=1,max=null,increment=1`.\n\n#### Example\n\n```liquid\n{{ product.variants.first.quantity_rule }}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/quantity_rule',
+    type: 'object',
+    properties: {
+      min: {
+        type: 'number',
+        description: 'Minimum order quantity (default 1)\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/quantity_rule#min)'
+      },
+      max: {
+        type: 'number',
+        description: 'Maximum order quantity If there is no maximum, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/quantity_rule#max)'
+      },
+      increment: {
+        type: 'number',
+        description: 'Order quantity increment (default 1)\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/quantity_rule#increment)'
+      }
+    }
+  },
+  scripts: {
+    summary: 'The active scripts, of each script type, on the store.',
+    global: true,
+    description: 'The active scripts, of each script type, on the store. There can be only one active script of each type. Currently, the only type accessible in Liquid is\n`cart_calculate_line_items`.\n\n> Tip:\n> To learn more about Shopify Scripts and the Script Editor, visit the [Shopify Help Center](https://help.shopify.com/manual/checkout-settings/script-editor).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/scripts',
+    type: 'object',
+    properties: {
+      cart_calculate_line_items: {
+        type: 'object',
+        description: "The active line item script. If no line item script is currently active, then `nil` is returned.\n\n#### Example\n\n```liquid\n{% if scripts.cart_calculate_line_items %}\n  <p>Don't miss our current sale: <strong>{{ scripts.cart_calculate_line_items.name }}</strong></p>\n{% endif %}\n```\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/scripts#cart_calculate_line_items)",
+        scope: 'script'
+      }
+    }
+  },
+  sitemap: {
+    summary: 'The sitemap for a specific group in the [`robots.txt` file](/themes/architecture/templates/robots-txt-liquid).',
+    description: "The sitemap for a specific group in the [`robots.txt` file](/themes/architecture/templates/robots-txt-liquid). The sitemap provides information about the pages and content on a site, and the relationships between them, which helps\ncrawlers crawl a site more efficiently.\n\n> Tip:\n> To learn more about sitemaps, refer to [Google's documentation](https://developers.google.com/search/docs/advanced/sitemaps/overview).\n\nThe `sitemap` object consists of a `Sitemap` directive, and a value of the URL that the sitemap is hosted at. For example:\n\n```\nSitemap: https://your-store.myshopify.com/sitemap.xml\n```\n\n> Tip:\n> You can [customize the `robots.txt` file](/themes/seo/robots-txt) with the [`robots.txt.liquid` template](/themes/architecture/templates/robots-txt-liquid).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/sitemap",
+    type: 'object',
+    properties: {
+      directive: {
+        type: 'string',
+        description: 'Returns `Sitemap`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/sitemap#directive)'
+      },
+      value: {
+        type: 'string',
+        description: 'The URL that the sitemap is hosted at.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/sitemap#value)'
+      }
+    }
+  },
+  sort_option: {
+    summary: 'A sort option for a collection or search results page.',
+    description: 'A sort option for a collection or search results page.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/sort_option',
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        description: 'The customer-facing name of the sort option. The name can be edited by merchants in the [language editor](https://help.shopify.com/manual/online-store/themes/customizing-themes/language/change-wording).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/sort_option#name)'
+      },
+      value: {
+        type: 'string',
+        description: 'The value of the sort option. This value is used when assigning the [`collection.sort_by`](/docs/api/liquid/objects/collection#collection-sort_by) and\n[`search.sort_by`](/docs/api/liquid/objects/search#search-sort_by) parameters.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/sort_option#value)'
+      }
+    }
+  },
+  transaction_payment_details: {
+    summary: 'Information about the payment methods used for a transaction.',
+    description: 'Information about the payment methods used for a transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details',
+    type: 'object',
+    properties: {
+      credit_card_company: {
+        type: 'string',
+        description: 'The name of the company that issued the credit card used for the transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details#credit_card_company)'
+      },
+      credit_card_last_four_digits: {
+        type: 'string',
+        description: 'The last four digits of the credit card number of the credit card used for the transaction.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details#credit_card_last_four_digits)'
+      },
+      credit_card_number: {
+        type: 'string',
+        description: 'The credit card number of the credit card used for the transaction. All but the last four digits are redacted.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details#credit_card_number)'
+      },
+      gift_card: {
+        type: 'object',
+        description: 'The gift card used for the transaction. If no gift card was used, then `nil` is returned.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details#gift_card)',
+        scope: 'gift_card'
+      }
+    }
+  },
+  user_agent: {
+    summary: 'The user-agent, which is the name of the crawler, for a specific group in the [`robots.txt` file](/themes/architecture/templates/robots-txt-liquid).',
+    description: 'The user-agent, which is the name of the crawler, for a specific group in the [`robots.txt` file](/themes/architecture/templates/robots-txt-liquid). The `user_agent` object consists of a `User-agent` directive, and a value of the name of the user-agent. For example:\n\n```\nUser-agent: *\n```\n\n> Tip:\n> You can [customize the `robots.txt` file](/themes/seo/robots-txt) with the [`robots.txt.liquid` template](/themes/architecture/templates/robots-txt-liquid).\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user_agent',
+    type: 'object',
+    properties: {
+      directive: {
+        type: 'string',
+        description: 'Returns `User-agent`.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user_agent#directive)'
+      },
+      value: {
+        type: 'string',
+        description: 'The name of the user-agent.\n\n---\n\n[Shopify Documentation](https://shopify.dev/docs/api/liquid/objects/user_agent#value)'
+      }
     }
   }
 };

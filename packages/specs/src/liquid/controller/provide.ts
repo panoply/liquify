@@ -1,5 +1,5 @@
 import type { IObject, Properties } from '..';
-import { descriptive, TypeNames } from '../../utils/signature';
+import { TypeNames } from '../../utils/signature';
 import { CompletionItem, TextEdit, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver-types';
 import { liquid } from './states';
 import { entries } from '../../utils/native';
@@ -22,7 +22,10 @@ export function ProvideProps ([ label, { description, type, snippet = label } ])
     detail: TypeNames[type],
     kind: CompletionItemKind.Property,
     insertTextFormat: InsertTextFormat.Snippet,
-    documentation: descriptive(description),
+    documentation: {
+      kind: 'markdown',
+      value: description
+    },
     data: { snippet }
   };
 
@@ -79,6 +82,12 @@ function walkProps (props: string[], value: Properties) {
     return props.length > 1
       ? walkProps(props.slice(1), properties)
       : entries(properties).map(ProvideProps);
+  } else {
+
+    if (value[props[0]]?.scope) {
+      const { properties } = liquid.data.variation.objects[value[props[0]]?.scope];
+      return entries(properties).map(ProvideProps);
+    }
   }
 
   return entries(value).map(ProvideProps);
@@ -105,9 +114,13 @@ export async function LiquidPropertyComplete (node: any, offset: number) {
   const first = objects?.[props[0]];
 
   if (first) {
+
     return walkProps(props.slice(1), first?.properties);
+
   } else if (liquid.data.variables.has(props[0])) {
+
     const variable = liquid.data.variables.get(props[0])[node.scope[props[0]]];
+
     return walkProps(props.slice(1), (variable.value as IObject)?.properties);
   }
 

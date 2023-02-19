@@ -1,4 +1,4 @@
-import prettify from '@liquify/prettify';
+import esthetic from 'esthetic';
 import { Formatting } from 'types/server';
 import { IAST, TextDocument } from '@liquify/liquid-parser';
 import { TextEdit } from 'vscode-languageserver';
@@ -43,7 +43,7 @@ export async function markup (document: IAST, options: Formatting): Promise<Text
 
   try {
 
-    const newText = await prettify.format(source, {
+    const newText = await esthetic.format(source, {
       language: 'liquid'
     });
 

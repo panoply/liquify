@@ -1,5 +1,5 @@
 import type { TextDocumentItem } from 'vscode-languageserver-types';
-import { q, Engine } from '@liquify/liquid-language-specs';
+import { q, Engine } from '@liquify/specs';
 import { parse } from './parser/parse';
 import { create, update, get, remove, model } from './tree/model';
 import { AST } from './tree/ast';
@@ -15,7 +15,7 @@ export type { TextDocument, Position, Range } from 'vscode-languageserver-textdo
 export type { AST as IAST } from './tree/ast';
 export type { INode } from './tree/typings';
 export * from './lexical/';
-export * from '@liquify/liquid-language-specs';
+export * from '@liquify/specs';
 
 /* EXPOSED EXPORT TYPES ----------------------- */
 

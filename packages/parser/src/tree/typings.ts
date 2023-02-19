@@ -1,6 +1,6 @@
 /* eslint no-unused-vars: "off" */
 
-import { Type } from '@liquify/liquid-language-specs';
+import { Type } from '@liquify/specs';
 import { Range } from 'vscode-languageserver-textdocument';
 import { DocumentUri, integer, Diagnostic } from 'vscode-languageserver-types';
 import { NodeLanguage, NodeKind, TagType, NodeType } from '../lexical';

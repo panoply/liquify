@@ -39,10 +39,6 @@ function CompleteFilters () {
 
 }
 
-function CompleteFilters () {
-
-}
-
 /**
  * Returns the last known character code of the `from` offset position.
  * Strips ending whitespace from the content of the token.

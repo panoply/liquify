@@ -12,6 +12,12 @@
         "package.json"
       ],
       "url": "./.vscode/schema/tsup.json"
+    },
+    {
+      "fileMatch": [
+        "theme-docs-objects.json"
+      ],
+      "url": "./packages/schema/package/theme-docs/objects.json"
     }
   ],
   /* -------------------------------------------- */

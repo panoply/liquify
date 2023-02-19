@@ -7,14 +7,21 @@
   ],
   "include": [
     "tsup.config.ts",
-    "scripts/enums.js",
-    "src/**/*.ts"
+    "scripts/tsup-plugins/enums.js",
+    "src/**/*.ts",
+    "node_modules/.cache/objects.ts"
   ],
   "compilerOptions": {
     "incremental": false,
     "allowJs": true,
     "removeComments": false,
+    "typeRoots": [
+      "node_modules/@types",
+    ],
     "outDir": "package",
+    "types": [
+      "node"
+    ],
     "baseUrl": ".",
     "paths": {
       "html": [
@@ -45,8 +52,11 @@
       "types/*": [
         "./src/types/*.ts",
       ],
-      "enums": [
-        "./scripts/enums.js"
+      "tsup-plugin-enums": [
+        "scripts/tsup-plugins/enums.js"
+      ],
+      "tsup-plugin-description": [
+        "scripts/tsup-plugins/description.js"
       ]
     }
   }

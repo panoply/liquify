@@ -1,5 +1,5 @@
 import { NodeLanguage } from './lexical/language';
-import { Engine } from '@liquify/liquid-language-specs';
+import { Engine } from '@liquify/specs';
 
 export interface IConfig {
 
