@@ -1,5 +1,5 @@
 {
-  "name": "@liquify/liquid-language-specs",
+  "name": "@liquify/specs",
   "version": "0.1.7",
   "private": false,
   "author": {
@@ -33,6 +33,8 @@
     "dev": "tsup --watch",
     "build": "tsup --minify",
     "predev": "tsup --env.NODE_ENV predev",
+    "shopify": "pnpm exec ./shopify.sh",
+    "liquid:shopify": "node ./scripts/shopify-specs.cjs && eslint ./src/liquid/data/shopify/objects.ts --fix",
     "html": "node ./scripts/html-specs.js && eslint ./src/html/data/html5/*.ts --fix",
     "package": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava ./test/dev.test.mjs --watch --verbose --color",
@@ -59,6 +61,7 @@
   "devDependencies": {
     "@vscode/web-custom-data": "^0.4.4",
     "ava": "^5.0.1",
+    "minimist": "^1.2.7",
     "tsup": "^6.4.0",
     "vscode-languageserver-types": "^3.17.2"
   }

@@ -12,15 +12,22 @@ In the context of the Liquid Language Server, these _specifications_ are just da
 
 ### Why?
 
-Liquid is a basic template language that is consumer facing. When building the Liquify (Liquid) parser one of my main goals was to standardize all variations of the language but such a task is impossible due to the fact Liquid is a template language and can exist in a customized formats I required a simple, extensible and integrated solution for interfacing with the parser and language server. The result is Liquid Language Specifications.
+Liquid is a basic template language that is consumer facing. When building the Liquify (Liquid) parser one of my main goals was to standardize all variations of the language but such a task is impossible due to the fact Liquid is a template language and can exist in a customized formats. The resulting solution was to produce a simple, extensible and integrated solution for interfacing with the parser and language server. The result is Liquid Language Specifications.
 
 ### Supported
 
-The modules provides raw data references for the following Liquid variations. The specifications also provide HTML specifications which are made available using the [vscode-custom-data](https://github.com/microsoft/vscode-custom-data#readme) package.
+The modules provides raw data references for the following:
 
 - HTML
 - Liquid Standard
 - Liquid Shopify
+
+### TODO
+
+The following Liquid variations are scheduled to be mapped.
+
+- Liquid 11ty
+- Liquid Jekyll
 
 # Install
 
@@ -30,13 +37,13 @@ pnpm add @liquify/liquid-language-specs
 
 # Usage
 
-The module provides a informal Query Engine to interfaces with both HTML and Liquid specifications. The module enables the Liquify [Liquid Language Server](#) and [Liquid Language Parser](#) to interact, traverse and query raw data at different points. This allows for capabilities like code completions, validations (linting) and signatures to be provided. The query engine is typically used by the parser and each time a tag, object or filter is encountered when walking a document we query its specification reference and from here the scanner (or language server) can act accordingly.
+The module provides a informal Query Engine that interfaces with both HTML and Liquid specifications. The module enables the Liquify [Liquid Language Server](#) and [Liquid Language Parser](#) to interact, traverse and query raw data at different points. This allows for capabilities like code completions, validations (linting) and signatures to be provided. The query engine is typically used by the parser and each time a tag, object or filter is encountered during traversal operations we query its specification reference and from here the scanner (or language server) will act accordingly.
 
 Read More about [queries](docs/06-queries.md)
 
 ### Data (`liquid` and `html5`)
 
-We can access the specifications via 2 named exports, `html5` and `liquid`. Both exports are objects and provide us direct access to the data (ie: specifications). These data exports are merely convenience exports that expose the specifications used by the providers (`p`) and queries (`q`) exports which are at the core of traversal operations.
+We can access the specifications via 2 named exports, `html5` and `liquid`. Both exports are objects and provide us direct access to the data (ie: specifications). These data exports are merely convenience exports that expose the specifications used by the providers (`p`) and queries (`q`) exports that are at the core of traversal.
 
 ```typescript
 import { html5, liquid } from '@liquify/liquid-language-specs';
@@ -99,7 +106,7 @@ $.html5.value;         // The attribute value specification in traversal
 
 ### Query (`q`)
 
-The `q` query export allows us to navigate through specifications. These methods are typically used within the Liquify parser and will augment the state `$` references during traversal and lexical analysis. Almost all queries and operations update state `$` records.
+The `q` query export allows us to navigate through specifications. These methods are typically used by the Liquify parser and will augment the state `$` references during lexical analysis. Almost all queries and operations update state `$` records.
 
 ```typescript
 import { q } from '@liquify/liquid-language-specs';
@@ -148,7 +155,7 @@ q.reset(): void
 
 ### Provide (`p`)
 
-The `p` providers named export exposes methods that facilitate capabilities in the Liquify [Liquid Language Server](#). These are feature which provide the data used in LSP specific capabilities like code completions, signatures and linting within text editors (like vscode). Providers are different from `q` queries and specific to LSP and text editor extensions/plugins.
+The `p` providers named export exposes methods that facilitate capabilities in the Liquify [Liquid Language Server](#). These are features which provide the data used by LSP specific capabilities like code completions, signatures and linting in text editors (like vscode). Providers are different from `q` queries and specific to LSP.
 
 > When settings a new Liquid engine via `q.setEngine()` the reference for Liquid will be updated to the variation.
 
@@ -180,28 +187,33 @@ p.HTMLValueResolve(item: CompletionItem): CompletionItem
 
 # Documentation
 
-In the context of the Liquid Language Server, these _specifications_ are just data references that describe Liquid and HTML syntax. These are not quite parsing grammars and despite the name, they are not official specifications. The specs exist to enable developers of any level to quickly compose schemas that extend upon Liquid [standard](https://shopify.github.io/liquid/) and described tags, filters and objects in different variations.
+In the context of the Liquid Language Server, these _specifications_ are just data references that describe Liquid and HTML syntax. They are not quite parsing grammars and despite the name, they are not official specifications. The specs exist to enable developers of any level to quickly compose schemas that extend upon Liquid [standard](https://shopify.github.io/liquid/) and described tags, filters and objects in different variations.
 
 1. [Tokens](docs/01-tokens.md)
 2. [Types](docs/02-types.md)
 3. [Arguments](docs/03-arguments.md)
 
-### Unsupported
+# References
 
-The specifications map Liquid objects in a hardcoded manner. When a Liquid variation provides objects on the consumer facing end (like those in the Shopify variation) the objects are provided to Liquify via manual data entry. This is both a very tedious and time consuming task.
+The specification are either hard-coded and entered manually or will pull in a reference. The idea of specifications is to have a single source of truth for all variations, sort of like Definitely Typed.
 
-There is no API endpoint to provided such data required to compose the specs in an automated manner and due to the inconsistencies, the constant changing UI and general unpredictability in documentation that informs upon objects, specifically that of Shopify, we are unable crawl and compose this data required in an automated manner and thus, support is made possible through manual entry.
+### HTML5
 
-Below is a list of objects awaiting triage/input:
+The HTML specifications leverage the [@vscode/web-custom-data](https://github.com/microsoft/vscode-custom-data) module. The resulting data is crawled and extracted from MDN.
 
-#### Shopify Variation
+### Liquid Standard
 
-- `filter_value`
-- `generic_file`
-- `measurement`
-- `metafields`
+The Standard specification are mostly hard-coded and partially use data pulled in from the Shopify [theme-liquid-docs](https://github.com/Shopify/theme-liquid-docs). Because the Standard variation can be implemented in an isolated manner into projects, adjustments are made for extended usages.
 
-#### Jekyll Variation
+### Liquid Shopify
+
+The Shopify specifications pull in data from the [theme-liquid-docs](https://github.com/Shopify/theme-liquid-docs). If you find inconsistencies with descriptions or issues relating to this then it is Shopify's burden to bare.
+
+### Liquid Jekyll
+
+_Not yet supported_
+
+#### Liquid 11ty
 
 _Not yet supported_
 

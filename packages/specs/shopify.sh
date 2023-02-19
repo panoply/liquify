@@ -1,0 +1,19 @@
+dir=./node_modules/.specs     # ACE OUTPUT DIRECTORY LOCATION
+src=./data/                   # SRC FILES CONTAINING DATA
+out=../..                     # CD DIRECTORY TO GET BACK TO ROOT
+
+#---------------------------------------------------------------------------
+# DOWNLOAD THE SHOPIFY DOCS PROJECT AND INSTALL
+#---------------------------------------------------------------------------
+
+# 1. REMOVE THE TEMP DIRECTORY WHERE ACE WILL BUILD
+echo -e "\033[0;32mCleaning Shopify Documentation References\033[0m"
+rm -rf $dir
+
+# 3. CLONE ACE FROM GITHUB
+echo -e "\033[0;32mCloning Ace $ver from https://github.com/Shopify/theme-liquid-docs\033[0m"
+git -c advice.detachedHead=false clone --depth 1 https://github.com/Shopify/theme-liquid-docs $dir/
+
+# 4. CD INTO THE DIRECTORY AND RUN NPM INSTALL
+echo -e "\033[0;32mInstall Ace\033[0m"
+cd $out
