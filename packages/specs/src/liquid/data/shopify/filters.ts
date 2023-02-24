@@ -37,7 +37,7 @@ export const Filters: IFilters = {
             ]
           },
           scale: {
-            type: 'integer',
+            type: 'number',
             description: 'The scale parameter lets you specify the pixel density of the image',
             pattern: /\b[23]\b/,
             value: [
@@ -78,8 +78,7 @@ export const Filters: IFilters = {
   },
   currency_selector: {
     description: 'Generates a drop-down list that customers can use to select an accepted currency on your storefront. This filter must be used on the form object within a currency form',
-    snippet: 'class: $1, id: $2',
-    scope: [ 'form' ],
+    scope: 'form',
     deprecated: true
   },
   customer_login_link: {
@@ -133,6 +132,7 @@ export const Filters: IFilters = {
   },
   color_modify: {
     description: 'Modifies the given component of a color',
+    snippet: "color_modify: '${1|red,green,blue,alpha,hue,saturation,lightness|}', ${2:100}",
     arguments: [
       {
         type: 'string',
@@ -148,7 +148,7 @@ export const Filters: IFilters = {
         ]
       },
       {
-        type: 'integer',
+        type: 'number',
         required: true,
         pattern: {
           red: [ 0, 255 ],
@@ -169,7 +169,7 @@ export const Filters: IFilters = {
     description: 'Lightens the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: 'integer',
+        type: 'number',
         pattern: [ 0, 100 ],
         required: true
       }
@@ -183,7 +183,7 @@ export const Filters: IFilters = {
     description: 'Saturates the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: 'integer',
+        type: 'number',
         pattern: [ 0, 100 ],
         required: true
       }
@@ -197,7 +197,7 @@ export const Filters: IFilters = {
     description: 'Desaturates the input color. Takes a value between 0 and 100 percent.',
     arguments: [
       {
-        type: 'integer',
+        type: 'number',
         pattern: [ 0, 100 ],
         required: true
       }
@@ -209,6 +209,7 @@ export const Filters: IFilters = {
   },
   color_mix: {
     description: 'Blends together two colors. Blend factor should be a value between 0 and 100 percent.',
+    snippet: "color_mix: '${1:#FECEE9}', ${2:100}",
     arguments: [
       {
         type: 'string',
@@ -216,7 +217,7 @@ export const Filters: IFilters = {
         required: true
       },
       {
-        type: 'integer',
+        type: 'number',
         pattern: [ 0, 100 ],
         required: true
       }
@@ -228,10 +229,11 @@ export const Filters: IFilters = {
   },
   color_contrast: {
     description: 'Calculates the contrast ratio between two colors. Returns the numerator part of the ratio, which has a denominator of 1. For example, for a contrast ratio of 3.5:1, the filter returns 3.5.\n\nWith regards to accessibility, [WCAG 2.0 level AA](https://www.w3.org/WAI/WCAG20/quickref/#qr-visual-audio-contrast-contrast) requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text. [Level AAA](https://www.w3.org/WAI/WCAG20/quickref/#qr-visual-audio-contrast7) requires a contrast ratio of at least 7:1 for normal text and 4.5:1 for large text.\n\nThe order in which you specify the colors does not matter. The filter will automatically detect the lighter and darker colors.',
+    snippet: "color_contrast: '${1:#FECEE9}'",
     arguments: [
       {
         type: 'string',
-        pattern: /#[A-Fa-f0-9]{8}/,
+        pattern: /#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,
         required: true
       }
     ],
@@ -242,6 +244,7 @@ export const Filters: IFilters = {
   },
   color_difference: {
     description: 'Calculates the [color difference](https://en.wikipedia.org/wiki/Color_difference) or distance between two colors. With regards to accessibility, the W3C [suggests](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) that the color difference should be greater than 500.',
+    snippet: "color_difference: '${1:#FECEE9}'",
     arguments: [
       {
         type: 'string',
@@ -256,7 +259,7 @@ export const Filters: IFilters = {
   },
   default_errors: {
     description: 'Outputs default error messages for the `form.errors` variable. The messages returned are dependent on the strings returned by form.errors.',
-    scope: [ 'form' ],
+    scope: 'form',
     reference: {
       name: 'Shopify Liquid',
       url: 'https://shopify.dev/api/liquid/filters/additional-filters#default_errors'
@@ -264,7 +267,7 @@ export const Filters: IFilters = {
   },
   default_pagination: {
     description: 'Creates a set of links for paginated results. Used in conjunction with the [paginate](https://shopify.dev/api/liquid/objects/paginate) variable.',
-    scope: [ 'paginate' ],
+    scope: 'paginate',
     arguments: [
       {
         type: 'parameter',
@@ -287,6 +290,7 @@ export const Filters: IFilters = {
   },
   brightness_difference: {
     description: 'Calculates the perceived brightness difference between two colors. With regards to accessibility, the W3C [suggests](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) that the brightness difference should be greater than 125.',
+    snippet: "brightness_difference: '${1:#FECEE9}'",
     arguments: [
       {
         type: 'string',
@@ -359,7 +363,7 @@ export const Filters: IFilters = {
   },
   font_modify: {
     description: 'font_modify takes two arguments. The first indicates which property should be modified and the second is the modification to be made.',
-    snippet: "font_modify:  '${1|normal,italic,oblique|}', '${2|100,200,300,400,500,600,700,800,900,lighter,normal,bold,bolder|}'",
+    snippet: "font_modify: '${1|normal,italic,oblique|}', '${2|100,200,300,400,500,600,700,800,900,lighter,normal,bold,bolder|}'",
     arguments: [
       {
         type: 'string',
@@ -459,7 +463,7 @@ export const Filters: IFilters = {
   },
   highlight: {
     description: 'Wraps words inside search results with an HTML `<strong>` tag with the class highlight if it matches the submitted [search.terms](https://shopify.dev/docs/themes/liquid/reference/objects/search/#search.terms).',
-    scope: [ 'search' ],
+    scope: 'search',
     reference: {
       name: 'Shopify Liquid',
       url: 'https://shopify.dev/api/liquid/filters/additional-filters#highlight'
@@ -467,7 +471,7 @@ export const Filters: IFilters = {
   },
   highlight_active_tag: {
     description: 'Wraps a tag link in a `<span>` with the class `active` if that tag is being used to filter a collection.',
-    scope: [ 'collection' ],
+    scope: 'collection',
     reference: {
       name: 'Shopify Liquid',
       url: 'https://shopify.dev/api/liquid/filters/additional-filters#highlight_active_tag'
@@ -483,7 +487,7 @@ export const Filters: IFilters = {
   },
   json: {
     description: 'Converts a string into JSON format.\n\nYou do not have to wrap the Liquid output in quotations - the json filter will add them in. The json filter will also escape quotes as needed inside the output.',
-    scope: [ 'collection' ],
+    scope: 'collection',
     reference: {
       name: 'Shopify Liquid',
       url: 'https://shopify.dev/api/liquid/filters/additional-filters#json'
@@ -740,18 +744,6 @@ export const Filters: IFilters = {
         type: 'string',
         pattern: /%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,
         description: 'The time_tag filter accepts the same parameters as Ruby\'s strftime method.'
-      },
-      {
-        type: 'string',
-        value: 'foo'
-      },
-      {
-        type: 'string',
-        value: 'bar'
-      },
-      {
-        type: 'string',
-        value: 'baz'
       },
       {
         type: 'parameter',

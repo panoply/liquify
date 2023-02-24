@@ -1,23 +1,16 @@
 /* eslint-disable no-use-before-define */
 
-import { Templates, Pattern, References } from './shared';
+import { Templates, Pattern, Descriptions } from './shared';
 import { Types } from './types';
 import { Type } from '../utils/enums';
 
-export declare interface Value {
-  /**
-   * Description
-   *
-   * An optional desciption for the value to be shown
-   * in hovers and completions.
-   */
-  readonly description?: string;
+export declare interface Value extends Descriptions {
   /**
    * Deprecated
    *
    * Whether the argument is deprecated or not
    */
-  readonly deprecated?: boolean;
+  deprecated?: boolean;
   /**
    * Template
    *
@@ -31,29 +24,24 @@ export declare interface Value {
    *
    * @default undefined
    */
-  readonly template?: Templates | Templates[] | undefined;
+  template?: Templates | Templates[] | undefined;
   /**
    * Value
    *
    * A pre-defined argument value, can be a string or
    * an array of strings (when multiple values occur)
    */
-  readonly value: string | string[]
+  value: string | string[]
 }
 
-export declare interface Parameter {
+export declare interface Parameter extends Descriptions {
   /**
    * The type value the parameter accepts. When a parameter is a keyword type,
    * ie: no colon operator then assert the _keyword_ type (enum `10`) and omit
    * the `value` property. If type is set to `keyword` and a value exists, those
    * entries will be ignored.
    */
-  readonly type: Type | Types.Basic | 'keyword'
-  /**
-   * Description of argument which will be rendered in
-   * completions, hovers or signatures.
-   */
-  readonly description?: string | undefined;
+  type: Type | Types.Basic | 'keyword'
   /**
    * Pattern
    *
@@ -71,7 +59,7 @@ export declare interface Parameter {
    * complex patterns else you will exhaust the parser. Keep it simple.
    *
    */
-  readonly pattern?: Pattern,
+  pattern?: Pattern,
 
   /**
    * Whether the parameter values can be loosely matched, meaning
@@ -80,13 +68,13 @@ export declare interface Parameter {
    *
    * When `undefined` the parser will assume `true`
    */
-  readonly strict?: boolean;
+  strict?: boolean;
 
   /**
    * The parameter value can be pre-defined or user defined.
    * When a value is supplied, it will be provided to completions.
    */
-  readonly value?: string | string[] | Value[]
+  value?: string | string[] | Value[]
 }
 
 export declare interface ArgumentParameter extends Omit<Parameter, 'type' | 'value'> {
@@ -95,19 +83,19 @@ export declare interface ArgumentParameter extends Omit<Parameter, 'type' | 'val
    *
    * Argument type is equal to value of 'parameter'
    */
-  readonly type: 'parameter'
+  type: 'parameter'
 
   /**
    * Whether the argument is required or optional.
    * When `undefined` the parser will assume `false`
    */
-  readonly required?: boolean;
+  required?: boolean;
 
   /**
    * If parameters should be unqiue, no duplicate entries.
    * When `undefined` the parser will assume `true`
    */
-  readonly unique?: boolean
+  unique?: boolean
   /**
    * Seperator
    *
@@ -121,7 +109,7 @@ export declare interface ArgumentParameter extends Omit<Parameter, 'type' | 'val
    *
    * @default NaN
    */
-  readonly separator?: 44 | 10 | 61
+  separator?: 44 | 10 | 61
   /**
    * Value
    *
@@ -136,16 +124,16 @@ export declare interface ArgumentParameter extends Omit<Parameter, 'type' | 'val
    * The parser will validate the character sequence and intercepts value types,
    * and accept any parameter name that is a alpha-numeric combination.
    */
-  readonly value: Types.Basic | { [parameter: string]: Parameter }
+  value: Types.Basic | { [parameter: string]: Parameter }
 }
 
-export declare interface Argument {
+export declare interface Argument extends Descriptions {
   /**
    * Type
    *
    * Argument type is equal to value of 'parameter'
    */
-  readonly type: Type | Types.Basic | Types.Argument
+  type: Type | Types.Basic | Types.Argument
   /**
    * Pattern
    *
@@ -165,7 +153,7 @@ export declare interface Argument {
    * complex patterns else you will exhaust the parser. Keep it simple.
    *
    */
-  readonly pattern?: Pattern | { [property: string]: Pattern },
+  pattern?: Pattern | { [property: string]: Pattern },
   /**
    * Strict
    *
@@ -177,7 +165,7 @@ export declare interface Argument {
    *
    * @default true
    */
-  readonly strict?: boolean;
+  strict?: boolean;
   /**
    * Required
    *
@@ -188,7 +176,7 @@ export declare interface Argument {
    *
    * @default true
    */
-  readonly required?: boolean;
+  required?: boolean;
   /**
    * Deprecated
    *
@@ -196,7 +184,7 @@ export declare interface Argument {
    *
    * @default false
    */
-  readonly deprecated?: boolean;
+  deprecated?: boolean;
   /**
    * Seperator
    *
@@ -210,24 +198,7 @@ export declare interface Argument {
    *
    * @default NaN
    */
-  readonly separator?: 44 | 10 | 61
-  /**
-   * Description
-   *
-   * Description of argument which will be rendered in
-   * completions, hovers or signatures of the Language Server.
-   *
-   * @default undefined
-   */
-  readonly description?: string | undefined;
-  /**
-   * Reference
-   *
-   * Documentation reference to this argument
-   *
-   * @default undefined
-   */
-  readonly reference?: References | undefined;
+  separator?: 44 | 10 | 61
   /**
    * Template
    *
@@ -237,7 +208,7 @@ export declare interface Argument {
    *
    * @default undefined
    */
-  readonly template?: Templates | Templates[] | undefined;
+  template?: Templates | Templates[] | undefined;
   /**
    * Value
    *
@@ -326,7 +297,7 @@ export declare interface Argument {
    *
    * ```
    */
-  readonly value?: string | string[] | Value[] | { [argument: string]: Value[] }
+  value?: string | string[] | Value[] | { [argument: string]: Value[] }
 }
 
 export declare type Arguments = Array<Argument | ArgumentParameter>

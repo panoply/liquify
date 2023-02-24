@@ -133,7 +133,7 @@ export const Tags: ITags = {
     description: 'The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.',
     filters: false,
     deprecated: true,
-    singular: true,
+    singleton: true,
     type: 'import',
     reference: {
       name: 'Shopify Liquid',
@@ -142,7 +142,7 @@ export const Tags: ITags = {
   },
   layout: {
     description: "Include \"{% layout 'alternate' %}\" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:",
-    singular: true,
+    singleton: true,
     type: 'import',
     arguments: [
       {
@@ -169,7 +169,7 @@ export const Tags: ITags = {
         required: true
       },
       {
-        type: 'integer',
+        type: 'number',
         required: true,
         pattern: [ 1, 50 ]
       }
@@ -182,7 +182,7 @@ export const Tags: ITags = {
   section: {
     description: 'Renders a section from the sections folder of a theme.',
     filters: false,
-    singular: true,
+    singleton: true,
     type: 'import',
     arguments: [
       {
@@ -201,7 +201,6 @@ export const Tags: ITags = {
     language: 'json',
     unique: true,
     type: 'embedded',
-    trims: false,
     reference: {
       name: 'Shopify Liquid',
       url: 'https://help.shopify.com/en/themes/development/sections#using-section-schema-tags'
@@ -211,7 +210,6 @@ export const Tags: ITags = {
     type: 'embedded',
     description: 'The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.',
     filters: false,
-    trims: false,
     language: 'css',
     reference: {
       name: 'Shopify Liquid',
@@ -222,7 +220,6 @@ export const Tags: ITags = {
     type: 'embedded',
     description: 'The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.',
     filters: false,
-    trims: false,
     unique: true,
     deprecated: true,
     language: 'css',
@@ -243,7 +240,6 @@ export const Tags: ITags = {
     description: 'The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.',
     filters: false,
     deprecated: true,
-    trims: false,
     language: 'javascript',
     reference: {
       name: 'Shopify Liquid',

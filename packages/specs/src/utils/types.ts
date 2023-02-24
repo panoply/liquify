@@ -1,30 +1,4 @@
 /**
- * Token References
- */
-export const enum Tokens {
-  HTMLTag = 1,
-  HTMLAttribute,
-  HTMLValue,
-  LiquidEmbedded,
-  LiquidTag,
-  LiquidTagArgument,
-  LiquidTagParameter,
-  LiquidOutput,
-  LiquidObject,
-  LiquidProperty,
-  LiquidFilter,
-  LiquidFilterArgument,
-  LiquidFilterParameter
-}
-
-export const enum DataSource {
-  HTMLWorkspaceSettings = 1,
-  LiquifyContributes,
-  LiquidrcConfig,
-  LiquidSpecsFile
-}
-
-/**
  * Scope References
  *
  * Enum used to define scopes, which are
@@ -114,154 +88,7 @@ export const enum Scopes {
   Boolean
 }
 
-/**
- * Query Engine Errors
- *
- * Enum used when the query engine has
- * encountered an error.
- */
-export const enum Errors {
-  ParameterNotUnique = 1,
-  ParameterUnknown
-}
-
-/**
- * Within References
- */
-export const enum Within {
-  Tag = 1,
-  Filter,
-  Arguments,
-  Parameter,
-  ParameterValue,
-}
-
-export const enum TypeBasic {
-  any = 1,
-  object,
-  /**
-   * **BASIC TYPE**
-   *
-   * A value that is a digit integer or float type. It
-   * will assume one or the other.
-   *
-   * ---
-   *
-   * **Example**
-   *
-   * - `25`
-   * - `-39.756`
-   *
-   * ---
-   *
-   */
-  number,
-  /**
-   * **BASIC TYPE**
-   *
-   * A value that is a digit integer or float type. It
-   * will assume one or the other.
-   *
-   * ---
-   *
-   * **Example**
-   *
-   * - `25`
-   * - `-39.756`
-   *
-   * ---
-   *
-   */
-  float,
-  boolean,
-  string,
-  array
-}
-
-/**
- * Separator Types
- *
- * Enum values used to infer separator characters of
- * arguments or parameters.
- */
-export const enum Separator {
-  /**
-   * `,`
-   *
-   * Comma character
-   */
-  Comma = 1,
-  /**
-   * ` `
-   *
-   * Whitespace character
-   */
-  Whitespace,
-  /**
-   * `\n`
-   *
-   * Newline character
-   */
-  Newline,
-  /**
-   * `=`
-   *
-   * Equals character
-   */
-  Equal
-}
-
-/**
- * Engine Types
- *
- * String enums that define Liquid engines
- */
-export const enum Engine {
-  /**
-   * Liquid Standard Variation
-   *
-   * **FREE**
-   */
-  standard = 'standard',
-  /**
-   * Liquid Shopify Variation
-   *
-   * **LICENSED**
-   */
-  shopify = 'shopify',
-  /**
-   * Liquid Jekyll Variation
-   *
-   * **FREE**
-   */
-  jekyll = 'jekyll',
-  /**
-   * Liquid Eleventy Variation
-   *
-   * **FREE**
-   */
-  eleventy = 'eleventy'
-}
-
-/**
- * Combined Type Enum
- *
- * Specifications reference ranges on properties
- * and this export is used to match within those ranges.
- */
-export const enum Type {
-
-  /* -------------------------------------------- */
-  /* BASIC TYPES                                  */
-  /* -------------------------------------------- */
-  /**
-   * **BASIC TYPE**
-   *
-   * Nil Type
-   *
-   * Asserts a `nil` type was provided
-   */
-  nil = 0,
+export const enum Types {
   /**
    * **BASIC TYPE**
    *
@@ -280,7 +107,7 @@ export const enum Type {
    *
    * ---
    */
-  any,
+  Any = 1,
   /**
    * **BASIC TYPE**
    *
@@ -298,7 +125,7 @@ export const enum Type {
    * ---
    *
    */
-  object,
+  Object,
   /**
    * **BASIC TYPE**
    *
@@ -316,7 +143,7 @@ export const enum Type {
    * ---
    *
    */
-  number,
+  Number,
   /**
    * **BASIC TYPE**
    *
@@ -333,7 +160,7 @@ export const enum Type {
    * ---
    *
    */
-  float,
+  Float,
   /**
    * **BASIC TYPE**
    *
@@ -352,7 +179,7 @@ export const enum Type {
    * ---
    *
    */
-  boolean,
+  Boolean,
   /**
    * **BASIC TYPE**
    *
@@ -367,7 +194,7 @@ export const enum Type {
    *
    * ---
    */
-  string,
+  String,
   /**
    * **BASIC TYPE**
    *
@@ -388,7 +215,7 @@ export const enum Type {
    * ---
    *
    */
-  array,
+  Array,
   /**
    * **BASIC TYPE**
    *
@@ -407,11 +234,10 @@ export const enum Type {
    * ---
    *
    */
-  constant,
+  Constant,
+}
 
-  /* -------------------------------------------- */
-  /* ARGUMENT TYPES                               */
-  /* -------------------------------------------- */
+export const enum Argument {
 
   /**
    * **ARGUMENT TYPE**
@@ -429,7 +255,7 @@ export const enum Type {
    *
    * ---
    */
-  parameter,
+  Parameter,
   /**
    * **ARGUMENT TYPE**
    *
@@ -454,7 +280,7 @@ export const enum Type {
    *
    * ---
    */
-  keyword,
+  Keyword,
   /**
    * **ARGUMENT TYPE**
    *
@@ -470,12 +296,10 @@ export const enum Type {
    *
    * ---
    */
-  attribute,
+  Attribute,
+}
 
-  /* -------------------------------------------- */
-  /* TAG TYPES                                    */
-  /* -------------------------------------------- */
-
+export const enum Tags {
   /**
    * **TAG TYPE**
    *
@@ -502,7 +326,7 @@ export const enum Type {
    * - `{% unless %}`
    * - `{% else %}`
    */
-  control,
+  Control,
   /**
    * **TAG TYPE**
    *
@@ -529,7 +353,7 @@ export const enum Type {
    * - `{% # comment %}`
    * - `<!-- comment -->`
    */
-  comment,
+  Comment,
   /**
    * **TAG TYPE**
    *
@@ -558,7 +382,7 @@ export const enum Type {
    * - `<style>`
    * - `---`
    */
-  embedded,
+  Embedded,
   /**
    * **TAG TYPE**
    *
@@ -589,7 +413,7 @@ export const enum Type {
    *
    * - `{% form 'contact' %}{% endform %}`
    */
-  generator,
+  Generator,
   /**
    * **TAG TYPE**
    *
@@ -608,7 +432,7 @@ export const enum Type {
    * - `{% include '' %}`
    * - `<script src="">`
    */
-  import,
+  Import,
   /**
    * **TAG TYPE**
    *
@@ -636,7 +460,7 @@ export const enum Type {
    * - `{% cycle %}`
    * - `{% break %}` or `{% continue %}`
    */
-  iteration,
+  Iteration,
   /**
    * **TAG TYPE**
    *
@@ -662,7 +486,7 @@ export const enum Type {
    * - `{% link {{ page.my_variable }} %}`
    * - `{% post_url 2010-07-21-name-of-post %}`
    */
-  link,
+  Link,
   /**
    * **TAG TYPE**
    *
@@ -692,7 +516,7 @@ export const enum Type {
    * - `{{ variable }}`
    * - `{{ 100 }}`
    */
-  output,
+  Output,
   /**
    * **TAG TYPE**
    *
@@ -718,7 +542,7 @@ export const enum Type {
    * - `{% capture %}`
    * - `{% increment %}`
    */
-  variable,
+  Variable,
   /**
    * **TAG TYPE**
    *
@@ -743,7 +567,7 @@ export const enum Type {
    *
    * - `{% raw %} {% endraw %}`
    */
-  raw,
+  Raw,
   /**
    * **TAG TYPE**
    *
@@ -772,5 +596,5 @@ export const enum Type {
    *
    * - `{% some_tag %}`
    */
-  unknown,
+  Unknown,
 }

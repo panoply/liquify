@@ -528,6 +528,29 @@ export function setObject (name: string): boolean {
 };
 
 /**
+ * Set Type
+ *
+ * Keeps a peristed store of a specific `type` which will
+ * not change until re-setting via this function. It augments
+ * the state `type` value. Typically used when walking object properties
+ * to exclude non matching types.
+ *
+ * > This was added for usage in the vscode-liquid extension.
+ */
+export function setType (type: Type): boolean {
+
+  if (type === null) {
+    liquid.type = null;
+    return true;
+  }
+
+  liquid.type = type;
+
+  return true;
+
+}
+
+/**
  * Is Property
  *
  * Queries the current object for a property value
@@ -540,6 +563,7 @@ export function isProperty (token: string): boolean {
   const prop = liquid.object?.properties?.[token];
 
   if (!prop) return false;
+
   if (scope) liquid.variable.value = prop;
 
   if (prop?.scope) {

@@ -7,7 +7,7 @@ export const TAGS: Tags = {
   post_url: {
     type: 'output',
     description: 'Link to a post on your site, the post_url tag will generate the correct permalink URL for the post you specify',
-    singular: true,
+    singleton: true,
     reference: {
       name: 'Jekyll Liquid',
       url: 'https://jekyllrb.com/docs/liquid/tags/#linking-to-posts'
@@ -16,7 +16,7 @@ export const TAGS: Tags = {
   include: {
     type: 'import',
     description: 'The include tag allows you to include the content from another file stored in the _includes folder',
-    singular: true,
+    singleton: true,
     reference: {
       name: 'Jekyll Liquid',
       url: 'https://jekyllrb.com/docs/includes'
@@ -25,7 +25,7 @@ export const TAGS: Tags = {
   include_relative: {
     type: 'import',
     description: 'Include file fragments relative to the current file by using the include_relative tag',
-    singular: true,
+    singleton: true,
     reference: {
       name: 'Jekyll Liquid',
       url: 'https://jekyllrb.com/docs/includes/#including-files-relative-to-another-file'

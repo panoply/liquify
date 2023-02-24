@@ -1,12 +1,29 @@
 import { shopify, standard, jekyll } from './liquid/data/index';
 import { Tags, Objects, Filters } from './liquid';
+import { extend } from './liquid/controller/extend';
 import { attributes, tags, values, voids } from './html/data/index';
 import { HTMLAttributes, HTMLTags, HTMLValues } from './html';
+import { Engine } from './utils/enums';
 
 /**
  * Liquid Specifications
  */
 export const liquid: {
+/**
+ * Extend Specification
+ *
+ * This function allows the specification to be extended
+ * with custom support for different references.
+ */
+  extend: (engine: Engine, spec: {
+    objects?: Objects,
+    filters?: Filters,
+    tags?: Tags
+  }) => {
+    objects?: Objects,
+    filters: Filters,
+    tags: Tags
+  }
 
   /**
    * Standard Liquid
@@ -75,6 +92,8 @@ export const liquid: {
   }
 
 } = {
+
+  extend,
 
   get standard () {
     return standard;

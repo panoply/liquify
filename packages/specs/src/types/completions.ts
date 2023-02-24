@@ -1,5 +1,56 @@
 import type { CompletionItem } from 'vscode-languageserver-types';
 import { Arguments } from './arguments';
+import { IObject } from './objects';
+
+export interface ObjectGroup {
+  /**
+   * The specification object reference
+   */
+  object: IObject;
+  /**
+   * Partial completion item reference
+   */
+  item: CompletionItem
+}
+
+export interface ObjectGroupItems {
+  /**
+   * All Objects
+   */
+  all: CompletionItem[],
+  /**
+   * Objects which are template specific
+   */
+  template: CompletionItem[]
+  /**
+   * Objects with type `any`
+   */
+  any: CompletionItem[]
+  /**
+   * Objects with type `array`
+   */
+  array: CompletionItem[]
+  /**
+   * Objects with type `string`
+   */
+  string: CompletionItem[]
+  /**
+   * Objects with type `number`
+   */
+  number: CompletionItem[]
+  /**
+   * Objects with type `constant`
+   */
+  constant: CompletionItem[]
+  /**
+   * Objects with type `boolean`
+   */
+  boolean: CompletionItem[]
+  /**
+   * Objects with type `object`
+   */
+  object: CompletionItem[]
+}
 
 export interface Completion extends CompletionItem {
   data?: {

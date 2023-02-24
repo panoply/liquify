@@ -1,4 +1,4 @@
-import { Engine, Within, Scopes } from '../utils/enums';
+import { Engine, Within, Scopes, Type } from '../utils/enums';
 import type {
   Tag,
   Tags,
@@ -45,6 +45,12 @@ export declare interface Liquid {
    */
   object: IObject;
   /**
+   * A persisted store reference to the object type.
+   * Used when walking properties so as the property types
+   * are aligned.
+   */
+  type: Type;
+  /**
    * The current argument or parameter references
    */
   argument: Argument | ArgumentParameter;
@@ -64,6 +70,10 @@ export declare interface Liquid {
    * The current scope map value
    */
   scope: number;
+  /**
+   * A storage map for holding files and external data refs
+   */
+  readonly files: Map<string, any>;
   /**
    * Data References
    */

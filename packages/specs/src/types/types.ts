@@ -3,7 +3,6 @@ export declare namespace Types {
   export type Basic = (
     | 'any'
     | 'object'
-    | 'integer'
     | 'number'
     | 'boolean'
     | 'string'

@@ -7,10 +7,11 @@
   ],
   "include": [
     "tsup.config.ts",
-    "scripts/tsup-plugins/enums.js",
+    "scripts/tsup/tsup-enums.js",
     "src/**/*.ts",
-    "node_modules/.cache/objects.ts"
-  ],
+    "node_modules/.cache/objects.ts",
+    "scripts/*.ts"
+   ],
   "compilerOptions": {
     "incremental": false,
     "allowJs": true,
@@ -53,10 +54,10 @@
         "./src/types/*.ts",
       ],
       "tsup-plugin-enums": [
-        "scripts/tsup-plugins/enums.js"
+        "scripts/tsup/tsup-enums.js"
       ],
       "tsup-plugin-description": [
-        "scripts/tsup-plugins/description.js"
+        "scripts/tsup/description.js"
       ]
     }
   }

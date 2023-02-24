@@ -1,10 +1,8 @@
 <img src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" align="left" />&nbsp;&nbsp;<img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
 
-# @liquify/liquid-language-specs
+# @liquify/specs
 
-This package is available on the npm registry for modules consumed by the [Liquify](https://liquify.dev) parser and text editor extension/plugin but it also exists as point of reference for different Liquid variations and can be appropriated into projects outside of Liquify. At its core, the module provides lexical, parse and feature capabilities for the Liquify [Liquid Language Server](#) and [Liquid Language Parser](#).
-
-_This module extends upon the "Custom Data" approaches first introduced by the VSCode team, specifically that used in [HTML language Service](https://github.com/microsoft/vscode-html-languageservice)._
+This package is available on the npm registry for modules consumed by the [Liquify](https://liquify.dev) parser and text editor extension/plugin but it also exists as point of reference for different Liquid variations and can be appropriated into projects outside of Liquify. At its core, the module provides lexical, parse and feature capabilities for the Liquify [Liquid Language Server](https://github.com/panoply/liquify/tree/next/packages/server) and [Liquid Language Parser](https://github.com/panoply/liquify/tree/next/packages/parser).
 
 ### What?
 
@@ -32,12 +30,12 @@ The following Liquid variations are scheduled to be mapped.
 # Install
 
 ```
-pnpm add @liquify/liquid-language-specs
+pnpm add @liquify/specs
 ```
 
 # Usage
 
-The module provides a informal Query Engine that interfaces with both HTML and Liquid specifications. The module enables the Liquify [Liquid Language Server](#) and [Liquid Language Parser](#) to interact, traverse and query raw data at different points. This allows for capabilities like code completions, validations (linting) and signatures to be provided. The query engine is typically used by the parser and each time a tag, object or filter is encountered during traversal operations we query its specification reference and from here the scanner (or language server) will act accordingly.
+The module provides a informal Query Engine that interfaces with both HTML and Liquid specifications. The module enables the Liquify [Liquid Language Server](https://github.com/panoply/liquify/tree/next/packages/server) and [Liquid Language Parser](#) to interact, traverse and query raw data at different points. This allows for capabilities like code completions, validations (linting) and signatures to be provided. The query engine is typically used by the parser and each time a tag, object or filter is encountered during traversal operations we query its specification reference and from here the scanner (or language server) will act accordingly.
 
 Read More about [queries](docs/06-queries.md)
 
@@ -46,7 +44,7 @@ Read More about [queries](docs/06-queries.md)
 We can access the specifications via 2 named exports, `html5` and `liquid`. Both exports are objects and provide us direct access to the data (ie: specifications). These data exports are merely convenience exports that expose the specifications used by the providers (`p`) and queries (`q`) exports that are at the core of traversal.
 
 ```typescript
-import { html5, liquid } from '@liquify/liquid-language-specs';
+import { html5, liquid } from '@liquify/specs';
 
 // LIQUID STANDARD
 
@@ -83,7 +81,7 @@ The `$` state named export holds in-stream data reference to the specification v
 
 <!-- prettier-ignore -->
 ```typescript
-import { $ } from '@liquify/liquid-language-specs';
+import { $ } from '@liquify/specs';
 
 // LIQUID
 
@@ -94,8 +92,10 @@ $.liquid.object;        // The object or property object specification in traver
 $.liquid.argument;      // The tag or filter argument record in traversal
 $.liquid.value;         // The current tag, filter or object value in traversal
 $.liquid.separator;     // The current separator character code (if any)
+$.liquid.type;          // A persisted reference to a certain type, like an object type
 $.liquid.within;        // An enum number value informing upon the within status
 $.liquid.variable;      // A string[] list value which holds reference to an assigned value
+$.liquid.files;         // Map reference which maintain file specific data.
 
 // HTML5
 
@@ -109,7 +109,7 @@ $.html5.value;         // The attribute value specification in traversal
 The `q` query export allows us to navigate through specifications. These methods are typically used by the Liquify parser and will augment the state `$` references during lexical analysis. Almost all queries and operations update state `$` records.
 
 ```typescript
-import { q } from '@liquify/liquid-language-specs';
+import { q } from '@liquify/specs';
 
 // LISTS
 
@@ -120,32 +120,33 @@ q.getObjects(engine?: Engine): string[]
 // SETTERS
 
 q.setEngine(engine: IEngine): void
-q.setTag(token: string): boolean
-q.setFilter(token: string): boolean
-q.setObject(token: string): boolean
-q.setVariable(token: string): boolean
+q.setTag(token: string): boolean;
+q.setType(type: string): boolean;
+q.setFilter(token: string): boolean;
+q.setObject(token: string): boolean;
+q.setVariable(token: string): boolean;
 
 // VALIDATORS
 
-q.isError(err: QueryError): boolean
-q.isObjectType(type: number): boolean
-q.isOptional(from: number): boolean
-q.isAllowed(prop: string): boolean
-q.isParameter(token: string): boolean
-q.isArgument(type: Type): boolean
-q.isProperty(token: string): boolean
-q.isRequired(): boolean
-q.isTagType(type: Type): boolean
-q.isType(type: Type): boolean
-q.isValue(token: string): boolean
-q.isVoid(token: string): boolean
-q.isWithin(token: Within): boolean
+q.isError(err: QueryError): boolean;
+q.isObjectType(type: number): boolean;
+q.isOptional(from: number): boolean;
+q.isAllowed(prop: string): boolean;
+q.isParameter(token: string): boolean;
+q.isArgument(type: Type): boolean;
+q.isProperty(token: string): boolean;
+q.isRequired(): boolean;
+q.isTagType(type: Type): boolean;
+q.isType(type: Type): boolean;
+q.isValue(token: string): boolean;
+q.isVoid(token: string): boolean;
+q.isWithin(token: Within): boolean;
 
 // NAVIGATORS
 
-q.nextArgument(): boolean
-q.nextParameter(): boolean
-q.prevArgument(): boolean
+q.nextArgument(): boolean;
+q.nextParameter(): boolean;
+q.prevArgument(): boolean;
 
 // OTHER
 
@@ -155,22 +156,25 @@ q.reset(): void
 
 ### Provide (`p`)
 
-The `p` providers named export exposes methods that facilitate capabilities in the Liquify [Liquid Language Server](#). These are features which provide the data used by LSP specific capabilities like code completions, signatures and linting in text editors (like vscode). Providers are different from `q` queries and specific to LSP.
+The `p` providers named export exposes methods that facilitate capabilities in the Liquify [Liquid Language Server](https://github.com/panoply/liquify/tree/next/packages/server). These are features which provide the data used by LSP specific capabilities like code completions, signatures and linting in text editors (like vscode). Providers are different from `q` queries and specific to LSP.
 
 > When settings a new Liquid engine via `q.setEngine()` the reference for Liquid will be updated to the variation.
 
 <!-- prettier-ignore -->
 ```typescript
-import { p } from '@liquify/liquid-language-specs';
+import { p } from '@liquify/specs';
+
+p.ObjectDetail(type: Type)
+p.ObjectGroups(template: string)
 
 // LIQUID
 
 p.LiquidSignatures()
 p.LiquidCompletions()
-p.LiquidTagResolve(item: CompletionItem): CompletionItem
-p.LiquidFilterResolve(item: CompletionItem): CompletionItem
-p.LiquidOutputResolve(item: CompletionItem): CompletionItem
-p.LiquidPropertyComplete(item: CompletionItem): CompletionItem
+p.LiquidTagResolve(item: CompletionItem): CompletionItem;
+p.LiquidFilterResolve(item: CompletionItem): CompletionItem;
+p.LiquidOutputResolve(item: CompletionItem): CompletionItem;
+p.LiquidPropertyComplete(item: CompletionItem): CompletionItem;
 
 // HTML
 
@@ -213,7 +217,7 @@ The Shopify specifications pull in data from the [theme-liquid-docs](https://git
 
 _Not yet supported_
 
-#### Liquid 11ty
+### Liquid 11ty
 
 _Not yet supported_
 

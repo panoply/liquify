@@ -29,6 +29,11 @@ export const assign = Object.assign;
 export const entries = Object.entries;
 
 /**
+ * Cached Native Object.values
+ */
+export const values = Object.values;
+
+/**
  * Cached Native Array.isArray
  */
 export const isArray = Array.isArray;

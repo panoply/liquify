@@ -354,7 +354,7 @@ export const filters: Filters = {
     description: 'Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places',
     arguments: [
       {
-        type: 'integer',
+        type: 'number',
         required: false
       }
     ],
@@ -382,11 +382,11 @@ export const filters: Filters = {
     snippet: 'slice: $1 $0',
     arguments: [
       {
-        type: 'integer',
+        type: 'number',
         required: true
       },
       {
-        type: 'integer',
+        type: 'number',
         required: false
       }
     ],
@@ -399,7 +399,7 @@ export const filters: Filters = {
     description: 'Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array’s items to use for sorting',
     arguments: [
       {
-        type: 'integer',
+        type: 'number',
         required: false
       }
     ],
@@ -469,7 +469,7 @@ export const filters: Filters = {
     snippet: 'truncate: $1 $0',
     arguments: [
       {
-        type: 'integer',
+        type: 'number',
         required: true
       },
       {
@@ -487,7 +487,7 @@ export const filters: Filters = {
     snippet: 'truncatewords: $1 $0',
     arguments: [
       {
-        type: 'integer',
+        type: 'number',
         required: true
       },
       {

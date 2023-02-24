@@ -1,25 +1,10 @@
-import { References } from './shared';
+import { Descriptions, References } from './shared';
 import { Arguments } from './arguments';
+import { Types } from './types';
 
 /* FILTER INTERFACE EXPORT -------------------- */
 
-export declare interface Filter {
-  /**
-   * Description
-   *
-   * Description of the filter
-   *
-   * @default undefined
-   */
-  readonly description?: string
-  /**
-   * Reference
-   *
-   * URL reference to online documentation explaining this filter
-   *
-   * @default undefined
-   */
-  readonly reference?: References;
+export declare interface Filter extends Descriptions {
   /**
    * Deprecated
    *
@@ -27,7 +12,15 @@ export declare interface Filter {
    *
    * @default false
    */
-  readonly deprecated?: boolean;
+  deprecated?: boolean;
+  /**
+   * Reference
+   *
+   * URL reference to online documentation explaining this filter
+   *
+   * @default undefined
+   */
+  reference?: References;
   /**
    * Snippet
    *
@@ -35,7 +28,32 @@ export declare interface Filter {
    *
    * @default undefined
    */
-  readonly snippet?: string;
+  snippet?: string;
+  /**
+   * Expects
+   *
+   * This infers the type in which the filter *expects* to recieve.
+   * We use this value to denote expectations, for example say a
+   * boolean was passed to a number filter, see below:
+   *
+   * @example
+   *
+   * {{ false | plus: 1 }}
+   *
+   * @default any
+   */
+  expects?: Types.Basic;
+  /**
+   * Returns
+   *
+   * This infers the type in which the filter *returns*.
+   *
+   * @example
+   *
+   * // Return type is array
+   * {{ 'foo,bar,baz' | split: ',' }}
+   */
+  returns?: Types.Basic
   /**
    * Scope
    *
@@ -44,7 +62,7 @@ export declare interface Filter {
    *
    * @default undefined
    */
-  readonly scope?: string[] | undefined
+  scope?: string | undefined
   /**
    * Filter arguments can differ greatly depending on how they are
    * implemented. The spec understands the below filter structures:
@@ -57,7 +75,7 @@ export declare interface Filter {
    *
    * @default undefined
    */
-  readonly arguments?: Arguments
+  arguments?: Arguments
 
 }
 

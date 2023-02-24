@@ -8,7 +8,7 @@ export const tags: Tags = {
     type: 'comment',
     description: 'Prevents an expression from being rendered or output.',
     snippet: '$1',
-    singular: true,
+    singleton: true,
     reference: {
       name: 'Standard Liquid',
       url: 'https://shopify.dev/api/liquid/tags#inline_comment'
@@ -19,7 +19,7 @@ export const tags: Tags = {
     description: 'Creates a new variable.',
     snippet: '$1 = $2',
     filters: true,
-    singular: true,
+    singleton: true,
     reference: {
       name: 'Standard Liquid',
       url: 'https://shopify.github.io/liquid/tags/variable/#assign'
@@ -28,7 +28,7 @@ export const tags: Tags = {
   },
   break: {
     type: 'iteration',
-    singular: true,
+    singleton: true,
     parents: [
       'for',
       'tablerow'
@@ -71,7 +71,7 @@ export const tags: Tags = {
   continue: {
     type: 'iteration',
     description: 'Causes the loop to skip the current iteration when it encounters the continue tag.',
-    singular: true,
+    singleton: true,
     parents: [
       'for',
       'tablerow'
@@ -84,7 +84,7 @@ export const tags: Tags = {
   },
   cycle: {
     type: 'iteration',
-    singular: true,
+    singleton: true,
     description: 'Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.',
     parents: [ 'for', 'tablerow' ],
     reference: {
@@ -95,7 +95,7 @@ export const tags: Tags = {
   },
   decrement: {
     description: 'Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.',
-    singular: true,
+    singleton: true,
     filters: false,
     type: 'variable',
     reference: {
@@ -107,7 +107,7 @@ export const tags: Tags = {
   echo: {
     type: 'output',
     description: 'Using the echo tag is the same as wrapping an expression in curly brackets ({{ and }}). However, unlike the curly bracket method, you can use the echo tag inside liquid tags.',
-    singular: true,
+    singleton: true,
     filters: true,
     reference: {
       name: 'Standard Liquid',
@@ -117,7 +117,7 @@ export const tags: Tags = {
   else: {
     type: 'control',
     description: 'Add condition within an if or unless block.',
-    singular: true,
+    singleton: true,
     parents: [
       'if',
       'elsif',
@@ -134,7 +134,7 @@ export const tags: Tags = {
   },
   elsif: {
     description: 'Adds more conditions within an if or unless block.',
-    singular: true,
+    singleton: true,
     type: 'control',
     parents: [ 'if' ],
     reference: {
@@ -153,11 +153,11 @@ export const tags: Tags = {
     },
     parameters: {
       offset: {
-        type: 'integer',
+        type: 'number',
         description: 'Begins the loop at the specified index'
       },
       limit: {
-        type: 'integer',
+        type: 'number',
         description: 'Limits the loop to the specified number of iterations'
       },
       reversed: {
@@ -177,7 +177,7 @@ export const tags: Tags = {
   },
   increment: {
     description: 'Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.',
-    singular: true,
+    singleton: true,
     filters: false,
     type: 'variable',
     reference: {
@@ -189,7 +189,7 @@ export const tags: Tags = {
   liquid: {
     description: 'Encloses multiple tags within one set of delimiters, to allow writing Liquid logic more concisely.',
     type: 'unknown',
-    singular: true,
+    singleton: true,
     reference: {
       name: 'Standard Liquid',
       url: 'https://shopify.github.io/liquid/tags/template/#liquid'
@@ -207,7 +207,7 @@ export const tags: Tags = {
     description: 'Insert the rendered content of another template within the current template.\n\nThe code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.',
     snippet: "'$1'",
     filters: false,
-    singular: true,
+    singleton: true,
     type: 'import',
     reference: {
       name: 'Standard Liquid',
@@ -220,15 +220,15 @@ export const tags: Tags = {
     type: 'iteration',
     parameters: {
       cols: {
-        type: 'integer',
+        type: 'number',
         description: 'Defines how many columns the tables should have.'
       },
       limit: {
-        type: 'integer',
+        type: 'number',
         description: 'Exits the tablerow loop after a specific index.'
       },
       offset: {
-        type: 'integer',
+        type: 'number',
         description: 'Starts the tablerow loop after a specific index.'
       }
     }
@@ -250,7 +250,7 @@ export const tags: Tags = {
   },
   when: {
     description: 'Define the various conditions set by the "{% case %}" tag',
-    singular: true,
+    singleton: true,
     type: 'control',
     parents: [ 'case' ],
     reference: {

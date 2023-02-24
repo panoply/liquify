@@ -1,13 +1,13 @@
 import { defineConfig } from 'tsup';
-import { enums } from 'tsup-plugin-enums';
 
 export default defineConfig([
   {
-    entry: [ './src/build/shopify.ts' ],
+    entry: [ './scripts/shopify-specs.ts' ],
     outDir: 'bin',
-    clean: false,
+    clean: true,
+    bundle: true,
     format: 'cjs',
-    bundle: true
+    onSuccess: 'node ./bin/shopify-specs.js && eslint ./src/liquid/data/shopify/*.ts --fix'
   },
   {
 
@@ -37,17 +37,7 @@ export default defineConfig([
       },
       resolve: true
     },
-    clean: process.env.predev === 'true' ? true : [
-      '!./package/html/attributes.js',
-      '!./package/html/tags.js',
-      '!./package/html/values.js',
-      '!./package/html/voids.js',
-      '!./package/liquid/jekyll.js',
-      '!./package/liquid/shopify.js',
-      '!./package/liquid/standard.js',
-      '!./package/index.js',
-      '!./package/specs.d.ts'
-    ],
+    clean: true,
     outDir: 'package',
     legacyOutput: false,
     splitting: true,
@@ -59,8 +49,8 @@ export default defineConfig([
         {
           any: 1,
           object: 2,
-          integer: 3,
-          number: 4,
+          number: 3,
+          float: 4,
           boolean: 5,
           string: 6,
           array: 7,
@@ -88,6 +78,29 @@ export default defineConfig([
         }
       )
     ]
-
   }
 ]);
+
+/**
+ * TSUP Plugin: Enums
+ *
+ * Converts all string `type` references to enum values.
+ * This ensures the parser can reason with specifications
+ * in the most optimal manner.
+ */
+function enums (value = {}) {
+
+  const names = Object.keys(value).join('|');
+  const match = `(?<=(?:separator|type|items):\\s{0,})['"]\\b(${names})\\b['"](?=[\n,]?)`;
+  const regexp = new RegExp(match, 'g');
+
+  return {
+    name: 'string-to-enum',
+    renderChunk: (code:string) => {
+
+      return {
+        code: code.replace(regexp, (m, type) => value[type])
+      };
+    }
+  };
+}

@@ -7,11 +7,13 @@ export const liquid: Liquid = {
   tag: undefined,
   filter: undefined,
   object: undefined,
+  type: undefined,
   argument: undefined,
   value: undefined,
   within: undefined,
   scope: undefined,
   variable: undefined,
+  files: new Map(),
   data: {
     variation: specification.standard,
     variables: new Map(),
