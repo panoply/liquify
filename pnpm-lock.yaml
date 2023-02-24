@@ -52,9 +52,9 @@ importers:
 
   configs/prettier-config:
     specifiers:
-      prettier: ^2.7.1
+      prettier: ^2.8.4
     devDependencies:
-      prettier: 2.7.1
+      prettier: 2.8.4
 
   configs/tsconfig:
     specifiers: {}
@@ -14864,13 +14864,6 @@ packages:
   /prepend-http/2.0.0:
     resolution: {integrity: sha512-ravE6m9Atw9Z/jjttRUZ+clIXogdghyZAuWJ3qEzjT+jI/dL1ifAqhZeC5VHzQp1MSt1+jxKkFNemj/iO7tVUA==}
     engines: {node: '>=4'}
-    dev: true
-
-  /prettier/2.7.1:
-    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-    requiresBuild: true
     dev: true
 
   /prettier/2.8.3:

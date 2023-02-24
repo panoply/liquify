@@ -48,7 +48,3 @@ _.html
 ### License
 
 [MIT](#LICENSE)
-
-```
-
-```

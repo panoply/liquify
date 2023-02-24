@@ -1,6 +1,6 @@
 {
   "name": "@liquify/prettier-config",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Sharable Prettier config consumed within the Liquify monorepo workspace.",
   "main": "index.js",
   "author": {
@@ -27,9 +27,9 @@
     "pnpm": ">=6"
   },
   "devDependencies": {
-    "prettier": "^2.7.1"
+    "prettier": "^2.8.4"
   },
   "peerDependencies": {
-    "prettier": "^2.7.1"
+    "prettier": "^2.8.4"
   }
 }
