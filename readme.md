@@ -26,37 +26,41 @@ Liquify provides powerful language tooling for the [Liquid Template Language](ht
 
 The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is leveraged by hundreds of different SaaS services, thousands of open source projects and tends to be the preferred choice for JAM~Stacked generated web applications. Despite Liquid being actively maintained by Shopify, their current solutions are missing a lot of key capabilities which I consider necessities.
 
-Liquify was created to solve the issue of lack-lustered and otherwise incompatible solutions which exist in the Liquid nexus. It intends to provide everything required for Shopify themes, Jekyll and 11ty static sites or custom projects leveraging Liquid as the consumer. It aims to deliver powerful text editor features that enrich the programing experience and lives of those working with the template language.
+Liquify was created to solve the issue of lack-lustered and otherwise incompatible solutions which exist in the Liquid nexus. It intends to provide everything required for Shopify themes, Jekyll and 11ty static sites or custom projects leveraging Liquid as the consumer. It aims to deliver powerful text editor features that enrich the programming experience and lives of those working with the template language.
 
 ###### LICENSING
 
-**Package licensing matters! [MIT](https://mit-license.org/), [PROPRIETARY](#) or [CC BY-NC-ND 4.0](#) licenses are imposed. Though the code is public, please be aware of the licensing of each package.**
+**Package licensing matters! [MIT](https://mit-license.org/), [PROPRIETARY](#) or [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) licenses are imposed. Though the code is public, please be aware of the licensing of each package.**
 
 # Packages
 
 Liquify is monorepo project and most packages contained within this repository are available for download on the NPM Registry. Consult the readme of each package for a deeper understanding of a modules use-case and appropriation.
 
-### Client Packages
+## Client Packages
 
 These packages are the text editor [LSP](https://microsoft.github.io/language-server-protocol/specifications/specification-current/) clients.
 
 - [@liquify/vscode](https://github.com/panoply/liquify/tree/next/packages/vscode)
-- [@liquify/atom](https://github.com/panoply/liquify/tree/next/packages/atom)
 - [@liquify/sublime](https://github.com/panoply/liquify/tree/next/packages/sublime)
 - [@liquify/vim](https://github.com/panoply/liquify/tree/next/packages/vim)
 
-### Core Packages
+## Core Packages
 
 These packages are considered the _core_ modules of the project.
 
 - [@liquify/liquid-parser](https://github.com/panoply/liquify/tree/next/packages/parser)
 - [@liquify/liquid-language-server](https://github.com/panoply/liquify/tree/next/packages/server)
-- [@liquify/liquid-language-specs](https://github.com/panoply/liquify/tree/next/packages/specs)
-- [@liquify/prettify](https://github.com/panoply/liquify/tree/next/packages/prettify)
+- [@liquify/specs](https://github.com/panoply/liquify/tree/next/packages/specs)
 - [@liquify/schema](https://github.com/panoply/liquify/tree/next/packages/schema)
-- [@liquify/syncify](https://github.com/panoply/liquify/tree/next/packages/syncify)
 
-### Config Packages
+## Isolated Packages
+
+These packages exist in the monorepo but are distributed independent of the Liquify organization NPM registry name.
+
+- [esthetic](https://github.com/panoply/liquify/tree/next/packages/esthetic)
+- [syncify](https://github.com/panoply/liquify/tree/next/packages/syncify)
+
+## Config Packages
 
 These packages are the sharable configurations for the development workspace.
 
@@ -64,7 +68,7 @@ These packages are the sharable configurations for the development workspace.
 - [@liquify/prettier-config](https://github.com/panoply/liquify/tree/next/utils/prettier-config)
 - [@liquify/tsconfig](https://github.com/panoply/liquify/tree/next/utils/tsconfig)
 
-### Miscellaneous Packages
+## Miscellaneous Packages
 
 These are an assortment a different packages which were developed for specific purposes. They are made available as modules for consumption by projects that may wish to use or require them.
 

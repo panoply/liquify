@@ -93,7 +93,7 @@ The directory structure . This structure is far more logical and visually pleasi
 
 #### JavaScript
 
-The project implements [Mithril.js](https://mithril.js.org/), [Stimulus.js](https://stimulusjs.org/) and [SPX](https://spx.js.org/). These 3 modules act in unity to provide a static hybrid PWA browsing experience. This odd and otherwise opinionated combination of Open Source tools results in blazing fast renders and instant per page navigation requests.
+The project implements [Mithril.js](https://mithril.js.org/), [Stimulus.js](https://stimulusjs.org/) and [SPX](https://spx.js.org/). These 3 modules act in unity to provide a static hybrid PWA browsing experience. This odd and otherwise opinionated combination of Open Source tools results in fast renders and instant per page navigation requests.
 
 #### Styling
 
