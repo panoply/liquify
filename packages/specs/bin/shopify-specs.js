@@ -189,6 +189,7 @@ function objects() {
         );
       }
     }
+    string.push("---");
     if (path2) {
       string.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/${path2}#${name})
 

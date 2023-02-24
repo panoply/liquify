@@ -138,6 +138,8 @@ function objects () {
       }
     }
 
+    string.push('---');
+
     if (path) {
       string.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/${path}#${name})\n\n`);
     } else {
