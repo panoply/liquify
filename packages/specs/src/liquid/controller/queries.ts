@@ -550,6 +550,38 @@ export function setType (type: Type): boolean {
 
 }
 
+/* -------------------------------------------- */
+/* CHECKSUMS                                    */
+/* -------------------------------------------- */
+
+/**
+ * Has Object
+ *
+ * Queries the current variation to check whether or not the
+ * provided name parameter exist in the object specifications.
+ *
+ * **DOES NOT MODIFY STATE**
+ */
+export function hasObject (name: string): boolean {
+
+  return name in liquid.data.variation?.objects;
+
+}
+
+/**
+ * Has Property
+ *
+ * Queries the current object in state to check whether or not the
+ * provided `prop` parameter exists on the object
+ *
+ * **DOES NOT MODIFY STATE**
+ */
+export function hasProperty (name: string): boolean {
+
+  return name in liquid.object?.properties;
+
+}
+
 /**
  * Is Property
  *
@@ -557,6 +589,11 @@ export function setType (type: Type): boolean {
  * matching the parameter `value` provided. The object state
  * reference will update and point to the property
  * value when a match occurs.
+ *
+ * Accepts an optional `scopeArrays` which defaults to `true`
+ * and will allow the spec to move state forward when object
+ * type is array and its scope property matches. When `false`,
+ * the object will persist.
  */
 export function isProperty (token: string): boolean {
 
@@ -566,14 +603,11 @@ export function isProperty (token: string): boolean {
 
   if (scope) liquid.variable.value = prop;
 
-  if (prop?.scope) {
+  if (prop?.scope) return setObject(prop.scope);
 
-    return setObject(prop.scope);
+  liquid.object = prop;
 
-  } else {
-    liquid.object = prop;
-    return true;
-  }
+  return true;
 
 }
 
@@ -613,7 +647,7 @@ export function isParent (name: string) {
  *
  * Checks to see if the provide parameter is a scoped variable,
  * meaning that it holds a property assignment (ie: object).
- * When determined, the the state `liquid.object` is aligned
+ * When determined, the state `liquid.object` is aligned
  * and boolean type `true` is returned. If the variable scope does not
  * hold a property assignment then `false` is returned.
  *
