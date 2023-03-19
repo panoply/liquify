@@ -1,7 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
-  background: #0e0e0e;
+  background: #0f1215;
 }
 
 .moloko-editor {
@@ -61,7 +61,7 @@ body {
   overflow-y: scroll;
   font-size: 0.785rem;
   font-family: Arial, Helvetica, sans-serif;
-  background: #0e0e0e;
+  background: #0f1215;
   border-top: 0.01rem solid #444;
   border-right: 0.01rem solid #444;
   border-left: 0.01rem solid #444;
@@ -112,7 +112,7 @@ body {
   width: 100%;
   height: 100%;
   padding: 25px;
-  background: #0e0e0e;
+  background: #0f1215;
 }
 .newfile_overlay > p {
   color: #fff;
@@ -138,7 +138,7 @@ body {
   font-size: 0.785rem;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 30px;
-  background: #0e0e0e;
+  background: #0f1215;
   border-top: 0.01rem solid #666;
   -webkit-font-smoothing: antialiased;
 }
@@ -169,7 +169,7 @@ body {
   display: none;
   color: #666;
   font-size: 11px;
-  background-color: #0e0e0e;
+  background-color: #0f1215;
 }
 .potion_footer footer > ul > li.language-auto:hover span.hover-above {
   display: block;
@@ -289,7 +289,7 @@ body {
   z-index: 9999;
   display: block;
   width: 270px;
-  background: #0e0e0e;
+  background: #0f1215;
   border-left: 0.01rem solid #666;
   will-change: auto;
 }
@@ -310,7 +310,7 @@ body {
   width: 100%;
   height: 39.5px;
   color: #fff;
-  background: #0e0e0e;
+  background: #0f1215;
   border-bottom: 0.01rem solid #666;
 }
 .potion_tabs > ul {
@@ -402,7 +402,7 @@ body {
 .potion_tabs .tab_item.active {
   height: 41px;
   color: #fff;
-  background: #0e0e0e;
+  background: #0f1215;
 }
 .potion_tabs .tab_item.active .delete {
   display: block;

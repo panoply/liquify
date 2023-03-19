@@ -1,4 +1,5 @@
-import type { IEditSession, Split } from 'types/editor';
+import type { Editor, IEditSession, Split } from 'types/editor';
+import type { Rules } from 'esthetic';
 import m from 'mithril';
 
 export type Languages = (
@@ -40,13 +41,6 @@ export interface Options {
    * @default 12.7 // converts to pixels
    */
   fontSize?: number;
-  /**
-   * Whether or not to enable file tabs. Optionally
-   * provide default tabs.
-   */
-  fileTabs?: boolean | {
-
-  };
   /**
    * Mithril components to be rendered
    */
@@ -116,70 +110,7 @@ export interface Options {
 
 type GetBasePath<T extends Options['basePath']> = T extends '.' ? './' : `./${string}/`
 
-export interface ISamples {
-
-  'html5-doctype.html': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/html/html5-doctype.js`;
-  'json-ld-sample.html': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/html/json-ld-sample.js`;
-  'attribute-sorting.html': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/html/attribute-sorting.js`;
-  'comment-ignores.html': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/html/comment-ignores.js`;
-
-  'attribute-values.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/attribute-values.js`;
-  'eleventy-sample.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/eleventy-sample.js`;
-  'embedded-languages.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/embedded-languages.js`;
-  'frontmatter.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/frontmatter.js`;
-  'jekyll-sample.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/jekyll-sample.js`;
-  'script-with-liquid.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/script-with-liquid.js`;
-  'shopify-sample.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/shopify-sample.js`;
-  'shopify-section.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/shopify-section.js`;
-  'style-with-liquid.liquid': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/style-with-liquid.js`;
-
-  'arrays-and-objects.js': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/javascript/arrays-and-objects.js`;
-  'block-comments.js': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/javascript/block-comments.js`;
-  'condition-samples.js': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/javascript/condition-samples.js`;
-  'functions-and-promises.js': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/javascript/functions-and-promises.js`;
-  'js-with-liquid.js': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/javascript/js-with-liquid.js`;
-  'jsx-sample.js': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/javascript/jsx-sample.js`;
-  'object-sorting.js': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/javascript/object-sorting.js`;
-  'variables-and-methods.js': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/javascript/variables-and-methods.js`;
-
-  'declaration-sample.ts': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/typescript/declaration-sample.js`;
-  'decorators.ts': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/typescript/decorators.js`;
-  'interface-sample.ts': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/typescript/interface-sample.js`;
-  'tsx-sample.ts': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/typescript/tsx-sample.js`;
-
-  'liquid-in-css.css': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/liquid-in-css.js`;
-  'liquid-in-scss.scss': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/liquid-in-scss.js`;
-  'mixins-sample.scss': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/mixins-sample.js`;
-  'properties-and-classes.css': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/properties-and-classes.js`;
-  'sass-functions.scss': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/sass-functions.js`;
-  'sass-variables.scss': `${GetBasePath<'.' | `./${string}/`>}moloko/samples/liquid/sass-variables.js`;
-
-}
-
 export interface Paths {
-  /**
-   * The paths to external extension modules
-   */
-  extensions: {
-    split: `${GetBasePath<'.' | `./${string}/`>}moloko/extensions/split.js`
-  },
-  /**
-   * The paths to external package modules
-   */
-  modules: {
-    prettify: `${GetBasePath<'.' | `./${string}/`>}moloko/modules/prettify.js`
-  },
-  /**
-   * The paths to external package modules
-   */
-  workers: {
-    base: `${GetBasePath<'.' | `./${string}/`>}moloko/workers/worker-base.js`,
-    html: `${GetBasePath<'.' | `./${string}/`>}moloko/workers/worker-html.js`,
-    css: `${GetBasePath<'.' | `./${string}/`>}moloko/workers/worker-css.js`,
-    json: `${GetBasePath<'.' | `./${string}/`>}moloko/workers/worker-json.js`,
-    xml: `${GetBasePath<'.' | `./${string}/`>}moloko/workers/worker-xml.js`,
-    javascript: `${GetBasePath<'.' | `./${string}/`>}moloko/workers/worker-javascript.js`
-  },
   /**
    * The paths to themes contained within the project.
    */
@@ -206,11 +137,6 @@ export interface Paths {
     text: `${GetBasePath<'.' | `./${string}/`>}moloko/language/text.js`,
     auto: `${GetBasePath<'.' | `./${string}/`>}moloko/language/text.js`
   };
-  /**
-   * Language sample snippets, typically not required and exist purely for Prettify
-   * playground.
-   */
-  samples: ISamples
 }
 
 export interface Attrs {
@@ -232,10 +158,6 @@ export interface Attrs {
    * @default 'Liquid
    */
   languageName: string;
-  /**
-   * The code sample (if not selected is null)
-   */
-  sample: string;
   /**
    * The font size of the editor
    *
@@ -268,12 +190,6 @@ export interface Attrs {
    */
   pane: 'split' | 'editor' | 'preview'
   /**
-   * Whether or not select sample is open
-   *
-   * @default false
-   */
-  selectSample: boolean;
-  /**
    * Whether or not select language is open
    *
    * @default false
@@ -304,6 +220,10 @@ export interface Attrs {
    */
   output: IEditSession;
   /**
+   * Æsthetic rules editor session and instance
+   */
+  rules: Editor;
+  /**
    * An index reference to the current opened file.
    * When not using file tabs, this will be `0`
    */
@@ -329,10 +249,9 @@ export interface Attrs {
    * Prettify stats copy
    */
   stats?: {
-    prettifyTime: string;
+    estheticTime: string;
     languageName: string;
     characterLength: string;
-    sizeOfFile: string;
   }
 }
 
@@ -340,7 +259,6 @@ export interface Hash {
   language: Languages;
   languageName: string;
   idx: 0 | 1
-  sample: string;
   autoDetect: boolean;
   fontSize: number;
   pane: 'split' | 'editor' | 'preview'
@@ -351,4 +269,5 @@ export interface Hash {
   stats: Attrs['stats'];
   input: string;
   output: string;
+  rules: Rules;
 }

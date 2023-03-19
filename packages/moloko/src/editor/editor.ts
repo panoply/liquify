@@ -1,10 +1,11 @@
-import { Attrs } from '@types';
+import { Attrs } from 'types';
 import * as ace from 'ace';
 import { Split } from 'ace/split';
-import * as hash from '@hash';
-import * as store from '@store';
-import { toggleViews } from '@actions';
+import * as hash from 'editor/hash';
+import * as store from 'store';
+import { pane } from 'actions';
 import m from 'mithril';
+import esthetic from 'esthetic';
 
 /* function create (attrs: Attrs, dom: HTMLElement) {
 
@@ -80,34 +81,33 @@ export const Editor: m.Component<Attrs> = {
 
     attrs.editor = new Split(dom, 'ace/theme/potion', 2);
 
-    // if (store.options.hash && attrs.hash) {
+    if (store.options.hash && attrs.hash) {
 
-    //  // const text = hash.decode(attrs.hash);
-    //  // const mode = await store.language(text.language);
+      const text = hash.decode(attrs.hash);
+      const mode = await store.language(text.language);
 
-    //   attrs.input = ace.createEditSession(text.input, mode);
-    //   attrs.output = ace.createEditSession(text.output, mode);
-    //   attrs.language = text.language;
-    //   attrs.autoDetect = text.autoDetect;
-    //   attrs.sample = text.sample;
-    //   attrs.languageName = text.languageName;
-    //   attrs.stats = text.stats;
-    //   attrs.mode = text.mode;
+      attrs.input = ace.createEditSession(text.input, mode);
+      attrs.output = ace.createEditSession(text.output, mode);
+      attrs.language = text.language;
+      attrs.autoDetect = text.autoDetect;
+      attrs.languageName = text.languageName;
+      attrs.stats = text.stats;
+      attrs.mode = text.mode;
 
-    // } else {
+      esthetic.rules(text.rules);
 
-    const mode = await store.language(attrs.language);
+    } else {
 
-    attrs.input = ace.createEditSession('', mode);
-    attrs.output = ace.createEditSession('', mode);
+      const mode = await store.language(attrs.language);
+      attrs.input = ace.createEditSession('', mode);
+      attrs.output = ace.createEditSession('', mode);
 
-    if (store.options.hash) hash.encode();
+      // if (store.options.hash) hash.encode();
 
-    // }
+    }
 
-    toggleViews(attrs.pane);
+    pane(attrs.pane);
 
-    //  toggleViews('editor');
     attrs.ready = true;
 
   },

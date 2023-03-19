@@ -1,40 +1,24 @@
-import { Ace } from '@types';
-import esthetic, { Rules, Language } from 'esthetic';
-import { attrs, commands } from '@attrs';
-import { language } from '@store';
+import { Ace } from 'types';
+import esthetic, { Rules } from 'esthetic';
+import { attrs } from 'attrs';
 import m from 'mithril';
 import './build/moloko.css';
 
 export async function newMode () {
 
-  const options = esthetic.language(attrs.language as any);
+  const options = esthetic.detect(attrs.language as any);
 
   try {
-    const value = await esthetic.format(attrs.input.getValue(), options);
+
+    const value = esthetic.format(attrs.input.getValue(), options);
     attrs.output.setValue(value);
+
   } catch (text) {
+
     return attrs.output.setValue(text);
+
   }
 
-}
-
-function onChangeTest (input: string, options: Language) {
-
-  language(options.language as any).then(mode => {
-
-    attrs.input.setMode(mode);
-    attrs.output.setMode(mode);
-
-    attrs.language = options.language as any;
-    attrs.languageName = options.languageName;
-
-    esthetic[options.language](input).then(value => {
-
-      attrs.output.setValue(value);
-
-    }).catch(error => attrs.output.setValue(error));
-
-  });
 }
 
 /**
@@ -43,40 +27,43 @@ function onChangeTest (input: string, options: Language) {
  * Invoked for every document change, passes input
  * to esthetic and updates the output content.
  */
-export function onChange (delta: Ace.Delta) {
+export function onChange () {
 
   const input = attrs.input.getValue();
 
-  if (delta.action === 'insert' && delta.lines.length > 3 && attrs.autoDetect === true) {
-    // const lang = esthetic.language(input);
-    // if (lang.language !== attrs.language) return onChangeTest(input, lang);
+  try {
+
+    const value = esthetic.format(input);
+    attrs.output.setValue(value);
+
+  } catch (error) {
+
+    attrs.output.setValue(error);
+
   }
-
-  const value = esthetic.format.sync(input, {
-    language: 'liquid'
-  });
-
-  // esthetic[attrs.language](input).then(value => {
-
-  attrs.output.setValue(value);
-
-  // }).catch(error => attrs.output.setValue(error));
 
 }
 
 /**
- * Beautify Code
+ * Format Code
  *
  * Invokes beautification, uses the editors input
  * and update the output content.
  */
-export function beautify (options: Rules) {
+export function format (options?: Rules) {
 
-  esthetic[attrs.language](attrs.input.getValue(), options).then((value) => {
+  if (options) esthetic.rules(options);
 
-    attrs.output.setValue(value);
+  try {
 
-  }).catch(attrs.output.setValue);
+    const output = esthetic.format(attrs.input.getValue());
+    attrs.output.setValue(output);
+
+  } catch (error) {
+
+    attrs.output.setValue(error);
+
+  }
 
 }
 
@@ -86,7 +73,7 @@ export function beautify (options: Rules) {
  * The Ace editor configuration for the input
  * rendered. The input renderer is editable.
  */
-export function inputEditor (editor: Ace.Editor) {
+export function input (editor: Ace.Editor) {
 
   // CONTAINER
   editor.container.style.borderRight = '0.01rem solid #666';
@@ -96,20 +83,17 @@ export function inputEditor (editor: Ace.Editor) {
   editor.commands.addCommand({
     exec (editor) {
 
-      const value = esthetic.format.sync(editor.getValue(), {
-        language: 'liquid',
-        liquid: {
-          indentAttributes: true
-        },
-        markup: {
-          forceAttribute: true,
-          forceIndent: true
-        }
-      });
+      try {
 
-      // esthetic[attrs.language](input).then(value => {
+        const value = esthetic.format(editor.getValue());
+        attrs.output.setValue(value);
 
-      attrs.output.setValue(value);
+      } catch (e) {
+
+        console.log(e);
+
+      }
+
     },
     name: 'save',
     bindKey: {
@@ -123,7 +107,6 @@ export function inputEditor (editor: Ace.Editor) {
   editor.renderer.setPadding(5);
   editor.renderer.showCursor();
   editor.renderer.$cursorLayer.setBlinking(true);
-
   editor.setOptions({
     readOnly: false,
     highlightActiveLine: true,
@@ -149,7 +132,7 @@ export function inputEditor (editor: Ace.Editor) {
  * The Ace editor configuration for the output
  * renderer. The output editor is READ ONLY.
  */
-export function outputEditor (editor: Ace.Editor) {
+export function output (editor: Ace.Editor) {
 
   // RENDERER
   editor.renderer.setScrollMargin(15, 15, 0, 0);
@@ -174,21 +157,21 @@ export function outputEditor (editor: Ace.Editor) {
  * Changes the editor panes. Allows for users to
  * toggle split, editor and preview views.
  */
-export function toggleViews (pane: 'split' | 'editor' | 'preview') {
+export function pane (view: 'split' | 'editor' | 'preview') {
 
-  attrs.pane = pane;
+  attrs.pane = view;
   attrs.editor.setFontSize(attrs.fontSize);
 
-  if (pane === 'editor') {
+  if (view === 'editor') {
 
     attrs.idx = 1;
 
     attrs.editor.setSplits(1);
     attrs.editor.setSession(attrs.input, 0);
 
-    inputEditor(attrs.editor.getEditor(0));
+    input(attrs.editor.getEditor(0));
 
-  } else if (pane === 'preview') {
+  } else if (view === 'preview') {
 
     attrs.idx = 0;
 
@@ -200,9 +183,9 @@ export function toggleViews (pane: 'split' | 'editor' | 'preview') {
     attrs.editor.setSplits(1);
     attrs.editor.setSession(attrs.output, 0);
 
-    outputEditor(attrs.editor.getEditor(0));
+    output(attrs.editor.getEditor(0));
 
-  } else if (pane === 'split') {
+  } else if (view === 'split') {
 
     attrs.idx = 1;
 
@@ -210,8 +193,8 @@ export function toggleViews (pane: 'split' | 'editor' | 'preview') {
     attrs.editor.setSession(attrs.input, 0);
     attrs.editor.setSession(attrs.output, 1);
 
-    inputEditor(attrs.editor.getEditor(0));
-    outputEditor(attrs.editor.getEditor(1));
+    input(attrs.editor.getEditor(0));
+    output(attrs.editor.getEditor(1));
   }
 
   m.redraw();

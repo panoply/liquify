@@ -1,4 +1,4 @@
-import type { Attrs, Ace } from '@types';
+import type { Attrs, Ace } from 'types';
 
 /**
  * The default base path location entry file
@@ -12,18 +12,17 @@ export const attrs: Attrs = {
   hash: '',
   idx: 1,
   ready: false,
-  fontSize: 12.7,
+  fontSize: 12,
   autoDetect: false,
   onChange: false,
-  sample: null,
   pane: 'split',
   editor: null,
   input: null,
   output: null,
+  rules: null,
   language: 'liquid',
   languageName: 'Liquid + HTML',
   selectLanguage: false,
-  selectSample: false,
   mode: 'ace/mode/liquid',
   active: 0,
   files: [
@@ -36,8 +35,7 @@ export const attrs: Attrs = {
   stats: {
     characterLength: '0 Characters',
     languageName: 'Plain Text',
-    sizeOfFile: '0 B',
-    prettifyTime: 'Formatted&nbsp;in&nbsp;0ms' as any
+    estheticTime: 'Formatted&nbsp;in&nbsp;0ms' as any
   }
 };
 

@@ -3,7 +3,7 @@
 declare module 'ace' {
 
     // @ts-expect-error
-    import type { Editor, TextMode, IEditSession, Document, Config } from './editor'
+    import type { Editor, TextMode, IEditSession, Document, Config } from './editor.d'
 
     /**
      * Provides access to require in packed noconflict mode
@@ -43,3 +43,11 @@ declare module 'ace' {
     export const config: Config
 
 }
+
+
+declare module 'ace/split' {
+
+    // @ts-expect-error
+ export { Split} from './editor'
+}
+

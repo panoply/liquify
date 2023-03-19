@@ -11,35 +11,38 @@
   "include": [
     "src",
     "types",
-    "node_modules/.ace/build/src/ace.js"
+    "node_modules/.ace/build/src/ace.js",
+    "tsup.ts"
   ],
+  "typeAcquisition": {
+    "enable": true,
+    "include": ["node"],
+  },
   "compilerOptions": {
     "incremental": false,
+    "types": ["node"],
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "declaration": true,
-    "target": "ES6",
     "removeComments": true,
-    "lib": ["es2020", "DOM", "DOM.Iterable"],
-    "module": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
     "emitDeclarationOnly": true,
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@types": ["./index.d.ts"],
-      "@utils": ["./src/utils.ts"],
-      "@events": ["./src/editor/events.ts"],
-      "@footer": ["./src/editor/footer.ts"],
-      "@attrs": ["./src/attrs.ts"],
-      "@actions": ["./src/actions.ts"],
-      "@store": ["./src/store.ts"],
-      "@icons": ["./src/editor/icons.ts"],
-      "@hash": ["./src/editor/hash.ts"],
-      "@editor": ["./src/editor/editor.ts"],
-      "@tabs": ["./src/editor/tabs.ts"],
-      "@settings": ["./src/editor/settings.ts"],
+      "types": ["./index.d.ts"],
+      "utils": ["./src/utils.ts"],
+      "attrs": ["./src/attrs.ts"],
+      "actions": ["./src/actions.ts"],
+      "store": ["./src/store.ts"],
+      "editor/*": ["./src/editor/*"],
       "ace": ["node_modules/.ace/build/src/ace.js"],
       "ace/split": [
         "node_modules/.ace/build/src/ext-split.js"
+      ],
+      "ace/language-tools": [
+        "node_modules/.ace/build/src/ext-language_tools.js"
       ],
       "ace/*": [
         "node_modules/.ace/build/src/*",

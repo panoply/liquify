@@ -1,15 +1,15 @@
 # @liquify/moloko
 
-Moloko is an embedded web based code editor developed for the [Liquid](https://shopify.github.io/liquid/) template language and supports various languages that are typically used along side it within projects. Moloko is heavily inspired by the [Flems](https://flems.io) code playground which is written and maintained by the brilliant [Rasmus Porsager](https://github.com/porsager). Moloko supports the various languages that are typically used along side it within projects.
+Moloko is an embedded web based code editor. Moloko is heavily inspired by the [Flems](https://flems.io) code playground which is written and maintained by the brilliant [Rasmus Porsager](https://github.com/porsager).
 
 [Live Example](https://liquify.dev/moloko)
 
 # Installation
 
-Moloko has peer dependencies on [mithril.js](https://mithril.js.org) and [prettify](https://github.com/panoply/prettify). Both these modules need to be installed in order for moloko to be used.
+Moloko has peer dependencies on [mithril.js](https://mithril.js.org) and [Æsthetic](https://github.com/panoply/esthetic). Both these modules need to be installed in order for moloko to be used.
 
 ```bash
-pnpm add @liquify/moloko @liquify/prettify mithril
+pnpm add @liquify/moloko esthetic mithril
 ```
 
 ### Requirements
@@ -57,7 +57,7 @@ In addition to Liquid, Moloko also supports several other languages:
 
 # Usage
 
-Moloko leverages the powerful [mithril.js](https://mithril.js.org) SPA framework together with the [Ace](https://ace.c9.io/) text editor. Beautification support is made possible with [prettify](https://github.com/panoply/prettify).
+Moloko leverages the powerful [mithril.js](https://mithril.js.org) SPA framework together with the [Ace](https://ace.c9.io/) text editor.
 
 ```typescript
 import moloko from '@liquify/moloko';
@@ -69,7 +69,7 @@ moloko.mount(document.body, options?: Options): Promise<Editor>;
 moloko.beautify(rules: PrettifyOptions)
 
 // Prettify Instance
-moloko.prettify: Prettify
+moloko.esthetic: Esthetic
 
 // Interface with current open file
 moloko.file.open: boolean

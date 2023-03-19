@@ -1,4 +1,4 @@
-import { Languages } from '@types';
+import { Languages } from 'types';
 
 const extmap = {
   '.liquid': 'liquid',
@@ -52,7 +52,7 @@ export function langmap (extension: string): false | Languages {
 
 export function ghissue (options = {}) {
 
-  const url = new URL('https://github.com/panoply/prettify/issues/new');
+  const url = new URL('https://github.com/panoply/esthetic/issues/new');
 
   const types = [
     'body',

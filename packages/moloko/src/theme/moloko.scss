@@ -1,7 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
-  background: #0e0e0e;
+  background: #0f1215;
 }
 
 .moloko-editor {
@@ -64,15 +64,12 @@ body {
   overflow-x: hidden;
   overflow-y: scroll;
   font-size: 0.785rem;
-  font-family: Arial,
-    Helvetica,
-    sans-serif;
-  background: #0e0e0e;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0f1215;
   border-top: 0.01rem solid #444;
   border-right: 0.01rem solid #444;
   border-left: 0.01rem solid #444;
   will-change: auto;
-
 
   ul {
     display: block;
@@ -85,7 +82,6 @@ body {
       width: 100%;
       margin-top: 20px;
       color: #666;
-
 
       &.selected {
         color: #fff;
@@ -120,14 +116,15 @@ body {
   width: 100%;
   height: 100%;
   padding: 25px;
-  background: #0e0e0e;
+  background: #0f1215;
 
   > p {
     color: #fff;
     font-weight: lighter;
     font-size: 0.895rem;
     font-size: 0.8rem;
-    font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
+    font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas,
+      source-code-pro, monospace;
     font-style: italic;
     font-style: oblique;
     text-align: left;
@@ -145,18 +142,14 @@ body {
   height: 30px;
   color: #fff;
   font-size: 0.785rem;
-  font-family: Arial,
-    Helvetica,
-    sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   line-height: 30px;
-  background: #0e0e0e;
+  background: #0f1215;
   border-top: 0.01rem solid #666;
   -webkit-font-smoothing: antialiased;
 
-
   footer {
     position: relative;
-
 
     > ul {
       margin: 0;
@@ -167,8 +160,6 @@ body {
         display: inline-block;
 
         &.language-auto {
-
-
           &.active {
             > svg {
               color: #7be66d;
@@ -181,7 +172,6 @@ body {
             color: #666;
           }
 
-
           span.hover-above {
             position: absolute;
             bottom: 35px;
@@ -190,7 +180,7 @@ body {
             display: none;
             color: #666;
             font-size: 11px;
-            background-color: #0e0e0e;
+            background-color: #0f1215;
           }
 
           &:hover {
@@ -221,7 +211,6 @@ body {
           }
 
           &:hover {
-
             span.hover {
               display: inline-block;
             }
@@ -271,11 +260,9 @@ body {
           font-size: 11px;
           cursor: pointer;
 
-
           span {
             padding-left: 14px;
           }
-
 
           span.hover {
             display: none;
@@ -341,7 +328,6 @@ body {
   position: relative;
 }
 
-
 .potion_settings {
   position: fixed;
   top: 39px;
@@ -350,7 +336,7 @@ body {
   z-index: 9999;
   display: block;
   width: 270px;
-  background: #0e0e0e;
+  background: #0f1215;
   border-left: 0.01rem solid #666;
   will-change: auto;
 
@@ -373,7 +359,7 @@ body {
   width: 100%;
   height: 39.5px;
   color: #fff;
-  background: #0e0e0e;
+  background: #0f1215;
   border-bottom: 0.01rem solid #666;
 
   > ul {
@@ -448,22 +434,18 @@ body {
     padding: 0 30px 0 20px;
     color: #666;
     font-size: 13px;
-    font-family: Arial,
-      Helvetica,
-      sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: 40px;
     text-align: center;
     background: transparent;
     border: 0;
     border-right: 0.01rem solid #666;
 
-
     .delete {
       z-index: 99999;
       display: none;
 
       &:hover {
-
         > svg {
           color: #fff;
         }
@@ -482,7 +464,7 @@ body {
     &.active {
       height: 41px;
       color: #fff;
-      background: #0e0e0e;
+      background: #0f1215;
 
       .delete {
         display: block;

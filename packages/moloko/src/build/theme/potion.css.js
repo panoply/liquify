@@ -1,7 +1,7 @@
 module.exports = `body {
   margin: 0;
   overflow: hidden;
-  background: #0e0e0e;
+  background: #0f1215;
 }
 
 .moloko-editor {
@@ -61,7 +61,7 @@ module.exports = `body {
   overflow-y: scroll;
   font-size: 0.785rem;
   font-family: Arial, Helvetica, sans-serif;
-  background: #0e0e0e;
+  background: #0f1215;
   border-top: 0.01rem solid #444;
   border-right: 0.01rem solid #444;
   border-left: 0.01rem solid #444;
@@ -112,7 +112,7 @@ module.exports = `body {
   width: 100%;
   height: 100%;
   padding: 25px;
-  background: #0e0e0e;
+  background: #0f1215;
 }
 .newfile_overlay > p {
   color: #fff;
@@ -138,7 +138,7 @@ module.exports = `body {
   font-size: 0.785rem;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 30px;
-  background: #0e0e0e;
+  background: #0f1215;
   border-top: 0.01rem solid #666;
   -webkit-font-smoothing: antialiased;
 }
@@ -169,7 +169,7 @@ module.exports = `body {
   display: none;
   color: #666;
   font-size: 11px;
-  background-color: #0e0e0e;
+  background-color: #0f1215;
 }
 .potion_footer footer > ul > li.language-auto:hover span.hover-above {
   display: block;
@@ -289,7 +289,7 @@ module.exports = `body {
   z-index: 9999;
   display: block;
   width: 270px;
-  background: #0e0e0e;
+  background: #0f1215;
   border-left: 0.01rem solid #666;
   will-change: auto;
 }
@@ -310,7 +310,7 @@ module.exports = `body {
   width: 100%;
   height: 39.5px;
   color: #fff;
-  background: #0e0e0e;
+  background: #0f1215;
   border-bottom: 0.01rem solid #666;
 }
 .potion_tabs > ul {
@@ -402,7 +402,7 @@ module.exports = `body {
 .potion_tabs .tab_item.active {
   height: 41px;
   color: #fff;
-  background: #0e0e0e;
+  background: #0f1215;
 }
 .potion_tabs .tab_item.active .delete {
   display: block;
@@ -443,16 +443,24 @@ module.exports = `body {
   color: #444;
 }
 
+.ace_gutter-cell.ace_error {
+  background-image: url("data:image/svg+xml,%3Csvgxmlns='http://www.w3.org/2000/svg'class='icon icon-tabler icon-tabler-x'width='32'height='32'viewBox='0 0 24 24'stroke-width='1.5'stroke='%23f74639'fill='none'stroke-linecap='round'stroke-linejoin='round'%3E%3Cpathstroke='none'd='M0 0h24v24H0z'fill='none'/%3E%3Clinex1='18'y1='6'x2='6'y2='18'/%3E%3Clinex1='6'y1='6'x2='18'y2='18'/%3E%3C/svg%3E") !important;
+  background-position: 5px center !important;
+  background-size: 12px !important;
+  color: #f74639;
+}
+
 .ace-potion {
   color: #f8f8f2;
   white-space: pre-wrap;
   text-shadow: none;
-  background-color: #0e0e0e;
+  background-color: #0f1215;
+  font-weight: 100;
   -webkit-font-smoothing: antialiased;
 }
 .ace-potion .ace_gutter {
   color: #fff;
-  background: #0e0e0e;
+  background: #0f1215;
 }
 .ace-potion .ace_print-margin {
   width: 0.01rem;
@@ -479,7 +487,7 @@ module.exports = `body {
 }
 .ace-potion .ace_gutter-active-line {
   color: #fff;
-  background-color: #0e0e0e;
+  background-color: #0f1215;
 }
 .ace-potion .ace_marker-layer .ace_selected-word {
   border: 1px solid rgba(255, 255, 255, 0.0823529412);

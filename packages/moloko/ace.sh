@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ver=v1.14.0                       # ACE VERSION TO CLONE
+ver=v1.16.0                       # ACE VERSION TO CLONE
 ace=./node_modules/.ace           # ACE OUTPUT DIRECTORY LOCATION
 src=./src/build                   # SRC FILES USED WHEN BUILDING ACE
 out=../..                         # CD DIRECTORY TO GET BACK TO ROOT
@@ -10,20 +10,20 @@ out=../..                         # CD DIRECTORY TO GET BACK TO ROOT
 #---------------------------------------------------------------------------
 
 # 1. REMOVE THE TEMP DIRECTORY WHERE ACE WILL BUILD
-echo -e "\033[0;32mCleaning Ace Build Directory\033[0m"
-rm -rf $ace
+# echo -e "\033[0;32mCleaning Ace Build Directory\033[0m"
+# rm -rf $ace
 
-# 2. COMPILE THE POTION THEME
-echo -e "\033[0;32mCompiling Potion Theme\033[0m"
-node ./scripts/ace.mjs
+# # 2. COMPILE THE POTION THEME
+# echo -e "\033[0;32mCompiling Potion Theme\033[0m"
+# node ./scripts/ace.mjs
 
-# 3. CLONE ACE FROM GITHUB
-echo -e "\033[0;32mCloning Ace $ver from https://github.com/ajaxorg/ace.git\033[0m"
-git -c advice.detachedHead=false clone --depth 1 --branch $ver https://github.com/ajaxorg/ace.git $ace/
+# # 3. CLONE ACE FROM GITHUB
+# echo -e "\033[0;32mCloning Ace $ver from https://github.com/ajaxorg/ace.git\033[0m"
+# git -c advice.detachedHead=false clone --depth 1 --branch $ver https://github.com/ajaxorg/ace.git $ace/
 
-# 4. CD INTO THE DIRECTORY AND RUN NPM INSTALL
-echo -e "\033[0;32mInstall Ace\033[0m"
-cd $ace && npm install --silent && cd $out
+# # 4. CD INTO THE DIRECTORY AND RUN NPM INSTALL
+# echo -e "\033[0;32mInstall Ace\033[0m"
+# cd $ace && npm install --silent && cd $out
 
 #---------------------------------------------------------------------------
 # REPLACE ACE LIQUID MODE

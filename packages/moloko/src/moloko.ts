@@ -1,29 +1,33 @@
-import type { Options } from '@types';
+import type { Options } from 'types';
 import esthetic from 'esthetic';
-import { Editor } from '@editor';
-import { Footer } from '@footer';
-import { attrs, basePath } from '@attrs';
-import { paths, options } from '@store';
-import { normal } from '@utils';
-import * as ace from 'ace';
-import * as hash from '@hash';
+import { Editor } from 'editor/editor';
+import { Footer } from 'editor/footer';
+import { attrs, basePath } from 'attrs';
+import { paths, options } from 'store';
+import { normal } from 'utils';
 import m from 'mithril';
+import ace from 'ace';
+import { Rules } from 'editor/rules';
+import tools from 'ace/language-tools';
 
-export { beautify, toggleViews as pane } from '@actions';
+export { format, pane } from 'actions';
 
 /* -------------------------------------------- */
 /* PRESETS                                      */
 /* -------------------------------------------- */
 
-ace.config.set('useWorker', true);
+ace.config.set('useWorker', false);
 ace.config.set('packaged', true);
+ace.config.setModuleUrl('ace/ext/language_tools', tools);
+ace.config.loadModule('ace/ext/language_tools');
 
-// esthetic.on('format', function () {
-//   attrs.stats.prettifyTime = `Formatted&nbsp;in&nbsp;${esthetic.stats.time}ms`;
-//   attrs.stats.languageName = esthetic.stats.language;
-//   attrs.stats.characterLength = `${(esthetic.stats.chars || 0).toLocaleString('en-US')} Characters`;
-//   attrs.stats.sizeOfFile = esthetic.stats.size as any;
-// });
+esthetic.config({
+  logColors: false
+}).on('format', function ({ stats }) {
+  attrs.stats.estheticTime = `Formatted&nbsp;in&nbsp;${esthetic.stats.time}`;
+  attrs.stats.languageName = stats.language;
+  attrs.stats.characterLength = `${(stats.chars || 0).toLocaleString('en-US')} Characters`;
+});
 
 export function state () {
 
@@ -40,24 +44,12 @@ export function state () {
  */
 function locations (path: string) {
 
-  for (const ext in paths.extensions) {
-    paths.extensions[ext] = normal(path + paths.extensions[ext].slice(1));
-  };
-
   for (const lang in paths.languages) {
     paths.languages[lang] = normal(path + paths.languages[lang].slice(1));
   };
 
   for (const theme in paths.themes) {
     paths.themes[theme] = normal(path + paths.themes[theme].slice(1));
-  };
-
-  for (const sample in paths.samples) {
-    paths.samples[sample] = normal(path + paths.samples[sample].slice(1));
-  };
-
-  for (const worker in paths.workers) {
-    paths.workers[worker] = normal(path + paths.workers[worker].slice(1));
   };
 
 };
@@ -122,13 +114,11 @@ export async function mount (element: Element, opts: Options = {}) {
   await configure(opts);
 
   m.mount(element, {
-
     view: () => [
       m('section.moloko-editor', [
-      //  m(Tabs, attrs),
-        m(Editor, attrs),
-        // !config.allowSettings || m(Settings, attrs),
-        m(Footer, attrs)
+        m(Rules, attrs),
+        m(Editor, attrs)
+        // m(Footer, attrs)
       ])
     ]
   });

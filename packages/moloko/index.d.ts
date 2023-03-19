@@ -1,14 +1,15 @@
 import { Editor } from './types/editor';
 import type Esthetic from 'esthetic';
 import type { Rules } from 'esthetic';
-import { Options, Languages, Paths, Attrs, ISamples } from './types/moloko';
+import { Options, Languages, Paths, Attrs } from './types/moloko';
 export * as Ace from './types/editor';
 export * from './types/moloko';
 
 /**
- * **🥛 MOLOKO**
+ * **🥛 Moloko Editor**
  *
- * Liquid text editor built atop of Ace.
+ * Browser based text editor built atop of [Ace](https://github.com/ajaxorg/ace).
+ * Developed for usage in [Liquify](https://liquify.dev) and [Æsthetic](https://æsthetic.dev).
  */
 declare const moloko: {
   /**
@@ -19,9 +20,9 @@ declare const moloko: {
    */
   mount(element: Element | HTMLElement, options?: Options): Promise<Editor>
   /**
-   * **ÆSTHETIC**
+   * **Æsthetic**
    *
-   * Returns the Prettify instance used by the editor. If `options.format` is
+   * Returns the Æsthetic instance used by the editor. If `options.format` is
    * `false` then `null` is returned.
    */
   esthetic: typeof Esthetic;
@@ -29,7 +30,7 @@ declare const moloko: {
    * Invoke programmatic beautification on the current active file.
    * This function expects beautification rules to be passed.
    */
-  beautify(rules: Rules): typeof Esthetic;
+  format(rules: Rules): typeof Esthetic;
   /**
    * Toggles pane views
    */
@@ -63,10 +64,6 @@ declare const moloko: {
    * for augmenting those use `file` session.
    */
   config(options?: Omit<Options, 'language' | 'theme' | 'format'>): Options;
-  /**
-   * Loads a sample snippets (Prettify specific option)
-   */
-  sample (file: keyof ISamples): Promise<string>
 
 };
 

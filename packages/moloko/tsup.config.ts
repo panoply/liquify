@@ -1,4 +1,8 @@
 import { defineConfig } from 'tsup';
+import { copyFile } from 'node:fs/promises';
+import { join, basename } from 'node:path';
+
+const cwd = process.cwd();
 
 export default defineConfig([
   {
@@ -30,71 +34,50 @@ export default defineConfig([
       'moloko/language/text': './node_modules/.ace/build/src/mode-text.js',
       'moloko/language/yaml': './node_modules/.ace/build/src/mode-yaml.js',
       'moloko/language/xml': './node_modules/.ace/build/src/mode-xml.js',
-
-      /* WORKERS ---------------------------------- */
-
-      'worker-base': './node_modules/.ace/build/src-min/worker-base.js',
-      'worker-css': './node_modules/.ace/build/src-min/worker-css.js',
-      'worker-html': './node_modules/.ace/build/src-min/worker-html.js',
-      'worker-javascript': './node_modules/.ace/build/src-min/worker-javascript.js',
-      'worker-json': './node_modules/.ace/build/src-min/worker-json.js',
-      'worker-xml': './node_modules/.ace/build/src-min/worker-xml.js',
-      'worker-yaml': './node_modules/.ace/build/src-min/worker-yaml.js',
-
-      /* SAMPLES ------------------------------------ */
-
-      'moloko/samples/html/attribute-sorting': './src/samples/html/attribute-sorting.ts',
-      'moloko/samples/html/comment-ignores': './src/samples/html/comment-ignores.ts',
-      'moloko/samples/html/html5-doctype': './src/samples/html/html5-doctype.ts',
-      'moloko/samples/html/json-ld-sample': './src/samples/html/json-ld-sample.ts',
-
-      'moloko/samples/styles/liquid-in-css': './src/samples/styles/liquid-in-css.ts',
-      'moloko/samples/styles/liquid-in-scss': './src/samples/styles/liquid-in-scss.ts',
-      'moloko/samples/styles/mixins-sample': './src/samples/styles/mixins-sample.ts',
-      'moloko/samples/styles/properties-and-classes': './src/samples/styles/properties-and-classes.ts',
-      'moloko/samples/styles/sass-functions': './src/samples/styles/sass-functions.ts',
-      'moloko/samples/styles/sass-variables': './src/samples/styles/sass-variables.ts',
-
-      'moloko/samples/liquid/attribute-values': './src/samples/liquid/attribute-values.ts',
-      'moloko/samples/liquid/eleventy-sample': './src/samples/liquid/eleventy-sample.ts',
-      'moloko/samples/liquid/embedded-languages': './src/samples/liquid/embedded-languages.ts',
-      'moloko/samples/liquid/frontmatter': './src/samples/liquid/frontmatter.ts',
-      'moloko/samples/liquid/jekyll-sample': './src/samples/liquid/jekyll-sample.ts',
-      'moloko/samples/liquid/script-with-liquid': './src/samples/liquid/script-with-liquid.ts',
-      'moloko/samples/liquid/shopify-sample': './src/samples/liquid/shopify-sample.ts',
-      'moloko/samples/liquid/shopify-section': './src/samples/liquid/shopify-section.ts',
-      'moloko/samples/liquid/style-with-liquid': './src/samples/liquid/style-with-liquid.ts',
-
-      'moloko/samples/javascript/arrays-and-objects': './src/samples/javascript/arrays-and-objects.ts',
-      'moloko/samples/javascript/block-comments': './src/samples/javascript/block-comments.ts',
-      'moloko/samples/javascript/condition-samples': './src/samples/javascript/condition-samples.ts',
-      'moloko/samples/javascript/functions-and-promises': './src/samples/javascript/functions-and-promises.ts',
-      'moloko/samples/javascript/js-with-liquid': './src/samples/javascript/js-with-liquid.ts',
-      'moloko/samples/javascript/jsx-sample': './src/samples/javascript/jsx-sample.ts',
-      'moloko/samples/javascript/object-sorting': './src/samples/javascript/object-sorting.ts',
-      'moloko/samples/javascript/variables-and-methods': './src/samples/javascript/variables-and-methods.ts',
-
-      'moloko/samples/typescript/declaration-sample': './src/samples/typescript/declaration-sample.ts',
-      'moloko/samples/typescript/decorators': './src/samples/typescript/decorators.ts',
-      'moloko/samples/typescript/interface-sample': './src/samples/typescript/interface-sample.ts',
-      'moloko/samples/typescript/iterators-and-generators': './src/samples/typescript/iterators-and-generators.ts',
-      'moloko/samples/typescript/tsx-sample': './src/samples/typescript/tsx-sample.ts'
+      'json-linter': './src/worker.ts'
 
     },
     outDir: './package',
     platform: 'browser',
-    noExternal: [
+    noExternal: process.env.production ? [
       'lz-string',
+      'vscode-json-languageservice'
+    ] : [
+      'lz-string',
+      'vscode-json-languageservice',
       'mithril',
       'esthetic'
     ],
+    external: process.env.production ? [
+      'mithril',
+      'esthetic'
+    ] : [],
+
+    minify: process.env.production ? 'terser' : false,
     skipNodeModulesBundle: false,
     treeshake: 'smallest',
     splitting: false,
     shims: false,
     target: 'es6',
     bundle: true,
-    format: 'esm',
+    format: [ 'esm' ],
+    async onSuccess () {
+
+      for (const worker of [
+        './node_modules/.ace/build/src/worker-base.js',
+        './node_modules/.ace/build/src/worker-css.js',
+        './node_modules/.ace/build/src/worker-html.js',
+        './node_modules/.ace/build/src/worker-javascript.js',
+        './node_modules/.ace/build/src/worker-json.js',
+        './node_modules/.ace/build/src/worker-xml.js',
+        './node_modules/.ace/build/src/worker-yaml.js'
+      ]) {
+
+        await copyFile(join(cwd, worker), join(cwd, './package/', basename(worker)));
+
+      }
+
+    },
     outExtension () {
       return {
         js: '.js'

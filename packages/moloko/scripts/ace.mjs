@@ -8,16 +8,16 @@ import ansis from 'ansis';
 const cwd = process.cwd();
 const { log } = console;
 
-const VER = 'v1.14.0';
+const VER = 'v1.16.0';
 const ACE = './node_modules/.ace';
 const SRC = './src/build';
 const OUT = '../..';
 
-async function executeCommand (cmd, args, opts) {
+function executeCommand (cmd, args, opts) {
 
   log(ansis.cyan('Executing: ') + cmd + ' ' + args.join(' '));
 
-  await spawn.spawn(cmd, args, {
+  spawn.spawn(cmd, args, {
     cwd: opts.cwd,
     env: opts.env || process.env,
     stdio: 'inherit'
@@ -41,15 +41,15 @@ async function exec (cmds, opts) {
   log(ansis.magentaBright(run.title));
   log(ansis.gray(run.description));
 
-  const spawned = await executeCommand(parts[0], parts.splice(1), opts);
+  const spawned = executeCommand(parts[0], parts.splice(1), opts);
 
   if (spawned.error) {
-    log(chalk.red('Error happened executing: ') + cmd);
+    log(chalk.red('Error happened executing: ') + run);
     log(chalk.red('Stopping execution.'));
     return spawned;
   }
 
-  log(chalk.cyan('Finished: ') + cmd);
+  log(chalk.cyan('Finished: ') + run);
 
   return exec(cmds, opts) || spawned;
 
