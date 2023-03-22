@@ -1,0 +1,8 @@
+.env
+dist/
+node_modules/
+versions/
+.pnpm-debug.log
+
+# Local Netlify folder
+.netlify

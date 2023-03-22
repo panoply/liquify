@@ -2,7 +2,7 @@
   "extends": "@liquify/tsconfig",
   "exclude": [
     "node_modules/**",
-    "package/**",
+    "dist/**",
     "test",
     "index.mjs",
     "index.js",
@@ -13,7 +13,7 @@
     "types",
     "node_modules/.ace/build/src/ace.js",
     "tsup.ts"
-  ],
+ ],
   "typeAcquisition": {
     "enable": true,
     "include": ["node"],
@@ -27,6 +27,7 @@
     "removeComments": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
+    "target": "ES6",
     "emitDeclarationOnly": true,
     "isolatedModules": true,
     "baseUrl": ".",
@@ -37,17 +38,9 @@
       "actions": ["./src/actions.ts"],
       "store": ["./src/store.ts"],
       "editor/*": ["./src/editor/*"],
-      "ace": ["node_modules/.ace/build/src/ace.js"],
-      "ace/split": [
-        "node_modules/.ace/build/src/ext-split.js"
-      ],
-      "ace/language-tools": [
-        "node_modules/.ace/build/src/ext-language_tools.js"
-      ],
-      "ace/*": [
-        "node_modules/.ace/build/src/*",
-        "!node_modules/.ace/build/src/ace.js"
-      ]
+      "monaco/*": ["./src/monaco/*"],
+      "monaco-editor": ["./node_modules/esm/vs/editor/editor.main.js"],
+      "bss": ["./types/bss.d.ts"]
     }
   }
 }

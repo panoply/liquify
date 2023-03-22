@@ -1,0 +1,30 @@
+{
+  "cSpell.words": [
+    "Æsthetic",
+    "aestheticignore",
+    "Amato",
+    "ANTLR",
+    "endcustom",
+    "endfor",
+    "endrandom",
+    "estheticignore",
+    "estheticrc",
+    "linebreak",
+    "stylelint",
+    "toets"
+  ],
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/LICENSE":true,
+    "**/node_modules": true
+  },
+  "workbench.colorCustomizations": {
+    "window.inactiveBorder": "#00aeff",
+  }
+
+}

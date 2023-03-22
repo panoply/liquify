@@ -1,33 +1,57 @@
-import type { Hash } from 'types';
+import type { IAttrs, Hash } from 'types';
 import { attrs } from 'attrs';
-import * as store from 'store';
 import lz from 'lz-string';
-import esthetic from 'esthetic';
 
 /**
+ * Encode
+ *
  * Compress the editors current session
  */
-export function encode () {
+export function encode ({
+  detectLanguage,
+  idx,
+  languagesOpen,
+  model,
+  previewMode,
+  previewOpen,
+  rules,
+  rulesOpen
+}: IAttrs) {
 
-  attrs.hash = 'M=' + lz.compressToEncodedURIComponent(JSON.stringify(<Hash>{
-    options: store.options,
-    mode: attrs.mode,
-    pane: attrs.pane,
-    language: attrs.language,
-    languageName: attrs.languageName,
-    fontSize: attrs.fontSize,
-    autoDetect: attrs.autoDetect,
-    stats: attrs.stats,
-    input: attrs.input.getValue(),
-    output: attrs.output.getValue(),
-    rules: esthetic.rules()
+  const input = model.input.map((
+    {
+      language,
+      languageName,
+      model,
+      order,
+      uri
+    }
+  ) => ({
+    language,
+    languageName,
+    order,
+    uri,
+    model: model.getValue()
   }));
 
-  window.location.hash = attrs.hash;
+  attrs.hash = 'M=' + lz.compressToEncodedURIComponent(JSON.stringify(<Hash>{
+    detectLanguage,
+    input,
+    idx,
+    languagesOpen,
+    previewMode,
+    previewOpen,
+    rules,
+    rulesOpen
+  }));
+
+  // window.location.hash = attrs.hash;
 
 }
 
 /**
+ * Decode
+ *
  * Decompress the encoded JSON string URI
  */
 export function decode (hash: string): Hash {

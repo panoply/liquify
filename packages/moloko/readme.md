@@ -1,6 +1,6 @@
-# @liquify/moloko
+# Moloko
 
-Moloko is an embedded web based code editor. Moloko is heavily inspired by the [Flems](https://flems.io) code playground which is written and maintained by the brilliant [Rasmus Porsager](https://github.com/porsager).
+Moloko is an embedded web based code editor built atop of [Monaco](https://github.com/microsoft/monaco-editor).
 
 [Live Example](https://liquify.dev/moloko)
 
@@ -9,31 +9,12 @@ Moloko is an embedded web based code editor. Moloko is heavily inspired by the [
 Moloko has peer dependencies on [mithril.js](https://mithril.js.org) and [Æsthetic](https://github.com/panoply/esthetic). Both these modules need to be installed in order for moloko to be used.
 
 ```bash
-pnpm add @liquify/moloko esthetic mithril
+pnpm add moloko-monaco mithril esthetic
 ```
 
 ### Requirements
 
-Moloko is running atop of [Ace](https://ace.c9.io/) and thus it requires several external modules to be placed into a distribution bundle of your project. The module exposes an executable for this which helps alleviate some of the red~tape typically incurred when leveraging the Ace editor in projects of this nature.
-
-After installing, run the following command:
-
-```bash
-pnpm moloko
-```
-
-Moloko will look in the relative directory of where it was imported for the modules it requires. If your distribution bundle exists in `./dist/js/bundle.js` then you'd pass `--output dist/js ` flag to the moloko command.
-
-CLI Options:
-
-```bash
-pnpm moloko -o, --output <dir>   # The output directory to which moloko should be copied
-pnpm moloko -s, --standalone     # Generates a standalone build, without ace web workers
-```
-
-# Overview
-
-Moloko uses a custom build of the [Ace](https://ace.c9.io/) text editor under the hood and renders a development workspace virtually using the powerful [mithril.js](https://mithril.js.org) SPA framework. The editor employs a custom set of Ace grammars that support embedded code regions and syntax highlighting for Liquid.
+Moloko is running atop of [Monaco](https://github.com/microsoft/monaco-editor) and thus it requires workers be integrated into a distribution bundle of your project.
 
 ### Supported Themes
 
@@ -60,28 +41,16 @@ In addition to Liquid, Moloko also supports several other languages:
 Moloko leverages the powerful [mithril.js](https://mithril.js.org) SPA framework together with the [Ace](https://ace.c9.io/) text editor.
 
 ```typescript
-import moloko from '@liquify/moloko';
+import moloko from 'moloko-monaco';
 
 // Render the editor to a document element
-moloko.mount(document.body, options?: Options): Promise<Editor>;
+moloko.mount(document.body, options?: Options);
 
-// Programmatic invocation for Liquid formatting
-moloko.beautify(rules: PrettifyOptions)
-
-// Prettify Instance
-moloko.esthetic: Esthetic
-
-// Interface with current open file
-moloko.file.open: boolean
-moloko.file.language: Language
-moloko.file.session: EditorSession
-moloko.file.cursor: Position
-moloko.file.name: string
 ```
 
 # Contributing
 
-Despite running atop of ACE, Moloko is distributed in such a way that it does not have dependency on the module itself, but instead will spin up its own build and expose that. In order to support the grammars and embedded languages of the Shopify Liquid variation the module employs its own grammar, language modes and theme.
+Despite running atop of Monaco, Moloko will spin up its own build and expose it. In order to support the grammars and embedded languages of the Shopify Liquid variation the module employs its own Liquid grammar.
 
 <details>
 <summary>
@@ -105,7 +74,7 @@ Despite running atop of ACE, Moloko is distributed in such a way that it does no
 - Run `pnpm i` in the root directory
 - Run `pnpm dev` and start coding
 
-You can run `pnpm build` to generate a distributed bundle or `pnpm ace` to pull in ace from github and setup the required files. Take a look at the package `scripts` for more context.
+You can run `pnpm build` to generate a distributed bundle.
 
 # Author
 

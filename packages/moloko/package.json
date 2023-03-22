@@ -1,5 +1,5 @@
 {
-  "name": "@liquify/moloko",
+  "name": "moloko-monaco",
   "version": "1.0.0",
   "description": "Liquid code editing and embedded support for the browser.",
   "main": "package/moloko.js",
@@ -10,17 +10,11 @@
     "moloko": "./bin/moloko.cjs"
   },
   "exports": {
-    "import": "./package/moloko.js"
+    "import": "./dist/moloko.js"
   },
   "scripts": {
-    "dev": "concurrently \"tsup --watch\" \"pnpm style:watch\" \"http-server -o\"",
-    "workers": "node ./scripts/workers.mjs",
-    "theme": "node ./scripts/theme.mjs",
-    "build": "pnpm style:build && tsup --minify --env.NODE_ENV production",
-    "build:ace": "pnpm style:build && pnpm ace && tsup --minify --env.NODE_ENV production",
-    "ace": "pnpm exec ./ace.sh",
-    "style:build": "sass ./src/theme/moloko.scss:./src/build/moloko.css --no-source-map",
-    "style:watch": "sass ./src/theme/moloko.scss:./src/build/moloko.css --watch"
+    "dev": "concurrently \"tsup --watch\" \"http-server -o\"",
+    "build": "tsup --minify --env.NODE_ENV production"
   },
   "keywords": [],
   "author": "",
@@ -63,23 +57,21 @@
     "@sissel/stylelint-config": "^1.0.0",
     "@types/mithril": "^2.0.12",
     "@types/node": "^18.14.6",
-    "ace-linters": "^0.6.0",
     "ansis": "^1.5.5",
     "concurrently": "^7.6.0",
-    "cross-spawn": "^7.0.3",
+    "csstype": "^3.1.1",
     "esthetic": "workspace:0.5.5-beta.1",
-    "execa": "^7.1.1",
     "http-server": "^14.1.1",
     "mithril": "^2.2.2",
-    "parse-spawn-args": "^1.0.2",
+    "monaco-editor": "^0.36.1",
     "sass": "^1.59.3",
     "stylelint": "^15.3.0",
     "stylint": "^2.0.0",
     "terser": "^5.16.5",
-    "tsup": "^6.6.3",
-    "vscode-json-languageservice": "^5.3.2"
+    "tsup": "^6.6.3"
   },
   "dependencies": {
+    "bss": "^1.6.4",
     "lz-string": "^1.5.0",
     "minimist": "^1.2.8"
   },

@@ -1,206 +1,185 @@
-import type { Editor, IEditSession, Split } from 'types/editor';
-import type { Rules } from 'esthetic';
-import m from 'mithril';
+import type { editor } from 'monaco-editor';
+import type { Rules, LanguageName, LanguageOfficialName } from 'esthetic';
 
-export type Languages = (
-  | 'liquid'
-  | 'javascript'
-  | 'jsx'
-  | 'typescript'
-  | 'tsx'
-  | 'html'
-  | 'css'
-  | 'scss'
-  | 'json'
-  | 'markdown'
-  | 'xml'
-  | 'yaml'
-  | 'text'
-  | 'auto'
+export type Icons = (
+  | 'pane'
+  | 'document'
+  | 'link'
+  | 'table'
+  | 'plus'
+  | 'check'
+  | 'cross'
+  | 'gears'
+  | 'github'
+  | 'refresh'
+  | 'issue'
+  | 'discord'
+  | 'code'
+  | 'rules'
+  | 'detect'
+  | 'detectoff'
 )
 
-type SamplePaths<T extends string> = `${GetBasePath<'.' | `./${string}/`>}moloko/samples/${T}.js`
+export type ISidebarActionKeys = (
+  | 'document'
+  | 'rules'
+  | 'github'
+  | 'link'
+  | 'command'
+)
 
-export interface Samples {
-  liquid: {
-    name: 'Liquid',
-    path: SamplePaths<'liquid' | 'shopify' | 'eleventy' | 'jekyll'>
-  }[];
+export interface IActions {
+  /**
+   * Whether or not action is active/enabled.
+   */
+  active: boolean;
+  /**
+   * The icon to use
+   */
+  icon: Icons;
+  /**
+   * Tooltip Hover
+   */
+  tooltip?: string;
 }
 
-export interface Options {
+export interface ISidebar {
   /**
-   * The document language
+   * Enable sidebar
    *
-   * @default 'liquid'
+   * @default true
    */
-  language?: Languages;
+  enable?: boolean;
   /**
-   * The font size of the editor
+   * Width of the sidebar
    *
-   * @default 12.7 // converts to pixels
+   * @default 75
    */
-  fontSize?: number;
+  width?: number;
   /**
-   * Mithril components to be rendered
+   * Sidebar background color (defaults to `ui.background`)
+   *
+   * @default '#0f1215'
    */
-  components?: {
+  background?: string;
+  /**
+   * Action Buttons
+   *
+   * Returns in the order of each key.
+   */
+  actions: {
     /**
-     * Rendered for newfiles that have been created
+     * The current file
      */
-    newFile?: m.Component<Attrs>
-  };
+    file?: IActions;
+    /**
+     * The Æsthetic JSON rules
+     */
+    rules?: IActions;
+    /**
+     * Whether or not to activate preview pane
+     */
+    preview?: IActions;
+    /**
+     * Hash link copy
+     */
+    link?: IActions;
+    /**
+     * Rules export
+     */
+    export?: IActions
+    /**
+     * Submit an issue to github with playground reference
+     */
+    github?: IActions
+  }
+}
+
+export interface IFooter {
   /**
-   * The distributed bundle location, where the entry file exists.
-   * The `basePath` location will be relative to the distribution path, eg:
-   *
-   * ```
-   * // The distribution entry file that is put to:
-   * './dist/index.js'
-   *
-   * // The base path moloko directory will exist at:
-   * './dist/moloko/'
-   * ```
-   *
-   * @default '.'
-   */
-  basePath?: '.' | `./${string}/`;
-  /**
-   * The editor theme to use (defaults to potion),
-   *
-   * **NOTE**: You should probably not use Github theme
-   * util the project is more stable.
-   *
-   * @default 'potion'
-   */
-  theme?: 'potion' | 'github';
-  /**
-   * Whether or not to compress and save editor state
-   * in an ecoded URI which preserves editor state between
-   * page refreshing and allows sharable linking.
-   *
-   * @default `true`
-   */
-  hash?: boolean;
-  /**
-   * Whether or not formatting is enabled
+   * Enable footer
    *
    * @default true
    */
-  format?: boolean;
+  enable?: boolean;
   /**
-   * Whether or not formatting should be applied to
-   * documents on save. When `true` the editor will
-   * listen for `cmd + s` and run Prettify when invoked.
+   * Height of the footer
    *
-   * @default true
+   * @default 35
    */
-  formatOnSave?: boolean;
+  height?: number;
   /**
-   * **NOT YET AVAILABLE**
+   * Footer background color (defaults to `ui.background`)
    *
-   * Whether or not users can control editor settings.
-   * When `true` the workspace will render a toggle
-   * button which exposes editor settings. (defaults to `false`)
-   *
-   * @default false
+   * @default '#0f1215'
    */
-  allowSettings?: boolean;
+  background?: string;
+  /**
+   * Action Buttons
+   *
+   * Returns in the order of each key.
+   */
+  actions: {
+    /**
+     * Language detection control
+     *
+     */
+    detect?: IActions;
+    /**
+     * The Æsthetic JSON rules
+     */
+    language?: IActions;
+    /**
+     * The formatting toggle
+     */
+    formatToggle?: IActions;
+    /**
+     * Formatting stats
+     */
+    stats?: IActions;
+  }
+
 }
 
-type GetBasePath<T extends Options['basePath']> = T extends '.' ? './' : `./${string}/`
-
-export interface Paths {
+export interface IEditor {
   /**
-   * The paths to themes contained within the project.
+   * The Language identifier
    */
-  themes: {
-    potion: `${GetBasePath<'.' | `./${string}/`>}moloko/themes/potion.js`,
-    github: `${GetBasePath<'.' | `./${string}/`>}moloko/themes/github.js`
-  };
+  diff: string;
   /**
-   * The paths to language mode files contained  within the project.
+   * Rules model and editor instances
    */
-  languages: {
-    liquid: `${GetBasePath<'.' | `./${string}/`>}moloko/language/liquid.js`,
-    javascript: `${GetBasePath<'.' | `./${string}/`>}moloko/language/javascript.js`,
-    typescript: `${GetBasePath<'.' | `./${string}/`>}moloko/language/typescript.js`,
-    css: `${GetBasePath<'.' | `./${string}/`>}moloko/language/css.js`,
-    html: `${GetBasePath<'.' | `./${string}/`>}moloko/language/html.js`,
-    jsx: `${GetBasePath<'.' | `./${string}/`>}moloko/language/jsx.js`,
-    scss: `${GetBasePath<'.' | `./${string}/`>}moloko/language/scss.js`,
-    tsx: `${GetBasePath<'.' | `./${string}/`>}moloko/language/tsx.js`,
-    json: `${GetBasePath<'.' | `./${string}/`>}moloko/language/json.js`,
-    markdown: `${GetBasePath<'.' | `./${string}/`>}moloko/language/markdown.js`,
-    xml: `${GetBasePath<'.' | `./${string}/`>}moloko/language/xml.js`,
-    yaml: `${GetBasePath<'.' | `./${string}/`>}moloko/language/yaml.js`,
-    text: `${GetBasePath<'.' | `./${string}/`>}moloko/language/text.js`,
-    auto: `${GetBasePath<'.' | `./${string}/`>}moloko/language/text.js`
-  };
+  rules: editor.IStandaloneCodeEditor;
+  /**
+  * Input editor session and instance
+  */
+  input: editor.IStandaloneCodeEditor;
 }
 
-export interface Attrs {
+export interface IFile {
   /**
-   * Whether or not editor is ready
-   *
-   * @default false
+   * A URI identifier of the current document
    */
-  ready: boolean;
+  uri: string;
   /**
-   * The file language
-   *
-   * @default 'liquid'
+   * The order index of the document tab (`0` if tabs are disabled)
    */
-  language: Languages;
+  order: number;
   /**
-   * The file language name
-   *
-   * @default 'Liquid
+   * The Language identifier
    */
-  languageName: string;
+  language: string;
   /**
-   * The font size of the editor
-   *
-   * @default 12.7 // converts to pixels
+   * The Official Language Name
    */
-  fontSize: number;
+  languageName: LanguageOfficialName;
   /**
-   * Automatically detect language
-   *
-   * @default false
+   * Input editor session and instance
    */
-  autoDetect: boolean;
-  /**
-   * Whether or not the onChange listener is enabled
-   *
-   * @default false
-   */
-  onChange: boolean;
-  /**
-   * The current editor split index. A value of `0` when pane is
-   * `preview` or `1` when pane is `editor` or `split`.
-   *
-   * @default 1
-   */
-  idx: 0 | 1;
-  /**
-   * The current pane view
-   *
-   * @default 'split'
-   */
-  pane: 'split' | 'editor' | 'preview'
-  /**
-   * Whether or not select language is open
-   *
-   * @default false
-   */
-  selectLanguage: boolean;
-  /**
-   * The current mode reference
-   *
-   * @default 'ace/mode/liquid'
-   */
-  mode: `ace/mode/${Languages}`;
+  model: editor.ITextModel;
+}
+
+export interface IAttrs {
   /**
    * The current hash reference
    *
@@ -208,66 +187,159 @@ export interface Attrs {
    */
   hash: string;
   /**
-   * Editor
+   * Æsthetic formatting Rules
    */
-  editor: Split;
+  get rules(): Rules;
   /**
-   * Input editor session and instance
+   * The preview mode showing
+   *
+   * @default null
    */
-  input: IEditSession;
+  previewMode: null | 'diff' | 'table';
   /**
-   * Output editor session and instance
+   * Whether or not language detection is enabled
+   *
+   * @default true
    */
-  output: IEditSession;
+  detectLanguage: boolean;
   /**
-   * Æsthetic rules editor session and instance
+   * Whether or not the language selector is open
+   *
+   * @default false
    */
-  rules: Editor;
+  languagesOpen: boolean;
   /**
-   * An index reference to the current opened file.
-   * When not using file tabs, this will be `0`
+   * Æsthetic Rules Editor Open
+   *
+   * @default false
    */
-  active: number;
+  rulesOpen: boolean;
   /**
-   * Files
+   * Whether or not the Preview pane is open
+   *
+   * @default false
    */
-  files: Array<{
+  previewOpen: boolean;
+  /**
+   * Active File
+   */
+  set input(file: IFile)
+  /**
+   * Active Input
+   */
+  get input(): IFile
+  /**
+   * Active File index
+   */
+  idx: number;
+  /**
+   * List of open editor model files
+   */
+  model: {
     /**
-     * The name of the file (tab)
+     * Diff Preview Editor Model
      */
-    filename: string;
+    diff: editor.ITextModel
     /**
-     * The language name of the file
-     */
-    language: Languages;
+    * Rules Editor model
+    */
+    rules: editor.ITextModel;
     /**
-     * The document source string
+     * Input Editor Models
      */
-    session: IEditSession
-  }>
-  /**
-   * Prettify stats copy
-   */
-  stats?: {
-    estheticTime: string;
-    languageName: string;
-    characterLength: string;
+    input: IFile[];
   }
+  /**
+   * Editor Instances
+   */
+  editor: IEditor;
+
 }
 
-export interface Hash {
-  language: Languages;
-  languageName: string;
-  idx: 0 | 1
-  autoDetect: boolean;
-  fontSize: number;
-  pane: 'split' | 'editor' | 'preview'
-  options: Options;
-  open: number;
-  mode: `ace/mode/${Languages}`;
-  settings: boolean;
-  stats: Attrs['stats'];
-  input: string;
-  output: string;
-  rules: Rules;
+export interface IOptions {
+
+  /**
+   * Monaco Editor Options
+   *
+   * These will be defined at runtime as defaults.
+   */
+  monaco?: editor.IEditorOptions;
+  /**
+   * The default Language
+   *
+   * @default liquid
+   */
+  language?: LanguageName;
+  /**
+   * Offset Top
+   */
+  offset?: number;
+  /**
+   * Whether or not language detection is enabled
+   *
+   * @default true
+   */
+  detect?: boolean;
+  /**
+   * Whether or not to persist in a hash
+   *
+   * @default true
+   */
+  hash?: boolean;
+  /**
+   * The default input to render.
+   *
+   * @default ''
+   */
+  input?: LanguageName;
+  /**
+   * Whether or not to render preview diff
+   *
+   * @default false
+   */
+  diff?: boolean;
+  /**
+   * Whether or not to allow tabs
+   *
+   * **NOT YET AVAILABLE**
+   *
+   * @deprecated
+   */
+  tabs?: boolean;
+  /**
+   * Sidebar Component
+   *
+   */
+  sidebar?: ISidebar;
+  /**
+   * Footer Component
+   */
+  footer?: IFooter;
+  /**
+   * Moloko base colors
+   */
+  colors?: {
+    /**
+     * The base background color
+     */
+    background?: string;
+    /**
+     * The accent color (ie: hovers, active etc)
+     */
+    accents?: string;
+    /**
+     * The border colors
+     */
+    borders?: string
+  };
+}
+
+export interface Hash extends Omit<IAttrs, | 'hash' | 'input' | 'editor' | 'files' | 'model'> {
+  input: {
+    uri: string;
+    order: number;
+    language: string;
+    languageName: LanguageOfficialName;
+    model: string;
+  }[]
 }
