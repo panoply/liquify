@@ -4,6 +4,9 @@
 [submodule "packages/esthetic"]
 	path = packages/esthetic
 	url = https://github.com/panoply/esthetic
+[submodule "packages/moloko"]
+	path = packages/moloko
+	url = https://github.com/panoply/moloko
 [submodule "packages/schema"]
 	path = packages/schema
 	url = https://github.com/panoply/liquify-schema
