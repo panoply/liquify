@@ -1,6 +1,0 @@
----
-Testing inlined output object token tags. This test case ensures that text node structures and kept intact and output to the same line. The case is a basic sentence with output token surrounded by text content, the nodes should not be indented and break the imposed sentence.
----
-
-Hello {{ object.prop.name | default: 'Sissel' }}, Lorem ipsum dolor sit amet, {{ object.foo }} adipiscing elit, sed do eiusmod tempor {{ object.bar[0][1] }} ut labore et dolore magna {{ object.bar[0][2]['string']-}} . Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut {{- object.bar[0][3] -}}  ex ea commodo consequat.
-

@@ -64,8 +64,7 @@
     "concurrency": 5
   },
   "dependencies": {
-    "@liquify/ava": "workspace:^0.0.6",
-    "@liquify/specs": "workspace:^0.1.7",
+    "@liquify/schema": "workspace:*",
     "lodash.inrange": "^3.3.6",
     "mergerino": "^0.4.0",
     "vscode-languageserver-textdocument": "^1.0.8",
@@ -75,12 +74,13 @@
     "url": "https://github.com/panoply/liquid-parser"
   },
   "devDependencies": {
+    "@liquify/ava": "workspace:*",
     "@types/lodash.inrange": "^3.3.7",
     "ansis": "^1.5.5",
     "ava": "5.2.0",
     "json-stringify-safe": "^5.0.1",
     "pretty-hrtime": "^1.0.3",
-    "tsup": "^6.6.3",
+    "tsup": "^6.7.0",
     "vscode-languageserver-types": "^3.17.3"
   },
   "tsup": {

@@ -38,15 +38,15 @@
     "url": "https://github.com/panoply/liquify"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.26.0",
+    "@changesets/cli": "^2.26.1",
     "@liquify/eslint-config": "workspace:*",
     "@liquify/prettier-config": "workspace:*",
     "@liquify/tsconfig": "workspace:*",
-    "concurrently": "^7.6.0",
-    "eslint": "^8.35.0",
-    "prettier": "^2.8.4",
-    "tsup": "^6.6.3",
-    "typescript": "^4.9.5"
+    "concurrently": "^8.0.1",
+    "eslint": "^8.37.0",
+    "prettier": "^2.8.7",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.3"
   },
   "publishConfig": {
     "access": "restricted"

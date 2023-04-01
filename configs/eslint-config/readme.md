@@ -1,6 +1,6 @@
 # ESLint Config
 
-An shareable config for eslint to maintain a code style aesthetic across the Liquify project. ESLint [Standard](https://github.com/standard/eslint-config-standard) is extended with additional rule sets.
+Shareable config for eslint to maintain a code style aesthetic across the Liquify project. ESLint [Standard](https://github.com/standard/eslint-config-standard) is extended with additional rule sets.
 
 ### Install
 
@@ -27,7 +27,6 @@ Extend the `package.json` file of each module and/or project.
 - [@liquify/prettier-config](https://github.com/panoply/liquify/tree/next/build/eslint-config)
 - [@liquify/tsconfig](https://github.com/panoply/liquify/tree/next/build/tsconfig)
 - [@liquify/rollup-config](https://github.com/panoply/liquify/tree/next/build/rollup-config)
-
 
 ### Author
 

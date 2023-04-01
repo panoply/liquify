@@ -1,0 +1,29 @@
+{
+  "name": "@liquify/stylelint-config",
+  "version": "1.0.0",
+  "description": "Sharable Stylelint config consumed within the Liquify monorepo workspace.",
+  "main": "stylelint.cjs",
+  "license": "MIT",
+  "keywords": [
+    "stylelint",
+    "stylelint-config",
+    "config",
+    "linting",
+    "formatting"
+  ],
+  "scripts": {
+    "bump": "pnpm up @liquify/stylelint-config -r",
+    "postversion": "pnpm bump"
+  },
+  "engines": {
+    "pnpm": ">=6"
+  },
+  "dependencies": {
+    "postcss": "^8.4.21",
+    "postcss-scss": "^4.0.6",
+    "stylelint": "^15.3.0",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-standard-scss": "^7.0.1",
+    "stylelint-scss": "^4.5.0"
+  }
+}
