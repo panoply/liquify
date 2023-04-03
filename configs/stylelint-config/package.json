@@ -11,6 +11,13 @@
     "linting",
     "formatting"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panoply/liquify/master/configs/stylelint-config"
+  },
+  "bugs": {
+    "url": "https://github.com/panoply/liquify/issues"
+  },
   "scripts": {
     "bump": "pnpm up @liquify/stylelint-config -r",
     "postversion": "pnpm bump"

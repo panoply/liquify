@@ -17,16 +17,15 @@
 
 # Liquify
 
-Liquify provides powerful language tooling for the [Liquid Template Language](https://shopify.github.io/liquid/). The packages available in this project provide developers working with Liquid an integrated development experience.
+Liquify provides powerful developer tooling for the [Liquid Template Language](https://shopify.github.io/liquid/).
 
-- [Documentation](https://liquify.dev)
 - [Discord](https://discord.gg/eUNEsxMuWt)
 
 ### Why
 
-The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is leveraged by hundreds of different SaaS services, thousands of open source projects and tends to be the preferred choice for JAM~Stacked generated web applications. Despite Liquid being actively maintained by Shopify, their current solutions are missing a lot of key capabilities which I consider necessities.
+The Liquid template language has been around for a long time. Created by Shopify CEO [Tobi Lütke](https://twitter.com/tobi) it is leveraged by hundreds of different SaaS services, thousands of open source projects and tends to be the preferred choice for JAM~Stacked (SSG) generated web applications. Despite Liquid being actively maintained by Shopify, their current solutions are missing a lot of key capabilities which I consider necessities.
 
-Liquify was created to solve the issue of lack-lustered and otherwise incompatible solutions which exist in the Liquid nexus. It intends to provide everything required for Shopify themes, Jekyll and 11ty static sites or custom projects leveraging Liquid as the consumer. It aims to deliver powerful text editor features that enrich the programming experience and lives of those working with the template language.
+Liquify was created to solve the issue of lack-lustered and otherwise incompatible solutions which exist within nexus. It intends to provide everything required for Shopify themes, Jekyll and 11ty static sites or custom projects leveraging Liquid as the consumer facing language. It aims to deliver powerful text editor features that enrich the programming experience and lives of those working with the template language.
 
 ###### LICENSING
 
@@ -34,7 +33,7 @@ Liquify was created to solve the issue of lack-lustered and otherwise incompatib
 
 # Packages
 
-Liquify is monorepo project and most packages contained within this repository are available for download on the NPM Registry. Consult the readme of each package for a deeper understanding of a modules use-case and appropriation.
+Liquify is a [pnpm](https://pnpm.js.org/en/cli/install) powered monorepo project. Most packages contained within this repository are available for download via the NPM Registry. Consult the readme of each package for a deeper understanding of a modules use-case and appropriation. Some packages are maintained in an isolated repositories using [Git Sub-Modules](https://git-scm.com/book/en/v2/Git-Tools-Submodules). PR's and issues pertaining to submodule projects are tracked outside of this repository.
 
 ## Client Packages
 
@@ -48,44 +47,51 @@ These packages are the text editor [LSP](https://microsoft.github.io/language-se
 
 These packages are considered the _core_ modules of the project.
 
-- [@liquify/liquid-parser](https://github.com/panoply/liquify/tree/next/packages/parser)
-- [@liquify/liquid-language-server](https://github.com/panoply/liquify/tree/next/packages/server)
+- [@liquify/parser](https://github.com/panoply/liquify/tree/next/packages/parser)
+- [@liquify/server](https://github.com/panoply/liquify/tree/next/packages/server)
 - [@liquify/specs](https://github.com/panoply/liquify/tree/next/packages/specs)
 - [@liquify/schema](https://github.com/panoply/liquify/tree/next/packages/schema)
 
-## Isolated Packages
-
-These packages exist in the monorepo but are distributed independent of the Liquify organization NPM registry name.
-
-- [esthetic](https://github.com/panoply/liquify/tree/next/packages/esthetic)
-- [syncify](https://github.com/panoply/liquify/tree/next/packages/syncify)
-
 ## Config Packages
 
-These packages are the sharable configurations for the development workspace.
+These packages are the sharable configurations for popular development tools leveraged in the workspace.
 
+- [@liquify/tsconfig](https://github.com/panoply/liquify/tree/next/utils/tsconfig)
 - [@liquify/eslint-config](https://github.com/panoply/liquify/tree/next/utils/eslint-config)
 - [@liquify/prettier-config](https://github.com/panoply/liquify/tree/next/utils/prettier-config)
-- [@liquify/tsconfig](https://github.com/panoply/liquify/tree/next/utils/tsconfig)
+- [@liquify/stylelint-config](https://github.com/panoply/liquify/tree/next/utils/stylelint-config)
 
-## Miscellaneous Packages
+## Extended Packages
 
 These are an assortment a different packages which were developed for specific purposes. They are made available as modules for consumption by projects that may wish to use or require them.
 
-- [@liquify/moloko](https://github.com/panoply/liquify/tree/next/packages/moloko)
 - [@liquify/highlight](https://github.com/panoply/liquify/tree/next/packages/highlight)
+- [@liquify/prism](https://github.com/panoply/liquify/tree/next/packages/prism)
 
-### Documentation Package
+## Testing Package
 
-This is where the documentation for [liquify.dev](https://liquify.dev) exists, the [playground](https://liquify.dev/prettify/playground) for [Prettify](https://github.com/panoply/liquify/tree/next/packages/prettify) and other public facing content.
-
-- [@liquify/docs](https://github.com/panoply/liquify/tree/next/docs)
-
-### Testing Package
-
-This is test runner extension pack for working with [AVA](https://github.com/avajs/ava). It helps alleviate some of the complexities involved with testing AST structures in projects like [@liquify/liquid-parser](https://github.com/panoply/liquify/tree/next/packages/parser), [@liquify/prettify](https://github.com/panoply/liquify/tree/next/packages/prettify) and more!
+This is test runner extension package which extends upon [AVA](https://github.com/avajs/ava). The module helps alleviate some of the complexities involved with testing AST structures in projects like [@liquify/parser](https://github.com/panoply/liquify/tree/next/packages/parser), [Æsthetic](https://github.com/panoply/esthetic) and more.
 
 - [@liquify/ava](https://github.com/panoply/liquify/tree/next/packages/ava)
+
+## Submodule Packages
+
+These packages exist in the monorepo but are distributed independent of the Liquify organization NPM registry name. These packages are published and maintained in an isolated repositories using [Git Sub-Modules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+
+- [moloko](https://github.com/panoply/liquify/tree/next/packages/moloko)
+- [esthetic](https://github.com/panoply/liquify/tree/next/packages/esthetic)
+- [syncify](https://github.com/panoply/liquify/tree/next/packages/syncify)
+
+# Documentation
+
+Several different projects exist within Liquify. Some projects have their own designated documentation and domain address. Documentation packages are marked as **private** and are served up via [Netlify](https://netlify.com/). Refer to below list of documentation websites shipped from this monorepo.
+
+- [liquify.dev](https://liquify.dev)
+- [æsthetic.dev](https://æsthetic.dev)
+- [moloko.js.org](https://moloko.js.org)
+- [syncify.js.org](https://syncify.myshopify.com)
+
+Refer to readme files contained within the **docs** sub-directory of each project for more information.
 
 # Contributing
 
@@ -156,7 +162,7 @@ pnpm test                   Tests all packages in the repository
 
 ```
 pnpm lsp               <dev|build|test>         Targets the Liquid Language Server package
-pnpm prettify          <dev|build|test>         Targets the Prettify package
+pnpm esthetic          <dev|build|test>         Targets the Æsthetic package
 pnpm parser            <dev|build|test>         Targets the Liquid Language Parser package
 pnpm specs             <dev|build|test>         Targets the Liquid Language Specs package
 pnpm vscode            <dev|build>              Targets the vscode client package
@@ -166,15 +172,11 @@ pnpm schema            <build|generate>         Targets the Schema Stores packag
 
 ## Testing
 
-Package testing is somewhat incomplete. The Liquify project uses [AVA](https://github.com/avajs/ava) for tests and also for printing stdout responses to the CLI in modules like the [@liquify/liquid-parser](https://github.com/panoply/liquify/tree/next/packages/parser) and [@liquify/prettify](https://github.com/panoply/liquify/tree/next/packages/prettify).
+Package testing is somewhat incomplete. The Liquify project uses [AVA](https://github.com/avajs/ava) for tests and also for printing stdout responses to the CLI in modules like the [@liquify/parser](https://github.com/panoply/liquify/tree/next/packages/parser) and [Æsthetic](https://github.com/panoply/esthetic).
 
 ## Contributors
 
-Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com).
-
-🥛 <small>[Νίκος Σαβίδης](mailto:n.savvidis@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
-<br>
-🍔 <small>[Joseph Curtis](#)</small> <img align="right" src="https://img.shields.io/badge/-@jCurt-1DA1F2?logo=twitter&logoColor=fff" />
+Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com) or reach out via [Twitter](https://twitter.com/niksavvidis).
 
 ## Acknowledgements
 

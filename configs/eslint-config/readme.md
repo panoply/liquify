@@ -10,24 +10,36 @@ Shareable config for eslint to maintain a code style aesthetic across the Liquif
 pnpm add @liquify/eslint-config -D
 ```
 
+> Required peer dependency on eslint
+
 ### Usage
 
 Extend the `package.json` file of each module and/or project.
 
 ```json
 {
-  "extends": ["@liquify/eslint-config"]
+  "eslintConfig": {
+    "extends": ["@liquify/eslint-config"]
+  }
 }
 ```
 
-> Required peer dependency on eslint
+In some packages ESLint will be limited to the specific project itself by inferring `true` on the `root` key option.
+
+```json
+{
+  "eslintConfig": {
+    "root": true
+  }
+}
+```
 
 ### Related
 
-- [@liquify/prettier-config](https://github.com/panoply/liquify/tree/next/build/eslint-config)
-- [@liquify/tsconfig](https://github.com/panoply/liquify/tree/next/build/tsconfig)
-- [@liquify/rollup-config](https://github.com/panoply/liquify/tree/next/build/rollup-config)
+- [@liquify/tsconfig](https://github.com/panoply/liquify/tree/master/configs/tsconfig)
+- [@liquify/prettier-config](https://github.com/panoply/liquify/tree/master/configs/eslint-config)
+- [@liquify/stylelint-config](https://github.com/panoply/liquify/tree/master/configs/stylelint-config)
 
 ### Author
 
-🥛 <small>[Νίκος Σαβίδης](mailto:n.savvidis@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@sisselsiv-1DA1F2?logo=twitter&logoColor=fff" />
+🥛 <small>[Νίκος Σαβίδης](mailto:n.savvidis@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@niksavvidis-1DA1F2?logo=twitter&logoColor=fff" />
