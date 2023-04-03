@@ -177,7 +177,3 @@ Package testing is somewhat incomplete. The Liquify project uses [AVA](https://g
 ## Contributors
 
 Want to contribute? Shoot me an [email](mailto:n.savvidis@gmx.com) or reach out via [Twitter](https://twitter.com/niksavvidis).
-
-## Acknowledgements
-
-Liquify took a considerable amount of time to build and has been colossal undertaking. Many sleepless nights and a lot of hours were poured into this project as not many were willing to take on this task. Thanks to all those who used the previous version of this extension.
