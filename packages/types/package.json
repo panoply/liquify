@@ -1,71 +1,31 @@
 {
   "name": "@liquify/types",
   "version": "0.1.0",
-  "description": "Liquify Types used by the Liquid Parser and Liquid Language Specs packages.",
+  "description": "Liquify Type Declarations",
   "author": {
     "name": "Νίκος Σαβίδης ",
     "email": "n.savvidis@gmx.com"
   },
   "license": "MIT",
-  "type": "module",
   "types": "./index.d.ts",
-  "main": "./index.cjs",
   "exports": {
-    "require": "./index.cjs",
-    "import": "./index.js"
+    ".": "./package/index.js",
+    "./parser": "./parser/index.d.ts",
+    "./parser/lexical": "./parser/lexical.d.ts",
+    "./highlight": "./highlight/index.d.ts",
+    "./moloko": "./moloko/index.d.ts",
+    "./specs": "./specs/index.d.ts",
+    "./esthetic": "./esthetic/index.d.ts"
   },
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/panoply/liquify/master/packages/highlight"
+    "url": "https://github.com/panoply/liquify/master/packages/types"
   },
   "bugs": {
     "url": "https://github.com/panoply/liquify/issues"
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup --minify",
-    "pack": "cd versions; pnpm pack ../ && cd ..",
-    "test": "ava --verbose --watch"
-  },
-  "tsup": {
-    "entry": [
-      "./src/index.ts"
-    ],
-    "outDir": "./",
-    "treeshake": true,
-    "dts": true,
-    "external": [
-      "chalk",
-      "cli-highlight"
-    ],
-    "splitting": false,
-    "format": [
-      "cjs",
-      "esm"
-    ]
-  },
-  "prettier": "@liquify/prettier-config",
-  "eslintConfig": {
-    "ignorePatterns": [
-      "package/*",
-      "index.cjs",
-      "index.js",
-      "index.d.ts"
-    ],
-    "extends": [
-      "@liquify/eslint-config"
-    ]
-  },
-  "devDependencies": {
-    "@liquify/eslint-config": "workspace:*",
-    "@liquify/prettier-config": "workspace:*",
-    "@liquify/tsconfig": "workspace:*",
-    "ava": "^5.0.1",
-    "tsup": "^6.4.0"
-  },
-  "dependencies": {
-    "chalk": "^5.1.2",
-    "cli-highlight": "^2.1.11"
+    "build": "pnpm exec ./build.sh"
   }
 }
