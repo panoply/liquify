@@ -6,23 +6,25 @@
     "test"
   ],
   "include": [
+    "package/lexical.js",
+    "package/lexical.d.ts",
     "src/**/*.ts",
     "tests/**/*.mjs"
   ],
   "compilerOptions": {
-    "types": [
-      "node"
-    ],
     "allowJs": true,
     "declaration": true,
+    "declarationDir": "types",
     "removeComments": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "incremental": false,
-    "typeRoots": [
-      "node_modules/@types",
-    ],
     "outDir": "package",
     "baseUrl": ".",
     "paths": {
+      "./src/lexical/index.ts": [
+        "./src/lexical/*.ts"
+      ],
       "@liquify/ava/parser": [
         "./node_modules/@liquify/ava/package/parser.d.ts"
       ],

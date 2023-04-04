@@ -17,7 +17,7 @@
  *
  */
 
-export const enum NodeLanguage {
+export enum NodeLanguage {
   /**
    * Liquid Language - ALL TAGS DEFAULT TO LIQUID
    */

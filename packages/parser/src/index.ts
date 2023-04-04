@@ -11,11 +11,9 @@ import merge from 'mergerino';
 
 /* EXPOSED EXPORTS ---------------------------- */
 
-export type { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
-export type { AST as IAST } from './tree/ast';
-export type { INode } from './tree/typings';
-export * from './lexical/';
-export * from '@liquify/specs';
+export { TextDocument, Position, Range } from 'vscode-languageserver-textdocument';
+export { AST as IAST } from './tree/ast';
+export { INode } from './types';
 
 /* EXPOSED EXPORT TYPES ----------------------- */
 

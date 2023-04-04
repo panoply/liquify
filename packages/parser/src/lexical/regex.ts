@@ -1,3 +1,4 @@
+
 /**
  * `[^'"[\s\]{}|!:,.<=>-]*?$`
  *
@@ -103,11 +104,11 @@ export const DigitOnly = /^[0-9]+$/;
 /**
  * `^['"]`
 *
- * ---
- *
- * Single captures of string quotation characters
- *
- */
+* ---
+*
+* Single captures of string quotation characters
+*
+*/
 export const StringQuotations = /^['"]/;
 
 /**
@@ -532,4 +533,4 @@ export const YAMLFrontmatterDelimiter = /^-{3}/;
 /**
  *
  */
-export const HTMLVoidTags = /(?:area|br|base|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)/i;
+export const HTMLVoids = /(?:area|br|base|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)/i;

@@ -3,7 +3,7 @@
 /**
  * The Tag Type
  */
-export const enum TagType {
+export enum TagType {
   /**
    * Output Tag Type
    *

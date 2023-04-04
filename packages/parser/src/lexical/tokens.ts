@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export const enum TokenType {
+export enum TokenType {
   Whitespace,
   Newline,
 

@@ -52,6 +52,8 @@ These packages are considered the _core_ modules of the project.
 - [@liquify/specs](https://github.com/panoply/liquify/tree/next/packages/specs)
 - [@liquify/schema](https://github.com/panoply/liquify/tree/next/packages/schema)
 
+> The `@liquify/schema` package is published as a sub-module.
+
 ## Config Packages
 
 These packages are the sharable configurations for popular development tools leveraged in the workspace.
@@ -95,7 +97,7 @@ Refer to readme files contained within the **docs** sub-directory of each projec
 
 # Contributing
 
-The project and containing modules use [pnpm](https://pnpm.js.org/) for dependency and workspace management. Development is intended to be conducted within the [vscode](https://code.visualstudio.com/) text editor. It is important that you install all the recommended extensions and also disable the unwanted extensions.
+The project and its containing modules use [pnpm](https://pnpm.js.org/) for dependency and workspace management. Development is intended to be conducted within the [vscode](https://code.visualstudio.com/) text editor. It is important that you install all the recommended extensions and also disable the unwanted extensions. The **recommended** extensions are important as they ensure the best possible development experience.
 
 <details>
 <summary>
@@ -134,7 +136,7 @@ The project and containing modules use [pnpm](https://pnpm.js.org/) for dependen
 - Clone this repository `git clone https://github.com/panoply/liquify.git`
 - Run `pnpm i` in the root directory
 
-The project will be complied and all packages will build in `postinstall`. You can `cd` into any package or alternatively you can run `pnpm dev` from workspace root to start watch + build mode on packages that are specific to Liquify. The `pnpm dev` when executed from workspace root will target only specific packages relating to Liquify (excluding utils/docs etc).
+The project will be complied and all packages will build in `postinstall`. You can `cd` into any package or alternatively you can run `pnpm dev` from workspace root to start watch + build mode on packages that are specific to Liquify. The `pnpm dev` when executed from workspace root will target only specific packages relating to Liquify and exclude utils/docs etc.
 
 ## Developing
 
@@ -161,13 +163,24 @@ pnpm test                   Tests all packages in the repository
 #### Targeting (Workspace Root)
 
 ```
-pnpm lsp               <dev|build|test>         Targets the Liquid Language Server package
-pnpm esthetic          <dev|build|test>         Targets the Æsthetic package
-pnpm parser            <dev|build|test>         Targets the Liquid Language Parser package
-pnpm specs             <dev|build|test>         Targets the Liquid Language Specs package
-pnpm vscode            <dev|build>              Targets the vscode client package
-pnpm moloko            <dev|build>              Targets the Ace based Liquid browser editor
-pnpm schema            <build|generate>         Targets the Schema Stores package
+pnpm @server            <dev|build|test>         Targets the Liquid Language Server package
+pnpm @esthetic          <dev|build|test>         Targets the Æsthetic package
+pnpm @parser            <dev|build|test>         Targets the Liquid Language Parser package
+pnpm @specs             <dev|build|test>         Targets the Liquid Language Specs package
+pnpm @vscode            <dev|build>              Targets the vscode client package
+pnpm @moloko            <dev|build>              Targets the Moloko (monaco) text editor package
+pnpm @highlight         <dev|build|test>         Targets the CLI syntax highlight package
+pnpm @ava               <dev|build>              Targets the AVA test extender package
+pnpm @schema            <build|generate>         Targets the Schema Stores package
+```
+
+#### Documentation (Workspace Root)
+
+```
+pnpm @docs:liquify      <dev|build|deploy>        Targets the liquify.dev documentation
+pnpm @docs:esthetic     <dev|build|deploy>        Targets the æsthetic.dev documentation
+pnpm @docs:moloko       <dev|build|deploy>        Targets the moloko.js.org documentation
+pnpm @docs:syncify      <dev|build|deploy>        Targets the syncify.js.org documentation
 ```
 
 ## Testing

@@ -1,7 +1,7 @@
 /* eslint no-unused-vars: "off" */
 
 import { ParseError, ErrorLevel } from './errors';
-import { Diagnostic, Range } from 'vscode-languageserver-types';
+import type { Diagnostic, Range } from 'vscode-languageserver-types';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -84,13 +84,6 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     message: 'Missing attribute value. This attribute requires a value!',
     source: 'Liquid HTML Parser',
     data: { doFormat: true }
-  },
-  [ParseError.MissingTagName]: {
-    severity: ErrorLevel.Error,
-    message: 'Missing tag name',
-    source: 'Liquid Parser',
-    data: { doFormat: false }
-
   },
   [ParseError.MissingTagName]: {
     severity: ErrorLevel.Error,

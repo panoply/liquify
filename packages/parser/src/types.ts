@@ -3,7 +3,7 @@
 import { Type } from '@liquify/specs';
 import { Range } from 'vscode-languageserver-textdocument';
 import { DocumentUri, integer, Diagnostic } from 'vscode-languageserver-types';
-import { NodeLanguage, NodeKind, TagType, NodeType } from '../lexical';
+import { NodeLanguage, NodeKind, TagType, NodeType } from './lexical';
 
 /* -------------------------------------------- */
 /* SUPPORTS                                     */
@@ -125,7 +125,11 @@ export interface INode {
    * Whether or not the not is a singular type
    */
   singular: boolean;
-  lastError: number;
+  /**
+   * Line number
+   */
+  line: number;
+
   /**
    * The parse error indexes of the node
    */
@@ -215,7 +219,7 @@ export interface INode {
    * contained on the scope property differs depending on the type of tag we
    * are dealing with.
    */
-  scope?: { [tag: string]: number } | undefined
+  scope?: { [tag: string]: any } | undefined
 
   /**
    * Returns the token (tag) inner contents as string with the `open`

@@ -7,6 +7,7 @@ export default defineConfig([
     clean: true,
     bundle: true,
     format: 'cjs',
+    name: 'specs',
     onSuccess: 'node ./bin/shopify-specs.js && eslint ./src/liquid/data/shopify/*.ts --fix'
   },
   {
@@ -32,9 +33,7 @@ export default defineConfig([
 
     },
     dts: {
-      entry: {
-        specs: './src/index.ts'
-      },
+      entry: './src/index.ts',
       resolve: true
     },
     clean: true,
@@ -43,6 +42,7 @@ export default defineConfig([
     splitting: true,
     bundle: true,
     format: 'cjs',
+    name: 'specs',
     treeshake: 'smallest',
     plugins: [
       enums(

@@ -1,7 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import os from 'os';
-import { has } from 'lodash';
 import data from '@vscode/web-custom-data/data/browsers.html-data.json';
 
 console.log('Importing from @vscode/web-custom-data\n');

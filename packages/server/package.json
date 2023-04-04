@@ -48,32 +48,33 @@
     "concurrency": 5
   },
   "dependencies": {
-    "@liquify/liquid-parser": "workspace:*",
+    "@liquify/liquid-parser": "workspace:0.1.1-beta.1",
     "@vscode/emmet-helper": "^2.8.6",
     "esthetic": "workspace:0.5.5-beta.1",
-    "fs-extra": "^11.1.0",
+    "fs-extra": "^11.1.1",
     "indent-string": "^5.0.0",
     "lodash": "^4.17.21",
     "strip-json-comments": "^5.0.0",
-    "vscode-css-languageservice": "^6.2.3",
-    "vscode-json-languageservice": "^5.3.0",
+    "vscode-css-languageservice": "^6.2.4",
+    "vscode-json-languageservice": "^5.3.2",
     "vscode-languageserver": "^8.1.0",
     "vscode-languageserver-textdocument": "^1.0.8",
     "vscode-uri": "^3.0.7"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.191",
+    "@types/lodash": "^4.14.192",
     "ava": "^5.2.0",
     "dotenv": "^16.0.3",
     "marky": "^1.2.5",
     "pretty-ms": "^8.0.0",
-    "tsup": "^6.6.3",
+    "tsup": "^6.7.0",
     "vscode-languageserver-types": "^3.17.3"
   },
   "tsup": {
     "entry": {
       "server": "src/index.ts"
     },
+    "name": "Server",
     "outDir": "package",
     "bundle": true,
     "clean": false,

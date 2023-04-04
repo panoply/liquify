@@ -1,15 +1,15 @@
 import { TextDocument } from 'vscode-languageserver-textdocument';
-// import { TextDocumentContentChangeEvent } from 'vscode-languageserver-protocol';
-// import { TextEdit } from 'vscode-languageserver';
 import inRange from 'lodash.inrange';
 import { AST } from './ast';
 import { Node } from './nodes';
-import { NodeLanguage, NodeType } from '../lexical';
+import { NodeLanguage } from '../lexical/language';
+import { NodeType } from '../lexical/type';
 import { customChanges } from '../parser/utils';
+import { INode } from '../types';
 
 export class Embed extends Node {
 
-  constructor ({ start, parent, kind, tag, type }: Node) {
+  constructor ({ start, parent, kind, tag, type }: INode) {
 
     super(NodeType.Embed, start, parent, kind);
 

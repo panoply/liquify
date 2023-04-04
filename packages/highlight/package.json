@@ -32,6 +32,7 @@
     "entry": [
       "./src/index.ts"
     ],
+    "name": "highlight",
     "outDir": "./",
     "treeshake": true,
     "dts": true,
@@ -58,12 +59,12 @@
     ]
   },
   "devDependencies": {
-    "@liquify/eslint-config": "workspace:*",
-    "@liquify/prettier-config": "workspace:*",
-    "@liquify/tsconfig": "workspace:*",
+    "@liquify/eslint-config": "workspace:^",
+    "@liquify/prettier-config": "workspace:^",
+    "@liquify/tsconfig": "workspace:^",
     "ava": "^5.2.0",
-    "terser": "^5.16.5",
-    "tsup": "^6.6.3"
+    "terser": "^5.16.8",
+    "tsup": "^6.7.0"
   },
   "dependencies": {
     "chalk": "^5.2.0",

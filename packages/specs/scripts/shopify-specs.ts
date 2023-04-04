@@ -11,10 +11,11 @@ import type { Objects } from 'liquid';
  * Reference to Current Working Directory
  */
 const cwd = process.cwd();
+const PREFIX = `${ansis.gray('[')}SPECS${ansis.gray(']')} ${ansis.magenta('RUN')}`;
 
 const { log } = console;
 
-log('\x1B[H\x1B[2J');
+// log('\x1B[H\x1B[2J');
 
 generate();
 
@@ -38,7 +39,7 @@ function unescape (string: string) {
 
 function generate () {
 
-  log(ansis.greenBright('Shopify Specifications'));
+  log(`${PREFIX} ${ansis.magenta.bold('Building Shopify Specifications')}`);
 
   objects();
 
@@ -51,7 +52,7 @@ function generate () {
  */
 function objects () {
 
-  log(ansis.cyanBright('Shopify Objects'));
+  log(`${PREFIX} ${ansis.cyan('Shopify Objects')}`);
 
   /* -------------------------------------------- */
   /* FUNCTIONS                                    */
@@ -212,7 +213,7 @@ function objects () {
 
   for (const item of data) {
 
-    log(ansis.blue(`- ${item.name}`));
+    // log(ansis.blue(`- ${item.name}`));
 
     spec[item.name] = { summary: item.summary };
 
@@ -244,7 +245,7 @@ function objects () {
 
       for (const prop of item.properties) {
 
-        log(ansis.gray(`  - ${prop.name}`));
+        // log(ansis.gray(`  - ${prop.name}`));
 
         spec[item.name].properties[prop.name] = { type: Type.unknown };
         spec[item.name].properties[prop.name].description = docs(prop, item.name);
@@ -276,11 +277,13 @@ function objects () {
 
   const parse = JSON.stringify(spec, null, 2);
 
-  log(ansis.greenBright(`Writing objects JSON: ${ansis.whiteBright('data/liquid/shopify/objects.json')} `));
+  log(PREFIX + ansis.cyan(` Writing objects JSON: ${ansis.whiteBright('data/liquid/shopify/objects.json')} `));
 
   fs.writeFileSync(join(cwd, 'data/liquid/shopify/objects.json'), parse);
 
-  log(ansis.greenBright(`Writing objects DATA: ${ansis.whiteBright('src/liquid/data/shopify/objects.ts')} `));
+  log(PREFIX + ansis.cyan(` Writing objects DATA: ${ansis.whiteBright('src/liquid/data/shopify/objects.ts')} `));
 
   fs.writeFileSync(join(cwd, 'src/liquid/data/shopify/objects.ts'), output('Objects', 'objects', parse));
+
+  log(`${PREFIX} ${ansis.magenta.bold('Finished Shopify Specifications')}`);
 }

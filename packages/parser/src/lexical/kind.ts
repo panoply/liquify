@@ -17,7 +17,7 @@
  *
  * ---
  */
-export const enum NodeKind {
+export enum NodeKind {
   /**
    * Liquid Kind, eg: `{{ tag }}` | `{% tag %}`
    */

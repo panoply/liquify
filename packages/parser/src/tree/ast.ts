@@ -6,7 +6,7 @@ import { Diagnostics, IDiagnostic } from '../lexical/diagnostics';
 import { Node } from '../tree/nodes';
 import { Embed } from '../tree/embed';
 import { assign, GetFormedRange } from '../parser/utils';
-import { PublishDiagnosticsParams } from './typings';
+import { INode, PublishDiagnosticsParams } from '../types';
 import * as s from '../parser/stream';
 import { validate } from './validate';
 
@@ -69,7 +69,7 @@ export class AST {
   /**
    * The abstract syntax tree.
    */
-  get nodes (): Node[] { return this.root.children; };
+  get nodes (): INode[] { return this.root.children; };
 
   /**
    * File context information which described the document
@@ -459,7 +459,7 @@ export class AST {
    * If successful, returns the Node and also updates the `node`
    * cursor property, unless false is passed as second parameter
    */
-  public getNodeAt (location: Position | number): Node {
+  public getNodeAt (location: Position | number): INode {
 
     const offset = typeof location === 'number'
       ? location

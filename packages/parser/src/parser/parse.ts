@@ -1,6 +1,11 @@
+import type { INode } from '../types';
 import { $, q, Type } from '@liquify/specs';
 import { Range, TextDocument } from 'vscode-languageserver-textdocument';
-import { NodeKind, NodeLanguage, TokenType, NodeType, ParseError } from '../lexical';
+import { NodeKind } from '../lexical/kind';
+import { NodeLanguage } from '../lexical/language';
+import { NodeType } from '../lexical/type';
+import { TokenType } from '../lexical/tokens';
+import { ParseError } from '../lexical/errors';
 import { AST } from '../tree/ast';
 import { Node } from '../tree/nodes';
 import { Embed } from '../tree/embed';
@@ -35,17 +40,17 @@ export function parse (document: AST): AST {
   /**
    * The parent node of the current node
    */
-  let parent: Node = document.root;
+  let parent: INode = document.root;
 
   /**
    * The current node
    */
-  let node: Node | Embed;
+  let node: INode | Embed;
 
   /**
    * A node to track
    */
-  let track: Node;
+  let track: INode;
 
   /**
    * A parse error callback
@@ -85,7 +90,7 @@ export function parse (document: AST): AST {
   /**
    * Paired Sets
    */
-  const pair: Set<Node> = new Set();
+  const pair: Set<INode> = new Set();
 
   /* -------------------------------------------- */
   /* TOKENIZER                                    */
@@ -688,7 +693,7 @@ export function parse (document: AST): AST {
 
   // console.log(document);
 
-  (document.node as Node) = document.getNodeAt(document.cursor);
+  (document.node as INode) = document.getNodeAt(document.cursor);
 
   return document;
 

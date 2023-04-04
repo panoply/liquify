@@ -1020,7 +1020,7 @@ function Scan (): number {
       if (s.IfRegExp(r.Number)) {
 
         // Validate integer number types, these are not floats
-        if (q.isType(Type.integer)) {
+        if (q.isType(Type.number)) {
 
           // Test against the argument value
           if (!q.isValue(s.token)) {
@@ -1751,7 +1751,7 @@ function Scan (): number {
       if (s.IfRegExp(r.Number)) {
 
         // Validate integer number types, these are not floats
-        if (q.isType(Type.integer)) {
+        if (q.isType(Type.number)) {
 
           // Ensure we are dealing with an integer
           if (s.TokenContains(r.DigitOnly)) {

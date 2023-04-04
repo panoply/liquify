@@ -1,8 +1,17 @@
-export * from './language';
-export * from './kind';
-export * from './tokens';
-export * from './tags';
-export * from './characters';
-export * from './errors';
-export * from './type';
-export * as regex from './regex';
+
+import { NodeType } from './type';
+import { ErrorLevel, ParseError } from './errors';
+import { CharCode } from './characters';
+import { TagType } from './tags';
+import { NodeKind } from './kind';
+import { TokenType } from './tokens';
+import { NodeLanguage } from './language';
+
+export { NodeKind,
+  ErrorLevel,
+  ParseError,
+  CharCode,
+  NodeType,
+  TagType,
+  TokenType,
+  NodeLanguage };

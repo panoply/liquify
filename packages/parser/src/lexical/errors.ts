@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export const enum ErrorLevel {
+export enum ErrorLevel {
   /**
    * Reports an error.
    */
@@ -22,7 +22,7 @@ export const enum ErrorLevel {
   Hint = 4,
 }
 
-export const enum ParseError {
+export enum ParseError {
   /**
    * Parsing error occured. This could
    * be any error, its a fallback

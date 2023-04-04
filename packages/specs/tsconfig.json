@@ -11,18 +11,12 @@
     "src/**/*.ts",
     "node_modules/.cache/objects.ts",
     "scripts/*.ts"
-   ],
+  ],
   "compilerOptions": {
     "incremental": false,
     "allowJs": true,
     "removeComments": false,
-    "typeRoots": [
-      "node_modules/@types",
-    ],
     "outDir": "package",
-    "types": [
-      "node"
-    ],
     "baseUrl": ".",
     "paths": {
       "html": [

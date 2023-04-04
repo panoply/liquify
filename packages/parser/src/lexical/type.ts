@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-export const enum NodeType {
+export enum NodeType {
   Root,
   Pair,
   Void,

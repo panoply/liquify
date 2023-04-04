@@ -5,7 +5,7 @@ import { AST } from './ast';
 import { findFirst } from '../parser/utils';
 import { Type } from '@liquify/specs';
 import { NodeKind, TagType, NodeLanguage, NodeType, CharCode as c } from '../lexical';
-import { INode } from './typings';
+import { INode } from '../types';
 
 // import inRange from 'lodash.inrange';
 
@@ -26,17 +26,16 @@ export class Node implements INode {
   public variable?: string;
   public root: number;
   public index: number;
-  public parent: Node;
-  public children: Node[] = [];
+  public parent: INode;
+  public children: INode[] = [];
   public scope: {};
   public objects?: {};
   public filters?: {};
   public arguments?: {};
   public singular: boolean;
-  public lastError: number;
   public errors: number[] = [];
 
-  constructor (type: NodeType, start?: number, parent?: Node, kind?: NodeKind) {
+  constructor (type: NodeType, start?: number, parent?: INode, kind?: NodeKind) {
 
     if (type === NodeType.Root) {
 
@@ -70,7 +69,7 @@ export class Node implements INode {
     }
   }
 
-  get tagType (): TagType {
+  get tagType () {
 
     return this.offsets.length > 2
       ? TagType.Template
@@ -79,19 +78,19 @@ export class Node implements INode {
         : TagType.Singleton;
   }
 
-  get start (): number {
+  get start () {
     return this.offsets[0];
   }
 
-  get startToken (): string {
+  get startToken () {
     return AST.document.getText(this.offsets[0], this.offsets[1]);
   }
 
-  get end (): number {
+  get end () {
     return this.offsets[this.offsets.length - 1];
   }
 
-  get endToken (): string {
+  get endToken () {
     return AST.document.getText(this.offsets[2], this.offsets[3]);
   }
 
@@ -115,15 +114,15 @@ export class Node implements INode {
     return AST.document.getRange(this.start, this.end);
   };
 
-  get prevSibling (): Node | null {
+  get prevSibling () {
     return this.parent.children[this.index - 1] || null;
   }
 
-  get nextSibling (): Node | null {
+  get nextSibling () {
     return this.parent.children?.[this.index + 1] || null;
   }
 
-  get firstChild (): Node | undefined {
+  get firstChild () {
     return this.children?.[0] || null;
   }
 
@@ -134,12 +133,12 @@ export class Node implements INode {
       : this.parent.children[idx - 2];
   }
 
-  get lastChild (): Node | undefined {
+  get lastChild () {
 
     return this.children?.[this.children.length - 1] || null;
   }
 
-  get lastWord (): string {
+  get lastWord () {
 
     const token = this.startToken.slice(2, AST.document.cursor - this.start);
     const match = /\w+?(?=\s*?[^\w]*?$)/.exec(token);
@@ -172,7 +171,7 @@ export class Node implements INode {
    *
    * - Lifted from vscode-html-languageservice
    */
-  public getNodeAt (offset: number): Node {
+  public getNodeAt (offset: number) {
 
     const node = findFirst(this.children, ({ start }) => offset <= start) - 1;
 

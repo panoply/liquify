@@ -10,23 +10,25 @@
   "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "engines": {
-    "node": "16",
-    "vscode": "^1.6.0",
+    "node": ">=16",
+    "vscode": ">=1.6.0",
     "pnpm": ">=7"
   },
   "scripts": {
-    "dev": "conc --restart-tries 2 -n \"AVA,PRETTIFY,SPECS,PARSER,VSCODE,SERVER\" -c \"#81D4FA,#FF69B,#9370DB,#1E90FF,#00CED1,#FF7F50\" \"pnpm ava dev\" \"pnpm prettify dev\" \"pnpm specs dev\" \"pnpm parser dev\" \"pnpm vscode dev\" \"pnpm lsp dev\"",
-    "build": "pnpm -r run build",
-    "lsp": "pnpm run -F @liquify/liquid-language-server",
-    "ava": "pnpm -r run -F @liquify/ava",
-    "prettify": "pnpm run -F @liquify/prettify",
-    "parser": "pnpm run -F @liquify/liquid-parser",
-    "schema": "pnpm run -F @liquify/schema",
-    "specs": "pnpm run -F @liquify/liquid-language-specs",
-    "moloko": "pnpm run -F @liquify/moloko",
-    "vscode": "pnpm run -F vscode-liquid",
-    "docs": "pnpm run -F @liquify/docs",
-    "ci:publish": "pnpm publish -r",
+    "dev": "conc --restart-tries 2 -n \"AVA,ÆSTHETIC,SPECS,PARSER,VSCODE,SERVER\" -c \"#81D4FA,#FF69B,#9370DB,#1E90FF,#00CED1,#FF7F50\" \"pnpm @ava dev\" \"pnpm @esthetic dev\" \"pnpm @specs dev\" \"pnpm @parser dev\" \"pnpm @vscode dev\" \"pnpm @server dev\"",
+    "build": "pnpm exec ./build.sh",
+    "@server": "pnpm run -F @liquify/liquid-language-server",
+    "@ava": "pnpm -r run -F @liquify/ava",
+    "@esthetic": "pnpm run -F esthetic",
+    "@highlight": "pnpm run -F @liquify/highlight",
+    "@parser": "pnpm run -F @liquify/liquid-parser",
+    "@schema": "pnpm run -F @liquify/schema",
+    "@specs": "pnpm run -F @liquify/specs",
+    "@moloko": "pnpm run -F moloko",
+    "@vscode": "pnpm run -F vscode-liquid",
+    "@docs:esthetic": "pnpm run -F esthetic-docs",
+    "@docs:liquify": "pnpm run -F @liquify/docs",
+    "@types": "pnpm run -F @liquify/types",
     "preinstall": "npx only-allow pnpm"
   },
   "husky": {
@@ -38,7 +40,6 @@
     "url": "https://github.com/panoply/liquify"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.26.1",
     "@liquify/eslint-config": "workspace:*",
     "@liquify/prettier-config": "workspace:*",
     "@liquify/tsconfig": "workspace:*",

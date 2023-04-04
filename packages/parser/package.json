@@ -4,7 +4,7 @@
   "description": "An incremental parser for the Liquid Templating Language",
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup --minify",
+    "build": "NODE_ENV=PROD tsup --minify",
     "package": "cd versions; pnpm pack ../ && cd ..",
     "release": "pnpm -w release --pkg $npm_package_name",
     "test": "ava tests/dev.test.mjs --watch --verbose",
@@ -64,7 +64,8 @@
     "concurrency": 5
   },
   "dependencies": {
-    "@liquify/schema": "workspace:*",
+    "@liquify/schema": "workspace:^",
+    "@liquify/specs": "workspace:^",
     "lodash.inrange": "^3.3.6",
     "mergerino": "^0.4.0",
     "vscode-languageserver-textdocument": "^1.0.8",
@@ -74,7 +75,7 @@
     "url": "https://github.com/panoply/liquid-parser"
   },
   "devDependencies": {
-    "@liquify/ava": "workspace:*",
+    "@liquify/ava": "workspace:^",
     "@types/lodash.inrange": "^3.3.7",
     "ansis": "^1.5.5",
     "ava": "5.2.0",
@@ -82,25 +83,5 @@
     "pretty-hrtime": "^1.0.3",
     "tsup": "^6.7.0",
     "vscode-languageserver-types": "^3.17.3"
-  },
-  "tsup": {
-    "entry": [
-      "./src/index.ts",
-      "./src/lexical/index.ts",
-      "./src/lexical/diagnostics.ts"
-    ],
-    "external": [
-      "vscode-languageserver-textdocument"
-    ],
-    "format": "cjs",
-    "dts": {
-      "entry": "./src/index.ts",
-      "resolve": true
-    },
-    "outDir": "package",
-    "legacyOutput": false,
-    "splitting": false,
-    "treeshake": "smallest",
-    "bundle": true
   }
 }

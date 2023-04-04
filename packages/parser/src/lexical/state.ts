@@ -3,7 +3,7 @@
 /**
  * Cache Context
  */
-export const enum ScanCache {
+export enum ScanCache {
   Reset,
   SkipClose,
   PassThrough,
