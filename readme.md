@@ -68,7 +68,7 @@ These packages are the sharable configurations for popular development tools lev
 These are an assortment a different packages which were developed for specific purposes. They are made available as modules for consumption by projects that may wish to use or require them.
 
 - [@liquify/highlight](https://github.com/panoply/liquify/tree/next/packages/highlight)
-- [@liquify/prism](https://github.com/panoply/liquify/tree/next/packages/prism)
+- [@liquify/papyrus](https://github.com/panoply/liquify/tree/next/packages/prism)
 
 ## Testing Package
 
@@ -82,6 +82,7 @@ These packages exist in the monorepo but are distributed independent of the Liqu
 
 - [moloko](https://github.com/panoply/liquify/tree/next/packages/moloko)
 - [esthetic](https://github.com/panoply/liquify/tree/next/packages/esthetic)
+- [papyrus](https://github.com/panoply/liquify/tree/next/packages/papyrus)
 - [syncify](https://github.com/panoply/liquify/tree/next/packages/syncify)
 
 # Documentation
@@ -91,6 +92,7 @@ Several different projects exist within Liquify. Some projects have their own de
 - [liquify.dev](https://liquify.dev)
 - [æsthetic.dev](https://æsthetic.dev)
 - [moloko.js.org](https://moloko.js.org)
+- [papyrus.js.org](https://papyrus.js.org)
 - [syncify.js.org](https://syncify.myshopify.com)
 
 Refer to readme files contained within the **docs** sub-directory of each project for more information.
@@ -181,6 +183,7 @@ pnpm @docs:liquify      <dev|build|deploy>        Targets the liquify.dev docume
 pnpm @docs:esthetic     <dev|build|deploy>        Targets the æsthetic.dev documentation
 pnpm @docs:moloko       <dev|build|deploy>        Targets the moloko.js.org documentation
 pnpm @docs:syncify      <dev|build|deploy>        Targets the syncify.js.org documentation
+pnpm @docs:papyrus      <dev|build|deploy>        Targets the papyrus.js.org documentation
 ```
 
 ## Testing

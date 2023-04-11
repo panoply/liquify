@@ -25,9 +25,11 @@
     "@schema": "pnpm run -F @liquify/schema",
     "@specs": "pnpm run -F @liquify/specs",
     "@moloko": "pnpm run -F moloko",
+    "@papyrus": "pnpm run -F papyrus",
     "@vscode": "pnpm run -F vscode-liquid",
     "@docs:esthetic": "pnpm run -F esthetic-docs",
     "@docs:liquify": "pnpm run -F @liquify/docs",
+    "@docs:papyrus": "pnpm run -F papyrus-docs",
     "@types": "pnpm run -F @liquify/types",
     "preinstall": "npx only-allow pnpm"
   },

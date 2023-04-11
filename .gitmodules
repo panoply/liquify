@@ -10,3 +10,6 @@
 [submodule "packages/schema"]
 	path = packages/schema
 	url = https://github.com/panoply/liquify-schema
+[submodule "packages/papyrus"]
+	path = packages/papyrus
+	url = https://github.com/panoply/papyrus

@@ -4,6 +4,8 @@ packages:
   - "configs/eslint-config"
   - "configs/stylelint-config"
   - "packages/highlight"
+  - "packages/papyrus"
+  - "packages/papyrus/docs"
   - "packages/esthetic/docs"
   - "packages/esthetic"
   - "packages/schema"
