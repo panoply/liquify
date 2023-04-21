@@ -452,7 +452,7 @@ export const objects: Objects = {
       },
       total_weight: {
         type: 'number',
-        description: 'The total weight of all of the items in the cart.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart#total_weight)\n\n'
+        description: "The total weight of all of the items in the cart in grams. \n\n**Tip**\n\n> Use the [`weight_with_unit`](https://shopify.dev/docs/api/liquid/filters/weight_with_unit) filter to format the weight in\n> [the store's format](https://www.shopify.com/admin/settings/general), or override the default unit.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart#total_weight)\n\n"
       },
       discount_applications: {
         type: 'array',
@@ -789,6 +789,11 @@ export const objects: Objects = {
         type: 'object',
         description: 'The currency used in the country.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country#currency)\n\n',
         scope: 'currency'
+      },
+      market: {
+        type: 'object',
+        description: 'The market that includes this country.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country#market)\n\n',
+        scope: 'market'
       }
     }
   },
@@ -1327,11 +1332,11 @@ export const objects: Objects = {
     }
   },
   gift_card: {
-    summary: "A [gift card](https://help.shopify.com/manual/products/gift-card-products) that's been issued to a customer.",
+    summary: "A [gift card](https://help.shopify.com/manual/products/gift-card-products) that's been issued to a customer or a recipient.",
     template: [
       'gift_card.liquid'
     ],
-    description: "A [gift card](https://help.shopify.com/manual/products/gift-card-products) that's been issued to a customer.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card)\n\n",
+    description: "A [gift card](https://help.shopify.com/manual/products/gift-card-products) that's been issued to a customer or a recipient.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card)\n\n",
     type: 'object',
     properties: {
       balance: {
@@ -1350,6 +1355,15 @@ export const objects: Objects = {
         type: 'object',
         description: 'The customer associated with the gift card.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card#customer)\n\n',
         scope: 'customer'
+      },
+      recipient: {
+        type: 'object',
+        description: 'The recipient associated with the gift card. If there is no recipient associated with the gift card, then `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card#recipient)\n\n',
+        scope: 'recipient'
+      },
+      message: {
+        type: 'string',
+        description: 'The personalized message intended for the recipient. If there is no message intended for the recipient, then `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card#message)\n\n'
       },
       enabled: {
         type: 'boolean',
@@ -1859,6 +1873,11 @@ export const objects: Objects = {
         description: 'The languages that are available on the store.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization#available_languages)\n\n',
         scope: 'shop_locale'
       },
+      market: {
+        type: 'object',
+        description: 'The currently selected market on the storefront.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization#market)\n\n',
+        scope: 'market'
+      },
       country: {
         type: 'object',
         description: 'The currently selected country on the storefront.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization#country)\n\n',
@@ -1900,6 +1919,26 @@ export const objects: Objects = {
       metafields: {
         type: 'any',
         description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the location. \n\n**Tip**\n\n> To learn about how to create metafields, refer to [Create and manage metafields](/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/location#metafields)\n\n'
+      }
+    }
+  },
+  market: {
+    summary: 'A group of one or more regions of the world that a merchant is targeting for sales.',
+    description: 'A group of one or more regions of the world that a merchant is targeting for sales. To learn more about markets, refer to [the Shopify Markets conceptual\noverview](/docs/apps/markets).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/market)\n\n',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'string',
+        description: 'The ID of the market.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/market#id)\n\n'
+      },
+      handle: {
+        type: 'string',
+        description: 'The [handle](/docs/api/liquid/basics#handles) of the market.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/market#handle)\n\n'
+      },
+      metafields: {
+        type: 'array',
+        description: 'The [metafields](/docs/api/liquid/objects/metafield) applied to the market. \n\n**Tip**\n\n> To learn about how to create metafields, refer to [Create and manage\n> metafields](/apps/metafields/manage) or visit the [Shopify Help\n> Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/market#metafields)\n\n',
+        scope: 'metafield'
       }
     }
   },
@@ -2744,7 +2783,7 @@ export const objects: Objects = {
       },
       weight: {
         type: 'number',
-        description: "The weight of the variant in grams. \n\n**Tip**\n\n> Use the [`weight_with_unit` filter](https://shopify.dev/docs/api/liquid/filters/weight_with_unit) filter to format the weight in\n> [the store's format](https://www.shopify.com/admin/settings/general).\n>\n> Use `variant.weight_in_unit` to output the weight in the unit configured on the variant.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant#weight)\n\n"
+        description: "The weight of the variant in grams. \n\n**Tip**\n\n> Use the [`weight_with_unit`](https://shopify.dev/docs/api/liquid/filters/weight_with_unit) filter to format the weight in\n> [the store's format](https://www.shopify.com/admin/settings/general).\n>\n> Use `variant.weight_in_unit` to output the weight in the unit configured on the variant.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant#weight)\n\n"
       },
       unit_price_measurement: {
         type: 'object',
@@ -2829,6 +2868,28 @@ export const objects: Objects = {
       scale_max: {
         type: 'number',
         description: 'The maximum value of the rating scale.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/rating#scale_max)\n\n'
+      }
+    }
+  },
+  recipient: {
+    summary: 'A recipient that is associated with a [gift card](https://help.shopify.com/manual/products/gift-card-products).',
+    template: [
+      'gift_card.liquid'
+    ],
+    description: 'A recipient that is associated with a [gift card](https://help.shopify.com/manual/products/gift-card-products).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recipient)\n\n',
+    type: 'object',
+    properties: {
+      nickname: {
+        type: 'string',
+        description: 'The nickname of the recipient.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recipient#nickname)\n\n'
+      },
+      email: {
+        type: 'string',
+        description: 'The email of the recipient.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recipient#email)\n\n'
+      },
+      name: {
+        type: 'string',
+        description: 'The full name of the recipient.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recipient#name)\n\n'
       }
     }
   },
@@ -3910,7 +3971,7 @@ export const objects: Objects = {
         description: 'The height of the video source file.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video_source#height)\n\n'
       },
       mime_type: {
-        type: 'number',
+        type: 'string',
         description: 'The [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) of the video source file.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video_source#mime_type)\n\n'
       },
       url: {

@@ -11,9 +11,7 @@ echo -e "\033[0;32mCleaning Shopify Documentation References\033[0m"
 rm -rf $dir
 
 # 3. CLONE ACE FROM GITHUB
-echo -e "\033[0;32mCloning Ace $ver from https://github.com/Shopify/theme-liquid-docs\033[0m"
+echo -e "\033[0;32mCloning Shopify Theme Docs $ver from https://github.com/Shopify/theme-liquid-docs\033[0m"
 git -c advice.detachedHead=false clone --depth 1 https://github.com/Shopify/theme-liquid-docs $dir/
 
-# 4. CD INTO THE DIRECTORY AND RUN NPM INSTALL
-echo -e "\033[0;32mInstall Ace\033[0m"
 cd $out

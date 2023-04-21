@@ -195,6 +195,22 @@ export const Tags: ITags = {
       url: 'https://shopify.dev/api/liquid/tags/theme-tags#section'
     }
   },
+  sections: {
+    description: 'Renders a [section group](https://shopify.dev/themes/architecture/section-groups). Use this tag to render section groups as part of the theme\'s layout content. Place the sections tag where you want to render it in the layout.',
+    filters: false,
+    singleton: true,
+    type: 'import',
+    arguments: [
+      {
+        type: 'string',
+        required: true
+      }
+    ],
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/api/liquid/tags/theme-tags#sections'
+    }
+  },
   schema: {
     description: 'The schema tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ',
     filters: false,

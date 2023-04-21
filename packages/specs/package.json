@@ -33,7 +33,7 @@
     "dev": "tsup --watch",
     "build": "tsup --minify",
     "predev": "tsup --env.NODE_ENV predev",
-    "shopify:pull": "pnpm exec ./shopify.sh",
+    "shopify:pull": "pnpm exec ./bin.sh",
     "shopify:make": "node bin/shopify.js && eslint ./src/liquid/data/shopify/objects.ts --fix",
     "html": "node ./scripts/html-specs.js && eslint ./src/html/data/html5/*.ts --fix",
     "package": "cd versions; pnpm pack ../ && cd ..",
