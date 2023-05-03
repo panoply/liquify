@@ -1,6 +1,6 @@
 {
   "name": "@liquify/specs",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": false,
   "author": {
     "name": "Νίκος Σαβίδης",
@@ -34,7 +34,7 @@
     "build": "tsup --minify",
     "predev": "tsup --env.NODE_ENV predev",
     "shopify:pull": "pnpm exec ./bin.sh",
-    "shopify:make": "node bin/shopify.js && eslint ./src/liquid/data/shopify/objects.ts --fix",
+    "shopify:make": "node bin/shopify-specs.js && eslint ./src/liquid/data/shopify/objects.ts --fix",
     "html": "node ./scripts/html-specs.js && eslint ./src/html/data/html5/*.ts --fix",
     "package": "cd versions; pnpm pack ../ && cd ..",
     "test": "ava ./test/dev.test.mjs --watch --verbose --color",
