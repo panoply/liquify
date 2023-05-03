@@ -295,7 +295,7 @@
   },
   "block": {
     "summary": "The content and settings of a [section block](/themes/architecture/sections/section-schema#blocks).",
-    "description": "The content and settings of a [section block](/themes/architecture/sections/section-schema#blocks). Sections and blocks are reusable modules of content that make up [templates](/themes/architecture/templates).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/block)\n\n",
+    "description": "The content and settings of a [section block](/themes/architecture/sections/section-schema#blocks). Sections and blocks are reusable modules of content that make up [templates](/themes/architecture/templates).\n\nTo learn more about using blocks, refer to the [Shopify Partners blog](https://www.shopify.com/partners/blog/theme-blocks).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/block)\n\n",
     "type": "object",
     "properties": {
       "id": {
@@ -391,6 +391,49 @@
         "type": "object",
         "description": "The previous (newer) article in the blog. Returns `nil` if there is no previous article.\n\nThis property can be used on the [article page](/themes/architecture/templates/article) to output `previous` links.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog#previous_article)\n\n",
         "scope": "article"
+      }
+    }
+  },
+  "brand": {
+    "summary": "The [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets) for the store.",
+    "description": "The [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets) for the store.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand)\n\n",
+    "type": "object",
+    "properties": {
+      "slogan": {
+        "type": "string",
+        "description": "The slogan for the brand.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand#slogan)\n\n"
+      },
+      "short_description": {
+        "type": "string",
+        "description": "A short description of the brand.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand#short_description)\n\n"
+      },
+      "favicon_url": {
+        "type": "object",
+        "description": "The square logo for the brand, resized to 32x32 px.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand#favicon_url)\n\n",
+        "scope": "image"
+      },
+      "cover_image": {
+        "type": "object",
+        "description": "The square logo for the brand, resized to 32x32 px.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand#cover_image)\n\n",
+        "scope": "image"
+      },
+      "logo": {
+        "type": "object",
+        "description": "The default logo for the brand.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand#logo)\n\n",
+        "scope": "image"
+      },
+      "square_logo": {
+        "type": "object",
+        "description": "The square logo for the brand.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand#square_logo)\n\n",
+        "scope": "image"
+      },
+      "colors": {
+        "type": 22,
+        "description": "The brand's colors. To learn about how to access brand colors, refer to [`brand_color`](https://shopify.dev/docs/api/liquid/objects/brand_color).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand#colors)\n\n"
+      },
+      "metafields": {
+        "type": 22,
+        "description": "The social links for the brand. Social links are stored in [metafields](https://shopify.dev/docs/api/liquid/objects/metafield), and can be accessed using the syntax `shop.brand.metafields.social_links.<platform>.value`.\n\n| Platforms |\n| --- |\n| `facebook` |\n| `pinterest` |\n| `instagram` |\n| `tiktok` |\n| `tumblr` |\n| `snapchat` |\n| `vimeo` |\n\n#### Example\n\n```liquid\n\n{{ shop.brand.metafields.social_links.twitter.value }}\n{{ shop.brand.metafields.social_links.youtube.value }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand#metafields)\n\n"
       }
     }
   },
@@ -603,6 +646,12 @@
         "scope": "image"
       }
     }
+  },
+  "brand_color": {
+    "summary": "The colors defined as part of a store's [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets).",
+    "description": "The colors defined as part of a store's [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets).\n\n#### \n\nTo access a brand color, specify the following:\n- The brand color group: either `primary` or `secondary`\n- The color role: Whether the color is a `background` or `foreground` (contrasting) color\n- The 0-based index of the color within the group and role\n\n\n```liquid\n\n{{ shop.brand.colors.primary[0].background }}\n{{ shop.brand.colors.primary[0].foreground }}\n{{ shop.brand.colors.secondary[0].background }}\n{{ shop.brand.colors.secondary[1].background }}\n{{ shop.brand.colors.secondary[0].foreground }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand_color)\n\n",
+    "type": "string",
+    "const": true
   },
   "color": {
     "summary": "A color from a [`color` setting](/themes/architecture/settings/input-settings#color).",
@@ -1225,7 +1274,7 @@
       },
       "email": {
         "type": "string",
-        "description": "The email associated with the form. This property is exclusive to the following forms:\n\n- [`contact`](https://shopify.dev/docs/api/liquid/tags/form#form-contact)\n- [`create_customer`](https://shopify.dev/docs/api/liquid/tags/form#form-create_customer)\n- [`customer`](https://shopify.dev/docs/api/liquid/tags/form#form-customer)\n- [`customer_login`](https://shopify.dev/docs/api/liquid/tags/form#form-customer_login)\n- [`new_comment`](https://shopify.dev/docs/api/liquid/tags/form#form-new_comment)\n- [`recover_customer_password`](https://shopify.dev/docs/api/liquid/tags/form#form-recover_customer_password)\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form#email)\n\n"
+        "description": "The email associated with the form. This property is exclusive to the following forms:\n\n- [`contact`](https://shopify.dev/docs/api/liquid/tags/form#form-contact)\n- [`create_customer`](https://shopify.dev/docs/api/liquid/tags/form#form-create_customer)\n- [`customer`](https://shopify.dev/docs/api/liquid/tags/form#form-customer)\n- [`customer_login`](https://shopify.dev/docs/api/liquid/tags/form#form-customer_login)\n- [`new_comment`](https://shopify.dev/docs/api/liquid/tags/form#form-new_comment)\n- [`recover_customer_password`](https://shopify.dev/docs/api/liquid/tags/form#form-recover_customer_password)\n- [`product`](https://shopify.dev/docs/api/liquid/tags/form#form-product)\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form#email)\n\n"
       },
       "first_name": {
         "type": "string",
@@ -1258,6 +1307,14 @@
       "set_as_default_checkbox": {
         "type": "string",
         "description": "Renders an HTML checkbox that can submit the address as the customer's default address. This property is exclusive to the [`customer_address` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form#set_as_default_checkbox)\n\n"
+      },
+      "name": {
+        "type": "string",
+        "description": "The nickname of the gift card recipient. This property is exclusive to the [`product` form](https://shopify.dev/docs/api/liquid/tags/form#form-product).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form#name)\n\n"
+      },
+      "message": {
+        "type": "string",
+        "description": "The personalized message intended for the recipient. This property is exclusive to the [`product` form](https://shopify.dev/docs/api/liquid/tags/form#form-product).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form#message)\n\n"
       },
       "zip": {
         "type": "string",
@@ -1362,6 +1419,10 @@
       "message": {
         "type": "string",
         "description": "The personalized message intended for the recipient. If there is no message intended for the recipient, then `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card#message)\n\n"
+      },
+      "send_on": {
+        "type": "string",
+        "description": "The scheduled date on which the gift card will be sent to the recipient. If the gift card does not have a scheduled date, then `nil` is returned.\n\n\n**Tip**\n\n> Use the [`date` filter](https://shopify.dev/docs/api/liquid/filters/date) to format the date.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card#send_on)\n\n"
       },
       "enabled": {
         "type": "boolean",
@@ -2794,7 +2855,7 @@
       },
       "inventory_quantity": {
         "type": "number",
-        "description": "The inventory quantity of the variant. If inventory isn't tracked, then `0` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant#inventory_quantity)\n\n"
+        "description": "The inventory quantity of the variant. If inventory isn't tracked, then the number of items sold is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant#inventory_quantity)\n\n"
       },
       "inventory_management": {
         "type": "string",
@@ -3575,6 +3636,11 @@
         "type": "boolean",
         "description": "Returns `true` if the store accepts gift cards. Returns `false` if not.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop#accepts_gift_cards)\n\n"
       },
+      "brand": {
+        "type": "object",
+        "description": "The [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets) for the store.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop#brand)\n\n",
+        "scope": "brand"
+      },
       "metaobjects": {
         "type": 22,
         "description": "All of the [metaobjects](/docs/api/liquid/objects/metaobject) of the store. Metaobjects can only be accessed by specifying their type and handle. For more information, refer to [Access metaobjects individually](https://shopify.dev/docs/api/liquid/objects#metaobject-access-metaobjects-individually).\n\nMetaobjects are created in the [Content](https://www.shopify.com/admin/content) page of the Shopify admin.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop#metaobjects)\n\n"
@@ -3715,14 +3781,14 @@
     "const": true
   },
   "template": {
-    "summary": "Information about the current template.",
+    "summary": "Information about the current [template](/docs/themes/architecture/templates).",
     "global": true,
-    "description": "Information about the current template.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/template)\n\n",
+    "description": "Information about the current [template](/docs/themes/architecture/templates).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/template)\n\n",
     "type": "object",
     "properties": {
       "name": {
         "type": "string",
-        "description": "The name of the template's [type](/themes/architecture/templates#template-types).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/template#name)\n\n",
+        "description": "The name of the template's [type](/docs/themes/architecture/templates#template-types).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/template#name)\n\n",
         "literal": [
           "404",
           "article",
@@ -4176,6 +4242,10 @@
         "type": "array",
         "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because the array is always the same as [`checkout.line_items`](/docs/api/liquid/objects/checkout#checkout-line_items).\n\n---\n\nThe unfulfilled line items of the checkout.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout#unfulfilled_line_items)\n\n",
         "scope": "line_item"
+      },
+      "item_count": {
+        "type": "number",
+        "description": "The number of items in the checkout.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout#item_count)\n\n"
       }
     }
   },
