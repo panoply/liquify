@@ -1,4 +1,5 @@
-import { LiquidParser, Engine } from '@liquify/liquid-parser';
+import { LiquidParser } from '@liquify/liquid-parser';
+import { Engine } from '@liquify/specs'
 
 /**
  * Liquid Parser
@@ -12,7 +13,6 @@ export const Parser = new LiquidParser(
     frontmatter: true,
     comments: true,
     variables: true,
-    linting: {},
     associates: {}
   }
 );
