@@ -43,7 +43,7 @@ export async function markup (document: IAST, options: Formatting): Promise<Text
 
   try {
 
-    const newText = await esthetic.format(source, {
+    const newText = esthetic.format(source, {
       language: 'liquid'
     });
 
