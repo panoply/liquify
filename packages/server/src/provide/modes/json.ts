@@ -1,4 +1,5 @@
-import { IAST, IEmbed, Position, NodeLanguage } from '@liquify/liquid-parser';
+import { IAST, IEmbed, Position } from '@liquify/liquid-parser';
+import { NodeLanguage } from '@liquify/liquid-parser/lexical';
 import { TextEdit, Diagnostic, CompletionList, CompletionItem, Hover } from 'vscode-languageserver-protocol';
 import {
   getLanguageService,
