@@ -493,6 +493,24 @@ export const Filters: IFilters = {
       url: 'https://shopify.dev/api/liquid/filters/additional-filters#json'
     }
   },
+  image_url: {
+    description: 'Returns the CDN URL for an image. Accepts an image size as a parameter.',
+    snippet: 'image_url: width: ${2:450}',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/docs/api/liquid/filters/image_url'
+    }
+
+  },
+  image_tag: {
+    description: 'Generates an HTML <img> tag for a given image_url',
+    snippet: 'image_tag',
+    reference: {
+      name: 'Shopify Liquid',
+      url: 'https://shopify.dev/docs/api/liquid/filters/image_tag'
+    }
+
+  },
   img_tag: {
     description: 'Generates an image tag.',
     reference: {
