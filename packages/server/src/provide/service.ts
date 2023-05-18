@@ -2,27 +2,15 @@
 import { JSONLanguageService } from 'provide/modes/json';
 import { CSSLanguageService } from 'provide/modes/css';
 import { Services, Formatting } from 'types/server';
-import { schema } from './schema';
+import schema  from '@liquify/schema/shopify/sections.json';
 import * as Format from './service/format';
 import * as Hover from './service/hovers';
 import * as c from './service/completions';
 import * as Editing from './service/editing';
-import {
-  $,
-  p,
-  q,
-  liquid,
-  regex,
-  Position,
-  IAST,
-  INode,
-  Type,
-  CharCode,
-  NodeKind,
-  TagType,
-  TokenType
-} from '@liquify/liquid-parser';
-
+import { $, p, q, liquid, Type } from '@liquify/specs';
+import { IAST, INode, Position } from '@liquify/liquid-parser'
+import { TokenType, TagType, CharCode, NodeKind } from '@liquify/liquid-parser/lexical'
+import * as regex from '@liquify/liquid-parser/regex'
 import {
   // Connection,
   TextEdit,
@@ -190,10 +178,7 @@ export class LiquidService {
   /**
    * `doComplete`
    */
-  async doComplete (document: IAST, position: Position, {
-    triggerCharacter,
-    triggerKind
-  }: CompletionContext) {
+  async doComplete (document: IAST, position: Position, { triggerCharacter, triggerKind }: CompletionContext) {
 
     const trigger = CompletionTriggerKind.TriggerCharacter === triggerKind
       ? triggerCharacter.charCodeAt(0)
