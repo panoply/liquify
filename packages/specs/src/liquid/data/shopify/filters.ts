@@ -1,6 +1,6 @@
-import { Filters as IFilters } from '../..';
+import { Filters } from '../..';
 
-export const Filters: IFilters = {
+export const filters: Filters = {
   item_count_for_variant: {
     description: 'Returns the total item count for a specified variant in the cart. \n\n\n\n#### Example\n\n```liquid\n\n{{ cart | item_count_for_variant: 39888235757633 }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/item_count_for_variant)\n\n',
     returns: 'number',
