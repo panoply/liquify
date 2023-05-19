@@ -1705,6 +1705,13 @@ declare interface Value extends Descriptions {
      */
     deprecated?: boolean;
     /**
+     * Required
+     *
+     * Whether the the parameter argument is required or optional.
+     * When `undefined` the parser will assume `false`
+     */
+    required?: boolean;
+    /**
      * Template
      *
      * A template scope id. when provided, values will only
@@ -1728,6 +1735,8 @@ declare interface Value extends Descriptions {
 }
 declare interface Parameter extends Descriptions {
     /**
+     * Type
+     *
      * The type value the parameter accepts. When a parameter is a keyword type,
      * ie: no colon operator then assert the _keyword_ type (enum `10`) and omit
      * the `value` property. If type is set to `keyword` and a value exists, those
@@ -1753,6 +1762,51 @@ declare interface Parameter extends Descriptions {
      */
     pattern?: Pattern;
     /**
+     * When
+     *
+     * Controls the availability of an expression. The **when** reference
+     * accepts a previously provided parameter and will only be made available
+     * when that parameter and its value exists.
+     *
+     * Take the following specification for the `image_url` filter. When the `crop`
+     * parameter has a value of `region` then additional parameters can be used, such
+     * as the `crop_left`, `crop_top` etc etc.
+     *
+     * ```js
+     * [
+     *  {
+     *    type: 'parameter',
+     *    value: {
+     *      crop: {
+     *        type: 'string',
+     *        value: ['region', 'top', 'bottom', 'left', 'right']
+     *      },
+     *      crop_left: {
+     *        type: 'number',
+     *        when: [ ['crop', 'region'] ]
+     *      },
+     *      crop_top: {
+     *        type: 'number',
+     *        when: [ ['crop', 'region'] ]
+     *      }
+     *    }
+     *  }
+     * ]
+     * ```
+     *
+     * The filter object would now behave as such. Providing the following
+     * expression would allow the additional parameters to be expressed in
+     * in completions:
+     *
+     * ```js
+     * {{ xxx | image_url: crop: 'region', crop_left: 20, crop_top: 20 }}
+     * ```
+     *
+     * Providing a value of `top` to the `crop` value parameter would however
+     * result in an error and completions would not be made available.
+     */
+    when?: [string, number | boolean | string][];
+    /**
      * Whether the parameter values can be loosely matched, meaning
      * that addition values that are not otherwise provided can
      * be defined as long as the value matche the `type` provided.
@@ -1774,15 +1828,31 @@ declare interface ArgumentParameter extends Omit<Parameter, 'type' | 'value'> {
      */
     type: 'parameter';
     /**
-     * Whether the argument is required or optional.
-     * When `undefined` the parser will assume `false`
-     */
-    required?: boolean;
-    /**
+     * Unique
+     *
      * If parameters should be unqiue, no duplicate entries.
      * When `undefined` the parser will assume `true`
      */
     unique?: boolean;
+    /**
+     * Required
+     *
+     * Whether the the parameter argument is required or optional.
+     * When `undefined` the parser will assume `false`
+     */
+    required?: boolean;
+    /**
+     * Requires
+     *
+     * Specify the parameters values required by the filter to be
+     * provided. Optionally use a Regex expression **OR** match if
+     * the filter requires one or the other be provided.
+     *
+     * The Liquid parser will consult this reference before it begins
+     * walking the filter arguments. You can also specify required arguments
+     * on the `value` entries.
+     */
+    requires?: RegExp | string[];
     /**
      * Seperator
      *
@@ -2526,19 +2596,21 @@ declare interface Filter extends Descriptions {
      */
     snippet?: string;
     /**
-     * Expects
+     * Objects
      *
-     * This infers the type in which the filter *expects* to recieve.
-     * We use this value to denote expectations, for example say a
-     * boolean was passed to a number filter, see below:
+     * This filter is only available to be used on the following objects.
      *
-     * @example
-     *
-     * {{ false | plus: 1 }}
-     *
-     * @default any
+     * @default undefined
      */
-    expects?: Types.Basic;
+    objects?: string[];
+    /**
+     * Filters
+     *
+     * This filter is only available when these filters are present
+     *
+     * @default undefined
+     */
+    filters?: string[];
     /**
      * Returns
      *

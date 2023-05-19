@@ -1,2595 +1,8 @@
 #!/usr/bin/env node
-"use strict";var ie=Object.create;var R=Object.defineProperty;var se=Object.getOwnPropertyDescriptor;var oe=Object.getOwnPropertyNames;var ae=Object.getPrototypeOf,re=Object.prototype.hasOwnProperty;var H=(e,n)=>()=>(n||e((n={exports:{}}).exports,n),n.exports),I=(e,n)=>{for(var s in n)R(e,s,{get:n[s],enumerable:!0})},pe=(e,n,s,i)=>{if(n&&typeof n=="object"||typeof n=="function")for(let a of oe(n))!re.call(e,a)&&a!==s&&R(e,a,{get:()=>n[a],enumerable:!(i=se(n,a))||i.enumerable});return e};var M=(e,n,s)=>(s=e!=null?ie(ae(e)):{},pe(n||!e||!e.__esModule?R(s,"default",{value:e,enumerable:!0}):s,e));var J=H(U=>{"use strict";Object.defineProperty(U,"__esModule",{value:!0});var E=e=>{let[,n]=/([a-f\d]{3,6})/i.exec(e)||[],s=n?n.length:0;if(s===3)n=n[0]+n[0]+n[1]+n[1]+n[2]+n[2];else if(s!==6)return[0,0,0];let i=parseInt(n,16);return[i>>16&255,i>>8&255,255&i]},b=(e,n,s)=>n>e?n:e>s?s:e,de=(e,n,s)=>{if(n==="")return e;let i=e.indexOf(n);if(i<0)return e;let a=n.length,h=0,t="";for(;~i;)t+=e.slice(h,i)+s,h=i+a,i=e.indexOf(n,h);return t+e.slice(h)},G={open:"",close:""},o=(e=>{let n=y=>!!t.find(w=>y.test(w)),s=e||(typeof process!="undefined"?process:{}),{stdout:i,platform:a}=s,h=s.env||{},t=s.argv||[],d="FORCE_COLOR"in h,p=h.FORCE_COLOR,c=p==="true"||parseInt(p)>0,l="NO_COLOR"in h||d&&!c||n(/^-{1,2}(no-color|color=false|color=never)$/),r=d&&c||n(/^-{1,2}(color|color=true|color=always)$/),u=i&&"isTTY"in i&&/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(h.TERM);return!l&&(r||u||a==="win32"||"CI"in h)})()?(e,n)=>({open:`\x1B[${e}m`,close:`\x1B[${n}m`}):()=>G,D=(e,n,s)=>o(`38;2;${e};${n};${s}`,39),N=(e,n,s)=>o(`48;2;${e};${n};${s}`,49),ce={visible:G,reset:o(0,0),inverse:o(7,27),hidden:o(8,28),bold:o(1,22),dim:o(2,22),faint:o(2,22),italic:o(3,23),underline:o(4,24),doubleUnderline:o(21,24),strikethrough:o(9,29),strike:o(9,29),frame:o(51,54),encircle:o(52,54),overline:o(53,55),black:o(30,39),red:o(31,39),green:o(32,39),yellow:o(33,39),blue:o(34,39),magenta:o(35,39),cyan:o(36,39),white:o(37,39),grey:o(90,39),gray:o(90,39),blackBright:o(90,39),redBright:o(91,39),greenBright:o(92,39),yellowBright:o(93,39),blueBright:o(94,39),magentaBright:o(95,39),cyanBright:o(96,39),whiteBright:o(97,39),bgBlack:o(40,49),bgRed:o(41,49),bgGreen:o(42,49),bgYellow:o(43,49),bgBlue:o(44,49),bgMagenta:o(45,49),bgCyan:o(46,49),bgWhite:o(47,49),bgBlackBright:o(100,49),bgRedBright:o(101,49),bgGreenBright:o(102,49),bgYellowBright:o(103,49),bgBlueBright:o(104,49),bgMagentaBright:o(105,49),bgCyanBright:o(106,49),bgWhiteBright:o(107,49)},{defineProperty:le,defineProperties:he,setPrototypeOf:B}=Object,ue=/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,fe=/(\r*\n)/g,Y=function(){let e=n=>n;return e.strip=n=>n.replace(ue,""),e.extend=n=>{for(let s in n){let i=n[s],a=i.open!=null?i:D(...E(i));g[s]={get(){let h=W(this,a);return le(this,s,{value:h}),h}}}C=he(()=>{},g),B(e,C)},e.extend(ce),e},W=({props:e},{open:n,close:s})=>{let i=(t,...d)=>me(t,d,i.props),a=n,h=s;return e!==void 0&&(a=e.openStack+n,h=s+e.closeStack),B(i,C),i.props={open:n,close:s,openStack:a,closeStack:h,parent:e},i.open=a,i.close=h,i},me=(e,n,s)=>{if(!e)return"";let{openStack:i,closeStack:a}=s,h=e.raw!=null?String.raw(e,...n):e;if(~h.indexOf("\x1B"))for(;s!==void 0;)h=de(h,s.close,s.open),s=s.parent;return~h.indexOf(`
-`)&&(h=h.replace(fe,a+"$1"+i)),i+h+a},O={ansi:e=>(n=>o(`38;5;${n}`,39))(b(e,0,255)),bgAnsi:e=>(n=>o(`48;5;${n}`,49))(b(e,0,255)),hex:e=>D(...E(e)),bgHex:e=>N(...E(e)),rgb:(e,n,s)=>D(b(e,0,255),b(n,0,255),b(s,0,255)),bgRgb:(e,n,s)=>N(b(e,0,255),b(n,0,255),b(s,0,255))},g={},C;for(let e in O)g[e]={get(){return(...n)=>W(this,O[e](...n))}};g.ansi256=g.fg=g.ansi,g.bgAnsi256=g.bg=g.bgAnsi;var ye=new Y;U.Ansis=Y,U.default=ye});var X=H((xe,$)=>{"use strict";var V=J();$.exports=V.default;$.exports.Ansis=V.Ansis});var S=M(require("fs")),A=require("path");var f=M(X());var j={};I(j,{filters:()=>_,tags:()=>L});var _={abs:{description:"Returns the absolute value of a number",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/abs/"}},append:{description:"Concatenates two strings and returns the concatenated value",snippet:"append: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/append/"}},at_least:{description:"Limits a number to a minimum value",snippet:"at_least: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_least/"}},at_most:{description:"Limits a number to a maximum value",snippet:"at_most: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_most/"}},capitalize:{description:"Makes the first character of a string capitalized",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/capitalize/"}},ceil:{description:"Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/ceil/"}},compact:{description:"Removes any `nil` values from an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/compact/"}},concat:{description:"Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",snippet:"concat: $1 $0",arguments:[{type:"array",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/concat/"}},date:{description:"Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby\u2019s `Time.parse`",snippet:"date: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/date/"}},default:{description:"Allows you to specify a fallback in case a value doesn\u2019t exist. default will show its value if the left side is `nil`, `false`, or `empty`",snippet:"default: '$1' $0",arguments:[{type:"any",required:!0},{type:"parameter",value:{allow_false:{type:"boolean",description:"To allow variables to return false instead of the default value, you can use the `allow_false` parameter."}}}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/default/"}},divided_by:{description:"Divides a number by another number",snippet:"divided_by: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/divided_by/"}},downcase:{description:"Makes each character in a string lowercase. It has no effect on strings which are already all lowercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/downcase/"}},escape:{description:"Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape/"}},escape_once:{description:"Escapes a string without changing existing escaped entities. It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape_once/"}},first:{description:"Returns the first item of an array.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/first/"}},floor:{description:"Rounds the input down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/floor/"}},join:{description:"Joins the elements of an array with the character passed as the parameter. The result is a single string.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/join/"},snippet:"join: '$1' $0",arguments:[{type:"string",required:!0}]},last:{description:"Gets the last element in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/last/"}},lstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the left side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/lstrip/"}},map:{description:"Accepts an array element\u2019s attribute as a parameter and creates a string out of each array element\u2019s value.",snippet:"map: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/map/"}},minus:{description:"Subtracts a number from another number",snippet:"minus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/minus/"}},modulo:{description:"Returns the remainder of a division operation",snippet:"modulo: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/modulo/"}},newline_to_br:{description:"Replaces every newline in a string with an HTML line break (`<br />`)",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/newline_to_br/"}},plus:{description:"Adds a number to another number",snippet:"plus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/plus/"}},prepend:{description:"Adds the specified string to the beginning of another string",snippet:"prepend: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/prepend/"}},remove:{description:"Removes every occurrence of the specified substring from a string",snippet:"remove: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove/"}},remove_first:{description:"Removes only the first occurrence of the specified substring from a string",snippet:"remove_first: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove_first/"}},replace:{description:"Replaces every occurrence of the first argument in a string with the second argument",snippet:"replace: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace/"}},replace_first:{description:"Replaces only the first occurrence of the first argument in a string with the second argument",snippet:"replace_first: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace_first/"}},reverse:{description:"Reverses the order of the items in an array. `reverse` cannot reverse a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/reverse/"}},round:{description:"Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/round/"}},rstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the right side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/rstrip/"}},size:{description:"Returns the number of characters in a string or the number of items in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/size/"}},slice:{description:"Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",snippet:"slice: $1 $0",arguments:[{type:"number",required:!0},{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/slice/"}},sort:{description:"Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array\u2019s items to use for sorting",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort/"}},sort_natural:{description:"Sorts items in an array in case-insensitive order",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort_natural/"}},split:{description:"Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",snippet:"split: $1",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/split/"}},strip:{description:"Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip/"}},strip_html:{description:"Removes any HTML tags from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_html/"}},strip_newlines:{description:"Removes any newline characters (line breaks) from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_newlines/"}},times:{description:"Multiplies a number by another number",snippet:"times: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/times/"}},truncate:{description:"Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (\u2026) is appended to the string and is included in the character count",snippet:"truncate: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncate/"}},truncatewords:{description:"Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (\u2026) is appended to the string",snippet:"truncatewords: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncatewords/"}},uniq:{description:"Removes any duplicate elements in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/uniq/"}},upcase:{description:"Makes each character in a string uppercase. It has no effect on strings which are already all uppercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/upcase/"}},url_decode:{description:"Decodes a string that has been encoded as a URL or by `url_encode`",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_decode/"}},url_encode:{description:"Converts any URL-unsafe characters in a string into percent-encoded characters",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_encode/"}},where:{description:"Creates an array including only the objects with a given property value, or any truthy value by default",snippet:"where: '$1'$0",arguments:[{type:"string",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/where/"}}};var L={"#":{type:"comment",description:"Prevents an expression from being rendered or output.",snippet:"$1",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.dev/api/liquid/tags#inline_comment"}},assign:{type:"variable",description:"Creates a new variable.",snippet:"$1 = $2",filters:!0,singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#assign"}},break:{type:"iteration",singleton:!0,parents:["for","tablerow"],description:"Causes the loop to stop iterating when it encounters the break tag.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#break"}},capture:{type:"variable",filters:!1,description:"Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through `{% capture %}` are strings.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#capture"}},case:{type:"control",description:"Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",children:["when","else"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#case"}},comment:{type:"comment",description:"Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/comment/"}},continue:{type:"iteration",description:"Causes the loop to skip the current iteration when it encounters the continue tag.",singleton:!0,parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#continue"}},cycle:{type:"iteration",singleton:!0,description:"Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#cycle"}},decrement:{description:"Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#decrement"}},echo:{type:"output",description:"Using the echo tag is the same as wrapping an expression in curly brackets ({{ and }}). However, unlike the curly bracket method, you can use the echo tag inside liquid tags.",singleton:!0,filters:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#echo"}},else:{type:"control",description:"Add condition within an if or unless block.",singleton:!0,parents:["if","elsif","case","unless","when","for"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},elsif:{description:"Adds more conditions within an if or unless block.",singleton:!0,type:"control",parents:["if"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},for:{description:"Repeatedly executes a block of code.",type:"iteration",snippet:"$1 in $2",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#for"},parameters:{offset:{type:"number",description:"Begins the loop at the specified index"},limit:{type:"number",description:"Limits the loop to the specified number of iterations"},reversed:{type:"keyword",description:"Reverses the order of the loop. Note that this flag\u2019s spelling is different from the filter reverse"}}},if:{description:"Executes a block of code only if a certain condition is met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#if"}},increment:{description:"Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#increment"}},liquid:{description:"Encloses multiple tags within one set of delimiters, to allow writing Liquid logic more concisely.",type:"unknown",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#liquid"}},raw:{type:"raw",description:"Allows output of Liquid code on a page without being parsed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/raw/"}},render:{description:`Insert the rendered content of another template within the current template.
+"use strict";var ie=Object.create;var R=Object.defineProperty;var se=Object.getOwnPropertyDescriptor;var oe=Object.getOwnPropertyNames;var ae=Object.getPrototypeOf,re=Object.prototype.hasOwnProperty;var F=(e,n)=>()=>(n||e((n={exports:{}}).exports,n),n.exports),I=(e,n)=>{for(var s in n)R(e,s,{get:n[s],enumerable:!0})},pe=(e,n,s,i)=>{if(n&&typeof n=="object"||typeof n=="function")for(let a of oe(n))!re.call(e,a)&&a!==s&&R(e,a,{get:()=>n[a],enumerable:!(i=se(n,a))||i.enumerable});return e};var H=(e,n,s)=>(s=e!=null?ie(ae(e)):{},pe(n||!e||!e.__esModule?R(s,"default",{value:e,enumerable:!0}):s,e));var W=F(w=>{"use strict";Object.defineProperty(w,"__esModule",{value:!0});var E=e=>{let[,n]=/([a-f\d]{3,6})/i.exec(e)||[],s=n?n.length:0;if(s===3)n=n[0]+n[0]+n[1]+n[1]+n[2]+n[2];else if(s!==6)return[0,0,0];let i=parseInt(n,16);return[i>>16&255,i>>8&255,255&i]},b=(e,n,s)=>n>e?n:e>s?s:e,de=(e,n,s)=>{if(n==="")return e;let i=e.indexOf(n);if(i<0)return e;let a=n.length,h=0,t="";for(;~i;)t+=e.slice(h,i)+s,h=i+a,i=e.indexOf(n,h);return t+e.slice(h)},O={open:"",close:""},o=(e=>{let n=y=>!!t.find(A=>y.test(A)),s=e||(typeof process!="undefined"?process:{}),{stdout:i,platform:a}=s,h=s.env||{},t=s.argv||[],d="FORCE_COLOR"in h,p=h.FORCE_COLOR,c=p==="true"||parseInt(p)>0,l="NO_COLOR"in h||d&&!c||n(/^-{1,2}(no-color|color=false|color=never)$/),r=d&&c||n(/^-{1,2}(color|color=true|color=always)$/),u=i&&"isTTY"in i&&/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(h.TERM);return!l&&(r||u||a==="win32"||"CI"in h)})()?(e,n)=>({open:`\x1B[${e}m`,close:`\x1B[${n}m`}):()=>O,D=(e,n,s)=>o(`38;2;${e};${n};${s}`,39),M=(e,n,s)=>o(`48;2;${e};${n};${s}`,49),ce={visible:O,reset:o(0,0),inverse:o(7,27),hidden:o(8,28),bold:o(1,22),dim:o(2,22),faint:o(2,22),italic:o(3,23),underline:o(4,24),doubleUnderline:o(21,24),strikethrough:o(9,29),strike:o(9,29),frame:o(51,54),encircle:o(52,54),overline:o(53,55),black:o(30,39),red:o(31,39),green:o(32,39),yellow:o(33,39),blue:o(34,39),magenta:o(35,39),cyan:o(36,39),white:o(37,39),grey:o(90,39),gray:o(90,39),blackBright:o(90,39),redBright:o(91,39),greenBright:o(92,39),yellowBright:o(93,39),blueBright:o(94,39),magentaBright:o(95,39),cyanBright:o(96,39),whiteBright:o(97,39),bgBlack:o(40,49),bgRed:o(41,49),bgGreen:o(42,49),bgYellow:o(43,49),bgBlue:o(44,49),bgMagenta:o(45,49),bgCyan:o(46,49),bgWhite:o(47,49),bgBlackBright:o(100,49),bgRedBright:o(101,49),bgGreenBright:o(102,49),bgYellowBright:o(103,49),bgBlueBright:o(104,49),bgMagentaBright:o(105,49),bgCyanBright:o(106,49),bgWhiteBright:o(107,49)},{defineProperty:le,defineProperties:he,setPrototypeOf:G}=Object,ue=/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,fe=/(\r*\n)/g,B=function(){let e=n=>n;return e.strip=n=>n.replace(ue,""),e.extend=n=>{for(let s in n){let i=n[s],a=i.open!=null?i:D(...E(i));g[s]={get(){let h=Y(this,a);return le(this,s,{value:h}),h}}}C=he(()=>{},g),G(e,C)},e.extend(ce),e},Y=({props:e},{open:n,close:s})=>{let i=(t,...d)=>me(t,d,i.props),a=n,h=s;return e!==void 0&&(a=e.openStack+n,h=s+e.closeStack),G(i,C),i.props={open:n,close:s,openStack:a,closeStack:h,parent:e},i.open=a,i.close=h,i},me=(e,n,s)=>{if(!e)return"";let{openStack:i,closeStack:a}=s,h=e.raw!=null?String.raw(e,...n):e;if(~h.indexOf("\x1B"))for(;s!==void 0;)h=de(h,s.close,s.open),s=s.parent;return~h.indexOf(`
+`)&&(h=h.replace(fe,a+"$1"+i)),i+h+a},N={ansi:e=>(n=>o(`38;5;${n}`,39))(b(e,0,255)),bgAnsi:e=>(n=>o(`48;5;${n}`,49))(b(e,0,255)),hex:e=>D(...E(e)),bgHex:e=>M(...E(e)),rgb:(e,n,s)=>D(b(e,0,255),b(n,0,255),b(s,0,255)),bgRgb:(e,n,s)=>M(b(e,0,255),b(n,0,255),b(s,0,255))},g={},C;for(let e in N)g[e]={get(){return(...n)=>Y(this,N[e](...n))}};g.ansi256=g.fg=g.ansi,g.bgAnsi256=g.bg=g.bgAnsi;var ye=new B;w.Ansis=B,w.default=ye});var V=F((Ue,$)=>{"use strict";var J=W();$.exports=J.default;$.exports.Ansis=J.Ansis});var T=H(require("fs")),S=require("path");var f=H(V());var L={};I(L,{filters:()=>U,tags:()=>_});var U={abs:{description:"Returns the absolute value of a number",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/abs/"}},append:{description:"Concatenates two strings and returns the concatenated value",snippet:"append: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/append/"}},at_least:{description:"Limits a number to a minimum value",snippet:"at_least: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_least/"}},at_most:{description:"Limits a number to a maximum value",snippet:"at_most: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_most/"}},capitalize:{description:"Makes the first character of a string capitalized",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/capitalize/"}},ceil:{description:"Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/ceil/"}},compact:{description:"Removes any `nil` values from an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/compact/"}},concat:{description:"Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",snippet:"concat: $1 $0",arguments:[{type:"array",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/concat/"}},date:{description:"Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby\u2019s `Time.parse`",snippet:"date: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/date/"}},default:{description:"Allows you to specify a fallback in case a value doesn\u2019t exist. default will show its value if the left side is `nil`, `false`, or `empty`",snippet:"default: '$1' $0",arguments:[{type:"any",required:!0},{type:"parameter",value:{allow_false:{type:"boolean",description:"To allow variables to return false instead of the default value, you can use the `allow_false` parameter."}}}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/default/"}},divided_by:{description:"Divides a number by another number",snippet:"divided_by: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/divided_by/"}},downcase:{description:"Makes each character in a string lowercase. It has no effect on strings which are already all lowercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/downcase/"}},escape:{description:"Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape/"}},escape_once:{description:"Escapes a string without changing existing escaped entities. It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape_once/"}},first:{description:"Returns the first item of an array.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/first/"}},floor:{description:"Rounds the input down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/floor/"}},join:{description:"Joins the elements of an array with the character passed as the parameter. The result is a single string.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/join/"},snippet:"join: '$1' $0",arguments:[{type:"string",required:!0}]},last:{description:"Gets the last element in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/last/"}},lstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the left side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/lstrip/"}},map:{description:"Accepts an array element\u2019s attribute as a parameter and creates a string out of each array element\u2019s value.",snippet:"map: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/map/"}},minus:{description:"Subtracts a number from another number",snippet:"minus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/minus/"}},modulo:{description:"Returns the remainder of a division operation",snippet:"modulo: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/modulo/"}},newline_to_br:{description:"Replaces every newline in a string with an HTML line break (`<br />`)",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/newline_to_br/"}},plus:{description:"Adds a number to another number",snippet:"plus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/plus/"}},prepend:{description:"Adds the specified string to the beginning of another string",snippet:"prepend: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/prepend/"}},remove:{description:"Removes every occurrence of the specified substring from a string",snippet:"remove: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove/"}},remove_first:{description:"Removes only the first occurrence of the specified substring from a string",snippet:"remove_first: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove_first/"}},replace:{description:"Replaces every occurrence of the first argument in a string with the second argument",snippet:"replace: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace/"}},replace_first:{description:"Replaces only the first occurrence of the first argument in a string with the second argument",snippet:"replace_first: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace_first/"}},reverse:{description:"Reverses the order of the items in an array. `reverse` cannot reverse a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/reverse/"}},round:{description:"Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/round/"}},rstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the right side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/rstrip/"}},size:{description:"Returns the number of characters in a string or the number of items in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/size/"}},slice:{description:"Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",snippet:"slice: $1 $0",arguments:[{type:"number",required:!0},{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/slice/"}},sort:{description:"Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array\u2019s items to use for sorting",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort/"}},sort_natural:{description:"Sorts items in an array in case-insensitive order",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort_natural/"}},split:{description:"Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",snippet:"split: $1",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/split/"}},strip:{description:"Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip/"}},strip_html:{description:"Removes any HTML tags from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_html/"}},strip_newlines:{description:"Removes any newline characters (line breaks) from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_newlines/"}},times:{description:"Multiplies a number by another number",snippet:"times: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/times/"}},truncate:{description:"Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (\u2026) is appended to the string and is included in the character count",snippet:"truncate: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncate/"}},truncatewords:{description:"Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (\u2026) is appended to the string",snippet:"truncatewords: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncatewords/"}},uniq:{description:"Removes any duplicate elements in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/uniq/"}},upcase:{description:"Makes each character in a string uppercase. It has no effect on strings which are already all uppercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/upcase/"}},url_decode:{description:"Decodes a string that has been encoded as a URL or by `url_encode`",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_decode/"}},url_encode:{description:"Converts any URL-unsafe characters in a string into percent-encoded characters",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_encode/"}},where:{description:"Creates an array including only the objects with a given property value, or any truthy value by default",snippet:"where: '$1'$0",arguments:[{type:"string",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/where/"}}};var _={"#":{type:"comment",description:"Prevents an expression from being rendered or output.",snippet:"$1",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.dev/api/liquid/tags#inline_comment"}},assign:{type:"variable",description:"Creates a new variable.",snippet:"$1 = $2",filters:!0,singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#assign"}},break:{type:"iteration",singleton:!0,parents:["for","tablerow"],description:"Causes the loop to stop iterating when it encounters the break tag.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#break"}},capture:{type:"variable",filters:!1,description:"Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through `{% capture %}` are strings.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#capture"}},case:{type:"control",description:"Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",children:["when","else"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#case"}},comment:{type:"comment",description:"Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/comment/"}},continue:{type:"iteration",description:"Causes the loop to skip the current iteration when it encounters the continue tag.",singleton:!0,parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#continue"}},cycle:{type:"iteration",singleton:!0,description:"Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#cycle"}},decrement:{description:"Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#decrement"}},echo:{type:"output",description:"Using the echo tag is the same as wrapping an expression in curly brackets ({{ and }}). However, unlike the curly bracket method, you can use the echo tag inside liquid tags.",singleton:!0,filters:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#echo"}},else:{type:"control",description:"Add condition within an if or unless block.",singleton:!0,parents:["if","elsif","case","unless","when","for"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},elsif:{description:"Adds more conditions within an if or unless block.",singleton:!0,type:"control",parents:["if"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},for:{description:"Repeatedly executes a block of code.",type:"iteration",snippet:"$1 in $2",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#for"},parameters:{offset:{type:"number",description:"Begins the loop at the specified index"},limit:{type:"number",description:"Limits the loop to the specified number of iterations"},reversed:{type:"keyword",description:"Reverses the order of the loop. Note that this flag\u2019s spelling is different from the filter reverse"}}},if:{description:"Executes a block of code only if a certain condition is met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#if"}},increment:{description:"Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#increment"}},liquid:{description:"Encloses multiple tags within one set of delimiters, to allow writing Liquid logic more concisely.",type:"unknown",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#liquid"}},raw:{type:"raw",description:"Allows output of Liquid code on a page without being parsed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/raw/"}},render:{description:`Insert the rendered content of another template within the current template.
 
-The code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.`,snippet:"'$1'",filters:!1,singleton:!0,type:"import",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#render"}},tablerow:{description:"Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",type:"iteration",parameters:{cols:{type:"number",description:"Defines how many columns the tables should have."},limit:{type:"number",description:"Exits the tablerow loop after a specific index."},offset:{type:"number",description:"Starts the tablerow loop after a specific index."}},reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#tablerow"}},unless:{description:"The opposite of if \u2013 executes a block of code only if a certain condition is not met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},when:{description:'Define the various conditions set by the "{% case %}" tag',singleton:!0,type:"control",parents:["case"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#casewhen"}}};var T={};I(T,{filters:()=>ge,objects:()=>K,tags:()=>be});var Z={item_count_for_variant:{description:`Returns the total item count for a specified variant in the cart. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ cart | item_count_for_variant: 39888235757633 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/item_count_for_variant)
-
-`,returns:"number",snippet:"item_count_for_variant: ${1}",arguments:[{type:"any",required:!0}]},link_to_type:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to a collection page that lists all products of the given
-product type. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'Health' | link_to_type }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_type)
-
-`,returns:"string",snippet:"link_to_type"},link_to_vendor:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to a collection page that lists all products of a given
-product vendor. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ "Polina's Potent Potions" | link_to_vendor }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_vendor)
-
-`,snippet:"link_to_vendor",returns:"string"},sort_by:{description:"Generates a collection URL with the provided `sort_by` parameter appended. This filter must be applied to a collection URL. Accepts the following values:\n\n- `manual`\n- `best-selling`\n- `title-ascending`\n- `title-descending`\n- `price-ascending`\n- `price-descending`\n- `created-ascending`\n- `created-descending`\n\n\n\n**Tip**\n\n> You can append the `sort_by` filter to the [`url_for_type`](https://shopify.dev/docs/api/liquid/filters/url_for_type)\n> and [`url_for_vendor`](https://shopify.dev/docs/api/liquid/filters/url_for_vendor) filters.\n\n#### Example\n\n```liquid\n\n{{ collection.url | sort_by: 'best-selling' }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sort_by)\n\n",snippet:"sort_by: '${1|manual,best-selling,title-ascending,title-descending,price-ascending,price-descending,created-ascending,created-descending|}'",returns:"string",arguments:[{type:"string",required:!0,value:["manual","best-selling","title-ascending","title-descending","price-ascending","price-descending","created-ascending","created-descending"]}]},url_for_type:{description:`Generates a URL for a collection page that lists all products of the given product type. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'health' | url_for_type }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_for_type)
-
-`,returns:"string"},url_for_vendor:{description:`Generates a URL for a collection page that lists all products from the given product vendor. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ "Polina's Potent Potions" | url_for_vendor }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_for_vendor)
-
-`,returns:"string"},within:{description:`Generates a product URL within the context of the provided collection. When the collection context is included, you can access the associated [\`collection\` object](https://shopify.dev/docs/api/liquid/objects/collection)
-in the [product template](https://shopify.dev/themes/architecture/templates/product).
-
-> Caution:
-> Because a standard product page and a product page in the context of a collection have the same content on separate
-> URLs, you should consider the SEO implications of using the \`within\` filter.
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign collection_product = collection.products.first -%}
-
-{{ collection_product.url | within: collection }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/within)
-
-`,snippet:"within: ${1}",returns:"string",arguments:[{type:"array",required:!0}]},brightness_difference:{description:`Calculates the [perceived brightness difference](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) between two colors. 
-
-**Tip**
-
-> For accessibility best practices, it's recommended to have a minimum brightness difference of 125.
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#E800B0' | brightness_difference: '#FECEE9' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/brightness_difference)
-
-`,snippet:"brightness_difference: '${1:#FECEE9}'",arguments:[{type:"string",pattern:/#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,required:!0}],returns:"number"},color_brightness:{description:`Calculates the [perceived brightness](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) of a given color. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_brightness }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_brightness)
-
-`,returns:"number"},color_contrast:{description:`Calculates the contrast ratio between two colors and returns the ratio's numerator. The ratio's denominator, which isn't
-returned, is always 1. For example, with a contrast ratio of 3.5:1, this filter returns 3.5. The order in which you specify the colors doesn't matter.
-
-
-
-**Tip**
-
-> For accessibility best practices, the
-> [WCAG 2.0 level AA](https://www.w3.org/WAI/WCAG21/quickref/?versions=2.0#qr-visual-audio-contrast-contrast) requires a
-> minimum contrast ratio of 4.5:1 for normal text, and 3:1 for large text. [Level AAA](https://www.w3.org/WAI/WCAG21/quickref/?versions=2.0#qr-visual-audio-contrast7)
-> requires a minimum contrast ratio of 7:1 for normal text, and 4.5:1 for large text.
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#E800B0' | color_contrast: '#D9D8FF' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_contrast)
-
-`,snippet:"color_contrast: color: ${1:#FFF3F9}",arguments:[{type:"string",description:"A color to compare with the provided color.",pattern:/#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,required:!0}],returns:"number"},color_darken:{description:`Darkens a given color by a specific percentage. The percentage must be between 0 and 100. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_darken: 30 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_darken)
-
-`,returns:"string",snippet:"color_darken: ${1:30}",arguments:[{type:"number",description:"A color to compare with the provided color.",pattern:[0,100],required:!0}]},color_desaturate:{description:`Desaturates a given color by a specific percentage. The percentage must be between 0 and 100. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_desaturate: 30 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_desaturate)
-
-`,snippet:"color_desaturate: ${1:30}",arguments:[{type:"number",required:!0,pattern:[0,100],description:"The amount to desaturate the provided color by."}],returns:"string"},color_difference:{description:`Calculates the [color difference](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) between two colors. 
-
-**Tip**
-
-> For accessibility best practices, it's recommended to have a minimum color difference of 500.
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#720955' | color_difference: '#FFF3F9' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_difference)
-
-`,snippet:"color_difference: ${1:#FFF3F9}",arguments:[{type:"string",pattern:/#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,required:!0,description:"A color to compare with the provided color."}],returns:"number"},color_extract:{description:`Extracts a specific color component from a given color. Accepts the following color components:
-
-- \`alpha\`
-- \`red\`
-- \`green\`
-- \`blue\`
-- \`hue\`
-- \`saturation\`
-- \`lightness\`
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_extract: 'red' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_extract)
-
-`,returns:"number",snippet:"color_extract: '${1|alpha,red,green,blue,hue,saturation,lightness|}'",arguments:[{type:"string",required:!0,value:["alpha","red","green","blue","hue","saturation","lightness"]}]},color_lighten:{description:`Lightens a given color by a specific percentage. The percentage must be between 0 and 100. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_lighten: 30 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_lighten)
-
-`,snippet:"color_lighten: percent: ${1:30}",arguments:[{type:"number",pattern:[0,100],required:!0,description:"The amount to lighten the provided color by."}],returns:"string"},color_mix:{description:`Blends two colors together by a specific percentage factor. The percentage must be between 0 and 100. 
-
-**Tip**
-
-> A percentage factor of 100 returns the color being filtered. A percentage factor of 0 returns the color
-> supplied to the filter.
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#E800B0' | color_mix: '#00936F', 50 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_mix)
-
-`,snippet:"color_mix: '${1:#FECEE9}', ${2:100}",arguments:[{type:"string",pattern:/#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,required:!0},{type:"number",pattern:[0,100],required:!0}],returns:"string"},color_modify:{description:`Modifies a specific color component of a given color by a specific amount. The following table outlines valid color components, and the value range for their modifications:
-
-| Component | Value range |
-| --- | --- |
-| <ul><li>\`red\`</li><li>\`green\`</li><li>\`blue\`</li></ul> | An integer between 0 and 255 |
-| \`alpha\` | A decimal between 0 and 1 |
-| \`hue\` | An integer between 0 and 360 |
-| <ul><li>\`saturation\`<li>\`lightness\`</li></ul> | An integer between 0 and 100 |
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_modify: 'red', 255 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_modify)
-
-`,snippet:"color_modify: '${1|red,green,blue,alpha,hue,saturation,lightness|}', ${2:100}",arguments:[{type:"string",required:!0,value:["red","green","blue","alpha","hue","saturation","lightness"]},{type:"number",required:!0,pattern:{red:[0,255],green:[0,255],blue:[0,255],alpha:[0,1],hue:[0,360],saturation:[0,100]}}],returns:"string"},color_saturate:{description:`Saturates a given color by a specific percentage. The percentage must be between 0 and 100. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_saturate: 30 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_saturate)
-
-`,snippet:"color_saturate: ${1:30}",arguments:[{type:"number",pattern:[0,100],required:!0,description:"The amount to saturate the provided color by."}],returns:"string"},color_to_hex:{description:`Converts a CSS color string to hexadecimal format (\`hex6\`). Because colors are converted to \`hex6\` format, if a color with an alpha component is provided, then the alpha component
-is excluded from the output.
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'rgb(234, 90, 185)' | color_to_hex }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_to_hex)
-
-`,returns:"string"},color_to_hsl:{description:`Converts a CSS color string to \`HSL\` format. If a color with an alpha component is provided, the color is converted to \`HSLA\` format.
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_to_hsl }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_to_hsl)
-
-`,returns:"string"},color_to_rgb:{description:`Converts a CSS color string to \`RGB\` format. If a color with an alpha component is provided, then the color is converted to \`RGBA\` format.
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | color_to_rgb }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_to_rgb)
-
-`,returns:"string"},hex_to_rgba:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-The \`hex_to_rgba\` filter has been replaced by [\`color_to_rgb\`](/docs/api/liquid/filters/color_to_rgb) and
-[\`color_modify\`](/docs/api/liquid/filters/color_modify).
-
----
-
-Converts a CSS color string from  hexadecimal format to \`RGBA\` format. Shorthand hexadecimal formatting (\`hex3\`) is also accepted. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '#EA5AB9' | hex_to_rgba }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/hex_to_rgba)
-
-`,returns:"string",deprecated:!0,snippet:"hex_to_rgba"},hmac_sha1:{description:`Converts a string into an SHA-1 hash using a hash message authentication code (HMAC). The secret key for the message is supplied as a parameter to the filter.
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign secret_potion = 'Polyjuice' | hmac_sha1: 'Polina' -%}
-
-My secret potion: {{ secret_potion }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/hmac_sha1)
-
-`,returns:"string",snippet:"hmac_sha1: $1",arguments:[{type:"any",required:!0}]},hmac_sha256:{description:`Converts a string into an SHA-256 hash using a hash message authentication code (HMAC). The secret key for the message is supplied as a parameter to the filter.
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign secret_potion = 'Polyjuice' | hmac_sha256: 'Polina' -%}
-
-My secret potion: {{ secret_potion }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/hmac_sha256)
-
-`,returns:"string",snippet:"hmac_sha256: $1",arguments:[{type:"any",required:!0}]},md5:{description:`Converts a string into an MD5 hash. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '' | md5 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/md5)
-
-`,returns:"string"},sha1:{description:`Converts a string into an SHA-1 hash. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign secret_potion = 'Polyjuice' | sha1 -%}
-
-My secret potion: {{ secret_potion }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sha1)
-
-`,returns:"string"},sha256:{description:`Converts a string into an SHA-256 hash. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign secret_potion = 'Polyjuice' | sha256 -%}
-
-My secret potion: {{ secret_potion }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sha256)
-
-`,returns:"string",snippet:"sha256"},currency_selector:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-Deprecated without a direct replacement because the [currency form](/docs/api/liquid/tags/form#form-currency) has also been
-deprecated.
-
----
-
-Generates an HTML \`<select>\` element with an option for each currency available on the store. The \`currency_selector\` filter must be applied to the [\`form\` object](https://shopify.dev/docs/api/liquid/objects/form) within a
-[currency form](https://shopify.dev/docs/api/liquid/tags/form#form-currency).
-
-#### Example
-
-\`\`\`liquid
-
-{% form 'currency' %}
-  {{ form | currency_selector }}
-{% endform %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/currency_selector)
-
-`,scope:"form",deprecated:!0,returns:"string",snippet:"currency_selector"},customer_login_link:{description:`Generates an HTML link to the customer login page. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'Log in' | customer_login_link }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/customer_login_link)
-
-`,returns:"string"},customer_logout_link:{description:`Generates an HTML link to log the customer out of their account and redirect to the homepage. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'Log out' | customer_logout_link }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/customer_logout_link)
-
-`,returns:"string"},customer_register_link:{description:`Generates an HTML link to the customer registration page. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'Create an account' | customer_register_link }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/customer_register_link)
-
-`,returns:"string"},date:{description:`Converts a timestamp into another date format. The \`date\` filter accepts the same parameters as Ruby's strftime method for formatting the date. For a list of shorthand
-formats, refer to the [Ruby documentation](https://ruby-doc.org/core-3.1.1/Time.html#method-i-strftime) or
-[strftime reference and sandbox](http://www.strfti.me/).
-
-#### Example
-
-\`\`\`liquid
-
-{{ article.created_at | date: '%B %d, %Y' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/date)
-
-`,arguments:[{type:"string",required:!1,description:"The desired date format."}],returns:"string"},font_face:{description:`Generates a CSS [\`@font_face\` declaration](https://developer.mozilla.org/en-US/docs/Web/CSS/%40font-face) to load the provided font. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ settings.type_header_font | font_face }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/font_face)
-
-`,arguments:[{type:"parameter",value:{font_display:{type:"string",pattern:/\b(?:auto|block|swap|fallback|optional)\b/,description:"[string] Customize the [`font_display` property](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display) of the `@font-face` declaration.",value:[{value:"auto",description:"The font display strategy is defined by the user agent."},{value:"block",description:"Gives the font face a short block period and an infinite swap period."},{value:"swap",description:"Gives the font face an extremely small block period and an infinite swap period."},{value:"fallback",description:"Gives the font face an extremely small block period and a short swap period."},{value:"optional",description:"Gives the font face an extremely small block period and no swap period."}]}}}],returns:"string"},font_modify:{description:`Modifies a specific property of a given font. The \`font_modify\` filter requires two parameters. The first indicates which property should be modified and the second is
-either the new value, or modification amount, for that property.
-
-
-
-**Tip**
-
-> You can access every variant of the chosen font's family by using [\`font.variants\`](https://shopify.dev/docs/api/liquid/objects/font#font-variants).
-> However, you can more easily access specific styles and weights by using the \`font_modify\` filter.
-
-The following table outlines the valid font properties and modification values:
-
-<table>
-  <thead>
-    <th>Property</th>
-    <th>Modification value</th>
-    <th>Output</th>
-  </thead>
-  <tbody>
-    <tr>
-      <td rowspan=3><code>style</code></td>
-      <td><code>normal</code></td>
-      <td>Returns the normal variant of the same weight, if it exists.</td>
-    </tr>
-    <tr>
-      <td><code>italic</code></td>
-      <td>Returns the italic variant of the same weight, if it exists.</td>
-    </tr>
-    <tr>
-      <td><code>oblique</code></td>
-      <td>
-        <p>Returns the oblique variant of the same weight, if it exists.</p>
-        <p>Oblique variants are similar to italic variants in appearance. All Shopify fonts have only oblique or italic variants, not both.</p>
-      </td>
-    </tr>
-    <tr>
-      <td rowspan=7><code>weight</code></td>
-      <td><code>100</code> &rarr; <code>900</code></td>
-      <td>Returns a variant of the same style with the given weight, if it exists.</td>
-    </tr>
-    <tr>
-      <td><code>normal</code></td>
-      <td>Returns a variant of the same style with a weight of <code>400</code>, if it exists.</td>
-    </tr>
-    <tr>
-      <td><code>bold</code></td>
-      <td>Returns a variant of the same style with a weight of <code>700</code>, if it exists.</td>
-    </tr>
-    <tr>
-      <td><code>+100</code> &rarr; <code>+900</code></td>
-      <td>
-        <p>Returns a variant of the same style with a weight incremented by the given value, if it exists.</p>
-        <p>For example, if a font has a weight of <code>400</code>, then using <code>+100</code> would return the font with a weight of <code>500</code>.</p>
-      </td>
-    </tr>
-    <tr>
-      <td><code>-100</code> &rarr; <code>-900</code></td>
-      <td>
-        <p>Returns a variant of the same style with a weight decremented by the given value, if it exists.</p>
-        <p>For example, if a font has a weight of <code>400</code>, then using <code>-100</code> would return the font with a weight of <code>300</code>.</p>
-      </td>
-    </tr>
-    <tr>
-      <td><code>lighter</code></td>
-      <td>Returns a lighter variant of the same style by applying the rules used by the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#Meaning_of_relative_weights">CSS <code>font-weight</code> property</a> and browser <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#Fallback_weights">fallback weights</a>, if it exists.</td>
-    </tr>
-    <tr>
-      <td><code>bolder</code></td>
-      <td>Returns a bolder variant of the same style by applying the rules used by the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#Meaning_of_relative_weights">CSS <code>font-weight</code> property</a> and browser <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#Fallback_weights">fallback weights</a>, if it exists.</td>
-    </tr>
-  </tbody>
-</table>
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign bold_font = settings.type_body_font | font_modify: 'weight', 'bold' -%}
-
-h2 {
-  font-weight: {{ bold_font.weight }};
-}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/font_modify)
-
-`,snippet:"font_modify: '${1|normal,italic,oblique|}', '${2|100,200,300,400,500,600,700,800,900,lighter,normal,bold,bolder|}'",arguments:[{type:"string",required:!0,value:["style","weight"]},{type:"string",required:!0,pattern:{style:/\b(?:normal|italic|oblique)\b/,weight:/\b(?:normal|bold|bolder|lighter|[+-]?[1-9]0{2})\b/},value:{style:[{value:"normal",description:"Returns the normal variant of the same weight (if it exists)"},{value:"italic",description:"Returns the italic variant of the same weight (if it exists)"},{value:"oblique",description:"Has the same behavior as italic. None of the font families provided by Shopify have both italic and oblique styles."}],weight:[{value:"normal",description:"Has the same behavior as `400`."},{value:"bold",description:"Has the same behavior as `700`"},{value:"bolder",description:"Returns a bolder variant of the same style by applying the rules used by the CSS `font-weight` property and browser fallback weights (if it exists)."},{value:"lighter",description:"Returns a lighter variant of the same style by applying the rules used by the CSS `font-weight` property and browser fallback weights (if it exists)."}]}}],returns:"any"},font_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for the provided font in \`woff2\` format. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ settings.type_header_font | font_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/font_url)
-
-`,arguments:[{type:"string",required:!1,description:"Choose to return the URL for the font in `woff` format, instead of `woff2`."}],returns:"string"},default_errors:{description:`Generates default error messages for each possible value of [\`form.errors\`](https://shopify.dev/docs/themes/liquid/reference/objects/form#form-errors). 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/default_errors)
-
-`,scope:"form",returns:"string"},payment_button:{description:`Generates an HTML container to host [dynamic checkout buttons](https://help.shopify.com/manual/online-store/dynamic-checkout)
-for a product. The \`payment_button\` filter must be used on the \`form\` object within a [product form](https://shopify.dev/docs/api/liquid/tags/form#form-product). 
-
-**Note**
-
-> You can't render dynamic checkout buttons through AJAX requests, including those through the
-> [Section Rendering API](https://shopify.dev/api/section-rendering). The dynamic checkout buttons are added by JavaScript included
-> by Shopify through the [\`content_for_header\`](https://shopify.dev/docs/api/liquid/objects/content_for_header) object, which only runs on
-> the initial page load.
-
-#### Example
-
-\`\`\`liquid
-
-{% form 'product', product %}
-  {{ form | payment_button }}
-{% endform %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_button)
-
-`,scope:"form",returns:"string"},payment_terms:{description:`Generates the HTML for the [Shop Pay Installments banner](https://shopify.dev/themes/pricing-payments/installments). The \`payment_terms\` filter must be used on the \`form\` object within a [product form](https://shopify.dev/docs/api/liquid/tags/form#form-product) or
-[cart form](https://shopify.dev/docs/api/liquid/tags/form#form-cart).
-
-\`\`\`liquid
-{% form 'product', product %}
-  {{ form | payment_terms }}
-{% endform %}
-\`\`\`
-
-\`\`\`liquid
-{% form 'cart', cart %}
-  {{ form | payment_terms }}
-{% endform %}
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_terms)
-
-`,returns:"string"},time_tag:{description:`Converts a timestamp into an HTML \`<time>\` tag. The \`time_tag\` filter accepts the same parameters as Ruby's strftime method for formatting the date. For a list of shorthand
-formats, refer to the [Ruby documentation](https://ruby-doc.org/core-3.1.1/Time.html#method-i-strftime) or
-[strftime reference and sandbox](http://www.strfti.me/).
-
-#### Example
-
-\`\`\`liquid
-
-{{ article.created_at | time_tag: '%B %d, %Y' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/time_tag)
-
-`,arguments:[{type:"string",pattern:/%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,description:"The time_tag filter accepts the same parameters as Ruby's strftime method."},{type:"parameter",value:{datetime:{type:"string",pattern:/%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,description:"A datetime parameter with strftime shorthand formats to use a custom format for the datetime attribute of the output `<time>` tag."},format:{type:"string",description:"The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use",strict:!1,value:[{value:"abbreviated_date",description:"Dec 31, 2018"},{value:"basic",description:"12/31/2018"},{value:"date",description:"December 31, 2018"},{value:"date_at_time",description:"December 31, 2018 at 1:00 pm"},{value:"default",description:"Monday, December 31, 2018 at 1:00 pm -0500"},{value:"on_date",description:"on Dec 31, 2018"}]}}}],returns:"string",snippet:"time_tag"},translate:{description:`Returns a string of translated text for a given translation key from a [locale file](https://shopify.dev/themes/architecture/locales). The \`translate\` filter has an alias of \`t\`, which is more commonly used.
-
-
-
-**Tip**
-
-> To learn more about using the \`t\` filter, refer to [storefront locale file usage](https://shopify.dev/themes/architecture/locales/storefront-locale-files#usage)
-> or [schema locale file usage](https://shopify.dev/themes/architecture/locales/schema-locale-files#usage).
-
-#### Example
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/translate)
-
-`,returns:"string"},json:{description:`Converts a string, or object, into JSON format. 
-
-**Tip**
-
-> When using the JSON output in JavaScript, you don't need to wrap it in quotes because the \`json\` filter includes them.
-> The \`json\` filter also escapes any quotes inside the output.
-
-#### Product inventory
-
-When applied to a [\`product\` object](https://shopify.dev/docs/api/liquid/objects/product) on any Shopify store created after December 5, 2017, the
-\`json\` filter doesn't output values for the \`inventory_quantity\` and \`inventory_policy\` properties of any associated
-[variants](https://shopify.dev/docs/api/liquid/objects/variant). These properties are excluded to help prevent bots and crawlers from retrieving
-inventory quantities for stores to which they aren't granted access.
-
-If you need inventory information, you can access it through individual variants.
-
-#### Example
-
-\`\`\`liquid
-
-{{ product | json }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/json)
-
-`,returns:"string"},abs:{description:`Returns the absolute value of a number. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ -3 | abs }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/abs)
-
-`,returns:"number"},append:{description:`Adds a given string to the end of a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%-  assign path = product.url -%}
-
-{{ request.origin | append: path }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/append)
-
-`,snippet:"append: '${1}'",arguments:[{type:"string",required:!0}],returns:"string"},at_least:{description:`Limits a number to a minimum value. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 4 | at_least: 5 }}
-{{ 4 | at_least: 3 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/at_least)
-
-`,snippet:"at_least: $1 $0",arguments:[{type:"number",required:!0}],returns:"number"},at_most:{description:`Limits a number to a maximum value. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 6 | at_most: 5 }}
-{{ 4 | at_most: 5 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/at_most)
-
-`,snippet:"at_most: $1 $0",arguments:[{type:"number",required:!0}],returns:"number"},base64_decode:{description:`Decodes a string in [Base64 format](https://developer.mozilla.org/en-US/docs/Glossary/Base64). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'b25lIHR3byB0aHJlZQ==' | base64_decode }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/base64_decode)
-
-`,returns:"string"},base64_encode:{description:`Encodes a string to [Base64 format](https://developer.mozilla.org/en-US/docs/Glossary/Base64). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'one two three' | base64_encode }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/base64_encode)
-
-`,returns:"string"},base64_url_safe_decode:{description:`Decodes a string in URL-safe [Base64 format](https://developer.mozilla.org/en-US/docs/Glossary/Base64). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'b25lIHR3byB0aHJlZQ==' | base64_url_safe_decode }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/base64_url_safe_decode)
-
-`,returns:"string"},base64_url_safe_encode:{description:`Encodes a string to URL-safe [Base64 format](https://developer.mozilla.org/en-US/docs/Glossary/Base64). 
-
-
-
-#### Example
-
-To produce URL-safe Base64, this filter uses \`-\` and \`_\` in place of \`+\` and \`/\`.
-
-\`\`\`liquid
-
-{{ 'one two three' | base64_url_safe_encode }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/base64_url_safe_encode)
-
-`,returns:"string"},capitalize:{description:`Capitalizes the first word in a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'this sentence should start with a capitalized word.' | capitalize }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/capitalize)
-
-`,returns:"string"},ceil:{description:`Rounds a number up to the nearest integer. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 1.2 | ceil }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/ceil)
-
-`,returns:"number"},compact:{description:`Removes any \`nil\` items from an array. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign original_prices = collection.products | map: 'compare_at_price' -%}
-
-Original prices:
-
-{% for price in original_prices -%}
-  - {{ price }}
-{%- endfor %}
-
-{%- assign compacted_original_prices = original_prices | compact -%}
-
-Original prices - compacted:
-
-{% for price in compacted_original_prices -%}
-  - {{ price }}
-{%- endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/compact)
-
-`,returns:"array"},concat:{description:`Concatenates (combines) two arrays. 
-
-**Note**
-
-> The \`concat\` filter won't filter out duplicates. If you want to remove duplicates, then you need to use the
-> [\`uniq\` filter](https://shopify.dev/docs/api/liquid/filters/uniq).
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign types_and_vendors = collection.all_types | concat: collection.all_vendors -%}
-
-Types and vendors:
-
-{% for item in types_and_vendors -%}
-  {%- if item != blank -%}
-    - {{ item }}
-  {%- endif -%}
-{%- endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/concat)
-
-`,snippet:"concat: ${1}",arguments:[{type:"array",required:!0}],returns:"array"},default:{description:`Sets a default value for any variable whose value is one of the following:
-
-- [\`empty\`](https://shopify.dev/docs/api/liquid/basics#empty)
-- [\`false\`](https://shopify.dev/docs/api/liquid/basics#truthy-and-falsy)
-- [\`nil\`](https://shopify.dev/docs/api/liquid/basics#nil) 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.selected_variant.url | default: product.url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/default)
-
-`,arguments:[{type:"parameter",value:{allow_false:{type:"boolean",description:"Whether to use false values instead of the default."}}}],returns:"any"},divided_by:{description:`Divides a number by a given number. The \`divided_by\` filter produces a result of the same type as the divisor. This means if you divide by an integer, the result will be an integer, and if you divide by a float, the result will be a float. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 4 | divided_by: 2 }}
-
-# divisor is an integer
-{{ 20 | divided_by: 7 }}
-
-# divisor is a float 
-{{ 20 | divided_by: 7.0 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/divided_by)
-
-`,snippet:"divided_by: $1",arguments:[{type:"number",required:!0}],returns:"number"},downcase:{description:`Converts a string to all lowercase characters. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.title | downcase }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/downcase)
-
-`,returns:"string"},escape:{description:`Escapes special characters in HTML, such as \`<>\`, \`'\`, and \`&\`, and converts characters into escape sequences. The filter doesn't effect characters within the string that don\u2019t have a corresponding escape sequence.". 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '<p>Text to be escaped.</p>' | escape }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/escape)
-
-`,returns:"string"},escape_once:{description:`Escapes a string without changing characters that have already been escaped. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign escaped_text = '<p>Text to be escaped.</p>' | escape -%}
-
-{{ escaped_text }}
-{{ escaped_text | escape_once }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/escape_once)
-
-`,returns:"string"},first:{description:`Returns the first item in an array. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign first_product = collection.products | first -%}
-
-{{ first_product.title }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/first)
-
-`,returns:"any"},floor:{description:`Rounds a number down to the nearest integer. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 1.2 | floor }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/floor)
-
-`,returns:"number"},join:{description:`Combines all of the items in an array into a single string, separated by a space. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ collection.all_tags | join }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/join)
-
-`,snippet:"join: '$1' $0",arguments:[{type:"string",required:!0}],returns:"string"},last:{description:`Returns the last item in an array. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign last_product = collection.products | last -%}
-
-{{ last_product.title }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/last)
-
-`,returns:"any"},lstrip:{description:`Strips all whitespace from the left of a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign text = '  Some potions create whitespace.      ' -%}
-
-"{{ text }}"
-"{{ text | lstrip }}"
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/lstrip)
-
-`,returns:"string"},map:{description:`Creates an array of values from a specific property of the items in an array. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign product_titles = collection.products | map: 'title' -%}
-
-{{ product_titles | join: ', ' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/map)
-
-`,snippet:"map: $1",arguments:[{type:"any",required:!0}],returns:"array"},minus:{description:`Subtracts a given number from another number. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 4 | minus: 2 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/minus)
-
-`,snippet:"minus: $1",arguments:[{type:"number",required:!0}],returns:"number"},modulo:{description:`Returns the remainder of dividing a number by a given number. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 12 | modulo: 5 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/modulo)
-
-`,snippet:"modulo: $1",arguments:[{type:"number",required:!0}],returns:"number"},newline_to_br:{description:`Converts newlines (\`\\n\`) in a string to HTML line breaks (\`<br>\`). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.description | newline_to_br }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/newline_to_br)
-
-`,returns:"string"},plus:{description:`Adds two numbers. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 2 | plus: 2 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/plus)
-
-`,snippet:"plus: $1",arguments:[{type:"number",required:!0}],returns:"number"},prepend:{description:`Adds a given string to the beginning of a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign origin = request.origin -%}
-
-{{ product.url | prepend: origin }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/prepend)
-
-`,snippet:"prepend: '$1' $0",arguments:[{type:"string",required:!0}],returns:"string"},remove:{description:`Removes any instance of a substring inside a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ "I can't do it!" | remove: "'t" }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/remove)
-
-`,snippet:"remove: '$1' $0",arguments:[{type:"string",required:!0}],returns:"string"},remove_first:{description:`Removes the first instance of a substring inside a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ "I hate it when I accidentally spill my duplication potion accidentally!" | remove_first: ' accidentally' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/remove_first)
-
-`,snippet:"remove_first: $1",arguments:[{type:"string",required:!0}],returns:"string"},remove_last:{description:`Removes the last instance of a substring inside a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ "I hate it when I accidentally spill my duplication potion accidentally!" | remove_last: ' accidentally' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/remove_last)
-
-`,returns:"string",snippet:"remove_last: ${1}",arguments:[{type:"string",required:!0}]},replace:{description:`Replaces any instance of a substring inside a string with a given string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.handle | replace: '-', ' ' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/replace)
-
-`,snippet:"replace: $1, $2",arguments:[{type:"string",required:!0},{type:"string",required:!0}],returns:"string"},replace_first:{description:`Replaces the first instance of a substring inside a string with a given string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.handle | replace_first: '-', ' ' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/replace_first)
-
-`,snippet:"replace_first: $1, $2",arguments:[{type:"string",required:!0},{type:"string",required:!0}],returns:"string"},replace_last:{description:`Replaces the last instance of a substring inside a string with a given string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.handle | replace_last: '-', ' ' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/replace_last)
-
-`,returns:"string",snippet:"replace_last: $1, $2",arguments:[{type:"string",required:!0},{type:"string",required:!0}]},reverse:{description:`Reverses the order of the items in an array. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-Original order:
-{{ collection.products | map: 'title' | join: ', ' }}
-
-Reverse order:
-{{ collection.products | reverse | map: 'title' | join: ', ' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/reverse)
-
-`,returns:"array"},round:{description:`Rounds a number to the nearest integer. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 2.7 | round }}
-{{ 1.3 | round }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/round)
-
-`,arguments:[{type:"number",required:!1}],returns:"number"},rstrip:{description:`Strips all whitespace from the right of a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign text = '  Some potions create whitespace.      ' -%}
-
-"{{ text }}"
-"{{ text | rstrip }}"
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/rstrip)
-
-`,returns:"string"},size:{description:`Returns the size of a string or array. The size of a string is the number of characters that the string includes. The size of an array is the number of items
-in the array.
-
-#### Example
-
-\`\`\`liquid
-
-{{ collection.title | size }}
-{{ collection.products | size }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/size)
-
-`,returns:"number"},slice:{description:`Returns a substring or series of array items, starting at a given 0-based index. By default, the substring has a length of one character, and the array series has one array item. However, you can
-provide a second parameter to specify the number of characters or array items.
-
-#### Example
-
-\`\`\`liquid
-
-{{ collection.title | slice: 0 }}
-{{ collection.title | slice: 0, 5 }}
-
-{{ collection.all_tags | slice: 1, 2 | join: ', ' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/slice)
-
-`,snippet:"slice: $1 $0",arguments:[{type:"number",required:!0},{type:"number",required:!1}],returns:"string"},sort:{description:`Sorts the items in an array in case-sensitive alphabetical, or numerical, order. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% assign tags = collection.all_tags | sort %}
-
-{% for tag in tags -%}
-  {{ tag }}
-{%- endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sort)
-
-`,arguments:[{type:"number",required:!1}],returns:"array"},sort_natural:{description:`Sorts the items in an array in case-insensitive alphabetical order.
-
-> Caution:
-> You shouldn't use the \`sort_natural\` filter to sort numerical values. When comparing items an array, each item is converted to a
-> string, so sorting on numerical values can lead to unexpected results.
-
-#### Example
-
-\`\`\`liquid
-
-{% assign tags = collection.all_tags | sort_natural %}
-
-{% for tag in tags -%}
-  {{ tag }}
-{%- endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sort_natural)
-
-`,returns:"array"},split:{description:`Splits a string into an array of substrings based on a given separator. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign title_words = product.handle | split: '-' -%}
-
-{% for word in title_words -%}
-  {{ word }}
-{%- endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/split)
-
-`,snippet:"split: $1",arguments:[{type:"any",required:!0}],returns:"array"},strip:{description:`Strips all whitespace from the left and right of a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign text = '  Some potions create whitespace.      ' -%}
-
-"{{ text }}"
-"{{ text | strip }}"
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/strip)
-
-`,returns:"string"},strip_html:{description:`Strips all HTML tags from a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-<!-- With HTML -->
-{{ product.description }}
-
-<!-- HTML stripped -->
-{{ product.description | strip_html }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/strip_html)
-
-`,returns:"string"},strip_newlines:{description:`Strips all newline characters (line breaks) from a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-<!-- With newlines -->
-{{ product.description }}
-
-<!-- Newlines stripped -->
-{{ product.description | strip_newlines }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/strip_newlines)
-
-`,returns:"string"},times:{description:`Multiplies a number by a given number. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 2 | times: 2 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/times)
-
-`,snippet:"times: $1",arguments:[{type:"number",required:!0}],returns:"number"},truncate:{description:`Truncates a string down to a given number of characters. If the specified number of characters is less than the length of the string, then an ellipsis (\`...\`) is appended to
-the truncated string. The ellipsis is included in the character count of the truncated string.
-
-#### Example
-
-\`\`\`liquid
-
-{{ article.title | truncate: 15 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/truncate)
-
-`,snippet:"truncate: $1",arguments:[{type:"number",required:!0}],returns:"string"},truncatewords:{description:`Truncates a string down to a given number of words. If the specified number of words is less than the number of words in the string, then an ellipsis (\`...\`) is appended to
-the truncated string.
-
-> Caution:
-> HTML tags are treated as words, so you should strip any HTML from truncated content. If you don't strip HTML, then
-> closing HTML tags can be removed, which can result in unexpected behavior.
-
-#### Example
-
-\`\`\`liquid
-
-{{ article.content | strip_html | truncatewords: 15 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/truncatewords)
-
-`,snippet:"truncatewords: $1",arguments:[{type:"number",required:!0}],returns:"string"},uniq:{description:`Removes any duplicate items in an array. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% assign potion_array = 'invisibility, health, love, health, invisibility' | split: ', ' %}
-
-{{ potion_array | uniq | join: ', ' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/uniq)
-
-`,returns:"array"},upcase:{description:`Converts a string to all uppercase characters. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.title | upcase }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/upcase)
-
-`,returns:"string"},url_decode:{description:`Decodes any [percent-encoded](https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding) characters
-in a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'test%40test.com' | url_decode }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_decode)
-
-`,returns:"string"},url_encode:{description:`Converts any URL-unsafe characters in a string to the
-[percent-encoded](https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding) equivalent. 
-
-**Note**
-
-> Spaces are converted to a \`+\` character, instead of a percent-encoded character.
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'test@test.com' | url_encode }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_encode)
-
-`,returns:"string"},where:{description:`Filters an array to include only items with a specific property value. This requires you to provide both the property name and the associated value.
-
-#### Example
-
-\`\`\`liquid
-
-{% assign polina_products = collection.products | where: 'vendor', "Polina's Potent Potions" %}
-
-Products from Polina's Potent Potions:
-
-{% for product in polina_products -%}
-  - {{ product.title }}
-{%- endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/where)
-
-`,snippet:"where: ${1}, ${2}",arguments:[{type:"string",required:!0},{type:"string",required:!0}],returns:"array"},external_video_tag:{description:`Generates an HTML \`<iframe>\` tag containing the player for a given external video. The input for the \`external_video_tag\`
-filter can be either a [\`media\` object](https://shopify.dev/docs/api/liquid/objects/media) or [\`external_video_url\`](https://shopify.dev/docs/api/liquid/filters/external_video_url). If [alt text is set on the video](https://help.shopify.com/en/manual/products/product-media/add-alt-text), then it's
-included in the \`title\` attribute of the \`<iframe>\`. If no alt text is set, then the \`title\` attribute is set to the
-product title.
-
-#### Example
-
-\`\`\`liquid
-
-{% for media in product.media %}
-  {% if media.media_type == 'external_video' %}
-    {% if media.host == 'youtube' %}
-      {{ media | external_video_url: color: 'white' | external_video_tag }}
-    {% elsif media.host == 'vimeo' %}
-      {{ media | external_video_url: loop: '1', muted: '1' | external_video_tag }}
-    {% endif %}
-  {% endif %}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/external_video_tag)
-
-`,returns:"string"},external_video_url:{description:`Returns the URL for a given external video. Use this filter to specify parameters for the external video player generated
-by the [\`external_video_tag\` filter](https://shopify.dev/docs/api/liquid/filters/external_video_tag). 
-
-
-
-#### Example
-
-You can specify [YouTube](https://developers.google.com/youtube/player_parameters#Parameters) and [Vimeo](https://vimeo.zendesk.com/hc/en-us/articles/360001494447-Using-Player-Parameters) video parameters by adding a parameter that matches the parameter name, and the desired value.
-
-
-\`\`\`liquid
-
-{% for media in product.media %}
-  {% if media.media_type == 'external_video' %}
-    {% if media.host == 'youtube' %}
-      {{ media | external_video_url: color: 'white' | external_video_tag }}
-    {% elsif media.host == 'vimeo' %}
-      {{ media | external_video_url: loop: '1', muted: '1' | external_video_tag }}
-    {% endif %}
-  {% endif %}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/external_video_url)
-
-`,returns:"string",snippet:"external_video_url: $1: $2",arguments:[{type:"any",required:!0},{type:"any",required:!0}]},image_tag:{description:`Generates an HTML \`<img>\` tag for a given [\`image_url\`](https://shopify.dev/docs/api/liquid/filters/image_url). By default, \`width\` and \`height\` attributes are added to the \`<img>\` tag based on the dimensions and aspect ratio from
-the image URL. However, you can override these attributes with the [width](https://shopify.dev/docs/api/liquid/filters/image_tag#image_tag-width) and [height](https://shopify.dev/docs/api/liquid/filters/image_tag#image_tag-height)
-parameters. If only one parameter is provided, then only that attribute is added.
-
-
-
-**Note**
-
-> This filter automatically applies the \`object-position\` css style from the focal point value if set. For more
-> information, refer to the [\`focal_point\` object](https://shopify.dev/docs/api/liquid/objects/focal_point).
-
-#### Example
-
-\`\`\`liquid
-
-{{ product | image_url: width: 200 | image_tag }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/image_tag)
-
-`,returns:"string",snippet:"image_tag"},media_tag:{description:`Generates an appropriate HTML tag for a given media object. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% for media in product.media %}
-  {{- media | media_tag }}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/media_tag)
-
-`,returns:"string",snippet:"media_tag"},model_viewer_tag:{description:`Generates a [Google model viewer component](https://modelviewer.dev/) for a given 3D model. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% for media in product.media %}
-  {% if media.media_type == 'model' %}
-    {{ media | model_viewer_tag }}
-  {% endif %}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/model_viewer_tag)
-
-`,returns:"string",snippet:"model_viewer_tag"},video_tag:{description:`Generates an HTML \`<video>\` tag for a given video. 
-
-**Note**
-
-> When \`mp4\` videos are uploaded, Shopify generates an \`m3u8\` file as an additional [\`video_source\`](https://shopify.dev/docs/api/liquid/objects/video_source).
-> An \`m3u8\` file enables video players to leverage [HTTP live streaming (HLS)](https://developer.apple.com/streaming/),
-> resulting in an optimized video experience based on the user's internet connection. If loop is enabled, the HLS source is not used
-> in order to allow progessive download to cache the video.
->
-> If the \`m3u8\` source isn't supported, then the player falls back to the \`mp4\` source.
-
-#### Example
-
-\`\`\`liquid
-
-{% for media in product.media %}
-  {% if media.media_type == 'video' %}
-    {{ media | video_tag }}
-  {% endif %}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/video_tag)
-
-`,returns:"string",snippet:"video_tag"},metafield_tag:{description:'Generates an HTML element to host the metafield data. The type of element that\'s generated differs depending on the\ntype of metafield. \n\n**Note**\n\n> The `metafield_tag` filter doesn\'t support list metafields other than `list.single_line_text_field`.\n\n#### Basic types\n\nMost metafield types return a simple HTML element:\n\n| Type | Element | Attributes |\n| --- | --- | --- |\n| `boolean` | `<span>` | `class="metafield-boolean"` |\n| `collection_reference` | `<a>` | `class="metafield-collection_reference"` |\n| `color` | `<span>` | `class="metafield-color"` |\n| `date` | `<time>` | `datetime="<the metafield value>"`<br><br>`class="metafield-date"`<br><br>Value is localized to the customer |\n| `date_time` | `<time>` | `datetime="<the metafield value>"`<br><br>`class="metafield-date"`<br><br>Value is localized to the customer |\n| `json` | `<script>` | `type="application/json"`<br><br>`class="metafield-json"` |\n| `money` | `<span>` | `class="metafield-money"`<br><br>Value is formatted using the store\'s [HTML with currency setting](https://help.shopify.com/manual/payments/currency-formatting) |\n| `multi_line_text_field` | `<span>` | `class="metafield-multi_line_text_field"` |\n| `number_decimal` | `<span>` | `class="metafield-number_decimal"` |\n| `number_integer` | `<span>` | `class="metafield-number_integer"` |\n| `page_reference` | `<a>` | `class="metafield-page_reference"` |\n| `product_reference` | `<a>` | `class="metafield-page_reference"` |\n| `rating` | `<span>` | `class="metafield-rating"` | |\n| `single_line_text_field` | `<span>` | `class="metafield-single_line_text_field"` |\n| `url` | `<a>` | `class="metafield-url"` |\n| `variant_reference` | `<a>` | `class="metafield-variant_reference"` |\n| `rich_text_field` | `<div>` | `class="metafield-rich_text_field"` |\n\n\n```liquid\n\n<!-- boolean -->\n{{ product.metafields.information.seasonal | metafield_tag }}\n\n<!-- collection_reference -->\n{{ product.metafields.information.related_collection | metafield_tag }}\n\n<!-- color -->\n{{ product.metafields.details.potion_color | metafield_tag }}\n\n<!-- date -->\n{{ product.metafields.information.expiry | metafield_tag }}\n\n<!-- date_time -->\n{{ product.metafields.information.brew_date | metafield_tag }}\n\n<!-- json -->\n{{ product.metafields.information.burn_temperature | metafield_tag }}\n\n<!-- money -->\n{{ product.metafields.details.price_per_ml | metafield_tag }}\n\n<!-- multi_line_text_field -->\n{{ product.metafields.information.shipping | metafield_tag }}\n\n<!-- number_decimal -->\n{{ product.metafields.information.salinity | metafield_tag }}\n\n<!-- number_integer -->\n{{ product.metafields.information.doses_per_day | metafield_tag }}\n\n<!-- page_reference -->\n{{ product.metafields.information.dosage | metafield_tag }}\n\n<!-- product_reference -->\n{{ product.metafields.information.related_product | metafield_tag }}\n\n<!-- rating -->\n{{ product.metafields.details.rating | metafield_tag }}\n\n<!-- single_line_text_field -->\n{{ product.metafields.information.directions | metafield_tag }}\n\n<!-- url -->\n{{ product.metafields.information.health | metafield_tag }}\n\n<!-- variant_reference -->\n{{ product.metafields.information.health | metafield_tag }}\n\n<!-- rich_text_field -->\n{{ product.metafields.information.rich_description | metafield_tag }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/metafield_tag)\n\n',returns:"string"},metafield_text:{description:"Generates a text version of the metafield data. The following outlines the output for each metafield type:\n\n| Metafield type | Output |\n| --- | --- |\n| `single_line_text_field` | The metafield text. |\n| `multi_line_text_field` | The metafield text. |\n| `page_reference` | The page title. |\n| `product_reference` | The product title. |\n| `collection_reference` | The collection title. |\n| `variant_reference` | The variant title. |\n| `file_reference` | The file URL. |\n| `number_integer` | The number. |\n| `number_decimal` | The number. |\n| `date` | The date. |\n| `date-time` | The date and time. |\n| `url` | The URL. |\n| `json` | The JSON. |\n| `boolean` | The boolean value. |\n| `color` | The color value. |\n| `weight` | The weight value and unit.<br><br>If the value is a decimal with more than two places, then it'll be formatted to have a precision of two with trailing zeros removed. |\n| `volume` | The volume value and unit.<br><br>If the value is a decimal with more than two places, then it'll be formatted to have a precision of two with trailing zeros removed. |\n| `dimension` | The dimension value and unit.<br><br>If the value is a decimal with more than two places, then it'll be formatted to have a precision of two with trailing zeros removed. |\n| `rating` | The rating value. |\n| `list.single_line_text_field` | The metafield values converted to a sentence.<br><br>For example, if you had the values `Toronto`, `Ottawa`, and `Vancouver`, then the output would be:<br><br>`Toronto, Ottawa, and Vancouver` |\n| `money` | The money value, formatted using the store's [**HTML with currency** setting](https://help.shopify.com/manual/payments/currency-formatting). |\n| `rich_text_field` | The rich text value as simple text. |\n\n#### Example\n\n```liquid\n\n{{ product.metafields.information.dosage | metafield_text }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/metafield_text)\n\n",returns:"string"},money:{description:`Formats a given price based on the store's [**HTML without currency** setting](https://help.shopify.com/manual/payments/currency-formatting). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.price | money }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/money)
-
-`,returns:"string"},money_with_currency:{description:`Formats a given price based on the store's [**HTML with currency** setting](https://help.shopify.com/manual/payments/currency-formatting). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.price | money_with_currency }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/money_with_currency)
-
-`,returns:"string"},money_without_currency:{description:`Formats a given price based on the store's [**HTML without currency** setting](https://help.shopify.com/manual/payments/currency-formatting), without the currency symbol. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.price | money_without_currency }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/money_without_currency)
-
-`,returns:"string"},money_without_trailing_zeros:{description:`Formats a given price based on the store's [**HTML without currency** setting](https://help.shopify.com/manual/payments/currency-formatting), excluding the decimal separator
-(either \`.\` or \`,\`) and trailing zeros.
-
-If the price has a non-zero decimal value, then the output is the same as the [\`money\` filter](https://shopify.dev/docs/api/liquid/filters#money). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.price | money_without_trailing_zeros }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/money_without_trailing_zeros)
-
-`,returns:"string"},default_pagination:{description:`Generates HTML for a set of links for paginated results. Must be applied to the [\`paginate\` object](https://shopify.dev/docs/api/liquid/objects/paginate). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% paginate collection.products by 2 %}
-  {% for product in collection.products %}
-    {{- product.title }}
-  {% endfor %}
-
-  {{- paginate | default_pagination -}}
-{% endpaginate %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/default_pagination)
-
-`,scope:"paginate",returns:"string"},login_button:{description:`Generates an HTML Button that enables a customer to follow the Shop in the Shop App Configure the storefront for Follow on Shop. [Learn more](https://help.shopify.com/manual/online-store/themes/customizing-themes/follow-on-shop)
-
-
-
-**Note**
-
-> The presence of the [Shop](https://shopify.dev/docs/api/liquid/objects/shop) object
-> is required for validation purposes only.
-
-
-
-**Note**
-
-> The \`action\` specified is always \`'follow'\`. If this parameter is not supplied the button will not render.
-
-\`\`\`liquid
-{{ shop | login_button: action: 'follow' }}
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/login_button)
-
-`,returns:"string",scope:"shop",snippet:"login_button: action: 'follow'",arguments:[{type:"parameter",requires:["action"],value:{action:{type:"string",value:"follow"}}}]},camelize:{description:`Converts a string to CamelCase. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'variable-name' | camelize }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/camelize)
-
-`,returns:"string"},handleize:{description:`Converts a string into a [handle](https://shopify.dev/docs/api/liquid/basics#handles). 
-
-**Note**
-
-> The \`handleize\` filter has an alias of \`handle\`.
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.title | handleize }}
-{{ product.title | handle }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/handleize)
-
-`,returns:"string"},url_escape:{description:`Escapes any URL-unsafe characters in a string. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ '<p>Health & Love potions</p>' | url_escape }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_escape)
-
-`,returns:"string"},url_param_escape:{description:`Escapes any characters in a string that are unsafe for URL parameters. The \`url_param_escape\` filter escapes the same characters as [\`url_escape\`](https://shopify.dev/docs/api/liquid/filters/url_escape), with the
-addition of \`&\`.
-
-#### Example
-
-\`\`\`liquid
-
-{{ '<p>Health & Love potions</p>' | url_param_escape }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_param_escape)
-
-`,returns:"string"},highlight_active_tag:{description:`Wraps a given tag in an HTML \`<span>\` tag, with a \`class\` attribute of \`active\`, if the tag is currently active. Only
-applies to collection tags. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% for tag in collection.all_tags %}
-  {{- tag | highlight_active_tag | link_to_tag: tag }}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/highlight_active_tag)
-
-`,scope:"collection",returns:"string"},link_to_add_tag:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to the current blog or collection, filtered to show
-only articles or products that have a given tag, as well as any currently active tags. 
-
-**Tip**
-
-> To learn more about filtering by tag, refer to [Filter articles by tag](https://shopify.dev/themes/architecture/templates/blog#filter-articles-by-tag)
-> or [Filter collections by tag](https://shopify.dev/themes/navigation-search/filtering/tag-filtering).
-
-#### Example
-
-\`\`\`liquid
-
-{% for tag in collection.all_tags %}
-  {%- if current_tags contains tag -%}
-    {{ tag }}
-  {%- else -%}
-    {{ tag | link_to_add_tag: tag }}
-  {%- endif -%}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_add_tag)
-
-`,snippet:"link_to_add_tag: $1",arguments:[{type:"string",required:!0}],returns:"string"},link_to_remove_tag:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to the current blog or collection, filtered to show
-only articles or products that have any currently active tags, except the provided tag. 
-
-**Tip**
-
-> To learn more about filtering by tag, refer to [Filter articles by tag](https://shopify.dev/themes/architecture/templates/blog#filter-articles-by-tag)
-> or [Filter collections by tag](https://shopify.dev/themes/navigation-search/filtering/tag-filtering).
-
-#### Example
-
-\`\`\`liquid
-
-{% for tag in collection.all_tags %}
-  {%- if current_tags contains tag -%}
-    {{ tag | link_to_remove_tag: tag }}
-  {%- else -%}
-    {{ tag | link_to_add_tag: tag }}
-  {%- endif -%}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_remove_tag)
-
-`,snippet:"link_to_remove_tag: $1",arguments:[{type:"string",required:!0}],returns:"string"},link_to_tag:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to the current blog or collection, filtered to show
-only articles or products that have a given tag. 
-
-**Tip**
-
-> To learn more about filtering by tag, refer to [Filter articles by tag](https://shopify.dev/themes/architecture/templates/blog#filter-articles-by-tag)
-> or [Filter collections by tag](https://shopify.dev/themes/navigation-search/filtering/tag-filtering).
-
-#### Example
-
-\`\`\`liquid
-
-{% for tag in collection.all_tags %}
-  {{- tag | link_to_tag: tag }}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_tag)
-
-`,snippet:"link_to_tag: $1",arguments:[{type:"string",required:!0}],returns:"string"},format_address:{description:`Generates an HTML address display, with each address component ordered according to the address's locale. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ shop.address | format_address }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/format_address)
-
-`,returns:"string"},highlight:{description:`Wraps all instances of a specific string, within a given string, with an HTML \`<strong>\` tag with a \`class\` attribute
-of \`highlight\`. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% for item in search.results %}
-  {% if item.object_type == 'product' %}
-    {{ item.description | highlight: search.terms }}
-  {% else %}
-    {{ item.content | highlight: search.terms }}
-  {% endif %}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/highlight)
-
-`,scope:"search",returns:"string",snippet:"highlight: ${1:search.terms}",arguments:[{type:"string",required:!0}]},pluralize:{description:`Outputs the singular or plural version of a string based on a given number.
-
-> Caution:
-> The \`pluralize\` filter applies English pluralization rules to determine which string to output. You shouldn't use this
-> filter on non-English strings because it could lead to incorrect pluralizations.
-
-#### Example
-
-\`\`\`liquid
-
-Cart item count: {{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/pluralize)
-
-`,returns:"string",snippet:"pluralize: $1, $2",arguments:[{type:"string",required:!0},{type:"string",required:!0}]},article_img_url:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-The \`article_img_url\` filter has been replaced by [\`image_url\`](/docs/api/liquid/filters/image_url).
-
----
-
-Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an [article's image](https://shopify.dev/docs/api/liquid/objects/article#article-image). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ article.image | article_img_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/article_img_url)
-
-`,returns:"string",deprecated:!0,snippet:"article_img_url"},asset_img_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an image in the
-[\`assets\` directory](https://shopify.dev/themes/architecture#assets) of a theme. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'red-and-black-bramble-berries.jpg' | asset_img_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/asset_img_url)
-
-`,arguments:[{type:"string",description:"The original image size",pattern:/\b(?:master|x?[1-9]\d{2,3}|[1-9]\d{2,3}x|[1-9]\d{2,3}x[1-9]\d{2,3})\b/,value:["master","2000x","1500x","1000x","500x","250x","1500x1500","1000x1000","500x500","250x250"]},{type:"parameter",value:{crop:{type:"string",description:"You can specify a crop parameter to make sure that the resulting image's dimensions match the requested dimensions. If the entire image won't fit in your requested dimensions, the crop parameter specifies what part of the image to show",pattern:/\b(?:top|center|bottom|right)\b/,value:["top","center","bottom","left","right"]},scale:{type:"number",description:"The scale parameter lets you specify the pixel density of the image",pattern:/\b[23]\b/,value:["2","3"]},format:{type:"string",description:"The format parameter lets you specify what file format to use for the displayed image.",pattern:/\bp?jpg\b/,value:[{value:"jpg"},{value:"pjpg",description:"pjpg is progressive JPEG. A browser loads a full-sized progressive JPEG with gradually increasing quality, instead of loading the full-quality image from top to bottom like a traditional JPEG."}]}}}],returns:"string",snippet:"asset_img_url"},asset_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a file in the
-[\`assets\` directory](https://shopify.dev/themes/architecture#assets) of a theme. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'cart.js' | asset_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/asset_url)
-
-`,returns:"string"},collection_img_url:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-The \`collection_img_url\` filter has been replaced by [\`image_url\`](/docs/api/liquid/filters/image_url).
-
----
-
-Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a [collection's image](https://shopify.dev/docs/api/liquid/objects/collection#collection-image). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ collection.image | collection_img_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/collection_img_url)
-
-`,returns:"string",deprecated:!0,snippet:"collection_img_url"},file_img_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an image from the
-[Files](https://www.shopify.com/admin/settings/files) page of the Shopify admin. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'potions-header.png' | file_img_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/file_img_url)
-
-`,snippet:"file_img_url",returns:"string"},file_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a file from the
-[Files](https://www.shopify.com/admin/settings/files) page of the Shopify admin. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'disclaimer.pdf' | file_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/file_url)
-
-`,returns:"string",snippet:"file_url"},global_asset_url:{description:"Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a global asset. Global assets are kept in a directory on Shopify's server. Using global assets can be faster than loading the resource\ndirectly.\n\nDepending on the resource type, you might need to use an additional filter to load the resource. The following table\noutlines which filter to use for specific resource types.\n\n| Resource type | Additional filter |\n| --- | --- |\n| JavaScript (`.js`) | [`script_tag`](https://shopify.dev/docs/api/liquid/filters/script_tag) |\n| CSS (`.css`) | [`stylesheet_tag`](https://shopify.dev/docs/api/liquid/filters/stylesheet_tag)  |\n\nThe following table outlines the available global assets:\n\n| Category | Assets |\n| --- | --- |\n| Firebug | - `firebug/firebug.css`<br>- `firebug/firebug.html`<br>- `firebug/firebug.js`<br>- `firebug/firebugx.js`<br>- `firebug/errorIcon.png`<br>- `firebug/infoIcon.png`<br>- `firebug/warningIcon.png` |\n| JavaScript libraries | - `controls.js`<br>- `dragdrop.js`<br>- `effects.js`<br>- `ga.js`<br>- `mootools.js` |\n| Lightbox | - `lightbox.css`<br>- `lightbox.js`<br><br>- `lightbox/v1/lightbox.css`<br>- `lightbox/v1/lightbox.js`<br><br>- `lightbox/v2/lightbox.css`<br>- `lightbox/v2/lightbox.js`<br>- `lightbox/v2/close.gif`<br>- `lightbox/v2/loading.gif`<br>- `lightbox/v2/overlay.png`<br>- `lightbox/v2/zoom-lg.gif`<br><br>- `lightbox/v204/lightbox.css`<br>- `lightbox/v204/lightbox.js`<br>- `lightbox/v204/bullet.gif`<br>- `lightbox/v204/close.gif`<br>- `lightbox/v204/closelabel.gif`<br>- `lightbox/v204/donatebutton.gif`<br>- `lightbox/v204/downloadicon.gif`<br>- `lightbox/v204/loading.gif`<br>- `lightbox/v204/nextlabel.png`<br>- `lightbox/v204/prevlabel.gif` |\n| Prototype | - `prototype.js`<br>- `prototype/1.5/prototype.js`<br>- `prototype/1.6/prototype.js` |\n| script.aculo.us | - `scriptaculous/1.8.2/scriptaculous.js`<br>- `scriptaculous/1.8.2/builder.js`<br>- `scriptaculous/1.8.2/controls.js`<br>- `scriptaculous/1.8.2/dragdrop.js`<br>- `scriptaculous/1.8.2/effects.js`<br>- `scriptaculous/1.8.2/slider.js`<br>- `scriptaculous/1.8.2/sound.js`<br>- `scriptaculous/1.8.2/unittest.js` |\n| Shopify | - `list-collection.css`<br>- `textile.css` |\n\n#### Example\n\n```liquid\n\n{{ 'lightbox.js' | global_asset_url | script_tag }}\n\n{{ 'lightbox.css' | global_asset_url | stylesheet_tag }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/global_asset_url)\n\n",returns:"string"},image_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an image. You can use the \`image_url\` filter on the following objects, as well as their \`src\` property:
-
-- [\`article\`](https://shopify.dev/docs/api/liquid/objects/article)
-- [\`collection\`](https://shopify.dev/docs/api/liquid/objects/collection)
-- [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
-- [\`line_item\`](https://shopify.dev/docs/api/liquid/objects/line_item)
-- [\`product\`](https://shopify.dev/docs/api/liquid/objects/product)
-- [\`variant\`](https://shopify.dev/docs/api/liquid/objects/variant)
-- [\`country\`](https://shopify.dev/docs/api/liquid/objects/country)
-
-> Caution:
-> You need to specify either a [\`width\`](https://shopify.dev/docs/api/liquid/filters/image_url#image_url-width) or
-> [\`height\`](https://shopify.dev/docs/api/liquid/filters/image_url#image_url-height) parameter. If neither are specified, then an error is returned.
-
-
-
-**Note**
-
-> Regardless of the specified dimensions, an image can never be resized to be larger than its original dimensions.
-
-#### Example
-
-\`\`\`liquid
-
-{{ product | image_url: width: 450 }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/image_url)
-
-`,returns:"string",objects:["article","collection","image","line_item","product","variant","country"],snippet:"image_url: ${1|width,height}: $2",arguments:[{type:"parameter",strict:!0,requires:/\b(?:width|height)\b/,value:{width:{type:"number",description:"Specify the width of the image up to a maximum of `5760px`. If only the width is specified, then the height is automatically calculated based on the image's dimensions.",pattern:[0,5760]},height:{type:"number",description:"Specify the height of the image up to a maximum of `5760px`. If only the height is specified, then the width is automatically calculated based on the image's dimensions.",pattern:[0,5760]},format:{type:"string",description:"Specify which file format to use for the image. The valid formats are `pjpg` and `jpg`.\n\nIt's not practical to convert a lossy image format, like `jpg`, to a lossless image format, like `png`, so Shopify can do only the following conversions:\n\n- `png` to `jpg`\n- `png` to `pjpg`\n- `jpg` to `pjpg`\n\n> **Note**\n>\n>Shopify automatically detects which image formats are supported by the client (e.g. `WebP`, `AVIF`, etc.) and selects a file format for optimal quality and file size. When a format is specified, Shopify takes into account the features (e.g. progressive, alpha channel) of the specified file format when making the final automatic format selection. To learn more, visit [https://cdn.shopify.com/](https://cdn.shopify.com/).",pattern:/\b(?:p?jpg)\b/,value:["jpg","pjpg"]},pad_color:{type:"string",pattern:/(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,description:"Specify a color to pad the image if the specified dimensions result in an aspect ratio that differs from the original. The color must be in hexadecimal format (`hex3` or `hex6`)."},crop:{type:"string",description:"Specify which part of the image to show if the specified dimensions result in an aspect ratio that differs from the original. You can use the following values:\n\n- top\n- center\n- bottom\n- left\n- right\n- region\n\nThe default value is `center`.\n\nWhen using the `region` crop mode, the starting point for the crop is defined by `crop_left` and `crop_top` and extends to the `crop_width` and `crop_height`. Optionally, to resize the region extracted by the crop, use the width and height parameters.",value:["top","center","bottom","left","right","region"]},crop_left:{type:"number",pattern:[0,5760],when:[["crop","region"]]},crop_top:{type:"number",pattern:[0,5760],when:[["crop","region"]]},crop_width:{type:"number",pattern:[0,5760],when:[["crop","region"]]},crop_height:{type:"number",pattern:[0,5760],when:[["crop","region"]]}}}]},img_tag:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-The \`img_tag\` filter has been replaced by [\`image_tag\`](/docs/api/liquid/filters/image_tag).
-
----
-
-Generates an HTML \`<img>\` tag for a given image URL. You can also use the \`img_tag\` filter on the following objects:
-
-- [\`article\`](https://shopify.dev/docs/api/liquid/objects/article)
-- [\`collection\`](https://shopify.dev/docs/api/liquid/objects/collection)
-- [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
-- [\`line_item\`](https://shopify.dev/docs/api/liquid/objects/line_item)
-- [\`product\`](https://shopify.dev/docs/api/liquid/objects/product)
-- [\`variant\`](https://shopify.dev/docs/api/liquid/objects/variant)
-
-#### Example
-
-\`\`\`liquid
-
-{{ product | img_tag }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/img_tag)
-
-`,returns:"string",deprecated:!0,arguments:[{type:"string"},{type:"string"},{type:"string"}]},img_url:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-The \`img_url\` filter has been replaced by [\`image_url\`](/docs/api/liquid/filters/image_url).
-
----
-
-Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an image. You can use the \`img_url\` filter on the following objects:
-
-- [\`article\`](https://shopify.dev/docs/api/liquid/objects/article)
-- [\`collection\`](https://shopify.dev/docs/api/liquid/objects/collection)
-- [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
-- [\`line_item\`](https://shopify.dev/docs/api/liquid/objects/line_item)
-- [\`product\`](https://shopify.dev/docs/api/liquid/objects/product)
-- [\`variant\`](https://shopify.dev/docs/api/liquid/objects/variant)
-
-#### Example
-
-\`\`\`liquid
-
-{{ product | img_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/img_url)
-
-`,snippet:"img_url: '${2:medium}'",returns:"string",deprecated:!0,objects:["article","collection","image","line_item","product","variant","country"]},link_to:{description:`Generates an HTML \`<a>\` tag. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'Shopify' | link_to: 'https://www.shopify.com' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to)
-
-`,snippet:"link_to: $1",arguments:[{type:"string",required:!0,description:"The URL to link to."},{type:"parameter",strict:!1,description:`You can specify [HTML attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) by including a parameter that matches the attribute name, and the desired value.
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'Shopify' | link_to: 'https://www.shopify.com', class: 'link-class' }}
-
-\`\`\`
-
-`,value:{class:{type:"string"},id:{type:"string"},title:{type:"string"}}}],returns:"string"},payment_type_img_url:{description:`Returns the URL for an SVG image of a given [payment type](https://shopify.dev/docs/api/liquid/objects/shop#shop-enabled_payment_types). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% for type in shop.enabled_payment_types %}
-<img src="{{ type | payment_type_img_url }}" />
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_type_img_url)
-
-`,returns:"string"},payment_type_svg_tag:{description:`Generates an HTML \`<svg>\` tag for a given [payment type](https://shopify.dev/docs/api/liquid/objects/shop#shop-enabled_payment_types). 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{% for type in shop.enabled_payment_types -%}
-  {{ type | payment_type_svg_tag }}
-{% endfor %}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_type_svg_tag)
-
-`,returns:"string"},placeholder_svg_tag:{description:"Generates an HTML `<svg>` tag for a given placeholder name. Accepts the following placeholder names:\n\n- `collection-1`\n- `collection-2`\n- `collection-3`\n- `collection-4`\n- `collection-5`\n- `collection-6`\n- `image`\n- `lifestyle-1`\n- `lifestyle-2`\n- `product-1`\n- `product-2`\n- `product-3`\n- `product-4`\n- `product-5`\n- `product-6`\n\n#### Example\n\n```liquid\n\n{{ 'collection-1' | placeholder_svg_tag }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/placeholder_svg_tag)\n\n",returns:"string"},preload_tag:{description:`Generates an HTML \`<link>\` tag with a \`rel\` attribute of \`preload\` to prioritize loading a given Shopify-hosted asset.
-The asset URL is also added to the [Link header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)
-with a \`rel\` attribute of \`preload\`. You should use this filter sparingly. For example, consider preloading only resources necessary for rendering
-above-the-fold content. To learn more about preloading resources, refer to
-[Performance best practices for Shopify themes](https://shopify.dev/themes/best-practices/performance#preload-key-resources-defer-or-avoid-loading-others).
-
-
-
-**Tip**
-
-> If you want to preload a stylesheet, then use [\`stylesheet_tag\`](https://shopify.dev/docs/api/liquid/filters/stylesheet_tag). If you want to
-> preload an image, then use [\`image_tag\`](https://shopify.dev/docs/api/liquid/filters/image_tag).
-
-The input to this filter must be a URL from one of the following filters:
-
-- [\`asset_url\`](https://shopify.dev/docs/api/liquid/filters/asset_url)
-- [\`global_asset_url\`](https://shopify.dev/docs/api/liquid/filters/global_asset_url)
-- [\`shopify_asset_url\`](https://shopify.dev/docs/api/liquid/filters/shopify_asset_url)
-
-The \`preload_tag\` filter also requires an [\`as\` parameter](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-as)
-based on the kind of resource being preloaded.
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'cart.js' | asset_url | preload_tag: as: 'script' }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/preload_tag)
-
-`,returns:"string",snippet:"preload_tag: as: ${1|audio,document,embed,fetch,font,image,object,script,style,track,video,worker}",filters:["asset_url","global_asset_url","shopify_asset_url"],arguments:[{type:"parameter",strict:!1,requires:["as"],value:{as:{type:"string",value:["audio","document","embed","fetch","font","image","object","script","style","track","video","worker"]}}}]},product_img_url:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-The \`product_img_url\` filter has been replaced by [\`image_url\`](/docs/api/liquid/filters/image_url).
-
----
-
-Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a [product image](https://shopify.dev/docs/api/liquid/objects/product). This can be the product's \`featured_image\` or any image from the \`images\` array.
-
-#### Example
-
-\`\`\`liquid
-
-{{ product.featured_image | product_img_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/product_img_url)
-
-`,returns:"string",deprecated:!0,snippet:"product_img_url"},script_tag:{description:`Generates an HTML \`<script>\` tag for a given resource URL. The tag has a \`type\` attribute of \`text/javascript\`. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'cart.js' | asset_url | script_tag }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/script_tag)
-
-`,returns:"string"},shopify_asset_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a globally accessible Shopify asset. The following are the globally accessible Shopify assets:
-
-- \`option_selection.js\`
-- \`api.jquery.js\`
-- \`shopify_common.js\`
-- \`customer_area.js\`
-- \`currencies.js\`
-- \`customer.css\`
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'option_selection.js' | shopify_asset_url }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/shopify_asset_url)
-
-`,returns:"string"},stylesheet_tag:{description:`Generates an HTML \`<link>\` tag for a given resource URL. The tag has the following parameters:
-
-| Attribute | Value |
-| --- | --- |
-| \`rel\` | \`stylesheet\` |
-| \`type\` | \`text/css\` |
-| \`media\` | \`all\` | 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{{ 'base.css' | asset_url | stylesheet_tag }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/stylesheet_tag)
-
-`,returns:"string",snippet:"stylesheet_tag",arguments:[{type:"parameter",value:{preload:{type:"boolean",description:`Specify whether the stylesheet should be preloaded. When preload is set to true, a resource hint is sent as a Link header with a rel value of [preload](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/preload).
-
-This option doesn't affect the HTML link tag directly. You should use the preload parameter sparingly. For example, consider preloading only render-blocking stylesheets that are needed for initial functionality of the page, such as above-the-fold content. To learn more about resource hints in Shopify themes, refer to [Performance best practices for Shopify themes](https://shopify.dev/themes/best-practices/performance#preload-key-resources-defer-or-avoid-loading-others).`}}}]},weight_with_unit:{description:`Generates a formatted weight for a [\`variant\` object](https://shopify.dev/docs/api/liquid/objects/variant#variant-weight). The weight unit is
-set in the [general settings](https://www.shopify.com/admin/settings/general) in the Shopify admin. 
-
-
-
-#### Example
-
-\`\`\`liquid
-
-{%- assign variant = product.variants.first -%}
-
-{{ variant.weight | weight_with_unit }}
-
-\`\`\`
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/weight_with_unit)
-
-`,arguments:[{type:"string",required:!1,description:"The weight unit to use in place of the default weight unit."}],returns:"string"}};var Q={form:{type:"generator",description:"Creates an HTML `<form>` element along with the required `<input>` elements to submit the form to a particular endpoint.",arguments:[{type:"string",required:!0,pattern:/(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)?|localization/,value:[{value:"activate_customer_password",template:"customer/activate_account",description:"Generates a form for activating a customer account on the activate_account.liquid template."},{value:"product",description:'Generates a form for adding a product variant to the cart. Requires a "product" object as a parameter.'},{value:"new_comment",template:"article",description:"Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter."},{description:"Generates a form for creating a new customer account on the register.liquid template.",value:"create_customer",template:"customer/register"},{value:"customer",description:"Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup."},{value:"customer_address",description:"Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address."},{value:"customer_login",description:"Generates a form for logging into Customer Accounts on the login.liquid template.",template:"customer/login"},{value:"recover_customer_password",description:"Generates a form for recovering a lost password on the login.liquid template.",template:"customer/login"},{value:"contact",description:"Generates a form for submitting an email through the Liquid contact form"},{value:"reset_customer_password",description:"Generates a form on the customers/reset_password.liquid template for a customer to reset their password.",template:"customer/login"},{value:"guest_login",description:"Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.",template:"customer/login"},{value:"localization",description:"Generates a form for customers to select their preferred country so they're shown the appropriate language and currency. Inside the form, you can build two different selectors"},{value:"storefront_password",description:"Generates a form on the password.liquid template for entering a password-protected storefront."},{value:"currency",deprecated:!0,description:"Generates a form that lets your customer change the currency in your storefront. This form generator is deprecated, use the `localization` form instead."}]},{type:"object",separator:44,value:{product:[{value:"product",description:"The `product` object is required when generating a form for adding a product variant to the cart"}],new_comment:[{value:"article",description:"The `article` object"}],customer_address:[{value:"customer.new_address",description:"The `customer.new_address` is required for creating a new address"},{value:"address",description:"The `address` is required when editing an existing address"}]}},{type:"parameter",strict:!1,separator:44,value:{id:{type:"string",description:"Provide a custom HTML attribute `id` value."},class:{type:"string",description:"Provide a custom HTML attribute `class`"}}}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form"}},include:{description:"The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",filters:!1,deprecated:!0,singleton:!0,type:"import",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"}},layout:{description:`Include "{% layout 'alternate' %}" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:`,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#layout"}},paginate:{type:"iteration",description:"Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",arguments:[{type:"array",required:!0},{type:"keyword",value:"by",required:!0},{type:"number",required:!0,pattern:[1,50]}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#paginate"}},section:{description:"Renders a section from the sections folder of a theme.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#section"}},sections:{description:"Renders a [section group](https://shopify.dev/themes/architecture/section-groups). Use this tag to render section groups as part of the theme's layout content. Place the sections tag where you want to render it in the layout.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#sections"}},schema:{description:"The schema tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",filters:!1,language:"json",unique:!0,type:"embedded",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/development/sections#using-section-schema-tags"}},style:{type:"embedded",description:"The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",filters:!1,language:"css",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/themes/liquid/tags/theme-tags#style"}},stylesheet:{type:"embedded",description:"The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,unique:!0,deprecated:!0,language:"css",arguments:[{type:"string",value:"scss",description:"SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-schema"}},javascript:{type:"embedded",description:"The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,deprecated:!0,language:"javascript",reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-assets#javascript"}}};var P=Object.assign;var $e=Array.isArray;var K={media:{summary:"An abstract media object that can represent the following object types:\n\n- [`image`](/docs/api/liquid/objects/image)\n- [`model`](/docs/api/liquid/objects/model)\n- [`video`](/docs/api/liquid/objects/video)\n- [`external_video`](/docs/api/liquid/objects/external_video)",description:`An abstract media object that can represent the following object types:
+The code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.`,snippet:"'$1'",filters:!1,singleton:!0,type:"import",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#render"}},tablerow:{description:"Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",type:"iteration",parameters:{cols:{type:"number",description:"Defines how many columns the tables should have."},limit:{type:"number",description:"Exits the tablerow loop after a specific index."},offset:{type:"number",description:"Starts the tablerow loop after a specific index."}},reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#tablerow"}},unless:{description:"The opposite of if \u2013 executes a block of code only if a certain condition is not met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},when:{description:'Define the various conditions set by the "{% case %}" tag',singleton:!0,type:"control",parents:["case"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#casewhen"}}};var j={};I(j,{filters:()=>K,objects:()=>Q,tags:()=>ge});var X={form:{type:"generator",description:"Creates an HTML `<form>` element along with the required `<input>` elements to submit the form to a particular endpoint.",arguments:[{type:"string",required:!0,pattern:/(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)?|localization/,value:[{value:"activate_customer_password",template:"customer/activate_account",description:"Generates a form for activating a customer account on the activate_account.liquid template."},{value:"product",description:'Generates a form for adding a product variant to the cart. Requires a "product" object as a parameter.'},{value:"new_comment",template:"article",description:"Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter."},{description:"Generates a form for creating a new customer account on the register.liquid template.",value:"create_customer",template:"customer/register"},{value:"customer",description:"Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup."},{value:"customer_address",description:"Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address."},{value:"customer_login",description:"Generates a form for logging into Customer Accounts on the login.liquid template.",template:"customer/login"},{value:"recover_customer_password",description:"Generates a form for recovering a lost password on the login.liquid template.",template:"customer/login"},{value:"contact",description:"Generates a form for submitting an email through the Liquid contact form"},{value:"reset_customer_password",description:"Generates a form on the customers/reset_password.liquid template for a customer to reset their password.",template:"customer/login"},{value:"guest_login",description:"Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.",template:"customer/login"},{value:"localization",description:"Generates a form for customers to select their preferred country so they're shown the appropriate language and currency. Inside the form, you can build two different selectors"},{value:"storefront_password",description:"Generates a form on the password.liquid template for entering a password-protected storefront."},{value:"currency",deprecated:!0,description:"Generates a form that lets your customer change the currency in your storefront. This form generator is deprecated, use the `localization` form instead."}]},{type:"object",separator:44,value:{product:[{value:"product",description:"The `product` object is required when generating a form for adding a product variant to the cart"}],new_comment:[{value:"article",description:"The `article` object"}],customer_address:[{value:"customer.new_address",description:"The `customer.new_address` is required for creating a new address"},{value:"address",description:"The `address` is required when editing an existing address"}]}},{type:"parameter",strict:!1,separator:44,value:{id:{type:"string",description:"Provide a custom HTML attribute `id` value."},class:{type:"string",description:"Provide a custom HTML attribute `class`"}}}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form"}},include:{description:"The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",filters:!1,deprecated:!0,singleton:!0,type:"import",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"}},layout:{description:`Include "{% layout 'alternate' %}" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:`,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#layout"}},paginate:{type:"iteration",description:"Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",arguments:[{type:"array",required:!0},{type:"keyword",value:"by",required:!0},{type:"number",required:!0,pattern:[1,50]}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#paginate"}},section:{description:"Renders a section from the sections folder of a theme.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#section"}},sections:{description:"Renders a [section group](https://shopify.dev/themes/architecture/section-groups). Use this tag to render section groups as part of the theme's layout content. Place the sections tag where you want to render it in the layout.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#sections"}},schema:{description:"The schema tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",filters:!1,language:"json",unique:!0,type:"embedded",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/development/sections#using-section-schema-tags"}},style:{type:"embedded",description:"The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",filters:!1,language:"css",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/themes/liquid/tags/theme-tags#style"}},stylesheet:{type:"embedded",description:"The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,unique:!0,deprecated:!0,language:"css",arguments:[{type:"string",value:"scss",description:"SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-schema"}},javascript:{type:"embedded",description:"The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,deprecated:!0,language:"javascript",reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-assets#javascript"}}};var Z=Object.assign;var De=Array.isArray;var Q={media:{summary:"An abstract media object that can represent the following object types:\n\n- [`image`](/docs/api/liquid/objects/image)\n- [`model`](/docs/api/liquid/objects/model)\n- [`video`](/docs/api/liquid/objects/video)\n- [`external_video`](/docs/api/liquid/objects/external_video)",description:`An abstract media object that can represent the following object types:
 
 - [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
 - [\`model\`](https://shopify.dev/docs/api/liquid/objects/model)
@@ -15826,9 +13239,2596 @@ Last Updated: 6th April 2023
 Last Updated: 6th April 2023
 
 
-`}}}};var ge=P({},Z,_),be=P({},Q,L);var z={};I(z,{filters:()=>ve,objects:()=>ne,tags:()=>qe});var ee={relative_url:{description:"Prepend the baseurl value to the input. Useful if your site is hosted at a subpath rather than the root of the domain.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},absolute_url:{description:"Prepend the url and baseurl value to the input.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_xmlschema:{description:"Convert a Date into XML Schema (ISO 8601) format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_rfc822:{description:"Convert a Date into the RFC-822 format used for RSS feeds.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_string:{description:"Convert a date to short format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}}};var te={post_url:{type:"output",description:"Link to a post on your site, the post_url tag will generate the correct permalink URL for the post you specify",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#linking-to-posts"}},include:{type:"import",description:"The include tag allows you to include the content from another file stored in the _includes folder",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes"}},include_relative:{type:"import",description:"Include file fragments relative to the current file by using the include_relative tag",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes/#including-files-relative-to-another-file"}},link:{type:"output",filters:!0},highlight:{type:"raw",description:"Render a code block with syntax highlighting.",snippet:"highlight ${1}",filters:!1,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#code-snippet-highlighting"}}};var ne={site:{type:"object",description:"Site wide information + configuration settings from _config.yml. See below for details.",properties:{pages:{description:"A list of all Pages.",type:"array"},posts:{description:"A reverse chronological list of all Posts.",type:"array"},related_posts:{type:"array",description:"If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are the ten most recent posts. For high quality but slow to compute results, run the jekyll command with the --lsi (latent semantic indexing) option. "},time:{description:"The current time (when you run the jekyll command).",type:"string"}},reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/variables/#site-variables"}}};var ve=Object.assign(Object.create(null),ee,_),qe=Object.assign(Object.create(null),te,L);var x=process.cwd(),v=`${f.default.gray("[")}SPECS${f.default.gray("]")} ${f.default.magenta("RUN")}`,{log:q}=console;_e();function _e(){q(`${v} ${f.default.magenta.bold("Building Shopify Specifications")}`),Se(),Te(),q(`${v} ${f.default.magenta.bold("Finished Shopify Specifications")}`)}function Le(){let e=new Date,n=e.getFullYear(),s=e.getMonth(),i=e.getDay(),a=t=>({1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"})[t];return`${(t=>{let d=t%10,p=t%100;return t+(d===1&&p!==11?"st":d===2&&p!==12?"nd":d===3&&p!==13?"rd":"th")})(i)} ${a(s)} ${n}`}function je(e,n,s){return`import { ${e} } from '../..'
+`}}}};var K={item_count_for_variant:{description:`Returns the total item count for a specified variant in the cart. 
 
-export const ${n}: ${e} = ${s}`}function m(e){return e=e.replace(/&lt;/g,"<"),e=e.replace(/&gt;/g,">"),e=e.replace(/&quot;/g,'"'),e=e.replace(/&#39;/g,"'"),e=e.replace(/&amp;/g,"&"),e}function F(e,n,s){let i=[],{name:a,summary:h=null,description:t=null,examples:d,deprecated:p,deprecation_reason:c}=n;if(p===!0&&(i.push("\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F"),c!==""?i.push(m(c),"---"):i.push("No deprecation reason has been provided by the Shopify team \u{1F921}.","---")),t!==""&&h!==null){let l=m(t).replace(/>\s(Tip|Note):/g,`
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ cart | item_count_for_variant: 39888235757633 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/item_count_for_variant)
+
+`,returns:"number",snippet:"item_count_for_variant: ${1}",arguments:[{type:"any",required:!0}]},link_to_type:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to a collection page that lists all products of the given
+product type. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'Health' | link_to_type }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_type)
+
+`,returns:"string",snippet:"link_to_type"},link_to_vendor:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to a collection page that lists all products of a given
+product vendor. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ "Polina's Potent Potions" | link_to_vendor }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_vendor)
+
+`,snippet:"link_to_vendor",returns:"string"},sort_by:{description:"Generates a collection URL with the provided `sort_by` parameter appended. This filter must be applied to a collection URL. Accepts the following values:\n\n- `manual`\n- `best-selling`\n- `title-ascending`\n- `title-descending`\n- `price-ascending`\n- `price-descending`\n- `created-ascending`\n- `created-descending`\n\n\n\n**Tip**\n\n> You can append the `sort_by` filter to the [`url_for_type`](https://shopify.dev/docs/api/liquid/filters/url_for_type)\n> and [`url_for_vendor`](https://shopify.dev/docs/api/liquid/filters/url_for_vendor) filters.\n\n#### Example\n\n```liquid\n\n{{ collection.url | sort_by: 'best-selling' }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sort_by)\n\n",snippet:"sort_by: '${1|manual,best-selling,title-ascending,title-descending,price-ascending,price-descending,created-ascending,created-descending|}'",returns:"string",arguments:[{type:"string",required:!0,value:["manual","best-selling","title-ascending","title-descending","price-ascending","price-descending","created-ascending","created-descending"]}]},url_for_type:{description:`Generates a URL for a collection page that lists all products of the given product type. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'health' | url_for_type }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_for_type)
+
+`,returns:"string"},url_for_vendor:{description:`Generates a URL for a collection page that lists all products from the given product vendor. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ "Polina's Potent Potions" | url_for_vendor }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_for_vendor)
+
+`,returns:"string"},within:{description:`Generates a product URL within the context of the provided collection. When the collection context is included, you can access the associated [\`collection\` object](https://shopify.dev/docs/api/liquid/objects/collection)
+in the [product template](https://shopify.dev/themes/architecture/templates/product).
+
+> Caution:
+> Because a standard product page and a product page in the context of a collection have the same content on separate
+> URLs, you should consider the SEO implications of using the \`within\` filter.
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign collection_product = collection.products.first -%}
+
+{{ collection_product.url | within: collection }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/within)
+
+`,snippet:"within: ${1}",returns:"string",arguments:[{type:"array",required:!0}]},brightness_difference:{description:`Calculates the [perceived brightness difference](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) between two colors. 
+
+**Tip**
+
+> For accessibility best practices, it's recommended to have a minimum brightness difference of 125.
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#E800B0' | brightness_difference: '#FECEE9' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/brightness_difference)
+
+`,snippet:"brightness_difference: '${1:#FECEE9}'",arguments:[{type:"string",pattern:/#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,required:!0}],returns:"number"},color_brightness:{description:`Calculates the [perceived brightness](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) of a given color. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_brightness }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_brightness)
+
+`,returns:"number"},color_contrast:{description:`Calculates the contrast ratio between two colors and returns the ratio's numerator. The ratio's denominator, which isn't
+returned, is always 1. For example, with a contrast ratio of 3.5:1, this filter returns 3.5. The order in which you specify the colors doesn't matter.
+
+
+
+**Tip**
+
+> For accessibility best practices, the
+> [WCAG 2.0 level AA](https://www.w3.org/WAI/WCAG21/quickref/?versions=2.0#qr-visual-audio-contrast-contrast) requires a
+> minimum contrast ratio of 4.5:1 for normal text, and 3:1 for large text. [Level AAA](https://www.w3.org/WAI/WCAG21/quickref/?versions=2.0#qr-visual-audio-contrast7)
+> requires a minimum contrast ratio of 7:1 for normal text, and 4.5:1 for large text.
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#E800B0' | color_contrast: '#D9D8FF' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_contrast)
+
+`,snippet:"color_contrast: color: ${1:#FFF3F9}",arguments:[{type:"string",description:"A color to compare with the provided color.",pattern:/#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,required:!0}],returns:"number"},color_darken:{description:`Darkens a given color by a specific percentage. The percentage must be between 0 and 100. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_darken: 30 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_darken)
+
+`,returns:"string",snippet:"color_darken: ${1:30}",arguments:[{type:"number",description:"A color to compare with the provided color.",pattern:[0,100],required:!0}]},color_desaturate:{description:`Desaturates a given color by a specific percentage. The percentage must be between 0 and 100. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_desaturate: 30 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_desaturate)
+
+`,snippet:"color_desaturate: ${1:30}",arguments:[{type:"number",required:!0,pattern:[0,100],description:"The amount to desaturate the provided color by."}],returns:"string"},color_difference:{description:`Calculates the [color difference](https://www.w3.org/WAI/ER/WD-AERT/#color-contrast) between two colors. 
+
+**Tip**
+
+> For accessibility best practices, it's recommended to have a minimum color difference of 500.
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#720955' | color_difference: '#FFF3F9' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_difference)
+
+`,snippet:"color_difference: ${1:#FFF3F9}",arguments:[{type:"string",pattern:/#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,required:!0,description:"A color to compare with the provided color."}],returns:"number"},color_extract:{description:`Extracts a specific color component from a given color. Accepts the following color components:
+
+- \`alpha\`
+- \`red\`
+- \`green\`
+- \`blue\`
+- \`hue\`
+- \`saturation\`
+- \`lightness\`
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_extract: 'red' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_extract)
+
+`,returns:"number",snippet:"color_extract: '${1|alpha,red,green,blue,hue,saturation,lightness|}'",arguments:[{type:"string",required:!0,value:["alpha","red","green","blue","hue","saturation","lightness"]}]},color_lighten:{description:`Lightens a given color by a specific percentage. The percentage must be between 0 and 100. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_lighten: 30 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_lighten)
+
+`,snippet:"color_lighten: percent: ${1:30}",arguments:[{type:"number",pattern:[0,100],required:!0,description:"The amount to lighten the provided color by."}],returns:"string"},color_mix:{description:`Blends two colors together by a specific percentage factor. The percentage must be between 0 and 100. 
+
+**Tip**
+
+> A percentage factor of 100 returns the color being filtered. A percentage factor of 0 returns the color
+> supplied to the filter.
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#E800B0' | color_mix: '#00936F', 50 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_mix)
+
+`,snippet:"color_mix: '${1:#FECEE9}', ${2:100}",arguments:[{type:"string",pattern:/#(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,required:!0},{type:"number",pattern:[0,100],required:!0}],returns:"string"},color_modify:{description:`Modifies a specific color component of a given color by a specific amount. The following table outlines valid color components, and the value range for their modifications:
+
+| Component | Value range |
+| --- | --- |
+| <ul><li>\`red\`</li><li>\`green\`</li><li>\`blue\`</li></ul> | An integer between 0 and 255 |
+| \`alpha\` | A decimal between 0 and 1 |
+| \`hue\` | An integer between 0 and 360 |
+| <ul><li>\`saturation\`<li>\`lightness\`</li></ul> | An integer between 0 and 100 |
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_modify: 'red', 255 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_modify)
+
+`,snippet:"color_modify: '${1|red,green,blue,alpha,hue,saturation,lightness|}', ${2:100}",arguments:[{type:"string",required:!0,value:["red","green","blue","alpha","hue","saturation","lightness"]},{type:"number",required:!0,pattern:{red:[0,255],green:[0,255],blue:[0,255],alpha:[0,1],hue:[0,360],saturation:[0,100]}}],returns:"string"},color_saturate:{description:`Saturates a given color by a specific percentage. The percentage must be between 0 and 100. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_saturate: 30 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_saturate)
+
+`,snippet:"color_saturate: ${1:30}",arguments:[{type:"number",pattern:[0,100],required:!0,description:"The amount to saturate the provided color by."}],returns:"string"},color_to_hex:{description:`Converts a CSS color string to hexadecimal format (\`hex6\`). Because colors are converted to \`hex6\` format, if a color with an alpha component is provided, then the alpha component
+is excluded from the output.
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'rgb(234, 90, 185)' | color_to_hex }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_to_hex)
+
+`,returns:"string"},color_to_hsl:{description:`Converts a CSS color string to \`HSL\` format. If a color with an alpha component is provided, the color is converted to \`HSLA\` format.
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_to_hsl }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_to_hsl)
+
+`,returns:"string"},color_to_rgb:{description:`Converts a CSS color string to \`RGB\` format. If a color with an alpha component is provided, then the color is converted to \`RGBA\` format.
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | color_to_rgb }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/color_to_rgb)
+
+`,returns:"string"},hex_to_rgba:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
+
+The \`hex_to_rgba\` filter has been replaced by [\`color_to_rgb\`](/docs/api/liquid/filters/color_to_rgb) and
+[\`color_modify\`](/docs/api/liquid/filters/color_modify).
+
+---
+
+Converts a CSS color string from  hexadecimal format to \`RGBA\` format. Shorthand hexadecimal formatting (\`hex3\`) is also accepted. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '#EA5AB9' | hex_to_rgba }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/hex_to_rgba)
+
+`,returns:"string",deprecated:!0,snippet:"hex_to_rgba"},hmac_sha1:{description:`Converts a string into an SHA-1 hash using a hash message authentication code (HMAC). The secret key for the message is supplied as a parameter to the filter.
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign secret_potion = 'Polyjuice' | hmac_sha1: 'Polina' -%}
+
+My secret potion: {{ secret_potion }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/hmac_sha1)
+
+`,returns:"string",snippet:"hmac_sha1: $1",arguments:[{type:"any",required:!0}]},hmac_sha256:{description:`Converts a string into an SHA-256 hash using a hash message authentication code (HMAC). The secret key for the message is supplied as a parameter to the filter.
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign secret_potion = 'Polyjuice' | hmac_sha256: 'Polina' -%}
+
+My secret potion: {{ secret_potion }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/hmac_sha256)
+
+`,returns:"string",snippet:"hmac_sha256: $1",arguments:[{type:"any",required:!0}]},md5:{description:`Converts a string into an MD5 hash. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '' | md5 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/md5)
+
+`,returns:"string"},sha1:{description:`Converts a string into an SHA-1 hash. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign secret_potion = 'Polyjuice' | sha1 -%}
+
+My secret potion: {{ secret_potion }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sha1)
+
+`,returns:"string"},sha256:{description:`Converts a string into an SHA-256 hash. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign secret_potion = 'Polyjuice' | sha256 -%}
+
+My secret potion: {{ secret_potion }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sha256)
+
+`,returns:"string",snippet:"sha256"},currency_selector:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
+
+Deprecated without a direct replacement because the [currency form](/docs/api/liquid/tags/form#form-currency) has also been
+deprecated.
+
+---
+
+Generates an HTML \`<select>\` element with an option for each currency available on the store. The \`currency_selector\` filter must be applied to the [\`form\` object](https://shopify.dev/docs/api/liquid/objects/form) within a
+[currency form](https://shopify.dev/docs/api/liquid/tags/form#form-currency).
+
+#### Example
+
+\`\`\`liquid
+
+{% form 'currency' %}
+  {{ form | currency_selector }}
+{% endform %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/currency_selector)
+
+`,scope:"form",deprecated:!0,returns:"string",snippet:"currency_selector"},customer_login_link:{description:`Generates an HTML link to the customer login page. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'Log in' | customer_login_link }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/customer_login_link)
+
+`,returns:"string"},customer_logout_link:{description:`Generates an HTML link to log the customer out of their account and redirect to the homepage. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'Log out' | customer_logout_link }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/customer_logout_link)
+
+`,returns:"string"},customer_register_link:{description:`Generates an HTML link to the customer registration page. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'Create an account' | customer_register_link }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/customer_register_link)
+
+`,returns:"string"},date:{description:`Converts a timestamp into another date format. The \`date\` filter accepts the same parameters as Ruby's strftime method for formatting the date. For a list of shorthand
+formats, refer to the [Ruby documentation](https://ruby-doc.org/core-3.1.1/Time.html#method-i-strftime) or
+[strftime reference and sandbox](http://www.strfti.me/).
+
+#### Example
+
+\`\`\`liquid
+
+{{ article.created_at | date: '%B %d, %Y' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/date)
+
+`,arguments:[{type:"string",required:!1,description:"The desired date format."}],returns:"string"},font_face:{description:`Generates a CSS [\`@font_face\` declaration](https://developer.mozilla.org/en-US/docs/Web/CSS/%40font-face) to load the provided font. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ settings.type_header_font | font_face }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/font_face)
+
+`,arguments:[{type:"parameter",value:{font_display:{type:"string",pattern:/\b(?:auto|block|swap|fallback|optional)\b/,description:"[string] Customize the [`font_display` property](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display) of the `@font-face` declaration.",value:[{value:"auto",description:"The font display strategy is defined by the user agent."},{value:"block",description:"Gives the font face a short block period and an infinite swap period."},{value:"swap",description:"Gives the font face an extremely small block period and an infinite swap period."},{value:"fallback",description:"Gives the font face an extremely small block period and a short swap period."},{value:"optional",description:"Gives the font face an extremely small block period and no swap period."}]}}}],returns:"string"},font_modify:{description:`Modifies a specific property of a given font. The \`font_modify\` filter requires two parameters. The first indicates which property should be modified and the second is
+either the new value, or modification amount, for that property.
+
+
+
+**Tip**
+
+> You can access every variant of the chosen font's family by using [\`font.variants\`](https://shopify.dev/docs/api/liquid/objects/font#font-variants).
+> However, you can more easily access specific styles and weights by using the \`font_modify\` filter.
+
+The following table outlines the valid font properties and modification values:
+
+<table>
+  <thead>
+    <th>Property</th>
+    <th>Modification value</th>
+    <th>Output</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan=3><code>style</code></td>
+      <td><code>normal</code></td>
+      <td>Returns the normal variant of the same weight, if it exists.</td>
+    </tr>
+    <tr>
+      <td><code>italic</code></td>
+      <td>Returns the italic variant of the same weight, if it exists.</td>
+    </tr>
+    <tr>
+      <td><code>oblique</code></td>
+      <td>
+        <p>Returns the oblique variant of the same weight, if it exists.</p>
+        <p>Oblique variants are similar to italic variants in appearance. All Shopify fonts have only oblique or italic variants, not both.</p>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan=7><code>weight</code></td>
+      <td><code>100</code> &rarr; <code>900</code></td>
+      <td>Returns a variant of the same style with the given weight, if it exists.</td>
+    </tr>
+    <tr>
+      <td><code>normal</code></td>
+      <td>Returns a variant of the same style with a weight of <code>400</code>, if it exists.</td>
+    </tr>
+    <tr>
+      <td><code>bold</code></td>
+      <td>Returns a variant of the same style with a weight of <code>700</code>, if it exists.</td>
+    </tr>
+    <tr>
+      <td><code>+100</code> &rarr; <code>+900</code></td>
+      <td>
+        <p>Returns a variant of the same style with a weight incremented by the given value, if it exists.</p>
+        <p>For example, if a font has a weight of <code>400</code>, then using <code>+100</code> would return the font with a weight of <code>500</code>.</p>
+      </td>
+    </tr>
+    <tr>
+      <td><code>-100</code> &rarr; <code>-900</code></td>
+      <td>
+        <p>Returns a variant of the same style with a weight decremented by the given value, if it exists.</p>
+        <p>For example, if a font has a weight of <code>400</code>, then using <code>-100</code> would return the font with a weight of <code>300</code>.</p>
+      </td>
+    </tr>
+    <tr>
+      <td><code>lighter</code></td>
+      <td>Returns a lighter variant of the same style by applying the rules used by the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#Meaning_of_relative_weights">CSS <code>font-weight</code> property</a> and browser <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#Fallback_weights">fallback weights</a>, if it exists.</td>
+    </tr>
+    <tr>
+      <td><code>bolder</code></td>
+      <td>Returns a bolder variant of the same style by applying the rules used by the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#Meaning_of_relative_weights">CSS <code>font-weight</code> property</a> and browser <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#Fallback_weights">fallback weights</a>, if it exists.</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign bold_font = settings.type_body_font | font_modify: 'weight', 'bold' -%}
+
+h2 {
+  font-weight: {{ bold_font.weight }};
+}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/font_modify)
+
+`,snippet:"font_modify: '${1|normal,italic,oblique|}', '${2|100,200,300,400,500,600,700,800,900,lighter,normal,bold,bolder|}'",arguments:[{type:"string",required:!0,value:["style","weight"]},{type:"string",required:!0,pattern:{style:/\b(?:normal|italic|oblique)\b/,weight:/\b(?:normal|bold|bolder|lighter|[+-]?[1-9]0{2})\b/},value:{style:[{value:"normal",description:"Returns the normal variant of the same weight (if it exists)"},{value:"italic",description:"Returns the italic variant of the same weight (if it exists)"},{value:"oblique",description:"Has the same behavior as italic. None of the font families provided by Shopify have both italic and oblique styles."}],weight:[{value:"normal",description:"Has the same behavior as `400`."},{value:"bold",description:"Has the same behavior as `700`"},{value:"bolder",description:"Returns a bolder variant of the same style by applying the rules used by the CSS `font-weight` property and browser fallback weights (if it exists)."},{value:"lighter",description:"Returns a lighter variant of the same style by applying the rules used by the CSS `font-weight` property and browser fallback weights (if it exists)."}]}}],returns:"any"},font_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for the provided font in \`woff2\` format. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ settings.type_header_font | font_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/font_url)
+
+`,arguments:[{type:"string",required:!1,description:"Choose to return the URL for the font in `woff` format, instead of `woff2`."}],returns:"string"},default_errors:{description:`Generates default error messages for each possible value of [\`form.errors\`](https://shopify.dev/docs/themes/liquid/reference/objects/form#form-errors). 
+
+
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/default_errors)
+
+`,scope:"form",returns:"string"},payment_button:{description:`Generates an HTML container to host [dynamic checkout buttons](https://help.shopify.com/manual/online-store/dynamic-checkout)
+for a product. The \`payment_button\` filter must be used on the \`form\` object within a [product form](https://shopify.dev/docs/api/liquid/tags/form#form-product). 
+
+**Note**
+
+> You can't render dynamic checkout buttons through AJAX requests, including those through the
+> [Section Rendering API](https://shopify.dev/api/section-rendering). The dynamic checkout buttons are added by JavaScript included
+> by Shopify through the [\`content_for_header\`](https://shopify.dev/docs/api/liquid/objects/content_for_header) object, which only runs on
+> the initial page load.
+
+#### Example
+
+\`\`\`liquid
+
+{% form 'product', product %}
+  {{ form | payment_button }}
+{% endform %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_button)
+
+`,scope:"form",returns:"string"},payment_terms:{description:`Generates the HTML for the [Shop Pay Installments banner](https://shopify.dev/themes/pricing-payments/installments). The \`payment_terms\` filter must be used on the \`form\` object within a [product form](https://shopify.dev/docs/api/liquid/tags/form#form-product) or
+[cart form](https://shopify.dev/docs/api/liquid/tags/form#form-cart).
+
+\`\`\`liquid
+{% form 'product', product %}
+  {{ form | payment_terms }}
+{% endform %}
+\`\`\`
+
+\`\`\`liquid
+{% form 'cart', cart %}
+  {{ form | payment_terms }}
+{% endform %}
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_terms)
+
+`,returns:"string"},time_tag:{description:`Converts a timestamp into an HTML \`<time>\` tag. The \`time_tag\` filter accepts the same parameters as Ruby's strftime method for formatting the date. For a list of shorthand
+formats, refer to the [Ruby documentation](https://ruby-doc.org/core-3.1.1/Time.html#method-i-strftime) or
+[strftime reference and sandbox](http://www.strfti.me/).
+
+#### Example
+
+\`\`\`liquid
+
+{{ article.created_at | time_tag: '%B %d, %Y' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/time_tag)
+
+`,arguments:[{type:"string",pattern:/%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,description:"The time_tag filter accepts the same parameters as Ruby's strftime method."},{type:"parameter",value:{datetime:{type:"string",pattern:/%[AaBbCcDdeFGgHhIjkLlMmNnPpRrSsTtrUuVvWwXxYyZz0-9^%_-]+/,description:"A datetime parameter with strftime shorthand formats to use a custom format for the datetime attribute of the output `<time>` tag."},format:{type:"string",description:"The font-display descriptor determines how a font face is displayed based on whether and when it is downloaded and ready to use",strict:!1,value:[{value:"abbreviated_date",description:"Dec 31, 2018"},{value:"basic",description:"12/31/2018"},{value:"date",description:"December 31, 2018"},{value:"date_at_time",description:"December 31, 2018 at 1:00 pm"},{value:"default",description:"Monday, December 31, 2018 at 1:00 pm -0500"},{value:"on_date",description:"on Dec 31, 2018"}]}}}],returns:"string",snippet:"time_tag"},translate:{description:`Returns a string of translated text for a given translation key from a [locale file](https://shopify.dev/themes/architecture/locales). The \`translate\` filter has an alias of \`t\`, which is more commonly used.
+
+
+
+**Tip**
+
+> To learn more about using the \`t\` filter, refer to [storefront locale file usage](https://shopify.dev/themes/architecture/locales/storefront-locale-files#usage)
+> or [schema locale file usage](https://shopify.dev/themes/architecture/locales/schema-locale-files#usage).
+
+#### Example
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/translate)
+
+`,returns:"string"},json:{description:`Converts a string, or object, into JSON format. 
+
+**Tip**
+
+> When using the JSON output in JavaScript, you don't need to wrap it in quotes because the \`json\` filter includes them.
+> The \`json\` filter also escapes any quotes inside the output.
+
+#### Product inventory
+
+When applied to a [\`product\` object](https://shopify.dev/docs/api/liquid/objects/product) on any Shopify store created after December 5, 2017, the
+\`json\` filter doesn't output values for the \`inventory_quantity\` and \`inventory_policy\` properties of any associated
+[variants](https://shopify.dev/docs/api/liquid/objects/variant). These properties are excluded to help prevent bots and crawlers from retrieving
+inventory quantities for stores to which they aren't granted access.
+
+If you need inventory information, you can access it through individual variants.
+
+#### Example
+
+\`\`\`liquid
+
+{{ product | json }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/json)
+
+`,returns:"string"},abs:{description:`Returns the absolute value of a number. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ -3 | abs }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/abs)
+
+`,returns:"number"},append:{description:`Adds a given string to the end of a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%-  assign path = product.url -%}
+
+{{ request.origin | append: path }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/append)
+
+`,snippet:"append: '${1}'",arguments:[{type:"string",required:!0}],returns:"string"},at_least:{description:`Limits a number to a minimum value. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 4 | at_least: 5 }}
+{{ 4 | at_least: 3 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/at_least)
+
+`,snippet:"at_least: $1 $0",arguments:[{type:"number",required:!0}],returns:"number"},at_most:{description:`Limits a number to a maximum value. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 6 | at_most: 5 }}
+{{ 4 | at_most: 5 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/at_most)
+
+`,snippet:"at_most: $1 $0",arguments:[{type:"number",required:!0}],returns:"number"},base64_decode:{description:`Decodes a string in [Base64 format](https://developer.mozilla.org/en-US/docs/Glossary/Base64). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'b25lIHR3byB0aHJlZQ==' | base64_decode }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/base64_decode)
+
+`,returns:"string"},base64_encode:{description:`Encodes a string to [Base64 format](https://developer.mozilla.org/en-US/docs/Glossary/Base64). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'one two three' | base64_encode }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/base64_encode)
+
+`,returns:"string"},base64_url_safe_decode:{description:`Decodes a string in URL-safe [Base64 format](https://developer.mozilla.org/en-US/docs/Glossary/Base64). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'b25lIHR3byB0aHJlZQ==' | base64_url_safe_decode }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/base64_url_safe_decode)
+
+`,returns:"string"},base64_url_safe_encode:{description:`Encodes a string to URL-safe [Base64 format](https://developer.mozilla.org/en-US/docs/Glossary/Base64). 
+
+
+
+#### Example
+
+To produce URL-safe Base64, this filter uses \`-\` and \`_\` in place of \`+\` and \`/\`.
+
+\`\`\`liquid
+
+{{ 'one two three' | base64_url_safe_encode }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/base64_url_safe_encode)
+
+`,returns:"string"},capitalize:{description:`Capitalizes the first word in a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'this sentence should start with a capitalized word.' | capitalize }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/capitalize)
+
+`,returns:"string"},ceil:{description:`Rounds a number up to the nearest integer. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 1.2 | ceil }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/ceil)
+
+`,returns:"number"},compact:{description:`Removes any \`nil\` items from an array. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign original_prices = collection.products | map: 'compare_at_price' -%}
+
+Original prices:
+
+{% for price in original_prices -%}
+  - {{ price }}
+{%- endfor %}
+
+{%- assign compacted_original_prices = original_prices | compact -%}
+
+Original prices - compacted:
+
+{% for price in compacted_original_prices -%}
+  - {{ price }}
+{%- endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/compact)
+
+`,returns:"array"},concat:{description:`Concatenates (combines) two arrays. 
+
+**Note**
+
+> The \`concat\` filter won't filter out duplicates. If you want to remove duplicates, then you need to use the
+> [\`uniq\` filter](https://shopify.dev/docs/api/liquid/filters/uniq).
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign types_and_vendors = collection.all_types | concat: collection.all_vendors -%}
+
+Types and vendors:
+
+{% for item in types_and_vendors -%}
+  {%- if item != blank -%}
+    - {{ item }}
+  {%- endif -%}
+{%- endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/concat)
+
+`,snippet:"concat: ${1}",arguments:[{type:"array",required:!0}],returns:"array"},default:{description:`Sets a default value for any variable whose value is one of the following:
+
+- [\`empty\`](https://shopify.dev/docs/api/liquid/basics#empty)
+- [\`false\`](https://shopify.dev/docs/api/liquid/basics#truthy-and-falsy)
+- [\`nil\`](https://shopify.dev/docs/api/liquid/basics#nil) 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.selected_variant.url | default: product.url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/default)
+
+`,arguments:[{type:"parameter",value:{allow_false:{type:"boolean",description:"Whether to use false values instead of the default."}}}],returns:"any"},divided_by:{description:`Divides a number by a given number. The \`divided_by\` filter produces a result of the same type as the divisor. This means if you divide by an integer, the result will be an integer, and if you divide by a float, the result will be a float. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 4 | divided_by: 2 }}
+
+# divisor is an integer
+{{ 20 | divided_by: 7 }}
+
+# divisor is a float 
+{{ 20 | divided_by: 7.0 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/divided_by)
+
+`,snippet:"divided_by: $1",arguments:[{type:"number",required:!0}],returns:"number"},downcase:{description:`Converts a string to all lowercase characters. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.title | downcase }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/downcase)
+
+`,returns:"string"},escape:{description:`Escapes special characters in HTML, such as \`<>\`, \`'\`, and \`&\`, and converts characters into escape sequences. The filter doesn't effect characters within the string that don\u2019t have a corresponding escape sequence.". 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '<p>Text to be escaped.</p>' | escape }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/escape)
+
+`,returns:"string"},escape_once:{description:`Escapes a string without changing characters that have already been escaped. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign escaped_text = '<p>Text to be escaped.</p>' | escape -%}
+
+{{ escaped_text }}
+{{ escaped_text | escape_once }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/escape_once)
+
+`,returns:"string"},first:{description:`Returns the first item in an array. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign first_product = collection.products | first -%}
+
+{{ first_product.title }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/first)
+
+`,returns:"any"},floor:{description:`Rounds a number down to the nearest integer. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 1.2 | floor }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/floor)
+
+`,returns:"number"},join:{description:`Combines all of the items in an array into a single string, separated by a space. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ collection.all_tags | join }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/join)
+
+`,snippet:"join: '$1' $0",arguments:[{type:"string",required:!0}],returns:"string"},last:{description:`Returns the last item in an array. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign last_product = collection.products | last -%}
+
+{{ last_product.title }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/last)
+
+`,returns:"any"},lstrip:{description:`Strips all whitespace from the left of a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign text = '  Some potions create whitespace.      ' -%}
+
+"{{ text }}"
+"{{ text | lstrip }}"
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/lstrip)
+
+`,returns:"string"},map:{description:`Creates an array of values from a specific property of the items in an array. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign product_titles = collection.products | map: 'title' -%}
+
+{{ product_titles | join: ', ' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/map)
+
+`,snippet:"map: $1",arguments:[{type:"any",required:!0}],returns:"array"},minus:{description:`Subtracts a given number from another number. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 4 | minus: 2 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/minus)
+
+`,snippet:"minus: $1",arguments:[{type:"number",required:!0}],returns:"number"},modulo:{description:`Returns the remainder of dividing a number by a given number. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 12 | modulo: 5 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/modulo)
+
+`,snippet:"modulo: $1",arguments:[{type:"number",required:!0}],returns:"number"},newline_to_br:{description:`Converts newlines (\`\\n\`) in a string to HTML line breaks (\`<br>\`). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.description | newline_to_br }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/newline_to_br)
+
+`,returns:"string"},plus:{description:`Adds two numbers. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 2 | plus: 2 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/plus)
+
+`,snippet:"plus: $1",arguments:[{type:"number",required:!0}],returns:"number"},prepend:{description:`Adds a given string to the beginning of a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign origin = request.origin -%}
+
+{{ product.url | prepend: origin }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/prepend)
+
+`,snippet:"prepend: '$1' $0",arguments:[{type:"string",required:!0}],returns:"string"},remove:{description:`Removes any instance of a substring inside a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ "I can't do it!" | remove: "'t" }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/remove)
+
+`,snippet:"remove: '$1' $0",arguments:[{type:"string",required:!0}],returns:"string"},remove_first:{description:`Removes the first instance of a substring inside a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ "I hate it when I accidentally spill my duplication potion accidentally!" | remove_first: ' accidentally' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/remove_first)
+
+`,snippet:"remove_first: $1",arguments:[{type:"string",required:!0}],returns:"string"},remove_last:{description:`Removes the last instance of a substring inside a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ "I hate it when I accidentally spill my duplication potion accidentally!" | remove_last: ' accidentally' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/remove_last)
+
+`,returns:"string",snippet:"remove_last: ${1}",arguments:[{type:"string",required:!0}]},replace:{description:`Replaces any instance of a substring inside a string with a given string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.handle | replace: '-', ' ' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/replace)
+
+`,snippet:"replace: $1, $2",arguments:[{type:"string",required:!0},{type:"string",required:!0}],returns:"string"},replace_first:{description:`Replaces the first instance of a substring inside a string with a given string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.handle | replace_first: '-', ' ' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/replace_first)
+
+`,snippet:"replace_first: $1, $2",arguments:[{type:"string",required:!0},{type:"string",required:!0}],returns:"string"},replace_last:{description:`Replaces the last instance of a substring inside a string with a given string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.handle | replace_last: '-', ' ' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/replace_last)
+
+`,returns:"string",snippet:"replace_last: $1, $2",arguments:[{type:"string",required:!0},{type:"string",required:!0}]},reverse:{description:`Reverses the order of the items in an array. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+Original order:
+{{ collection.products | map: 'title' | join: ', ' }}
+
+Reverse order:
+{{ collection.products | reverse | map: 'title' | join: ', ' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/reverse)
+
+`,returns:"array"},round:{description:`Rounds a number to the nearest integer. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 2.7 | round }}
+{{ 1.3 | round }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/round)
+
+`,arguments:[{type:"number",required:!1}],returns:"number"},rstrip:{description:`Strips all whitespace from the right of a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign text = '  Some potions create whitespace.      ' -%}
+
+"{{ text }}"
+"{{ text | rstrip }}"
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/rstrip)
+
+`,returns:"string"},size:{description:`Returns the size of a string or array. The size of a string is the number of characters that the string includes. The size of an array is the number of items
+in the array.
+
+#### Example
+
+\`\`\`liquid
+
+{{ collection.title | size }}
+{{ collection.products | size }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/size)
+
+`,returns:"number"},slice:{description:`Returns a substring or series of array items, starting at a given 0-based index. By default, the substring has a length of one character, and the array series has one array item. However, you can
+provide a second parameter to specify the number of characters or array items.
+
+#### Example
+
+\`\`\`liquid
+
+{{ collection.title | slice: 0 }}
+{{ collection.title | slice: 0, 5 }}
+
+{{ collection.all_tags | slice: 1, 2 | join: ', ' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/slice)
+
+`,snippet:"slice: $1 $0",arguments:[{type:"number",required:!0},{type:"number",required:!1}],returns:"string"},sort:{description:`Sorts the items in an array in case-sensitive alphabetical, or numerical, order. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% assign tags = collection.all_tags | sort %}
+
+{% for tag in tags -%}
+  {{ tag }}
+{%- endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sort)
+
+`,arguments:[{type:"number",required:!1}],returns:"array"},sort_natural:{description:`Sorts the items in an array in case-insensitive alphabetical order.
+
+> Caution:
+> You shouldn't use the \`sort_natural\` filter to sort numerical values. When comparing items an array, each item is converted to a
+> string, so sorting on numerical values can lead to unexpected results.
+
+#### Example
+
+\`\`\`liquid
+
+{% assign tags = collection.all_tags | sort_natural %}
+
+{% for tag in tags -%}
+  {{ tag }}
+{%- endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sort_natural)
+
+`,returns:"array"},split:{description:`Splits a string into an array of substrings based on a given separator. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign title_words = product.handle | split: '-' -%}
+
+{% for word in title_words -%}
+  {{ word }}
+{%- endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/split)
+
+`,snippet:"split: $1",arguments:[{type:"any",required:!0}],returns:"array"},strip:{description:`Strips all whitespace from the left and right of a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign text = '  Some potions create whitespace.      ' -%}
+
+"{{ text }}"
+"{{ text | strip }}"
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/strip)
+
+`,returns:"string"},strip_html:{description:`Strips all HTML tags from a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+<!-- With HTML -->
+{{ product.description }}
+
+<!-- HTML stripped -->
+{{ product.description | strip_html }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/strip_html)
+
+`,returns:"string"},strip_newlines:{description:`Strips all newline characters (line breaks) from a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+<!-- With newlines -->
+{{ product.description }}
+
+<!-- Newlines stripped -->
+{{ product.description | strip_newlines }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/strip_newlines)
+
+`,returns:"string"},times:{description:`Multiplies a number by a given number. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 2 | times: 2 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/times)
+
+`,snippet:"times: $1",arguments:[{type:"number",required:!0}],returns:"number"},truncate:{description:`Truncates a string down to a given number of characters. If the specified number of characters is less than the length of the string, then an ellipsis (\`...\`) is appended to
+the truncated string. The ellipsis is included in the character count of the truncated string.
+
+#### Example
+
+\`\`\`liquid
+
+{{ article.title | truncate: 15 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/truncate)
+
+`,snippet:"truncate: $1",arguments:[{type:"number",required:!0}],returns:"string"},truncatewords:{description:`Truncates a string down to a given number of words. If the specified number of words is less than the number of words in the string, then an ellipsis (\`...\`) is appended to
+the truncated string.
+
+> Caution:
+> HTML tags are treated as words, so you should strip any HTML from truncated content. If you don't strip HTML, then
+> closing HTML tags can be removed, which can result in unexpected behavior.
+
+#### Example
+
+\`\`\`liquid
+
+{{ article.content | strip_html | truncatewords: 15 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/truncatewords)
+
+`,snippet:"truncatewords: $1",arguments:[{type:"number",required:!0}],returns:"string"},uniq:{description:`Removes any duplicate items in an array. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% assign potion_array = 'invisibility, health, love, health, invisibility' | split: ', ' %}
+
+{{ potion_array | uniq | join: ', ' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/uniq)
+
+`,returns:"array"},upcase:{description:`Converts a string to all uppercase characters. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.title | upcase }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/upcase)
+
+`,returns:"string"},url_decode:{description:`Decodes any [percent-encoded](https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding) characters
+in a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'test%40test.com' | url_decode }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_decode)
+
+`,returns:"string"},url_encode:{description:`Converts any URL-unsafe characters in a string to the
+[percent-encoded](https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding) equivalent. 
+
+**Note**
+
+> Spaces are converted to a \`+\` character, instead of a percent-encoded character.
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'test@test.com' | url_encode }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_encode)
+
+`,returns:"string"},where:{description:`Filters an array to include only items with a specific property value. This requires you to provide both the property name and the associated value.
+
+#### Example
+
+\`\`\`liquid
+
+{% assign polina_products = collection.products | where: 'vendor', "Polina's Potent Potions" %}
+
+Products from Polina's Potent Potions:
+
+{% for product in polina_products -%}
+  - {{ product.title }}
+{%- endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/where)
+
+`,snippet:"where: ${1}, ${2}",arguments:[{type:"string",required:!0},{type:"string",required:!0}],returns:"array"},external_video_tag:{description:`Generates an HTML \`<iframe>\` tag containing the player for a given external video. The input for the \`external_video_tag\`
+filter can be either a [\`media\` object](https://shopify.dev/docs/api/liquid/objects/media) or [\`external_video_url\`](https://shopify.dev/docs/api/liquid/filters/external_video_url). If [alt text is set on the video](https://help.shopify.com/en/manual/products/product-media/add-alt-text), then it's
+included in the \`title\` attribute of the \`<iframe>\`. If no alt text is set, then the \`title\` attribute is set to the
+product title.
+
+#### Example
+
+\`\`\`liquid
+
+{% for media in product.media %}
+  {% if media.media_type == 'external_video' %}
+    {% if media.host == 'youtube' %}
+      {{ media | external_video_url: color: 'white' | external_video_tag }}
+    {% elsif media.host == 'vimeo' %}
+      {{ media | external_video_url: loop: '1', muted: '1' | external_video_tag }}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/external_video_tag)
+
+`,returns:"string"},external_video_url:{description:`Returns the URL for a given external video. Use this filter to specify parameters for the external video player generated
+by the [\`external_video_tag\` filter](https://shopify.dev/docs/api/liquid/filters/external_video_tag). 
+
+
+
+#### Example
+
+You can specify [YouTube](https://developers.google.com/youtube/player_parameters#Parameters) and [Vimeo](https://vimeo.zendesk.com/hc/en-us/articles/360001494447-Using-Player-Parameters) video parameters by adding a parameter that matches the parameter name, and the desired value.
+
+
+\`\`\`liquid
+
+{% for media in product.media %}
+  {% if media.media_type == 'external_video' %}
+    {% if media.host == 'youtube' %}
+      {{ media | external_video_url: color: 'white' | external_video_tag }}
+    {% elsif media.host == 'vimeo' %}
+      {{ media | external_video_url: loop: '1', muted: '1' | external_video_tag }}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/external_video_url)
+
+`,returns:"string",snippet:"external_video_url: $1: $2",arguments:[{type:"any",required:!0},{type:"any",required:!0}]},image_tag:{description:`Generates an HTML \`<img>\` tag for a given [\`image_url\`](https://shopify.dev/docs/api/liquid/filters/image_url). By default, \`width\` and \`height\` attributes are added to the \`<img>\` tag based on the dimensions and aspect ratio from
+the image URL. However, you can override these attributes with the [width](https://shopify.dev/docs/api/liquid/filters/image_tag#image_tag-width) and [height](https://shopify.dev/docs/api/liquid/filters/image_tag#image_tag-height)
+parameters. If only one parameter is provided, then only that attribute is added.
+
+
+
+**Note**
+
+> This filter automatically applies the \`object-position\` css style from the focal point value if set. For more
+> information, refer to the [\`focal_point\` object](https://shopify.dev/docs/api/liquid/objects/focal_point).
+
+#### Example
+
+\`\`\`liquid
+
+{{ product | image_url: width: 200 | image_tag }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/image_tag)
+
+`,returns:"string",snippet:"image_tag"},media_tag:{description:`Generates an appropriate HTML tag for a given media object. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% for media in product.media %}
+  {{- media | media_tag }}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/media_tag)
+
+`,returns:"string",snippet:"media_tag"},model_viewer_tag:{description:`Generates a [Google model viewer component](https://modelviewer.dev/) for a given 3D model. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% for media in product.media %}
+  {% if media.media_type == 'model' %}
+    {{ media | model_viewer_tag }}
+  {% endif %}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/model_viewer_tag)
+
+`,returns:"string",snippet:"model_viewer_tag"},video_tag:{description:`Generates an HTML \`<video>\` tag for a given video. 
+
+**Note**
+
+> When \`mp4\` videos are uploaded, Shopify generates an \`m3u8\` file as an additional [\`video_source\`](https://shopify.dev/docs/api/liquid/objects/video_source).
+> An \`m3u8\` file enables video players to leverage [HTTP live streaming (HLS)](https://developer.apple.com/streaming/),
+> resulting in an optimized video experience based on the user's internet connection. If loop is enabled, the HLS source is not used
+> in order to allow progessive download to cache the video.
+>
+> If the \`m3u8\` source isn't supported, then the player falls back to the \`mp4\` source.
+
+#### Example
+
+\`\`\`liquid
+
+{% for media in product.media %}
+  {% if media.media_type == 'video' %}
+    {{ media | video_tag }}
+  {% endif %}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/video_tag)
+
+`,returns:"string",snippet:"video_tag"},metafield_tag:{description:'Generates an HTML element to host the metafield data. The type of element that\'s generated differs depending on the\ntype of metafield. \n\n**Note**\n\n> The `metafield_tag` filter doesn\'t support list metafields other than `list.single_line_text_field`.\n\n#### Basic types\n\nMost metafield types return a simple HTML element:\n\n| Type | Element | Attributes |\n| --- | --- | --- |\n| `boolean` | `<span>` | `class="metafield-boolean"` |\n| `collection_reference` | `<a>` | `class="metafield-collection_reference"` |\n| `color` | `<span>` | `class="metafield-color"` |\n| `date` | `<time>` | `datetime="<the metafield value>"`<br><br>`class="metafield-date"`<br><br>Value is localized to the customer |\n| `date_time` | `<time>` | `datetime="<the metafield value>"`<br><br>`class="metafield-date"`<br><br>Value is localized to the customer |\n| `json` | `<script>` | `type="application/json"`<br><br>`class="metafield-json"` |\n| `money` | `<span>` | `class="metafield-money"`<br><br>Value is formatted using the store\'s [HTML with currency setting](https://help.shopify.com/manual/payments/currency-formatting) |\n| `multi_line_text_field` | `<span>` | `class="metafield-multi_line_text_field"` |\n| `number_decimal` | `<span>` | `class="metafield-number_decimal"` |\n| `number_integer` | `<span>` | `class="metafield-number_integer"` |\n| `page_reference` | `<a>` | `class="metafield-page_reference"` |\n| `product_reference` | `<a>` | `class="metafield-page_reference"` |\n| `rating` | `<span>` | `class="metafield-rating"` | |\n| `single_line_text_field` | `<span>` | `class="metafield-single_line_text_field"` |\n| `url` | `<a>` | `class="metafield-url"` |\n| `variant_reference` | `<a>` | `class="metafield-variant_reference"` |\n| `rich_text_field` | `<div>` | `class="metafield-rich_text_field"` |\n\n\n```liquid\n\n<!-- boolean -->\n{{ product.metafields.information.seasonal | metafield_tag }}\n\n<!-- collection_reference -->\n{{ product.metafields.information.related_collection | metafield_tag }}\n\n<!-- color -->\n{{ product.metafields.details.potion_color | metafield_tag }}\n\n<!-- date -->\n{{ product.metafields.information.expiry | metafield_tag }}\n\n<!-- date_time -->\n{{ product.metafields.information.brew_date | metafield_tag }}\n\n<!-- json -->\n{{ product.metafields.information.burn_temperature | metafield_tag }}\n\n<!-- money -->\n{{ product.metafields.details.price_per_ml | metafield_tag }}\n\n<!-- multi_line_text_field -->\n{{ product.metafields.information.shipping | metafield_tag }}\n\n<!-- number_decimal -->\n{{ product.metafields.information.salinity | metafield_tag }}\n\n<!-- number_integer -->\n{{ product.metafields.information.doses_per_day | metafield_tag }}\n\n<!-- page_reference -->\n{{ product.metafields.information.dosage | metafield_tag }}\n\n<!-- product_reference -->\n{{ product.metafields.information.related_product | metafield_tag }}\n\n<!-- rating -->\n{{ product.metafields.details.rating | metafield_tag }}\n\n<!-- single_line_text_field -->\n{{ product.metafields.information.directions | metafield_tag }}\n\n<!-- url -->\n{{ product.metafields.information.health | metafield_tag }}\n\n<!-- variant_reference -->\n{{ product.metafields.information.health | metafield_tag }}\n\n<!-- rich_text_field -->\n{{ product.metafields.information.rich_description | metafield_tag }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/metafield_tag)\n\n',returns:"string"},metafield_text:{description:"Generates a text version of the metafield data. The following outlines the output for each metafield type:\n\n| Metafield type | Output |\n| --- | --- |\n| `single_line_text_field` | The metafield text. |\n| `multi_line_text_field` | The metafield text. |\n| `page_reference` | The page title. |\n| `product_reference` | The product title. |\n| `collection_reference` | The collection title. |\n| `variant_reference` | The variant title. |\n| `file_reference` | The file URL. |\n| `number_integer` | The number. |\n| `number_decimal` | The number. |\n| `date` | The date. |\n| `date-time` | The date and time. |\n| `url` | The URL. |\n| `json` | The JSON. |\n| `boolean` | The boolean value. |\n| `color` | The color value. |\n| `weight` | The weight value and unit.<br><br>If the value is a decimal with more than two places, then it'll be formatted to have a precision of two with trailing zeros removed. |\n| `volume` | The volume value and unit.<br><br>If the value is a decimal with more than two places, then it'll be formatted to have a precision of two with trailing zeros removed. |\n| `dimension` | The dimension value and unit.<br><br>If the value is a decimal with more than two places, then it'll be formatted to have a precision of two with trailing zeros removed. |\n| `rating` | The rating value. |\n| `list.single_line_text_field` | The metafield values converted to a sentence.<br><br>For example, if you had the values `Toronto`, `Ottawa`, and `Vancouver`, then the output would be:<br><br>`Toronto, Ottawa, and Vancouver` |\n| `money` | The money value, formatted using the store's [**HTML with currency** setting](https://help.shopify.com/manual/payments/currency-formatting). |\n| `rich_text_field` | The rich text value as simple text. |\n\n#### Example\n\n```liquid\n\n{{ product.metafields.information.dosage | metafield_text }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/metafield_text)\n\n",returns:"string"},money:{description:`Formats a given price based on the store's [**HTML without currency** setting](https://help.shopify.com/manual/payments/currency-formatting). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.price | money }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/money)
+
+`,returns:"string"},money_with_currency:{description:`Formats a given price based on the store's [**HTML with currency** setting](https://help.shopify.com/manual/payments/currency-formatting). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.price | money_with_currency }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/money_with_currency)
+
+`,returns:"string"},money_without_currency:{description:`Formats a given price based on the store's [**HTML without currency** setting](https://help.shopify.com/manual/payments/currency-formatting), without the currency symbol. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.price | money_without_currency }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/money_without_currency)
+
+`,returns:"string"},money_without_trailing_zeros:{description:`Formats a given price based on the store's [**HTML without currency** setting](https://help.shopify.com/manual/payments/currency-formatting), excluding the decimal separator
+(either \`.\` or \`,\`) and trailing zeros.
+
+If the price has a non-zero decimal value, then the output is the same as the [\`money\` filter](https://shopify.dev/docs/api/liquid/filters#money). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.price | money_without_trailing_zeros }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/money_without_trailing_zeros)
+
+`,returns:"string"},default_pagination:{description:`Generates HTML for a set of links for paginated results. Must be applied to the [\`paginate\` object](https://shopify.dev/docs/api/liquid/objects/paginate). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% paginate collection.products by 2 %}
+  {% for product in collection.products %}
+    {{- product.title }}
+  {% endfor %}
+
+  {{- paginate | default_pagination -}}
+{% endpaginate %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/default_pagination)
+
+`,scope:"paginate",returns:"string"},login_button:{description:`Generates an HTML Button that enables a customer to follow the Shop in the Shop App Configure the storefront for Follow on Shop. [Learn more](https://help.shopify.com/manual/online-store/themes/customizing-themes/follow-on-shop)
+
+
+
+**Note**
+
+> The presence of the [Shop](https://shopify.dev/docs/api/liquid/objects/shop) object
+> is required for validation purposes only.
+
+
+
+**Note**
+
+> The \`action\` specified is always \`'follow'\`. If this parameter is not supplied the button will not render.
+
+\`\`\`liquid
+{{ shop | login_button: action: 'follow' }}
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/login_button)
+
+`,returns:"string",scope:"shop",snippet:"login_button: action: 'follow'",arguments:[{type:"parameter",requires:["action"],value:{action:{type:"string",value:"follow"}}}]},camelize:{description:`Converts a string to CamelCase. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'variable-name' | camelize }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/camelize)
+
+`,returns:"string"},handleize:{description:`Converts a string into a [handle](https://shopify.dev/docs/api/liquid/basics#handles). 
+
+**Note**
+
+> The \`handleize\` filter has an alias of \`handle\`.
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.title | handleize }}
+{{ product.title | handle }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/handleize)
+
+`,returns:"string"},url_escape:{description:`Escapes any URL-unsafe characters in a string. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ '<p>Health & Love potions</p>' | url_escape }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_escape)
+
+`,returns:"string"},url_param_escape:{description:`Escapes any characters in a string that are unsafe for URL parameters. The \`url_param_escape\` filter escapes the same characters as [\`url_escape\`](https://shopify.dev/docs/api/liquid/filters/url_escape), with the
+addition of \`&\`.
+
+#### Example
+
+\`\`\`liquid
+
+{{ '<p>Health & Love potions</p>' | url_param_escape }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/url_param_escape)
+
+`,returns:"string"},highlight_active_tag:{description:`Wraps a given tag in an HTML \`<span>\` tag, with a \`class\` attribute of \`active\`, if the tag is currently active. Only
+applies to collection tags. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% for tag in collection.all_tags %}
+  {{- tag | highlight_active_tag | link_to_tag: tag }}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/highlight_active_tag)
+
+`,scope:"collection",returns:"string"},link_to_add_tag:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to the current blog or collection, filtered to show
+only articles or products that have a given tag, as well as any currently active tags. 
+
+**Tip**
+
+> To learn more about filtering by tag, refer to [Filter articles by tag](https://shopify.dev/themes/architecture/templates/blog#filter-articles-by-tag)
+> or [Filter collections by tag](https://shopify.dev/themes/navigation-search/filtering/tag-filtering).
+
+#### Example
+
+\`\`\`liquid
+
+{% for tag in collection.all_tags %}
+  {%- if current_tags contains tag -%}
+    {{ tag }}
+  {%- else -%}
+    {{ tag | link_to_add_tag: tag }}
+  {%- endif -%}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_add_tag)
+
+`,snippet:"link_to_add_tag: $1",arguments:[{type:"string",required:!0}],returns:"string"},link_to_remove_tag:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to the current blog or collection, filtered to show
+only articles or products that have any currently active tags, except the provided tag. 
+
+**Tip**
+
+> To learn more about filtering by tag, refer to [Filter articles by tag](https://shopify.dev/themes/architecture/templates/blog#filter-articles-by-tag)
+> or [Filter collections by tag](https://shopify.dev/themes/navigation-search/filtering/tag-filtering).
+
+#### Example
+
+\`\`\`liquid
+
+{% for tag in collection.all_tags %}
+  {%- if current_tags contains tag -%}
+    {{ tag | link_to_remove_tag: tag }}
+  {%- else -%}
+    {{ tag | link_to_add_tag: tag }}
+  {%- endif -%}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_remove_tag)
+
+`,snippet:"link_to_remove_tag: $1",arguments:[{type:"string",required:!0}],returns:"string"},link_to_tag:{description:`Generates an HTML \`<a>\` tag with an \`href\` attribute linking to the current blog or collection, filtered to show
+only articles or products that have a given tag. 
+
+**Tip**
+
+> To learn more about filtering by tag, refer to [Filter articles by tag](https://shopify.dev/themes/architecture/templates/blog#filter-articles-by-tag)
+> or [Filter collections by tag](https://shopify.dev/themes/navigation-search/filtering/tag-filtering).
+
+#### Example
+
+\`\`\`liquid
+
+{% for tag in collection.all_tags %}
+  {{- tag | link_to_tag: tag }}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to_tag)
+
+`,snippet:"link_to_tag: $1",arguments:[{type:"string",required:!0}],returns:"string"},format_address:{description:`Generates an HTML address display, with each address component ordered according to the address's locale. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ shop.address | format_address }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/format_address)
+
+`,returns:"string"},highlight:{description:`Wraps all instances of a specific string, within a given string, with an HTML \`<strong>\` tag with a \`class\` attribute
+of \`highlight\`. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% for item in search.results %}
+  {% if item.object_type == 'product' %}
+    {{ item.description | highlight: search.terms }}
+  {% else %}
+    {{ item.content | highlight: search.terms }}
+  {% endif %}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/highlight)
+
+`,scope:"search",returns:"string",snippet:"highlight: ${1:search.terms}",arguments:[{type:"string",required:!0}]},pluralize:{description:`Outputs the singular or plural version of a string based on a given number.
+
+> Caution:
+> The \`pluralize\` filter applies English pluralization rules to determine which string to output. You shouldn't use this
+> filter on non-English strings because it could lead to incorrect pluralizations.
+
+#### Example
+
+\`\`\`liquid
+
+Cart item count: {{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/pluralize)
+
+`,returns:"string",snippet:"pluralize: $1, $2",arguments:[{type:"string",required:!0},{type:"string",required:!0}]},article_img_url:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
+
+The \`article_img_url\` filter has been replaced by [\`image_url\`](/docs/api/liquid/filters/image_url).
+
+---
+
+Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an [article's image](https://shopify.dev/docs/api/liquid/objects/article#article-image). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ article.image | article_img_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/article_img_url)
+
+`,returns:"string",deprecated:!0,snippet:"article_img_url"},asset_img_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an image in the
+[\`assets\` directory](https://shopify.dev/themes/architecture#assets) of a theme. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'red-and-black-bramble-berries.jpg' | asset_img_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/asset_img_url)
+
+`,arguments:[{type:"string",description:"The original image size",pattern:/\b(?:master|x?[1-9]\d{2,3}|[1-9]\d{2,3}x|[1-9]\d{2,3}x[1-9]\d{2,3})\b/,value:["master","2000x","1500x","1000x","500x","250x","1500x1500","1000x1000","500x500","250x250"]},{type:"parameter",value:{crop:{type:"string",description:"You can specify a crop parameter to make sure that the resulting image's dimensions match the requested dimensions. If the entire image won't fit in your requested dimensions, the crop parameter specifies what part of the image to show",pattern:/\b(?:top|center|bottom|right)\b/,value:["top","center","bottom","left","right"]},scale:{type:"number",description:"The scale parameter lets you specify the pixel density of the image",pattern:/\b[23]\b/,value:["2","3"]},format:{type:"string",description:"The format parameter lets you specify what file format to use for the displayed image.",pattern:/\bp?jpg\b/,value:[{value:"jpg"},{value:"pjpg",description:"pjpg is progressive JPEG. A browser loads a full-sized progressive JPEG with gradually increasing quality, instead of loading the full-quality image from top to bottom like a traditional JPEG."}]}}}],returns:"string",snippet:"asset_img_url"},asset_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a file in the
+[\`assets\` directory](https://shopify.dev/themes/architecture#assets) of a theme. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'cart.js' | asset_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/asset_url)
+
+`,returns:"string"},collection_img_url:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
+
+The \`collection_img_url\` filter has been replaced by [\`image_url\`](/docs/api/liquid/filters/image_url).
+
+---
+
+Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a [collection's image](https://shopify.dev/docs/api/liquid/objects/collection#collection-image). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ collection.image | collection_img_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/collection_img_url)
+
+`,returns:"string",deprecated:!0,snippet:"collection_img_url"},file_img_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an image from the
+[Files](https://www.shopify.com/admin/settings/files) page of the Shopify admin. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'potions-header.png' | file_img_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/file_img_url)
+
+`,snippet:"file_img_url",returns:"string"},file_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a file from the
+[Files](https://www.shopify.com/admin/settings/files) page of the Shopify admin. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'disclaimer.pdf' | file_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/file_url)
+
+`,returns:"string",snippet:"file_url"},global_asset_url:{description:"Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a global asset. Global assets are kept in a directory on Shopify's server. Using global assets can be faster than loading the resource\ndirectly.\n\nDepending on the resource type, you might need to use an additional filter to load the resource. The following table\noutlines which filter to use for specific resource types.\n\n| Resource type | Additional filter |\n| --- | --- |\n| JavaScript (`.js`) | [`script_tag`](https://shopify.dev/docs/api/liquid/filters/script_tag) |\n| CSS (`.css`) | [`stylesheet_tag`](https://shopify.dev/docs/api/liquid/filters/stylesheet_tag)  |\n\nThe following table outlines the available global assets:\n\n| Category | Assets |\n| --- | --- |\n| Firebug | - `firebug/firebug.css`<br>- `firebug/firebug.html`<br>- `firebug/firebug.js`<br>- `firebug/firebugx.js`<br>- `firebug/errorIcon.png`<br>- `firebug/infoIcon.png`<br>- `firebug/warningIcon.png` |\n| JavaScript libraries | - `controls.js`<br>- `dragdrop.js`<br>- `effects.js`<br>- `ga.js`<br>- `mootools.js` |\n| Lightbox | - `lightbox.css`<br>- `lightbox.js`<br><br>- `lightbox/v1/lightbox.css`<br>- `lightbox/v1/lightbox.js`<br><br>- `lightbox/v2/lightbox.css`<br>- `lightbox/v2/lightbox.js`<br>- `lightbox/v2/close.gif`<br>- `lightbox/v2/loading.gif`<br>- `lightbox/v2/overlay.png`<br>- `lightbox/v2/zoom-lg.gif`<br><br>- `lightbox/v204/lightbox.css`<br>- `lightbox/v204/lightbox.js`<br>- `lightbox/v204/bullet.gif`<br>- `lightbox/v204/close.gif`<br>- `lightbox/v204/closelabel.gif`<br>- `lightbox/v204/donatebutton.gif`<br>- `lightbox/v204/downloadicon.gif`<br>- `lightbox/v204/loading.gif`<br>- `lightbox/v204/nextlabel.png`<br>- `lightbox/v204/prevlabel.gif` |\n| Prototype | - `prototype.js`<br>- `prototype/1.5/prototype.js`<br>- `prototype/1.6/prototype.js` |\n| script.aculo.us | - `scriptaculous/1.8.2/scriptaculous.js`<br>- `scriptaculous/1.8.2/builder.js`<br>- `scriptaculous/1.8.2/controls.js`<br>- `scriptaculous/1.8.2/dragdrop.js`<br>- `scriptaculous/1.8.2/effects.js`<br>- `scriptaculous/1.8.2/slider.js`<br>- `scriptaculous/1.8.2/sound.js`<br>- `scriptaculous/1.8.2/unittest.js` |\n| Shopify | - `list-collection.css`<br>- `textile.css` |\n\n#### Example\n\n```liquid\n\n{{ 'lightbox.js' | global_asset_url | script_tag }}\n\n{{ 'lightbox.css' | global_asset_url | stylesheet_tag }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/global_asset_url)\n\n",returns:"string"},image_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an image. You can use the \`image_url\` filter on the following objects, as well as their \`src\` property:
+
+- [\`article\`](https://shopify.dev/docs/api/liquid/objects/article)
+- [\`collection\`](https://shopify.dev/docs/api/liquid/objects/collection)
+- [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
+- [\`line_item\`](https://shopify.dev/docs/api/liquid/objects/line_item)
+- [\`product\`](https://shopify.dev/docs/api/liquid/objects/product)
+- [\`variant\`](https://shopify.dev/docs/api/liquid/objects/variant)
+- [\`country\`](https://shopify.dev/docs/api/liquid/objects/country)
+
+> Caution:
+> You need to specify either a [\`width\`](https://shopify.dev/docs/api/liquid/filters/image_url#image_url-width) or
+> [\`height\`](https://shopify.dev/docs/api/liquid/filters/image_url#image_url-height) parameter. If neither are specified, then an error is returned.
+
+
+
+**Note**
+
+> Regardless of the specified dimensions, an image can never be resized to be larger than its original dimensions.
+
+#### Example
+
+\`\`\`liquid
+
+{{ product | image_url: width: 450 }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/image_url)
+
+`,returns:"string",objects:["article","collection","image","line_item","product","variant","country"],snippet:"image_url: ${1|width,height}: $2",arguments:[{type:"parameter",strict:!0,requires:/\b(?:width|height)\b/,value:{width:{type:"number",description:"Specify the width of the image up to a maximum of `5760px`. If only the width is specified, then the height is automatically calculated based on the image's dimensions.",pattern:[0,5760]},height:{type:"number",description:"Specify the height of the image up to a maximum of `5760px`. If only the height is specified, then the width is automatically calculated based on the image's dimensions.",pattern:[0,5760]},format:{type:"string",description:"Specify which file format to use for the image. The valid formats are `pjpg` and `jpg`.\n\nIt's not practical to convert a lossy image format, like `jpg`, to a lossless image format, like `png`, so Shopify can do only the following conversions:\n\n- `png` to `jpg`\n- `png` to `pjpg`\n- `jpg` to `pjpg`\n\n> **Note**\n>\n>Shopify automatically detects which image formats are supported by the client (e.g. `WebP`, `AVIF`, etc.) and selects a file format for optimal quality and file size. When a format is specified, Shopify takes into account the features (e.g. progressive, alpha channel) of the specified file format when making the final automatic format selection. To learn more, visit [https://cdn.shopify.com/](https://cdn.shopify.com/).",pattern:/\b(?:p?jpg)\b/,value:["jpg","pjpg"]},pad_color:{type:"string",pattern:/(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/,description:"Specify a color to pad the image if the specified dimensions result in an aspect ratio that differs from the original. The color must be in hexadecimal format (`hex3` or `hex6`)."},crop:{type:"string",description:"Specify which part of the image to show if the specified dimensions result in an aspect ratio that differs from the original. You can use the following values:\n\n- top\n- center\n- bottom\n- left\n- right\n- region\n\nThe default value is `center`.\n\nWhen using the `region` crop mode, the starting point for the crop is defined by `crop_left` and `crop_top` and extends to the `crop_width` and `crop_height`. Optionally, to resize the region extracted by the crop, use the width and height parameters.",value:["top","center","bottom","left","right","region"]},crop_left:{type:"number",pattern:[0,5760],when:[["crop","region"]]},crop_top:{type:"number",pattern:[0,5760],when:[["crop","region"]]},crop_width:{type:"number",pattern:[0,5760],when:[["crop","region"]]},crop_height:{type:"number",pattern:[0,5760],when:[["crop","region"]]}}}]},img_tag:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
+
+The \`img_tag\` filter has been replaced by [\`image_tag\`](/docs/api/liquid/filters/image_tag).
+
+---
+
+Generates an HTML \`<img>\` tag for a given image URL. You can also use the \`img_tag\` filter on the following objects:
+
+- [\`article\`](https://shopify.dev/docs/api/liquid/objects/article)
+- [\`collection\`](https://shopify.dev/docs/api/liquid/objects/collection)
+- [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
+- [\`line_item\`](https://shopify.dev/docs/api/liquid/objects/line_item)
+- [\`product\`](https://shopify.dev/docs/api/liquid/objects/product)
+- [\`variant\`](https://shopify.dev/docs/api/liquid/objects/variant)
+
+#### Example
+
+\`\`\`liquid
+
+{{ product | img_tag }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/img_tag)
+
+`,returns:"string",deprecated:!0,arguments:[{type:"string"},{type:"string"},{type:"string"}]},img_url:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
+
+The \`img_url\` filter has been replaced by [\`image_url\`](/docs/api/liquid/filters/image_url).
+
+---
+
+Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for an image. You can use the \`img_url\` filter on the following objects:
+
+- [\`article\`](https://shopify.dev/docs/api/liquid/objects/article)
+- [\`collection\`](https://shopify.dev/docs/api/liquid/objects/collection)
+- [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
+- [\`line_item\`](https://shopify.dev/docs/api/liquid/objects/line_item)
+- [\`product\`](https://shopify.dev/docs/api/liquid/objects/product)
+- [\`variant\`](https://shopify.dev/docs/api/liquid/objects/variant)
+
+#### Example
+
+\`\`\`liquid
+
+{{ product | img_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/img_url)
+
+`,snippet:"img_url: '${2:medium}'",returns:"string",deprecated:!0,objects:["article","collection","image","line_item","product","variant","country"]},link_to:{description:`Generates an HTML \`<a>\` tag. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'Shopify' | link_to: 'https://www.shopify.com' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/link_to)
+
+`,snippet:"link_to: $1",arguments:[{type:"string",required:!0,description:"The URL to link to."},{type:"parameter",strict:!1,description:`You can specify [HTML attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) by including a parameter that matches the attribute name, and the desired value.
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'Shopify' | link_to: 'https://www.shopify.com', class: 'link-class' }}
+
+\`\`\`
+
+`,value:{class:{type:"string"},id:{type:"string"},title:{type:"string"}}}],returns:"string"},payment_type_img_url:{description:`Returns the URL for an SVG image of a given [payment type](https://shopify.dev/docs/api/liquid/objects/shop#shop-enabled_payment_types). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% for type in shop.enabled_payment_types %}
+<img src="{{ type | payment_type_img_url }}" />
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_type_img_url)
+
+`,returns:"string"},payment_type_svg_tag:{description:`Generates an HTML \`<svg>\` tag for a given [payment type](https://shopify.dev/docs/api/liquid/objects/shop#shop-enabled_payment_types). 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{% for type in shop.enabled_payment_types -%}
+  {{ type | payment_type_svg_tag }}
+{% endfor %}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_type_svg_tag)
+
+`,returns:"string"},placeholder_svg_tag:{description:"Generates an HTML `<svg>` tag for a given placeholder name. Accepts the following placeholder names:\n\n- `collection-1`\n- `collection-2`\n- `collection-3`\n- `collection-4`\n- `collection-5`\n- `collection-6`\n- `image`\n- `lifestyle-1`\n- `lifestyle-2`\n- `product-1`\n- `product-2`\n- `product-3`\n- `product-4`\n- `product-5`\n- `product-6`\n\n#### Example\n\n```liquid\n\n{{ 'collection-1' | placeholder_svg_tag }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/placeholder_svg_tag)\n\n",returns:"string"},preload_tag:{description:`Generates an HTML \`<link>\` tag with a \`rel\` attribute of \`preload\` to prioritize loading a given Shopify-hosted asset.
+The asset URL is also added to the [Link header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)
+with a \`rel\` attribute of \`preload\`. You should use this filter sparingly. For example, consider preloading only resources necessary for rendering
+above-the-fold content. To learn more about preloading resources, refer to
+[Performance best practices for Shopify themes](https://shopify.dev/themes/best-practices/performance#preload-key-resources-defer-or-avoid-loading-others).
+
+
+
+**Tip**
+
+> If you want to preload a stylesheet, then use [\`stylesheet_tag\`](https://shopify.dev/docs/api/liquid/filters/stylesheet_tag). If you want to
+> preload an image, then use [\`image_tag\`](https://shopify.dev/docs/api/liquid/filters/image_tag).
+
+The input to this filter must be a URL from one of the following filters:
+
+- [\`asset_url\`](https://shopify.dev/docs/api/liquid/filters/asset_url)
+- [\`global_asset_url\`](https://shopify.dev/docs/api/liquid/filters/global_asset_url)
+- [\`shopify_asset_url\`](https://shopify.dev/docs/api/liquid/filters/shopify_asset_url)
+
+The \`preload_tag\` filter also requires an [\`as\` parameter](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-as)
+based on the kind of resource being preloaded.
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'cart.js' | asset_url | preload_tag: as: 'script' }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/preload_tag)
+
+`,returns:"string",snippet:"preload_tag: as: ${1|audio,document,embed,fetch,font,image,object,script,style,track,video,worker}",filters:["asset_url","global_asset_url","shopify_asset_url"],arguments:[{type:"parameter",strict:!1,requires:["as"],value:{as:{type:"string",value:["audio","document","embed","fetch","font","image","object","script","style","track","video","worker"]}}}]},product_img_url:{description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
+
+The \`product_img_url\` filter has been replaced by [\`image_url\`](/docs/api/liquid/filters/image_url).
+
+---
+
+Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a [product image](https://shopify.dev/docs/api/liquid/objects/product). This can be the product's \`featured_image\` or any image from the \`images\` array.
+
+#### Example
+
+\`\`\`liquid
+
+{{ product.featured_image | product_img_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/product_img_url)
+
+`,returns:"string",deprecated:!0,snippet:"product_img_url"},script_tag:{description:`Generates an HTML \`<script>\` tag for a given resource URL. The tag has a \`type\` attribute of \`text/javascript\`. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'cart.js' | asset_url | script_tag }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/script_tag)
+
+`,returns:"string"},shopify_asset_url:{description:`Returns the [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for a globally accessible Shopify asset. The following are the globally accessible Shopify assets:
+
+- \`option_selection.js\`
+- \`api.jquery.js\`
+- \`shopify_common.js\`
+- \`customer_area.js\`
+- \`currencies.js\`
+- \`customer.css\`
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'option_selection.js' | shopify_asset_url }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/shopify_asset_url)
+
+`,returns:"string"},stylesheet_tag:{description:`Generates an HTML \`<link>\` tag for a given resource URL. The tag has the following parameters:
+
+| Attribute | Value |
+| --- | --- |
+| \`rel\` | \`stylesheet\` |
+| \`type\` | \`text/css\` |
+| \`media\` | \`all\` | 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{{ 'base.css' | asset_url | stylesheet_tag }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/stylesheet_tag)
+
+`,returns:"string",snippet:"stylesheet_tag",arguments:[{type:"parameter",value:{preload:{type:"boolean",description:`Specify whether the stylesheet should be preloaded. When preload is set to true, a resource hint is sent as a Link header with a rel value of [preload](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/preload).
+
+This option doesn't affect the HTML link tag directly. You should use the preload parameter sparingly. For example, consider preloading only render-blocking stylesheets that are needed for initial functionality of the page, such as above-the-fold content. To learn more about resource hints in Shopify themes, refer to [Performance best practices for Shopify themes](https://shopify.dev/themes/best-practices/performance#preload-key-resources-defer-or-avoid-loading-others).`}}}]},weight_with_unit:{description:`Generates a formatted weight for a [\`variant\` object](https://shopify.dev/docs/api/liquid/objects/variant#variant-weight). The weight unit is
+set in the [general settings](https://www.shopify.com/admin/settings/general) in the Shopify admin. 
+
+
+
+#### Example
+
+\`\`\`liquid
+
+{%- assign variant = product.variants.first -%}
+
+{{ variant.weight | weight_with_unit }}
+
+\`\`\`
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/weight_with_unit)
+
+`,arguments:[{type:"string",required:!1,description:"The weight unit to use in place of the default weight unit."}],returns:"string"}};var ge=Z({},X,_);var P={};I(P,{filters:()=>be,objects:()=>ne,tags:()=>ve});var ee={relative_url:{description:"Prepend the baseurl value to the input. Useful if your site is hosted at a subpath rather than the root of the domain.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},absolute_url:{description:"Prepend the url and baseurl value to the input.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_xmlschema:{description:"Convert a Date into XML Schema (ISO 8601) format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_rfc822:{description:"Convert a Date into the RFC-822 format used for RSS feeds.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_string:{description:"Convert a date to short format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}}};var te={post_url:{type:"output",description:"Link to a post on your site, the post_url tag will generate the correct permalink URL for the post you specify",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#linking-to-posts"}},include:{type:"import",description:"The include tag allows you to include the content from another file stored in the _includes folder",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes"}},include_relative:{type:"import",description:"Include file fragments relative to the current file by using the include_relative tag",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes/#including-files-relative-to-another-file"}},link:{type:"output",filters:!0},highlight:{type:"raw",description:"Render a code block with syntax highlighting.",snippet:"highlight ${1}",filters:!1,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#code-snippet-highlighting"}}};var ne={site:{type:"object",description:"Site wide information + configuration settings from _config.yml. See below for details.",properties:{pages:{description:"A list of all Pages.",type:"array"},posts:{description:"A reverse chronological list of all Posts.",type:"array"},related_posts:{type:"array",description:"If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are the ten most recent posts. For high quality but slow to compute results, run the jekyll command with the --lsi (latent semantic indexing) option. "},time:{description:"The current time (when you run the jekyll command).",type:"string"}},reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/variables/#site-variables"}}};var be=Object.assign(Object.create(null),ee,U),ve=Object.assign(Object.create(null),te,_);var x=process.cwd(),v=`${f.default.gray("[")}SPECS${f.default.gray("]")} ${f.default.magenta("RUN")}`,{log:q}=console;qe();function qe(){q(`${v} ${f.default.magenta.bold("Building Shopify Specifications")}`),Te(),je(),q(`${v} ${f.default.magenta.bold("Finished Shopify Specifications")}`)}function _e(){let e=new Date,n=e.getFullYear(),s=e.getMonth(),i=e.getDay(),a=t=>({1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"})[t];return`${(t=>{let d=t%10,p=t%100;return t+(d===1&&p!==11?"st":d===2&&p!==12?"nd":d===3&&p!==13?"rd":"th")})(i)} ${a(s)} ${n}`}function Le(e,n,s){return`import { ${e} } from '../..'
+
+export const ${n}: ${e} = ${s}`}function m(e){return e=e.replace(/&lt;/g,"<"),e=e.replace(/&gt;/g,">"),e=e.replace(/&quot;/g,'"'),e=e.replace(/&#39;/g,"'"),e=e.replace(/&amp;/g,"&"),e}function z(e,n,s){let i=[],{name:a,summary:h=null,description:t=null,examples:d,deprecated:p,deprecation_reason:c}=n;if(p===!0&&(i.push("\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F"),c!==""?i.push(m(c),"---"):i.push("No deprecation reason has been provided by the Shopify team \u{1F921}.","---")),t!==""&&h!==null){let l=m(t).replace(/>\s(Tip|Note):/g,`
 
 **$1**
 `).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"),r=m(h).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");l.trimStart()[0]===">"?i.push(m(r),l):i.push(m(r)+" "+l)}else{let l="";if(t!==""&&(l=m(t).replace(/>\s(Tip|Note):/g,`
@@ -15836,7 +15836,7 @@ export const ${n}: ${e} = ${s}`}function m(e){return e=e.replace(/&lt;/g,"<"),e=
 **$1**
 `).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),h.length>0){let r=m(h).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");l.trimStart()[0]===">"?i.push(m(r),l):i.push(m(r)+" "+l)}i.push(l)}if(d.length>0){let[l]=d;l.name===""?i.push("#### Example"):i.push(`#### ${l.name}`),l.description!==""&&i.push(m(l.description)),l.raw_liquid!==""&&i.push("```liquid",m(l.raw_liquid),"```")}return i.push("---"),s?i.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${s}#${a})
 `):i.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${a})
-`),i.push(`Last Updated: ${Le()}`,`
+`),i.push(`Last Updated: ${_e()}`,`
 `),i.join(`
 
-`)}function Te(){q(`${v} ${f.default.magenta("Shopify Filters")}`);let e=(0,A.join)(x,"node_modules/.specs/data","filters.json"),n=S.default.readFileSync(e).toString(),s=JSON.parse(n),i={},a=T.filters;for(let t of s)if(!(t.name in a))if(i[t.name]={},i[t.name].description=F("filters",t),t.return_type[0].type==="string"?i[t.name].returns="string":t.return_type[0].type==="number"?i[t.name].returns="number":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="array"?i[t.name].returns="array":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="object"?i[t.name].returns="object":i[t.name].returns="any",t.deprecated===!0&&(i[t.name].deprecated=t.deprecated),t.parameters.length===0){let d=[],p=[],c=t.syntax.split(" ");if(c[2][c[2].length-1]===":"){d.push(c[2]);let l=0;for(let r of c.slice(3)){l=l+1;let u;r.slice(0,-1)==="string"?u="string":r.slice(0,-1)==="number"?u="number":r.slice(0,-1)==="boolean"?u="boolean":r.slice(0,-1)==="array"?u="array":r.slice(0,-1)==="boolean"?u="boolean":r.slice(0,-1)==="object"?u="object":u="any",r[r.length-1]===","?(u==="string"?d.push("'$"+l+"',"):d.push("$"+l+","),p.push({type:u,required:!0})):(u==="string"?d.push("'$"+l+"'"):d.push("$"+l+","),p.push({type:u,required:!0}))}i[t.name].snippet=d.join(" "),i[t.name].arguments=p}}else{let d=t.syntax.split(" "),p=[],c=[];p.push(d[2]),d.splice(0,3);for(let l=0;l<t.parameters.length;l++){let r=t.parameters[l];if(d.length>0&&d[0][d[0].length-1]===","){if("arguments"in i[t.name]&&i[t.name].arguments.length<0)for(let u=0;u<d.length;u++){let y;r.types[0]==="string"?y="string":r.types[0]==="number"?y="number":r.types[0]==="boolean"?y="boolean":r.types[0]==="array"?y="array":r.types[0]==="boolean"?y="boolean":r.types[0]==="object"?y="object":y="any";let w=d[u],k={type:y};r.required===!0&&(k.required=!0),r.description!==""&&(k.description=m(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),c.push(k),w[w.length-1]===","?y==="string"?p.push("'$"+(u+1)+"',"):p.push("$"+(u+1)+","):y==="string"?p.push("'$"+(u+1)+"'"):p.push("$"+(u+1))}}else if(Array.isArray(i[t.name].arguments)){c.length===0&&c.push({type:"parameter",value:{}}),c[c.length-1].type!=="parameter"&&c.push({type:"parameter",value:{}}),r.required&&p.push(`${r.name}:`,"${"+(l+1)+"}");let u;r.types[0]==="string"?u="string":r.types[0]==="number"?u="number":r.types[0]==="boolean"?u="boolean":r.types[0]==="array"?u="array":r.types[0]==="boolean"?u="boolean":r.types[0]==="object"?u="object":u="any",c[c.length-1].value[r.name]={type:u,required:r.required},r.description!==""&&(c[c.length-1].value[r.name].description=m(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"))}}p.length>0&&(p.length===1&&p[0][p[0].length-1]===":"&&(p[0]=p[0].slice(0,-1)),i[t.name].snippet=p.join(" ")),c.length>0&&(i[t.name].arguments=c)}Object.keys(i).length>0&&(q(v+f.default.bold.redBright("NEW FILTERS AVAILABLE")),Object.keys(i).forEach(t=>{q(v+f.default.white(t))}))}function Se(){q(`${v} ${f.default.magenta("Shopify Objects")}`);let e=(t,d)=>{let p={scope:null,items:null,type:"any",literal:null},c=t[0].type,l=t[0].array_value;c==="string"||c==="boolean"||c==="number"?p.type=c:c==="array"?(p.type=c,l==="string"||l==="boolean"||l==="number"?p.items=l:p.scope=l):c!==""&&d.some(r=>r.name===c)&&(p.type="object",p.scope=c);for(let{name:r}of t)r!==""&&(p.literal===null&&(p.literal=[]),p.literal.push(r));return p},n=(0,A.join)(x,"node_modules/.specs/data","objects.json"),s=S.default.readFileSync(n).toString(),i=JSON.parse(s),a={};for(let t of i){if(a[t.name]={summary:t.summary},t.access.global===!0&&(a[t.name].global=t.access.global),t.deprecated===!0&&(a[t.name].deprecated=t.deprecated),t.access.template.length>0&&(a[t.name].template=t.access.template),a[t.name].description=F("objects",t),t.return_type.length>0){let{type:d,scope:p,literal:c}=e(t.return_type,i);c!==null&&(a[t.name].literal=c),p!==null?(a[t.name].type=d,a[t.name].scope=p):a[t.name].type=d}if(t.properties.length>0){a[t.name].type="object",typeof a[t.name].properties!="object"&&(a[t.name].properties={});for(let d of t.properties)if(a[t.name].properties[d.name]={type:22},a[t.name].properties[d.name].description=F("objects",d,t.name),t.deprecated===!0&&(a[t.name].properties[d.name].deprecated=t.deprecated),d.return_type.length>0){let{type:p,scope:c,literal:l}=e(d.return_type,i);l!==null&&(a[t.name].properties[d.name].literal=l),c!==null?(a[t.name].properties[d.name].type=p,a[t.name].properties[d.name].scope=c):a[t.name].properties[d.name].type=p}}else a[t.name].type!=="array"&&(a[t.name].const=!0)}let h=JSON.stringify(a,null,2);q(v+f.default.cyan(` Writing objects JSON: ${f.default.whiteBright("data/liquid/shopify/objects.json")} `)),S.default.writeFileSync((0,A.join)(x,"data/liquid/shopify/objects.json"),h),q(v+f.default.cyan(` Writing objects DATA: ${f.default.whiteBright("src/liquid/data/shopify/objects.ts")} `)),S.default.writeFileSync((0,A.join)(x,"src/liquid/data/shopify/objects.ts"),je("Objects","objects",h))}
+`)}function je(){q(`${v} ${f.default.magenta("Shopify Filters")}`);let e=(0,S.join)(x,"node_modules/.specs/data","filters.json"),n=T.default.readFileSync(e).toString(),s=JSON.parse(n),i={},a=j.filters;for(let t of s)if(!(t.name in a))if(i[t.name]={},i[t.name].description=z("filters",t),t.return_type[0].type==="string"?i[t.name].returns="string":t.return_type[0].type==="number"?i[t.name].returns="number":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="array"?i[t.name].returns="array":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="object"?i[t.name].returns="object":i[t.name].returns="any",t.deprecated===!0&&(i[t.name].deprecated=t.deprecated),t.parameters.length===0){let d=[],p=[],c=t.syntax.split(" ");if(c[2][c[2].length-1]===":"){d.push(c[2]);let l=0;for(let r of c.slice(3)){l=l+1;let u;r.slice(0,-1)==="string"?u="string":r.slice(0,-1)==="number"?u="number":r.slice(0,-1)==="boolean"?u="boolean":r.slice(0,-1)==="array"?u="array":r.slice(0,-1)==="boolean"?u="boolean":r.slice(0,-1)==="object"?u="object":u="any",r[r.length-1]===","?(u==="string"?d.push("'$"+l+"',"):d.push("$"+l+","),p.push({type:u,required:!0})):(u==="string"?d.push("'$"+l+"'"):d.push("$"+l+","),p.push({type:u,required:!0}))}i[t.name].snippet=d.join(" "),i[t.name].arguments=p}}else{let d=t.syntax.split(" "),p=[],c=[];p.push(d[2]),d.splice(0,3);for(let l=0;l<t.parameters.length;l++){let r=t.parameters[l];if(d.length>0&&d[0][d[0].length-1]===","){if("arguments"in i[t.name]&&i[t.name].arguments.length<0)for(let u=0;u<d.length;u++){let y;r.types[0]==="string"?y="string":r.types[0]==="number"?y="number":r.types[0]==="boolean"?y="boolean":r.types[0]==="array"?y="array":r.types[0]==="boolean"?y="boolean":r.types[0]==="object"?y="object":y="any";let A=d[u],k={type:y};r.required===!0&&(k.required=!0),r.description!==""&&(k.description=m(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),c.push(k),A[A.length-1]===","?y==="string"?p.push("'$"+(u+1)+"',"):p.push("$"+(u+1)+","):y==="string"?p.push("'$"+(u+1)+"'"):p.push("$"+(u+1))}}else if(Array.isArray(i[t.name].arguments)){c.length===0&&c.push({type:"parameter",value:{}}),c[c.length-1].type!=="parameter"&&c.push({type:"parameter",value:{}}),r.required&&p.push(`${r.name}:`,"${"+(l+1)+"}");let u;r.types[0]==="string"?u="string":r.types[0]==="number"?u="number":r.types[0]==="boolean"?u="boolean":r.types[0]==="array"?u="array":r.types[0]==="boolean"?u="boolean":r.types[0]==="object"?u="object":u="any",c[c.length-1].value[r.name]={type:u,required:r.required},r.description!==""&&(c[c.length-1].value[r.name].description=m(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"))}}p.length>0&&(p.length===1&&p[0][p[0].length-1]===":"&&(p[0]=p[0].slice(0,-1)),i[t.name].snippet=p.join(" ")),c.length>0&&(i[t.name].arguments=c)}Object.keys(i).length>0&&(q(v+f.default.bold.redBright("NEW FILTERS AVAILABLE")),Object.keys(i).forEach(t=>{q(v+f.default.white(t))}))}function Te(){q(`${v} ${f.default.magenta("Shopify Objects")}`);let e=(t,d)=>{let p={scope:null,items:null,type:"any",literal:null},c=t[0].type,l=t[0].array_value;c==="string"||c==="boolean"||c==="number"?p.type=c:c==="array"?(p.type=c,l==="string"||l==="boolean"||l==="number"?p.items=l:p.scope=l):c!==""&&d.some(r=>r.name===c)&&(p.type="object",p.scope=c);for(let{name:r}of t)r!==""&&(p.literal===null&&(p.literal=[]),p.literal.push(r));return p},n=(0,S.join)(x,"node_modules/.specs/data","objects.json"),s=T.default.readFileSync(n).toString(),i=JSON.parse(s),a={};for(let t of i){if(a[t.name]={summary:t.summary},t.access.global===!0&&(a[t.name].global=t.access.global),t.deprecated===!0&&(a[t.name].deprecated=t.deprecated),t.access.template.length>0&&(a[t.name].template=t.access.template),a[t.name].description=z("objects",t),t.return_type.length>0){let{type:d,scope:p,literal:c}=e(t.return_type,i);c!==null&&(a[t.name].literal=c),p!==null?(a[t.name].type=d,a[t.name].scope=p):a[t.name].type=d}if(t.properties.length>0){a[t.name].type="object",typeof a[t.name].properties!="object"&&(a[t.name].properties={});for(let d of t.properties)if(a[t.name].properties[d.name]={type:22},a[t.name].properties[d.name].description=z("objects",d,t.name),t.deprecated===!0&&(a[t.name].properties[d.name].deprecated=t.deprecated),d.return_type.length>0){let{type:p,scope:c,literal:l}=e(d.return_type,i);l!==null&&(a[t.name].properties[d.name].literal=l),c!==null?(a[t.name].properties[d.name].type=p,a[t.name].properties[d.name].scope=c):a[t.name].properties[d.name].type=p}}else a[t.name].type!=="array"&&(a[t.name].const=!0)}let h=JSON.stringify(a,null,2);q(v+f.default.cyan(` Writing objects JSON: ${f.default.whiteBright("data/liquid/shopify/objects.json")} `)),T.default.writeFileSync((0,S.join)(x,"data/liquid/shopify/objects.json"),h),q(v+f.default.cyan(` Writing objects DATA: ${f.default.whiteBright("src/liquid/data/shopify/objects.ts")} `)),T.default.writeFileSync((0,S.join)(x,"src/liquid/data/shopify/objects.ts"),Le("Objects","objects",h))}

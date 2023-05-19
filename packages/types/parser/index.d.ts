@@ -761,7 +761,7 @@ declare class Node implements INode {
      *
      * - Lifted from vscode-html-languageservice
      */
-    getNodeAt(offset: number): this | INode;
+    getNodeAt(offset: number): INode | this;
 }
 
 declare class Embed extends Node {

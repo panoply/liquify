@@ -91,9 +91,8 @@ Several different projects exist within Liquify. Some projects have their own de
 
 - [liquify.dev](https://liquify.dev)
 - [æsthetic.dev](https://æsthetic.dev)
-- [moloko.js.org](https://moloko.js.org)
 - [papyrus.js.org](https://papyrus.js.org)
-- [syncify.js.org](https://syncify.myshopify.com)
+- syncify.js.org
 
 Refer to readme files contained within the **docs** sub-directory of each project for more information.
 
