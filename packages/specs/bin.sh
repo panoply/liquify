@@ -6,7 +6,7 @@ out=../..                     # CD DIRECTORY TO GET BACK TO ROOT
 # DOWNLOAD THE SHOPIFY DOCS PROJECT AND INSTALL
 #---------------------------------------------------------------------------
 
-# 1. REMOVE THE TEMP DIRECTORY WHERE ACE WILL BUILD
+# 1. REMOVE THE TEMP DIRECTORY WHERE  SHOPIFY DOCS WILL BUILD
 echo -e "\033[0;32mCleaning Shopify Documentation References\033[0m"
 rm -rf $dir
 
