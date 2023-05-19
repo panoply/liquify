@@ -30,19 +30,21 @@ export declare interface Filter extends Descriptions {
    */
   snippet?: string;
   /**
-   * Expects
+   * Objects
    *
-   * This infers the type in which the filter *expects* to recieve.
-   * We use this value to denote expectations, for example say a
-   * boolean was passed to a number filter, see below:
+   * This filter is only available to be used on the following objects.
    *
-   * @example
-   *
-   * {{ false | plus: 1 }}
-   *
-   * @default any
+   * @default undefined
    */
-  expects?: Types.Basic;
+  objects?: string[];
+  /**
+   * Filters
+   *
+   * This filter is only available when these filters are present
+   *
+   * @default undefined
+   */
+  filters?: string[];
   /**
    * Returns
    *
