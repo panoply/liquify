@@ -2,15 +2,6 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig([
   {
-    entry: [ './scripts/shopify-specs.ts' ],
-    outDir: 'bin',
-    clean: true,
-    bundle: true,
-    format: 'cjs',
-    name: 'specs',
-    onSuccess: 'node ./bin/shopify-specs.js && eslint ./src/liquid/data/shopify/*.ts --fix'
-  },
-  {
 
     entry: {
 
@@ -78,6 +69,15 @@ export default defineConfig([
         }
       )
     ]
+  },
+  {
+    entry: [ './scripts/shopify-specs.ts' ],
+    outDir: 'bin',
+    clean: true,
+    bundle: true,
+    format: 'cjs',
+    name: 'specs',
+    onSuccess: 'node ./bin/shopify-specs.js && eslint ./src/liquid/data/shopify/*.ts --fix'
   }
 ]);
 
@@ -99,7 +99,7 @@ function enums (value = {}) {
     renderChunk: (code:string) => {
 
       return {
-        code: code.replace(regexp, (m, type) => value[type])
+        code: code.replace(regexp, (_, type) => value[type])
       };
     }
   };
