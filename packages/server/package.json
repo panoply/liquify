@@ -1,6 +1,6 @@
 {
-  "name": "@liquify/liquid-language-server",
-  "version": "0.1.0",
+  "name": "liquid-language-server",
+  "version": "0.0.1-beta.1",
   "description": "Language Server for the Liquid Templating Language",
   "homepage": "https://liquify.dev",
   "author": {

@@ -1,8 +1,15 @@
-[![Coverage Status](https://coveralls.io/repos/github/panoply/vscode-liquid/badge.svg?branch=2.4.0)](https://coveralls.io/github/panoply/vscode-liquid?branch=2.4.0)
+<pre><code><strong>
+  💧 <i>WIP</i></strong>
+<p><i>
+  Liquid Language Server is still in development</i>
+</p>
+  → <a href="https://discord.gg/eUNEsxMuWt"><i>Join the Discord and collaborate on the project</i></a>
+
+</code></pre>
 
 # Liquid Language Server
 
-An [LSP](#) implementation for the Liquid template language.
+An [LSP](https://langserver.org/) implementation for the Liquid template language.
 
 ## Capabilities
 
@@ -17,16 +24,17 @@ An [LSP](#) implementation for the Liquid template language.
 ### Install
 
 ```
-<pnpm|npm|yarn> i @liquify/liquid-language-server
+<pnpm|npm|yarn> i liquid-language-server
 ```
 
 ## Specifications
 
-Server capabilities are made possible by providing the Language Server with Liquid specification variation reference data. The Liquid Language Server supports 3 specifications:
+Server capabilities are made possible by providing the Language Server with Liquid specification variation reference data. The Liquid Language Server supports 4 specifications:
 
-- [Liquid Standard](#)
-- [Liquid Shopify](#)
-- [Liquid Jekyll](#)
+- [Liquid Standard](https://github.com/panoply/liquify/tree/dev/packages/specs/src/liquid/data/standard)
+- [Liquid Shopify](https://github.com/panoply/liquify/tree/dev/packages/specs/src/liquid/data/shopify)
+- [Liquid Jekyll](https://github.com/panoply/liquify/tree/dev/packages/specs/src/liquid/data/jekyll)
+- [Liquid Eleventy](https://github.com/panoply/liquify/tree/dev/packages/specs/src/liquid/data/11ty)
 
 ## Parser
 
