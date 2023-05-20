@@ -48,9 +48,9 @@ These packages are the text editor [LSP](https://microsoft.github.io/language-se
 These packages are considered the _core_ modules of the project.
 
 - [@liquify/parser](https://github.com/panoply/liquify/tree/next/packages/parser)
-- [@liquify/server](https://github.com/panoply/liquify/tree/next/packages/server)
 - [@liquify/specs](https://github.com/panoply/liquify/tree/next/packages/specs)
 - [@liquify/schema](https://github.com/panoply/liquify/tree/next/packages/schema)
+- [liquid-language-server](https://github.com/panoply/liquify/tree/next/packages/server)
 
 > The `@liquify/schema` package is published as a sub-module.
 
