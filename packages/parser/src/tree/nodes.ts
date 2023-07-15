@@ -30,6 +30,7 @@ export class Node implements INode {
   public children: INode[] = [];
   public scope: {};
   public objects?: {};
+  public import?: string;
   public filters?: {};
   public arguments?: {};
   public singular: boolean;

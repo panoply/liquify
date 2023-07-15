@@ -23,8 +23,11 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@liquify/liquid-parser/*": [
-        "./node_modules/@liquify/liquid-parser/package/*"
+      "@liquify/parser/*": [
+        "./node_modules/@liquify/parser/package/*"
+      ],
+      "@liquify/specs/*": [
+        "./node_modules/@liquify/specs/package/*"
       ],
       "export": [
         "./src/export.ts"

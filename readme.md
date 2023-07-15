@@ -50,9 +50,14 @@ These packages are considered the _core_ modules of the project.
 - [@liquify/parser](https://github.com/panoply/liquify/tree/next/packages/parser)
 - [@liquify/specs](https://github.com/panoply/liquify/tree/next/packages/specs)
 - [@liquify/schema](https://github.com/panoply/liquify/tree/next/packages/schema)
-- [liquid-language-server](https://github.com/panoply/liquify/tree/next/packages/server)
 
 > The `@liquify/schema` package is published as a sub-module.
+
+## Language Server
+
+- [liquid-language-server](https://github.com/panoply/liquify/tree/next/packages/server)
+
+This is the Language Server module that provide text editor capabilities in vscode and other LSP supported environments.
 
 ## Config Packages
 

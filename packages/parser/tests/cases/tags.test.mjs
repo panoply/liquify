@@ -509,7 +509,24 @@ test('tablerow', t => {
 
 });
 
-test.todo('render');
+test('render', t => {
+
+  forSnippet(
+    [
+      liquid`{% render ''%}`
+
+    ]
+  )(function (sample) {
+
+    const ast = parser.parse(sample);
+
+    console.log(ast);
+    explore.errors(t)(ast);
+
+  });
+
+});
+
 test.todo('echo');
 test.todo('section');
 test.todo('include');

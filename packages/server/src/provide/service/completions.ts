@@ -1,5 +1,6 @@
 import { TextEdit } from 'vscode-languageserver';
-import { Position, CharCode, INode } from '@liquify/liquid-parser';
+import { Position, INode } from '@liquify/parser';
+import { CharCode } from '@liquify/parser/lexical';
 
 /* -------------------------------------------- */
 /* LOCAL SCOPES                                 */

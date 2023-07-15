@@ -1,10 +1,11 @@
 import * as specification from '../data';
 import { Tag, Filter, Argument, Value, Completions, ScopeMapValue, IObject } from '../';
+import { ArgumentParameter } from '../../types/arguments';
 import { CompletionItemKind, CompletionItem } from 'vscode-languageserver-types';
 import { Engine, Within, Errors, Type, Scopes } from '../../utils/enums';
 import { documentation, filterCompletions } from '../../utils/signature';
 import { isNumber } from '../../utils/typeof';
-import { keys, entries, isArray, last } from '../../utils/native';
+import { keys, entries, isArray, last, values } from '../../utils/native';
 import { inPattern, inValues, inRange } from '../../utils/finders';
 import { liquid } from './states';
 
@@ -551,7 +552,7 @@ export function setType (type: Type): boolean {
 }
 
 /* -------------------------------------------- */
-/* CHECKSUMS                                    */
+/* CHECKS                                       */
 /* -------------------------------------------- */
 
 /**
@@ -579,6 +580,53 @@ export function hasObject (name: string): boolean {
 export function hasProperty (name: string): boolean {
 
   return name in liquid.object?.properties;
+
+}
+
+/**
+ * Has Requires
+ *
+ * Queries the current filter to check whether or not
+ * a parameter argument has requires. Expects the node
+ * `filter` value.
+ *
+ * **DOES NOT MODIFY STATE**
+ */
+export function hasRequires (filters: { [offset: number]: number | string[]; }): boolean {
+
+  const argument = liquid.argument as ArgumentParameter;
+
+  if (argument.requires === undefined) return true;
+
+  const entries = values(filters).slice(1);
+
+  let p: number | string[];
+
+  if (isArray(argument.requires)) {
+
+    const required = { ...argument.requires };
+
+    let x = -1;
+
+    while (entries.length) {
+      if (required.length === 0) break;
+      p = entries.pop();
+      if (isNumber(p)) continue;
+      x = required.indexOf(p[0]);
+      if (x > -1) required.splice(x, 1);
+    }
+
+    return required.length === 0;
+
+  }
+
+  while (entries.length) {
+    p = entries.pop();
+    if (isNumber(p)) continue;
+    if (argument.requires.test(p[0])) return true;
+  }
+
+  return false;
 
 }
 
@@ -770,6 +818,10 @@ export function isWithin (token: Within): boolean {
  * Checks the requirement for arguments, argument parameters or
  * parameter values. When a parameter has a `keyword` type, then
  * this returns `true`.
+ *
+ * In some cases, like within filter specifications, a `requires`
+ * reference might be used. This check will also check for the existence
+ * of such a property.
  */
 export function isRequired (): boolean {
 
@@ -777,7 +829,10 @@ export function isRequired (): boolean {
     Within.Parameter && isType(Type.keyword)
   ) || (
     liquid.argument?.required === true
+  ) || (
+    (liquid.argument as ArgumentParameter)?.requires !== undefined
   );
+
 }
 
 /**

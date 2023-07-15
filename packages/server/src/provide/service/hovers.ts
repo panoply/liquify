@@ -1,4 +1,4 @@
-import { $, Position, IAST, INode, IObject, Regex } from '@liquify/liquid-parser';
+import { $, Position, IAST, INode, IObject, Regex } from '@liquify/parser';
 import { inRange } from 'lodash';
 
 /**

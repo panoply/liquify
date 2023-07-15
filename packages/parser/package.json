@@ -1,5 +1,5 @@
 {
-  "name": "@liquify/liquid-parser",
+  "name": "@liquify/parser",
   "version": "0.1.1-beta.1",
   "description": "An incremental parser for the Liquid Templating Language",
   "scripts": {

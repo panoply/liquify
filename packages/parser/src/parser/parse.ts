@@ -473,6 +473,15 @@ export function parse (document: AST): AST {
         break;
 
       /* -------------------------------------------- */
+      /* LIQUID IMPORT TAG                            */
+      /* -------------------------------------------- */
+      case TokenType.ImportFileString:
+
+        node.import = s.token;
+
+        break;
+
+      /* -------------------------------------------- */
       /* LIQUID OUTPUT TAG NAME                       */
       /* -------------------------------------------- */
       case TokenType.OutputTagName:
@@ -668,9 +677,21 @@ export function parse (document: AST): AST {
         break;
 
       /* -------------------------------------------- */
+      /* LIQUID FILTER ARGUMENT                       */
+      /* -------------------------------------------- */
+      case TokenType.FilterParameter:
+
+        filter = s.offset + 1;
+        node.filters[filter] = [ s.token ];
+
+        break;
+
+      /* -------------------------------------------- */
       /* LIQUID FILTER END                            */
       /* -------------------------------------------- */
       case TokenType.FilterEnd:
+
+        console.log(node);
 
         filter = NaN;
 

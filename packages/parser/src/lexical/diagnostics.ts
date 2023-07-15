@@ -236,6 +236,12 @@ export const Diagnostics: { [K in ParseError]: IDiagnostic } = {
     source: 'Liquid Parser',
     data: { doFormat: true }
   },
+  [ParseError.InvalidFileImport]: {
+    severity: ErrorLevel.Error,
+    message: 'Invalid file import passed. String is expected',
+    source: 'Liquid Parser',
+    data: { doFormat: true }
+  },
   [ParseError.InvalidNumberRange]: {
     severity: ErrorLevel.Error,
     message: 'Invalid number range provided',

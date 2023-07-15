@@ -595,6 +595,15 @@ function Scan (): number {
           }
         }
 
+        /* IMPORT TYPE ------------------------------ */
+
+        // Import type tags, eg: {% render %} or {% include %}
+        if (q.isTagType(Type.import)) {
+          state = ScanState.Import;
+          ender = ScanState.BeforeSingularTagClose;
+          return TokenType.SingularTagName;
+        }
+
         /* EMBEDDED TYPE ------------------------------ */
 
         // Embedded language type tags, eg: {% schema %}
@@ -1105,12 +1114,13 @@ function Scan (): number {
             return TokenType.ParseError;
           }
 
-          return Scan();
+          return TokenType.FilterParameter;
         }
 
         // If we get here, we have a keyword or variable
         state = ScanState.FilterSeparator;
         return TokenType.Variable;
+
       }
 
       // Missing filter argument, eg: {{ tag | filter: ^ }}
@@ -1460,7 +1470,7 @@ function Scan (): number {
 
         // Lets consult the specification to see if we know about the value
         // being assigned (ie: if it is a known object)
-        if (q.setObject(s.token)) {
+        if (q.setObject(s.token) || q.isVariable(s.token)) {
 
           cache = ScanState.VariableAssignment;
 
@@ -1481,6 +1491,8 @@ function Scan (): number {
 
       }
 
+      console.log(s.IsRegExp(r.TagCloseClear), q.isVariable(s.token), s.token);
+
       if (s.IsRegExp(r.TagCloseClear)) {
         state = ScanState.BeforeSingularTagClose;
         return Scan();
@@ -1491,6 +1503,42 @@ function Scan (): number {
         // We are dealing with an assign tag and we assume
         // that a filter exists after assignment
         state = ScanState.Filter;
+        return Scan();
+      }
+
+      state = ScanState.GotoTagEnd;
+      error = ParseError.InvalidCharacters;
+      return TokenType.ParseError;
+
+    /* -------------------------------------------- */
+    /* LIQUID VARIABLE IDENTIFIER TAG               */
+    /* -------------------------------------------- */
+    case ScanState.Import:
+
+      // Lets check for a string assignment, eg: {% render 'string' %}
+      if (s.IsRegExp(r.StringQuotations)) {
+
+        // We have a string assignment, we will pass to filter next
+        if (s.SkipQuotedString(true)) return TokenType.ImportFileString;
+
+        // If we get here we have an invalid string (missing quotation)
+        // We will also assert a cache to denote we are closing a singular tag
+        cache = ScanState.BeforeSingularTagClose;
+        state = ScanState.GotoTagEnd;
+        error = ParseError.MissingQuotation;
+        return TokenType.ParseError;
+
+      }
+
+      // Variable assignment name can be wild
+      if (s.IfRegExp(r.KeywordAlphaNumeric)) {
+        state = ScanState.GotoTagEnd;
+        error = ParseError.InvalidFileImport;
+        return TokenType.ParseError;
+      }
+
+      if (s.IsRegExp(r.TagCloseClear)) {
+        state = ScanState.BeforeSingularTagClose;
         return Scan();
       }
 

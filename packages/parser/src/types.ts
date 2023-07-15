@@ -175,7 +175,7 @@ export interface INode {
    * The var property holds the **keyword** value of an
    * assignment variable like that of `assign` and `capture`
    */
-  variable?: string ;
+  variable?: string;
   /**
    * Objects this tag contains. Each property contained on the
    * object is an offset location, the value of each property will either
@@ -213,6 +213,11 @@ export interface INode {
    * slight differences overall.
    */
   filters?: { [offset: number]: string[] | number }
+
+  /**
+   * The file reference of an import tag type like `{% render %}`
+   */
+  import?: string;
 
   /**
    * Tag scopes represent references and assignments. The information

@@ -183,6 +183,23 @@ export enum TokenType {
   ObjectTagName,
 
 
+  /* IMPORT TAG TYPES --------------------------- */
+
+  /**
+   * Import tag file
+   *
+   * _Similar to `output` types but references a **known** object in the spec_
+   *
+   * **EXAMPLES**
+   *
+   * - `{% render 'file'^`
+   * - `{% include 'file'^`
+   * - `{% section 'file'^`
+   * - `{% layout 'file'^`
+   */
+  ImportFileString,
+
+
   /* ITERATION ---------------------------------- */
 
   Iteration,

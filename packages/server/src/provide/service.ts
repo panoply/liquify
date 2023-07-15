@@ -2,22 +2,22 @@
 import { JSONLanguageService } from 'provide/modes/json';
 import { CSSLanguageService } from 'provide/modes/css';
 import { Services, Formatting } from 'types/server';
-import schema  from '@liquify/schema/shopify/sections.json';
+import schema from '@liquify/schema/shopify/sections.json';
 import * as Format from './service/format';
 import * as Hover from './service/hovers';
 import * as c from './service/completions';
 import * as Editing from './service/editing';
 import { $, p, q, liquid, Type } from '@liquify/specs';
-import { IAST, INode, Position } from '@liquify/liquid-parser'
-import { TokenType, TagType, CharCode, NodeKind } from '@liquify/liquid-parser/lexical'
-import * as regex from '@liquify/liquid-parser/regex'
+import { IAST, INode, Position } from '@liquify/parser';
+import { TokenType, TagType, CharCode, NodeKind } from '@liquify/parser/lexical';
+import * as regex from '@liquify/parser/regex';
 import {
   // Connection,
   TextEdit,
   CompletionTriggerKind,
   PublishDiagnosticsParams,
   // FormattingOptions,
-  SignatureHelpParams,
+  // SignatureHelpParams,
   SignatureHelpTriggerKind,
   SignatureHelpContext,
   SignatureHelp,
@@ -39,7 +39,7 @@ export class LiquidService {
 
   private edits: TextEdit[];
   private token: number = NaN;
-  private signature: number = 0;
+  // private signature: number = 0;
 
   private mode: {
     css: CSSLanguageService,

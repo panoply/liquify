@@ -1,6 +1,6 @@
 import esthetic from 'esthetic';
 import { Formatting } from 'types/server';
-import { IAST, TextDocument } from '@liquify/liquid-parser';
+import { IAST, TextDocument } from '@liquify/parser';
 import { TextEdit } from 'vscode-languageserver';
 
 /**

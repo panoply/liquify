@@ -633,7 +633,7 @@ export const enum ScanState {
   ImportPath,
 
   /**
-   * `{% rende 'dir/file' with^ %}`
+   * `{% render 'dir/file' with^ %}`
    *
    * ---
    *

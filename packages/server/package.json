@@ -25,8 +25,8 @@
     "import": "./package/server.es.js"
   },
   "bundledDependencies": [
-    "@liquify/liquid-language-specs",
-    "@liquify/liquid-parser",
+    "@liquify/specs",
+    "@liquify/parser",
     "vscode-css-languageservice",
     "vscode-json-languageservice",
     "vscode-languageserver",
@@ -48,7 +48,7 @@
     "concurrency": 5
   },
   "dependencies": {
-    "@liquify/liquid-parser": "workspace:^",
+    "@liquify/parser": "workspace:^",
     "@liquify/schema": "workspace:^",
     "@liquify/specs": "workspace:^",
     "@vscode/emmet-helper": "^2.8.8",
@@ -64,7 +64,7 @@
     "vscode-uri": "^3.0.7"
   },
   "devDependencies": {
-    "@liquify/types": "workspace:^",
+    "@liquify/types": "workspace:*",
     "@types/lodash": "^4.14.194",
     "ava": "^5.2.0",
     "dotenv": "^16.0.3",
@@ -87,11 +87,11 @@
     "format": "cjs",
     "noExternal": [
       "strip-json-comments",
-      "@liquify/prettify"
+      "esthetic"
     ],
     "external": [
       "@liquify/liquid-language-specs",
-      "@liquify/liquid-parser",
+      "@liquify/parser",
       "@vscode/emmet-helper",
       "indent-string",
       "lodash",

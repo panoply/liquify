@@ -107,6 +107,7 @@ export class AST {
    * encountered while scanning the document.
    */
   public errors: IDiagnostic[] = [];
+
   /**
    * Global scopes
    */
@@ -141,6 +142,14 @@ export class AST {
    * via the language server.
    */
   public changes: Array<{ range: Range, text: string }> = [];
+
+  /**
+   * Reference externally referenced files in the document.
+   * Imports account for `{% render %}` like tags.
+   */
+  public imports: {
+
+  };
 
   /**
    * Warning Reporter. Generates the warning diagnostics which are

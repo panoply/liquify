@@ -17,11 +17,11 @@
   "scripts": {
     "dev": "conc --restart-tries 2 -n \"AVA,ÆSTHETIC,SPECS,PARSER,VSCODE,SERVER\" -c \"#81D4FA,#FF69B,#9370DB,#1E90FF,#00CED1,#FF7F50\" \"pnpm @ava dev\" \"pnpm @esthetic dev\" \"pnpm @specs dev\" \"pnpm @parser dev\" \"pnpm @vscode dev\" \"pnpm @server dev\"",
     "build": "pnpm exec ./build.sh",
-    "@server": "pnpm run -F @liquify/liquid-language-server",
+    "@server": "pnpm run -F liquid-language-server",
     "@ava": "pnpm -r run -F @liquify/ava",
     "@esthetic": "pnpm run -F esthetic",
     "@highlight": "pnpm run -F @liquify/highlight",
-    "@parser": "pnpm run -F @liquify/liquid-parser",
+    "@parser": "pnpm run -F @liquify/parser",
     "@schema": "pnpm run -F @liquify/schema",
     "@specs": "pnpm run -F @liquify/specs",
     "@moloko": "pnpm run -F moloko",

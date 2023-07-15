@@ -323,6 +323,13 @@ export enum ParseError {
    */
   InvalidArgument,
 
+  /**
+   * Invalid File Import
+   *
+   * @example
+   * {% render object.prop %} // string import is required
+   */
+  InvalidFileImport,
 
   /**
    * Invalid Argument Number Range

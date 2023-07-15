@@ -1,5 +1,5 @@
-import { LiquidParser } from '@liquify/liquid-parser';
-import { Engine } from '@liquify/specs'
+import { LiquidParser } from '@liquify/parser';
+import { Engine } from '@liquify/specs';
 
 /**
  * Liquid Parser

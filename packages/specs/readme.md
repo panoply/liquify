@@ -126,6 +126,12 @@ q.setFilter(token: string): boolean;
 q.setObject(token: string): boolean;
 q.setVariable(token: string): boolean;
 
+// CHECKSUMS
+
+q.hasRequires(filters: NodeFilters): boolean;
+q.hasObject(name: string): boolean;
+q.hasProperty(name: string): boolean;
+
 // VALIDATORS
 
 q.isError(err: QueryError): boolean;

@@ -1,4 +1,4 @@
-import { IAST, INode } from '@liquify/liquid-parser';
+import { IAST, INode } from '@liquify/parser';
 import { LinkedEditingRanges } from 'vscode-languageserver';
 
 export function getEditRanges (document: IAST, node: INode): LinkedEditingRanges {

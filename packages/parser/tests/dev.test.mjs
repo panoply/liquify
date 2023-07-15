@@ -1,5 +1,5 @@
 import test from 'ava';
-import { dev } from '@liquify/ava/parser';
+import { dev, explore } from '@liquify/ava/parser';
 import { LiquidParser } from '@liquify/liquid-parser';
 
 export const parser = new LiquidParser({ engine: 'shopify' });
@@ -8,7 +8,7 @@ test('develop', async t => {
 
   await dev(t)(async text => {
 
-    const doc = parser.scan(
+    explore.ast = parser.scan(
       {
         languageId: 'liquid',
         version: 1,
@@ -18,13 +18,13 @@ test('develop', async t => {
     );
 
     // THIS IS AST
-    console.log(doc);
+    explore.stack([ 'filters', 'objects', 'arguments', 'scope' ]);
 
     // THIS IS A NODE
     // console.log(doc.getNodeAt(300));
 
     // THIS IS ERRORS
-    console.log(doc.errors);
+    console.log(explore.ast.errors);
 
     // THIS RETURNS THE STRING OF ERROR DETERMINED
     // console.log(doc.getText(doc.errors[0].range));
