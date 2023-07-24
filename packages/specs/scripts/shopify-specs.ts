@@ -487,10 +487,10 @@ function filters () {
 
   if (count.length > 0) {
 
-    log(PREFIX + ansis.bold.redBright('NEW FILTERS AVAILABLE'));
+    log(PREFIX + ' ' + ansis.bold.redBright('NEW FILTERS AVAILABLE'));
 
     Object.keys(spec).forEach(name => {
-      log(PREFIX + ansis.white(name));
+      log(PREFIX + ' ' + ansis.white(name));
     });
   }
 }
