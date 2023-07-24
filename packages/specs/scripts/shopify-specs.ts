@@ -39,10 +39,10 @@ function lastUpdate () {
   const date = new Date();
 
   const Y = date.getFullYear();
-  const M = date.getMonth();
+  const M = date.getMonth() + 1;
   const D = date.getDay();
 
-  const month = (i: number): string => ({
+  const month = (m: number): string => ({
     1: 'January',
     2: 'February',
     3: 'March',
@@ -55,7 +55,7 @@ function lastUpdate () {
     10: 'October',
     11: 'November',
     12: 'December'
-  }[i]);
+  }[m]);
 
   const day = (i: number): string => {
 
@@ -216,7 +216,7 @@ function documentation (type: 'filters' | 'objects', ref: ThemeDocs.Objects[0], 
   string.push('---');
 
   if (path) {
-    string.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${type}/${path}#${name})\n`);
+    string.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${type}/${path}/${name})\n`);
   } else {
     string.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${type}/${name})\n`);
   }
@@ -237,7 +237,7 @@ function documentation (type: 'filters' | 'objects', ref: ThemeDocs.Objects[0], 
  * intact. We only care about the descriptions and types provided.
  *
  * There is manual work involved in the filter specifications and this is
- * carried out after generation such value validations.
+ * carried out after generating such value validations.
  */
 function filters () {
 
@@ -602,7 +602,7 @@ function objects () {
 
       for (const prop of item.properties) {
 
-        // log(ansis.gray(`  - ${prop.name}`));
+        log(ansis.gray(`  - ${prop.name}`));
 
         spec[item.name].properties[prop.name] = { type: Type.unknown };
         spec[item.name].properties[prop.name].description = documentation('objects', prop, item.name);
