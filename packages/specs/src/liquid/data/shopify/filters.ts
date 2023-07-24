@@ -860,6 +860,9 @@ export const filters: Filters = {
     description: 'Strips all newline characters (line breaks) from a string. \n\n\n\n#### Example\n\n```liquid\n\n<!-- With newlines -->\n{{ product.description }}\n\n<!-- Newlines stripped -->\n{{ product.description | strip_newlines }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/strip_newlines)\n\n',
     returns: 'string'
   },
+  sum: {
+    description: "Returns the sum of all elements in an array. \n\n\n\n#### Example\n\n```liquid\n\n{% assign fibonacci = '0, 1, 1, 2, 3, 5' | split: ', ' %}\n\n{{ fibonacci | sum }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/sum)\n\n"
+  },
   times: {
     description: 'Multiplies a number by a given number. \n\n\n\n#### Example\n\n```liquid\n\n{{ 2 | times: 2 }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/times)\n\n',
     snippet: 'times: $1',
@@ -1201,7 +1204,7 @@ export const filters: Filters = {
       'variant',
       'country'
     ],
-    snippet: 'image_url: ${1|width,height}: $2',
+    snippet: 'image_url: ${1|width,height|}: $2',
     arguments: [
       {
         type: 'parameter',
@@ -1351,7 +1354,7 @@ export const filters: Filters = {
   preload_tag: {
     description: "Generates an HTML `<link>` tag with a `rel` attribute of `preload` to prioritize loading a given Shopify-hosted asset.\nThe asset URL is also added to the [Link header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)\nwith a `rel` attribute of `preload`. You should use this filter sparingly. For example, consider preloading only resources necessary for rendering\nabove-the-fold content. To learn more about preloading resources, refer to\n[Performance best practices for Shopify themes](https://shopify.dev/themes/best-practices/performance#preload-key-resources-defer-or-avoid-loading-others).\n\n\n\n**Tip**\n\n> If you want to preload a stylesheet, then use [`stylesheet_tag`](https://shopify.dev/docs/api/liquid/filters/stylesheet_tag). If you want to\n> preload an image, then use [`image_tag`](https://shopify.dev/docs/api/liquid/filters/image_tag).\n\nThe input to this filter must be a URL from one of the following filters:\n\n- [`asset_url`](https://shopify.dev/docs/api/liquid/filters/asset_url)\n- [`global_asset_url`](https://shopify.dev/docs/api/liquid/filters/global_asset_url)\n- [`shopify_asset_url`](https://shopify.dev/docs/api/liquid/filters/shopify_asset_url)\n\nThe `preload_tag` filter also requires an [`as` parameter](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-as)\nbased on the kind of resource being preloaded.\n\n#### Example\n\n```liquid\n\n{{ 'cart.js' | asset_url | preload_tag: as: 'script' }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/preload_tag)\n\n",
     returns: 'string',
-    snippet: 'preload_tag: as: ${1|audio,document,embed,fetch,font,image,object,script,style,track,video,worker}',
+    snippet: 'preload_tag: as: ${1|audio,document,embed,fetch,font,image,object,script,style,track,video,worker|}',
     filters: [
       'asset_url',
       'global_asset_url',
