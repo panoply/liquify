@@ -1376,6 +1376,10 @@ export const objects: Objects = {
         type: 'string',
         description: 'The name of the fulfillment service. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/tracking_company)\n\n\nLast Updated: 1st August 2023\n\n\n'
       },
+      tracking_numbers: {
+        type: 'array',
+        description: "An array of the fulfillment's tracking numbers. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/tracking_numbers)\n\n\nLast Updated: 1st August 2023\n\n\n"
+      },
       tracking_number: {
         type: 'string',
         description: "The fulfillment's tracking number. If there's no tracking number, then `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/tracking_number)\n\n\nLast Updated: 1st August 2023\n\n\n"
@@ -2123,6 +2127,9 @@ export const objects: Objects = {
   },
   metaobject: {
     summary: 'A metaobject entry, which includes the values for a set of [fields](/docs/api/liquid/objects#metafield).\nThe set is defined by the parent [`metaobject_definition`](/docs/api/liquid/objects#metaobject_definition).',
+    template: [
+      'metaobject'
+    ],
     description: "A metaobject entry, which includes the values for a set of [fields](https://shopify.dev/docs/api/liquid/objects#metafield).\nThe set is defined by the parent [`metaobject_definition`](https://shopify.dev/docs/api/liquid/objects#metaobject_definition). \n\n\n\n#### Access metaobjects individually\n\nThe access path for a metaobject consists of two layers:\n\n- type - The type of the parent metaobject definition.\n- handle - The unique [handle](/docs/api/liquid/basics#handles) of the metaobject.\n\nGiven this, you can access a metaobject with the following syntax:\n\n```liquid\n{{ shop.metaobjects.type.handle }}\n```\n\nYou can also use square bracket notation:\n\n```liquid\n{{ shop.metaobjects['type']['handle'] }}\n```\n\nA metaobjects's field values can be accessed using the key of the desired field:\n\n```liquid\n{{ shop.metaobjects.testimonials.homepage.title }}\n{{ shop.metaobjects['highlights']['washable'].image.value }}\n```\n\n> Note:\n> When the [`publishable` capability](/apps/data-extensions/metaobjects/capabilities) is enabled, a metaobject can only be accessed if its status is `active`.  If its status is `draft`, then the return value is `nil`.\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject)\n\n\nLast Updated: 1st August 2023\n\n\n",
     type: 'object',
     properties: {
@@ -2149,6 +2156,10 @@ export const objects: Objects = {
       id: {
         type: 'number',
         description: 'The ID of the metaobject. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_system/id)\n\n\nLast Updated: 1st August 2023\n\n\n'
+      },
+      url: {
+        type: 'string',
+        description: 'The relative URL of the metaobject. Only set for metaobjects that have the `online_store` capability.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_system/url)\n\n\nLast Updated: 1st August 2023\n\n\n'
       }
     }
   },
@@ -2241,6 +2252,7 @@ export const objects: Objects = {
           'declined',
           'fraud',
           'inventory',
+          'staff',
           'other'
         ]
       },
@@ -3947,7 +3959,7 @@ export const objects: Objects = {
         scope: 'transaction_payment_details'
       },
       amount: {
-        type: 'string',
+        type: 'number',
         description: "The amount of the transaction in the currency's subunit. The amount is in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/amount)\n\n\nLast Updated: 1st August 2023\n\n\n"
       },
       gateway_display_name: {
@@ -4226,7 +4238,7 @@ export const objects: Objects = {
         description: '⚠️ **DEPRECATED** ⚠️\n\nDeprecated because `unfulfilled` is always returned.\n\n---\n\nThe fulfillment status of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfillment_status)\n\n\nLast Updated: 1st August 2023\n\n\n'
       },
       gift_cards_amount: {
-        type: 'string',
+        type: 'number',
         description: "The amount of the checkout price paid in gift cards. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/gift_cards_amount)\n\n\nLast Updated: 1st August 2023\n\n\n"
       },
       id: {
