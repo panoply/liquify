@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-"use strict";var ie=Object.create;var R=Object.defineProperty;var oe=Object.getOwnPropertyDescriptor;var se=Object.getOwnPropertyNames;var ae=Object.getPrototypeOf,re=Object.prototype.hasOwnProperty;var z=(e,n)=>()=>(n||e((n={exports:{}}).exports,n),n.exports),A=(e,n)=>{for(var o in n)R(e,o,{get:n[o],enumerable:!0})},pe=(e,n,o,i)=>{if(n&&typeof n=="object"||typeof n=="function")for(let a of se(n))!re.call(e,a)&&a!==o&&R(e,a,{get:()=>n[a],enumerable:!(i=oe(n,a))||i.enumerable});return e};var H=(e,n,o)=>(o=e!=null?ie(ae(e)):{},pe(n||!e||!e.__esModule?R(o,"default",{value:e,enumerable:!0}):o,e));var W=z(U=>{"use strict";Object.defineProperty(U,"__esModule",{value:!0});var I=e=>{let[,n]=/([a-f\d]{3,6})/i.exec(e)||[],o=n?n.length:0;if(o===3)n=n[0]+n[0]+n[1]+n[1]+n[2]+n[2];else if(o!==6)return[0,0,0];let i=parseInt(n,16);return[i>>16&255,i>>8&255,255&i]},v=(e,n,o)=>n>e?n:e>o?o:e,de=(e,n,o)=>{if(n==="")return e;let i=e.indexOf(n);if(i<0)return e;let a=n.length,l=0,t="";for(;~i;)t+=e.slice(l,i)+o,l=i+a,i=e.indexOf(n,l);return t+e.slice(l)},N={open:"",close:""},s=(e=>{let n=y=>!!t.find(w=>y.test(w)),o=e||(typeof process!="undefined"?process:{}),{stdout:i,platform:a}=o,l=o.env||{},t=o.argv||[],p="FORCE_COLOR"in l,d=l.FORCE_COLOR,c=d==="true"||parseInt(d)>0,h="NO_COLOR"in l||p&&!c||n(/^-{1,2}(no-color|color=false|color=never)$/),r=p&&c||n(/^-{1,2}(color|color=true|color=always)$/),u=i&&"isTTY"in i&&/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(l.TERM);return!h&&(r||u||a==="win32"||"CI"in l)})()?(e,n)=>({open:`\x1B[${e}m`,close:`\x1B[${n}m`}):()=>N,E=(e,n,o)=>s(`38;2;${e};${n};${o}`,39),F=(e,n,o)=>s(`48;2;${e};${n};${o}`,49),ce={visible:N,reset:s(0,0),inverse:s(7,27),hidden:s(8,28),bold:s(1,22),dim:s(2,22),faint:s(2,22),italic:s(3,23),underline:s(4,24),doubleUnderline:s(21,24),strikethrough:s(9,29),strike:s(9,29),frame:s(51,54),encircle:s(52,54),overline:s(53,55),black:s(30,39),red:s(31,39),green:s(32,39),yellow:s(33,39),blue:s(34,39),magenta:s(35,39),cyan:s(36,39),white:s(37,39),grey:s(90,39),gray:s(90,39),blackBright:s(90,39),redBright:s(91,39),greenBright:s(92,39),yellowBright:s(93,39),blueBright:s(94,39),magentaBright:s(95,39),cyanBright:s(96,39),whiteBright:s(97,39),bgBlack:s(40,49),bgRed:s(41,49),bgGreen:s(42,49),bgYellow:s(43,49),bgBlue:s(44,49),bgMagenta:s(45,49),bgCyan:s(46,49),bgWhite:s(47,49),bgBlackBright:s(100,49),bgRedBright:s(101,49),bgGreenBright:s(102,49),bgYellowBright:s(103,49),bgBlueBright:s(104,49),bgMagentaBright:s(105,49),bgCyanBright:s(106,49),bgWhiteBright:s(107,49)},{defineProperty:he,defineProperties:le,setPrototypeOf:G}=Object,ue=/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,fe=/(\r*\n)/g,B=function(){let e=n=>n;return e.strip=n=>n.replace(ue,""),e.extend=n=>{for(let o in n){let i=n[o],a=i.open!=null?i:E(...I(i));b[o]={get(){let l=Y(this,a);return he(this,o,{value:l}),l}}}C=le(()=>{},b),G(e,C)},e.extend(ce),e},Y=({props:e},{open:n,close:o})=>{let i=(t,...p)=>me(t,p,i.props),a=n,l=o;return e!==void 0&&(a=e.openStack+n,l=o+e.closeStack),G(i,C),i.props={open:n,close:o,openStack:a,closeStack:l,parent:e},i.open=a,i.close=l,i},me=(e,n,o)=>{if(!e)return"";let{openStack:i,closeStack:a}=o,l=e.raw!=null?String.raw(e,...n):e;if(~l.indexOf("\x1B"))for(;o!==void 0;)l=de(l,o.close,o.open),o=o.parent;return~l.indexOf(`
-`)&&(l=l.replace(fe,a+"$1"+i)),i+l+a},M={ansi:e=>(n=>s(`38;5;${n}`,39))(v(e,0,255)),bgAnsi:e=>(n=>s(`48;5;${n}`,49))(v(e,0,255)),hex:e=>E(...I(e)),bgHex:e=>F(...I(e)),rgb:(e,n,o)=>E(v(e,0,255),v(n,0,255),v(o,0,255)),bgRgb:(e,n,o)=>F(v(e,0,255),v(n,0,255),v(o,0,255))},b={},C;for(let e in M)b[e]={get(){return(...n)=>Y(this,M[e](...n))}};b.ansi256=b.fg=b.ansi,b.bgAnsi256=b.bg=b.bgAnsi;var ye=new B;U.Ansis=B,U.default=ye});var V=z((Oe,D)=>{"use strict";var J=W();D.exports=J.default;D.exports.Ansis=J.Ansis});var T=H(require("fs")),S=require("path");var f=H(V());var L={};A(L,{filters:()=>O,tags:()=>_});var O={abs:{description:"Returns the absolute value of a number",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/abs/"}},append:{description:"Concatenates two strings and returns the concatenated value",snippet:"append: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/append/"}},at_least:{description:"Limits a number to a minimum value",snippet:"at_least: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_least/"}},at_most:{description:"Limits a number to a maximum value",snippet:"at_most: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_most/"}},capitalize:{description:"Makes the first character of a string capitalized",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/capitalize/"}},ceil:{description:"Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/ceil/"}},compact:{description:"Removes any `nil` values from an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/compact/"}},concat:{description:"Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",snippet:"concat: $1 $0",arguments:[{type:"array",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/concat/"}},date:{description:"Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby\u2019s `Time.parse`",snippet:"date: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/date/"}},default:{description:"Allows you to specify a fallback in case a value doesn\u2019t exist. default will show its value if the left side is `nil`, `false`, or `empty`",snippet:"default: '$1' $0",arguments:[{type:"any",required:!0},{type:"parameter",value:{allow_false:{type:"boolean",description:"To allow variables to return false instead of the default value, you can use the `allow_false` parameter."}}}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/default/"}},divided_by:{description:"Divides a number by another number",snippet:"divided_by: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/divided_by/"}},downcase:{description:"Makes each character in a string lowercase. It has no effect on strings which are already all lowercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/downcase/"}},escape:{description:"Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape/"}},escape_once:{description:"Escapes a string without changing existing escaped entities. It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape_once/"}},first:{description:"Returns the first item of an array.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/first/"}},floor:{description:"Rounds the input down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/floor/"}},join:{description:"Joins the elements of an array with the character passed as the parameter. The result is a single string.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/join/"},snippet:"join: '$1' $0",arguments:[{type:"string",required:!0}]},last:{description:"Gets the last element in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/last/"}},lstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the left side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/lstrip/"}},map:{description:"Accepts an array element\u2019s attribute as a parameter and creates a string out of each array element\u2019s value.",snippet:"map: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/map/"}},minus:{description:"Subtracts a number from another number",snippet:"minus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/minus/"}},modulo:{description:"Returns the remainder of a division operation",snippet:"modulo: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/modulo/"}},newline_to_br:{description:"Replaces every newline in a string with an HTML line break (`<br />`)",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/newline_to_br/"}},plus:{description:"Adds a number to another number",snippet:"plus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/plus/"}},prepend:{description:"Adds the specified string to the beginning of another string",snippet:"prepend: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/prepend/"}},remove:{description:"Removes every occurrence of the specified substring from a string",snippet:"remove: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove/"}},remove_first:{description:"Removes only the first occurrence of the specified substring from a string",snippet:"remove_first: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove_first/"}},replace:{description:"Replaces every occurrence of the first argument in a string with the second argument",snippet:"replace: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace/"}},replace_first:{description:"Replaces only the first occurrence of the first argument in a string with the second argument",snippet:"replace_first: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace_first/"}},reverse:{description:"Reverses the order of the items in an array. `reverse` cannot reverse a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/reverse/"}},round:{description:"Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/round/"}},rstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the right side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/rstrip/"}},size:{description:"Returns the number of characters in a string or the number of items in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/size/"}},slice:{description:"Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",snippet:"slice: $1 $0",arguments:[{type:"number",required:!0},{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/slice/"}},sort:{description:"Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array\u2019s items to use for sorting",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort/"}},sort_natural:{description:"Sorts items in an array in case-insensitive order",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort_natural/"}},split:{description:"Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",snippet:"split: $1",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/split/"}},strip:{description:"Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip/"}},strip_html:{description:"Removes any HTML tags from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_html/"}},strip_newlines:{description:"Removes any newline characters (line breaks) from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_newlines/"}},times:{description:"Multiplies a number by another number",snippet:"times: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/times/"}},truncate:{description:"Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (\u2026) is appended to the string and is included in the character count",snippet:"truncate: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncate/"}},truncatewords:{description:"Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (\u2026) is appended to the string",snippet:"truncatewords: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncatewords/"}},uniq:{description:"Removes any duplicate elements in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/uniq/"}},upcase:{description:"Makes each character in a string uppercase. It has no effect on strings which are already all uppercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/upcase/"}},url_decode:{description:"Decodes a string that has been encoded as a URL or by `url_encode`",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_decode/"}},url_encode:{description:"Converts any URL-unsafe characters in a string into percent-encoded characters",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_encode/"}},where:{description:"Creates an array including only the objects with a given property value, or any truthy value by default",snippet:"where: '$1'$0",arguments:[{type:"string",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/where/"}}};var _={"#":{type:"comment",description:"Prevents an expression from being rendered or output.",snippet:"$1",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.dev/api/liquid/tags#inline_comment"}},assign:{type:"variable",description:"Creates a new variable.",snippet:"$1 = $2",filters:!0,singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#assign"}},break:{type:"iteration",singleton:!0,parents:["for","tablerow"],description:"Causes the loop to stop iterating when it encounters the break tag.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#break"}},capture:{type:"variable",filters:!1,description:"Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through `{% capture %}` are strings.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#capture"}},case:{type:"control",description:"Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",children:["when","else"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#case"}},comment:{type:"comment",description:"Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/comment/"}},continue:{type:"iteration",description:"Causes the loop to skip the current iteration when it encounters the continue tag.",singleton:!0,parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#continue"}},cycle:{type:"iteration",singleton:!0,description:"Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#cycle"}},decrement:{description:"Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#decrement"}},echo:{type:"output",description:"Using the echo tag is the same as wrapping an expression in curly brackets ({{ and }}). However, unlike the curly bracket method, you can use the echo tag inside liquid tags.",singleton:!0,filters:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#echo"}},else:{type:"control",description:"Add condition within an if or unless block.",singleton:!0,parents:["if","elsif","case","unless","when","for"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},elsif:{description:"Adds more conditions within an if or unless block.",singleton:!0,type:"control",parents:["if"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},for:{description:"Repeatedly executes a block of code.",type:"iteration",snippet:"$1 in $2",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#for"},parameters:{offset:{type:"number",description:"Begins the loop at the specified index"},limit:{type:"number",description:"Limits the loop to the specified number of iterations"},reversed:{type:"keyword",description:"Reverses the order of the loop. Note that this flag\u2019s spelling is different from the filter reverse"}}},if:{description:"Executes a block of code only if a certain condition is met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#if"}},increment:{description:"Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#increment"}},liquid:{description:"Encloses multiple tags within one set of delimiters, to allow writing Liquid logic more concisely.",type:"unknown",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#liquid"}},raw:{type:"raw",description:"Allows output of Liquid code on a page without being parsed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/raw/"}},render:{description:`Insert the rendered content of another template within the current template.
+"use strict";var oe=Object.create;var R=Object.defineProperty;var se=Object.getOwnPropertyDescriptor;var ae=Object.getOwnPropertyNames;var re=Object.getPrototypeOf,pe=Object.prototype.hasOwnProperty;var z=(e,t)=>()=>(t||e((t={exports:{}}).exports,t),t.exports),A=(e,t)=>{for(var s in t)R(e,s,{get:t[s],enumerable:!0})},de=(e,t,s,n)=>{if(t&&typeof t=="object"||typeof t=="function")for(let r of ae(t))!pe.call(e,r)&&r!==s&&R(e,r,{get:()=>t[r],enumerable:!(n=se(t,r))||n.enumerable});return e};var J=(e,t,s)=>(s=e!=null?oe(re(e)):{},de(t||!e||!e.__esModule?R(s,"default",{value:e,enumerable:!0}):s,e));var G=z(O=>{"use strict";Object.defineProperty(O,"__esModule",{value:!0});var I=e=>{let[,t]=/([a-f\d]{3,6})/i.exec(e)||[],s=t?t.length:0;if(s===3)t=t[0]+t[0]+t[1]+t[1]+t[2]+t[2];else if(s!==6)return[0,0,0];let n=parseInt(t,16);return[n>>16&255,n>>8&255,255&n]},_=(e,t,s)=>t>e?t:e>s?s:e,ce=(e,t,s)=>{if(t==="")return e;let n=e.indexOf(t);if(n<0)return e;let r=t.length,h=0,o="";for(;~n;)o+=e.slice(h,n)+s,h=n+r,n=e.indexOf(t,h);return o+e.slice(h)},M={open:"",close:""},a=(e=>{let t=u=>!!o.find(b=>u.test(b)),s=e||(typeof process!="undefined"?process:{}),{stdout:n,platform:r}=s,h=s.env||{},o=s.argv||[],i="FORCE_COLOR"in h,p=h.FORCE_COLOR,c=p==="true"||parseInt(p)>0,d="NO_COLOR"in h||i&&!c||t(/^-{1,2}(no-color|color=false|color=never)$/),f=i&&c||t(/^-{1,2}(color|color=true|color=always)$/),l=n&&"isTTY"in n&&/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(h.TERM);return!d&&(f||l||r==="win32"||"CI"in h)})()?(e,t)=>({open:`\x1B[${e}m`,close:`\x1B[${t}m`}):()=>M,E=(e,t,s)=>a(`38;2;${e};${t};${s}`,39),Y=(e,t,s)=>a(`48;2;${e};${t};${s}`,49),he={visible:M,reset:a(0,0),inverse:a(7,27),hidden:a(8,28),bold:a(1,22),dim:a(2,22),faint:a(2,22),italic:a(3,23),underline:a(4,24),doubleUnderline:a(21,24),strikethrough:a(9,29),strike:a(9,29),frame:a(51,54),encircle:a(52,54),overline:a(53,55),black:a(30,39),red:a(31,39),green:a(32,39),yellow:a(33,39),blue:a(34,39),magenta:a(35,39),cyan:a(36,39),white:a(37,39),grey:a(90,39),gray:a(90,39),blackBright:a(90,39),redBright:a(91,39),greenBright:a(92,39),yellowBright:a(93,39),blueBright:a(94,39),magentaBright:a(95,39),cyanBright:a(96,39),whiteBright:a(97,39),bgBlack:a(40,49),bgRed:a(41,49),bgGreen:a(42,49),bgYellow:a(43,49),bgBlue:a(44,49),bgMagenta:a(45,49),bgCyan:a(46,49),bgWhite:a(47,49),bgBlackBright:a(100,49),bgRedBright:a(101,49),bgGreenBright:a(102,49),bgYellowBright:a(103,49),bgBlueBright:a(104,49),bgMagentaBright:a(105,49),bgCyanBright:a(106,49),bgWhiteBright:a(107,49)},{defineProperty:le,defineProperties:ue,setPrototypeOf:N}=Object,fe=/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,me=/(\r*\n)/g,W=function(){let e=t=>t;return e.strip=t=>t.replace(fe,""),e.extend=t=>{for(let s in t){let n=t[s],r=n.open!=null?n:E(...I(n));v[s]={get(){let h=B(this,r);return le(this,s,{value:h}),h}}}F=ue(()=>{},v),N(e,F)},e.extend(he),e},B=({props:e},{open:t,close:s})=>{let n=(o,...i)=>ye(o,i,n.props),r=t,h=s;return e!==void 0&&(r=e.openStack+t,h=s+e.closeStack),N(n,F),n.props={open:t,close:s,openStack:r,closeStack:h,parent:e},n.open=r,n.close=h,n},ye=(e,t,s)=>{if(!e)return"";let{openStack:n,closeStack:r}=s,h=e.raw!=null?String.raw(e,...t):e;if(~h.indexOf("\x1B"))for(;s!==void 0;)h=ce(h,s.close,s.open),s=s.parent;return~h.indexOf(`
+`)&&(h=h.replace(me,r+"$1"+n)),n+h+r},H={ansi:e=>(t=>a(`38;5;${t}`,39))(_(e,0,255)),bgAnsi:e=>(t=>a(`48;5;${t}`,49))(_(e,0,255)),hex:e=>E(...I(e)),bgHex:e=>Y(...I(e)),rgb:(e,t,s)=>E(_(e,0,255),_(t,0,255),_(s,0,255)),bgRgb:(e,t,s)=>Y(_(e,0,255),_(t,0,255),_(s,0,255))},v={},F;for(let e in H)v[e]={get(){return(...t)=>B(this,H[e](...t))}};v.ansi256=v.fg=v.ansi,v.bgAnsi256=v.bg=v.bgAnsi;var be=new W;O.Ansis=W,O.default=be});var V=z((xe,P)=>{"use strict";var K=G();P.exports=K.default;P.exports.Ansis=K.Ansis});var j=J(require("fs")),T=require("path");var m=J(V());var S={};A(S,{filters:()=>x,tags:()=>L});var x={abs:{description:"Returns the absolute value of a number",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/abs/"}},append:{description:"Concatenates two strings and returns the concatenated value",snippet:"append: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/append/"}},at_least:{description:"Limits a number to a minimum value",snippet:"at_least: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_least/"}},at_most:{description:"Limits a number to a maximum value",snippet:"at_most: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_most/"}},capitalize:{description:"Makes the first character of a string capitalized",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/capitalize/"}},ceil:{description:"Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/ceil/"}},compact:{description:"Removes any `nil` values from an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/compact/"}},concat:{description:"Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",snippet:"concat: $1 $0",arguments:[{type:"array",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/concat/"}},date:{description:"Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby\u2019s `Time.parse`",snippet:"date: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/date/"}},default:{description:"Allows you to specify a fallback in case a value doesn\u2019t exist. default will show its value if the left side is `nil`, `false`, or `empty`",snippet:"default: '$1' $0",arguments:[{type:"any",required:!0},{type:"parameter",value:{allow_false:{type:"boolean",description:"To allow variables to return false instead of the default value, you can use the `allow_false` parameter."}}}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/default/"}},divided_by:{description:"Divides a number by another number",snippet:"divided_by: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/divided_by/"}},downcase:{description:"Makes each character in a string lowercase. It has no effect on strings which are already all lowercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/downcase/"}},escape:{description:"Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape/"}},escape_once:{description:"Escapes a string without changing existing escaped entities. It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape_once/"}},first:{description:"Returns the first item of an array.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/first/"}},floor:{description:"Rounds the input down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/floor/"}},join:{description:"Joins the elements of an array with the character passed as the parameter. The result is a single string.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/join/"},snippet:"join: '$1' $0",arguments:[{type:"string",required:!0}]},last:{description:"Gets the last element in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/last/"}},lstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the left side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/lstrip/"}},map:{description:"Accepts an array element\u2019s attribute as a parameter and creates a string out of each array element\u2019s value.",snippet:"map: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/map/"}},minus:{description:"Subtracts a number from another number",snippet:"minus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/minus/"}},modulo:{description:"Returns the remainder of a division operation",snippet:"modulo: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/modulo/"}},newline_to_br:{description:"Replaces every newline in a string with an HTML line break (`<br />`)",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/newline_to_br/"}},plus:{description:"Adds a number to another number",snippet:"plus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/plus/"}},prepend:{description:"Adds the specified string to the beginning of another string",snippet:"prepend: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/prepend/"}},remove:{description:"Removes every occurrence of the specified substring from a string",snippet:"remove: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove/"}},remove_first:{description:"Removes only the first occurrence of the specified substring from a string",snippet:"remove_first: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove_first/"}},replace:{description:"Replaces every occurrence of the first argument in a string with the second argument",snippet:"replace: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace/"}},replace_first:{description:"Replaces only the first occurrence of the first argument in a string with the second argument",snippet:"replace_first: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace_first/"}},reverse:{description:"Reverses the order of the items in an array. `reverse` cannot reverse a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/reverse/"}},round:{description:"Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/round/"}},rstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the right side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/rstrip/"}},size:{description:"Returns the number of characters in a string or the number of items in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/size/"}},slice:{description:"Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",snippet:"slice: $1 $0",arguments:[{type:"number",required:!0},{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/slice/"}},sort:{description:"Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array\u2019s items to use for sorting",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort/"}},sort_natural:{description:"Sorts items in an array in case-insensitive order",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort_natural/"}},split:{description:"Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",snippet:"split: $1",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/split/"}},strip:{description:"Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip/"}},strip_html:{description:"Removes any HTML tags from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_html/"}},strip_newlines:{description:"Removes any newline characters (line breaks) from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_newlines/"}},times:{description:"Multiplies a number by another number",snippet:"times: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/times/"}},truncate:{description:"Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (\u2026) is appended to the string and is included in the character count",snippet:"truncate: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncate/"}},truncatewords:{description:"Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (\u2026) is appended to the string",snippet:"truncatewords: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncatewords/"}},uniq:{description:"Removes any duplicate elements in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/uniq/"}},upcase:{description:"Makes each character in a string uppercase. It has no effect on strings which are already all uppercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/upcase/"}},url_decode:{description:"Decodes a string that has been encoded as a URL or by `url_encode`",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_decode/"}},url_encode:{description:"Converts any URL-unsafe characters in a string into percent-encoded characters",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_encode/"}},where:{description:"Creates an array including only the objects with a given property value, or any truthy value by default",snippet:"where: '$1'$0",arguments:[{type:"string",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/where/"}}};var L={"#":{type:"comment",description:"Prevents an expression from being rendered or output.",snippet:"$1",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.dev/api/liquid/tags#inline_comment"}},assign:{type:"variable",description:"Creates a new variable.",snippet:"$1 = $2",filters:!0,singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#assign"}},break:{type:"iteration",singleton:!0,parents:["for","tablerow"],description:"Causes the loop to stop iterating when it encounters the break tag.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#break"}},capture:{type:"variable",filters:!1,description:"Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through `{% capture %}` are strings.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#capture"}},case:{type:"control",description:"Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",children:["when","else"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#case"}},comment:{type:"comment",description:"Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/comment/"}},continue:{type:"iteration",description:"Causes the loop to skip the current iteration when it encounters the continue tag.",singleton:!0,parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#continue"}},cycle:{type:"iteration",singleton:!0,description:"Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#cycle"}},decrement:{description:"Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#decrement"}},echo:{type:"output",description:"Using the echo tag is the same as wrapping an expression in curly brackets ({{ and }}). However, unlike the curly bracket method, you can use the echo tag inside liquid tags.",singleton:!0,filters:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#echo"}},else:{type:"control",description:"Add condition within an if or unless block.",singleton:!0,parents:["if","elsif","case","unless","when","for"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},elsif:{description:"Adds more conditions within an if or unless block.",singleton:!0,type:"control",parents:["if"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},for:{description:"Repeatedly executes a block of code.",type:"iteration",snippet:"$1 in $2",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#for"},parameters:{offset:{type:"number",description:"Begins the loop at the specified index"},limit:{type:"number",description:"Limits the loop to the specified number of iterations"},reversed:{type:"keyword",description:"Reverses the order of the loop. Note that this flag\u2019s spelling is different from the filter reverse"}}},if:{description:"Executes a block of code only if a certain condition is met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#if"}},increment:{description:"Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#increment"}},liquid:{description:"Encloses multiple tags within one set of delimiters, to allow writing Liquid logic more concisely.",type:"unknown",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#liquid"}},raw:{type:"raw",description:"Allows output of Liquid code on a page without being parsed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/raw/"}},render:{description:`Insert the rendered content of another template within the current template.
 
-The code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.`,snippet:"'$1'",filters:!1,singleton:!0,type:"import",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#render"}},tablerow:{description:"Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",type:"iteration",parameters:{cols:{type:"number",description:"Defines how many columns the tables should have."},limit:{type:"number",description:"Exits the tablerow loop after a specific index."},offset:{type:"number",description:"Starts the tablerow loop after a specific index."}},reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#tablerow"}},unless:{description:"The opposite of if \u2013 executes a block of code only if a certain condition is not met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},when:{description:'Define the various conditions set by the "{% case %}" tag',singleton:!0,type:"control",parents:["case"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#casewhen"}}};var j={};A(j,{filters:()=>Q,objects:()=>K,tags:()=>be});var X={form:{type:"generator",description:"Creates an HTML `<form>` element along with the required `<input>` elements to submit the form to a particular endpoint.",arguments:[{type:"string",required:!0,pattern:/(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)?|localization/,value:[{value:"activate_customer_password",template:"customer/activate_account",description:"Generates a form for activating a customer account on the activate_account.liquid template."},{value:"product",description:'Generates a form for adding a product variant to the cart. Requires a "product" object as a parameter.'},{value:"new_comment",template:"article",description:"Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter."},{description:"Generates a form for creating a new customer account on the register.liquid template.",value:"create_customer",template:"customer/register"},{value:"customer",description:"Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup."},{value:"customer_address",description:"Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address."},{value:"customer_login",description:"Generates a form for logging into Customer Accounts on the login.liquid template.",template:"customer/login"},{value:"recover_customer_password",description:"Generates a form for recovering a lost password on the login.liquid template.",template:"customer/login"},{value:"contact",description:"Generates a form for submitting an email through the Liquid contact form"},{value:"reset_customer_password",description:"Generates a form on the customers/reset_password.liquid template for a customer to reset their password.",template:"customer/login"},{value:"guest_login",description:"Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.",template:"customer/login"},{value:"localization",description:"Generates a form for customers to select their preferred country so they're shown the appropriate language and currency. Inside the form, you can build two different selectors"},{value:"storefront_password",description:"Generates a form on the password.liquid template for entering a password-protected storefront."},{value:"currency",deprecated:!0,description:"Generates a form that lets your customer change the currency in your storefront. This form generator is deprecated, use the `localization` form instead."}]},{type:"object",separator:44,value:{product:[{value:"product",description:"The `product` object is required when generating a form for adding a product variant to the cart"}],new_comment:[{value:"article",description:"The `article` object"}],customer_address:[{value:"customer.new_address",description:"The `customer.new_address` is required for creating a new address"},{value:"address",description:"The `address` is required when editing an existing address"}]}},{type:"parameter",strict:!1,separator:44,value:{id:{type:"string",description:"Provide a custom HTML attribute `id` value."},class:{type:"string",description:"Provide a custom HTML attribute `class`"}}}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form"}},include:{description:"The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",filters:!1,deprecated:!0,singleton:!0,type:"import",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"}},layout:{description:`Include "{% layout 'alternate' %}" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:`,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#layout"}},paginate:{type:"iteration",description:"Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",arguments:[{type:"array",required:!0},{type:"keyword",value:"by",required:!0},{type:"number",required:!0,pattern:[1,50]}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#paginate"}},section:{description:"Renders a section from the sections folder of a theme.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#section"}},sections:{description:"Renders a [section group](https://shopify.dev/themes/architecture/section-groups). Use this tag to render section groups as part of the theme's layout content. Place the sections tag where you want to render it in the layout.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#sections"}},schema:{description:"The schema tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",filters:!1,language:"json",unique:!0,type:"embedded",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/development/sections#using-section-schema-tags"}},style:{type:"embedded",description:"The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",filters:!1,language:"css",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/themes/liquid/tags/theme-tags#style"}},stylesheet:{type:"embedded",description:"The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,unique:!0,deprecated:!0,language:"css",arguments:[{type:"string",value:"scss",description:"SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-schema"}},javascript:{type:"embedded",description:"The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,deprecated:!0,language:"javascript",reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-assets#javascript"}}};var Z=Object.assign;var Ee=Array.isArray;var K={media:{summary:"An abstract media object that can represent the following object types:\n\n- [`image`](/docs/api/liquid/objects/image)\n- [`model`](/docs/api/liquid/objects/model)\n- [`video`](/docs/api/liquid/objects/video)\n- [`external_video`](/docs/api/liquid/objects/external_video)",description:`An abstract media object that can represent the following object types:
+The code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.`,snippet:"'$1'",filters:!1,singleton:!0,type:"import",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#render"}},tablerow:{description:"Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",type:"iteration",parameters:{cols:{type:"number",description:"Defines how many columns the tables should have."},limit:{type:"number",description:"Exits the tablerow loop after a specific index."},offset:{type:"number",description:"Starts the tablerow loop after a specific index."}},reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#tablerow"}},unless:{description:"The opposite of if \u2013 executes a block of code only if a certain condition is not met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},when:{description:'Define the various conditions set by the "{% case %}" tag',singleton:!0,type:"control",parents:["case"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#casewhen"}}};var w={};A(w,{filters:()=>ee,objects:()=>Q,tags:()=>ge});var X={form:{type:"generator",description:"Creates an HTML `<form>` element along with the required `<input>` elements to submit the form to a particular endpoint.",arguments:[{type:"string",required:!0,pattern:/(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)?|localization/,value:[{value:"activate_customer_password",template:"customer/activate_account",description:"Generates a form for activating a customer account on the activate_account.liquid template."},{value:"product",description:'Generates a form for adding a product variant to the cart. Requires a "product" object as a parameter.'},{value:"new_comment",template:"article",description:"Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter."},{description:"Generates a form for creating a new customer account on the register.liquid template.",value:"create_customer",template:"customer/register"},{value:"customer",description:"Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup."},{value:"customer_address",description:"Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address."},{value:"customer_login",description:"Generates a form for logging into Customer Accounts on the login.liquid template.",template:"customer/login"},{value:"recover_customer_password",description:"Generates a form for recovering a lost password on the login.liquid template.",template:"customer/login"},{value:"contact",description:"Generates a form for submitting an email through the Liquid contact form"},{value:"reset_customer_password",description:"Generates a form on the customers/reset_password.liquid template for a customer to reset their password.",template:"customer/login"},{value:"guest_login",description:"Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.",template:"customer/login"},{value:"localization",description:"Generates a form for customers to select their preferred country so they're shown the appropriate language and currency. Inside the form, you can build two different selectors"},{value:"storefront_password",description:"Generates a form on the password.liquid template for entering a password-protected storefront."},{value:"currency",deprecated:!0,description:"Generates a form that lets your customer change the currency in your storefront. This form generator is deprecated, use the `localization` form instead."}]},{type:"object",separator:44,value:{product:[{value:"product",description:"The `product` object is required when generating a form for adding a product variant to the cart"}],new_comment:[{value:"article",description:"The `article` object"}],customer_address:[{value:"customer.new_address",description:"The `customer.new_address` is required for creating a new address"},{value:"address",description:"The `address` is required when editing an existing address"}]}},{type:"parameter",strict:!1,separator:44,value:{id:{type:"string",description:"Provide a custom HTML attribute `id` value."},class:{type:"string",description:"Provide a custom HTML attribute `class`"}}}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form"}},include:{description:"The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",filters:!1,deprecated:!0,singleton:!0,type:"import",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"}},layout:{description:`Include "{% layout 'alternate' %}" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:`,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#layout"}},paginate:{type:"iteration",description:"Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",arguments:[{type:"array",required:!0},{type:"keyword",value:"by",required:!0},{type:"number",required:!0,pattern:[1,50]}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#paginate"}},section:{description:"Renders a section from the sections folder of a theme.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#section"}},sections:{description:"Renders a [section group](https://shopify.dev/themes/architecture/section-groups). Use this tag to render section groups as part of the theme's layout content. Place the sections tag where you want to render it in the layout.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#sections"}},schema:{description:"The schema tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",filters:!1,language:"json",unique:!0,type:"embedded",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/development/sections#using-section-schema-tags"}},style:{type:"embedded",description:"The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",filters:!1,language:"css",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/themes/liquid/tags/theme-tags#style"}},stylesheet:{type:"embedded",description:"The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,unique:!0,deprecated:!0,language:"css",arguments:[{type:"string",value:"scss",description:"SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-schema"}},javascript:{type:"embedded",description:"The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,deprecated:!0,language:"javascript",reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-assets#javascript"}}};var Z=Object.assign;var Fe=Array.isArray;var Q={media:{summary:"An abstract media object that can represent the following object types:\n\n- [`image`](/docs/api/liquid/objects/image)\n- [`model`](/docs/api/liquid/objects/model)\n- [`video`](/docs/api/liquid/objects/video)\n- [`external_video`](/docs/api/liquid/objects/external_video)",description:`An abstract media object that can represent the following object types:
 
 - [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
 - [\`model\`](https://shopify.dev/docs/api/liquid/objects/model)
@@ -452,6 +452,8 @@ Last Updated: 0th October 2023
 
 The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -473,6 +475,8 @@ Last Updated: 0th October 2023
 > This is the same value as [\`discount.amount\`](https://shopify.dev/docs/api/liquid/objects/discount#discount-amount).
 
 The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -535,6 +539,8 @@ Last Updated: 0th October 2023
 > This is the same value as [\`discount.total_savings\`](https://shopify.dev/docs/api/liquid/objects/discount#discount-total_savings).
 The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -555,6 +561,8 @@ Last Updated: 0th October 2023
 
 > This is the same value as [\`discount.savings\`](https://shopify.dev/docs/api/liquid/objects/discount#discount-savings).
 The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -1338,6 +1346,8 @@ Last Updated: 0th October 2023
 
 `},total_price:{type:"number",description:`The total price of all of the items in the cart in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -1354,6 +1364,8 @@ Last Updated: 0th October 2023
 
 `},checkout_charge_amount:{type:"number",description:`The amount that the customer will be charged at checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -1369,6 +1381,8 @@ Last Updated: 0th October 2023
 
 
 `},original_total_price:{type:"number",description:`The total price of all of the items in the cart in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -1387,6 +1401,8 @@ Last Updated: 0th October 2023
 `},items_subtotal_price:{type:"number",description:`The total price of all of the items in the cart in the currency's subunit, after any line item discounts. This
 doesn't include taxes (unless taxes are included in the prices), cart discounts, or shipping costs. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -1402,6 +1418,8 @@ Last Updated: 0th October 2023
 
 
 `},total_discount:{type:"number",description:`The total amount of all discounts (the amount saved) for the cart in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -2726,6 +2744,8 @@ Last Updated: 0th October 2023
 
 `},total_spent:{type:"number",description:`The total amount that the customer has spent on all orders in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -2967,6 +2987,8 @@ Last Updated: 0th October 2023
 
 `,scope:"discount_application"},amount:{type:"number",description:`The amount that the item is discounted by in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -2992,6 +3014,8 @@ Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{total_allocated_amount:{type:"number",description:`The total amount of the discount in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -3026,6 +3050,8 @@ discount. The following table outlines what the value represents for each value 
 | --- | --- |
 | \`fixed_amount\` | The amount of the discount in the currency's subunit. |
 | \`percentage\` | The percent amount of the discount. |
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -4081,6 +4107,8 @@ Last Updated: 0th October 2023
 
 `,type:"object",properties:{balance:{type:"number",description:`The remaining balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -4206,6 +4234,8 @@ Last Updated: 0th October 2023
 
 
 `},initial_value:{type:"number",description:`The initial balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -4615,6 +4645,8 @@ The \`line_item.price\` property has been replaced by [\`line_item.final_price\`
 
 The price of the line item in the currency's subunit. This includes any discounts from [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -4640,6 +4672,8 @@ The \`line_item.line_price\` property has been replaced by [\`line_item.final_li
 The combined price, in the currency's subunit, of all of the items in a line item. This includes any discounts from [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is equal to \`line_item.price\` multiplied by \`line_item.quantity\`. It's output in the customer's local
 (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -4663,6 +4697,8 @@ The \`line_item.total_discount\` property has been replaced by [\`line_item.line
 ---
 
 The total amount, in the currency's subunit, of any discounts applied to the line item by [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -4693,6 +4729,8 @@ Last Updated: 0th October 2023
 
 `,scope:"discount_allocation"},final_price:{type:"number",description:`The price of the line item in the currency's subunit. This includes any line-level discounts. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -4709,6 +4747,8 @@ Last Updated: 0th October 2023
 
 `},final_line_price:{type:"number",description:`The combined price, in the currency's subunit, of all of the items in the line item. This includes any line-level discounts. The value is equal to \`line_item.final_price\` multiplied by \`line_item.quantity\`. It's output in the customer's local
 (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -4888,6 +4928,8 @@ Last Updated: 0th October 2023
  of the line item in the currency's subunit. The price reflects any discounts that are applied to the line item. The value is output in the customer's local
 (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Note**
@@ -4988,6 +5030,8 @@ Last Updated: 0th October 2023
 
 `},original_price:{type:"number",description:`The price of the line item in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -5005,6 +5049,8 @@ Last Updated: 0th October 2023
 `},original_line_price:{type:"number",description:`The combined price of all of the items in a line item in the currency's subunit, before any discounts have been applied. The value is equal to \`line_item.original_price\` multiplied by \`line_item.quantity\`. It's output in the customer's local
 (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -5020,6 +5066,8 @@ Last Updated: 0th October 2023
 
 
 `},line_level_total_discount:{type:"number",description:`The total amount of any discounts applied to the line item in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -6779,6 +6827,8 @@ Last Updated: 0th October 2023
 
 `},total_duties:{type:"number",description:`The sum of all duties applied to the line items in the order in the currency's subunit. If there are no duties, then \`nil\` is returned. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -6831,6 +6881,8 @@ Last Updated: 0th October 2023
 
 `,scope:"discount_application"},total_discounts:{type:"number",description:`The total amount of all discounts applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -6849,6 +6901,8 @@ Last Updated: 0th October 2023
 
 The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -6865,6 +6919,8 @@ Last Updated: 0th October 2023
 
 `},tax_price:{type:"number",description:`The total amount of taxes applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -6880,6 +6936,8 @@ Last Updated: 0th October 2023
 
 
 `},total_refunded_amount:{type:"number",description:`The total amount that's been refunded from the order in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -7185,6 +7243,8 @@ Last Updated: 0th October 2023
 `,scope:"shipping_method"},line_items_subtotal_price:{type:"number",description:`The sum of the prices of all of the line items in the order in the currency's subunit, after any line item discounts have
 been applied. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -7201,6 +7261,8 @@ Last Updated: 0th October 2023
 
 `},subtotal_price:{type:"number",description:`The sum of the prices of the [subtotal line items](https://shopify.dev/docs/api/liquid/objects/order#order-subtotal_line_items) in the currency's subunit, after any line item or
 cart discounts have been applied. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -7225,6 +7287,8 @@ Last Updated: 0th October 2023
 
 The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -7241,6 +7305,8 @@ Last Updated: 0th October 2023
 
 `},shipping_price:{type:"number",description:`The shipping price of the order in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -7250,6 +7316,18 @@ Last Updated: 0th October 2023
 ---
 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/shipping_price)
+
+
+Last Updated: 0th October 2023
+
+
+`},"pickup_in_store?":{type:"boolean",description:`Returns \`true\` if the order is a store pickup order. 
+
+
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/pickup_in_store?)
 
 
 Last Updated: 0th October 2023
@@ -7504,7 +7582,7 @@ Last Updated: 0th October 2023
 
 **Note**
 
-> The \`predictive_search\` object returns results only when rendered in a section using the Predictive Saerch API and the
+> The \`predictive_search\` object returns results only when rendered in a section using the Predictive Search API and the
 [Section Rendering API](https://shopify.dev/api/section-rendering). To learn about how to include predictive search in your theme,
 > refer to [Add predictive search to your theme](https://shopify.dev/themes/navigation-search/search/predictive-search).
 
@@ -7636,6 +7714,8 @@ the price adjustment. The following table outlines what the value represents for
 | \`fixed_amount\` | The amount that the original price is being adjusted by, in the currency's subunit. |
 | \`percentage\` | The percent amount that the original price is being adjusted by. |
 | \`price\` | The adjusted amount in the currency's subunit. |
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -7852,6 +7932,8 @@ Last Updated: 0th October 2023
 
 The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -7874,6 +7956,8 @@ Last Updated: 0th October 2023
 
 The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -7889,6 +7973,8 @@ Last Updated: 0th October 2023
 
 
 `},price_max:{type:"number",description:`The highest price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -8023,6 +8109,8 @@ Last Updated: 0th October 2023
 `},compare_at_price_min:{type:"number",description:`The lowest **compare at** price of any variants of the product in the currency's subunit. This is the same as
 \`product.compare_at_price\`. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -8039,6 +8127,8 @@ Last Updated: 0th October 2023
 
 `},compare_at_price_max:{type:"number",description:`The highest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -8054,6 +8144,8 @@ Last Updated: 0th October 2023
 
 
 `},compare_at_price:{type:"number",description:`The lowest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -8435,7 +8527,11 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`},quantity_rule:{type:"object",description:`Returns the specified quantity rule for the variant if one exists in the current customer context. Otherwise returns \`min=1,max=nil,increment=1\` if the variant does not have any quantity rule. 
+`},quantity_rule:{type:"object",description:`The quantity rule for the variant. If no rule exists, then a default value is returned.
+
+This rule can be set as part of a [B2B catalog](https://help.shopify.com/manual/b2b/catalogs/quantity-pricing).
+
+
 
 **Note**
 
@@ -8476,6 +8572,8 @@ Last Updated: 0th October 2023
 
 `},price:{type:"number",description:`The price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -8491,6 +8589,8 @@ Last Updated: 0th October 2023
 
 
 `},compare_at_price:{type:"number",description:`The **compare at** price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -8705,6 +8805,8 @@ Last Updated: 0th October 2023
 `,scope:"unit_price_measurement"},unit_price:{type:"number",description:`The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)
 of the variant in the currency's subunit. The price reflects any discounts that are applied to the line item. The value is output in the customer's local
 (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -9103,6 +9205,17 @@ For example, you can prevent session data from being tracked by tracking scripts
 Last Updated: 0th October 2023
 
 
+`},visual_preview_mode:{type:"boolean",description:`Returns \`true\` if the request is being made from within the theme editor's visual section preview. Returns \`false\` if not. You can use \`request.visual_preview_mode\` to control theme behavior depending on whether the theme is being viewed in the editor's visual section preview.
+For example, you can remove any scripts that interefere with how the section is displayed.
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/visual_preview_mode)
+
+
+Last Updated: 0th October 2023
+
+
 `},page_type:{type:"string",description:`The type of page being requested. 
 
 
@@ -9115,7 +9228,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`,literal:["404","article","blog","captcha","cart","collection","list-collections","customers/account","customers/activate_account","customers/addresses","customers/login","customers/order","customers/register","customers/reset_password","gift_card","index","page","password","policy","product","search"]},host:{type:"string",description:`The domain that the request is hosted on. 
+`,literal:["404","article","blog","captcha","cart","collection","list-collections","customers/account","customers/activate_account","customers/addresses","customers/login","customers/order","customers/register","customers/reset_password","gift_card","index","metaobject","page","password","policy","product","search"]},host:{type:"string",description:`The domain that the request is hosted on. 
 
 
 
@@ -9799,7 +9912,35 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`},blocks:{type:"array",description:`The blocks of the section. 
+`},index:{type:"number",description:`The 1-based index of the current section within its location. Use this property to adjust section behavior based on its position within its location ([template](https://shopify.dev/docs/themes/architecture/templates), [section group](/docs/themes/architecture/section-groups)) and on the page. The \`index\` starts at 1 within each location.
+
+An example use case is for programmatically setting \`loading="lazy"\` for images below the fold based on an index higher than, for example, 3. Note that this is now the default behavior for the [\`image_tag\` filter](https://shopify.dev/docs/api/liquid/filters#image_tag).
+
+Only use this for non-display use cases like web performance. Because of various limitations, the \`index\` property returns \`nil\` in the following contexts:
+
+- When rendered as a [static section](https://shopify.dev/docs/themes/architecture/sections#statically-render-a-section)
+- While rendering in the online store editor
+- When using the [Section Rendering API](https://shopify.dev/docs/api/section-rendering)
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/index)
+
+
+Last Updated: 0th October 2023
+
+
+`},index0:{type:"number",description:`The 0-based index of the current section within its location. This is the same as the \`index\` property except that the index starts at 0 instead of 1.
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/index0)
+
+
+Last Updated: 0th October 2023
+
+
+`},location:{type:"string",description:"The scope or context of the section (template, section group, or global). Sections can have one of four different location types. For sections rendered within a [template](https://shopify.dev/docs/themes/architecture/templates), the location will be `template`. For sections rendered within a [section group](/docs/themes/architecture/section-groups), the location will be the section group type, e.g., `header`, `footer`, `custom.<type>`. Sections [rendered statically](/docs/themes/architecture/sections#statically-render-a-section) will be `static`. Finally, if you're still using `content_for_index`, then the value will be `content_for_index`.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/location)\n\n\nLast Updated: 0th October 2023\n\n\n"},blocks:{type:"array",description:`The blocks of the section. 
 
 
 
@@ -9837,10 +9978,11 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`},compare_at_price:{type:"number",description:`The **compare at** price of the selling plan allocation in the currency's subunit. The value of the **compare at** price is the line item's price without the selling plan applied. If the price and compare
-at price are equal, then \`nil\` is returned.
+`},compare_at_price:{type:"number",description:`The **compare at** price of the selling plan allocation in the currency's subunit. The value of the **compare at** price is the line item's price without the selling plan applied.
 
 The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -9876,6 +10018,8 @@ Last Updated: 0th October 2023
 
 The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -9894,6 +10038,8 @@ Last Updated: 0th October 2023
 deliveries.
 
 The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -9951,6 +10097,8 @@ Last Updated: 0th October 2023
 
 `},remaining_balance_charge_amount:{type:"number",description:`The remaining amount for the customer to pay, in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -9989,6 +10137,8 @@ Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`The price that will be charged for the price adjustment's lifetime, in the currency's subunit. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -10035,6 +10185,8 @@ the checkout charge. The following table outlines what the value represents for 
 | --- | --- |
 | \`percentage\` | The percent amount of the original price that the customer needs to pay.<br><br>For example, if the value is 50, then the customer needs to pay 50% of the original price. |
 | \`price\` | The amount that the customer needs to pay in the currency's subunit. |
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -10405,6 +10557,8 @@ Last Updated: 0th October 2023
 
 `},original_price:{type:"number",description:`The price of the shipping method in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -10420,6 +10574,8 @@ Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`The price of the shipping method in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -10721,7 +10877,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`},currency:{type:"object",description:`The currency of the store. 
+`},currency:{type:"string",description:`The currency of the store. 
 
 
 
@@ -10733,7 +10889,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`,scope:"currency"},money_format:{type:"object",description:`The money format of the store. 
+`},money_format:{type:"object",description:`The money format of the store. 
 
 
 
@@ -10772,7 +10928,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`},enabled_payment_types:{type:"string",description:`The accepted payment types on the store. The payment types are based on the store's enabled [payment providers](https://help.shopify.com/manual/payments) and
+`},enabled_payment_types:{type:"array",description:`The accepted payment types on the store. The payment types are based on the store's enabled [payment providers](https://help.shopify.com/manual/payments) and
 the customer's current region and currency.
 
 
@@ -11219,6 +11375,8 @@ Last Updated: 0th October 2023
 
 `},price:{type:"number",description:`The tax amount in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -11504,6 +11662,8 @@ Last Updated: 0th October 2023
 
 
 `,scope:"transaction_payment_details"},amount:{type:"number",description:`The amount of the transaction in the currency's subunit. The amount is in the customer's local (presentment) currency.
+
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
 
 
 
@@ -12018,7 +12178,7 @@ Last Updated: 0th October 2023
 `,type:"string",const:!0},checkout:{summary:"A customer's checkout.",template:["checkout"],description:`A customer's checkout.
 
 > Deprecated:
-> <p>The <code>checkout</code> object will be deprecated for the Information, Shipping, and Payment pages on August 13, 2024. Merchants who have customized these pages using <code>checkout.liquid</code> to <a href="https://help.shopify.com/manual/online-store/themes/theme-structure/extend/checkout-migration#migrate-to-checkout-extensibility">upgrade to checkout extensibility</a> before August 13, 2024.</p>
+> <p>The <code>checkout</code> object will be deprecated for the Information, Shipping, and Payment pages on August 13, 2024. Merchants who have customized these pages using <code>checkout.liquid</code> need to <a href="https://help.shopify.com/manual/online-store/themes/theme-structure/extend/checkout-migration#migrate-to-checkout-extensibility">upgrade to checkout extensibility</a> before August 13, 2024.</p>
 > <p>Learn <a href="/apps/checkout">how to build checkout extensions</a> that extend the functionality of Shopify checkout.</p>
 
 You can access the \`checkout\` object on the [order status page](https://help.shopify.com/manual/orders/status-tracking/customize-order-status).
@@ -12187,6 +12347,8 @@ Last Updated: 0th October 2023
 
 `,scope:"discount_application"},discounts_amount:{type:"array",description:`The total amount of the discounts applied to the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
 
+For currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.
+
 
 
 **Tip**
@@ -12201,397 +12363,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`,scope:"discount_application"},discounts_savings:{type:"array",description:`The total amount of the discounts applied to the checkout in the currency's subunit, as a negative value. The value is output in the customer's local (presentment) currency.
-
-
-
-**Tip**
-
-> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discounts_savings)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"discount_application"},email:{type:"string",description:`The email associated with the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/email)
-
-
-Last Updated: 0th October 2023
-
-
-`},financial_status:{type:"string",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-Deprecated because \`nil\` is always returned.
-
----
-
-The financial status of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/financial_status)
-
-
-Last Updated: 0th October 2023
-
-
-`},fulfilled_at:{type:"string",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-Deprecated because \`nil\` is always returned.
-
----
-
-A timestamp for the fulfullment of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfilled_at)
-
-
-Last Updated: 0th October 2023
-
-
-`},fulfilled_line_items:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-Deprecated because the array is always empty.
-
----
-
-The fulfilled line items from the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfilled_line_items)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"line_item"},fulfillment_status:{type:"string",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-Deprecated because \`unfulfilled\` is always returned.
-
----
-
-The fulfillment status of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfillment_status)
-
-
-Last Updated: 0th October 2023
-
-
-`},gift_cards_amount:{type:"number",description:`The amount of the checkout price paid in gift cards. The value is output in the customer's local (presentment) currency.
-
-
-
-**Tip**
-
-> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/gift_cards_amount)
-
-
-Last Updated: 0th October 2023
-
-
-`},id:{type:"number",description:`The ID of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/id)
-
-
-Last Updated: 0th October 2023
-
-
-`},line_items:{type:"array",description:`The line items of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/line_items)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"line_item"},line_items_subtotal_price:{type:"number",description:`The sum of the prices of all of the line items of the checkout in the currency's subunit, after any line item discounts
-have been applied. The value is output in the customer's local (presentment) currency.
-
-
-
-**Tip**
-
-> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/line_items_subtotal_price)
-
-
-Last Updated: 0th October 2023
-
-
-`},name:{type:"number",description:`The name of the checkout. This value is the same as [\`checkout.id\`](https://shopify.dev/docs/api/liquid/objects/checkout#checkout-id) with a \`#\` prepended to it.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/name)
-
-
-Last Updated: 0th October 2023
-
-
-`},note:{type:"string",description:`Additional information entered by the customer with the [cart](https://shopify.dev/docs/api/liquid/objects/cart#cart-note). 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/note)
-
-
-Last Updated: 0th October 2023
-
-
-`},order:{type:"object",description:`The order created by the checkout. Depending on the payment provider, the order might not have been created when the [Thank You page](https://help.shopify.com/en/manual/orders/status-tracking)
-is first viewed. In this case, \`nil\` is returned.
-
-
-**Note**
-
-> The \`order\` object isn't available on the Thank You page.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"order"},order_id:{type:"string",description:`The ID of the order created by the checkout. The value is the same as [\`order.id\`](https://shopify.dev/docs/api/liquid/objects/order#order-id).
-
-Depending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)
-is first viewed. In this case, \`nil\` is returned.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_id)
-
-
-Last Updated: 0th October 2023
-
-
-`},order_name:{type:"string",description:`The name of the order created by the checkout. The value is the same as [\`order.name\`](https://shopify.dev/docs/api/liquid/objects/order#order-name).
-
-Depending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)
-is first viewed. In this case, \`nil\` is returned.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_name)
-
-
-Last Updated: 0th October 2023
-
-
-`},order_number:{type:"string",description:`An integer representation of the name of the order created by the checkout. The value is the same as [\`order.order_number\`](https://shopify.dev/docs/api/liquid/objects/order#order-order_number).
-
-Depending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)
-is first viewed. In this case, \`nil\` is returned.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_number)
-
-
-Last Updated: 0th October 2023
-
-
-`},requires_shipping:{type:"boolean",description:`Returns \`true\` if any of the line items of the checkout require shipping. Returns \`false\` if not. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/requires_shipping)
-
-
-Last Updated: 0th October 2023
-
-
-`},shipping_address:{type:"object",description:`The shipping address of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_address)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"address"},shipping_method:{type:"object",description:`The shipping method of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_method)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"shipping_method"},shipping_price:{type:"number",description:`The shipping price of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
-
-
-
-**Tip**
-
-> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_price)
-
-
-Last Updated: 0th October 2023
-
-
-`},tax_lines:{type:"array",description:`The tax lines for the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/tax_lines)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"tax_line"},tax_price:{type:"number",description:`The total tax amount of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
-
-
-
-**Tip**
-
-> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/tax_price)
-
-
-Last Updated: 0th October 2023
-
-
-`},total_price:{type:"number",description:`The total price of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
-
-
-
-**Tip**
-
-> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/total_price)
-
-
-Last Updated: 0th October 2023
-
-
-`},transactions:{type:"array",description:`The transactions of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/transactions)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"transaction"},unavailable_line_items:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-Deprecated because the array is always empty.
-
----
-
-The unavailable line items of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/unavailable_line_items)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"line_item"},unfulfilled_line_items:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
-
-Deprecated because the array is always the same as [\`checkout.line_items\`](/docs/api/liquid/objects/checkout#checkout-line_items).
-
----
-
-The unfulfilled line items of the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/unfulfilled_line_items)
-
-
-Last Updated: 0th October 2023
-
-
-`,scope:"line_item"},item_count:{type:"number",description:`The number of items in the checkout. 
-
-
-
----
-
-[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/item_count)
-
-
-Last Updated: 0th October 2023
-
-
-`}}},comment:{summary:"An article comment.",description:`An article comment. 
+`,scope:"discount_application"}}},comment:{summary:"An article comment.",description:`An article comment. 
 
 
 
@@ -13130,9 +12902,15 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`,scope:"product"}}},quantity_rule:{summary:"A variant order quantity rule (minimum, maximum, and increment). The default order variant quantity rule is `min=1,max=null,increment=1`.",description:`A variant order quantity rule (minimum, maximum, and increment). The default order variant quantity rule is \`min=1,max=null,increment=1\`. 
+`,scope:"product"}}},quantity_rule:{summary:"A variant order quantity rule.",description:`A variant order quantity rule. If no rule exists, then a default value is returned.
+
+This rule can be set as part of a [B2B catalog](https://help.shopify.com/manual/b2b/catalogs/quantity-pricing).
 
 
+
+**Note**
+
+> The default quantity rule is \`min=1,max=null,increment=1\`.
 
 #### The variant order quantity rule
 
@@ -13150,7 +12928,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`,type:"object",properties:{min:{type:"number",description:`Minimum order quantity (default 1) 
+`,type:"object",properties:{min:{type:"number",description:`The minimum order quantity. The default value is \`1\`. 
 
 
 
@@ -13162,7 +12940,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`},max:{type:"number",description:`Maximum order quantity If there is no maximum, then \`nil\` is returned.
+`},max:{type:"number",description:`The maximum order quantity. If there is no maximum quantity, then \`nil\` is returned.
 
 ---
 
@@ -13172,7 +12950,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`},increment:{type:"number",description:`Order quantity increment (default 1) 
+`},increment:{type:"number",description:`The number the order quantity can be incremented by. The default value is \`1\`. 
 
 
 
@@ -13407,7 +13185,7 @@ Last Updated: 0th October 2023
 Last Updated: 0th October 2023
 
 
-`}}}};var Q={item_count_for_variant:{description:`Returns the total item count for a specified variant in the cart. 
+`}}}};var ee={item_count_for_variant:{description:`Returns the total item count for a specified variant in the cart. 
 
 
 
@@ -16012,17 +15790,17 @@ set in the [general settings](https://www.shopify.com/admin/settings/general) in
 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/weight_with_unit)
 
-`,arguments:[{type:"string",required:!1,description:"The weight unit to use in place of the default weight unit."}],returns:"string"}};var be=Z({},X,_);var $={};A($,{filters:()=>ge,objects:()=>ne,tags:()=>ve});var ee={relative_url:{description:"Prepend the baseurl value to the input. Useful if your site is hosted at a subpath rather than the root of the domain.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},absolute_url:{description:"Prepend the url and baseurl value to the input.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_xmlschema:{description:"Convert a Date into XML Schema (ISO 8601) format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_rfc822:{description:"Convert a Date into the RFC-822 format used for RSS feeds.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_string:{description:"Convert a date to short format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}}};var te={post_url:{type:"output",description:"Link to a post on your site, the post_url tag will generate the correct permalink URL for the post you specify",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#linking-to-posts"}},include:{type:"import",description:"The include tag allows you to include the content from another file stored in the _includes folder",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes"}},include_relative:{type:"import",description:"Include file fragments relative to the current file by using the include_relative tag",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes/#including-files-relative-to-another-file"}},link:{type:"output",filters:!0},highlight:{type:"raw",description:"Render a code block with syntax highlighting.",snippet:"highlight ${1}",filters:!1,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#code-snippet-highlighting"}}};var ne={site:{type:"object",description:"Site wide information + configuration settings from _config.yml. See below for details.",properties:{pages:{description:"A list of all Pages.",type:"array"},posts:{description:"A reverse chronological list of all Posts.",type:"array"},related_posts:{type:"array",description:"If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are the ten most recent posts. For high quality but slow to compute results, run the jekyll command with the --lsi (latent semantic indexing) option. "},time:{description:"The current time (when you run the jekyll command).",type:"string"}},reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/variables/#site-variables"}}};var ge=Object.assign(Object.create(null),ee,O),ve=Object.assign(Object.create(null),te,_);var x=process.cwd(),q=`${f.default.gray("[")}SPECS${f.default.gray("]")} ${f.default.magenta("RUN")}`,{log:g}=console;qe();function qe(){g(`${q} ${f.default.magenta.bold("Building Shopify Specifications")}`),Te(),je(),g(`${q} ${f.default.magenta.bold("Finished Shopify Specifications")}`)}function _e(){let e=new Date,n=e.getFullYear(),o=e.getMonth()+1,i=e.getDay(),a=t=>({1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"})[t];return`${(t=>{let p=t%10,d=t%100;return t+(p===1&&d!==11?"st":p===2&&d!==12?"nd":p===3&&d!==13?"rd":"th")})(i)} ${a(o)} ${n}`}function Le(e,n,o){return`import { ${e} } from '../..'
+`,arguments:[{type:"string",required:!1,description:"The weight unit to use in place of the default weight unit."}],returns:"string"}};var ge=Z({},X,L);var C={};A(C,{filters:()=>ve,objects:()=>ie,tags:()=>qe});var te={relative_url:{description:"Prepend the baseurl value to the input. Useful if your site is hosted at a subpath rather than the root of the domain.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},absolute_url:{description:"Prepend the url and baseurl value to the input.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_xmlschema:{description:"Convert a Date into XML Schema (ISO 8601) format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_rfc822:{description:"Convert a Date into the RFC-822 format used for RSS feeds.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_string:{description:"Convert a date to short format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}}};var ne={post_url:{type:"output",description:"Link to a post on your site, the post_url tag will generate the correct permalink URL for the post you specify",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#linking-to-posts"}},include:{type:"import",description:"The include tag allows you to include the content from another file stored in the _includes folder",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes"}},include_relative:{type:"import",description:"Include file fragments relative to the current file by using the include_relative tag",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes/#including-files-relative-to-another-file"}},link:{type:"output",filters:!0},highlight:{type:"raw",description:"Render a code block with syntax highlighting.",snippet:"highlight ${1}",filters:!1,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#code-snippet-highlighting"}}};var ie={site:{type:"object",description:"Site wide information + configuration settings from _config.yml. See below for details.",properties:{pages:{description:"A list of all Pages.",type:"array"},posts:{description:"A reverse chronological list of all Posts.",type:"array"},related_posts:{type:"array",description:"If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are the ten most recent posts. For high quality but slow to compute results, run the jekyll command with the --lsi (latent semantic indexing) option. "},time:{description:"The current time (when you run the jekyll command).",type:"string"}},reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/variables/#site-variables"}}};var ve=Object.assign(Object.create(null),te,x),qe=Object.assign(Object.create(null),ne,L);var U=process.cwd(),q=`${m.default.gray("[")}SPECS${m.default.gray("]")} ${m.default.magenta("RUN")}`,{log:g}=console;_e();function _e(){g(`${q} ${m.default.magenta.bold("Building Shopify Specifications")}`),Se(),Te(),g(`${q} ${m.default.magenta.bold("Finished Shopify Specifications")}`)}function Le(){let e=new Date,t=e.getFullYear(),s=e.getMonth()+1,n=e.getDay(),r=o=>({1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"})[o];return`${(o=>{let i=o%10,p=o%100;return o+(i===1&&p!==11?"st":i===2&&p!==12?"nd":i===3&&p!==13?"rd":"th")})(n)} ${r(s)} ${t}`}function je(e,t,s){return`import { ${e} } from '../..'
 
-export const ${n}: ${e} = ${o}`}function m(e){return e=e.replace(/&lt;/g,"<"),e=e.replace(/&gt;/g,">"),e=e.replace(/&quot;/g,'"'),e=e.replace(/&#39;/g,"'"),e=e.replace(/&amp;/g,"&"),e}function P(e,n,o){let i=[],{name:a,summary:l=null,description:t=null,examples:p,deprecated:d,deprecation_reason:c}=n;if(d===!0&&(i.push("\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F"),c!==""?i.push(m(c),"---"):i.push("No deprecation reason has been provided by the Shopify team \u{1F921}.","---")),t!==""&&l!==null){let h=m(t).replace(/>\s(Tip|Note):/g,`
-
-**$1**
-`).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"),r=m(l).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");h.trimStart()[0]===">"?i.push(m(r),h):i.push(m(r)+" "+h)}else{let h="";if(t!==""&&(h=m(t).replace(/>\s(Tip|Note):/g,`
+export const ${t}: ${e} = ${s}`}function y(e){return e=e.replace(/&lt;/g,"<"),e=e.replace(/&gt;/g,">"),e=e.replace(/&quot;/g,'"'),e=e.replace(/&#39;/g,"'"),e=e.replace(/&amp;/g,"&"),e}function D(e,t,s){let n=[],{name:r,summary:h=null,description:o=null,examples:i,deprecated:p,deprecation_reason:c}=t;if(p===!0&&(n.push("\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F"),c!==""?n.push(y(c),"---"):n.push("No deprecation reason has been provided by the Shopify team \u{1F921}.","---")),o!==""&&h!==null){let d=y(o).replace(/>\s(Tip|Note):/g,`
 
 **$1**
-`).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),l.length>0){let r=m(l).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");h.trimStart()[0]===">"?i.push(m(r),h):i.push(m(r)+" "+h)}i.push(h)}if(p.length>0){let[h]=p;h.name===""?i.push("#### Example"):i.push(`#### ${h.name}`),h.description!==""&&i.push(m(h.description)),h.raw_liquid!==""&&i.push("```liquid",m(h.raw_liquid),"```")}return i.push("---"),o?i.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${o}/${a})
-`):i.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${a})
-`),i.push(`Last Updated: ${_e()}`,`
-`),i.join(`
+`).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"),f=y(h).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");d.trimStart()[0]===">"?n.push(y(f),d):n.push(y(f)+" "+d)}else{let d="";if(o!==""&&(d=y(o).replace(/>\s(Tip|Note):/g,`
 
-`)}function je(){g(`${q} ${f.default.magenta("Shopify Filters")}`);let e=(0,S.join)(x,"node_modules/.specs/data","filters.json"),n=T.default.readFileSync(e).toString(),o=JSON.parse(n),i={},a=j.filters;for(let t of o)if(!(t.name in a))if(i[t.name]={},i[t.name].description=P("filters",t),t.return_type[0].type==="string"?i[t.name].returns="string":t.return_type[0].type==="number"?i[t.name].returns="number":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="array"?i[t.name].returns="array":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="object"?i[t.name].returns="object":i[t.name].returns="any",t.deprecated===!0&&(i[t.name].deprecated=t.deprecated),t.parameters.length===0){let p=[],d=[],c=t.syntax.split(" ");if(c[2][c[2].length-1]===":"){p.push(c[2]);let h=0;for(let r of c.slice(3)){h=h+1;let u;r.slice(0,-1)==="string"?u="string":r.slice(0,-1)==="number"?u="number":r.slice(0,-1)==="boolean"?u="boolean":r.slice(0,-1)==="array"?u="array":r.slice(0,-1)==="boolean"?u="boolean":r.slice(0,-1)==="object"?u="object":u="any",r[r.length-1]===","?(u==="string"?p.push("'$"+h+"',"):p.push("$"+h+","),d.push({type:u,required:!0})):(u==="string"?p.push("'$"+h+"'"):p.push("$"+h+","),d.push({type:u,required:!0}))}i[t.name].snippet=p.join(" "),i[t.name].arguments=d}}else{let p=t.syntax.split(" "),d=[],c=[];d.push(p[2]),p.splice(0,3);for(let h=0;h<t.parameters.length;h++){let r=t.parameters[h];if(p.length>0&&p[0][p[0].length-1]===","){if("arguments"in i[t.name]&&i[t.name].arguments.length<0)for(let u=0;u<p.length;u++){let y;r.types[0]==="string"?y="string":r.types[0]==="number"?y="number":r.types[0]==="boolean"?y="boolean":r.types[0]==="array"?y="array":r.types[0]==="boolean"?y="boolean":r.types[0]==="object"?y="object":y="any";let w=p[u],k={type:y};r.required===!0&&(k.required=!0),r.description!==""&&(k.description=m(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),c.push(k),w[w.length-1]===","?y==="string"?d.push("'$"+(u+1)+"',"):d.push("$"+(u+1)+","):y==="string"?d.push("'$"+(u+1)+"'"):d.push("$"+(u+1))}}else if(Array.isArray(i[t.name].arguments)){c.length===0&&c.push({type:"parameter",value:{}}),c[c.length-1].type!=="parameter"&&c.push({type:"parameter",value:{}}),r.required&&d.push(`${r.name}:`,"${"+(h+1)+"}");let u;r.types[0]==="string"?u="string":r.types[0]==="number"?u="number":r.types[0]==="boolean"?u="boolean":r.types[0]==="array"?u="array":r.types[0]==="boolean"?u="boolean":r.types[0]==="object"?u="object":u="any",c[c.length-1].value[r.name]={type:u,required:r.required},r.description!==""&&(c[c.length-1].value[r.name].description=m(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"))}}d.length>0&&(d.length===1&&d[0][d[0].length-1]===":"&&(d[0]=d[0].slice(0,-1)),i[t.name].snippet=d.join(" ")),c.length>0&&(i[t.name].arguments=c)}Object.keys(i).length>0&&(g(q+" "+f.default.bold.redBright("NEW FILTERS AVAILABLE")),Object.keys(i).forEach(t=>{g(q+" "+f.default.white(t))}))}function Te(){g(`${q} ${f.default.magenta("Shopify Objects")}`);let e=(t,p)=>{let d={scope:null,items:null,type:"any",literal:null},c=t[0].type,h=t[0].array_value;c==="string"||c==="boolean"||c==="number"?d.type=c:c==="array"?(d.type=c,h==="string"||h==="boolean"||h==="number"?d.items=h:d.scope=h):c!==""&&p.some(r=>r.name===c)&&(d.type="object",d.scope=c);for(let{name:r}of t)r!==""&&(d.literal===null&&(d.literal=[]),d.literal.push(r));return d},n=(0,S.join)(x,"node_modules/.specs/data","objects.json"),o=T.default.readFileSync(n).toString(),i=JSON.parse(o),a={};for(let t of i){if(a[t.name]={summary:t.summary},t.access.global===!0&&(a[t.name].global=t.access.global),t.deprecated===!0&&(a[t.name].deprecated=t.deprecated),t.access.template.length>0&&(a[t.name].template=t.access.template),a[t.name].description=P("objects",t),t.return_type.length>0){let{type:p,scope:d,literal:c}=e(t.return_type,i);c!==null&&(a[t.name].literal=c),d!==null?(a[t.name].type=p,a[t.name].scope=d):a[t.name].type=p}if(t.properties.length>0){a[t.name].type="object",typeof a[t.name].properties!="object"&&(a[t.name].properties={});for(let p of t.properties)if(g(f.default.gray(`  - ${p.name}`)),a[t.name].properties[p.name]={type:22},a[t.name].properties[p.name].description=P("objects",p,t.name),t.deprecated===!0&&(a[t.name].properties[p.name].deprecated=t.deprecated),p.return_type.length>0){let{type:d,scope:c,literal:h}=e(p.return_type,i);h!==null&&(a[t.name].properties[p.name].literal=h),c!==null?(a[t.name].properties[p.name].type=d,a[t.name].properties[p.name].scope=c):a[t.name].properties[p.name].type=d}}else a[t.name].type!=="array"&&(a[t.name].const=!0)}let l=JSON.stringify(a,null,2);g(q+f.default.cyan(` Writing objects JSON: ${f.default.whiteBright("data/liquid/shopify/objects.json")} `)),T.default.writeFileSync((0,S.join)(x,"data/liquid/shopify/objects.json"),l),g(q+f.default.cyan(` Writing objects DATA: ${f.default.whiteBright("src/liquid/data/shopify/objects.ts")} `)),T.default.writeFileSync((0,S.join)(x,"src/liquid/data/shopify/objects.ts"),Le("Objects","objects",l))}
+**$1**
+`).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),h.length>0){let f=y(h).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");d.trimStart()[0]===">"?n.push(y(f),d):n.push(y(f)+" "+d)}n.push(d)}if(i.length>0){let[d]=i;d.name===""?n.push("#### Example"):n.push(`#### ${d.name}`),d.description!==""&&n.push(y(d.description)),d.raw_liquid!==""&&n.push("```liquid",y(d.raw_liquid),"```")}return n.push("---"),s?n.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${s}/${r})
+`):n.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${r})
+`),n.push(`Last Updated: ${Le()}`,`
+`),n.join(`
+
+`)}function Te(){g(`${q} ${m.default.magenta("Shopify Filters")}`);let e=(0,T.join)(U,"node_modules/.specs/data","filters.json"),t=j.default.readFileSync(e).toString(),s=JSON.parse(t),n={},r=w.filters;for(let i of s)if(!(i.name in r))if(n[i.name]={},n[i.name].description=D("filters",i),i.return_type[0].type==="string"?n[i.name].returns="string":i.return_type[0].type==="number"?n[i.name].returns="number":i.return_type[0].type==="boolean"?n[i.name].returns="boolean":i.return_type[0].type==="array"?n[i.name].returns="array":i.return_type[0].type==="boolean"?n[i.name].returns="boolean":i.return_type[0].type==="object"?n[i.name].returns="object":n[i.name].returns="any",i.deprecated===!0&&(n[i.name].deprecated=i.deprecated),i.parameters.length===0){let p=[],c=[],d=i.syntax.split(" ");if(d[2][d[2].length-1]===":"){p.push(d[2]);let f=0;for(let l of d.slice(3)){f=f+1;let u;l.slice(0,-1)==="string"?u="string":l.slice(0,-1)==="number"?u="number":l.slice(0,-1)==="boolean"?u="boolean":l.slice(0,-1)==="array"?u="array":l.slice(0,-1)==="boolean"?u="boolean":l.slice(0,-1)==="object"?u="object":u="any",l[l.length-1]===","?(u==="string"?p.push("'$"+f+"',"):p.push("$"+f+","),c.push({type:u,required:!0})):(u==="string"?p.push("'$"+f+"'"):p.push("$"+f+","),c.push({type:u,required:!0}))}n[i.name].snippet=p.join(" "),n[i.name].arguments=c}}else{let p=i.syntax.split(" "),c=[],d=[];c.push(p[2]),p.splice(0,3);for(let f=0;f<i.parameters.length;f++){let l=i.parameters[f];if(p.length>0&&p[0][p[0].length-1]===","){if("arguments"in n[i.name]&&n[i.name].arguments.length<0)for(let u=0;u<p.length;u++){let b;l.types[0]==="string"?b="string":l.types[0]==="number"?b="number":l.types[0]==="boolean"?b="boolean":l.types[0]==="array"?b="array":l.types[0]==="boolean"?b="boolean":l.types[0]==="object"?b="object":b="any";let $=p[u],k={type:b};l.required===!0&&(k.required=!0),l.description!==""&&(k.description=y(l.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),d.push(k),$[$.length-1]===","?b==="string"?c.push("'$"+(u+1)+"',"):c.push("$"+(u+1)+","):b==="string"?c.push("'$"+(u+1)+"'"):c.push("$"+(u+1))}}else if(Array.isArray(n[i.name].arguments)){d.length===0&&d.push({type:"parameter",value:{}}),d[d.length-1].type!=="parameter"&&d.push({type:"parameter",value:{}}),l.required&&c.push(`${l.name}:`,"${"+(f+1)+"}");let u;l.types[0]==="string"?u="string":l.types[0]==="number"?u="number":l.types[0]==="boolean"?u="boolean":l.types[0]==="array"?u="array":l.types[0]==="boolean"?u="boolean":l.types[0]==="object"?u="object":u="any",d[d.length-1].value[l.name]={type:u,required:l.required},l.description!==""&&(d[d.length-1].value[l.name].description=y(l.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"))}}c.length>0&&(c.length===1&&c[0][c[0].length-1]===":"&&(c[0]=c[0].slice(0,-1)),n[i.name].snippet=c.join(" ")),d.length>0&&(n[i.name].arguments=d)}let h=JSON.stringify(n,function(i,p){return p&&p.exec===RegExp.prototype.exec?new RegExp(p).source:p},2);Object.keys(n).length>0&&(g(q+" "+m.default.bold.redBright("NEW FILTERS AVAILABLE")),g(q+m.default.cyan(` Writing filters JSON: ${m.default.whiteBright("data/liquid/shopify/filters.json")} `)),j.default.writeFileSync((0,T.join)(U,"data/liquid/shopify/filters.json"),h),Object.keys(n).forEach(i=>{g(q+" "+m.default.white(i))}))}function Se(){g(`${q} ${m.default.magenta("Shopify Objects")}`);let e=(o,i)=>{let p={scope:null,items:null,type:"any",literal:null},c=o[0].type,d=o[0].array_value;c==="string"||c==="boolean"||c==="number"?p.type=c:c==="array"?(p.type=c,d==="string"||d==="boolean"||d==="number"?p.items=d:p.scope=d):c!==""&&i.some(f=>f.name===c)&&(p.type="object",p.scope=c);for(let{name:f}of o)f!==""&&(p.literal===null&&(p.literal=[]),p.literal.push(f));return p},t=(0,T.join)(U,"node_modules/.specs/data","objects.json"),s=j.default.readFileSync(t).toString(),n=JSON.parse(s),r={};for(let o of n){if(r[o.name]={summary:o.summary},o.access.global===!0&&(r[o.name].global=o.access.global),o.deprecated===!0&&(r[o.name].deprecated=o.deprecated),o.access.template.length>0&&(r[o.name].template=o.access.template),r[o.name].description=D("objects",o),o.return_type.length>0){let{type:i,scope:p,literal:c}=e(o.return_type,n);c!==null&&(r[o.name].literal=c),p!==null?(r[o.name].type=i,r[o.name].scope=p):r[o.name].type=i}if(o.properties.length>0){r[o.name].type="object",typeof r[o.name].properties!="object"&&(r[o.name].properties={});for(let i of o.properties)if(g(m.default.gray(`  - ${i.name}`)),r[o.name].properties[i.name]={type:22},r[o.name].properties[i.name].description=D("objects",i,o.name),o.deprecated===!0&&(r[o.name].properties[i.name].deprecated=o.deprecated),i.return_type.length>0){let{type:p,scope:c,literal:d}=e(i.return_type,n);d!==null&&(r[o.name].properties[i.name].literal=d),c!==null?(r[o.name].properties[i.name].type=p,r[o.name].properties[i.name].scope=c):r[o.name].properties[i.name].type=p}}else r[o.name].type!=="array"&&(r[o.name].const=!0)}let h=JSON.stringify(r,null,2);g(q+m.default.cyan(` Writing objects JSON: ${m.default.whiteBright("data/liquid/shopify/objects.json")} `)),j.default.writeFileSync((0,T.join)(U,"data/liquid/shopify/objects.json"),h),g(q+m.default.cyan(` Writing objects DATA: ${m.default.whiteBright("src/liquid/data/shopify/objects.ts")} `)),j.default.writeFileSync((0,T.join)(U,"src/liquid/data/shopify/objects.ts"),je("Objects","objects",h))}

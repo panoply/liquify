@@ -1339,6 +1339,17 @@ export const filters: Filters = {
     ],
     returns: 'string'
   },
+  line_items_for: {
+    description: "Returns the subset of cart line items that include a specified product or variant. Accepts the following object types:\n\n- `product`\n- `variant`\n\n#### Example\n\n```liquid\n\n{% assign product = all_products['bloodroot-whole'] %}\n{% assign line_items = cart | line_items_for: product %}\n\nTotal cart quantity for product: {{ line_items | sum: 'quantity' }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/line_items_for)\n\n\nLast Updated: 0th October 2023\n\n\n",
+    returns: 'array',
+    snippet: 'line_items_for: $1,',
+    arguments: [
+      {
+        type: 'any',
+        required: true
+      }
+    ]
+  },
   payment_type_img_url: {
     description: 'Returns the URL for an SVG image of a given [payment type](https://shopify.dev/docs/api/liquid/objects/shop#shop-enabled_payment_types). \n\n\n\n#### Example\n\n```liquid\n\n{% for type in shop.enabled_payment_types %}\n<img src="{{ type | payment_type_img_url }}" />\n{% endfor %}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/payment_type_img_url)\n\n',
     returns: 'string'

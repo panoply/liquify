@@ -149,12 +149,12 @@
     "properties": {
       "amount": {
         "type": "number",
-        "description": "The amount of the discount in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`discount.total_amount`](https://shopify.dev/docs/api/liquid/objects/discount#discount-total_amount).\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/amount)\n\n\nLast Updated: 0th October 2023\n\n\n",
+        "description": "The amount of the discount in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`discount.total_amount`](https://shopify.dev/docs/api/liquid/objects/discount#discount-total_amount).\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/amount)\n\n\nLast Updated: 0th October 2023\n\n\n",
         "deprecated": true
       },
       "total_amount": {
         "type": "number",
-        "description": "The amount of the discount in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`discount.amount`](https://shopify.dev/docs/api/liquid/objects/discount#discount-amount).\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/total_amount)\n\n\nLast Updated: 0th October 2023\n\n\n",
+        "description": "The amount of the discount in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`discount.amount`](https://shopify.dev/docs/api/liquid/objects/discount#discount-amount).\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/total_amount)\n\n\nLast Updated: 0th October 2023\n\n\n",
         "deprecated": true
       },
       "code": {
@@ -179,12 +179,12 @@
       },
       "savings": {
         "type": "number",
-        "description": "The amount of the discount as a negative value, in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`discount.total_savings`](https://shopify.dev/docs/api/liquid/objects/discount#discount-total_savings).\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/savings)\n\n\nLast Updated: 0th October 2023\n\n\n",
+        "description": "The amount of the discount as a negative value, in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`discount.total_savings`](https://shopify.dev/docs/api/liquid/objects/discount#discount-total_savings).\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/savings)\n\n\nLast Updated: 0th October 2023\n\n\n",
         "deprecated": true
       },
       "total_savings": {
         "type": "number",
-        "description": "The amount of the discount as a negative value, in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`discount.savings`](https://shopify.dev/docs/api/liquid/objects/discount#discount-savings).\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/total_savings)\n\n\nLast Updated: 0th October 2023\n\n\n",
+        "description": "The amount of the discount as a negative value, in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`discount.savings`](https://shopify.dev/docs/api/liquid/objects/discount#discount-savings).\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/total_savings)\n\n\nLast Updated: 0th October 2023\n\n\n",
         "deprecated": true
       }
     }
@@ -460,23 +460,23 @@
       },
       "total_price": {
         "type": "number",
-        "description": "The total price of all of the items in the cart in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/total_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total price of all of the items in the cart in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/total_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "checkout_charge_amount": {
         "type": "number",
-        "description": "The amount that the customer will be charged at checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/checkout_charge_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The amount that the customer will be charged at checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/checkout_charge_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "original_total_price": {
         "type": "number",
-        "description": "The total price of all of the items in the cart in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/original_total_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total price of all of the items in the cart in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/original_total_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "items_subtotal_price": {
         "type": "number",
-        "description": "The total price of all of the items in the cart in the currency's subunit, after any line item discounts. This\ndoesn't include taxes (unless taxes are included in the prices), cart discounts, or shipping costs. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/items_subtotal_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total price of all of the items in the cart in the currency's subunit, after any line item discounts. This\ndoesn't include taxes (unless taxes are included in the prices), cart discounts, or shipping costs. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/items_subtotal_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "total_discount": {
         "type": "number",
-        "description": "The total amount of all discounts (the amount saved) for the cart in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/total_discount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total amount of all discounts (the amount saved) for the cart in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/total_discount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "items": {
         "type": "array",
@@ -918,7 +918,7 @@
       },
       "total_spent": {
         "type": "number",
-        "description": "The total amount that the customer has spent on all orders in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/total_spent)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total amount that the customer has spent on all orders in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/total_spent)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "orders": {
         "type": "array",
@@ -1009,7 +1009,7 @@
       },
       "amount": {
         "type": "number",
-        "description": "The amount that the item is discounted by in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_allocation/amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The amount that the item is discounted by in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_allocation/amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       }
     }
   },
@@ -1020,7 +1020,7 @@
     "properties": {
       "total_allocated_amount": {
         "type": "number",
-        "description": "The total amount of the discount in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/total_allocated_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total amount of the discount in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/total_allocated_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "title": {
         "type": "string",
@@ -1028,7 +1028,7 @@
       },
       "value": {
         "type": "number",
-        "description": "The value of the discount. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/discount_application#discount_application-value_type) of the\ndiscount. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `fixed_amount` | The amount of the discount in the currency's subunit. |\n| `percentage` | The percent amount of the discount. |\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/value)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The value of the discount. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/discount_application#discount_application-value_type) of the\ndiscount. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `fixed_amount` | The amount of the discount in the currency's subunit. |\n| `percentage` | The percent amount of the discount. |\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/value)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "target_selection": {
         "type": "string",
@@ -1430,7 +1430,7 @@
     "properties": {
       "balance": {
         "type": "number",
-        "description": "The remaining balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/balance)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The remaining balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/balance)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "code": {
         "type": "string",
@@ -1472,7 +1472,7 @@
       },
       "initial_value": {
         "type": "number",
-        "description": "The initial balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/initial_value)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The initial balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/initial_value)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "url": {
         "type": "string",
@@ -1603,15 +1603,15 @@
       },
       "price": {
         "type": "number",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.price` property has been replaced by [`line_item.final_price`](/docs/api/liquid/objects/line_item#line_item-final_price).\n\n---\n\nThe price of the line item in the currency's subunit. This includes any discounts from [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.price` property has been replaced by [`line_item.final_price`](/docs/api/liquid/objects/line_item#line_item-final_price).\n\n---\n\nThe price of the line item in the currency's subunit. This includes any discounts from [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "line_price": {
         "type": "number",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.line_price` property has been replaced by [`line_item.final_line_price`](/docs/api/liquid/objects/line_item#line_item-final_line_price).\n\n---\n\nThe combined price, in the currency's subunit, of all of the items in a line item. This includes any discounts from [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is equal to `line_item.price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/line_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.line_price` property has been replaced by [`line_item.final_line_price`](/docs/api/liquid/objects/line_item#line_item-final_line_price).\n\n---\n\nThe combined price, in the currency's subunit, of all of the items in a line item. This includes any discounts from [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is equal to `line_item.price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/line_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "total_discount": {
         "type": "number",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.total_discount` property has been replaced by [`line_item.line_level_total_discount`](/docs/api/liquid/objects/line_item#line_item-line_level_total_discount).\n\n---\n\nThe total amount, in the currency's subunit, of any discounts applied to the line item by [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/total_discount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because discounts from automatic discounts and discount codes aren't included.\n\nThe `line_item.total_discount` property has been replaced by [`line_item.line_level_total_discount`](/docs/api/liquid/objects/line_item#line_item-line_level_total_discount).\n\n---\n\nThe total amount, in the currency's subunit, of any discounts applied to the line item by [Shopify Scripts](https://help.shopify.com/manual/checkout-settings/script-editor). The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/total_discount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "discount_allocations": {
         "type": "array",
@@ -1620,11 +1620,11 @@
       },
       "final_price": {
         "type": "number",
-        "description": "The price of the line item in the currency's subunit. This includes any line-level discounts. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/final_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The price of the line item in the currency's subunit. This includes any line-level discounts. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/final_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "final_line_price": {
         "type": "number",
-        "description": "The combined price, in the currency's subunit, of all of the items in the line item. This includes any line-level discounts. The value is equal to `line_item.final_price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/final_line_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The combined price, in the currency's subunit, of all of the items in the line item. This includes any line-level discounts. The value is equal to `line_item.final_price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/final_line_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "variant_id": {
         "type": "number",
@@ -1674,7 +1674,7 @@
       },
       "unit_price": {
         "type": "number",
-        "description": "The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)\n of the line item in the currency's subunit. The price reflects any discounts that are applied to the line item. The value is output in the customer's local\n(presentment) currency.\n\n\n\n**Note**\n\n> Unit prices are available only to stores located in Germany and France.\n\nTo learn about how to display unit prices in your theme, refer to [Unit pricing](https://shopify.dev/themes/pricing-payments/unit-pricing).\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/unit_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)\n of the line item in the currency's subunit. The price reflects any discounts that are applied to the line item. The value is output in the customer's local\n(presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Note**\n\n> Unit prices are available only to stores located in Germany and France.\n\nTo learn about how to display unit prices in your theme, refer to [Unit pricing](https://shopify.dev/themes/pricing-payments/unit-pricing).\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/unit_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "sku": {
         "type": "string",
@@ -1698,15 +1698,15 @@
       },
       "original_price": {
         "type": "number",
-        "description": "The price of the line item in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/original_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The price of the line item in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/original_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "original_line_price": {
         "type": "number",
-        "description": "The combined price of all of the items in a line item in the currency's subunit, before any discounts have been applied. The value is equal to `line_item.original_price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/original_line_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The combined price of all of the items in a line item in the currency's subunit, before any discounts have been applied. The value is equal to `line_item.original_price` multiplied by `line_item.quantity`. It's output in the customer's local\n(presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/original_line_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "line_level_total_discount": {
         "type": "number",
-        "description": "The total amount of any discounts applied to the line item in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/line_level_total_discount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total amount of any discounts applied to the line item in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/line_level_total_discount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "line_level_discount_allocations": {
         "type": "array",
@@ -2277,7 +2277,7 @@
       },
       "total_duties": {
         "type": "number",
-        "description": "The sum of all duties applied to the line items in the order in the currency's subunit. If there are no duties, then `nil` is returned. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_duties)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The sum of all duties applied to the line items in the order in the currency's subunit. If there are no duties, then `nil` is returned. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_duties)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "customer_url": {
         "type": "string",
@@ -2295,19 +2295,19 @@
       },
       "total_discounts": {
         "type": "number",
-        "description": "The total amount of all discounts applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_discounts)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total amount of all discounts applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_discounts)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "total_net_amount": {
         "type": "number",
-        "description": "The net amount of the order in the currency's subunit. The amount is calculated after refunds are applied, so is equal to `order.total_price` minus `order.total_refunded_amount`.\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_net_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The net amount of the order in the currency's subunit. The amount is calculated after refunds are applied, so is equal to `order.total_price` minus `order.total_refunded_amount`.\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_net_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "tax_price": {
         "type": "number",
-        "description": "The total amount of taxes applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/tax_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total amount of taxes applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/tax_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "total_refunded_amount": {
         "type": "number",
-        "description": "The total amount that's been refunded from the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_refunded_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total amount that's been refunded from the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_refunded_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "email": {
         "type": "string",
@@ -2428,19 +2428,23 @@
       },
       "line_items_subtotal_price": {
         "type": "number",
-        "description": "The sum of the prices of all of the line items in the order in the currency's subunit, after any line item discounts have\nbeen applied. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/line_items_subtotal_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The sum of the prices of all of the line items in the order in the currency's subunit, after any line item discounts have\nbeen applied. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/line_items_subtotal_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "subtotal_price": {
         "type": "number",
-        "description": "The sum of the prices of the [subtotal line items](https://shopify.dev/docs/api/liquid/objects/order#order-subtotal_line_items) in the currency's subunit, after any line item or\ncart discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/subtotal_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The sum of the prices of the [subtotal line items](https://shopify.dev/docs/api/liquid/objects/order#order-subtotal_line_items) in the currency's subunit, after any line item or\ncart discounts have been applied. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/subtotal_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "total_price": {
         "type": "number",
-        "description": "The total price of the order in the currency's subunit. \n\n**Note**\n\n> The total price is calculated before refunds are applied. Use [`order.total_net_amount`](https://shopify.dev/docs/api/liquid/objects/order#order-total_net_amount)\n> to output the total minus any refunds.\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The total price of the order in the currency's subunit. \n\n**Note**\n\n> The total price is calculated before refunds are applied. Use [`order.total_net_amount`](https://shopify.dev/docs/api/liquid/objects/order#order-total_net_amount)\n> to output the total minus any refunds.\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "shipping_price": {
         "type": "number",
-        "description": "The shipping price of the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/shipping_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The shipping price of the order in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/shipping_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+      },
+      "pickup_in_store?": {
+        "type": "boolean",
+        "description": "Returns `true` if the order is a store pickup order. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/pickup_in_store?)\n\n\nLast Updated: 0th October 2023\n\n\n"
       }
     }
   },
@@ -2538,7 +2542,7 @@
   },
   "predictive_search": {
     "summary": "Information about the results from a predictive search query through the\n[Predictive Search API](/api/ajax/reference/predictive-search#get-locale-search-suggest).",
-    "description": "Information about the results from a predictive search query through the\n[Predictive Search API](https://shopify.dev/api/ajax/reference/predictive-search#get-locale-search-suggest). \n\n**Note**\n\n> The `predictive_search` object returns results only when rendered in a section using the Predictive Saerch API and the\n[Section Rendering API](https://shopify.dev/api/section-rendering). To learn about how to include predictive search in your theme,\n> refer to [Add predictive search to your theme](https://shopify.dev/themes/navigation-search/search/predictive-search).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search)\n\n\nLast Updated: 0th October 2023\n\n\n",
+    "description": "Information about the results from a predictive search query through the\n[Predictive Search API](https://shopify.dev/api/ajax/reference/predictive-search#get-locale-search-suggest). \n\n**Note**\n\n> The `predictive_search` object returns results only when rendered in a section using the Predictive Search API and the\n[Section Rendering API](https://shopify.dev/api/section-rendering). To learn about how to include predictive search in your theme,\n> refer to [Add predictive search to your theme](https://shopify.dev/themes/navigation-search/search/predictive-search).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search)\n\n\nLast Updated: 0th October 2023\n\n\n",
     "type": "object",
     "properties": {
       "performed": {
@@ -2584,7 +2588,7 @@
       },
       "value": {
         "type": "number",
-        "description": "The value of the price adjustment as a decimal. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment#selling_plan_price_adjustment-value_type) of\nthe price adjustment. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `fixed_amount` | The amount that the original price is being adjusted by, in the currency's subunit. |\n| `percentage` | The percent amount that the original price is being adjusted by. |\n| `price` | The adjusted amount in the currency's subunit. |\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment/value)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The value of the price adjustment as a decimal. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment#selling_plan_price_adjustment-value_type) of\nthe price adjustment. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `fixed_amount` | The amount that the original price is being adjusted by, in the currency's subunit. |\n| `percentage` | The percent amount that the original price is being adjusted by. |\n| `price` | The adjusted amount in the currency's subunit. |\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment/value)\n\n\nLast Updated: 0th October 2023\n\n\n"
       }
     }
   },
@@ -2660,15 +2664,15 @@
       },
       "price_min": {
         "type": "number",
-        "description": "The lowest price of any variants of the product in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`product.price`](https://shopify.dev/docs/api/liquid/objects/product#product-price).\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price_min)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The lowest price of any variants of the product in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`product.price`](https://shopify.dev/docs/api/liquid/objects/product#product-price).\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price_min)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "price": {
         "type": "number",
-        "description": "The lowest price of any variants of the product in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`product.price_min`](https://shopify.dev/docs/api/liquid/objects/product#product-price_min).\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The lowest price of any variants of the product in the currency's subunit. \n\n**Note**\n\n> This is the same value as [`product.price_min`](https://shopify.dev/docs/api/liquid/objects/product#product-price_min).\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "price_max": {
         "type": "number",
-        "description": "The highest price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price_max)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The highest price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price_max)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "price_varies": {
         "type": "boolean",
@@ -2708,15 +2712,15 @@
       },
       "compare_at_price_min": {
         "type": "number",
-        "description": "The lowest **compare at** price of any variants of the product in the currency's subunit. This is the same as\n`product.compare_at_price`. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price_min)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The lowest **compare at** price of any variants of the product in the currency's subunit. This is the same as\n`product.compare_at_price`. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price_min)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "compare_at_price_max": {
         "type": "number",
-        "description": "The highest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price_max)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The highest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price_max)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "compare_at_price": {
         "type": "number",
-        "description": "The lowest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The lowest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "compare_at_price_varies": {
         "type": "boolean",
@@ -2835,7 +2839,7 @@
       },
       "quantity_rule": {
         "type": "object",
-        "description": "Returns the specified quantity rule for the variant if one exists in the current customer context. Otherwise returns `min=1,max=nil,increment=1` if the variant does not have any quantity rule. \n\n**Note**\n\n> The default quantity rule is `min=1,max=null,increment=1`.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/quantity_rule)\n\n\nLast Updated: 0th October 2023\n\n\n",
+        "description": "The quantity rule for the variant. If no rule exists, then a default value is returned.\n\nThis rule can be set as part of a [B2B catalog](https://help.shopify.com/manual/b2b/catalogs/quantity-pricing).\n\n\n\n**Note**\n\n> The default quantity rule is `min=1,max=null,increment=1`.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/quantity_rule)\n\n\nLast Updated: 0th October 2023\n\n\n",
         "scope": "quantity_rule"
       },
       "quantity_price_breaks": {
@@ -2849,11 +2853,11 @@
       },
       "price": {
         "type": "number",
-        "description": "The price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "compare_at_price": {
         "type": "number",
-        "description": "The **compare at** price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/compare_at_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The **compare at** price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/compare_at_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "selected_selling_plan_allocation": {
         "type": "object",
@@ -2916,7 +2920,7 @@
       },
       "unit_price": {
         "type": "number",
-        "description": "The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)\nof the variant in the currency's subunit. The price reflects any discounts that are applied to the line item. The value is output in the customer's local\n(presentment) currency.\n\n\n\n**Note**\n\n> Unit prices are available only to stores located in Germany and France.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/unit_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)\nof the variant in the currency's subunit. The price reflects any discounts that are applied to the line item. The value is output in the customer's local\n(presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Note**\n\n> Unit prices are available only to stores located in Germany and France.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/unit_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "inventory_quantity": {
         "type": "number",
@@ -3066,6 +3070,10 @@
         "type": "boolean",
         "description": "Returns `true` if the request is being made from within the theme editor. Returns `false` if not. You can use `request.design_mode` to control theme behavior depending on whether the theme is being viewed in the editor.\nFor example, you can prevent session data from being tracked by tracking scripts in the theme editor.\n\n> Caution:\n> You shouldn't use `request.design_mode` to change customer-facing functionality. The theme editor preview should match\n> what the merchant's customers see on the live store.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/design_mode)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
+      "visual_preview_mode": {
+        "type": "boolean",
+        "description": "Returns `true` if the request is being made from within the theme editor's visual section preview. Returns `false` if not. You can use `request.visual_preview_mode` to control theme behavior depending on whether the theme is being viewed in the editor's visual section preview.\nFor example, you can remove any scripts that interefere with how the section is displayed.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/visual_preview_mode)\n\n\nLast Updated: 0th October 2023\n\n\n"
+      },
       "page_type": {
         "type": "string",
         "description": "The type of page being requested. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/page_type)\n\n\nLast Updated: 0th October 2023\n\n\n",
@@ -3086,6 +3094,7 @@
           "customers/reset_password",
           "gift_card",
           "index",
+          "metaobject",
           "page",
           "password",
           "policy",
@@ -3316,6 +3325,18 @@
         "type": "any",
         "description": "The [settings](https://shopify.dev/themes/architecture/sections/section-schema#settings) of the section. To learn about how to access settings, refer to [Access settings](https://shopify.dev/themes/architecture/settings#access-settings).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/settings)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
+      "index": {
+        "type": "number",
+        "description": "The 1-based index of the current section within its location. Use this property to adjust section behavior based on its position within its location ([template](https://shopify.dev/docs/themes/architecture/templates), [section group](/docs/themes/architecture/section-groups)) and on the page. The `index` starts at 1 within each location.\n\nAn example use case is for programmatically setting `loading=\"lazy\"` for images below the fold based on an index higher than, for example, 3. Note that this is now the default behavior for the [`image_tag` filter](https://shopify.dev/docs/api/liquid/filters#image_tag).\n\nOnly use this for non-display use cases like web performance. Because of various limitations, the `index` property returns `nil` in the following contexts:\n\n- When rendered as a [static section](https://shopify.dev/docs/themes/architecture/sections#statically-render-a-section)\n- While rendering in the online store editor\n- When using the [Section Rendering API](https://shopify.dev/docs/api/section-rendering)\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/index)\n\n\nLast Updated: 0th October 2023\n\n\n"
+      },
+      "index0": {
+        "type": "number",
+        "description": "The 0-based index of the current section within its location. This is the same as the `index` property except that the index starts at 0 instead of 1.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/index0)\n\n\nLast Updated: 0th October 2023\n\n\n"
+      },
+      "location": {
+        "type": "string",
+        "description": "The scope or context of the section (template, section group, or global). Sections can have one of four different location types. For sections rendered within a [template](https://shopify.dev/docs/themes/architecture/templates), the location will be `template`. For sections rendered within a [section group](/docs/themes/architecture/section-groups), the location will be the section group type, e.g., `header`, `footer`, `custom.<type>`. Sections [rendered statically](/docs/themes/architecture/sections#statically-render-a-section) will be `static`. Finally, if you're still using `content_for_index`, then the value will be `content_for_index`.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/location)\n\n\nLast Updated: 0th October 2023\n\n\n"
+      },
       "blocks": {
         "type": "array",
         "description": "The blocks of the section. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/blocks)\n\n\nLast Updated: 0th October 2023\n\n\n",
@@ -3334,7 +3355,7 @@
       },
       "compare_at_price": {
         "type": "number",
-        "description": "The **compare at** price of the selling plan allocation in the currency's subunit. The value of the **compare at** price is the line item's price without the selling plan applied. If the price and compare\nat price are equal, then `nil` is returned.\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/compare_at_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The **compare at** price of the selling plan allocation in the currency's subunit. The value of the **compare at** price is the line item's price without the selling plan applied.\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/compare_at_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "price_adjustments": {
         "type": "array",
@@ -3343,11 +3364,11 @@
       },
       "unit_price": {
         "type": "number",
-        "description": "The [unit price](https://shopify.dev/docs/api/liquid/objects/variant#variant-unit_price) of the variant associated with the selling plan, in the currency's subunit. If the variant doesn't have a unit price, then `nil` is returned.\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/unit_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The [unit price](https://shopify.dev/docs/api/liquid/objects/variant#variant-unit_price) of the variant associated with the selling plan, in the currency's subunit. If the variant doesn't have a unit price, then `nil` is returned.\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/unit_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "per_delivery_price": {
         "type": "number",
-        "description": "The price for each delivery in the selling plan in the currency's subunit. If a selling plan includes multiple deliveries, then the `per_delivery_price` is the `price` divided by the number of\ndeliveries.\n\nThe value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/per_delivery_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The price for each delivery in the selling plan in the currency's subunit. If a selling plan includes multiple deliveries, then the `per_delivery_price` is the `price` divided by the number of\ndeliveries.\n\nThe value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/per_delivery_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "selling_plan": {
         "type": "object",
@@ -3364,7 +3385,7 @@
       },
       "remaining_balance_charge_amount": {
         "type": "number",
-        "description": "The remaining amount for the customer to pay, in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/remaining_balance_charge_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The remaining amount for the customer to pay, in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/remaining_balance_charge_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       }
     }
   },
@@ -3379,7 +3400,7 @@
       },
       "price": {
         "type": "number",
-        "description": "The price that will be charged for the price adjustment's lifetime, in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation_price_adjustment/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The price that will be charged for the price adjustment's lifetime, in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation_price_adjustment/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       }
     }
   },
@@ -3398,7 +3419,7 @@
       },
       "value": {
         "type": "number",
-        "description": "The value of the checkout charge. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge#selling_plan_checkout_charge-value_type) of\nthe checkout charge. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `percentage` | The percent amount of the original price that the customer needs to pay.<br><br>For example, if the value is 50, then the customer needs to pay 50% of the original price. |\n| `price` | The amount that the customer needs to pay in the currency's subunit. |\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge/value)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The value of the checkout charge. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge#selling_plan_checkout_charge-value_type) of\nthe checkout charge. The following table outlines what the value represents for each value type:\n\n| Value type | Value |\n| --- | --- |\n| `percentage` | The percent amount of the original price that the customer needs to pay.<br><br>For example, if the value is 50, then the customer needs to pay 50% of the original price. |\n| `price` | The amount that the customer needs to pay in the currency's subunit. |\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge/value)\n\n\nLast Updated: 0th October 2023\n\n\n"
       }
     }
   },
@@ -3534,11 +3555,11 @@
       },
       "original_price": {
         "type": "number",
-        "description": "The price of the shipping method in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/original_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The price of the shipping method in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/original_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "price": {
         "type": "number",
-        "description": "The price of the shipping method in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The price of the shipping method in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "handle": {
         "type": "string",
@@ -3640,9 +3661,8 @@
         "description": "Returns `true` if customer accounts are optional to complete checkout. Returns `false` if not. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/customer_accounts_optional)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "currency": {
-        "type": "object",
-        "description": "The currency of the store. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/currency)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "currency"
+        "type": "string",
+        "description": "The currency of the store. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/currency)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "money_format": {
         "type": "object",
@@ -3659,7 +3679,7 @@
         "description": "The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the store. \n\n**Tip**\n\n> To learn about how to create metafields, refer to [Create and manage metafields](https://shopify.dev/apps/metafields/manage) or visit\n> the [Shopify Help Center](https://help.shopify.com/manual/metafields).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/metafields)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "enabled_payment_types": {
-        "type": "string",
+        "type": "array",
         "description": "The accepted payment types on the store. The payment types are based on the store's enabled [payment providers](https://help.shopify.com/manual/payments) and\nthe customer's current region and currency.\n\n\n\n**Tip**\n\n> You can output an `svg` logo for each payment type with the [`payment_type_svg_tag` filter](https://shopify.dev/docs/api/liquid/filters/payment_type_svg_tag).\n> Alternatively, you can get the source URL for each `svg` with the [`payment_type_img_url` filter](https://shopify.dev/docs/api/liquid/filters/payment_type_img_url).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/enabled_payment_types)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "taxes_included": {
@@ -3812,7 +3832,7 @@
       },
       "price": {
         "type": "number",
-        "description": "The tax amount in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tax_line/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The tax amount in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted price.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tax_line/price)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "rate": {
         "type": "number",
@@ -3958,7 +3978,7 @@
       },
       "amount": {
         "type": "number",
-        "description": "The amount of the transaction in the currency's subunit. The amount is in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The amount of the transaction in the currency's subunit. The amount is in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "gateway_display_name": {
         "type": "string",
@@ -4150,7 +4170,7 @@
     "template": [
       "checkout"
     ],
-    "description": "A customer's checkout.\n\n> Deprecated:\n> <p>The <code>checkout</code> object will be deprecated for the Information, Shipping, and Payment pages on August 13, 2024. Merchants who have customized these pages using <code>checkout.liquid</code> to <a href=\"https://help.shopify.com/manual/online-store/themes/theme-structure/extend/checkout-migration#migrate-to-checkout-extensibility\">upgrade to checkout extensibility</a> before August 13, 2024.</p>\n> <p>Learn <a href=\"/apps/checkout\">how to build checkout extensions</a> that extend the functionality of Shopify checkout.</p>\n\nYou can access the `checkout` object on the [order status page](https://help.shopify.com/manual/orders/status-tracking/customize-order-status).\n\nShopify Plus merchants can access the `checkout` object in the [`checkout.liquid` layout](https://shopify.dev/themes/architecture/layouts/checkout-liquid).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout)\n\n\nLast Updated: 0th October 2023\n\n\n",
+    "description": "A customer's checkout.\n\n> Deprecated:\n> <p>The <code>checkout</code> object will be deprecated for the Information, Shipping, and Payment pages on August 13, 2024. Merchants who have customized these pages using <code>checkout.liquid</code> need to <a href=\"https://help.shopify.com/manual/online-store/themes/theme-structure/extend/checkout-migration#migrate-to-checkout-extensibility\">upgrade to checkout extensibility</a> before August 13, 2024.</p>\n> <p>Learn <a href=\"/apps/checkout\">how to build checkout extensions</a> that extend the functionality of Shopify checkout.</p>\n\nYou can access the `checkout` object on the [order status page](https://help.shopify.com/manual/orders/status-tracking/customize-order-status).\n\nShopify Plus merchants can access the `checkout` object in the [`checkout.liquid` layout](https://shopify.dev/themes/architecture/layouts/checkout-liquid).\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout)\n\n\nLast Updated: 0th October 2023\n\n\n",
     "type": "object",
     "properties": {
       "applied_gift_cards": {
@@ -4206,126 +4226,8 @@
       },
       "discounts_amount": {
         "type": "array",
-        "description": "The total amount of the discounts applied to the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discounts_amount)\n\n\nLast Updated: 0th October 2023\n\n\n",
+        "description": "The total amount of the discounts applied to the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\nFor currencies without subunits, such as JPY and KRW, tenths and hundredths of a unit are appended. For example, 1000 Japanese yen is output as 100000.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discounts_amount)\n\n\nLast Updated: 0th October 2023\n\n\n",
         "scope": "discount_application"
-      },
-      "discounts_savings": {
-        "type": "array",
-        "description": "The total amount of the discounts applied to the checkout in the currency's subunit, as a negative value. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discounts_savings)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "discount_application"
-      },
-      "email": {
-        "type": "string",
-        "description": "The email associated with the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/email)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "financial_status": {
-        "type": "string",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because `nil` is always returned.\n\n---\n\nThe financial status of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/financial_status)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "fulfilled_at": {
-        "type": "string",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because `nil` is always returned.\n\n---\n\nA timestamp for the fulfullment of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfilled_at)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "fulfilled_line_items": {
-        "type": "array",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because the array is always empty.\n\n---\n\nThe fulfilled line items from the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfilled_line_items)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "line_item"
-      },
-      "fulfillment_status": {
-        "type": "string",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because `unfulfilled` is always returned.\n\n---\n\nThe fulfillment status of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfillment_status)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "gift_cards_amount": {
-        "type": "number",
-        "description": "The amount of the checkout price paid in gift cards. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/gift_cards_amount)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "id": {
-        "type": "number",
-        "description": "The ID of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/id)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "line_items": {
-        "type": "array",
-        "description": "The line items of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/line_items)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "line_item"
-      },
-      "line_items_subtotal_price": {
-        "type": "number",
-        "description": "The sum of the prices of all of the line items of the checkout in the currency's subunit, after any line item discounts\nhave been applied. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/line_items_subtotal_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "name": {
-        "type": "number",
-        "description": "The name of the checkout. This value is the same as [`checkout.id`](https://shopify.dev/docs/api/liquid/objects/checkout#checkout-id) with a `#` prepended to it.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/name)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "note": {
-        "type": "string",
-        "description": "Additional information entered by the customer with the [cart](https://shopify.dev/docs/api/liquid/objects/cart#cart-note). \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/note)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "order": {
-        "type": "object",
-        "description": "The order created by the checkout. Depending on the payment provider, the order might not have been created when the [Thank You page](https://help.shopify.com/en/manual/orders/status-tracking)\nis first viewed. In this case, `nil` is returned.\n\n\n**Note**\n\n> The `order` object isn't available on the Thank You page.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "order"
-      },
-      "order_id": {
-        "type": "string",
-        "description": "The ID of the order created by the checkout. The value is the same as [`order.id`](https://shopify.dev/docs/api/liquid/objects/order#order-id).\n\nDepending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)\nis first viewed. In this case, `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_id)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "order_name": {
-        "type": "string",
-        "description": "The name of the order created by the checkout. The value is the same as [`order.name`](https://shopify.dev/docs/api/liquid/objects/order#order-name).\n\nDepending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)\nis first viewed. In this case, `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_name)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "order_number": {
-        "type": "string",
-        "description": "An integer representation of the name of the order created by the checkout. The value is the same as [`order.order_number`](https://shopify.dev/docs/api/liquid/objects/order#order-order_number).\n\nDepending on the payment provider, the order might not have been created when the [Order status page](https://help.shopify.com/en/manual/orders/status-tracking)\nis first viewed. In this case, `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_number)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "requires_shipping": {
-        "type": "boolean",
-        "description": "Returns `true` if any of the line items of the checkout require shipping. Returns `false` if not. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/requires_shipping)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "shipping_address": {
-        "type": "object",
-        "description": "The shipping address of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_address)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "address"
-      },
-      "shipping_method": {
-        "type": "object",
-        "description": "The shipping method of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_method)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "shipping_method"
-      },
-      "shipping_price": {
-        "type": "number",
-        "description": "The shipping price of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "tax_lines": {
-        "type": "array",
-        "description": "The tax lines for the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/tax_lines)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "tax_line"
-      },
-      "tax_price": {
-        "type": "number",
-        "description": "The total tax amount of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/tax_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "total_price": {
-        "type": "number",
-        "description": "The total price of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.\n\n\n\n**Tip**\n\n> Use [money filters](https://shopify.dev/docs/api/liquid/filters/money-filters) to output a formatted amount.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/total_price)\n\n\nLast Updated: 0th October 2023\n\n\n"
-      },
-      "transactions": {
-        "type": "array",
-        "description": "The transactions of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/transactions)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "transaction"
-      },
-      "unavailable_line_items": {
-        "type": "array",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because the array is always empty.\n\n---\n\nThe unavailable line items of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/unavailable_line_items)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "line_item"
-      },
-      "unfulfilled_line_items": {
-        "type": "array",
-        "description": "⚠️ **DEPRECATED** ⚠️\n\nDeprecated because the array is always the same as [`checkout.line_items`](/docs/api/liquid/objects/checkout#checkout-line_items).\n\n---\n\nThe unfulfilled line items of the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/unfulfilled_line_items)\n\n\nLast Updated: 0th October 2023\n\n\n",
-        "scope": "line_item"
-      },
-      "item_count": {
-        "type": "number",
-        "description": "The number of items in the checkout. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/item_count)\n\n\nLast Updated: 0th October 2023\n\n\n"
       }
     }
   },
@@ -4524,21 +4426,21 @@
     }
   },
   "quantity_rule": {
-    "summary": "A variant order quantity rule (minimum, maximum, and increment). The default order variant quantity rule is `min=1,max=null,increment=1`.",
-    "description": "A variant order quantity rule (minimum, maximum, and increment). The default order variant quantity rule is `min=1,max=null,increment=1`. \n\n\n\n#### The variant order quantity rule\n\n```liquid\n\n{{ product.variants.first.quantity_rule }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule)\n\n\nLast Updated: 0th October 2023\n\n\n",
+    "summary": "A variant order quantity rule.",
+    "description": "A variant order quantity rule. If no rule exists, then a default value is returned.\n\nThis rule can be set as part of a [B2B catalog](https://help.shopify.com/manual/b2b/catalogs/quantity-pricing).\n\n\n\n**Note**\n\n> The default quantity rule is `min=1,max=null,increment=1`.\n\n#### The variant order quantity rule\n\n```liquid\n\n{{ product.variants.first.quantity_rule }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule)\n\n\nLast Updated: 0th October 2023\n\n\n",
     "type": "object",
     "properties": {
       "min": {
         "type": "number",
-        "description": "Minimum order quantity (default 1) \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/min)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The minimum order quantity. The default value is `1`. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/min)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "max": {
         "type": "number",
-        "description": "Maximum order quantity If there is no maximum, then `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/max)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The maximum order quantity. If there is no maximum quantity, then `nil` is returned.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/max)\n\n\nLast Updated: 0th October 2023\n\n\n"
       },
       "increment": {
         "type": "number",
-        "description": "Order quantity increment (default 1) \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/increment)\n\n\nLast Updated: 0th October 2023\n\n\n"
+        "description": "The number the order quantity can be incremented by. The default value is `1`. \n\n\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/increment)\n\n\nLast Updated: 0th October 2023\n\n\n"
       }
     }
   },

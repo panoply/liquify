@@ -477,17 +477,20 @@ function filters () {
     }
   }
 
-  // const parse = JSON.stringify(spec, function (_, regex) {
-  //   return regex && regex.exec === RegExp.prototype.exec
-  //     ? new RegExp(regex).source
-  //     : regex;
-  // }, 2);
+  const parse = JSON.stringify(spec, function (_, regex) {
+    return regex && regex.exec === RegExp.prototype.exec
+      ? new RegExp(regex).source
+      : regex;
+  }, 2);
 
   const count = Object.keys(spec);
 
   if (count.length > 0) {
 
     log(PREFIX + ' ' + ansis.bold.redBright('NEW FILTERS AVAILABLE'));
+
+    log(PREFIX + ansis.cyan(` Writing filters JSON: ${ansis.whiteBright('data/liquid/shopify/filters.json')} `));
+    fs.writeFileSync(join(cwd, 'data/liquid/shopify/filters.json'), parse);
 
     Object.keys(spec).forEach(name => {
       log(PREFIX + ' ' + ansis.white(name));
