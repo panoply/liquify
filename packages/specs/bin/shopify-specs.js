@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-"use strict";var ie=Object.create;var R=Object.defineProperty;var se=Object.getOwnPropertyDescriptor;var oe=Object.getOwnPropertyNames;var ae=Object.getPrototypeOf,re=Object.prototype.hasOwnProperty;var z=(e,n)=>()=>(n||e((n={exports:{}}).exports,n),n.exports),A=(e,n)=>{for(var s in n)R(e,s,{get:n[s],enumerable:!0})},pe=(e,n,s,i)=>{if(n&&typeof n=="object"||typeof n=="function")for(let a of oe(n))!re.call(e,a)&&a!==s&&R(e,a,{get:()=>n[a],enumerable:!(i=se(n,a))||i.enumerable});return e};var H=(e,n,s)=>(s=e!=null?ie(ae(e)):{},pe(n||!e||!e.__esModule?R(s,"default",{value:e,enumerable:!0}):s,e));var Y=z(U=>{"use strict";Object.defineProperty(U,"__esModule",{value:!0});var I=e=>{let[,n]=/([a-f\d]{3,6})/i.exec(e)||[],s=n?n.length:0;if(s===3)n=n[0]+n[0]+n[1]+n[1]+n[2]+n[2];else if(s!==6)return[0,0,0];let i=parseInt(n,16);return[i>>16&255,i>>8&255,255&i]},v=(e,n,s)=>n>e?n:e>s?s:e,de=(e,n,s)=>{if(n==="")return e;let i=e.indexOf(n);if(i<0)return e;let a=n.length,u=0,t="";for(;~i;)t+=e.slice(u,i)+s,u=i+a,i=e.indexOf(n,u);return t+e.slice(u)},N={open:"",close:""},o=(e=>{let n=m=>!!t.find(w=>m.test(w)),s=e||(typeof process!="undefined"?process:{}),{stdout:i,platform:a}=s,u=s.env||{},t=s.argv||[],p="FORCE_COLOR"in u,d=u.FORCE_COLOR,c=d==="true"||parseInt(d)>0,l="NO_COLOR"in u||p&&!c||n(/^-{1,2}(no-color|color=false|color=never)$/),r=p&&c||n(/^-{1,2}(color|color=true|color=always)$/),h=i&&"isTTY"in i&&/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(u.TERM);return!l&&(r||h||a==="win32"||"CI"in u)})()?(e,n)=>({open:`\x1B[${e}m`,close:`\x1B[${n}m`}):()=>N,E=(e,n,s)=>o(`38;2;${e};${n};${s}`,39),F=(e,n,s)=>o(`48;2;${e};${n};${s}`,49),ce={visible:N,reset:o(0,0),inverse:o(7,27),hidden:o(8,28),bold:o(1,22),dim:o(2,22),faint:o(2,22),italic:o(3,23),underline:o(4,24),doubleUnderline:o(21,24),strikethrough:o(9,29),strike:o(9,29),frame:o(51,54),encircle:o(52,54),overline:o(53,55),black:o(30,39),red:o(31,39),green:o(32,39),yellow:o(33,39),blue:o(34,39),magenta:o(35,39),cyan:o(36,39),white:o(37,39),grey:o(90,39),gray:o(90,39),blackBright:o(90,39),redBright:o(91,39),greenBright:o(92,39),yellowBright:o(93,39),blueBright:o(94,39),magentaBright:o(95,39),cyanBright:o(96,39),whiteBright:o(97,39),bgBlack:o(40,49),bgRed:o(41,49),bgGreen:o(42,49),bgYellow:o(43,49),bgBlue:o(44,49),bgMagenta:o(45,49),bgCyan:o(46,49),bgWhite:o(47,49),bgBlackBright:o(100,49),bgRedBright:o(101,49),bgGreenBright:o(102,49),bgYellowBright:o(103,49),bgBlueBright:o(104,49),bgMagentaBright:o(105,49),bgCyanBright:o(106,49),bgWhiteBright:o(107,49)},{defineProperty:le,defineProperties:ue,setPrototypeOf:O}=Object,he=/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,fe=/(\r*\n)/g,G=function(){let e=n=>n;return e.strip=n=>n.replace(he,""),e.extend=n=>{for(let s in n){let i=n[s],a=i.open!=null?i:E(...I(i));g[s]={get(){let u=B(this,a);return le(this,s,{value:u}),u}}}C=ue(()=>{},g),O(e,C)},e.extend(ce),e},B=({props:e},{open:n,close:s})=>{let i=(t,...p)=>ye(t,p,i.props),a=n,u=s;return e!==void 0&&(a=e.openStack+n,u=s+e.closeStack),O(i,C),i.props={open:n,close:s,openStack:a,closeStack:u,parent:e},i.open=a,i.close=u,i},ye=(e,n,s)=>{if(!e)return"";let{openStack:i,closeStack:a}=s,u=e.raw!=null?String.raw(e,...n):e;if(~u.indexOf("\x1B"))for(;s!==void 0;)u=de(u,s.close,s.open),s=s.parent;return~u.indexOf(`
-`)&&(u=u.replace(fe,a+"$1"+i)),i+u+a},M={ansi:e=>(n=>o(`38;5;${n}`,39))(v(e,0,255)),bgAnsi:e=>(n=>o(`48;5;${n}`,49))(v(e,0,255)),hex:e=>E(...I(e)),bgHex:e=>F(...I(e)),rgb:(e,n,s)=>E(v(e,0,255),v(n,0,255),v(s,0,255)),bgRgb:(e,n,s)=>F(v(e,0,255),v(n,0,255),v(s,0,255))},g={},C;for(let e in M)g[e]={get(){return(...n)=>B(this,M[e](...n))}};g.ansi256=g.fg=g.ansi,g.bgAnsi256=g.bg=g.bgAnsi;var me=new G;U.Ansis=G,U.default=me});var V=z((Je,D)=>{"use strict";var W=Y();D.exports=W.default;D.exports.Ansis=W.Ansis});var T=H(require("fs")),S=require("path");var f=H(V());var L={};A(L,{filters:()=>J,tags:()=>_});var J={abs:{description:"Returns the absolute value of a number",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/abs/"}},append:{description:"Concatenates two strings and returns the concatenated value",snippet:"append: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/append/"}},at_least:{description:"Limits a number to a minimum value",snippet:"at_least: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_least/"}},at_most:{description:"Limits a number to a maximum value",snippet:"at_most: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_most/"}},capitalize:{description:"Makes the first character of a string capitalized",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/capitalize/"}},ceil:{description:"Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/ceil/"}},compact:{description:"Removes any `nil` values from an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/compact/"}},concat:{description:"Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",snippet:"concat: $1 $0",arguments:[{type:"array",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/concat/"}},date:{description:"Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby\u2019s `Time.parse`",snippet:"date: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/date/"}},default:{description:"Allows you to specify a fallback in case a value doesn\u2019t exist. default will show its value if the left side is `nil`, `false`, or `empty`",snippet:"default: '$1' $0",arguments:[{type:"any",required:!0},{type:"parameter",value:{allow_false:{type:"boolean",description:"To allow variables to return false instead of the default value, you can use the `allow_false` parameter."}}}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/default/"}},divided_by:{description:"Divides a number by another number",snippet:"divided_by: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/divided_by/"}},downcase:{description:"Makes each character in a string lowercase. It has no effect on strings which are already all lowercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/downcase/"}},escape:{description:"Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape/"}},escape_once:{description:"Escapes a string without changing existing escaped entities. It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape_once/"}},first:{description:"Returns the first item of an array.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/first/"}},floor:{description:"Rounds the input down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/floor/"}},join:{description:"Joins the elements of an array with the character passed as the parameter. The result is a single string.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/join/"},snippet:"join: '$1' $0",arguments:[{type:"string",required:!0}]},last:{description:"Gets the last element in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/last/"}},lstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the left side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/lstrip/"}},map:{description:"Accepts an array element\u2019s attribute as a parameter and creates a string out of each array element\u2019s value.",snippet:"map: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/map/"}},minus:{description:"Subtracts a number from another number",snippet:"minus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/minus/"}},modulo:{description:"Returns the remainder of a division operation",snippet:"modulo: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/modulo/"}},newline_to_br:{description:"Replaces every newline in a string with an HTML line break (`<br />`)",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/newline_to_br/"}},plus:{description:"Adds a number to another number",snippet:"plus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/plus/"}},prepend:{description:"Adds the specified string to the beginning of another string",snippet:"prepend: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/prepend/"}},remove:{description:"Removes every occurrence of the specified substring from a string",snippet:"remove: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove/"}},remove_first:{description:"Removes only the first occurrence of the specified substring from a string",snippet:"remove_first: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove_first/"}},replace:{description:"Replaces every occurrence of the first argument in a string with the second argument",snippet:"replace: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace/"}},replace_first:{description:"Replaces only the first occurrence of the first argument in a string with the second argument",snippet:"replace_first: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace_first/"}},reverse:{description:"Reverses the order of the items in an array. `reverse` cannot reverse a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/reverse/"}},round:{description:"Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/round/"}},rstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the right side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/rstrip/"}},size:{description:"Returns the number of characters in a string or the number of items in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/size/"}},slice:{description:"Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",snippet:"slice: $1 $0",arguments:[{type:"number",required:!0},{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/slice/"}},sort:{description:"Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array\u2019s items to use for sorting",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort/"}},sort_natural:{description:"Sorts items in an array in case-insensitive order",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort_natural/"}},split:{description:"Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",snippet:"split: $1",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/split/"}},strip:{description:"Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip/"}},strip_html:{description:"Removes any HTML tags from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_html/"}},strip_newlines:{description:"Removes any newline characters (line breaks) from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_newlines/"}},times:{description:"Multiplies a number by another number",snippet:"times: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/times/"}},truncate:{description:"Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (\u2026) is appended to the string and is included in the character count",snippet:"truncate: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncate/"}},truncatewords:{description:"Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (\u2026) is appended to the string",snippet:"truncatewords: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncatewords/"}},uniq:{description:"Removes any duplicate elements in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/uniq/"}},upcase:{description:"Makes each character in a string uppercase. It has no effect on strings which are already all uppercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/upcase/"}},url_decode:{description:"Decodes a string that has been encoded as a URL or by `url_encode`",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_decode/"}},url_encode:{description:"Converts any URL-unsafe characters in a string into percent-encoded characters",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_encode/"}},where:{description:"Creates an array including only the objects with a given property value, or any truthy value by default",snippet:"where: '$1'$0",arguments:[{type:"string",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/where/"}}};var _={"#":{type:"comment",description:"Prevents an expression from being rendered or output.",snippet:"$1",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.dev/api/liquid/tags#inline_comment"}},assign:{type:"variable",description:"Creates a new variable.",snippet:"$1 = $2",filters:!0,singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#assign"}},break:{type:"iteration",singleton:!0,parents:["for","tablerow"],description:"Causes the loop to stop iterating when it encounters the break tag.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#break"}},capture:{type:"variable",filters:!1,description:"Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through `{% capture %}` are strings.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#capture"}},case:{type:"control",description:"Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",children:["when","else"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#case"}},comment:{type:"comment",description:"Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/comment/"}},continue:{type:"iteration",description:"Causes the loop to skip the current iteration when it encounters the continue tag.",singleton:!0,parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#continue"}},cycle:{type:"iteration",singleton:!0,description:"Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#cycle"}},decrement:{description:"Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#decrement"}},echo:{type:"output",description:"Using the echo tag is the same as wrapping an expression in curly brackets ({{ and }}). However, unlike the curly bracket method, you can use the echo tag inside liquid tags.",singleton:!0,filters:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#echo"}},else:{type:"control",description:"Add condition within an if or unless block.",singleton:!0,parents:["if","elsif","case","unless","when","for"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},elsif:{description:"Adds more conditions within an if or unless block.",singleton:!0,type:"control",parents:["if"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},for:{description:"Repeatedly executes a block of code.",type:"iteration",snippet:"$1 in $2",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#for"},parameters:{offset:{type:"number",description:"Begins the loop at the specified index"},limit:{type:"number",description:"Limits the loop to the specified number of iterations"},reversed:{type:"keyword",description:"Reverses the order of the loop. Note that this flag\u2019s spelling is different from the filter reverse"}}},if:{description:"Executes a block of code only if a certain condition is met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#if"}},increment:{description:"Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#increment"}},liquid:{description:"Encloses multiple tags within one set of delimiters, to allow writing Liquid logic more concisely.",type:"unknown",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#liquid"}},raw:{type:"raw",description:"Allows output of Liquid code on a page without being parsed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/raw/"}},render:{description:`Insert the rendered content of another template within the current template.
+"use strict";var ie=Object.create;var R=Object.defineProperty;var oe=Object.getOwnPropertyDescriptor;var se=Object.getOwnPropertyNames;var ae=Object.getPrototypeOf,re=Object.prototype.hasOwnProperty;var z=(e,n)=>()=>(n||e((n={exports:{}}).exports,n),n.exports),A=(e,n)=>{for(var o in n)R(e,o,{get:n[o],enumerable:!0})},pe=(e,n,o,i)=>{if(n&&typeof n=="object"||typeof n=="function")for(let a of se(n))!re.call(e,a)&&a!==o&&R(e,a,{get:()=>n[a],enumerable:!(i=oe(n,a))||i.enumerable});return e};var H=(e,n,o)=>(o=e!=null?ie(ae(e)):{},pe(n||!e||!e.__esModule?R(o,"default",{value:e,enumerable:!0}):o,e));var W=z(U=>{"use strict";Object.defineProperty(U,"__esModule",{value:!0});var I=e=>{let[,n]=/([a-f\d]{3,6})/i.exec(e)||[],o=n?n.length:0;if(o===3)n=n[0]+n[0]+n[1]+n[1]+n[2]+n[2];else if(o!==6)return[0,0,0];let i=parseInt(n,16);return[i>>16&255,i>>8&255,255&i]},v=(e,n,o)=>n>e?n:e>o?o:e,de=(e,n,o)=>{if(n==="")return e;let i=e.indexOf(n);if(i<0)return e;let a=n.length,l=0,t="";for(;~i;)t+=e.slice(l,i)+o,l=i+a,i=e.indexOf(n,l);return t+e.slice(l)},N={open:"",close:""},s=(e=>{let n=y=>!!t.find(w=>y.test(w)),o=e||(typeof process!="undefined"?process:{}),{stdout:i,platform:a}=o,l=o.env||{},t=o.argv||[],p="FORCE_COLOR"in l,d=l.FORCE_COLOR,c=d==="true"||parseInt(d)>0,h="NO_COLOR"in l||p&&!c||n(/^-{1,2}(no-color|color=false|color=never)$/),r=p&&c||n(/^-{1,2}(color|color=true|color=always)$/),u=i&&"isTTY"in i&&/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(l.TERM);return!h&&(r||u||a==="win32"||"CI"in l)})()?(e,n)=>({open:`\x1B[${e}m`,close:`\x1B[${n}m`}):()=>N,E=(e,n,o)=>s(`38;2;${e};${n};${o}`,39),F=(e,n,o)=>s(`48;2;${e};${n};${o}`,49),ce={visible:N,reset:s(0,0),inverse:s(7,27),hidden:s(8,28),bold:s(1,22),dim:s(2,22),faint:s(2,22),italic:s(3,23),underline:s(4,24),doubleUnderline:s(21,24),strikethrough:s(9,29),strike:s(9,29),frame:s(51,54),encircle:s(52,54),overline:s(53,55),black:s(30,39),red:s(31,39),green:s(32,39),yellow:s(33,39),blue:s(34,39),magenta:s(35,39),cyan:s(36,39),white:s(37,39),grey:s(90,39),gray:s(90,39),blackBright:s(90,39),redBright:s(91,39),greenBright:s(92,39),yellowBright:s(93,39),blueBright:s(94,39),magentaBright:s(95,39),cyanBright:s(96,39),whiteBright:s(97,39),bgBlack:s(40,49),bgRed:s(41,49),bgGreen:s(42,49),bgYellow:s(43,49),bgBlue:s(44,49),bgMagenta:s(45,49),bgCyan:s(46,49),bgWhite:s(47,49),bgBlackBright:s(100,49),bgRedBright:s(101,49),bgGreenBright:s(102,49),bgYellowBright:s(103,49),bgBlueBright:s(104,49),bgMagentaBright:s(105,49),bgCyanBright:s(106,49),bgWhiteBright:s(107,49)},{defineProperty:he,defineProperties:le,setPrototypeOf:G}=Object,ue=/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,fe=/(\r*\n)/g,B=function(){let e=n=>n;return e.strip=n=>n.replace(ue,""),e.extend=n=>{for(let o in n){let i=n[o],a=i.open!=null?i:E(...I(i));b[o]={get(){let l=Y(this,a);return he(this,o,{value:l}),l}}}C=le(()=>{},b),G(e,C)},e.extend(ce),e},Y=({props:e},{open:n,close:o})=>{let i=(t,...p)=>me(t,p,i.props),a=n,l=o;return e!==void 0&&(a=e.openStack+n,l=o+e.closeStack),G(i,C),i.props={open:n,close:o,openStack:a,closeStack:l,parent:e},i.open=a,i.close=l,i},me=(e,n,o)=>{if(!e)return"";let{openStack:i,closeStack:a}=o,l=e.raw!=null?String.raw(e,...n):e;if(~l.indexOf("\x1B"))for(;o!==void 0;)l=de(l,o.close,o.open),o=o.parent;return~l.indexOf(`
+`)&&(l=l.replace(fe,a+"$1"+i)),i+l+a},M={ansi:e=>(n=>s(`38;5;${n}`,39))(v(e,0,255)),bgAnsi:e=>(n=>s(`48;5;${n}`,49))(v(e,0,255)),hex:e=>E(...I(e)),bgHex:e=>F(...I(e)),rgb:(e,n,o)=>E(v(e,0,255),v(n,0,255),v(o,0,255)),bgRgb:(e,n,o)=>F(v(e,0,255),v(n,0,255),v(o,0,255))},b={},C;for(let e in M)b[e]={get(){return(...n)=>Y(this,M[e](...n))}};b.ansi256=b.fg=b.ansi,b.bgAnsi256=b.bg=b.bgAnsi;var ye=new B;U.Ansis=B,U.default=ye});var V=z((Oe,D)=>{"use strict";var J=W();D.exports=J.default;D.exports.Ansis=J.Ansis});var T=H(require("fs")),S=require("path");var f=H(V());var L={};A(L,{filters:()=>O,tags:()=>_});var O={abs:{description:"Returns the absolute value of a number",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/abs/"}},append:{description:"Concatenates two strings and returns the concatenated value",snippet:"append: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/append/"}},at_least:{description:"Limits a number to a minimum value",snippet:"at_least: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_least/"}},at_most:{description:"Limits a number to a maximum value",snippet:"at_most: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/at_most/"}},capitalize:{description:"Makes the first character of a string capitalized",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/capitalize/"}},ceil:{description:"Rounds the input up to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/ceil/"}},compact:{description:"Removes any `nil` values from an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/compact/"}},concat:{description:"Concatenates (combines) an array with another array. The resulting array contains all the elements of the original arrays",snippet:"concat: $1 $0",arguments:[{type:"array",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/concat/"}},date:{description:"Converts a timestamp into another date format. The format for this syntax is the same as `strftime` - The input uses the same format as Ruby\u2019s `Time.parse`",snippet:"date: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/date/"}},default:{description:"Allows you to specify a fallback in case a value doesn\u2019t exist. default will show its value if the left side is `nil`, `false`, or `empty`",snippet:"default: '$1' $0",arguments:[{type:"any",required:!0},{type:"parameter",value:{allow_false:{type:"boolean",description:"To allow variables to return false instead of the default value, you can use the `allow_false` parameter."}}}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/default/"}},divided_by:{description:"Divides a number by another number",snippet:"divided_by: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/divided_by/"}},downcase:{description:"Makes each character in a string lowercase. It has no effect on strings which are already all lowercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/downcase/"}},escape:{description:"Escapes a string by replacing characters with escape sequences (so that the string can be used in a URL, for example). It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape/"}},escape_once:{description:"Escapes a string without changing existing escaped entities. It doesn\u2019t change strings that don\u2019t have anything to escape",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/escape_once/"}},first:{description:"Returns the first item of an array.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/first/"}},floor:{description:"Rounds the input down to the nearest whole number. Liquid tries to convert the input to a number before the filter is applied",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/floor/"}},join:{description:"Joins the elements of an array with the character passed as the parameter. The result is a single string.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/join/"},snippet:"join: '$1' $0",arguments:[{type:"string",required:!0}]},last:{description:"Gets the last element in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/last/"}},lstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the left side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/lstrip/"}},map:{description:"Accepts an array element\u2019s attribute as a parameter and creates a string out of each array element\u2019s value.",snippet:"map: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/map/"}},minus:{description:"Subtracts a number from another number",snippet:"minus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/minus/"}},modulo:{description:"Returns the remainder of a division operation",snippet:"modulo: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/modulo/"}},newline_to_br:{description:"Replaces every newline in a string with an HTML line break (`<br />`)",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/newline_to_br/"}},plus:{description:"Adds a number to another number",snippet:"plus: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/plus/"}},prepend:{description:"Adds the specified string to the beginning of another string",snippet:"prepend: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/prepend/"}},remove:{description:"Removes every occurrence of the specified substring from a string",snippet:"remove: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove/"}},remove_first:{description:"Removes only the first occurrence of the specified substring from a string",snippet:"remove_first: '$1' $0",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/remove_first/"}},replace:{description:"Replaces every occurrence of the first argument in a string with the second argument",snippet:"replace: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace/"}},replace_first:{description:"Replaces only the first occurrence of the first argument in a string with the second argument",snippet:"replace_first: '$1', '$2' $0",arguments:[{type:"string",required:!0},{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/replace_first/"}},reverse:{description:"Reverses the order of the items in an array. `reverse` cannot reverse a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/reverse/"}},round:{description:"Rounds a number to the nearest integer or, if a number is passed as an argument, to that number of decimal places",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/round/"}},rstrip:{description:"Removes all whitespace (tabs, spaces, and newlines) from the right side of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/rstrip/"}},size:{description:"Returns the number of characters in a string or the number of items in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/size/"}},slice:{description:"Returns a substring of 1 character beginning at the index specified by the first argument. An optional second argument specifies the length of the substring to be returned",snippet:"slice: $1 $0",arguments:[{type:"number",required:!0},{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/slice/"}},sort:{description:"Sorts items in an array in case-sensitive order - An optional argument specifies which property of the array\u2019s items to use for sorting",arguments:[{type:"number",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort/"}},sort_natural:{description:"Sorts items in an array in case-insensitive order",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/sort_natural/"}},split:{description:"Divides a string into an array using the argument as a separator. split is commonly used to convert comma-separated items from a string to an array",snippet:"split: $1",arguments:[{type:"string",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/split/"}},strip:{description:"Removes all whitespace (tabs, spaces, and newlines) from both the left and right sides of a string. It does not affect spaces between words",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip/"}},strip_html:{description:"Removes any HTML tags from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_html/"}},strip_newlines:{description:"Removes any newline characters (line breaks) from a string",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/strip_newlines/"}},times:{description:"Multiplies a number by another number",snippet:"times: $1 $0",arguments:[{type:"number",required:!0}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/times/"}},truncate:{description:"Shortens a string down to the number of characters passed as an argument. If the specified number of characters is less than the length of the string, an ellipsis (\u2026) is appended to the string and is included in the character count",snippet:"truncate: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncate/"}},truncatewords:{description:"Shortens a string down to the number of words passed as an argument. If the specified number of words is less than the number of words in the string, an ellipsis (\u2026) is appended to the string",snippet:"truncatewords: $1 $0",arguments:[{type:"number",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/truncatewords/"}},uniq:{description:"Removes any duplicate elements in an array",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/uniq/"}},upcase:{description:"Makes each character in a string uppercase. It has no effect on strings which are already all uppercase",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/upcase/"}},url_decode:{description:"Decodes a string that has been encoded as a URL or by `url_encode`",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_decode/"}},url_encode:{description:"Converts any URL-unsafe characters in a string into percent-encoded characters",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/url_encode/"}},where:{description:"Creates an array including only the objects with a given property value, or any truthy value by default",snippet:"where: '$1'$0",arguments:[{type:"string",required:!0},{type:"string",required:!1}],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/filters/where/"}}};var _={"#":{type:"comment",description:"Prevents an expression from being rendered or output.",snippet:"$1",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.dev/api/liquid/tags#inline_comment"}},assign:{type:"variable",description:"Creates a new variable.",snippet:"$1 = $2",filters:!0,singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#assign"}},break:{type:"iteration",singleton:!0,parents:["for","tablerow"],description:"Causes the loop to stop iterating when it encounters the break tag.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#break"}},capture:{type:"variable",filters:!1,description:"Captures the string inside of the opening and closing tags and assigns it to a variable. Variables created through `{% capture %}` are strings.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#capture"}},case:{type:"control",description:"Creates a switch statement to compare a variable with different values. case initializes the switch statement, and when compares its values.",children:["when","else"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#case"}},comment:{type:"comment",description:"Allows you to leave un-rendered code inside a Liquid template. Any text within the opening and closing comment blocks will not be output, and any Liquid code within will not be executed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/comment/"}},continue:{type:"iteration",description:"Causes the loop to skip the current iteration when it encounters the continue tag.",singleton:!0,parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#continue"}},cycle:{type:"iteration",singleton:!0,description:"Loops through a group of strings and outputs them in the order that they were passed as parameters. Each time cycle is called, the next string that was passed as a parameter is output.",parents:["for","tablerow"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#cycle"}},decrement:{description:"Creates a new number variable, and decreases its value by one every time it is called. The initial value is -1.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#decrement"}},echo:{type:"output",description:"Using the echo tag is the same as wrapping an expression in curly brackets ({{ and }}). However, unlike the curly bracket method, you can use the echo tag inside liquid tags.",singleton:!0,filters:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#echo"}},else:{type:"control",description:"Add condition within an if or unless block.",singleton:!0,parents:["if","elsif","case","unless","when","for"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},elsif:{description:"Adds more conditions within an if or unless block.",singleton:!0,type:"control",parents:["if"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},for:{description:"Repeatedly executes a block of code.",type:"iteration",snippet:"$1 in $2",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#for"},parameters:{offset:{type:"number",description:"Begins the loop at the specified index"},limit:{type:"number",description:"Limits the loop to the specified number of iterations"},reversed:{type:"keyword",description:"Reverses the order of the loop. Note that this flag\u2019s spelling is different from the filter reverse"}}},if:{description:"Executes a block of code only if a certain condition is met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#if"}},increment:{description:"Creates a new number variable, and increases its value by one every time it is called. The initial value is 0.",singleton:!0,filters:!1,type:"variable",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/variable/#increment"}},liquid:{description:"Encloses multiple tags within one set of delimiters, to allow writing Liquid logic more concisely.",type:"unknown",singleton:!0,reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#liquid"}},raw:{type:"raw",description:"Allows output of Liquid code on a page without being parsed.",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/raw/"}},render:{description:`Insert the rendered content of another template within the current template.
 
-The code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.`,snippet:"'$1'",filters:!1,singleton:!0,type:"import",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#render"}},tablerow:{description:"Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",type:"iteration",parameters:{cols:{type:"number",description:"Defines how many columns the tables should have."},limit:{type:"number",description:"Exits the tablerow loop after a specific index."},offset:{type:"number",description:"Starts the tablerow loop after a specific index."}},reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#tablerow"}},unless:{description:"The opposite of if \u2013 executes a block of code only if a certain condition is not met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},when:{description:'Define the various conditions set by the "{% case %}" tag',singleton:!0,type:"control",parents:["case"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#casewhen"}}};var j={};A(j,{filters:()=>Q,objects:()=>K,tags:()=>ge});var X={form:{type:"generator",description:"Creates an HTML `<form>` element along with the required `<input>` elements to submit the form to a particular endpoint.",arguments:[{type:"string",required:!0,pattern:/(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)?|localization/,value:[{value:"activate_customer_password",template:"customer/activate_account",description:"Generates a form for activating a customer account on the activate_account.liquid template."},{value:"product",description:'Generates a form for adding a product variant to the cart. Requires a "product" object as a parameter.'},{value:"new_comment",template:"article",description:"Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter."},{description:"Generates a form for creating a new customer account on the register.liquid template.",value:"create_customer",template:"customer/register"},{value:"customer",description:"Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup."},{value:"customer_address",description:"Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address."},{value:"customer_login",description:"Generates a form for logging into Customer Accounts on the login.liquid template.",template:"customer/login"},{value:"recover_customer_password",description:"Generates a form for recovering a lost password on the login.liquid template.",template:"customer/login"},{value:"contact",description:"Generates a form for submitting an email through the Liquid contact form"},{value:"reset_customer_password",description:"Generates a form on the customers/reset_password.liquid template for a customer to reset their password.",template:"customer/login"},{value:"guest_login",description:"Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.",template:"customer/login"},{value:"localization",description:"Generates a form for customers to select their preferred country so they're shown the appropriate language and currency. Inside the form, you can build two different selectors"},{value:"storefront_password",description:"Generates a form on the password.liquid template for entering a password-protected storefront."},{value:"currency",deprecated:!0,description:"Generates a form that lets your customer change the currency in your storefront. This form generator is deprecated, use the `localization` form instead."}]},{type:"object",separator:44,value:{product:[{value:"product",description:"The `product` object is required when generating a form for adding a product variant to the cart"}],new_comment:[{value:"article",description:"The `article` object"}],customer_address:[{value:"customer.new_address",description:"The `customer.new_address` is required for creating a new address"},{value:"address",description:"The `address` is required when editing an existing address"}]}},{type:"parameter",strict:!1,separator:44,value:{id:{type:"string",description:"Provide a custom HTML attribute `id` value."},class:{type:"string",description:"Provide a custom HTML attribute `class`"}}}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form"}},include:{description:"The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",filters:!1,deprecated:!0,singleton:!0,type:"import",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"}},layout:{description:`Include "{% layout 'alternate' %}" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:`,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#layout"}},paginate:{type:"iteration",description:"Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",arguments:[{type:"array",required:!0},{type:"keyword",value:"by",required:!0},{type:"number",required:!0,pattern:[1,50]}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#paginate"}},section:{description:"Renders a section from the sections folder of a theme.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#section"}},sections:{description:"Renders a [section group](https://shopify.dev/themes/architecture/section-groups). Use this tag to render section groups as part of the theme's layout content. Place the sections tag where you want to render it in the layout.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#sections"}},schema:{description:"The schema tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",filters:!1,language:"json",unique:!0,type:"embedded",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/development/sections#using-section-schema-tags"}},style:{type:"embedded",description:"The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",filters:!1,language:"css",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/themes/liquid/tags/theme-tags#style"}},stylesheet:{type:"embedded",description:"The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,unique:!0,deprecated:!0,language:"css",arguments:[{type:"string",value:"scss",description:"SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-schema"}},javascript:{type:"embedded",description:"The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,deprecated:!0,language:"javascript",reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-assets#javascript"}}};var Z=Object.assign;var Ee=Array.isArray;var K={media:{summary:"An abstract media object that can represent the following object types:\n\n- [`image`](/docs/api/liquid/objects/image)\n- [`model`](/docs/api/liquid/objects/model)\n- [`video`](/docs/api/liquid/objects/video)\n- [`external_video`](/docs/api/liquid/objects/external_video)",description:`An abstract media object that can represent the following object types:
+The code within the rendered template does not automatically have access to the variables assigned using variable tags within the parent template. Similarly, variables assigned within the rendered template cannot be accessed by code in any other template.`,snippet:"'$1'",filters:!1,singleton:!0,type:"import",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/template/#render"}},tablerow:{description:"Generates an HTML `<table>`. Must be wrapped in an opening `<table>` and closing `</table>` HTML tags.",type:"iteration",parameters:{cols:{type:"number",description:"Defines how many columns the tables should have."},limit:{type:"number",description:"Exits the tablerow loop after a specific index."},offset:{type:"number",description:"Starts the tablerow loop after a specific index."}},reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/iteration/#tablerow"}},unless:{description:"The opposite of if \u2013 executes a block of code only if a certain condition is not met.",type:"control",reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#unless"}},when:{description:'Define the various conditions set by the "{% case %}" tag',singleton:!0,type:"control",parents:["case"],reference:{name:"Standard Liquid",url:"https://shopify.github.io/liquid/tags/control-flow/#casewhen"}}};var j={};A(j,{filters:()=>Q,objects:()=>K,tags:()=>be});var X={form:{type:"generator",description:"Creates an HTML `<form>` element along with the required `<input>` elements to submit the form to a particular endpoint.",arguments:[{type:"string",required:!0,pattern:/(?:activate_|recover_|reset_|create_)customer_password|contact|guest_login|storefront_password|currency|product|new_comment|(?:create_)?customer(?:_address|_login)?|localization/,value:[{value:"activate_customer_password",template:"customer/activate_account",description:"Generates a form for activating a customer account on the activate_account.liquid template."},{value:"product",description:'Generates a form for adding a product variant to the cart. Requires a "product" object as a parameter.'},{value:"new_comment",template:"article",description:"Generates a form for creating a new comment in the article.liquid template. Requires the article object as a parameter."},{description:"Generates a form for creating a new customer account on the register.liquid template.",value:"create_customer",template:"customer/register"},{value:"customer",description:"Generates a form for creating a new customer without registering a new account. This form is useful for collecting customer information when you don't want customers to log in to your store, such as building a list of emails from a newsletter signup."},{value:"customer_address",description:"Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address."},{value:"customer_login",description:"Generates a form for logging into Customer Accounts on the login.liquid template.",template:"customer/login"},{value:"recover_customer_password",description:"Generates a form for recovering a lost password on the login.liquid template.",template:"customer/login"},{value:"contact",description:"Generates a form for submitting an email through the Liquid contact form"},{value:"reset_customer_password",description:"Generates a form on the customers/reset_password.liquid template for a customer to reset their password.",template:"customer/login"},{value:"guest_login",description:"Generates a form on the login.liquid template that directs customers back to their checkout session as a guest instead of logging in to an account.",template:"customer/login"},{value:"localization",description:"Generates a form for customers to select their preferred country so they're shown the appropriate language and currency. Inside the form, you can build two different selectors"},{value:"storefront_password",description:"Generates a form on the password.liquid template for entering a password-protected storefront."},{value:"currency",deprecated:!0,description:"Generates a form that lets your customer change the currency in your storefront. This form generator is deprecated, use the `localization` form instead."}]},{type:"object",separator:44,value:{product:[{value:"product",description:"The `product` object is required when generating a form for adding a product variant to the cart"}],new_comment:[{value:"article",description:"The `article` object"}],customer_address:[{value:"customer.new_address",description:"The `customer.new_address` is required for creating a new address"},{value:"address",description:"The `address` is required when editing an existing address"}]}},{type:"parameter",strict:!1,separator:44,value:{id:{type:"string",description:"Provide a custom HTML attribute `id` value."},class:{type:"string",description:"Provide a custom HTML attribute `class`"}}}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/docs/themes/liquid/reference/tags/theme-tags#form"}},include:{description:"The include tag has been deprecated because the way that it handles variables reduces performance and makes theme code harder to both read and maintain.",filters:!1,deprecated:!0,singleton:!0,type:"import",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/liquid/tags/deprecated-tags#include"}},layout:{description:`Include "{% layout 'alternate' %}" at the beginning of a template file to use an alternate layout file from the Layout folder of your theme. If you don't define an alternate layout, the theme.liquid template file is used by default:`,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#layout"}},paginate:{type:"iteration",description:"Splitting products, blog articles, and search results across multiple pages is a necessary part of theme design as you are limited to 50 results per page in any for loop.",arguments:[{type:"array",required:!0},{type:"keyword",value:"by",required:!0},{type:"number",required:!0,pattern:[1,50]}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#paginate"}},section:{description:"Renders a section from the sections folder of a theme.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#section"}},sections:{description:"Renders a [section group](https://shopify.dev/themes/architecture/section-groups). Use this tag to render section groups as part of the theme's layout content. Place the sections tag where you want to render it in the layout.",filters:!1,singleton:!0,type:"import",arguments:[{type:"string",required:!0}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/api/liquid/tags/theme-tags#sections"}},schema:{description:"The schema tag is used by Shopify sections. Each section can have a single schema tag, and schema tags must contain valid JSON. schema tags can be placed anywhere within a section file but cannot be nested inside another Liquid tag.  ",filters:!1,language:"json",unique:!0,type:"embedded",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/en/themes/development/sections#using-section-schema-tags"}},style:{type:"embedded",description:"The Liquid style tag renders an HTML `<style>` tag with a Shopify data attribute.",filters:!1,language:"css",reference:{name:"Shopify Liquid",url:"https://help.shopify.com/themes/liquid/tags/theme-tags#style"}},stylesheet:{type:"embedded",description:"The stylesheet tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,unique:!0,deprecated:!0,language:"css",arguments:[{type:"string",value:"scss",description:"SASS support is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`."}],reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-schema"}},javascript:{type:"embedded",description:"The javascript tag is used by Shopify sections. Code is concatenated into a single file by Shopify and injected into `{{ content_for_header }}`.",filters:!1,deprecated:!0,language:"javascript",reference:{name:"Shopify Liquid",url:"https://shopify.dev/themes/architecture/sections/section-assets#javascript"}}};var Z=Object.assign;var Ee=Array.isArray;var K={media:{summary:"An abstract media object that can represent the following object types:\n\n- [`image`](/docs/api/liquid/objects/image)\n- [`model`](/docs/api/liquid/objects/model)\n- [`video`](/docs/api/liquid/objects/video)\n- [`external_video`](/docs/api/liquid/objects/external_video)",description:`An abstract media object that can represent the following object types:
 
 - [\`image\`](https://shopify.dev/docs/api/liquid/objects/image)
 - [\`model\`](https://shopify.dev/docs/api/liquid/objects/model)
@@ -25,7 +25,7 @@ to use media in your theme, refer to [Support product media](https://shopify.dev
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/media)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the media. 
@@ -37,7 +37,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/media/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The position of the media in the [\`product.media\` array](https://shopify.dev/docs/api/liquid/objects/product#product-media). If the source is a [\`file_reference\` metafield](https://shopify.dev/apps/metafields/types), then \`nil\` is returned.
@@ -47,7 +47,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/media/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},media_type:{type:"string",description:`The media type. 
@@ -74,7 +74,7 @@ You can use the \`media_type\` property with the [\`where\` filter](/docs/api/li
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/media/media_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["image","model","video","external_video"]},preview_image:{type:"object",description:`A preview image of the media. 
@@ -88,7 +88,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/media/preview_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},alt:{type:"string",description:`The alt text of the media. 
@@ -100,7 +100,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/media/alt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},address:{summary:"An address, such as a customer address or order shipping address.",description:`An address, such as a customer address or order shipping address. 
@@ -114,7 +114,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{company:{type:"string",description:`The company of the address. If no company is specified, then \`nil\` is returned.
@@ -124,7 +124,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/company)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},phone:{type:"string",description:`The phone number of the address. If no phone number is specified, then \`nil\` is returned.
@@ -134,7 +134,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/phone)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},first_name:{type:"string",description:`The first name of the address. 
@@ -146,7 +146,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/first_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},last_name:{type:"string",description:`The last name of the address. 
@@ -158,7 +158,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/last_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`A combination of the first and last names of the address. 
@@ -170,7 +170,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The relative URL for the address. 
@@ -184,7 +184,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},summary:{type:"string",description:`A summary of the address, including the following properties:
@@ -202,7 +202,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/summary)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the address. 
@@ -214,7 +214,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},address1:{type:"string",description:`The first line of the address. 
@@ -226,7 +226,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/address1)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},address2:{type:"string",description:`The second line of the address. If no second line is specified, then \`nil\` is returned.
@@ -236,7 +236,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/address2)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},city:{type:"string",description:`The city of the address. 
@@ -248,7 +248,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/city)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},zip:{type:"string",description:`The zip or postal code of the address. 
@@ -260,7 +260,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/zip)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},country_code:{type:"string",description:`The country of the address in [ISO 3166-1 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html). 
@@ -272,7 +272,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/country_code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},province_code:{type:"string",description:`The province of the address in [ISO 3166-2 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html). 
@@ -286,7 +286,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/province_code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},country:{type:"object",description:`The country of the address. 
@@ -298,7 +298,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/country)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"country"},street:{type:"string",description:`A combination of the first and second lines of the address. 
@@ -310,7 +310,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/street)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},province:{type:"string",description:`The province of the address. 
@@ -322,7 +322,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/address/province)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},collections:{summary:"All of the [collections](/docs/api/liquid/objects/collection) on a store.",global:!0,description:`All of the [collections](https://shopify.dev/docs/api/liquid/objects/collection) on a store. 
@@ -347,7 +347,7 @@ You can iterate over \`collections\` to build a collection list.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collections)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"array",scope:"collection"},pages:{summary:"All of the [pages](/docs/api/liquid/objects/page) on a store.",global:!0,description:`All of the [pages](https://shopify.dev/docs/api/liquid/objects/page) on a store. 
@@ -371,7 +371,7 @@ You can access a specific page through the \`pages\` object using the page's [ha
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/pages)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"array",scope:"page"},all_products:{summary:"All of the products on a store.",global:!0,description:`All of the products on a store. 
@@ -396,7 +396,7 @@ You can use \`all_products\` to access a product by its [handle](/docs/api/liqui
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/all_products)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"array",scope:"product"},app:{summary:"An app. This object is usually used to access app-specific information for use with [theme app extensions](/apps/online-store/theme-app-extensions).",description:`An app. This object is usually used to access app-specific information for use with [theme app extensions](https://shopify.dev/apps/online-store/theme-app-extensions). 
@@ -408,7 +408,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/app)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{metafields:{type:22,description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) that are [owned by the app](https://shopify.dev/apps/metafields/app-owned). 
@@ -420,7 +420,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/app/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},discount:{summary:"A discount applied to a cart, line item, or order.",deprecated:!0,description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -441,7 +441,7 @@ A discount applied to a cart, line item, or order.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{amount:{type:"number",description:`The amount of the discount in the currency's subunit. 
@@ -463,7 +463,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0},total_amount:{type:"number",description:`The amount of the discount in the currency's subunit. 
@@ -485,7 +485,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/total_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0},code:{type:"string",description:`The customer-facing name of the discount. 
@@ -499,7 +499,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0},title:{type:"string",description:`The customer-facing name of the discount. 
@@ -513,7 +513,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0},type:{type:"string",description:`The type of the discount. 
@@ -525,7 +525,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0,literal:["FixedAmountDiscount","PercentageDiscount","ShippingDiscount"]},savings:{type:"number",description:`The amount of the discount as a negative value, in the currency's subunit. 
@@ -546,7 +546,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/savings)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0},total_savings:{type:"number",description:`The amount of the discount as a negative value, in the currency's subunit. 
@@ -567,7 +567,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount/total_savings)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0}}},articles:{summary:"All of the articles across the blogs in the store.",global:!0,description:`All of the articles across the blogs in the store. 
@@ -591,7 +591,7 @@ You can use \`articles\` to access an article by its [handle](/docs/api/liquid/b
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/articles)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"array",scope:"article"},article:{summary:"An article, or [blog post](https://help.shopify.com/manual/online-store/blogs/writing-blogs), in a blog.",template:["article"],description:`An article, or [blog post](https://help.shopify.com/manual/online-store/blogs/writing-blogs), in a blog. 
@@ -603,7 +603,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{image:{type:"object",description:`The featured image for the article. 
@@ -615,7 +615,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},author:{type:"string",description:`The full name of the author of the article. 
@@ -627,7 +627,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/author)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},metafields:{type:"any",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the article. 
@@ -642,7 +642,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the article. 
@@ -654,7 +654,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"string",description:`The ID of the article. 
@@ -666,7 +666,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the article. 
@@ -678,7 +678,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The relative URL of the article. 
@@ -690,7 +690,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},template_suffix:{type:"string",description:`The name of the [custom template](https://shopify.dev/themes/architecture/templates#alternate-templates) assigned to the article. The name doesn't include the \`article.\` prefix, or the file extension (\`.json\` or \`.liquid\`).
@@ -702,7 +702,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/template_suffix)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},created_at:{type:"string",description:`A timestamp for when the article was created. 
@@ -716,7 +716,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/created_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},published_at:{type:"string",description:`A timestamp for when the article was published. 
@@ -730,7 +730,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/published_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},updated_at:{type:"string",description:`A timestamp for when the article was updated. 
@@ -744,7 +744,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/updated_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"moderated?":{type:"boolean",description:`Returns \`true\` if the blog that the article belongs to is set to [moderate comments](https://help.shopify.com/manual/online-store/blogs/managing-comments).
@@ -757,7 +757,7 @@ Returns \`false\` if not.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/moderated?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},comments:{type:"array",description:`The published comments for the article. Returns an empty array if comments are disabled.
@@ -773,7 +773,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/comments)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"comment"},comments_count:{type:"number",description:`The number of published comments for the article. 
@@ -785,7 +785,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/comments_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"comments_enabled?":{type:"boolean",description:`Returns \`true\` if comments are enabled. Returns \`false\` if not. 
@@ -797,7 +797,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/comments_enabled?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},comment_post_url:{type:"string",description:`The relative URL where POST requests are sent when creating new comments. 
@@ -809,7 +809,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/comment_post_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},content:{type:"string",description:`The content of the article. 
@@ -821,7 +821,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/content)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},excerpt:{type:"string",description:`The excerpt of the article. 
@@ -833,7 +833,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/excerpt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},excerpt_or_content:{type:"string",description:`Returns the article [excerpt](https://shopify.dev/docs/api/liquid/objects/article#article-excerpt) if it exists. Returns the article
@@ -846,7 +846,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/excerpt_or_content)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tags:{type:"array",description:`The tags applied to the article. 
@@ -871,7 +871,7 @@ When looping through \`article.tags\`, you can print how many times a tag is use
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},user:{type:"object",description:`The user associated with the author of the article. 
@@ -883,7 +883,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/article/user)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"user"}}},block:{summary:"The content and settings of a [section block](/themes/architecture/sections/section-schema#blocks).",description:`The content and settings of a [section block](https://shopify.dev/themes/architecture/sections/section-schema#blocks). Sections and blocks are reusable modules of content that make up [templates](https://shopify.dev/themes/architecture/templates).
@@ -895,7 +895,7 @@ To learn more about using blocks, refer to the [Shopify Partners blog](https://w
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/block)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"string",description:`The ID of the block. The ID is dynamically generated by Shopify.
@@ -905,7 +905,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/block/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},settings:{type:"any",description:`The [settings](https://shopify.dev/themes/architecture/sections/section-schema#blocks) of the block. To learn about how to access settings, refer to [Access settings](https://shopify.dev/themes/architecture/settings#access-settings). To learn which input settings can be applied to the \`type\` property within settings, refer to [Input settings](/themes/architecture/settings/input-settings).
@@ -915,7 +915,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/block/settings)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},type:{type:"string",description:`The type of the block. The type is a free-form string that's defined in the [block's schema](https://shopify.dev/themes/architecture/sections/section-schema#blocks).
@@ -926,7 +926,7 @@ You can use the type as an identifier. For example, you might display different 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/block/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},shopify_attributes:{type:"string",description:`The data attributes for the block for use in the theme editor. The theme editor's [JavaScript API](https://shopify.dev/themes/architecture/sections/integrate-sections-with-the-theme-editor#section-and-block-javascript-events)
@@ -938,7 +938,7 @@ outside the theme editor.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/block/shopify_attributes)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},blogs:{summary:"All of the blogs in the store.",global:!0,description:`All of the blogs in the store. 
@@ -963,7 +963,7 @@ You can use \`blogs\` to access a blog by its [handle](/docs/api/liquid/basics#h
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blogs)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"array",scope:"blog"},blog:{summary:"Information about a specific [blog](https://help.shopify.com/manual/online-store/blogs/adding-a-blog) in the store.",template:["blog","article"],description:`Information about a specific [blog](https://help.shopify.com/manual/online-store/blogs/adding-a-blog) in the store. 
@@ -975,7 +975,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the blog. 
@@ -987,7 +987,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the blog. 
@@ -999,7 +999,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the blog. 
@@ -1011,7 +1011,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},articles:{type:"array",description:`The articles in the blog. 
@@ -1025,7 +1025,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/articles)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"article"},articles_count:{type:"number",description:`The total number of articles in the blog. This total doesn't include hidden articles. 
@@ -1037,7 +1037,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/articles_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},metafields:{type:"array",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the blog. 
@@ -1052,7 +1052,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"metafield"},url:{type:"string",description:`The relative URL of the blog. 
@@ -1064,7 +1064,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},template_suffix:{type:"string",description:`The name of the [custom template](https://shopify.dev/themes/architecture/templates#alternate-templates) assigned to the blog. The name doesn't include the \`blog.\` prefix, or the file extension (\`.json\` or \`.liquid\`).
@@ -1076,7 +1076,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/template_suffix)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},all_tags:{type:"array",description:`All of the tags on the articles in the blog. This includes tags of articles that aren't in the current pagination view.
@@ -1086,7 +1086,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/all_tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tags:{type:"array",description:`A list of all of the tags on all of the articles in the blog.
@@ -1101,7 +1101,7 @@ filtered view.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"comments_enabled?":{type:"boolean",description:`Returns \`true\` if comments are enabled for the blog. Returns \`false\` if not. 
@@ -1113,7 +1113,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/comments_enabled?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"moderated?":{type:"boolean",description:`Returns \`true\` if the blog is set to
@@ -1126,7 +1126,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/moderated?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},next_article:{type:"object",description:`The next (older) article in the blog. Returns \`nil\` if there is no next article.
@@ -1138,7 +1138,7 @@ This property can be used on the [article page](https://shopify.dev/themes/archi
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/next_article)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"article"},previous_article:{type:"object",description:`The previous (newer) article in the blog. Returns \`nil\` if there is no previous article.
@@ -1150,7 +1150,7 @@ This property can be used on the [article page](https://shopify.dev/themes/archi
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/blog/previous_article)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"article"}}},brand:{summary:"The [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets) for the store.",description:`The [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets) for the store. 
@@ -1162,7 +1162,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{slogan:{type:"string",description:`The slogan for the brand. 
@@ -1174,7 +1174,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand/slogan)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},short_description:{type:"string",description:`A short description of the brand. 
@@ -1186,7 +1186,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand/short_description)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},favicon_url:{type:"object",description:`The square logo for the brand, resized to 32x32 px. 
@@ -1198,7 +1198,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand/favicon_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},cover_image:{type:"object",description:`The square logo for the brand, resized to 32x32 px. 
@@ -1210,7 +1210,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand/cover_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},logo:{type:"object",description:`The default logo for the brand. 
@@ -1222,7 +1222,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand/logo)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},square_logo:{type:"object",description:`The square logo for the brand. 
@@ -1234,7 +1234,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand/square_logo)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},colors:{type:22,description:`The brand's colors. To learn about how to access brand colors, refer to [\`brand_color\`](https://shopify.dev/docs/api/liquid/objects/brand_color).
@@ -1244,7 +1244,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand/colors)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},metafields:{type:22,description:`The social links for the brand. Social links are stored in [metafields](https://shopify.dev/docs/api/liquid/objects/metafield), and can be accessed using the syntax \`shop.brand.metafields.social_links.<platform>.value\`.
@@ -1273,7 +1273,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},cart:{summary:"A customer\u2019s cart.",global:!0,template:["cart"],description:`A customer\u2019s cart. 
@@ -1285,7 +1285,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{requires_shipping:{type:"boolean",description:`Returns \`true\` if any of the products in the cart require shipping. Returns \`false\` if not. 
@@ -1297,7 +1297,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/requires_shipping)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},note:{type:"string",description:`Additional information captured with the cart. To learn more about capturing cart notes, refer to the [\`cart\` template](https://shopify.dev/themes/architecture/templates/cart#support-cart-notes-and-attributes).
@@ -1321,7 +1321,7 @@ To capture a cart note, include an HTML input such as a \`<textarea>\` with an a
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/note)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},item_count:{type:"number",description:`The number of items in the cart. 
@@ -1333,7 +1333,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/item_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_price:{type:"number",description:`The total price of all of the items in the cart in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.
@@ -1349,7 +1349,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/total_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},checkout_charge_amount:{type:"number",description:`The amount that the customer will be charged at checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -1365,7 +1365,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/checkout_charge_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},original_total_price:{type:"number",description:`The total price of all of the items in the cart in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.
@@ -1381,7 +1381,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/original_total_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},items_subtotal_price:{type:"number",description:`The total price of all of the items in the cart in the currency's subunit, after any line item discounts. This
@@ -1398,7 +1398,7 @@ doesn't include taxes (unless taxes are included in the prices), cart discounts,
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/items_subtotal_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_discount:{type:"number",description:`The total amount of all discounts (the amount saved) for the cart in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -1414,7 +1414,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/total_discount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},items:{type:"array",description:`The line items in the cart. 
@@ -1426,7 +1426,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"},"empty?":{type:"boolean",description:`Returns \`true\` if there are no items in the cart. Return's \`false\` if there are. 
@@ -1438,7 +1438,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/empty?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},currency:{type:22,description:`The currency of the cart. If the store uses multi-currency, then this is the same as the customer's local
@@ -1455,7 +1455,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/currency)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_weight:{type:"number",description:`The total weight of all of the items in the cart in grams. 
@@ -1470,7 +1470,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/total_weight)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},discount_applications:{type:"array",description:`The discount applications for the cart. 
@@ -1493,7 +1493,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/discount_applications)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},attributes:{type:"any",description:`Additional attributes entered by the customer with the cart. To learn more about capturing cart attributes, refer to the [\`cart\` template](https://shopify.dev/themes/architecture/templates/cart#support-cart-notes-and-attributes).
@@ -1517,7 +1517,7 @@ To capture a cart attribute, include an HTML input with an attribute of \`name="
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/attributes)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cart_level_discount_applications:{type:"array",description:`The cart-specific discount applications for the cart. 
@@ -1540,7 +1540,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/cart_level_discount_applications)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},discounts:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -1560,7 +1560,7 @@ The discounts applied to the cart.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/discounts)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount"},taxes_included:{type:"boolean",description:`Returns \`true\` if taxes are included in the prices of products in the cart. Returns \`false\` if not. This can be set in a store\u2019s [tax settings](https://www.shopify.com/admin/settings/taxes).
@@ -1573,7 +1573,7 @@ then the value reflects the tax requirements of the customer\u2019s country.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/cart/taxes_included)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},collection:{summary:"A [collection](https://help.shopify.com/manual/products/collections) in a store.",template:["collection"],description:`A [collection](https://help.shopify.com/manual/products/collections) in a store. 
@@ -1585,7 +1585,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{metafields:{type:"array",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the collection. 
@@ -1600,7 +1600,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"metafield"},id:{type:"number",description:`The ID of the collection. 
@@ -1612,7 +1612,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the collection. 
@@ -1624,7 +1624,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the collection. 
@@ -1636,7 +1636,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},description:{type:"string",description:`The description of the collection. 
@@ -1648,7 +1648,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/description)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},template_suffix:{type:"string",description:`The name of the [custom template](https://shopify.dev/themes/architecture/templates#alternate-templates) assigned to the collection. The name doesn't include the \`collection.\` prefix, or the file extension (\`.json\` or \`.liquid\`).
@@ -1660,7 +1660,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/template_suffix)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},current_vendor:{type:"string",description:`The vendor name on a vendor collection page. You can query for products from a certain vendor at the \`/collections/vendors\` URL
@@ -1677,7 +1677,7 @@ with a query parameter in the format of \`?q=[vendor]\`, where \`[vendor]\` is y
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/current_vendor)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},current_type:{type:"string",description:`The product type on a product type collection page. You can query for products of a certain type at the \`/collections/types\` URL
@@ -1694,7 +1694,7 @@ with a query parameter in the format of \`?q=[type]\`, where \`[type]\` is your 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/current_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The relative URL of the collection. 
@@ -1706,7 +1706,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},published_at:{type:"string",description:`A timestamp for when the collection was published. 
@@ -1720,7 +1720,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/published_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},image:{type:"object",description:`The image for the collection. This image is added on the collection's page in the Shopify admin.
@@ -1730,7 +1730,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},sort_options:{type:"array",description:`The available sorting options for the collection. 
@@ -1763,7 +1763,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/sort_options)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"sort_option"},sort_by:{type:"string",description:`The sort order applied to the collection by the \`sort_by\` URL parameter. If there's no \`sort_by\` URL parameter, then the value is \`nil\`.
@@ -1773,7 +1773,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/sort_by)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},default_sort_by:{type:"string",description:`The default sort order of the collection. This is set on the collection's page in the Shopify admin.
@@ -1783,7 +1783,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/default_sort_by)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["manual","best-selling","title-ascending","price-ascending","price-descending","created-ascending","created-descending"]},next_product:{type:"object",description:`The next product in the collection. Returns \`nil\` if there's no next product. This property can be used on the [product page](https://shopify.dev/themes/architecture/templates/product) to output \`next\` links.
@@ -1793,7 +1793,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/next_product)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product"},previous_product:{type:"object",description:`The previous product in the collection. Returns \`nil\` if there's no previous product. This property can be used on the [product page](https://shopify.dev/themes/architecture/templates/product) to output \`previous\` links.
@@ -1803,7 +1803,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/previous_product)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product"},products_count:{type:"number",description:`The total number of products in the current view of the collection. 
@@ -1815,7 +1815,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/products_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},products:{type:"array",description:`All of the products in the collection. 
@@ -1829,7 +1829,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/products)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product"},all_products_count:{type:"number",description:`The total number of products in a collection. This includes products that have been filtered out of the current view.
@@ -1845,7 +1845,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/all_products_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},all_tags:{type:"array",description:`All of the tags applied to the products in the collection. This includes tags for products that have been filtered out of the current view.
@@ -1862,7 +1862,7 @@ A maximum of 1,000 tags can be returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/all_tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tags:{type:"array",description:`The tags that are currently applied to the collection. This doesn't include tags for products that have been filtered out of the current view.
@@ -1873,7 +1873,7 @@ Returns \`nil\` if no tags have been applied, or all products with tags have bee
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},all_types:{type:"array",description:`All of the product types in a collection. 
@@ -1898,7 +1898,7 @@ Use the [\`link_to_type\`](/docs/api/liquid/filters/link_to_type) filter to crea
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/all_types)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},all_vendors:{type:"array",description:`All of the product vendors in a collection. 
@@ -1923,7 +1923,7 @@ Use the [\`link_to_vendor\`](/docs/api/liquid/filters/link_to_vendor) filter to 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/all_vendors)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},filters:{type:"array",description:`The [storefront filters](https://help.shopify.com/manual/online-store/themes/customizing-themes/storefront-filters) that
@@ -1936,7 +1936,7 @@ To learn about supporting filters in your theme, refer to [Support storefront fi
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/filters)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter"},featured_image:{type:"object",description:`The featured image for the collection. The default is the [collection image](https://shopify.dev/docs/api/liquid/objects/collection#collection-image). If this image isn't available, then
@@ -1948,7 +1948,7 @@ doesn't have a featured image, then \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/collection/featured_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"}}},brand_color:{summary:"The colors defined as part of a store's [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets).",description:`The colors defined as part of a store's [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets). 
@@ -1978,7 +1978,7 @@ To access a brand color, specify the following:
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/brand_color)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},color:{summary:"A color from a [`color` setting](/themes/architecture/settings/input-settings#color).",description:`A color from a [\`color\` setting](https://shopify.dev/themes/architecture/settings/input-settings#color). 
@@ -2003,7 +2003,7 @@ When a color setting is referenced directly, the hexidecimal color code is retur
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{red:{type:"number",description:`The red component of the color, which is a number between 0 and 255. 
@@ -2015,7 +2015,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/red)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},green:{type:"number",description:`The green component of the color, which is a number between 0 and 255. 
@@ -2027,7 +2027,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/green)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},blue:{type:"number",description:`The blue component of the color, which is a number between 0 and 255. 
@@ -2039,7 +2039,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/blue)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},rgb:{type:"string",description:`The red, green, and blue values of the color, represented as a space-separated string. 
@@ -2051,7 +2051,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/rgb)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},rgba:{type:"string",description:`The red, green, blue, and alpha values of the color, represented as a
@@ -2064,7 +2064,7 @@ space-separated string, with a slash before the alpha channel.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/rgba)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},hue:{type:"number",description:`The hue component of the color, which is a number between 0 and 360. 
@@ -2076,7 +2076,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/hue)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},saturation:{type:"number",description:`The saturation component of the color, which is a number between 0 and 100. 
@@ -2088,7 +2088,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/saturation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},lightness:{type:"number",description:`The lightness component of the color, which is a number between 0 and 100. 
@@ -2100,7 +2100,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/lightness)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},alpha:{type:"number",description:`The alpha component of the color, which is a decimal number between 0.0 and 1.0. 
@@ -2112,7 +2112,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color/alpha)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},color_scheme:{summary:"A color_scheme from a [`color_scheme` setting](/themes/architecture/settings/input-settings#color_scheme).",description:`A color_scheme from a [\`color_scheme\` setting](https://shopify.dev/themes/architecture/settings/input-settings#color_scheme). 
@@ -2137,7 +2137,7 @@ When a color_scheme setting is referenced directly, the color scheme ID is retur
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color_scheme)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"string",description:`The ID of the color_scheme 
@@ -2149,7 +2149,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color_scheme/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},settings:{type:"any",description:`The [settings](https://shopify.dev/docs/themes/architecture/settings/input-settings#color_scheme_group) of the color_scheme. 
@@ -2161,7 +2161,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color_scheme/settings)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},color_scheme_group:{summary:"A color_scheme_group from a [`color_scheme_group` setting](/themes/architecture/settings/input-settings#color_scheme_group).",description:`A color_scheme_group from a [\`color_scheme_group\` setting](https://shopify.dev/themes/architecture/settings/input-settings#color_scheme_group). 
@@ -2188,7 +2188,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/color_scheme_group)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,const:!0},company_address:{summary:"The address of a company location.",description:`The address of a company location. To learn about B2B in themes, refer to [Support B2B customers in your theme](https://shopify.dev/themes/pricing-payments/b2b).
@@ -2198,7 +2198,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{attention:{type:"string",description:`The attention line of the address. 
@@ -2210,7 +2210,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/attention)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the address. 
@@ -2222,7 +2222,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},address1:{type:"string",description:`The first line of the address. 
@@ -2234,7 +2234,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/address1)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},address2:{type:"string",description:`The second line of the address. If no second line is specified, then \`nil\` is returned.
@@ -2244,7 +2244,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/address2)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},city:{type:"string",description:`The city of the address. 
@@ -2256,7 +2256,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/city)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},zip:{type:"string",description:`The zip or postal code of the address. 
@@ -2268,7 +2268,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/zip)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},country_code:{type:"string",description:`The country of the address in [ISO 3166-1 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html). 
@@ -2280,7 +2280,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/country_code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},province_code:{type:"string",description:`The province of the address in [ISO 3166-2 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html). 
@@ -2294,7 +2294,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/province_code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},country:{type:"object",description:`The country of the address. 
@@ -2306,7 +2306,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/country)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"country"},street:{type:"string",description:`A combination of the first and second lines of the address. 
@@ -2318,7 +2318,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/street)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},province:{type:"string",description:`The province of the address. 
@@ -2330,7 +2330,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_address/province)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},company:{summary:"A company that a [customer](/docs/api/liquid/objects/customer) is purchasing for.",description:`A company that a [customer](https://shopify.dev/docs/api/liquid/objects/customer) is purchasing for. To learn about B2B in themes, refer to [Support B2B customers in your theme](https://shopify.dev/themes/pricing-payments/b2b).
@@ -2340,7 +2340,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the company. 
@@ -2352,7 +2352,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The name of the company. 
@@ -2364,7 +2364,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},available_locations:{type:"array",description:`The company locations that the current customer has access to, or can interact with. 
@@ -2376,7 +2376,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company/available_locations)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"company_location"},metafields:{type:"array",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the company. 
@@ -2391,7 +2391,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"metafield"}}},company_location:{summary:"A location of the [company](/docs/api/liquid/objects/company) that a [customer](/docs/api/liquid/objects/customer) is purchasing for.",description:`A location of the [company](https://shopify.dev/docs/api/liquid/objects/company) that a [customer](https://shopify.dev/docs/api/liquid/objects/customer) is purchasing for. To learn about B2B in themes, refer to [Support B2B customers in your theme](https://shopify.dev/themes/pricing-payments/b2b).
@@ -2401,7 +2401,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the location. 
@@ -2413,7 +2413,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The name of the location. 
@@ -2425,7 +2425,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url_to_set_as_current:{type:"string",description:`The URL to set the location as the current location for the customer. 
@@ -2437,7 +2437,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location/url_to_set_as_current)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"current?":{type:"boolean",description:`Returns \`true\` if the location is currently selected. Returns \`false\` if not. 
@@ -2449,7 +2449,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location/current?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},company:{type:"object",description:`The company that the location is associated with. 
@@ -2461,7 +2461,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location/company)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"company"},shipping_address:{type:"object",description:`The address of the location. 
@@ -2473,7 +2473,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location/shipping_address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"company_address"},tax_registration_id:{type:"number",description:`The tax ID of the location. 
@@ -2485,7 +2485,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location/tax_registration_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},metafields:{type:"array",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the company location. 
@@ -2500,7 +2500,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/company_location/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"metafield"}}},content_for_header:{summary:"Dynamically returns all scripts required by Shopify.",global:!0,description:`Dynamically returns all scripts required by Shopify. Include the \`content_for_header\` object in your [layout files](https://shopify.dev/themes/architecture/layouts) between the \`<head>\` and
@@ -2520,7 +2520,7 @@ change the behaviour of your code.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/content_for_header)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,const:!0},country:{summary:"A country supported by the store's localization options.",description:`A country supported by the store's localization options. To learn how to use the \`country\` object to offer localization options in your theme,
@@ -2544,7 +2544,7 @@ When the country object is referenced directly, \`country.name\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{name:{type:"string",description:`The name of the country. 
@@ -2556,7 +2556,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},iso_code:{type:"string",description:`The ISO code of the country in [ISO 3166-1 (alpha 2) format](https://www.iso.org/glossary-for-iso-3166.html). 
@@ -2568,7 +2568,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country/iso_code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},unit_system:{type:"string",description:`The unit system of the country. 
@@ -2580,7 +2580,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country/unit_system)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["imperial","metric"]},currency:{type:"object",description:`The currency used in the country. 
@@ -2592,7 +2592,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country/currency)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"currency"},market:{type:"object",description:`The market that includes this country. 
@@ -2604,7 +2604,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country/market)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"market"}}},currency:{summary:"Information about a currency, like the ISO code and symbol.",description:`Information about a currency, like the ISO code and symbol. 
@@ -2616,7 +2616,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/currency)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{iso_code:{type:"string",description:`The [ISO code](https://www.iso.org/iso-4217-currency-codes.html) of the currency. 
@@ -2628,7 +2628,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/currency/iso_code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},symbol:{type:"string",description:`The symbol of the currency. 
@@ -2640,7 +2640,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/currency/symbol)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The name of the currency. 
@@ -2652,7 +2652,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/currency/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},customer:{summary:"A [customer](https://help.shopify.com/manual/customers) of the store.",global:!0,template:["customers/account","customers/addresses","customers/order"],description:`A [customer](https://help.shopify.com/manual/customers) of the store. The \`customer\` object is directly accessible globally when a customer is logged in to their account. It's also defined in
@@ -2685,7 +2685,7 @@ When using the \`customer\` object outside of customer-specific templates or obj
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{first_name:{type:"string",description:`The first name of the customer. 
@@ -2697,7 +2697,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/first_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},last_name:{type:"string",description:`The last name of the customer. 
@@ -2709,7 +2709,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/last_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},orders_count:{type:"number",description:`The total number of orders that the customer has placed. 
@@ -2721,7 +2721,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/orders_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_spent:{type:"number",description:`The total amount that the customer has spent on all orders in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -2737,7 +2737,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/total_spent)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},orders:{type:"array",description:`All of the orders placed by the customer. 
@@ -2751,7 +2751,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/orders)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"order"},last_order:{type:"object",description:`The last order placed by the customer, not including test orders. 
@@ -2763,7 +2763,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/last_order)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"order"},name:{type:"string",description:`The full name of the customer. 
@@ -2775,7 +2775,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},email:{type:"string",description:`The email of the customer. 
@@ -2787,7 +2787,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/email)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},phone:{type:"string",description:`The phone number of the customer. This phone number is only populated if the customer checks out using a phone number during checkout, opts in to SMS
@@ -2798,7 +2798,7 @@ notifications, or if the merchant has manually entered it.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/phone)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},has_account:{type:"boolean",description:`Returns \`true\` if the email associated with the customer is tied to a
@@ -2814,7 +2814,7 @@ of whether the customer has logged into their account.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/has_account)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},accepts_marketing:{type:"boolean",description:`Returns \`true\` if the customer accepts marketing. Returns \`false\` if not. 
@@ -2826,7 +2826,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/accepts_marketing)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the customer. 
@@ -2838,7 +2838,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tags:{type:"array",description:`The tags associated with the customer. 
@@ -2850,7 +2850,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},default_address:{type:"object",description:`The default address of the customer. 
@@ -2862,7 +2862,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/default_address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"address"},addresses:{type:"array",description:`All of the addresses associated with the customer. 
@@ -2876,7 +2876,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/addresses)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"address"},addresses_count:{type:"number",description:`The number of addresses associated with the customer. 
@@ -2888,7 +2888,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/addresses_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tax_exempt:{type:"boolean",description:`Returns \`true\` if the customer is exempt from taxes. Returns \`false\` if not. 
@@ -2900,7 +2900,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/tax_exempt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"b2b?":{type:"boolean",description:`Returns \`true\` if the customer is a B2B customer. Returns \`false\` if not. To learn about B2B in themes, refer to [Support B2B customers in your theme](https://shopify.dev/themes/pricing-payments/b2b).
@@ -2910,7 +2910,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/b2b?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},company_available_locations:{type:"array",description:`The company locations that the customer has access to, or can interact with. To learn about B2B in themes, refer to [Support B2B customers in your theme](https://shopify.dev/themes/pricing-payments/b2b).
@@ -2920,7 +2920,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/company_available_locations)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"company_location"},current_location:{type:"object",description:`The currently selected company location. To learn about B2B in themes, refer to [Support B2B customers in your theme](https://shopify.dev/themes/pricing-payments/b2b).
@@ -2930,7 +2930,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/current_location)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"company_location"},current_company:{type:"object",description:`The company that the customer is purchasing for. To learn about B2B in themes, refer to [Support B2B customers in your theme](https://shopify.dev/themes/pricing-payments/b2b).
@@ -2940,7 +2940,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/customer/current_company)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"company"}}},discount_allocation:{summary:"Information about how a discount affects an item.",description:`Information about how a discount affects an item. To learn about how to display discounts in your theme, refer to [Discounts](https://shopify.dev/themes/pricing-payments/discounts).
@@ -2950,7 +2950,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_allocation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{discount_application:{type:"object",description:`The discount application that applies the discount to the item. 
@@ -2962,7 +2962,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_allocation/discount_application)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},amount:{type:"number",description:`The amount that the item is discounted by in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -2978,7 +2978,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_allocation/amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},discount_application:{summary:"Information about the intent of a discount.",description:`Information about the intent of a discount. To learn about how to display discounts in your theme, refer to [Discounts](https://shopify.dev/themes/pricing-payments/discounts).
@@ -2988,7 +2988,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{total_allocated_amount:{type:"number",description:`The total amount of the discount in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -3004,7 +3004,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/total_allocated_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The customer-facing name of the discount. 
@@ -3016,7 +3016,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value:{type:"number",description:`The value of the discount. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/discount_application#discount_application-value_type) of the
@@ -3038,7 +3038,7 @@ discount. The following table outlines what the value represents for each value 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},target_selection:{type:"string",description:`The selection method for line items or shipping lines to be discounted. 
@@ -3053,7 +3053,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/target_selection)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["all","entitled","explicit"]},type:{type:"string",description:`The type of the discount. 
@@ -3065,7 +3065,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["automatic","discount_code","manual","script"]},value_type:{type:"string",description:`The value type of the discount. 
@@ -3077,7 +3077,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/value_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["fixed_amount","percentage"]},target_type:{type:"string",description:`The type of item that the discount applies to. 
@@ -3089,7 +3089,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/discount_application/target_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["line_item","shipping_line"]}}},external_video:{summary:"Information about an external video from YouTube or Vimeo.",description:`Information about an external video from YouTube or Vimeo. 
@@ -3105,7 +3105,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{external_id:{type:"string",description:`The ID of the video from its external source. 
@@ -3117,7 +3117,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video/external_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},aspect_ratio:{type:"number",description:`The aspect ratio of the video as a decimal. 
@@ -3129,7 +3129,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video/aspect_ratio)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},host:{type:"string",description:`The service that hosts the video. 
@@ -3141,7 +3141,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video/host)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["youtube","vimeo"]},alt:{type:"string",description:`The alt text of the external video. 
@@ -3153,7 +3153,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video/alt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the external video. 
@@ -3165,7 +3165,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},media_type:{type:"string",description:`The media type of the external video. Always returns \`external_video\`. 
@@ -3192,7 +3192,7 @@ You can use the \`media_type\` property with the [\`where\` filter](/docs/api/li
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video/media_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The position of the external video in the [\`product.media\`](https://shopify.dev/docs/api/liquid/objects/product#product-media) array. 
@@ -3204,7 +3204,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},preview_image:{type:"object",description:`A preview image of the media. 
@@ -3218,7 +3218,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/external_video/preview_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"}}},filter:{summary:"A [storefront filter](https://help.shopify.com/manual/online-store/themes/customizing-themes/storefront-filters).",description:`A [storefront filter](https://help.shopify.com/manual/online-store/themes/customizing-themes/storefront-filters). To learn about supporting filters in your theme, refer to [Support storefront filtering](https://shopify.dev/themes/navigation-search/filtering/storefront-filtering/support-storefront-filtering).
@@ -3228,7 +3228,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{param_name:{type:"string",description:`The URL parameter for the filter. For example, \`filter.v.option.color\`. 
@@ -3240,7 +3240,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/param_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},label:{type:"string",description:`The customer-facing label for the filter. 
@@ -3252,7 +3252,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/label)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},type:{type:"string",description:`The type of the filter. 
@@ -3264,7 +3264,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["boolean","list","price_range"]},active_values:{type:"array",description:`The values of the filter that are currently active.
@@ -3278,7 +3278,7 @@ The array can have values only for \`boolean\` and \`list\` type filters.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/active_values)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter_value"},inactive_values:{type:"array",description:`The values of the filter that are currently inactive. The array can have values only for \`boolean\` and \`list\` type filters.
@@ -3288,7 +3288,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/inactive_values)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter_value"},values:{type:"array",description:`The values of the filter.
@@ -3302,7 +3302,7 @@ The array can have values only for \`boolean\` and \`list\` type filters.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/values)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter_value"},false_value:{type:"object",description:`The \`false\` filter value.
@@ -3316,7 +3316,7 @@ Returns a value only for \`boolean\` type filters. Returns \`nil\` for other typ
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/false_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter_value"},true_value:{type:"object",description:`The \`true\` filter value.
@@ -3330,7 +3330,7 @@ Returns a value only for \`boolean\` type filters. Returns \`nil\` for other typ
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/true_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter_value"},max_value:{type:"object",description:`The highest filter value.
@@ -3344,7 +3344,7 @@ Returns a value only for \`price_range\` type filters. Returns \`nil\` for other
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/max_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter_value"},min_value:{type:"object",description:`The lowest filter value.
@@ -3358,7 +3358,7 @@ Returns a value only for \`price_range\` type filters. Returns \`nil\` for other
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/min_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter_value"},range_max:{type:"number",description:`The highest product price within the collection or search results.
@@ -3372,7 +3372,7 @@ Returns a value only for \`price_range\` type filters. Returns \`nil\` for other
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/range_max)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url_to_remove:{type:"string",description:`The current page URL with the URL parameter related to the filter removed. 
@@ -3384,7 +3384,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter/url_to_remove)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},filter_value:{summary:"A specific value of a filter.",description:`A specific value of a filter. To learn about supporting filters in your theme, refer to [Support storefront filtering](https://shopify.dev/themes/navigation-search/filtering/storefront-filtering/support-storefront-filtering).
@@ -3394,7 +3394,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{param_name:{type:"string",description:`The URL parameter for the parent filter of the filter value. For example, \`filter.v.option.color\`.
@@ -3412,7 +3412,7 @@ Filters of type \`price_range\` include an extra component depending on whether 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter_value/param_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value:{type:"string",description:`The value. 
@@ -3424,7 +3424,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter_value/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},active:{type:"boolean",description:`Returns \`true\` if the value is currently active. Returns \`false\` if not.
@@ -3438,7 +3438,7 @@ Can only return \`true\` for filters of type \`boolean\` or \`list\`.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter_value/active)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},count:{type:"number",description:`The number of results related to the filter value.
@@ -3452,7 +3452,7 @@ Returns a value only for \`boolean\` and \`list\` type filters. Returns \`nil\` 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter_value/count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},label:{type:"string",description:`The customer-facing label for the filter value. For example, \`Red\` or \`Rouge\`.
@@ -3466,7 +3466,7 @@ Returns a value only for \`boolean\` and \`list\` type filters. Returns \`nil\` 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter_value/label)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url_to_add:{type:"string",description:`The current page URL with the filter value parameter added. 
@@ -3478,7 +3478,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter_value/url_to_add)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url_to_remove:{type:"string",description:`The current page URL with the filter value parameter removed. 
@@ -3490,7 +3490,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/filter_value/url_to_remove)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},focal_point:{summary:"The focal point for an image.",description:`The focal point for an image. The focal point will remain visible when the image is cropped by the
@@ -3519,7 +3519,7 @@ When a \`focal_point\` object is referenced directly, the coordinates are return
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/focal_point)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{x:{type:"number",description:`The horizontal position of the focal point, as a percent of the image width. Returns \`50\` if no focal point is set. 
@@ -3531,7 +3531,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/focal_point/x)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},y:{type:"number",description:`The vertical position of the focal point, as a percent of the image height. Returns \`50\` if no focal point is set. 
@@ -3543,7 +3543,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/focal_point/y)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},font:{summary:"A font from a [`font_picker` setting](/themes/architecture/settings/input-settings#font_picker).",description:`A font from a [\`font_picker\` setting](https://shopify.dev/themes/architecture/settings/input-settings#font_picker). You can use the \`font\` object in Liquid [assets](https://shopify.dev/themes/architecture#assets) or inside a [\`style\` tag](https://shopify.dev/docs/api/liquid/tags/style)
@@ -3561,7 +3561,7 @@ to apply font setting values to theme CSS.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/font)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{family:{type:"string",description:`The family name of the font. 
@@ -3573,7 +3573,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/font/family)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},fallback_families:{type:"string",description:`The fallback families of the font. 
@@ -3585,7 +3585,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/font/fallback_families)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},baseline_ratio:{type:"number",description:`The baseline ratio of the font as a decimal. 
@@ -3597,7 +3597,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/font/baseline_ratio)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},weight:{type:"number",description:`The weight of the font. 
@@ -3609,7 +3609,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/font/weight)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},style:{type:"string",description:`The style of the font. 
@@ -3621,7 +3621,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/font/style)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},variants:{type:"array",description:`The variants in the family of the font. 
@@ -3633,7 +3633,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/font/variants)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"font"},"system?":{type:"boolean",description:`Returns \`true\` if the font is a system font. Returns \`false\` if not. 
@@ -3648,7 +3648,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/font/system?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},form:{summary:"Information about a form created by a [`form` tag](/docs/api/liquid/tags/form).",description:`Information about a form created by a [\`form\` tag](https://shopify.dev/docs/api/liquid/tags/form). 
@@ -3660,7 +3660,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{errors:{type:"object",description:`Any errors from the form. If there are no errors, then \`nil\` is returned.
@@ -3677,7 +3677,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/errors)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"form_errors"},address1:{type:"string",description:`The first address line associated with the address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3687,7 +3687,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/address1)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},address2:{type:"string",description:`The second address line associated with the address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3697,7 +3697,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/address2)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},author:{type:"string",description:`The name of the author of the article comment. This property is exclusive to the [\`new_comment\` form](https://shopify.dev/docs/api/liquid/tags/form#form-new_comment).
@@ -3707,7 +3707,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/author)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},body:{type:"string",description:`The content of the contact submission or article comment. This property is exclusive to the [\`contact\`](https://shopify.dev/docs/api/liquid/tags/form#form-contact) and [\`new_comment\`](https://shopify.dev/docs/api/liquid/tags/form#form-new_comment)
@@ -3718,7 +3718,7 @@ forms.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/body)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},city:{type:"string",description:`The city associated with the address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3728,7 +3728,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/city)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},company:{type:"string",description:`The company associated with the address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3738,7 +3738,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/company)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},country:{type:"string",description:`The country associated with the address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3748,7 +3748,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/country)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},email:{type:"string",description:`The email associated with the form. This property is exclusive to the following forms:
@@ -3766,7 +3766,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/email)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},first_name:{type:"string",description:`The first name associated with the customer or address. This property is exclusive to the [\`create_customer\`](https://shopify.dev/docs/api/liquid/tags/form#form-create_customer) and
@@ -3777,7 +3777,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/first_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"string",description:`The ID of the form. 
@@ -3789,7 +3789,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},last_name:{type:"string",description:`The last name associated with the customer or address. This property is exclusive to the [\`create_customer\`](https://shopify.dev/docs/api/liquid/tags/form#form-create_customer) and
@@ -3800,7 +3800,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/last_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},password_needed:{type:"boolean",description:`Returns \`true\`. This property is exclusive to the [\`customer_login\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_login).
@@ -3810,7 +3810,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/password_needed)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},phone:{type:"string",description:`The phone number associated with the address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3820,7 +3820,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/phone)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"posted_successfully?":{type:"boolean",description:`Returns \`true\` if the form was submitted successfully. Returns \`false\` if there were errors. 
@@ -3834,7 +3834,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/posted_successfully?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},province:{type:"string",description:`The province associated with the address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3844,7 +3844,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/province)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},set_as_default_checkbox:{type:"string",description:`Renders an HTML checkbox that can submit the address as the customer's default address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3854,7 +3854,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/set_as_default_checkbox)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The nickname of the gift card recipient. This property is exclusive to the [\`product\` form](https://shopify.dev/docs/api/liquid/tags/form#form-product).
@@ -3864,7 +3864,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},message:{type:"string",description:`The personalized message intended for the recipient. This property is exclusive to the [\`product\` form](https://shopify.dev/docs/api/liquid/tags/form#form-product).
@@ -3874,7 +3874,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/message)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},zip:{type:"string",description:`The zip or postal code associated with the address. This property is exclusive to the [\`customer_address\` form](https://shopify.dev/docs/api/liquid/tags/form#form-customer_address).
@@ -3884,7 +3884,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form/zip)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},fulfillment:{summary:`An order [fulfillment](https://help.shopify.com/manual/orders/fulfillment), which includes information like the line items
@@ -3898,7 +3898,7 @@ being fulfilled and shipment tracking.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{created_at:{type:"string",description:`A timestamp for when the fulfillment was created. 
@@ -3912,7 +3912,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/created_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},item_count:{type:"number",description:`The number of items in the fulfillment. 
@@ -3924,7 +3924,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/item_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},fulfillment_line_items:{type:"array",description:`The line items in the fulfillment. 
@@ -3936,7 +3936,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/fulfillment_line_items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"},tracking_company:{type:"string",description:`The name of the fulfillment service. 
@@ -3948,7 +3948,19 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/tracking_company)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
+
+
+`},tracking_numbers:{type:"array",description:`An array of the fulfillment's tracking numbers. 
+
+
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/tracking_numbers)
+
+
+Last Updated: 0th October 2023
 
 
 `},tracking_number:{type:"string",description:`The fulfillment's tracking number. If there's no tracking number, then \`nil\` is returned.
@@ -3958,7 +3970,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/tracking_number)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tracking_url:{type:"string",description:`The URL for the fulfillment's tracking number. If there's no tracking number, then \`nil\` is returned.
@@ -3968,7 +3980,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/fulfillment/tracking_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},generic_file:{summary:"A file from a `file_reference` type [metafield](/docs/api/liquid/objects/metafield) that is neither an image or video.",description:`A file from a \`file_reference\` type [metafield](https://shopify.dev/docs/api/liquid/objects/metafield) that is neither an image or video. 
@@ -3982,7 +3994,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/generic_file)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{url:{type:"string",description:`The [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) for the file. 
@@ -3994,7 +4006,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/generic_file/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the file. 
@@ -4006,7 +4018,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/generic_file/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},media_type:{type:"string",description:`The media type of the model. Always returns \`generic_file\`. 
@@ -4018,7 +4030,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/generic_file/media_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},preview_image:{type:"object",description:`A preview image for the file. 
@@ -4030,7 +4042,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/generic_file/preview_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},position:{type:"number",description:`The position of the media in the [\`product.media\` array](https://shopify.dev/docs/api/liquid/objects/product#product-media). If the source is a [\`file_reference\` metafield](https://shopify.dev/apps/metafields/types), then \`nil\` is returned.
@@ -4040,7 +4052,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/generic_file/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},alt:{type:"string",description:`The alt text of the media. 
@@ -4052,7 +4064,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/generic_file/alt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},gift_card:{summary:"A [gift card](https://help.shopify.com/manual/products/gift-card-products) that's been issued to a customer or a recipient.",template:["gift_card.liquid"],description:`A [gift card](https://help.shopify.com/manual/products/gift-card-products) that's been issued to a customer or a recipient. 
@@ -4064,7 +4076,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{balance:{type:"number",description:`The remaining balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -4080,7 +4092,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/balance)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},code:{type:"string",description:`The code used to redeem the gift card. 
@@ -4092,7 +4104,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},currency:{type:"string",description:`The [ISO code](https://www.iso.org/iso-4217-currency-codes.html) of the currency that the gift card was issued in. 
@@ -4104,7 +4116,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/currency)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},customer:{type:"object",description:`The customer associated with the gift card. 
@@ -4116,7 +4128,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/customer)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"customer"},recipient:{type:"object",description:`The recipient associated with the gift card. If there is no recipient associated with the gift card, then \`nil\` is returned.
@@ -4126,7 +4138,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/recipient)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"recipient"},message:{type:"string",description:`The personalized message intended for the recipient. If there is no message intended for the recipient, then \`nil\` is returned.
@@ -4136,7 +4148,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/message)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},send_on:{type:"string",description:`The scheduled date on which the gift card will be sent to the recipient. If the gift card does not have a scheduled date, then \`nil\` is returned.
@@ -4151,7 +4163,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/send_on)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},enabled:{type:"boolean",description:`Returns \`true\` if the gift card is enabled. Returns \`false\` if not. 
@@ -4163,7 +4175,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/enabled)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},expired:{type:"boolean",description:`Returns \`true\` if the gift card is expired. Returns \`false\` if not. 
@@ -4175,7 +4187,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/expired)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},expires_on:{type:"string",description:`A timestamp for when the gift card expires. If the gift card never expires, then \`nil\` is returned.
@@ -4190,7 +4202,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/expires_on)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},initial_value:{type:"number",description:`The initial balance of the gift card in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -4206,7 +4218,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/initial_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The URL to view the gift card. This URL is on the \`checkout.shopify.com\` domain. 
@@ -4221,7 +4233,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},template_suffix:{type:"string",description:`The name of the [custom template](https://shopify.dev/themes/architecture/templates#alternate-templates) assigned to the gift card. The name doesn't include the \`gift_card.\` prefix, or the \`.liquid\` file extension.
@@ -4233,7 +4245,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/template_suffix)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},properties:{type:"array",description:`The [line item properties](https://shopify.dev/docs/api/liquid/objects/line_item#line_item-properties) assigned to the gift card. If there aren't any line item properties, then an [\`EmptyDrop\`](https://shopify.dev/docs/api/liquid/basics#emptydrop) is returned.
@@ -4243,7 +4255,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/properties)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"untyped"},qr_identifier:{type:"string",description:`A string used to generate a QR code for the gift card. 
@@ -4255,7 +4267,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/qr_identifier)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},pass_url:{type:"string",description:`The URL to download the gift card as an Apple Wallet Pass. 
@@ -4267,7 +4279,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/pass_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},product:{type:"object",description:`The product associated with the gift card. 
@@ -4279,7 +4291,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/product)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product"},last_four_characters:{type:"string",description:`The last 4 characters of the code used to redeem the gift card. 
@@ -4291,7 +4303,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/gift_card/last_four_characters)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},image:{summary:"An image, such as a product or collection image.",description:`An image, such as a product or collection image. To learn about the image formats that Shopify supports, visit the [Shopify Help Center](https://help.shopify.com/manual/online-store/images/theme-images#image-formats).
@@ -4319,7 +4331,7 @@ When an \`image\` object is referenced directly, the image's relative URL path i
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",scope:"image",properties:{presentation:{type:"object",description:`The presentation settings for the image. 
@@ -4331,7 +4343,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/presentation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image_presentation"},src:{type:"string",description:`The relative URL of the image. 
@@ -4343,7 +4355,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/src)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},width:{type:"number",description:`The width of the image in pixels. 
@@ -4355,7 +4367,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/width)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},height:{type:"number",description:`The height of the image in pixels. 
@@ -4367,7 +4379,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/height)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},aspect_ratio:{type:"number",description:`The aspect ratio of the image as a decimal. 
@@ -4379,7 +4391,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/aspect_ratio)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},alt:{type:"string",description:`The alt text of the image. 
@@ -4391,7 +4403,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/alt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"attached_to_variant?":{type:"boolean",description:`Returns \`true\` if the image is associated with a variant. Returns \`false\` if not. The \`attached_to_variant?\` property is only available for images accessed through the following sources:
@@ -4406,7 +4418,7 @@ If you reference this property on an image from another source, then \`nil\` is 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/attached_to_variant?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the image. If you reference the \`id\` property for preview images of [\`generic_file\`](https://shopify.dev/docs/api/liquid/objects/generic_file) or
@@ -4417,7 +4429,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},media_type:{type:"string",description:`The media type of the image. Always returns \`image\`. The \`media_type\` property is only available for images accessed through the following sources:
@@ -4447,7 +4459,7 @@ You can use the \`media_type\` property with the [\`where\` filter](/docs/api/li
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/media_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The position of the image in the [\`product.images\`](https://shopify.dev/docs/api/liquid/objects/product#product-images) or [\`product.media\`](https://shopify.dev/docs/api/liquid/objects/product#product-media)
@@ -4459,7 +4471,7 @@ on an image from another source, then \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},preview_image:{type:"object",description:`A preview image for the image. The \`preview_image\` property is only available for images accessed through the following sources:
@@ -4475,7 +4487,7 @@ If you reference this property on an image from another source, then \`nil\` is 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/preview_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},product_id:{type:"number",description:`The ID of the product that the image is associated with. The \`product_id\` property is only available for images associated with a product. If you reference this property on
@@ -4486,7 +4498,7 @@ an image from another source, then \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/product_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},variants:{type:"array",description:`The product variants that the image is associated with. The \`variants\` property is only available for images accessed through the following sources:
@@ -4501,7 +4513,7 @@ If you reference this property on an image from another source, then \`nil\` is 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image/variants)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"variant"}}},image_presentation:{summary:"The presentation settings for an image.",description:`The presentation settings for an image. 
@@ -4513,7 +4525,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image_presentation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{focal_point:{type:"object",description:`The focal point for the image. 
@@ -4525,7 +4537,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/image_presentation/focal_point)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"focal_point"}}},images:{summary:`All of the [images](/docs/api/liquid/objects/image) that have been [uploaded](https://help.shopify.com/manual/online-store/images/theme-images#upload-images)
@@ -4550,7 +4562,7 @@ You can access images from the \`images\` array by their filename.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/images)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"array",scope:"image"},line_item:{summary:"A line in a cart, checkout, or order. Each line item represents a product variant.",description:`A line in a cart, checkout, or order. Each line item represents a product variant. 
@@ -4562,7 +4574,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the line item. The ID differs depending on the context. The following table outlines the possible contexts and their associated values:
@@ -4578,7 +4590,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},quantity:{type:"number",description:`The quantity of the line item. 
@@ -4590,7 +4602,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/quantity)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -4614,7 +4626,7 @@ The price of the line item in the currency's subunit. This includes any discount
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},line_price:{type:"number",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -4639,7 +4651,7 @@ The combined price, in the currency's subunit, of all of the items in a line ite
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/line_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_discount:{type:"number",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -4663,7 +4675,7 @@ The total amount, in the currency's subunit, of any discounts applied to the lin
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/total_discount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},discount_allocations:{type:"array",description:`The discount allocations that apply to the line item.
@@ -4676,7 +4688,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/discount_allocations)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_allocation"},final_price:{type:"number",description:`The price of the line item in the currency's subunit. This includes any line-level discounts. The value is output in the customer's local (presentment) currency.
@@ -4692,7 +4704,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/final_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},final_line_price:{type:"number",description:`The combined price, in the currency's subunit, of all of the items in the line item. This includes any line-level discounts. The value is equal to \`line_item.final_price\` multiplied by \`line_item.quantity\`. It's output in the customer's local
@@ -4709,7 +4721,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/final_line_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},variant_id:{type:"number",description:`The [ID](https://shopify.dev/docs/api/liquid/objects/variant#variant-id) of the line item's variant. 
@@ -4721,7 +4733,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/variant_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},product_id:{type:"number",description:`The [ID](https://shopify.dev/docs/api/liquid/objects/product#product-id) of the line item's product. 
@@ -4733,7 +4745,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/product_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},product:{type:"object",description:`The product associated with the line item. 
@@ -4745,7 +4757,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/product)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product"},variant:{type:"object",description:`The variant associated with the line item. 
@@ -4757,7 +4769,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/variant)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"variant"},tax_lines:{type:"array",description:`The tax lines for the line item. 
@@ -4769,7 +4781,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/tax_lines)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"tax_line"},fulfillment:{type:"object",description:`The fulfillment of the line item. 
@@ -4781,7 +4793,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/fulfillment)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"fulfillment"},successfully_fulfilled_quantity:{type:"number",description:`The number of items from the line item that have been successfully fulfilled. 
@@ -4793,7 +4805,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/successfully_fulfilled_quantity)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},fulfillment_service:{type:"string",description:`The [fulfillment service](https://help.shopify.com/manual/shipping/understanding-shipping/dropshipping-and-fulfillment-services)
@@ -4806,7 +4818,7 @@ for the vartiant associated with the line item. If there's no fulfillment servic
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/fulfillment_service)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},properties:{type:"array",description:`The properties of the line item. You can add, or allow customers to add, custom information to a line item with line item properties.
@@ -4853,7 +4865,7 @@ For example, you can use the following code to capture custom engraving text for
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/properties)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"untyped"},unit_price_measurement:{type:"object",description:`The unit price measurement of the line item. 
@@ -4869,7 +4881,7 @@ To learn about how to display unit prices in your theme, refer to [Unit pricing]
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/unit_price_measurement)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"unit_price_measurement"},unit_price:{type:"number",description:`The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)
@@ -4895,7 +4907,7 @@ To learn about how to display unit prices in your theme, refer to [Unit pricing]
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/unit_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},sku:{type:"string",description:`The [sku](https://shopify.dev/docs/api/liquid/objects/variant#variant-sku) of the variant associated with the line item. 
@@ -4907,7 +4919,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/sku)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},message:{type:"string",description:`Information about the discounts that have affected the line item. The following table outlines what's returned depending on the number of discounts affecting the line item:
@@ -4923,7 +4935,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/message)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},vendor:{type:"string",description:`The vendor of the variant associated with the line item. 
@@ -4935,7 +4947,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/vendor)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the line item. The title is a combination of \`line_item.product.title\` and \`line_item.variant.title\`, separated
@@ -4959,7 +4971,7 @@ each title is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},taxable:{type:"boolean",description:`Returns \`true\` if taxes should be charged on the line item. Returns \`false\` if not. 
@@ -4971,7 +4983,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/taxable)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},original_price:{type:"number",description:`The price of the line item in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.
@@ -4987,7 +4999,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/original_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},original_line_price:{type:"number",description:`The combined price of all of the items in a line item in the currency's subunit, before any discounts have been applied. The value is equal to \`line_item.original_price\` multiplied by \`line_item.quantity\`. It's output in the customer's local
@@ -5004,7 +5016,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/original_line_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},line_level_total_discount:{type:"number",description:`The total amount of any discounts applied to the line item in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -5020,7 +5032,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/line_level_total_discount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},line_level_discount_allocations:{type:"array",description:`The discount allocations that apply directly to the line item.
@@ -5033,7 +5045,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/line_level_discount_allocations)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_allocation"},discounts:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -5053,7 +5065,7 @@ The discounts applied to the line item.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/discounts)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount"},gift_card:{type:"boolean",description:`Returns \`true\` if the product associated with the line item is a gift card. Returns \`false\` if not. 
@@ -5065,7 +5077,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/gift_card)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},requires_shipping:{type:"boolean",description:`Returns \`true\` if the variant associated with the line item requires shipping. Returns \`false\` if not. 
@@ -5077,7 +5089,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/requires_shipping)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},options_with_values:{type:"array",description:`The name and value pairs for each option of the variant associated with the line item. 
@@ -5114,7 +5126,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/options_with_values)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"untyped"},key:{type:"string",description:`The key of the line item. Line item keys are unique identifiers that consist of the following components separated by a colon:
@@ -5127,7 +5139,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/key)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},grams:{type:"number",description:`The weight of the line item in the store's [default weight unit](https://help.shopify.com/manual/intro-to-shopify/initial-setup/setup-business-settings#set-or-change-your-stores-default-weight-unit). 
@@ -5141,7 +5153,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/grams)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The relative URL of the variant associated with the line item. 
@@ -5153,7 +5165,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url_to_remove:{type:"string",description:`A URL to remove the line item from the cart. 
@@ -5167,7 +5179,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/url_to_remove)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},image:{type:"object",description:`The image of the line item. The image can come from one of the following sources:
@@ -5180,7 +5192,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},selling_plan_allocation:{type:"object",description:`The selling plan allocation of the line item. If the line item doesn't have a selling plan allocation, then \`nil\` is returned. #### Availability of selling plan information
@@ -5206,7 +5218,7 @@ The following properties aren't available when referencing selling plan informat
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/selling_plan_allocation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_allocation"},item_components:{type:"array",description:`The components of a line item. 
@@ -5220,7 +5232,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/line_item/item_components)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"}}},link:{summary:"A link in a [menu](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus).",description:`A link in a [menu](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus). To learn about how to implement navigation in a theme, refer to [Add navigation to your theme](https://shopify.dev/themes/navigation-search/navigation).
@@ -5230,7 +5242,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{active:{type:"boolean",description:`Returns \`true\` if the link is active. Returns \`false\` if not. A link is considered to be active if the current URL path matches, or contains, the link's [url](https://shopify.dev/docs/api/liquid/objects/link#link-url).
@@ -5253,7 +5265,7 @@ would be considered active:
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/active)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},current:{type:"boolean",description:`Returns \`true\` if the current URL path matches the [URL](https://shopify.dev/docs/api/liquid/objects/link#link-url) of the link. Returns \`false\` if not. 
@@ -5270,7 +5282,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/current)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},child_active:{type:"boolean",description:`Returns \`true\` if a link's child link is active. Returns \`false\` if not. A link is considered to be active if the current URL path matches, or contains, the [URL](https://shopify.dev/docs/api/liquid/objects/link#link-url) of
@@ -5287,7 +5299,7 @@ would be considered active:
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/child_active)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},child_current:{type:"boolean",description:`Returns \`true\` if current URL path matches a link's child link [URL](https://shopify.dev/docs/api/liquid/objects/link#link-url). Returns \`false\` if not. 
@@ -5304,7 +5316,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/child_current)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the link. 
@@ -5316,7 +5328,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},links:{type:"array",description:`The child links of the link. 
@@ -5342,7 +5354,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/links)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"link"},object:{type:"any",description:`The object associated with the link. The object can be one of the following:
@@ -5359,7 +5371,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/object)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the link. 
@@ -5371,7 +5383,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},type:{type:"string",description:`The type of the link. 
@@ -5383,7 +5395,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["article_link","blog_link","catalog_link","collection_link","collections_link","frontpage_link","http_link","page_link","policy_link","product_link","search_link"]},levels:{type:"number",description:`The number of nested levels under the link. 
@@ -5395,7 +5407,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/levels)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The URL of the link. 
@@ -5407,7 +5419,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/link/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},linklists:{summary:"All of the [menus](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus) in a store.",global:!0,description:`All of the [menus](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus) in a store. 
@@ -5438,7 +5450,7 @@ You can access a specific menu through the \`linklists\` object using the menu's
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/linklists)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"array",scope:"linklist"},linklist:{summary:"A [menu](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus) in a store.",description:`A [menu](https://help.shopify.com/manual/online-store/menus-and-links/drop-down-menus) in a store. To learn about how to implement navigation in a theme, refer to [Add navigation to your theme](https://shopify.dev/themes/navigation-search/navigation).
@@ -5448,7 +5460,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/linklist)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{links:{type:"array",description:`The links in the menu. 
@@ -5460,7 +5472,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/linklist/links)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"link"},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the menu. 
@@ -5472,7 +5484,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/linklist/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},levels:{type:"number",description:`The number of nested levels in the menu. 
@@ -5486,7 +5498,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/linklist/levels)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the menu. 
@@ -5498,7 +5510,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/linklist/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},forloop:{summary:"Information about a parent [`for` loop](/docs/api/liquid/tags/for).",description:`Information about a parent [\`for\` loop](https://shopify.dev/docs/api/liquid/tags/for). 
@@ -5522,7 +5534,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{length:{type:"number",description:`The total number of iterations in the loop. 
@@ -5534,7 +5546,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop/length)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},parentloop:{type:"object",description:`The parent \`forloop\` object. If the current \`for\` loop isn't nested inside another \`for\` loop, then \`nil\` is returned.
@@ -5556,7 +5568,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop/parentloop)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"forloop"},index:{type:"number",description:`The 1-based index of the current iteration. 
@@ -5568,7 +5580,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop/index)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},index0:{type:"number",description:`The 0-based index of the current iteration. 
@@ -5580,7 +5592,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop/index0)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},rindex:{type:"number",description:`The 1-based index of the current iteration, in reverse order. 
@@ -5592,7 +5604,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop/rindex)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},rindex0:{type:"number",description:`The 0-based index of the current iteration, in reverse order. 
@@ -5604,7 +5616,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop/rindex0)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},first:{type:"boolean",description:`Returns \`true\` if the current iteration is the first. Returns \`false\` if not. 
@@ -5616,7 +5628,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop/first)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},last:{type:"boolean",description:`Returns \`true\` if the current iteration is the last. Returns \`false\` if not. 
@@ -5628,7 +5640,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/forloop/last)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},tablerowloop:{summary:"Information about a parent [`tablerow` loop](/docs/api/liquid/tags/tablerow).",description:`Information about a parent [\`tablerow\` loop](https://shopify.dev/docs/api/liquid/tags/tablerow). 
@@ -5640,7 +5652,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{length:{type:"number",description:`The total number of iterations in the loop. 
@@ -5652,7 +5664,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/length)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},col:{type:"number",description:`The 1-based index of the current column. 
@@ -5664,7 +5676,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/col)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},row:{type:"number",description:`The 1-based index of current row. 
@@ -5676,7 +5688,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/row)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},index:{type:"number",description:`The 1-based index of the current iteration. 
@@ -5688,7 +5700,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/index)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},index0:{type:"number",description:`The 0-based index of the current iteration. 
@@ -5700,7 +5712,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/index0)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},col0:{type:"number",description:`The 0-based index of the current column. 
@@ -5712,7 +5724,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/col0)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},rindex:{type:"number",description:`The 1-based index of the current iteration, in reverse order. 
@@ -5724,7 +5736,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/rindex)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},rindex0:{type:"number",description:`The 0-based index of the current iteration, in reverse order. 
@@ -5736,7 +5748,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/rindex0)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},first:{type:"boolean",description:`Returns \`true\` if the current iteration is the first. Returns \`false\` if not. 
@@ -5748,7 +5760,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/first)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},last:{type:"boolean",description:`Returns \`true\` if the current iteration is the last. Returns \`false\` if not. 
@@ -5760,7 +5772,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/last)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},col_first:{type:"boolean",description:`Returns \`true\` if the current column is the first in the row. Returns \`false\` if not. 
@@ -5772,7 +5784,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/col_first)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},col_last:{type:"boolean",description:`Returns \`true\` if the current column is the last in the row. Returns \`false\` if not. 
@@ -5784,7 +5796,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tablerowloop/col_last)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},localization:{summary:"Information about the countries and languages that are available on a store.",global:!0,description:`Information about the countries and languages that are available on a store. The \`localization\` object can be used in a [localization form](https://shopify.dev/docs/api/liquid/tags/form#form-localization).
@@ -5796,7 +5808,7 @@ To learn about how to offer localization options in your theme, refer to [Suppor
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{available_countries:{type:"array",description:`The countries that are available on the store. 
@@ -5808,7 +5820,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization/available_countries)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"country"},available_languages:{type:"array",description:`The languages that are available on the store. 
@@ -5820,7 +5832,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization/available_languages)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"shop_locale"},market:{type:"object",description:`The currently selected market on the storefront. 
@@ -5832,7 +5844,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization/market)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"market"},country:{type:"object",description:`The currently selected country on the storefront. 
@@ -5844,7 +5856,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization/country)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"country"},language:{type:"object",description:`The currently selected language on the storefront. 
@@ -5856,7 +5868,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/localization/language)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"shop_locale"}}},location:{summary:"A store [location](https://help.shopify.com/manual/locations).",description:`A store [location](https://help.shopify.com/manual/locations). 
@@ -5871,7 +5883,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/location)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The location's ID. 
@@ -5883,7 +5895,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/location/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The location's name. 
@@ -5895,7 +5907,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/location/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},address:{type:"object",description:`The location's address. 
@@ -5907,7 +5919,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/location/address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"address"},latitude:{type:"number",description:`The latitude of the location's address. If the location's address isn't verified, then \`nil\` is returned.
@@ -5917,7 +5929,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/location/latitude)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},longitude:{type:"number",description:`The longitude of the location's address. If the location's address isn't verified, then \`nil\` is returned.
@@ -5927,7 +5939,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/location/longitude)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},metafields:{type:"any",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the location. 
@@ -5942,7 +5954,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/location/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},market:{summary:"A group of one or more regions of the world that a merchant is targeting for sales.",description:`A group of one or more regions of the world that a merchant is targeting for sales. To learn more about markets, refer to [Shopify Markets](https://shopify.dev/docs/apps/markets).
@@ -5954,7 +5966,7 @@ refer to [Detect and set a visitor's optimal localization](https://shopify.dev/d
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/market)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"string",description:`The ID of the market. 
@@ -5966,7 +5978,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/market/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the market. 
@@ -5978,7 +5990,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/market/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},metafields:{type:"array",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the market. 
@@ -5994,7 +6006,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/market/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"metafield"}}},measurement:{summary:"A measurement from one of the following metafield types:\n\n- `dimension`\n- `volume`\n- `weight`",description:`A measurement from one of the following metafield types:
@@ -6012,7 +6024,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/measurement)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{type:{type:"string",description:`The measurement type. 
@@ -6024,7 +6036,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/measurement/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["dimension","volume","weight"]},value:{type:"number",description:`The measurement value. 
@@ -6036,7 +6048,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/measurement/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},unit:{type:"string",description:`The measurement unit. 
@@ -6048,7 +6060,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/measurement/unit)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},metafield:{summary:"A [metafield](/apps/metafields) attached to a parent object.",description:`A [metafield](https://shopify.dev/apps/metafields) attached to a parent object. To learn about how to access a metafield on a specific object, refer to [Access metafields](https://shopify.dev/docs/api/liquid/objects/metafield#metafield-access-metafields).
@@ -6099,7 +6111,7 @@ Value: {{ product.metafields.information.directions.value }}
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metafield)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{value:{type:"any",description:`The value of the metafield. The following table outlines the value format for each metafield type:
@@ -6229,7 +6241,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metafield/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},type:{type:"string",description:`The [type](https://shopify.dev/apps/metafields/types) of the metafield. 
@@ -6241,7 +6253,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metafield/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["single_line_text_field","multi_line_text_field","rich_text_field","product_reference","collection_reference","variant_reference","page_reference","file_reference","number_integer","number_decimal","date","date_time","url_reference","json","boolean","color","weight","volume","dimension","rating","list","money"]},"list?":{type:"boolean",description:`Returns \`true\` if the metafield is a list type. Returns \`false\` if not. 
@@ -6255,7 +6267,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metafield/list?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},metaobject_definition:{summary:"A `metaobject_definition` defines the structure of a metaobject type for the store, which consists of\na merchant-defined set of [field definitions](https://help.shopify.com/en/manual/metafields/metafield-definitions).",description:`A \`metaobject_definition\` defines the structure of a metaobject type for the store, which consists of
@@ -6283,7 +6295,7 @@ For example, you can display the field \`author\` for each metaobject using the 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_definition)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{values:{type:"array",description:`The [metaobjects](https://shopify.dev/docs/api/liquid/objects#metaobject) that follow the definition. 
@@ -6295,7 +6307,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_definition/values)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"metaobject"},values_count:{type:"number",description:`The total number of entries for the metaobject definition. 
@@ -6307,10 +6319,10 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_definition/values_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
-`}}},metaobject:{summary:"A metaobject entry, which includes the values for a set of [fields](/docs/api/liquid/objects#metafield).\nThe set is defined by the parent [`metaobject_definition`](/docs/api/liquid/objects#metaobject_definition).",description:`A metaobject entry, which includes the values for a set of [fields](https://shopify.dev/docs/api/liquid/objects#metafield).
+`}}},metaobject:{summary:"A metaobject entry, which includes the values for a set of [fields](/docs/api/liquid/objects#metafield).\nThe set is defined by the parent [`metaobject_definition`](/docs/api/liquid/objects#metaobject_definition).",template:["metaobject"],description:`A metaobject entry, which includes the values for a set of [fields](https://shopify.dev/docs/api/liquid/objects#metafield).
 The set is defined by the parent [\`metaobject_definition\`](https://shopify.dev/docs/api/liquid/objects#metaobject_definition). 
 
 
@@ -6350,7 +6362,7 @@ A metaobjects's field values can be accessed using the key of the desired field:
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{system:{type:"object",description:`Basic information about the metaobject. These properties are grouped under the \`system\` object to avoid collisions between system property names and user-defined metaobject fields. 
@@ -6362,7 +6374,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject/system)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"metaobject_system"}}},metaobject_system:{summary:"Basic information about a [`metaobject`](/api/liquid/objects#metaobject). These properties are grouped under the `system` object to avoid collisions between system property names and user-defined metaobject fields.",description:`Basic information about a [\`metaobject\`](https://shopify.dev/api/liquid/objects#metaobject). These properties are grouped under the \`system\` object to avoid collisions between system property names and user-defined metaobject fields. 
@@ -6395,7 +6407,7 @@ You can also access \`metaobject_system\` properties when iterating over a list 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_system)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{type:{type:"string",description:`The type of the metaobject definition. This is a free-form string that's defined when the metaobject definition is created.
@@ -6405,7 +6417,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_system/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The unique [handle](https://shopify.dev/api/liquid/basics#handles) of the metaobject. 
@@ -6417,7 +6429,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_system/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the metaobject. 
@@ -6429,7 +6441,17 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_system/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
+
+
+`},url:{type:"string",description:`The relative URL of the metaobject. Only set for metaobjects that have the \`online_store\` capability.
+
+---
+
+[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/metaobject_system/url)
+
+
+Last Updated: 0th October 2023
 
 
 `}}},model:{summary:"A 3D model uploaded as product media.",description:`A 3D model uploaded as product media. 
@@ -6444,7 +6466,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{sources:{type:"array",description:`The source files for the model. 
@@ -6456,7 +6478,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model/sources)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"model_source"},alt:{type:"string",description:`The alt text of the model. 
@@ -6468,7 +6490,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model/alt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the model. 
@@ -6480,7 +6502,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},media_type:{type:"string",description:`The media type of the model. Always returns \`model\`. 
@@ -6507,7 +6529,7 @@ You can use the \`media_type\` property with the [\`where\` filter](/docs/api/li
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model/media_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The position of the model in the [\`product.media\`](https://shopify.dev/docs/api/liquid/objects/product#product-media) array. 
@@ -6519,7 +6541,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},preview_image:{type:"object",description:`A preview image for the model. 
@@ -6531,7 +6553,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model/preview_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"}}},model_source:{summary:"A model source file.",description:`A model source file. 
@@ -6543,7 +6565,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model_source)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{format:{type:"string",description:`The format of the model source file. 
@@ -6555,7 +6577,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model_source/format)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},mime_type:{type:"string",description:`The [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) of the model source file. 
@@ -6567,7 +6589,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model_source/mime_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) of the model source file. 
@@ -6579,7 +6601,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/model_source/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},money:{summary:"A money value, in the the customer's local (presentment) currency.",description:`A money value, in the the customer's local (presentment) currency. 
@@ -6604,7 +6626,7 @@ When a money object is referenced directly, the money value in cents is returned
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/money)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{currency:{type:"object",description:`The customer's local (presentment) currency. 
@@ -6616,7 +6638,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/money/currency)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"currency"}}},order:{summary:"An [order](https://help.shopify.com/manual/orders).",template:["customers/order"],description:`An [order](https://help.shopify.com/manual/orders). 
@@ -6628,7 +6650,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{discounts:{type:"object",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -6648,7 +6670,7 @@ The discounts on the order.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/discounts)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount"},attributes:{type:"any",description:`The attributes on the order. If there are no attributes on the order, then \`nil\` is returned.
@@ -6674,7 +6696,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/attributes)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cancel_reason:{type:"string",description:`The reason that the order was cancelled. 
@@ -6686,10 +6708,10 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/cancel_reason)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
-`,literal:["customer","declined","fraud","inventory","other"]},cancel_reason_label:{type:"string",description:`The localized version of the [cancellation reason](https://shopify.dev/docs/api/liquid/objects/order#order-cancel_reason) for the order. 
+`,literal:["customer","declined","fraud","inventory","staff","other"]},cancel_reason_label:{type:"string",description:`The localized version of the [cancellation reason](https://shopify.dev/docs/api/liquid/objects/order#order-cancel_reason) for the order. 
 
 **Tip**
 
@@ -6700,7 +6722,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/cancel_reason_label)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cancelled:{type:"boolean",description:`Returns \`true\` if the order was cancelled. Returns \`false\` if not. 
@@ -6712,7 +6734,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/cancelled)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cancelled_at:{type:"string",description:`A timestamp for when the order was cancelled. 
@@ -6726,7 +6748,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/cancelled_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cart_level_discount_applications:{type:"array",description:`The discount applications that apply at the order level. 
@@ -6738,7 +6760,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/cart_level_discount_applications)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},created_at:{type:"string",description:`A timestamp for when the order was created. 
@@ -6752,7 +6774,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/created_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_duties:{type:"number",description:`The sum of all duties applied to the line items in the order in the currency's subunit. If there are no duties, then \`nil\` is returned. The value is output in the customer's local (presentment) currency.
@@ -6768,7 +6790,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_duties)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},customer_url:{type:"string",description:`The URL for the customer to view the order in their account. 
@@ -6780,7 +6802,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/customer_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},customer:{type:"object",description:`The customer that placed the order. 
@@ -6792,7 +6814,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/customer)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"customer"},discount_applications:{type:"array",description:`All of the discount applications for the order and its line items. 
@@ -6804,7 +6826,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/discount_applications)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},total_discounts:{type:"number",description:`The total amount of all discounts applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -6820,7 +6842,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_discounts)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_net_amount:{type:"number",description:`The net amount of the order in the currency's subunit. The amount is calculated after refunds are applied, so is equal to \`order.total_price\` minus \`order.total_refunded_amount\`.
@@ -6838,7 +6860,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_net_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tax_price:{type:"number",description:`The total amount of taxes applied to the order in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -6854,7 +6876,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/tax_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_refunded_amount:{type:"number",description:`The total amount that's been refunded from the order in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -6870,7 +6892,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_refunded_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},email:{type:"string",description:`The email that's associated with the order. If no email is associated with the order, then \`nil\` is returned.
@@ -6880,7 +6902,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/email)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},financial_status:{type:"string",description:`The order's financial status. 
@@ -6892,7 +6914,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/financial_status)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["authorized","expired","paid","partially_paid","partially_refunded","pending","refunded","unpaid","voided"]},financial_status_label:{type:22,description:`The localized version of the [financial status](https://shopify.dev/docs/api/liquid/objects/order#order-financial_status) of the order. 
@@ -6906,7 +6928,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/financial_status_label)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},fulfillment_status:{type:"string",description:`The fulfillment status of the order. 
@@ -6918,7 +6940,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/fulfillment_status)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},fulfillment_status_label:{type:"string",description:`The localized version of the [fulfillment status](https://shopify.dev/docs/api/liquid/objects/order#order-fulfillment_status) of the order. 
@@ -6932,7 +6954,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/fulfillment_status_label)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["complete","fulfilled","partial","restocked","unfulfilled"]},id:{type:"string",description:`The ID of the order. 
@@ -6944,7 +6966,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},metafields:{type:"any",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the order. 
@@ -6959,7 +6981,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The name of the order. 
@@ -6971,7 +6993,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},note:{type:"string",description:`The note on the order. If there's no note on the order, then \`nil\` is returned.
@@ -6986,7 +7008,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/note)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},confirmation_number:{type:"string",description:`A randomly generated alpha-numeric identifier for the order that may be shown to the customer
@@ -7000,7 +7022,7 @@ This value isn't guaranteed to be unique.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/confirmation_number)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},order_number:{type:"number",description:`The integer representation of the order [name](https://shopify.dev/docs/api/liquid/objects/order#order-name). 
@@ -7012,7 +7034,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/order_number)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},order_status_url:{type:"string",description:`The URL for the [order status page](https://help.shopify.com/manual/orders/status-tracking) for the order. 
@@ -7024,7 +7046,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/order_status_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},customer_order_url:{type:"string",description:`The URL for the new order details page. The new customer accounts includes a list of Buyers Orders and an Order Details View.
@@ -7037,7 +7059,7 @@ can be found in the help center.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/customer_order_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},phone:{type:"string",description:`The phone number associated with the order. 
@@ -7049,7 +7071,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/phone)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},shipping_address:{type:"object",description:`The shipping address of the order. 
@@ -7061,7 +7083,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/shipping_address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"address"},billing_address:{type:"object",description:`The billing address of the order. 
@@ -7073,7 +7095,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/billing_address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"address"},tags:{type:"array",description:`The [tags](https://help.shopify.com/manual/shopify-admin/productivity-tools/using-tags) on the order. The tags are returned in alphabetical order.
@@ -7083,7 +7105,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tax_lines:{type:"array",description:`The tax lines on the order. 
@@ -7095,7 +7117,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/tax_lines)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"tax_line"},transactions:{type:"array",description:`The transactions of the order. 
@@ -7107,7 +7129,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/transactions)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"transaction"},line_items:{type:"array",description:`The line items in the order. 
@@ -7119,7 +7141,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/line_items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"},subtotal_line_items:{type:"array",description:`The non-tip line items in the order. 
@@ -7133,7 +7155,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/subtotal_line_items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"},item_count:{type:"number",description:`The number of items in the order. 
@@ -7145,7 +7167,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/item_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},shipping_methods:{type:"array",description:`The shipping methods for the order. 
@@ -7157,7 +7179,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/shipping_methods)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"shipping_method"},line_items_subtotal_price:{type:"number",description:`The sum of the prices of all of the line items in the order in the currency's subunit, after any line item discounts have
@@ -7174,7 +7196,7 @@ been applied. The value is output in the customer's local (presentment) currency
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/line_items_subtotal_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},subtotal_price:{type:"number",description:`The sum of the prices of the [subtotal line items](https://shopify.dev/docs/api/liquid/objects/order#order-subtotal_line_items) in the currency's subunit, after any line item or
@@ -7191,7 +7213,7 @@ cart discounts have been applied. The value is output in the customer's local (p
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/subtotal_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_price:{type:"number",description:`The total price of the order in the currency's subunit. 
@@ -7214,7 +7236,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/total_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},shipping_price:{type:"number",description:`The shipping price of the order in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -7230,7 +7252,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/order/shipping_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},page:{summary:"A [page](https://help.shopify.com/manual/online-store/themes/theme-structure/pages) on a store.",template:["page"],description:`A [page](https://help.shopify.com/manual/online-store/themes/theme-structure/pages) on a store. 
@@ -7242,7 +7264,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the page. 
@@ -7254,7 +7276,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},author:{type:"string",description:`The author of the page. 
@@ -7266,7 +7288,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/author)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the page. 
@@ -7278,7 +7300,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the page. 
@@ -7290,7 +7312,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},template_suffix:{type:"string",description:`The name of the [custom template](https://shopify.dev/themes/architecture/templates#alternate-templates) assigned to the page. The name doesn't include the \`page.\` prefix, or the file extension (\`.json\` or \`.liquid\`).
@@ -7302,7 +7324,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/template_suffix)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},content:{type:"string",description:`The content of the page. 
@@ -7314,7 +7336,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/content)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The relative URL of the page. 
@@ -7326,7 +7348,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},metafields:{type:"any",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the page. 
@@ -7341,7 +7363,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},published_at:{type:"string",description:`A timestamp for when the page was published. 
@@ -7355,7 +7377,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page/published_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},paginate:{summary:"Information about the pagination inside a set of [`paginate` tags](/docs/api/liquid/tags/paginate).",description:`Information about the pagination inside a set of [\`paginate\` tags](https://shopify.dev/docs/api/liquid/tags/paginate). 
@@ -7369,7 +7391,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{page_size:{type:"number",description:`The number of items displayed per page. 
@@ -7381,7 +7403,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/page_size)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},current_offset:{type:"number",description:`The total number of items on pages previous to the current page. For example, if you show 5 items per page and are on page 3, then the value of \`paginate.current_offset\` is 10.
@@ -7391,7 +7413,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/current_offset)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},current_page:{type:"number",description:`The page number of the current page. 
@@ -7403,7 +7425,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/current_page)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},items:{type:"number",description:`The total number of items to be paginated. For example, if you paginate a collection of 120 products, then the value of \`paginate.items\` is 120.
@@ -7413,7 +7435,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},parts:{type:"array",description:`The pagination parts. Pagination parts are used to build pagination navigation.
@@ -7423,7 +7445,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/parts)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"part"},next:{type:"object",description:`The pagination part to go to the next page. 
@@ -7435,7 +7457,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/next)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"part"},previous:{type:"object",description:`The pagination part to go to the previous page. 
@@ -7447,7 +7469,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/previous)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"part"},pages:{type:"number",description:`The total number of pages. 
@@ -7459,7 +7481,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/pages)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},page_param:{type:"string",description:`The URL parameter denoting the pagination. The default value is \`page\`.
@@ -7473,7 +7495,7 @@ operate independently from other lists on the page. For example, a paginated lis
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/paginate/page_param)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},predictive_search:{summary:`Information about the results from a predictive search query through the
@@ -7491,7 +7513,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{performed:{type:"boolean",description:`Returns \`true\` when being referenced inside a section that's been rendered using the Predictive Search API and
@@ -7504,7 +7526,7 @@ the Section Rendering API. Returns \`false\` if not.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search/performed)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},resources:{type:"object",description:`The resources associated with the query. You can check whether any resources of a specific type were returned using the [\`size\` filter](https://shopify.dev/docs/api/liquid/filters/size).
@@ -7522,7 +7544,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search/resources)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"predictive_search_resources"},terms:{type:"string",description:`The entered search terms. 
@@ -7536,7 +7558,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search/terms)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},types:{type:"array",description:`The object types that the search was performed on. Searches can be performed on the following object types:
@@ -7557,7 +7579,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search/types)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},selling_plan_price_adjustment:{summary:"Information about how a selling plan changes the price of a variant for a given period of time.",description:`Information about how a selling plan changes the price of a variant for a given period of time. To learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).
@@ -7567,7 +7589,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{order_count:{type:"number",description:`The number of orders that the price adjustment applies to. 
@@ -7579,7 +7601,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment/order_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The 1-based index of the price adjustment in the [\`selling_plan.price_adjustments\` array](https://shopify.dev/docs/api/liquid/objects/selling_plan#selling_plan-price_adjustments). 
@@ -7591,7 +7613,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value_type:{type:"string",description:`The type of price adjustment. 
@@ -7603,7 +7625,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment/value_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["percentage","fixed_amount","price"]},value:{type:"number",description:`The value of the price adjustment as a decimal. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment#selling_plan_price_adjustment-value_type) of
@@ -7626,7 +7648,7 @@ the price adjustment. The following table outlines what the value represents for
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},product:{summary:"A [product](https://help.shopify.com/manual/products) in the store.",template:["product"],description:`A [product](https://help.shopify.com/manual/products) in the store. 
@@ -7638,7 +7660,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{variants:{type:"array",description:`The variants of the product. 
@@ -7650,7 +7672,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/variants)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"variant"},images:{type:"array",description:`The images attached to the product. 
@@ -7662,7 +7684,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/images)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},metafields:{type:"any",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the product. 
@@ -7677,7 +7699,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},options_with_values:{type:"array",description:`The options on the product. 
@@ -7689,7 +7711,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/options_with_values)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product_option"},id:{type:"number",description:`The ID of the product. 
@@ -7701,7 +7723,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the product. 
@@ -7713,7 +7735,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the product. 
@@ -7725,7 +7747,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},template_suffix:{type:"string",description:`The name of the [custom template](https://shopify.dev/themes/architecture/templates#alternate-templates) of the product. The name doesn't include the \`product.\` prefix, or the file extension (\`.json\` or \`.liquid\`).
@@ -7737,7 +7759,7 @@ If a custom template isn't assigned to the product, then \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/template_suffix)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},vendor:{type:"string",description:`The vendor of the product. 
@@ -7749,7 +7771,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/vendor)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},description:{type:"string",description:`The description of the product. 
@@ -7763,7 +7785,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/description)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},content:{type:"string",description:`The description of the product. 
@@ -7777,7 +7799,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/content)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},featured_image:{type:"object",description:`The first (featured) image attached to the product. 
@@ -7789,7 +7811,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/featured_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},featured_media:{type:"object",description:`The first (featured) media attached to the product. 
@@ -7804,7 +7826,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/featured_media)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"media"},media:{type:"array",description:`The media attached to the product, sorted by the date it was added to the product. 
@@ -7819,7 +7841,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/media)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"media"},price_min:{type:"number",description:`The lowest price of any variants of the product in the currency's subunit. 
@@ -7841,7 +7863,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price_min)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`The lowest price of any variants of the product in the currency's subunit. 
@@ -7863,7 +7885,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price_max:{type:"number",description:`The highest price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -7879,7 +7901,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price_max)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price_varies:{type:"boolean",description:`Returns \`true\` if the product's variant prices vary. Returns \`false\` if not. 
@@ -7891,7 +7913,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/price_varies)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},selected_or_first_available_variant:{type:"object",description:`The currently selected or first available variant of the product. 
@@ -7911,7 +7933,7 @@ For a variant to be available, it needs to meet one of the following criteria:
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/selected_or_first_available_variant)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"variant"},collections:{type:"array",description:`The collections that the product belongs to. 
@@ -7926,7 +7948,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/collections)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"collection"},selected_variant:{type:"object",description:`The currently selected variant of the product. If no variant is currently selected, then \`nil\` is returned.
@@ -7942,7 +7964,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/selected_variant)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"variant"},first_available_variant:{type:"object",description:`The first available variant of the product. For a variant to be available, it needs to meet one of the following criteria:
@@ -7956,10 +7978,10 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/first_available_variant)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
-`,scope:"variant"},available:{type:"boolean",description:"Returns `true` if at least one of the variants of the product is available. Returns `false` if not. For a variant to be available, it needs to meet one of the following criteria:\n\n- The `variant.inventory_quantity` is greater than 0.\n- The `variant.inventory_policy` is set to `continue`.\n- The `variant.inventory_management` is `nil`.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/available)\n\n\nLast Updated: 1st July 2023\n\n\n"},options:{type:"array",description:`The option names of the product. 
+`,scope:"variant"},available:{type:"boolean",description:"Returns `true` if at least one of the variants of the product is available. Returns `false` if not. For a variant to be available, it needs to meet one of the following criteria:\n\n- The `variant.inventory_quantity` is greater than 0.\n- The `variant.inventory_policy` is set to `continue`.\n- The `variant.inventory_management` is `nil`.\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/available)\n\n\nLast Updated: 0th October 2023\n\n\n"},options:{type:"array",description:`The option names of the product. 
 
 
 
@@ -7983,7 +8005,7 @@ You can use the [\`size\` filter](/docs/api/liquid/filters/size) with dot notati
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/options)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},type:{type:"string",description:`The type of the product. 
@@ -7995,7 +8017,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},compare_at_price_min:{type:"number",description:`The lowest **compare at** price of any variants of the product in the currency's subunit. This is the same as
@@ -8012,7 +8034,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price_min)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},compare_at_price_max:{type:"number",description:`The highest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -8028,7 +8050,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price_max)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},compare_at_price:{type:"number",description:`The lowest **compare at** price of any variants of the product in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -8044,7 +8066,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},compare_at_price_varies:{type:"boolean",description:`Returns \`true\` if the variant **compare at** prices of the product vary. Returns \`false\` if not. 
@@ -8056,7 +8078,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/compare_at_price_varies)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The relative URL of the product. 
@@ -8068,7 +8090,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tags:{type:"array",description:`The [tags](https://help.shopify.com/manual/shopify-admin/productivity-tools/using-tags) of the product. 
@@ -8082,7 +8104,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},published_at:{type:"string",description:`A timestamp for when the product was published. 
@@ -8096,7 +8118,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/published_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},created_at:{type:"string",description:`A timestamp for when the product was created. 
@@ -8110,7 +8132,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/created_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},options_by_name:{type:"any",description:`Allows you to access a specific [product option](https://shopify.dev/docs/api/liquid/objects/product_option) by its name. 
@@ -8139,7 +8161,7 @@ When accessing a specific option, the name is case-insensitive.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/options_by_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},has_only_default_variant:{type:"boolean",description:`Returns \`true\` if the product doesn't have any options. Returns \`false\` if not. 
@@ -8151,7 +8173,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/has_only_default_variant)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"quantity_price_breaks_configured?":{type:"boolean",description:`Returns \`true\` if the product has at least one variant with quantity price breaks in the current customer context.
@@ -8164,7 +8186,7 @@ Returns \`false\` if not.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/quantity_price_breaks_configured?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},requires_selling_plan:{type:"boolean",description:`Returns \`true\` if all of the variants of the product require a selling plan. Returns \`false\` if not. 
@@ -8179,7 +8201,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/requires_selling_plan)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},selling_plan_groups:{type:"array",description:`The selling plan groups that the variants of the product are included in. 
@@ -8191,7 +8213,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/selling_plan_groups)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_group"},selected_selling_plan:{type:"object",description:`The currently selected selling plan. If no selling plan is selected, then \`nil\` is returned.
@@ -8207,7 +8229,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/selected_selling_plan)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan"},selected_selling_plan_allocation:{type:"object",description:`The currently selected selling plan allocation for the currently selected variant. If no variant and selling plan are selected, then \`nil\` is returned.
@@ -8224,7 +8246,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/selected_selling_plan_allocation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_allocation"},selected_or_first_available_selling_plan_allocation:{type:"object",description:`The currently selected, or first available, selling plan allocation. The following logic is used to determine which selling plan allocation is returned:
@@ -8242,7 +8264,7 @@ If the product doesn't have any selling plans, then \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/selected_or_first_available_selling_plan_allocation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_allocation"},"gift_card?":{type:"boolean",description:`Returns \`true\` if the product is a gift card. Returns \`false\` if not. 
@@ -8254,7 +8276,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product/gift_card?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},product_option:{summary:"A product option, such as size or color.",description:`A product option, such as size or color. 
@@ -8266,7 +8288,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product_option)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{name:{type:"string",description:`The name of the product option. 
@@ -8278,7 +8300,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product_option/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The 1-based index of the product option in the [\`product.options_with_values\` array](https://shopify.dev/docs/api/liquid/objects/product#product-options_with_values). 
@@ -8290,7 +8312,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product_option/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},values:{type:"array",description:`The possible values for the product option. 
@@ -8302,7 +8324,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product_option/values)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},selected_value:{type:"string",description:`The currently selected product option value. If no value is currently selected, then \`nil\` is returned.
@@ -8312,7 +8334,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/product_option/selected_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},variant:{summary:"A [product variant](https://help.shopify.com/manual/products/variants).",description:`A [product variant](https://help.shopify.com/manual/products/variants). 
@@ -8324,7 +8346,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{metafields:{type:"any",description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the variant. 
@@ -8339,7 +8361,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},product:{type:"object",description:`The parent product of the variant. 
@@ -8351,7 +8373,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/product)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product"},selected:{type:"boolean",description:`Returns \`true\` if the variant is currently selected. Returns \`false\` if it's not. 
@@ -8365,7 +8387,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/selected)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},matched:{type:"boolean",description:`Returns \`true\` if the variant has been matched by a [storefront filter](https://shopify.dev/themes/navigation-search/filtering/storefront-filtering).
@@ -8378,7 +8400,7 @@ Returns \`false\` if it hasn't.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/matched)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the variant. 
@@ -8390,7 +8412,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`A concatenation of each variant option, separated by a \`/\`. 
@@ -8410,7 +8432,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},quantity_rule:{type:"object",description:`Returns the specified quantity rule for the variant if one exists in the current customer context. Otherwise returns \`min=1,max=nil,increment=1\` if the variant does not have any quantity rule. 
@@ -8424,7 +8446,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/quantity_rule)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"quantity_rule"},quantity_price_breaks:{type:"array",description:`Returns \`quantity_price_break\` objects for the variant in the current customer context. 
@@ -8436,7 +8458,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/quantity_price_breaks)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"quantity_price_break"},"quantity_price_breaks_configured?":{type:"boolean",description:`Returns \`true\` if the variant has any quantity price breaks available in the current customer context.
@@ -8449,7 +8471,7 @@ Returns \`false\` if it doesn't.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/quantity_price_breaks_configured?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`The price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -8465,7 +8487,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},compare_at_price:{type:"number",description:`The **compare at** price of the variant in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -8481,7 +8503,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/compare_at_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},selected_selling_plan_allocation:{type:"object",description:`The selected \`selling_plan_allocation\`. If no selling plan is selected, then \`nil\` is returned.
@@ -8497,7 +8519,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/selected_selling_plan_allocation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_allocation"},selling_plan_allocations:{type:"array",description:`The \`selling_plan_allocation\` objects for the variant. 
@@ -8509,7 +8531,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/selling_plan_allocations)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_allocation"},sku:{type:"string",description:`The SKU of the variant. 
@@ -8521,7 +8543,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/sku)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},barcode:{type:"string",description:`The barcode of the variant. 
@@ -8533,7 +8555,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/barcode)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},available:{type:"boolean",description:`Returns \`true\` if the variant is available. Returns \`false\` if not. 
@@ -8545,7 +8567,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/available)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},options:{type:"string",description:`The values of the variant for each [product option](https://shopify.dev/docs/api/liquid/objects/product_option). 
@@ -8573,7 +8595,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/options)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},option1:{type:"string",description:`The value of the variant for the first product option. If there's no first product option, then \`nil\` is returned.
@@ -8583,7 +8605,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/option1)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},option2:{type:"string",description:`The value of the variant for the second product option. If there's no second product option, then \`nil\` is returned.
@@ -8593,7 +8615,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/option2)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},option3:{type:"string",description:`The value of the variant for the third product option. If there's no third product option, then \`nil\` is returned.
@@ -8603,7 +8625,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/option3)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The URL of the variant. Variant URLs use the following structure:
@@ -8617,7 +8639,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},weight_unit:{type:"string",description:`The unit for the weight of the variant. 
@@ -8632,7 +8654,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/weight_unit)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},weight_in_unit:{type:"number",description:`The weight of the variant in the unit specified by \`variant.weight_unit\`. 
@@ -8646,7 +8668,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/weight_in_unit)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},weight:{type:"number",description:`The weight of the variant in grams. 
@@ -8663,7 +8685,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/weight)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},unit_price_measurement:{type:"object",description:`The unit price measurement of the variant. 
@@ -8677,7 +8699,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/unit_price_measurement)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"unit_price_measurement"},unit_price:{type:"number",description:`The [unit price](https://help.shopify.com/manual/intro-to-shopify/initial-setup/sell-in-france/price-per-unit#add-unit-prices-to-your-product)
@@ -8701,7 +8723,7 @@ of the variant in the currency's subunit. The price reflects any discounts that 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/unit_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},inventory_quantity:{type:"number",description:`The inventory quantity of the variant. If inventory isn't tracked, then the number of items sold is returned.
@@ -8711,7 +8733,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/inventory_quantity)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},inventory_management:{type:"string",description:`The inventory management service of the variant. If inventory isn't tracked, then \`nil\` is returned.
@@ -8721,7 +8743,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/inventory_management)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},inventory_policy:{type:"string",description:`Whether the variant should continue to be sold when it's out of stock. 
@@ -8736,7 +8758,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/inventory_policy)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["continue","deny"]},requires_shipping:{type:"boolean",description:`Returns \`true\` if the variant requires shipping. Returns \`false\` if it doesn't. 
@@ -8748,7 +8770,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/requires_shipping)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},taxable:{type:"boolean",description:`Returns \`true\` if taxes should be charged on the variant. Returns \`false\` if not. 
@@ -8760,7 +8782,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/taxable)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},featured_image:{type:"object",description:`The image attached to the variant. 
@@ -8774,7 +8796,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/featured_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},image:{type:"object",description:`The image attached to the variant. 
@@ -8788,7 +8810,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},featured_media:{type:"object",description:`The first media object attached to the variant. 
@@ -8800,7 +8822,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/featured_media)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"media"},incoming:{type:"boolean",description:`Returns \`true\` if the variant has incoming inventory. Returns \`false\` if not. Incoming inventory information is populated by [inventory transfers](https://help.shopify.com/manual/products/inventory/transfers).
@@ -8810,7 +8832,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/incoming)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},next_incoming_date:{type:"string",description:`The arrival date for the next incoming inventory of the variant. Incoming inventory information is populated by [inventory transfers](https://help.shopify.com/manual/products/inventory/transfers).
@@ -8826,7 +8848,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/next_incoming_date)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},store_availabilities:{type:"array",description:`The store availabilities for the variant. The array is defined in only the following cases:
@@ -8839,7 +8861,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/store_availabilities)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"store_availability"},requires_selling_plan:{type:"boolean",description:`Returns \`true\` if the variant is set to require a \`selling_plan\` when being added to the cart. Returns \`false\` if not. 
@@ -8851,7 +8873,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/variant/requires_selling_plan)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},quantity_price_break:{summary:"The per-unit price of a variant when purchasing the minimum quantity or more.",description:`The per-unit price of a variant when purchasing the minimum quantity or more. 
@@ -8863,7 +8885,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_price_break)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{minimum_quantity:{type:"number",description:`The minimum quantity required to qualify for the price break. 
@@ -8875,7 +8897,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_price_break/minimum_quantity)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`The price for the quantity price break once the minimum quantity is met. The value is the price in the customer's local (presentment) currency.
@@ -8891,7 +8913,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_price_break/price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},rating:{summary:"Information for a [`rating` type](/apps/metafields/types) metafield.",description:`Information for a [\`rating\` type](https://shopify.dev/apps/metafields/types) metafield. 
@@ -8905,7 +8927,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/rating)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{rating:{type:"number",description:`The rating value. 
@@ -8917,7 +8939,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/rating/rating)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},scale_min:{type:"number",description:`The minimum value of the rating scale. 
@@ -8929,7 +8951,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/rating/scale_min)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},scale_max:{type:"number",description:`The maximum value of the rating scale. 
@@ -8941,7 +8963,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/rating/scale_max)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},recipient:{summary:"A recipient that is associated with a [gift card](https://help.shopify.com/manual/products/gift-card-products).",template:["gift_card.liquid"],description:`A recipient that is associated with a [gift card](https://help.shopify.com/manual/products/gift-card-products). 
@@ -8953,7 +8975,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recipient)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{nickname:{type:"string",description:`The nickname of the recipient. 
@@ -8965,7 +8987,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recipient/nickname)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},email:{type:"string",description:`The email of the recipient. 
@@ -8977,7 +8999,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recipient/email)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The full name of the recipient. 
@@ -8989,7 +9011,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recipient/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},recommendations:{summary:"Product recommendations for a specific product based on sales data, product descriptions, and collection relationships.",description:`Product recommendations for a specific product based on sales data, product descriptions, and collection relationships. Product recommendations become more accurate over time as new orders and product data become available. To learn more about
@@ -9008,7 +9030,7 @@ how product recommendations are generated, refer to [Product recommendations](ht
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recommendations)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{"performed?":{type:"boolean",description:`Returns \`true\` when being referenced inside a section that's been rendered using the Product Recommendations API and
@@ -9021,7 +9043,7 @@ the Section Rendering API. Returns \`false\` if not.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recommendations/performed?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},products:{type:"array",description:`The recommended products. If \`performed?\` is \`false\`, then an [EmptyDrop](https://shopify.dev/docs/api/liquid/basics#emptydrop) is returned.
@@ -9031,7 +9053,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recommendations/products)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product"},products_count:{type:"number",description:`The number of recommended products. If \`performed?\` is \`false\`, then 0 is returned.
@@ -9041,7 +9063,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recommendations/products_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},intent:{type:"string",description:`The recommendation intent. If \`performed?\` is \`false\`, then \`nil\` is returned.
@@ -9051,7 +9073,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/recommendations/intent)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},request:{summary:"Information about the current URL and the associated page.",global:!0,description:`Information about the current URL and the associated page. 
@@ -9063,7 +9085,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{design_mode:{type:"boolean",description:`Returns \`true\` if the request is being made from within the theme editor. Returns \`false\` if not. You can use \`request.design_mode\` to control theme behavior depending on whether the theme is being viewed in the editor.
@@ -9078,7 +9100,7 @@ For example, you can prevent session data from being tracked by tracking scripts
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/design_mode)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},page_type:{type:"string",description:`The type of page being requested. 
@@ -9090,7 +9112,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/page_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["404","article","blog","captcha","cart","collection","list-collections","customers/account","customers/activate_account","customers/addresses","customers/login","customers/order","customers/register","customers/reset_password","gift_card","index","page","password","policy","product","search"]},host:{type:"string",description:`The domain that the request is hosted on. 
@@ -9102,7 +9124,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/host)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},origin:{type:"string",description:`The protocol and host of the request. 
@@ -9125,7 +9147,7 @@ You can use \`request.origin\` with any object, object property, or filter that 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/origin)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},path:{type:"string",description:`The path of the request. 
@@ -9139,7 +9161,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/path)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},locale:{type:"object",description:`The locale of the request. 
@@ -9151,7 +9173,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/request/locale)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"shop_locale"}}},robots:{summary:"The default rule groups for the `robots.txt` file.",template:["robots.txt.liquid"],description:`The default rule groups for the \`robots.txt\` file. 
@@ -9165,7 +9187,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/robots)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{default_groups:{type:"array",description:`The rule groups. 
@@ -9177,7 +9199,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/robots/default_groups)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"group"}}},group:{summary:"A group of rules for the `robots.txt` file.",description:`A group of rules for the \`robots.txt\` file. 
@@ -9191,7 +9213,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/group)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{user_agent:{type:"object",description:`The user agent for the group. 
@@ -9203,7 +9225,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/group/user_agent)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"user_agent"},rules:{type:"array",description:`The rules in the group. 
@@ -9215,7 +9237,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/group/rules)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"rule"},sitemap:{type:"object",description:`The sitemap for the group. If the group doesn't require a sitemap, then \`blank\` is returned.
@@ -9227,7 +9249,7 @@ The sitemap can be accessed at \`/sitemap.xml\`.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/group/sitemap)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"sitemap"}}},rule:{summary:"A rule for the `robots.txt` file, which tells crawlers which pages can, or can't, be accessed.",description:`A rule for the \`robots.txt\` file, which tells crawlers which pages can, or can't, be accessed. A rule consists of a directive, which can be either \`Allow\` or \`Disallow\`, and a value of the associated URL path.
@@ -9251,7 +9273,7 @@ You can output a rule directly, instead of referencing each of its properties.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/rule)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{directive:{type:"string",description:`The directive of the rule. 
@@ -9263,7 +9285,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/rule/directive)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value:{type:"string",description:`The value of the rule. 
@@ -9275,7 +9297,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/rule/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},routes:{summary:"Allows you to generate standard URLs for the storefront.",global:!0,description:`Allows you to generate standard URLs for the storefront. Using the \`routes\` object instead of hardcoding URLs helps ensure that your theme supports
@@ -9287,7 +9309,7 @@ format.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{root_url:{type:"string",description:`The index (home page) URL. 
@@ -9299,7 +9321,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/root_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},account_url:{type:"string",description:`The [account page](https://help.shopify.com/manual/customers/customer-accounts) URL. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled. 
@@ -9311,7 +9333,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/account_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},account_login_url:{type:"string",description:`The [account login page](https://shopify.dev/themes/architecture/templates/customers-login) URL. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled. 
@@ -9323,7 +9345,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/account_login_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},account_logout_url:{type:"string",description:`The URL to log a customer out of their account. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled. 
@@ -9335,7 +9357,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/account_logout_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},account_recover_url:{type:"string",description:`The [password recovery page](https://shopify.dev/themes/architecture/templates/customers-reset-password) URL. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled. 
@@ -9347,7 +9369,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/account_recover_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},account_register_url:{type:"string",description:`The [account registration page](https://shopify.dev/themes/architecture/templates/customers-register) URL. 
@@ -9359,7 +9381,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/account_register_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},account_addresses_url:{type:"string",description:`The [account addresses page](https://shopify.dev/themes/architecture/templates/customers-addresses) URL. Redirects to [new customer accounts](https://help.shopify.com/en/manual/customers/customer-accounts/new-customer-accounts) when enabled. 
@@ -9371,7 +9393,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/account_addresses_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},collections_url:{type:"string",description:`The [collection list page](https://shopify.dev/themes/architecture/templates/list-collections) URL. 
@@ -9383,7 +9405,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/collections_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},all_products_collection_url:{type:"string",description:`The all-products collection page URL. The all-products collection is automatically generated by Shopify and contains all products in the store.
@@ -9393,7 +9415,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/all_products_collection_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},search_url:{type:"string",description:`The [search page](https://shopify.dev/themes/architecture/templates/search) URL. 
@@ -9405,7 +9427,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/search_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},predictive_search_url:{type:"string",description:`The [Predictive Search API](https://shopify.dev/api/ajax/reference/predictive-search) URL. 
@@ -9419,7 +9441,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/predictive_search_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cart_url:{type:"string",description:`The [cart page](https://shopify.dev/themes/architecture/templates/cart) URL. 
@@ -9431,7 +9453,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/cart_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cart_add_url:{type:"string",description:`The URL for the [\`/cart/add\` Cart API endpoint](https://shopify.dev/api/ajax/reference/cart#post-locale-cart-add-js). 
@@ -9443,7 +9465,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/cart_add_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cart_change_url:{type:"string",description:`The URL for the [\`/cart/change\` Cart API endpoint](https://shopify.dev/api/ajax/reference/cart#post-locale-cart-change-js). 
@@ -9455,7 +9477,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/cart_change_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cart_clear_url:{type:"string",description:`The URL for the [\`/cart/clear\` Cart API endpoint](https://shopify.dev/api/ajax/reference/cart#post-locale-cart-clear-js). 
@@ -9467,7 +9489,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/cart_clear_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cart_update_url:{type:"string",description:`The URL for the [\`/cart/update\` Cart API endpoint](https://shopify.dev/api/ajax/reference/cart#post-locale-cart-update-js). 
@@ -9479,7 +9501,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/cart_update_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},product_recommendations_url:{type:"string",description:`The [Product Recommendations API](https://shopify.dev/api/ajax/reference/product-recommendations) URL. 
@@ -9491,7 +9513,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/routes/product_recommendations_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},script:{summary:"Information about a Shopify Script.",description:`Information about a Shopify Script. 
@@ -9505,7 +9527,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/script)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the script. 
@@ -9517,7 +9539,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/script/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The name of the script. 
@@ -9529,7 +9551,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/script/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},search:{summary:"Information about a storefront search query.",template:["search"],description:`Information about a storefront search query. To learn about storefront search and how to include it in your theme, refer to [Storefront search](https://shopify.dev/themes/navigation-search/search).
@@ -9539,7 +9561,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{terms:{type:"string",description:`The entered search terms. 
@@ -9553,7 +9575,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/terms)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},filters:{type:"array",description:`The filters that have been set up on the search page. Only filters that are relevant to the current search results are returned. If the search results contain more than 1000
@@ -9570,7 +9592,7 @@ products, then the array will be empty.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/filters)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"filter"},performed:{type:"boolean",description:`Returns \`true\` if a search was successfully performed. Returns \`false\` if not. 
@@ -9582,7 +9604,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/performed)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},results:{type:"any",description:`The search result items. An item can be an [\`article\`](https://shopify.dev/docs/api/liquid/objects/article), a [\`page\`](https://shopify.dev/docs/api/liquid/objects/page), or a
@@ -9649,7 +9671,7 @@ Search results have an additional \`object_type\` property that returns the obje
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/results)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},results_count:{type:"number",description:`The number of results. 
@@ -9661,7 +9683,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/results_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},sort_options:{type:"array",description:`The available sorting options for the search results. 
@@ -9694,7 +9716,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/sort_options)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"sort_option"},sort_by:{type:22,description:`The sort order of the search results. This is determined by the \`sort_by\` URL parameter. If there's no \`sort_by\` URL parameter, then the value is \`nil\`.
@@ -9704,7 +9726,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/sort_by)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},default_sort_by:{type:"string",description:`The default sort order of the search results, which is \`relevance\`. 
@@ -9716,7 +9738,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/default_sort_by)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},types:{type:"array",description:`The object types that the search was performed on. A search can be performed on the following object types:
@@ -9736,7 +9758,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/search/types)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},section:{summary:"The properties and settings of a section.",description:`The properties and settings of a section. 
@@ -9750,7 +9772,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"string",description:`The ID of the section. The ID for sections included through [JSON templates](https://shopify.dev/themes/architecture/templates/json-templates) are dynamically
@@ -9764,7 +9786,7 @@ section has an ID of \`header\`.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},settings:{type:"any",description:`The [settings](https://shopify.dev/themes/architecture/sections/section-schema#settings) of the section. To learn about how to access settings, refer to [Access settings](https://shopify.dev/themes/architecture/settings#access-settings).
@@ -9774,7 +9796,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/settings)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},blocks:{type:"array",description:`The blocks of the section. 
@@ -9786,7 +9808,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/section/blocks)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"block"}}},selling_plan_allocation:{summary:"Information about how a specific [selling plan](/apps/subscriptions/selling-plans) affects a line item.",description:`Information about how a specific [selling plan](https://shopify.dev/apps/subscriptions/selling-plans) affects a line item. To learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).
@@ -9796,7 +9818,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{price:{type:"number",description:`The price of the selling plan allocation in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -9812,7 +9834,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},compare_at_price:{type:"number",description:`The **compare at** price of the selling plan allocation in the currency's subunit. The value of the **compare at** price is the line item's price without the selling plan applied. If the price and compare
@@ -9831,7 +9853,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/compare_at_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price_adjustments:{type:"array",description:`The selling plan allocation price adjustments. The maximum length of the array is two. If the associated selling plan doesn't create any price adjustments, then the
@@ -9847,7 +9869,7 @@ in the [\`selling_plan.price_adjustments\` array](https://shopify.dev/docs/api/l
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/price_adjustments)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_allocation_price_adjustment"},unit_price:{type:"number",description:`The [unit price](https://shopify.dev/docs/api/liquid/objects/variant#variant-unit_price) of the variant associated with the selling plan, in the currency's subunit. If the variant doesn't have a unit price, then \`nil\` is returned.
@@ -9865,7 +9887,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/unit_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},per_delivery_price:{type:"number",description:`The price for each delivery in the selling plan in the currency's subunit. If a selling plan includes multiple deliveries, then the \`per_delivery_price\` is the \`price\` divided by the number of
@@ -9884,7 +9906,7 @@ The value is output in the customer's local (presentment) currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/per_delivery_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},selling_plan:{type:"object",description:`The selling plan that created the allocation. 
@@ -9896,7 +9918,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/selling_plan)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan"},selling_plan_group_id:{type:"string",description:`The ID of the [\`selling_plan_group\`](https://shopify.dev/docs/api/liquid/objects/selling_plan_group) that the selling plan of the allocation belongs to. 
@@ -9908,7 +9930,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/selling_plan_group_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},checkout_charge_amount:{type:"number",description:`The amount that the customer will be charged at checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -9924,7 +9946,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/checkout_charge_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},remaining_balance_charge_amount:{type:"number",description:`The remaining amount for the customer to pay, in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -9940,7 +9962,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation/remaining_balance_charge_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},selling_plan_allocation_price_adjustment:{summary:"The resulting price from the intent of the associated [`selling_plan_price_adjustment`](/docs/api/liquid/objects/selling_plan_price_adjustment).",description:`The resulting price from the intent of the associated [\`selling_plan_price_adjustment\`](https://shopify.dev/docs/api/liquid/objects/selling_plan_price_adjustment). To learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).
@@ -9950,7 +9972,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation_price_adjustment)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{position:{type:"number",description:`The 1-based index of the price adjustment in the
@@ -9963,7 +9985,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation_price_adjustment/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`The price that will be charged for the price adjustment's lifetime, in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -9979,7 +10001,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_allocation_price_adjustment/price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},selling_plan_checkout_charge:{summary:`Information about how a specific [selling plan](/apps/subscriptions/selling-plans) affects the amount that a
@@ -9991,7 +10013,7 @@ customer needs to pay for a line item at checkout. To learn about how to support
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{value_type:{type:"string",description:`The value type of the checkout charge. 
@@ -10003,7 +10025,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge/value_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["percentage","price"]},value:{type:"number",description:`The value of the checkout charge. How this value is interpreted depends on the [value type](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge#selling_plan_checkout_charge-value_type) of
@@ -10025,7 +10047,7 @@ the checkout charge. The following table outlines what the value represents for 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_checkout_charge/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},selling_plan:{summary:"Information about the intent of how a specific [selling plan](/apps/subscriptions/selling-plans) affects a line item.",description:`Information about the intent of how a specific [selling plan](https://shopify.dev/apps/subscriptions/selling-plans) affects a line item. To learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).
@@ -10035,7 +10057,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the selling plan. 
@@ -10047,7 +10069,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The name of the selling plan. 
@@ -10061,7 +10083,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},description:{type:"string",description:`The description of the selling plan. 
@@ -10073,7 +10095,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/description)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},group_id:{type:"string",description:`The ID of the [\`selling_plan_group\`](https://shopify.dev/docs/api/liquid/objects/selling_plan_group) that the selling plan belongs to. 
@@ -10087,7 +10109,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/group_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},recurring_deliveries:{type:"boolean",description:`Returns \`true\` if the selling plan includes multiple deliveries. Returns \`false\` if not. 
@@ -10099,7 +10121,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/recurring_deliveries)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},options:{type:"array",description:`The selling plan options. 
@@ -10111,7 +10133,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/options)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_option"},price_adjustments:{type:"array",description:`The selling plan price adjustments. The maximum length of the array is two. If the selling plan doesn't create any price adjustments, then the
@@ -10127,7 +10149,7 @@ The \`selling_plan.price_adjustments\` array contains the intent of the selling 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/price_adjustments)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_price_adjustment"},selected:{type:"boolean",description:`Returns \`true\` if the selling plan is currently selected. Returns \`false\` if not. 
@@ -10141,7 +10163,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/selected)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},checkout_charge:{type:"object",description:`The checkout charge of the selling plan. 
@@ -10153,7 +10175,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan/checkout_charge)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_checkout_charge"}}},selling_plan_group:{summary:`Information about a specific group of [selling plans](/apps/subscriptions/selling-plans) that include any of a
@@ -10167,7 +10189,7 @@ To learn about how to support selling plans in your theme, refer to [Purchase op
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{selling_plans:{type:"array",description:`The selling plans in the group. 
@@ -10179,7 +10201,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group/selling_plans)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan"},id:{type:"number",description:`The ID of the selling plan group. 
@@ -10191,7 +10213,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"number",description:`The name of the selling plan group. 
@@ -10203,7 +10225,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},app_id:{type:"string",description:`An optional string provided by an app to identify selling plan groups created by that app. If the app doesn't provide a value, then \`nil\` is returned.
@@ -10221,7 +10243,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group/app_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},options:{type:"array",description:`The selling plan group options. 
@@ -10233,7 +10255,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group/options)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"selling_plan_group_option"},selling_plan_selected:{type:"boolean",description:`Returns \`true\` if the currently selected selling plan is part of the selling plan group. Returns \`false\` if not. 
@@ -10247,7 +10269,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group/selling_plan_selected)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},selling_plan_group_option:{summary:"Information about a specific option in a [selling plan group](/docs/api/liquid/objects/selling_plan_group).",description:`Information about a specific option in a [selling plan group](https://shopify.dev/docs/api/liquid/objects/selling_plan_group). 
@@ -10259,7 +10281,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{name:{type:"string",description:`The name of the option. 
@@ -10271,7 +10293,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The 1-based index of the option in the [\`selling_plan_group.options\` array](https://shopify.dev/docs/api/liquid/objects/selling_plan_group#selling_plan_group-options). 
@@ -10283,7 +10305,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},values:{type:"array",description:`The values of the option. 
@@ -10295,7 +10317,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option/values)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},selected_value:{type:"string",description:`The option value of the currently selected selling plan. If no selling plan is currently selected, then \`nil\` is returned.
@@ -10311,7 +10333,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option/selected_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},selling_plan_option:{summary:"Information about a selling plan's value for a specific [`selling_plan_group_option`](/docs/api/liquid/objects/selling_plan_group_option).",description:`Information about a selling plan's value for a specific [\`selling_plan_group_option\`](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option). To learn about how to support selling plans in your theme, refer to [Purchase options](https://shopify.dev/themes/pricing-payments/purchase-options).
@@ -10321,7 +10343,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_option)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{name:{type:"string",description:`The name of the associated \`selling_plan_group_option\`. 
@@ -10333,7 +10355,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_option/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The 1-based index of the selling plan option in the associated [\`selling_plan_group.options\` array](https://shopify.dev/docs/api/liquid/objects/selling_plan_group#selling_plan_group-options). 
@@ -10345,7 +10367,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_option/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value:{type:"string",description:`The value of the selling plan option. The value is one of the [\`selling_plan_group_option.values\`](https://shopify.dev/docs/api/liquid/objects/selling_plan_group_option#selling_plan_group_option-values).
@@ -10355,7 +10377,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/selling_plan_option/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},shipping_method:{summary:"Information about the shipping method for an order.",description:`Information about the shipping method for an order. 
@@ -10367,7 +10389,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{title:{type:"string",description:`The title of the shipping method. In most contexts, the shipping method title appears in the customer's preferred language. However, in the context of an
@@ -10378,7 +10400,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},original_price:{type:"number",description:`The price of the shipping method in the currency's subunit, before discounts have been applied. The value is output in the customer's local (presentment) currency.
@@ -10394,7 +10416,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/original_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`The price of the shipping method in the currency's subunit, after discounts have been applied. The value is output in the customer's local (presentment) currency.
@@ -10410,7 +10432,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},handle:{type:"string",description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the shipping method. 
@@ -10424,7 +10446,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"string",description:`The ID of the shipping method. 
@@ -10436,7 +10458,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tax_lines:{type:"array",description:`The tax lines for the shipping method. 
@@ -10448,7 +10470,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/tax_lines)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"tax_line"},discount_allocations:{type:"array",description:`The discount allocations that apply to the shipping method. 
@@ -10460,7 +10482,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shipping_method/discount_allocations)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_allocation"}}},shop:{summary:"Information about the store, such as the store address, the total number of products, and various settings.",global:!0,description:`Information about the store, such as the store address, the total number of products, and various settings. 
@@ -10472,7 +10494,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"string",description:`The ID of the store. 
@@ -10484,7 +10506,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The name of the store. 
@@ -10496,7 +10518,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},description:{type:"string",description:`The [description](https://help.shopify.com/manual/online-store/setting-up/preferences#edit-the-title-and-meta-description)
@@ -10509,7 +10531,7 @@ of the store.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/description)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},enabled_currencies:{type:"array",description:`The currencies that the store accepts. 
@@ -10523,7 +10545,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/enabled_currencies)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"currency"},published_locales:{type:"array",description:`The locales (languages) that are published on the store. 
@@ -10535,7 +10557,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/published_locales)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"shop_locale"},enabled_locales:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -10555,7 +10577,7 @@ The locales (languages) that are published on the store.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/enabled_locales)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"shop_locale"},locale:{type:"object",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -10575,7 +10597,7 @@ The currently active locale (language).
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/locale)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"shop_locale"},url:{type:"string",description:`The full URL of the store. 
@@ -10587,7 +10609,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},email:{type:"string",description:`The [sender email](https://help.shopify.com/manual/intro-to-shopify/initial-setup/setup-your-email#change-your-sender-email-address)
@@ -10600,7 +10622,7 @@ of the store.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/email)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},secure_url:{type:"string",description:`The full URL of the store, with an \`https\` protocol. 
@@ -10612,7 +10634,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/secure_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},domain:{type:"string",description:`The primary domain of the store. 
@@ -10624,7 +10646,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/domain)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},permanent_domain:{type:"string",description:`The \`.myshopify.com\` domain of the store. 
@@ -10636,7 +10658,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/permanent_domain)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},phone:{type:"string",description:`The phone number of the store. 
@@ -10648,7 +10670,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/phone)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},password_message:{type:"string",description:`The password page message of the store. 
@@ -10660,7 +10682,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/password_message)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},address:{type:"object",description:`The address of the store. 
@@ -10672,7 +10694,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"address"},customer_accounts_enabled:{type:"boolean",description:`Returns \`true\` if customer accounts are required to complete checkout. Returns \`false\` if not. 
@@ -10684,7 +10706,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/customer_accounts_enabled)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},customer_accounts_optional:{type:"boolean",description:`Returns \`true\` if customer accounts are optional to complete checkout. Returns \`false\` if not. 
@@ -10696,7 +10718,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/customer_accounts_optional)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},currency:{type:"object",description:`The currency of the store. 
@@ -10708,7 +10730,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/currency)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"currency"},money_format:{type:"object",description:`The money format of the store. 
@@ -10720,7 +10742,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/money_format)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"currency"},money_with_currency_format:{type:"object",description:`The money format of the store with the currency included. 
@@ -10732,7 +10754,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/money_with_currency_format)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"currency"},metafields:{type:22,description:`The [metafields](https://shopify.dev/docs/api/liquid/objects/metafield) applied to the store. 
@@ -10747,7 +10769,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/metafields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},enabled_payment_types:{type:"string",description:`The accepted payment types on the store. The payment types are based on the store's enabled [payment providers](https://help.shopify.com/manual/payments) and
@@ -10765,7 +10787,7 @@ the customer's current region and currency.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/enabled_payment_types)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},taxes_included:{type:"boolean",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -10785,7 +10807,7 @@ Returns \`true\` if prices include taxes. Returns \`false\` if not.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/taxes_included)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},refund_policy:{type:"object",description:`The refund policy for the store. 
@@ -10797,7 +10819,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/refund_policy)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"policy"},shipping_policy:{type:"object",description:`The shipping policy for the store. 
@@ -10809,7 +10831,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/shipping_policy)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"policy"},privacy_policy:{type:"object",description:`The privacy policy for the store. 
@@ -10821,7 +10843,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/privacy_policy)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"policy"},terms_of_service:{type:"object",description:`The terms of service for the store. 
@@ -10833,7 +10855,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/terms_of_service)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"policy"},subscription_policy:{type:"object",description:`The subscription policy for the store. 
@@ -10845,7 +10867,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/subscription_policy)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"policy"},policies:{type:"array",description:`The policies for the store. The policies are set in the store's [Policies settings](https://www.shopify.com/admin/settings/legal).
@@ -10867,7 +10889,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/policies)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"policy"},vendors:{type:"array",description:`All of the product vendors for the store. 
@@ -10889,7 +10911,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/vendors)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},types:{type:"array",description:`All of the product types in the store. 
@@ -10911,7 +10933,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/types)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},products_count:{type:"number",description:`The number of products in the store. 
@@ -10923,7 +10945,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/products_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},collections_count:{type:"number",description:`The number of collections in the store. 
@@ -10935,7 +10957,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/collections_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},accepts_gift_cards:{type:"boolean",description:`Returns \`true\` if the store accepts gift cards. Returns \`false\` if not. 
@@ -10947,7 +10969,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/accepts_gift_cards)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},brand:{type:"object",description:`The [brand assets](https://help.shopify.com/manual/promoting-marketing/managing-brand-assets) for the store. 
@@ -10959,7 +10981,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/brand)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"brand"},metaobjects:{type:22,description:`All of the [metaobjects](https://shopify.dev/docs/api/liquid/objects/metaobject) of the store. Metaobjects can only be accessed by specifying their type and handle. For more information, refer to [Access metaobjects individually](https://shopify.dev/docs/api/liquid/objects#metaobject-access-metaobjects-individually).
@@ -10971,7 +10993,7 @@ Metaobjects are created in the [Content](https://www.shopify.com/admin/content) 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop/metaobjects)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},shop_locale:{summary:"A language in a store.",description:`A language in a store. To learn how to offer localization options in your theme, refer to [Support multiple currencies and languages](https://shopify.dev/themes/internationalization/multiple-currencies-languages).
@@ -10981,7 +11003,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop_locale)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{name:{type:"string",description:`The name of the locale in the store's primary locale. 
@@ -10993,7 +11015,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop_locale/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},endonym_name:{type:"string",description:`The name of the locale in the locale itself. 
@@ -11005,7 +11027,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop_locale/endonym_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},iso_code:{type:"string",description:`The ISO code of the locale in [IETF language tag format](https://en.wikipedia.org/wiki/IETF_language_tag). 
@@ -11017,7 +11039,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop_locale/iso_code)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},primary:{type:"boolean",description:`Returns \`true\` if the locale is the store's primary locale. Returns \`false\` if not. 
@@ -11029,7 +11051,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop_locale/primary)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},root_url:{type:"string",description:`The relative root URL of the locale. 
@@ -11041,7 +11063,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/shop_locale/root_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},policy:{summary:"A [store policy](https://help.shopify.com/manual/checkout-settings/refund-privacy-tos), such as a privacy or return policy.",description:`A [store policy](https://help.shopify.com/manual/checkout-settings/refund-privacy-tos), such as a privacy or return policy. 
@@ -11053,7 +11075,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/policy)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"string",description:`The ID of the policy. 
@@ -11065,7 +11087,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/policy/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},body:{type:"string",description:`The content of the policy. 
@@ -11077,7 +11099,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/policy/body)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The relative URL of the policy. 
@@ -11089,7 +11111,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/policy/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The title of the policy. 
@@ -11101,7 +11123,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/policy/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},store_availability:{summary:"A variant's inventory information for a physical store location.",description:`A variant's inventory information for a physical store location. If a location doesn't stock a variant, then there won't be a \`store_availability\` for that variant and location.
@@ -11118,7 +11140,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/store_availability)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{available:{type:"boolean",description:`Returns \`true\` if the variant has available inventory at the location. Returns \`false\` if not. 
@@ -11130,7 +11152,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/store_availability/available)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},pick_up_enabled:{type:"boolean",description:`Returns \`true\` if the location has pickup enabled. Returns \`false\` if not. 
@@ -11142,7 +11164,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/store_availability/pick_up_enabled)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},pick_up_time:{type:"string",description:`The amount of time that it takes for pickup orders to be ready at the location. 
@@ -11156,7 +11178,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/store_availability/pick_up_time)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},location:{type:"object",description:`The location that the variant is stocked at. 
@@ -11168,7 +11190,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/store_availability/location)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"location"}}},tax_line:{summary:"Information about a tax line of a checkout or order.",description:`Information about a tax line of a checkout or order. 
@@ -11180,7 +11202,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tax_line)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{title:{type:"string",description:`The title of the tax. 
@@ -11192,7 +11214,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tax_line/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},price:{type:"number",description:`The tax amount in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -11208,7 +11230,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tax_line/price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},rate:{type:"number",description:`The decimal value of the tax rate. 
@@ -11220,7 +11242,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tax_line/rate)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},rate_percentage:{type:"number",description:`The decimal value of the tax rate, as a percentage. 
@@ -11232,7 +11254,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/tax_line/rate_percentage)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},theme:{summary:"Information about the current theme.",global:!0,deprecated:!0,description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -11254,7 +11276,7 @@ Information about the current theme.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/theme)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the theme. 
@@ -11266,7 +11288,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/theme/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0},name:{type:"string",description:`The name of the theme. 
@@ -11278,7 +11300,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/theme/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0},role:{type:"string",description:`The role of the theme. 
@@ -11290,7 +11312,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/theme/role)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,deprecated:!0,literal:["main","unpublished","demo","development"]}}},settings:{summary:"Allows you to access all of the theme's settings from the [`settings_schema.json` file](/themes/architecture/config/settings-schema-json).",global:!0,description:`Allows you to access all of the theme's settings from the [\`settings_schema.json\` file](https://shopify.dev/themes/architecture/config/settings-schema-json). 
@@ -11314,7 +11336,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/settings)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,const:!0},template:{summary:"Information about the current [template](/docs/themes/architecture/templates).",global:!0,description:`Information about the current [template](https://shopify.dev/docs/themes/architecture/templates). 
@@ -11326,7 +11348,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/template)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{name:{type:"string",description:`The name of the template's [type](https://shopify.dev/docs/themes/architecture/templates#template-types). 
@@ -11338,7 +11360,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/template/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["404","article","blog","cart","collection","list-collections","customers/account","customers/activate_account","customers/addresses","customers/login","customers/order","customers/register","customers/reset_password","gift_card","index","page","password","product","search"]},suffix:{type:"string",description:`The custom name of an [alternate template](https://shopify.dev/themes/architecture/templates#alternate-templates). Returns \`nil\` if the default template is being used.
@@ -11348,7 +11370,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/template/suffix)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},directory:{type:"string",description:`The name of the template's parent directory. Returns \`nil\` if the template's parent directory is \`/templates\`.
@@ -11358,7 +11380,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/template/directory)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},transaction:{summary:"A transaction associated with a checkout or order.",description:`A transaction associated with a checkout or order. 
@@ -11370,7 +11392,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{id:{type:"number",description:`The ID of the transaction. 
@@ -11382,7 +11404,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The name of the transaction. 
@@ -11394,7 +11416,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},status:{type:"string",description:`The status of the transaction. 
@@ -11406,7 +11428,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/status)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["success","pending","failure","error"]},created_at:{type:"string",description:`A timestamp of when the transaction was created. 
@@ -11420,7 +11442,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/created_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},receipt:{type:"string",description:`Information from the payment provider about the payment receipt. This includes things like whether the payment was a test, or an authorization code if there was one.
@@ -11430,7 +11452,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/receipt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},kind:{type:"string",description:`The type of transaction. 
@@ -11442,7 +11464,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/kind)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["authorization","capture","sale","void","refund"]},gateway:{type:"string",description:`The [handleized](https://shopify.dev/docs/api/liquid/basics#modifying-handles) name of the payment provider used for the transaction. 
@@ -11454,7 +11476,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/gateway)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},status_label:{type:"string",description:`The status of the transaction, translated based on the current locale. 
@@ -11466,7 +11488,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/status_label)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},payment_details:{type:"object",description:`The transaction payment details. 
@@ -11478,10 +11500,10 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/payment_details)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
-`,scope:"transaction_payment_details"},amount:{type:"string",description:`The amount of the transaction in the currency's subunit. The amount is in the customer's local (presentment) currency.
+`,scope:"transaction_payment_details"},amount:{type:"number",description:`The amount of the transaction in the currency's subunit. The amount is in the customer's local (presentment) currency.
 
 
 
@@ -11494,7 +11516,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},gateway_display_name:{type:"string",description:`The name of the payment provider used for the transaction. 
@@ -11506,7 +11528,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/gateway_display_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},"show_buyer_pending_payment_instructions?":{type:"boolean",description:`Whether the transaction is pending, and whether additional customer info is required to process the payment. 
@@ -11518,7 +11540,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/show_buyer_pending_payment_instructions?)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},buyer_pending_payment_notice:{type:"string",description:`A notice that contains instructions for the customer on how to complete their payment.
@@ -11531,7 +11553,7 @@ The messages are specific to the payment method used.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/buyer_pending_payment_notice)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},buyer_pending_payment_instructions:{type:"array",description:`A list of \`pending_payment_instruction_input\` header-value pairs, with payment method-specific details.
@@ -11550,7 +11572,7 @@ If the payment method doesn\u2019t support pending payment instructions, then an
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction/buyer_pending_payment_instructions)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"pending_payment_instruction_input"}}},unit_price_measurement:{summary:`Information about how units of a product variant are measured. It's used to calculate
@@ -11566,7 +11588,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{measured_type:{type:"string",description:`The type of unit measurement. 
@@ -11578,7 +11600,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement/measured_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["volume","weight","dimension"]},quantity_value:{type:"number",description:`The quantity of the unit. 
@@ -11590,7 +11612,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement/quantity_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},quantity_unit:{type:"string",description:`The unit of measurement used to measure the [\`quantity_value\`](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement#unit_price_measurement-quantity_value). 
@@ -11602,7 +11624,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement/quantity_unit)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},reference_value:{type:"number",description:`The quantity of the unit for the base unit price. 
@@ -11614,7 +11636,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement/reference_value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},reference_unit:{type:"string",description:`The unit of measurement used to measure the [\`reference_value\`](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement#unit_price_measurement-reference_value). 
@@ -11626,7 +11648,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/unit_price_measurement/reference_unit)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},user:{summary:"The author of a blog article.",description:`The author of a blog article. 
@@ -11641,7 +11663,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{account_owner:{type:"boolean",description:`Returns \`true\` if the author is the account owner of the store. Returns \`false\` if not. 
@@ -11653,7 +11675,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user/account_owner)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},bio:{type:"string",description:`The bio associated with the author's account. If no bio is specified, then \`nil\` is returned.
@@ -11663,7 +11685,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user/bio)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},email:{type:"string",description:`The email associated with the author's account. 
@@ -11675,7 +11697,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user/email)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},first_name:{type:"string",description:`The first name associated with the author's account. 
@@ -11687,7 +11709,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user/first_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},homepage:{type:"string",description:`The URL for the personal website associated with the author's account. If no personal website is specified, then \`nil\` is returned.
@@ -11697,7 +11719,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user/homepage)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},image:{type:"object",description:`The image associated with the author's account. If no image is specified, then \`nil\` is returned.
@@ -11707,7 +11729,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user/image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"},last_name:{type:"string",description:`The last name associated with the author's account. 
@@ -11719,7 +11741,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user/last_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"string",description:`The first and last name associated with the author's account. 
@@ -11731,7 +11753,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},video:{summary:"Information about a video uploaded as [product media](/docs/api/liquid/objects/product-media) or a [`file_reference` metafield](/apps/metafields/types).",description:`Information about a video uploaded as [product media](https://shopify.dev/docs/api/liquid/objects/product-media) or a [\`file_reference\` metafield](https://shopify.dev/apps/metafields/types). 
@@ -11745,7 +11767,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{sources:{type:"array",description:`The source files for the video. 
@@ -11757,7 +11779,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video/sources)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"video_source"},duration:{type:"number",description:`The duration of the video in milliseconds. 
@@ -11769,7 +11791,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video/duration)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},aspect_ratio:{type:"number",description:`The aspect ratio of the video as a decimal. 
@@ -11781,7 +11803,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video/aspect_ratio)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},alt:{type:"string",description:`The alt text of the video. 
@@ -11793,7 +11815,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video/alt)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the video. 
@@ -11805,7 +11827,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},media_type:{type:"string",description:`The media type of the model. Always returns \`video\`. 
@@ -11832,7 +11854,7 @@ You can use the \`media_type\` property with the [\`where\` filter](/docs/api/li
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video/media_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},position:{type:"number",description:`The position of the video in the [\`product.media\`](https://shopify.dev/docs/api/liquid/objects/product#product-media) array. 
@@ -11844,7 +11866,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video/position)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},preview_image:{type:"object",description:`A preview image for the video. 
@@ -11856,7 +11878,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video/preview_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"image"}}},video_source:{summary:"Information about the source files for a video.",description:`Information about the source files for a video. 
@@ -11868,7 +11890,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video_source)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{width:{type:"number",description:`The width of the video source file. 
@@ -11880,7 +11902,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video_source/width)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},format:{type:"string",description:`The format of the video source file. 
@@ -11896,7 +11918,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video_source/format)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,literal:["mov","mp4","m3u8"]},height:{type:"number",description:`The height of the video source file. 
@@ -11908,7 +11930,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video_source/height)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},mime_type:{type:"string",description:`The [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) of the video source file. 
@@ -11920,7 +11942,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video_source/mime_type)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The [CDN URL](https://shopify.dev/themes/best-practices/performance/platform#shopify-cdn) of the video source file. 
@@ -11932,7 +11954,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/video_source/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},additional_checkout_buttons:{summary:"Returns `true` if a store has any payment providers with offsite checkouts, such as PayPal Express Checkout.",global:!0,description:`Returns \`true\` if a store has any payment providers with offsite checkouts, such as PayPal Express Checkout. Use \`additional_checkout_buttons\` to check whether these payment providers exist, and
@@ -11951,7 +11973,7 @@ to show the associated checkout buttons. To learn more about how to use these ob
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/additional_checkout_buttons)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"boolean",const:!0},all_country_option_tags:{summary:"Creates an `&lt;option&gt;` tag for each country.",global:!0,description:`Creates an \`<option>\` tag for each country. An attribute called \`data-provinces\` is set for each \`<option>\`, and contains a JSON-encoded array of the
@@ -11980,7 +12002,7 @@ You can wrap the \`all_country_option_tags\` object in \`<select>\` tags to buil
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/all_country_option_tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},canonical_url:{summary:"The canonical URL for the current page.",global:!0,description:`The canonical URL for the current page. To learn about canonical URLs, refer to [Google's documentation](https://support.google.com/webmasters/answer/139066?hl=en).
@@ -11990,7 +12012,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/canonical_url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},checkout:{summary:"A customer's checkout.",template:["checkout"],description:`A customer's checkout.
@@ -12008,7 +12030,7 @@ Shopify Plus merchants can access the \`checkout\` object in the [\`checkout.liq
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{applied_gift_cards:{type:"array",description:`The gift cards applied to the checkout. 
@@ -12020,7 +12042,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/applied_gift_cards)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"gift_card"},attributes:{type:"any",description:`Additional attributes entered by the customer with the [cart](https://shopify.dev/docs/api/liquid/objects/cart#cart-attributes). Shopify Plus merchants that have access to \`checkout.liquid\` can [capture attributes at checkout](https://shopify.dev/themes/architecture/layouts/checkout-liquid#capture-checkout-attributes).
@@ -12030,7 +12052,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/attributes)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},billing_address:{type:"object",description:`The billing address entered at checkout. 
@@ -12042,7 +12064,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/billing_address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"address"},buyer_accepts_marketing:{type:"boolean",description:`Returns \`true\` if the customer checks the email marketing subscription checkbox. Returns \`false\` if not. 
@@ -12054,7 +12076,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/buyer_accepts_marketing)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cancelled:{type:"boolean",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12072,7 +12094,7 @@ Returns \`true\` if the checkout has been cancelled. Returns \`false\` if not.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/cancelled)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},cart_level_discount_applications:{type:"array",description:`The cart-specific discount applications for the checkout. 
@@ -12084,7 +12106,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/cart_level_discount_applications)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},currency:{type:"string",description:`The [ISO code](https://www.iso.org/iso-4217-currency-codes.html) of the currency of the checkout. 
@@ -12096,7 +12118,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/currency)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},customer:{type:"object",description:`The customer associated with the checkout.
@@ -12110,7 +12132,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/customer)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"customer"},discount:{type:"object",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12128,7 +12150,7 @@ A discount applied to the checkout without being saved.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount"},discounts:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12148,7 +12170,7 @@ The discounts applied to the checkout.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discounts)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount"},discount_applications:{type:"array",description:`The discount applications for the checkout. 
@@ -12160,7 +12182,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discount_applications)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},discounts_amount:{type:"array",description:`The total amount of the discounts applied to the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -12176,7 +12198,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discounts_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},discounts_savings:{type:"array",description:`The total amount of the discounts applied to the checkout in the currency's subunit, as a negative value. The value is output in the customer's local (presentment) currency.
@@ -12192,7 +12214,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/discounts_savings)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"discount_application"},email:{type:"string",description:`The email associated with the checkout. 
@@ -12204,7 +12226,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/email)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},financial_status:{type:"string",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12222,7 +12244,7 @@ The financial status of the checkout.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/financial_status)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},fulfilled_at:{type:"string",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12240,7 +12262,7 @@ A timestamp for the fulfullment of the checkout.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfilled_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},fulfilled_line_items:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12258,7 +12280,7 @@ The fulfilled line items from the checkout.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfilled_line_items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"},fulfillment_status:{type:"string",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12276,10 +12298,10 @@ The fulfillment status of the checkout.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/fulfillment_status)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
-`},gift_cards_amount:{type:"string",description:`The amount of the checkout price paid in gift cards. The value is output in the customer's local (presentment) currency.
+`},gift_cards_amount:{type:"number",description:`The amount of the checkout price paid in gift cards. The value is output in the customer's local (presentment) currency.
 
 
 
@@ -12292,7 +12314,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/gift_cards_amount)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the checkout. 
@@ -12304,7 +12326,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},line_items:{type:"array",description:`The line items of the checkout. 
@@ -12316,7 +12338,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/line_items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"},line_items_subtotal_price:{type:"number",description:`The sum of the prices of all of the line items of the checkout in the currency's subunit, after any line item discounts
@@ -12333,7 +12355,7 @@ have been applied. The value is output in the customer's local (presentment) cur
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/line_items_subtotal_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},name:{type:"number",description:`The name of the checkout. This value is the same as [\`checkout.id\`](https://shopify.dev/docs/api/liquid/objects/checkout#checkout-id) with a \`#\` prepended to it.
@@ -12343,7 +12365,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},note:{type:"string",description:`Additional information entered by the customer with the [cart](https://shopify.dev/docs/api/liquid/objects/cart#cart-note). 
@@ -12355,7 +12377,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/note)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},order:{type:"object",description:`The order created by the checkout. Depending on the payment provider, the order might not have been created when the [Thank You page](https://help.shopify.com/en/manual/orders/status-tracking)
@@ -12371,7 +12393,7 @@ is first viewed. In this case, \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"order"},order_id:{type:"string",description:`The ID of the order created by the checkout. The value is the same as [\`order.id\`](https://shopify.dev/docs/api/liquid/objects/order#order-id).
@@ -12384,7 +12406,7 @@ is first viewed. In this case, \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},order_name:{type:"string",description:`The name of the order created by the checkout. The value is the same as [\`order.name\`](https://shopify.dev/docs/api/liquid/objects/order#order-name).
@@ -12397,7 +12419,7 @@ is first viewed. In this case, \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},order_number:{type:"string",description:`An integer representation of the name of the order created by the checkout. The value is the same as [\`order.order_number\`](https://shopify.dev/docs/api/liquid/objects/order#order-order_number).
@@ -12410,7 +12432,7 @@ is first viewed. In this case, \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/order_number)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},requires_shipping:{type:"boolean",description:`Returns \`true\` if any of the line items of the checkout require shipping. Returns \`false\` if not. 
@@ -12422,7 +12444,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/requires_shipping)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},shipping_address:{type:"object",description:`The shipping address of the checkout. 
@@ -12434,7 +12456,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_address)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"address"},shipping_method:{type:"object",description:`The shipping method of the checkout. 
@@ -12446,7 +12468,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_method)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"shipping_method"},shipping_price:{type:"number",description:`The shipping price of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -12462,7 +12484,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/shipping_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},tax_lines:{type:"array",description:`The tax lines for the checkout. 
@@ -12474,7 +12496,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/tax_lines)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"tax_line"},tax_price:{type:"number",description:`The total tax amount of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -12490,7 +12512,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/tax_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},total_price:{type:"number",description:`The total price of the checkout in the currency's subunit. The value is output in the customer's local (presentment) currency.
@@ -12506,7 +12528,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/total_price)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},transactions:{type:"array",description:`The transactions of the checkout. 
@@ -12518,7 +12540,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/transactions)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"transaction"},unavailable_line_items:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12536,7 +12558,7 @@ The unavailable line items of the checkout.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/unavailable_line_items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"},unfulfilled_line_items:{type:"array",description:`\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F
@@ -12554,7 +12576,7 @@ The unfulfilled line items of the checkout.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/unfulfilled_line_items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"line_item"},item_count:{type:"number",description:`The number of items in the checkout. 
@@ -12566,7 +12588,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/checkout/item_count)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},comment:{summary:"An article comment.",description:`An article comment. 
@@ -12578,7 +12600,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{author:{type:"string",description:`The full name of the author of the comment. 
@@ -12590,7 +12612,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment/author)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},content:{type:"string",description:`The content of the comment. 
@@ -12602,7 +12624,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment/content)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},created_at:{type:"string",description:`A timestamp for when the comment was created. 
@@ -12616,7 +12638,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment/created_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},email:{type:"string",description:`The email of he author of the comment. 
@@ -12628,7 +12650,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment/email)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},id:{type:"number",description:`The ID of the comment. 
@@ -12640,7 +12662,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment/id)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},status:{type:"string",description:`The status of the comment. Always returns \`published\`. Outside of the Liquid context, the status of a comment can vary based on spam detection and whether blog comments are
@@ -12657,7 +12679,7 @@ moderated. However, only comments with a status of \`published\` are included in
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment/status)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},updated_at:{type:"string",description:`A timestamp for when the status of the comment was last updated. 
@@ -12671,7 +12693,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment/updated_at)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The relative URL of the article that the comment is associated with, with [\`comment.id\`](https://shopify.dev/docs/api/liquid/objects/comment#comment-id)
@@ -12684,7 +12706,7 @@ appended.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/comment/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},content_for_additional_checkout_buttons:{summary:"Returns checkout buttons for any active payment providers with offsite checkouts.",global:!0,description:`Returns checkout buttons for any active payment providers with offsite checkouts. Use [\`additional_checkout_buttons\`](https://shopify.dev/docs/api/liquid/objects/additional_checkout_buttons)
@@ -12703,7 +12725,7 @@ to show the associated checkout buttons. To learn more about how to use these ob
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/content_for_additional_checkout_buttons)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},content_for_index:{summary:"Dynamically returns the content of [sections](/themes/architecture/sections) to be rendered on the home page.",global:!0,description:`Dynamically returns the content of [sections](https://shopify.dev/themes/architecture/sections) to be rendered on the home page. If you use a [Liquid index template](https://shopify.dev/themes/architecture/templates/index-template) (\`templates/index.liquid\`), then you must include \`{{ content_for_index }}\` in the template. This object can't be used in JSON index templates.
@@ -12713,7 +12735,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/content_for_index)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},content_for_layout:{summary:"Dynamically returns content based on the current [template](/themes/architecture/templates).",global:!0,description:`Dynamically returns content based on the current [template](https://shopify.dev/themes/architecture/templates). Include the \`content_for_layout\` object in your [layout files](https://shopify.dev/themes/architecture/layouts) between the \`<body>\` and
@@ -12730,7 +12752,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/content_for_layout)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},country_option_tags:{summary:"Creates an `&lt;option&gt;` tag for each country and region that's included in a shipping zone on the [Shipping](https://www.shopify.com/admin/settings/shipping) page of the Shopify admin.",global:!0,description:`Creates an \`<option>\` tag for each country and region that's included in a shipping zone on the [Shipping](https://www.shopify.com/admin/settings/shipping) page of the Shopify admin. An attribute called \`data-provinces\` is set for each \`<option>\`, and contains a JSON-encoded array of the
@@ -12760,7 +12782,7 @@ You can wrap the \`country_option_tags\` object in \`<select>\` tags to build a 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/country_option_tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},current_page:{summary:"The current page number.",global:!0,description:`The current page number. The \`current_page\` object has a value of 1 for non-paginated resources.
@@ -12778,7 +12800,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/current_page)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"number",const:!0},current_tags:{summary:"The currently applied tags.",template:["blog","collection"],description:`The currently applied tags. You can [add tags](https://help.shopify.com/en/manual/shopify-admin/productivity-tools/using-tags) to articles and
@@ -12791,7 +12813,7 @@ to show only products with specific tags.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/current_tags)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"array"},form_errors:{summary:"The error category strings for errors from a form created by a [`form` tag](/docs/api/liquid/tags/form).",description:`The error category strings for errors from a form created by a [\`form\` tag](https://shopify.dev/docs/api/liquid/tags/form). The following table outlines the strings that can be returned and the reason that they would be:
@@ -12828,7 +12850,7 @@ You can output the name of the field related to the error, and the error message
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form_errors)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{messages:{type:"array",description:`The translated error messages for each value in the \`form_errors\` array. You can access a specific message in the array by using a specific error from the \`form_errors\` array as a key.
@@ -12838,7 +12860,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form_errors/messages)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},translated_fields:{type:"array",description:`The translated names for each value in the \`form_errors\` array. You can access a specific field in the array by using a specific error from the \`form_errors\` array as a key.
@@ -12848,7 +12870,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/form_errors/translated_fields)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},handle:{summary:"The [handle](/docs/api/liquid/basics#handles) of the resource associated with the current template.",global:!0,description:`The [handle](https://shopify.dev/docs/api/liquid/basics#handles) of the resource associated with the current template. The \`handle\` object will return a value only when the following templates are being viewed:
@@ -12866,7 +12888,7 @@ If none of the above templates are being viewed, then \`nil\` is returned.
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/handle)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},page_description:{summary:"The meta description of the current page.",global:!0,description:`The meta description of the current page. The \`page_description\` object can be used to provide a brief description of a page for search engine listings and social
@@ -12879,7 +12901,7 @@ To learn about where to edit the meta description for a page, visit the [Shopify
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page_description)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},page_image:{summary:"An image to be shown in search engine listings and social media previews for the current page.",global:!0,description:`An image to be shown in search engine listings and social media previews for the current page. The resource's featured image for product and collection pages, and blog posts, is used. For all other pages, or pages where
@@ -12903,7 +12925,7 @@ If a theme doesn't include \`og:image\` tags for a page, then Shopify automatica
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page_image)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",scope:"image",const:!0},page_title:{summary:"The page title of the current page.",global:!0,description:`The page title of the current page. The \`page_title\` object can be used to specify the title of page for search engine listings and social media previews.
@@ -12915,7 +12937,7 @@ To learn about where to edit the title for a page, visit the [Shopify Help Cente
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/page_title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"string",const:!0},part:{summary:"A part in the navigation for pagination.",description:`A part in the navigation for pagination. 
@@ -12946,7 +12968,7 @@ You can create a pagination navigation by iterating over each \`part\` of a [\`p
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/part)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{is_link:{type:"boolean",description:`Returns \`true\` if the part is a link. Returns \`false\` if not. 
@@ -12958,7 +12980,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/part/is_link)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},title:{type:"string",description:`The page number associated with the part. 
@@ -12970,7 +12992,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/part/title)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},url:{type:"string",description:`The URL of the part. It consists of the current page URL path with the pagination parameter for the current part appended.
@@ -12980,7 +13002,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/part/url)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},pending_payment_instruction_input:{summary:`Header-value pairs that make up the list of payment information specific to the payment method.
@@ -12994,7 +13016,7 @@ This information can be be used by the customer to complete the transaction offl
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/pending_payment_instruction_input)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{header:{type:"string",description:`The header of the payment instruction.
@@ -13007,7 +13029,7 @@ These are payment method-specific. Example: "Entity" and "Reference" for Multiba
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/pending_payment_instruction_input/header)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value:{type:"string",description:`Contains the corresponding values to the headers of the payment instruction. 
@@ -13019,7 +13041,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/pending_payment_instruction_input/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},powered_by_link:{summary:"Creates an HTML link element that links to a localied version of `shopify.com`, based on the locale of the store.",global:!0,description:`Creates an HTML link element that links to a localied version of \`shopify.com\`, based on the locale of the store. 
@@ -13039,7 +13061,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/powered_by_link)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,const:!0},predictive_search_resources:{summary:"Contains arrays of objects for each resource type that can be returned by a [predictive search query](/api/ajax/reference/predictive-search#get-locale-search-suggest).",description:`Contains arrays of objects for each resource type that can be returned by a [predictive search query](https://shopify.dev/api/ajax/reference/predictive-search#get-locale-search-suggest). You can check whether any resources of a specific type were returned using the [\`size\` filter](https://shopify.dev/docs/api/liquid/filters/size).
@@ -13057,7 +13079,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{articles:{type:"array",description:`The articles associated with the query. 
@@ -13069,7 +13091,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources/articles)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"article"},collections:{type:"array",description:`The collections associated with the query. 
@@ -13081,7 +13103,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources/collections)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"collection"},pages:{type:"array",description:`The pages associated with the query. 
@@ -13093,7 +13115,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources/pages)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"page"},products:{type:"array",description:`The products associated with the query. 
@@ -13105,7 +13127,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/predictive_search_resources/products)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"product"}}},quantity_rule:{summary:"A variant order quantity rule (minimum, maximum, and increment). The default order variant quantity rule is `min=1,max=null,increment=1`.",description:`A variant order quantity rule (minimum, maximum, and increment). The default order variant quantity rule is \`min=1,max=null,increment=1\`. 
@@ -13125,7 +13147,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{min:{type:"number",description:`Minimum order quantity (default 1) 
@@ -13137,7 +13159,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/min)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},max:{type:"number",description:`Maximum order quantity If there is no maximum, then \`nil\` is returned.
@@ -13147,7 +13169,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/max)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},increment:{type:"number",description:`Order quantity increment (default 1) 
@@ -13159,7 +13181,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/quantity_rule/increment)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},scripts:{summary:"The active scripts, of each script type, on the store.",global:!0,description:`The active scripts, of each script type, on the store. There can be only one active script of each type. Currently, the only type accessible in Liquid is
@@ -13176,7 +13198,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/scripts)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{cart_calculate_line_items:{type:"object",description:`The active line item script. If no line item script is currently active, then \`nil\` is returned.
@@ -13196,7 +13218,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/scripts/cart_calculate_line_items)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"script"}}},sitemap:{summary:"The sitemap for a specific group in the [`robots.txt` file](/themes/architecture/templates/robots-txt-liquid).",description:`The sitemap for a specific group in the [\`robots.txt\` file](https://shopify.dev/themes/architecture/templates/robots-txt-liquid). The sitemap provides information about the pages and content on a site, and the relationships between them, which helps
@@ -13225,7 +13247,7 @@ Sitemap: https://your-store.myshopify.com/sitemap.xml
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/sitemap)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{directive:{type:"string",description:`Returns \`Sitemap\`. 
@@ -13237,7 +13259,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/sitemap/directive)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value:{type:"string",description:`The URL that the sitemap is hosted at. 
@@ -13249,7 +13271,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/sitemap/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},sort_option:{summary:"A sort option for a collection or search results page.",description:`A sort option for a collection or search results page. 
@@ -13261,7 +13283,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/sort_option)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{name:{type:"string",description:`The customer-facing name of the sort option. The name can be edited by merchants in the [language editor](https://help.shopify.com/manual/online-store/themes/customizing-themes/language/change-wording).
@@ -13271,7 +13293,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/sort_option/name)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value:{type:"string",description:`The value of the sort option. This value is used when assigning the [\`collection.sort_by\`](https://shopify.dev/docs/api/liquid/objects/collection#collection-sort_by) and
@@ -13282,7 +13304,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/sort_option/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}},transaction_payment_details:{summary:"Information about the payment methods used for a transaction.",description:`Information about the payment methods used for a transaction. 
@@ -13294,7 +13316,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{credit_card_company:{type:"string",description:`The name of the company that issued the credit card used for the transaction. 
@@ -13306,7 +13328,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details/credit_card_company)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},credit_card_last_four_digits:{type:"string",description:`The last four digits of the credit card number of the credit card used for the transaction. 
@@ -13318,7 +13340,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details/credit_card_last_four_digits)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},credit_card_number:{type:"string",description:`The credit card number of the credit card used for the transaction. All but the last four digits are redacted.
@@ -13328,7 +13350,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details/credit_card_number)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},gift_card:{type:"object",description:`The gift card used for the transaction. If no gift card was used, then \`nil\` is returned.
@@ -13338,7 +13360,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/transaction_payment_details/gift_card)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,scope:"gift_card"}}},user_agent:{summary:"The user-agent, which is the name of the crawler, for a specific group in the [`robots.txt` file](/themes/architecture/templates/robots-txt-liquid).",description:`The user-agent, which is the name of the crawler, for a specific group in the [\`robots.txt\` file](https://shopify.dev/themes/architecture/templates/robots-txt-liquid). The \`user_agent\` object consists of a \`User-agent\` directive, and a value of the name of the user-agent. For example:
@@ -13358,7 +13380,7 @@ User-agent: *
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user_agent)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `,type:"object",properties:{directive:{type:"string",description:`Returns \`User-agent\`. 
@@ -13370,7 +13392,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user_agent/directive)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `},value:{type:"string",description:`The name of the user-agent. 
@@ -13382,7 +13404,7 @@ Last Updated: 1st July 2023
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/objects/user_agent/value)
 
 
-Last Updated: 1st July 2023
+Last Updated: 0th October 2023
 
 
 `}}}};var Q={item_count_for_variant:{description:`Returns the total item count for a specified variant in the cart. 
@@ -15990,17 +16012,17 @@ set in the [general settings](https://www.shopify.com/admin/settings/general) in
 
 [Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/weight_with_unit)
 
-`,arguments:[{type:"string",required:!1,description:"The weight unit to use in place of the default weight unit."}],returns:"string"}};var ge=Z({},X,_);var $={};A($,{filters:()=>be,objects:()=>ne,tags:()=>ve});var ee={relative_url:{description:"Prepend the baseurl value to the input. Useful if your site is hosted at a subpath rather than the root of the domain.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},absolute_url:{description:"Prepend the url and baseurl value to the input.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_xmlschema:{description:"Convert a Date into XML Schema (ISO 8601) format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_rfc822:{description:"Convert a Date into the RFC-822 format used for RSS feeds.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_string:{description:"Convert a date to short format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}}};var te={post_url:{type:"output",description:"Link to a post on your site, the post_url tag will generate the correct permalink URL for the post you specify",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#linking-to-posts"}},include:{type:"import",description:"The include tag allows you to include the content from another file stored in the _includes folder",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes"}},include_relative:{type:"import",description:"Include file fragments relative to the current file by using the include_relative tag",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes/#including-files-relative-to-another-file"}},link:{type:"output",filters:!0},highlight:{type:"raw",description:"Render a code block with syntax highlighting.",snippet:"highlight ${1}",filters:!1,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#code-snippet-highlighting"}}};var ne={site:{type:"object",description:"Site wide information + configuration settings from _config.yml. See below for details.",properties:{pages:{description:"A list of all Pages.",type:"array"},posts:{description:"A reverse chronological list of all Posts.",type:"array"},related_posts:{type:"array",description:"If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are the ten most recent posts. For high quality but slow to compute results, run the jekyll command with the --lsi (latent semantic indexing) option. "},time:{description:"The current time (when you run the jekyll command).",type:"string"}},reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/variables/#site-variables"}}};var be=Object.assign(Object.create(null),ee,J),ve=Object.assign(Object.create(null),te,_);var x=process.cwd(),q=`${f.default.gray("[")}SPECS${f.default.gray("]")} ${f.default.magenta("RUN")}`,{log:b}=console;qe();function qe(){b(`${q} ${f.default.magenta.bold("Building Shopify Specifications")}`),Te(),je(),b(`${q} ${f.default.magenta.bold("Finished Shopify Specifications")}`)}function _e(){let e=new Date,n=e.getFullYear(),s=e.getMonth()+1,i=e.getDay(),a=t=>({1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"})[t];return`${(t=>{let p=t%10,d=t%100;return t+(p===1&&d!==11?"st":p===2&&d!==12?"nd":p===3&&d!==13?"rd":"th")})(i)} ${a(s)} ${n}`}function Le(e,n,s){return`import { ${e} } from '../..'
+`,arguments:[{type:"string",required:!1,description:"The weight unit to use in place of the default weight unit."}],returns:"string"}};var be=Z({},X,_);var $={};A($,{filters:()=>ge,objects:()=>ne,tags:()=>ve});var ee={relative_url:{description:"Prepend the baseurl value to the input. Useful if your site is hosted at a subpath rather than the root of the domain.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},absolute_url:{description:"Prepend the url and baseurl value to the input.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_xmlschema:{description:"Convert a Date into XML Schema (ISO 8601) format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_rfc822:{description:"Convert a Date into the RFC-822 format used for RSS feeds.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}},date_to_string:{description:"Convert a date to short format.",reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/filters/"}}};var te={post_url:{type:"output",description:"Link to a post on your site, the post_url tag will generate the correct permalink URL for the post you specify",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#linking-to-posts"}},include:{type:"import",description:"The include tag allows you to include the content from another file stored in the _includes folder",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes"}},include_relative:{type:"import",description:"Include file fragments relative to the current file by using the include_relative tag",singleton:!0,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/includes/#including-files-relative-to-another-file"}},link:{type:"output",filters:!0},highlight:{type:"raw",description:"Render a code block with syntax highlighting.",snippet:"highlight ${1}",filters:!1,reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/liquid/tags/#code-snippet-highlighting"}}};var ne={site:{type:"object",description:"Site wide information + configuration settings from _config.yml. See below for details.",properties:{pages:{description:"A list of all Pages.",type:"array"},posts:{description:"A reverse chronological list of all Posts.",type:"array"},related_posts:{type:"array",description:"If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are the ten most recent posts. For high quality but slow to compute results, run the jekyll command with the --lsi (latent semantic indexing) option. "},time:{description:"The current time (when you run the jekyll command).",type:"string"}},reference:{name:"Jekyll Liquid",url:"https://jekyllrb.com/docs/variables/#site-variables"}}};var ge=Object.assign(Object.create(null),ee,O),ve=Object.assign(Object.create(null),te,_);var x=process.cwd(),q=`${f.default.gray("[")}SPECS${f.default.gray("]")} ${f.default.magenta("RUN")}`,{log:g}=console;qe();function qe(){g(`${q} ${f.default.magenta.bold("Building Shopify Specifications")}`),Te(),je(),g(`${q} ${f.default.magenta.bold("Finished Shopify Specifications")}`)}function _e(){let e=new Date,n=e.getFullYear(),o=e.getMonth()+1,i=e.getDay(),a=t=>({1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"})[t];return`${(t=>{let p=t%10,d=t%100;return t+(p===1&&d!==11?"st":p===2&&d!==12?"nd":p===3&&d!==13?"rd":"th")})(i)} ${a(o)} ${n}`}function Le(e,n,o){return`import { ${e} } from '../..'
 
-export const ${n}: ${e} = ${s}`}function y(e){return e=e.replace(/&lt;/g,"<"),e=e.replace(/&gt;/g,">"),e=e.replace(/&quot;/g,'"'),e=e.replace(/&#39;/g,"'"),e=e.replace(/&amp;/g,"&"),e}function P(e,n,s){let i=[],{name:a,summary:u=null,description:t=null,examples:p,deprecated:d,deprecation_reason:c}=n;if(d===!0&&(i.push("\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F"),c!==""?i.push(y(c),"---"):i.push("No deprecation reason has been provided by the Shopify team \u{1F921}.","---")),t!==""&&u!==null){let l=y(t).replace(/>\s(Tip|Note):/g,`
-
-**$1**
-`).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"),r=y(u).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");l.trimStart()[0]===">"?i.push(y(r),l):i.push(y(r)+" "+l)}else{let l="";if(t!==""&&(l=y(t).replace(/>\s(Tip|Note):/g,`
+export const ${n}: ${e} = ${o}`}function m(e){return e=e.replace(/&lt;/g,"<"),e=e.replace(/&gt;/g,">"),e=e.replace(/&quot;/g,'"'),e=e.replace(/&#39;/g,"'"),e=e.replace(/&amp;/g,"&"),e}function P(e,n,o){let i=[],{name:a,summary:l=null,description:t=null,examples:p,deprecated:d,deprecation_reason:c}=n;if(d===!0&&(i.push("\u26A0\uFE0F **DEPRECATED** \u26A0\uFE0F"),c!==""?i.push(m(c),"---"):i.push("No deprecation reason has been provided by the Shopify team \u{1F921}.","---")),t!==""&&l!==null){let h=m(t).replace(/>\s(Tip|Note):/g,`
 
 **$1**
-`).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),u.length>0){let r=y(u).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");l.trimStart()[0]===">"?i.push(y(r),l):i.push(y(r)+" "+l)}i.push(l)}if(p.length>0){let[l]=p;l.name===""?i.push("#### Example"):i.push(`#### ${l.name}`),l.description!==""&&i.push(y(l.description)),l.raw_liquid!==""&&i.push("```liquid",y(l.raw_liquid),"```")}return i.push("---"),s?i.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${s}/${a})
+`).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"),r=m(l).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");h.trimStart()[0]===">"?i.push(m(r),h):i.push(m(r)+" "+h)}else{let h="";if(t!==""&&(h=m(t).replace(/>\s(Tip|Note):/g,`
+
+**$1**
+`).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),l.length>0){let r=m(l).replace(/\(\/(docs\/api.*(?=\)))/g,"(https://shopify.dev/$1").replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1");h.trimStart()[0]===">"?i.push(m(r),h):i.push(m(r)+" "+h)}i.push(h)}if(p.length>0){let[h]=p;h.name===""?i.push("#### Example"):i.push(`#### ${h.name}`),h.description!==""&&i.push(m(h.description)),h.raw_liquid!==""&&i.push("```liquid",m(h.raw_liquid),"```")}return i.push("---"),o?i.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${o}/${a})
 `):i.push(`[Shopify Liquid](https://shopify.dev/docs/api/liquid/${e}/${a})
 `),i.push(`Last Updated: ${_e()}`,`
 `),i.join(`
 
-`)}function je(){b(`${q} ${f.default.magenta("Shopify Filters")}`);let e=(0,S.join)(x,"node_modules/.specs/data","filters.json"),n=T.default.readFileSync(e).toString(),s=JSON.parse(n),i={},a=j.filters;for(let t of s)if(!(t.name in a))if(i[t.name]={},i[t.name].description=P("filters",t),t.return_type[0].type==="string"?i[t.name].returns="string":t.return_type[0].type==="number"?i[t.name].returns="number":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="array"?i[t.name].returns="array":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="object"?i[t.name].returns="object":i[t.name].returns="any",t.deprecated===!0&&(i[t.name].deprecated=t.deprecated),t.parameters.length===0){let p=[],d=[],c=t.syntax.split(" ");if(c[2][c[2].length-1]===":"){p.push(c[2]);let l=0;for(let r of c.slice(3)){l=l+1;let h;r.slice(0,-1)==="string"?h="string":r.slice(0,-1)==="number"?h="number":r.slice(0,-1)==="boolean"?h="boolean":r.slice(0,-1)==="array"?h="array":r.slice(0,-1)==="boolean"?h="boolean":r.slice(0,-1)==="object"?h="object":h="any",r[r.length-1]===","?(h==="string"?p.push("'$"+l+"',"):p.push("$"+l+","),d.push({type:h,required:!0})):(h==="string"?p.push("'$"+l+"'"):p.push("$"+l+","),d.push({type:h,required:!0}))}i[t.name].snippet=p.join(" "),i[t.name].arguments=d}}else{let p=t.syntax.split(" "),d=[],c=[];d.push(p[2]),p.splice(0,3);for(let l=0;l<t.parameters.length;l++){let r=t.parameters[l];if(p.length>0&&p[0][p[0].length-1]===","){if("arguments"in i[t.name]&&i[t.name].arguments.length<0)for(let h=0;h<p.length;h++){let m;r.types[0]==="string"?m="string":r.types[0]==="number"?m="number":r.types[0]==="boolean"?m="boolean":r.types[0]==="array"?m="array":r.types[0]==="boolean"?m="boolean":r.types[0]==="object"?m="object":m="any";let w=p[h],k={type:m};r.required===!0&&(k.required=!0),r.description!==""&&(k.description=y(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),c.push(k),w[w.length-1]===","?m==="string"?d.push("'$"+(h+1)+"',"):d.push("$"+(h+1)+","):m==="string"?d.push("'$"+(h+1)+"'"):d.push("$"+(h+1))}}else if(Array.isArray(i[t.name].arguments)){c.length===0&&c.push({type:"parameter",value:{}}),c[c.length-1].type!=="parameter"&&c.push({type:"parameter",value:{}}),r.required&&d.push(`${r.name}:`,"${"+(l+1)+"}");let h;r.types[0]==="string"?h="string":r.types[0]==="number"?h="number":r.types[0]==="boolean"?h="boolean":r.types[0]==="array"?h="array":r.types[0]==="boolean"?h="boolean":r.types[0]==="object"?h="object":h="any",c[c.length-1].value[r.name]={type:h,required:r.required},r.description!==""&&(c[c.length-1].value[r.name].description=y(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"))}}d.length>0&&(d.length===1&&d[0][d[0].length-1]===":"&&(d[0]=d[0].slice(0,-1)),i[t.name].snippet=d.join(" ")),c.length>0&&(i[t.name].arguments=c)}Object.keys(i).length>0&&(b(q+" "+f.default.bold.redBright("NEW FILTERS AVAILABLE")),Object.keys(i).forEach(t=>{b(q+" "+f.default.white(t))}))}function Te(){b(`${q} ${f.default.magenta("Shopify Objects")}`);let e=(t,p)=>{let d={scope:null,items:null,type:"any",literal:null},c=t[0].type,l=t[0].array_value;c==="string"||c==="boolean"||c==="number"?d.type=c:c==="array"?(d.type=c,l==="string"||l==="boolean"||l==="number"?d.items=l:d.scope=l):c!==""&&p.some(r=>r.name===c)&&(d.type="object",d.scope=c);for(let{name:r}of t)r!==""&&(d.literal===null&&(d.literal=[]),d.literal.push(r));return d},n=(0,S.join)(x,"node_modules/.specs/data","objects.json"),s=T.default.readFileSync(n).toString(),i=JSON.parse(s),a={};for(let t of i){if(a[t.name]={summary:t.summary},t.access.global===!0&&(a[t.name].global=t.access.global),t.deprecated===!0&&(a[t.name].deprecated=t.deprecated),t.access.template.length>0&&(a[t.name].template=t.access.template),a[t.name].description=P("objects",t),t.return_type.length>0){let{type:p,scope:d,literal:c}=e(t.return_type,i);c!==null&&(a[t.name].literal=c),d!==null?(a[t.name].type=p,a[t.name].scope=d):a[t.name].type=p}if(t.properties.length>0){a[t.name].type="object",typeof a[t.name].properties!="object"&&(a[t.name].properties={});for(let p of t.properties)if(b(f.default.gray(`  - ${p.name}`)),a[t.name].properties[p.name]={type:22},a[t.name].properties[p.name].description=P("objects",p,t.name),t.deprecated===!0&&(a[t.name].properties[p.name].deprecated=t.deprecated),p.return_type.length>0){let{type:d,scope:c,literal:l}=e(p.return_type,i);l!==null&&(a[t.name].properties[p.name].literal=l),c!==null?(a[t.name].properties[p.name].type=d,a[t.name].properties[p.name].scope=c):a[t.name].properties[p.name].type=d}}else a[t.name].type!=="array"&&(a[t.name].const=!0)}let u=JSON.stringify(a,null,2);b(q+f.default.cyan(` Writing objects JSON: ${f.default.whiteBright("data/liquid/shopify/objects.json")} `)),T.default.writeFileSync((0,S.join)(x,"data/liquid/shopify/objects.json"),u),b(q+f.default.cyan(` Writing objects DATA: ${f.default.whiteBright("src/liquid/data/shopify/objects.ts")} `)),T.default.writeFileSync((0,S.join)(x,"src/liquid/data/shopify/objects.ts"),Le("Objects","objects",u))}
+`)}function je(){g(`${q} ${f.default.magenta("Shopify Filters")}`);let e=(0,S.join)(x,"node_modules/.specs/data","filters.json"),n=T.default.readFileSync(e).toString(),o=JSON.parse(n),i={},a=j.filters;for(let t of o)if(!(t.name in a))if(i[t.name]={},i[t.name].description=P("filters",t),t.return_type[0].type==="string"?i[t.name].returns="string":t.return_type[0].type==="number"?i[t.name].returns="number":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="array"?i[t.name].returns="array":t.return_type[0].type==="boolean"?i[t.name].returns="boolean":t.return_type[0].type==="object"?i[t.name].returns="object":i[t.name].returns="any",t.deprecated===!0&&(i[t.name].deprecated=t.deprecated),t.parameters.length===0){let p=[],d=[],c=t.syntax.split(" ");if(c[2][c[2].length-1]===":"){p.push(c[2]);let h=0;for(let r of c.slice(3)){h=h+1;let u;r.slice(0,-1)==="string"?u="string":r.slice(0,-1)==="number"?u="number":r.slice(0,-1)==="boolean"?u="boolean":r.slice(0,-1)==="array"?u="array":r.slice(0,-1)==="boolean"?u="boolean":r.slice(0,-1)==="object"?u="object":u="any",r[r.length-1]===","?(u==="string"?p.push("'$"+h+"',"):p.push("$"+h+","),d.push({type:u,required:!0})):(u==="string"?p.push("'$"+h+"'"):p.push("$"+h+","),d.push({type:u,required:!0}))}i[t.name].snippet=p.join(" "),i[t.name].arguments=d}}else{let p=t.syntax.split(" "),d=[],c=[];d.push(p[2]),p.splice(0,3);for(let h=0;h<t.parameters.length;h++){let r=t.parameters[h];if(p.length>0&&p[0][p[0].length-1]===","){if("arguments"in i[t.name]&&i[t.name].arguments.length<0)for(let u=0;u<p.length;u++){let y;r.types[0]==="string"?y="string":r.types[0]==="number"?y="number":r.types[0]==="boolean"?y="boolean":r.types[0]==="array"?y="array":r.types[0]==="boolean"?y="boolean":r.types[0]==="object"?y="object":y="any";let w=p[u],k={type:y};r.required===!0&&(k.required=!0),r.description!==""&&(k.description=m(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1")),c.push(k),w[w.length-1]===","?y==="string"?d.push("'$"+(u+1)+"',"):d.push("$"+(u+1)+","):y==="string"?d.push("'$"+(u+1)+"'"):d.push("$"+(u+1))}}else if(Array.isArray(i[t.name].arguments)){c.length===0&&c.push({type:"parameter",value:{}}),c[c.length-1].type!=="parameter"&&c.push({type:"parameter",value:{}}),r.required&&d.push(`${r.name}:`,"${"+(h+1)+"}");let u;r.types[0]==="string"?u="string":r.types[0]==="number"?u="number":r.types[0]==="boolean"?u="boolean":r.types[0]==="array"?u="array":r.types[0]==="boolean"?u="boolean":r.types[0]==="object"?u="object":u="any",c[c.length-1].value[r.name]={type:u,required:r.required},r.description!==""&&(c[c.length-1].value[r.name].description=m(r.description).replace(/\]\(\/(.*)(?=\))/g,"](https://shopify.dev/$1"))}}d.length>0&&(d.length===1&&d[0][d[0].length-1]===":"&&(d[0]=d[0].slice(0,-1)),i[t.name].snippet=d.join(" ")),c.length>0&&(i[t.name].arguments=c)}Object.keys(i).length>0&&(g(q+" "+f.default.bold.redBright("NEW FILTERS AVAILABLE")),Object.keys(i).forEach(t=>{g(q+" "+f.default.white(t))}))}function Te(){g(`${q} ${f.default.magenta("Shopify Objects")}`);let e=(t,p)=>{let d={scope:null,items:null,type:"any",literal:null},c=t[0].type,h=t[0].array_value;c==="string"||c==="boolean"||c==="number"?d.type=c:c==="array"?(d.type=c,h==="string"||h==="boolean"||h==="number"?d.items=h:d.scope=h):c!==""&&p.some(r=>r.name===c)&&(d.type="object",d.scope=c);for(let{name:r}of t)r!==""&&(d.literal===null&&(d.literal=[]),d.literal.push(r));return d},n=(0,S.join)(x,"node_modules/.specs/data","objects.json"),o=T.default.readFileSync(n).toString(),i=JSON.parse(o),a={};for(let t of i){if(a[t.name]={summary:t.summary},t.access.global===!0&&(a[t.name].global=t.access.global),t.deprecated===!0&&(a[t.name].deprecated=t.deprecated),t.access.template.length>0&&(a[t.name].template=t.access.template),a[t.name].description=P("objects",t),t.return_type.length>0){let{type:p,scope:d,literal:c}=e(t.return_type,i);c!==null&&(a[t.name].literal=c),d!==null?(a[t.name].type=p,a[t.name].scope=d):a[t.name].type=p}if(t.properties.length>0){a[t.name].type="object",typeof a[t.name].properties!="object"&&(a[t.name].properties={});for(let p of t.properties)if(g(f.default.gray(`  - ${p.name}`)),a[t.name].properties[p.name]={type:22},a[t.name].properties[p.name].description=P("objects",p,t.name),t.deprecated===!0&&(a[t.name].properties[p.name].deprecated=t.deprecated),p.return_type.length>0){let{type:d,scope:c,literal:h}=e(p.return_type,i);h!==null&&(a[t.name].properties[p.name].literal=h),c!==null?(a[t.name].properties[p.name].type=d,a[t.name].properties[p.name].scope=c):a[t.name].properties[p.name].type=d}}else a[t.name].type!=="array"&&(a[t.name].const=!0)}let l=JSON.stringify(a,null,2);g(q+f.default.cyan(` Writing objects JSON: ${f.default.whiteBright("data/liquid/shopify/objects.json")} `)),T.default.writeFileSync((0,S.join)(x,"data/liquid/shopify/objects.json"),l),g(q+f.default.cyan(` Writing objects DATA: ${f.default.whiteBright("src/liquid/data/shopify/objects.ts")} `)),T.default.writeFileSync((0,S.join)(x,"src/liquid/data/shopify/objects.ts"),Le("Objects","objects",l))}
