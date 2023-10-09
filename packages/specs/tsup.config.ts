@@ -69,16 +69,16 @@ export default defineConfig([
         }
       )
     ]
+  },
+  {
+    entry: [ './scripts/shopify-specs.ts' ],
+    outDir: 'bin',
+    clean: true,
+    bundle: true,
+    format: 'cjs',
+    name: 'specs',
+    onSuccess: 'node ./bin/shopify-specs.js && eslint ./src/liquid/data/shopify/*.ts --fix'
   }
-  // {
-  //   entry: [ './scripts/shopify-specs.ts' ],
-  //   outDir: 'bin',
-  //   clean: true,
-  //   bundle: true,
-  //   format: 'cjs',
-  //   name: 'specs',
-  //   onSuccess: 'node ./bin/shopify-specs.js && eslint ./src/liquid/data/shopify/*.ts --fix'
-  // }
 ]);
 
 /**
