@@ -278,18 +278,16 @@ export declare interface Argument extends Descriptions {
   /**
    * Value
    *
-   * The argument value can be pre-defined or user defined.
-   * When a `value` is supplied, it will be provided to completions.
-   * Values can be expressed in different forms and structures. The query
-   * engine will match certain argument sequences.
+   * The argument value can be pre-defined or user defined. When a `value` is supplied, it will be provided to
+   * completions. Values can be expressed in different forms and structures. The query engine will match certain
+   * argument sequences.
    *
    * **PAIR SEQUENCES**
    *
-   * Pair arguments can be inferred and occur when 2 (or more) entries exist on
-   * the `arguments` array list property available on filters or tags. When an
-   * argument item `value` uses an object `{}` type and the previous argument item
-   * in the list uses an array `value` type then the properties of the object
-   * type can reference the values, for example:
+   * Pair arguments can be inferred and occur when 2 (or more) entries exist on the `arguments` array list property
+   * available on filters or tags. When an argument item `value` uses an object `{}` type and the previous argument item
+   * in the list uses an array `value` type then the properties of the object type can reference the values, for
+   * example:
    *
    * ```js
    * [
@@ -329,11 +327,10 @@ export declare interface Argument extends Descriptions {
    *
    * ```
    *
-   * In the above example we are inferring a `pair` argument sequence. The
-   * `value` defined at index `0` is being reference in the `value` defined at
-   * index `1`. We asserted a _loose_ match, so if `foo` or `bar` are provided
-   * as an argument in the tag, then the values supplied in index `1` must follow,
-   * but if `baz` was provided, it does not require pairing.
+   * In the above example we are inferring a `pair` argument sequence. The`value` defined at index `0` is being
+   * reference in the `value` defined at index `1`. We asserted a _loose_ match, so if `foo` or `bar` are provided
+   * as an argument in the tag, then the values supplied in index `1` must follow, but if `baz` was provided, it does
+   * not require pairing.
    *
    * Using the above example:
    *
