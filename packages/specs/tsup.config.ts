@@ -16,6 +16,7 @@ export default defineConfig([
 
       'liquid/standard': './src/liquid/data/standard/export.ts',
       'liquid/shopify': './src/liquid/data/shopify/export.ts',
+      'liquid/11ty': './src/liquid/data/11ty/export.ts',
       'liquid/jekyll': './src/liquid/data/jekyll/export.ts',
 
       /* ENTRY -------------------------------------- */
