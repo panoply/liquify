@@ -1,6 +1,6 @@
 {
   "name": "@liquify/specs",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "private": false,
   "author": {
     "name": "Νίκος Σαβίδης",
@@ -64,6 +64,7 @@
     "@vscode/web-custom-data": "^0.4.6",
     "ansis": "^1.5.5",
     "ava": "^5.2.0",
+    "mergerino": "^0.4.0",
     "tsup": "^6.7.0",
     "vscode-languageserver-types": "^3.17.3"
   }
