@@ -1,6 +1,6 @@
-dir=./node_modules/.specs     # ACE OUTPUT DIRECTORY LOCATION
-src=./data/                   # SRC FILES CONTAINING DATA
-out=../..                     # CD DIRECTORY TO GET BACK TO ROOT
+dir="./node_modules/.specs"     # TEMP OUTPUT DIRECTORY LOCATION
+src="./data/"                   # SRC FILES CONTAINING DATA
+out="../.."                     # CD DIRECTORY TO GET BACK TO ROOT
 
 #---------------------------------------------------------------------------
 # DOWNLOAD THE SHOPIFY DOCS PROJECT AND INSTALL
