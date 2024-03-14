@@ -54,8 +54,9 @@ const unique: Set<string> = new Set();
 /**
  * Reset
  *
- * Resets all states. This is executed everytime we
- * encounter a new tag.
+ * Resets all states. This is executed everytime we encounter a new tag.
+ * Passing a parameter of `true` will trigger a **hard** reset and clear
+ * additional storages, such as `liquid.data.variables` or `liquid.data.files`
  */
 export function reset (hard = false): void {
 
@@ -75,8 +76,13 @@ export function reset (hard = false): void {
 
   unique.clear();
 
-  if (hard) liquid.data.variables.clear();
-
+  if (hard) {
+    liquid.within = undefined;
+    liquid.type = undefined;
+    liquid.files.clear();
+    liquid.data.variables.clear();
+    liquid.data.completions = undefined;
+  }
 }
 
 /* -------------------------------------------- */
@@ -96,6 +102,8 @@ export function getTags (engine?: Engine) {
   if (engine === Engine.standard) {
     return keys(specification.standard.tags);
   } else if (engine === Engine.shopify) {
+    return keys(specification.shopify.tags);
+  } else if (engine === Engine.eleventy) {
     return keys(specification.shopify.tags);
   } else if (engine === Engine.jekyll) {
     return keys(specification.jekyll.tags);
@@ -117,6 +125,8 @@ export function getFilters (engine?: Engine) {
     return keys(specification.standard.filters);
   } else if (engine === Engine.shopify) {
     return keys(specification.shopify.filters);
+  } else if (engine === Engine.eleventy) {
+    return keys(specification.standard.filters);
   } else if (engine === Engine.jekyll) {
     return keys(specification.jekyll.filters);
   }
@@ -135,47 +145,22 @@ export function getFilters (engine?: Engine) {
  */
 export function getObjects (engine?: Engine.shopify | Engine.jekyll | Engine.eleventy) {
 
-  if (liquid.engine === Engine.standard) return [];
-
   if (engine === undefined) return keys(liquid.data.variation.objects);
 
-  if (engine === Engine.shopify) {
+  if (liquid.engine === Engine.standard) {
+    return [];
+  } else if (engine === Engine.shopify) {
     return keys(specification.shopify.objects);
+  } else if (engine === Engine.eleventy) {
+    return keys(specification.eleventy.objects);
   } else if (engine === Engine.jekyll) {
     return keys(specification.jekyll.objects);
   }
 
 }
 
-/**
- * Get Argument
- *
- * Walks over _optional_ arguments contained on a tag
- * or filter until a `type` match is detected. If an
- * argument is `required` walk is cancelled.
- */
-export function isArgument (type: any): boolean {
-
-  if (cursor?.arguments === undefined) return false;
-
-  const start: number = index;
-  const limit = cursor.arguments.length - 1;
-
-  while ((liquid.argument.type !== type && liquid.argument?.required !== true)) {
-    liquid.argument = cursor.arguments[index];
-    if (index !== limit) index++; else break;
-  }
-
-  if (liquid.argument.type === type) return true;
-
-  index = start;
-  liquid.argument = cursor.arguments[start];
-  return false;
-
-};
-
 /* -------------------------------------------- */
-/* SETTERS                                      */
+/* IS SETTERS                                   */
 /* -------------------------------------------- */
 
 /**
@@ -265,6 +250,33 @@ export function isParameter (token: string) {
 }
 
 /**
+ * Get Argument
+ *
+ * Walks over _optional_ arguments contained on a tag
+ * or filter until a `type` match is detected. If an
+ * argument is `required` walk is cancelled.
+ */
+export function isArgument (type: any): boolean {
+
+  if (cursor?.arguments === undefined) return false;
+
+  const start: number = index;
+  const limit = cursor.arguments.length - 1;
+
+  while ((liquid.argument.type !== type && liquid.argument?.required !== true)) {
+    liquid.argument = cursor.arguments[index];
+    if (index !== limit) index++; else break;
+  }
+
+  if (liquid.argument.type === type) return true;
+
+  index = start;
+  liquid.argument = cursor.arguments[start];
+  return false;
+
+};
+
+/**
  * Is Value
  *
  * Validates an a argument value. This function will run
@@ -321,6 +333,10 @@ export function isValue (token: string): boolean {
   return true;
 
 };
+
+/* -------------------------------------------- */
+/* FUNCTIONS                                    */
+/* -------------------------------------------- */
 
 /**
  * Completions
@@ -404,19 +420,22 @@ export function setCompletions (): Completions {
 
 }
 
-/* -------------------------------------------- */
-/* FUNCTIONS                                    */
-/* -------------------------------------------- */
-
 /**
  * Set Engine
  *
  * Sets the Liquid `variation` and `engine` variable.
  * This will change what specification we reference.
+ *
+ * **WARNING**
+ *
+ * A **hard** reset is applied when calling this function,
+ * all current states are purged.
  */
 export function setEngine (name: Engine): void {
 
   if (liquid.engine !== name) {
+
+    reset(true);
 
     liquid.engine = name;
     liquid.data.variation = specification[liquid.engine];
@@ -440,6 +459,7 @@ export function setTag (name: string): boolean {
   if (!liquid.data.variation.tags?.[name]) return false;
 
   cursor = liquid.tag = liquid.data.variation.tags[name];
+
   liquid.argument = cursor?.arguments?.[0] as Argument;
   liquid.within = Within.Arguments;
 
@@ -509,8 +529,10 @@ export function setObject (name: string): boolean {
   if (!record) {
 
     if (!scope && liquid.data.variables.has(name)) {
+
       const record = liquid.data.variables.get(name);
       const variable = last<ScopeMapValue>(record);
+
       if (variable.scope === Scopes.Object) {
         liquid.scope = record.length - 1;
         liquid.object = variable.value as IObject;
