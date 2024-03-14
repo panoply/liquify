@@ -1,4 +1,4 @@
-import { shopify, standard, jekyll } from './liquid/data/index';
+import { shopify, standard, jekyll, eleventy } from './liquid/data/index';
 import { Tags, Objects, Filters } from './liquid';
 import { extend } from './liquid/controller/extend';
 import { attributes, tags, values, voids } from './html/data/index';
@@ -66,6 +66,8 @@ export const liquid: {
   }
   /**
    * Jekyll Liquid
+   *
+   * **NOT YET AVAILABLE**
    */
   get jekyll(): {
     /**
@@ -91,6 +93,33 @@ export const liquid: {
     objects: Objects;
   }
 
+  /**
+   * Eleventy Liquid
+   */
+  get eleventy(): {
+    /**
+     * Eleventy Specification: Tags
+     *
+     * Tags extend the Standard Variation and will be made
+     * available here.
+     */
+    tags: Tags;
+    /**
+       * Eleventy Specification: Filters
+       *
+       * Filters extend the Standard Variation and will be made
+       * available here.
+       */
+    filters: Filters;
+    /**
+       * Eleventy Specification: Filters
+       *
+       * Filters extend the Standard Variation and will be made
+       * available here.
+       */
+    objects: Objects;
+  }
+
 } = {
 
   extend,
@@ -103,6 +132,9 @@ export const liquid: {
   },
   get jekyll () {
     return jekyll;
+  },
+  get eleventy () {
+    return eleventy;
   }
 
 };
