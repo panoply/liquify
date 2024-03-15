@@ -67,9 +67,9 @@
   "editor.detectIndentation": true,
   "editor.renderWhitespace": "none",
   "editor.codeActionsOnSave": {
-    "source.deleteSemicolons": false,
-    "source.fixAll.eslint": true,
-    "source.fixAll.stylelint": true
+    "source.deleteSemicolons": "never",
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
   },
   /* -------------------------------------------- */
   /* JAVASCRIPT                                   */
