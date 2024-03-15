@@ -1,6 +1,8 @@
+import { LiteralUnion } from './utils';
+
 export declare namespace Types {
 
-  export type Basic = (
+  export type Basic = LiteralUnion<(
     | 'any'
     | 'object'
     | 'number'
@@ -8,15 +10,15 @@ export declare namespace Types {
     | 'string'
     | 'array'
     | 'constant'
-  )
+  )>
 
-  export type Argument = (
+  export type Argument = LiteralUnion<(
     | 'parameter'
     | 'keyword'
     | 'attribute'
-  )
+  )>
 
-  export type Tag = (
+  export type Tag = LiteralUnion<(
     | 'control'
     | 'comment'
     | 'embedded'
@@ -28,7 +30,7 @@ export declare namespace Types {
     | 'variable'
     | 'raw'
     | 'unknown'
-  )
+  )>
 
   export type Separators = (
     | ','

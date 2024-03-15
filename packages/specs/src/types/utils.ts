@@ -58,3 +58,8 @@ export type Enumerate<N extends number> = EnumerateInternal<[], N> extends (infe
 export type Range<
   FROM extends number, TO extends number
 > = Exclude<Enumerate<TO>, Enumerate<FROM>>;
+
+export type LiteralUnion<
+  LiteralType,
+  BaseType = string,
+> = LiteralType | (BaseType & Record<never, never>);

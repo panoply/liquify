@@ -31,7 +31,7 @@ export declare interface IProperty extends Descriptions {
    *
    * @default undefined
    */
-  items?: string | Types.Basic
+  items?: Types.Basic
   /**
    * Type
    *
