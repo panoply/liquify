@@ -4,8 +4,8 @@
 <pre><code><strong>
   💧 <i>WIP</i></strong>
 <p><i>
-  Liquify is still under development. The project has been open sourced as the beta
-  release is planned for 2023. You can find various projects the exist as part of
+  Liquify is still under development. The project has been open sourced and will
+  release in an incremental manner. You can find various projects the exist as part of
   Liquify already in circulation. The containing readme files are not up to date so
   please grain of salt content.</i>
 </p>
