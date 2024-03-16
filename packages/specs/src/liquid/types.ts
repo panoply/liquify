@@ -81,7 +81,7 @@ export declare interface Liquid {
     /**
      * Document variables
      */
-    variables: Map<string, ScopeMapValue[]>
+    variables: Map<string, ScopeMapValue[]>;
     /**
      * Variation Spec
      */
