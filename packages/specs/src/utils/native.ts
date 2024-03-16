@@ -43,6 +43,11 @@ export const isArray = Array.isArray;
 /* -------------------------------------------- */
 
 /**
+ * Create a null prototyp object
+ */
+export const obj = () => create(null);
+
+/**
  * Returns last item in array
  */
 export const last = <T>(array: any[]): T => array[array.length - 1];
