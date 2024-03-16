@@ -112,6 +112,8 @@ export namespace ThemeDocs {
      * The returning type applied by the filter.
      */
     return_type?: ReturnType;
+
     [k: string]: unknown
+
   }[]
 }
