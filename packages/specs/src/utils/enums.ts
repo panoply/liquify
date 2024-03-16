@@ -175,7 +175,8 @@ export const enum TypeBasic {
   float,
   boolean,
   string,
-  array
+  array,
+  null
 }
 
 /**
