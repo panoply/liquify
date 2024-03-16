@@ -1,8 +1,9 @@
-import { assign } from '../../utils/native';
-import { Objects, Filters, Tags } from '../..';
-import { Engine } from '../../utils/enums';
+import { assign, isArray, keys, obj } from '../../utils/native';
+import { Objects, Filters, Tags, IProperty, Properties } from '../..';
+import { Engine, Type, TypeBasic } from '../../utils/enums';
 import { shopify, eleventy, jekyll, standard } from '../data';
 import merge from 'mergerino';
+import { isObject, isString, isNumber, isBoolean, isNull } from '../../utils/typeof';
 
 function patchObjects (model: Objects, spec: Objects, patch: boolean) {
   for (const object in spec) {
@@ -44,6 +45,142 @@ function patchTags (model: Tags, spec: Tags, patch: boolean) {
       model[tag] = spec[tag];
     }
   }
+}
+
+/**
+ * Generate Specification
+ *
+ * Traverses a data structure and composes a Liquid specification that can be
+ * understand by the query engine. Used for cases like the 11ty data cascade,
+ * frontmatter and more. Expects an `input` object reference and specification type.
+ * Optionally accepts a callback function which **MUST** return a specification,
+ * whe provided it will augment the spec passed.
+ */
+export function generate <T> (
+  input: any,
+  spec: IProperty | Properties
+): T {
+
+  /**
+   * Object Keys
+   */
+  let props: string[];
+
+  /**
+   * Whether or not the input is an array type
+   */
+  let array: boolean = false;
+
+  /**
+   * The key reference during traversal
+   */
+  let k: string;
+
+  /**
+   * The value reference during traversal
+   */
+  let v: any;
+
+  if (isObject(input)) {
+    if (isArray(input)) {
+      array = true;
+      props = keys(input);
+    } else {
+      props = keys(input);
+    }
+  }
+
+  for (let i = 0, s = props.length; i < s; i++) {
+
+    k = props[i];
+    v = input[k];
+
+    if (isString(v)) {
+      if (array) {
+
+        spec.items = TypeBasic.string;
+
+      } else {
+
+        spec[k] = obj();
+        spec[k].type = TypeBasic.string;
+        spec[k].value = v;
+
+      }
+    } else if (isNumber(v)) {
+      if (array) {
+
+        spec.items = TypeBasic.number;
+        spec.value = v;
+
+      } else {
+
+        spec[k] = obj();
+        spec[k].type = TypeBasic.number;
+        spec[k].value = v;
+
+      }
+    } else if (isBoolean(v)) {
+      if (array) {
+
+        spec.items = TypeBasic.boolean;
+        spec.value = v;
+
+      } else {
+
+        spec[k] = obj();
+        spec[k].type = Type.boolean;
+        spec[k].value = v;
+
+      }
+
+    } else if (isNull(v)) {
+
+      if (array) {
+
+        spec.items = TypeBasic.any;
+        spec.value = v;
+
+      } else {
+
+        spec[k] = obj();
+        spec[k].type = TypeBasic.any;
+        spec[k].value = v;
+        spec[k].description = 'Value is `null`';
+      }
+
+    } else if (isObject(v)) {
+
+      if (isArray(v)) {
+
+        spec[k] = obj();
+        spec[k].type = TypeBasic.array;
+        spec[k].properties = obj();
+
+        generate(v, spec[k]);
+
+      } else {
+
+        if (array) {
+
+          spec.type = TypeBasic.array;
+          generate(v, spec.properties);
+
+        } else {
+
+          spec[k] = obj();
+          spec[k].type = TypeBasic.object;
+          spec[k].properties = obj();
+
+          generate(v, spec[k].properties);
+
+        }
+      }
+    }
+  }
+
+  return <T>spec;
+
 }
 
 /**
