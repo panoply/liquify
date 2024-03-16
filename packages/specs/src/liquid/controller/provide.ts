@@ -3,8 +3,8 @@ import { TypeNames } from '../../utils/signature';
 import { CompletionItem, TextEdit, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver-types';
 import { liquid } from './states';
 import { entries, values } from '../../utils/native';
-import { Type } from 'utils/enums';
 import { ObjectGroupItems } from 'types/completions';
+import { Type, TypeBasic } from '../../utils/enums';
 
 /* -------------------------------------------- */
 /* FUNCTIONS                                    */
@@ -133,17 +133,17 @@ export function ObjectGroups (
 
       const props = values(object.properties);
 
-      if (props.some(x => x.type === Type.array)) {
+      if (props.some(x => x.type === TypeBasic.array)) {
         items.array.push(entry);
-      } else if (props.some(x => x.type === Type.string)) {
+      } else if (props.some(x => x.type === TypeBasic.string)) {
         items.string.push(entry);
-      } else if (props.some(x => x.type === Type.boolean)) {
+      } else if (props.some(x => x.type === TypeBasic.boolean)) {
         items.boolean.push(entry);
-      } else if (props.some(x => x.type === Type.number)) {
+      } else if (props.some(x => x.type === TypeBasic.number)) {
         items.number.push(entry);
-      } else if (props.some(x => x.type === Type.object)) {
+      } else if (props.some(x => x.type === TypeBasic.object)) {
         items.object.push(entry);
-      } else if (props.some(x => x.type === Type.any)) {
+      } else if (props.some(x => x.type === TypeBasic.any)) {
         items.any.push(entry);
       }
 
