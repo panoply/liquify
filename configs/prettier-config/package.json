@@ -27,6 +27,6 @@
     "pnpm": ">=6"
   },
   "devDependencies": {
-    "prettier": "^2.8.4"
+    "prettier": "^3.2.5"
   }
 }
