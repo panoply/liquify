@@ -1,6 +1,6 @@
 {
   "name": "@liquify/specs",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "private": false,
   "author": {
     "name": "Νίκος Σαβίδης",
@@ -61,11 +61,11 @@
   },
   "devDependencies": {
     "@liquify/eslint-config": "workspace:^",
-    "@vscode/web-custom-data": "^0.4.6",
-    "ansis": "^1.5.5",
-    "ava": "^5.2.0",
+    "@vscode/web-custom-data": "^0.4.9",
+    "ansis": "^2.3.0",
+    "ava": "^6.1.2",
     "mergerino": "^0.4.0",
-    "tsup": "^6.7.0",
-    "vscode-languageserver-types": "^3.17.3"
+    "tsup": "^8.0.2",
+    "vscode-languageserver-types": "^3.17.5"
   }
 }
