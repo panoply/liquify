@@ -1,5 +1,5 @@
 import { References, Descriptions } from './shared';
-import { Type } from '../utils/enums';
+import { TypeBasic } from '../utils/enums';
 import { Types } from './types';
 
 /* OBJECT PROPERTY EXPORT --------------------- */
@@ -26,18 +26,18 @@ export declare interface IProperty extends Descriptions {
   /**
    * Items
    *
-   * When type is `array` and the object property does have a `scope`
+   * When type is `array` and the object property does not have a `scope`
    * but each entry in the array has known type, it can be defined here.
    *
    * @default undefined
    */
-  items?: Types.Basic
+  items?: TypeBasic & Types.Basic
   /**
    * Type
    *
    * The Typeof object value
    */
-  type: Type | Types.Basic;
+  type: TypeBasic & Types.Basic;
   /**
    * Literals
    *
@@ -72,7 +72,7 @@ export declare interface IObject extends Descriptions {
    *
    * @default 'object'
    */
-  type?: Type | Types.Basic;
+  type?: TypeBasic & Types.Basic;
   /**
    * Reference
    *
@@ -156,17 +156,11 @@ export declare interface IObject extends Descriptions {
    * List of property values this tag object supports, recursively
    * supply properties for deep nested objects.
    */
-  properties?: {
-    [name: string]: IProperty;
-  };
+  properties?: { [name: string]: IProperty; };
 }
 
 /* REFERENCE ---------------------------------- */
 
-export declare interface Properties {
-  [name: string]: IProperty;
-}
+export declare interface Properties { [name: string]: IProperty; }
 
-export declare interface Objects {
-  [name: string]: IObject;
-}
+export declare interface Objects { [name: string]: IObject; }
