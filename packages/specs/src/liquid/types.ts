@@ -98,6 +98,7 @@ export declare interface Liquid {
        * Liquid Tags
        */
       readonly tags?: Tags;
+
     };
     /**
      * Completion Items (LSP Related)
