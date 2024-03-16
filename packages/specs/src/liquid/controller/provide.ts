@@ -176,7 +176,7 @@ export function ObjectGroups (
  * Sets the completion items that are passed to the completion resolver.
  * Extracts necessary values from the passed in specification record.
  */
-export function ProvideProps ([ label, { description, type, snippet = label } ]): CompletionItem {
+export function ProvideProps ([ label, { description = '', type, snippet = label } ]): CompletionItem {
 
   return {
     label,
