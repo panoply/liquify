@@ -31,7 +31,7 @@ export declare interface IProperty extends Descriptions {
    *
    * @default undefined
    */
-  items?: TypeBasic & Types.Basic
+  items?: TypeBasic & Types.Basic;
   /**
    * Type
    *
@@ -45,9 +45,25 @@ export declare interface IProperty extends Descriptions {
    * Say for example, the values that will be returns will either
    * be `foo` or `bar` then you'd provide them here.
    *
+   * This can also be used when objects return multiple types, in
+   * such a case, the `type` will be set to `literal` and types will
+   * be referred to on this value.
+   *
    * @default undefined
    */
-  literal?: string[] | undefined
+  literal?: string[] | undefined;
+  /**
+   * Value
+   *
+   * Optionally provide the object value. This is typically not required,
+   * but is made available for static based completions when it may be desirable
+   * to pass the static result. When generating specifications for sources like
+   * that in 11ty when dealing with frontmatter or a data cascade, this entry
+   * will be populated.
+   *
+   * @default undefined
+   */
+  value?: any;
   /**
    * Reference
    *
@@ -130,6 +146,10 @@ export declare interface IObject extends Descriptions {
    * Say for example, the values that will be returns will either
    * be `foo` or `bar` then you'd provide them here.
    *
+   * This can also be used when objects return multiple types, in
+   * such a case, the `type` will be set to `literal` and types will
+   * be referred to on this value.
+   *
    * @default undefined
    */
   literal?: string[] | undefined
@@ -149,7 +169,7 @@ export declare interface IObject extends Descriptions {
    *
    * @default []
    */
-  parent?: string[]
+  parent?: string[];
   /**
    * Properties
    *
