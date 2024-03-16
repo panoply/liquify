@@ -1,3 +1,4 @@
+import { TypeBasic } from 'utils/enums';
 import { LiteralUnion } from './utils';
 
 export declare namespace Types {
@@ -10,7 +11,7 @@ export declare namespace Types {
     | 'string'
     | 'array'
     | 'constant'
-  )>
+  ), TypeBasic>
 
   export type Argument = LiteralUnion<(
     | 'parameter'
