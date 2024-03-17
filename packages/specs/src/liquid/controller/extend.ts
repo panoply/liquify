@@ -1,51 +1,9 @@
-import { assign, isArray, keys, obj } from '../../utils/native';
-import { Objects, Filters, Tags, IProperty, Properties } from '../..';
+import { isArray, keys, obj } from '../../utils/native';
+import { Objects, Filters, Tags } from '../..';
 import { Engine, Type, TypeBasic } from '../../utils/enums';
 import { shopify, eleventy, jekyll, standard } from '../data';
-import merge from 'mergerino';
 import { isObject, isString, isNumber, isBoolean, isNull } from '../../utils/typeof';
-
-function patchObjects (model: Objects, spec: Objects, patch: boolean) {
-  for (const object in spec) {
-    if (object in model) {
-      if (patch) {
-        model[object].properties = merge(model[object].properties, spec[object].properties);
-      } else {
-        assign(model[object].properties, spec[object].properties);
-      }
-    } else {
-      model[object] = spec[object];
-    }
-  }
-}
-
-function patchFilters (model: Filters, spec: Filters, patch: boolean) {
-  for (const filter in spec) {
-    if (filter in model) {
-      if (patch) {
-        model[filter] = merge(model[filter], spec[filter]);
-      } else {
-        assign(model[filter], spec[filter]);
-      }
-    } else {
-      model[filter] = spec[filter];
-    }
-  }
-}
-
-function patchTags (model: Tags, spec: Tags, patch: boolean) {
-  for (const tag in spec) {
-    if (tag in model) {
-      if (patch) {
-        model[tag] = merge(model[tag], spec[tag]);
-      } else {
-        assign(model[tag], spec[tag]);
-      }
-    } else {
-      model[tag] = spec[tag];
-    }
-  }
-}
+import { patchFilters, patchObjects, patchTags } from '../../utils/patches';
 
 /**
  * Generate Specification
@@ -53,13 +11,8 @@ function patchTags (model: Tags, spec: Tags, patch: boolean) {
  * Traverses a data structure and composes a Liquid specification that can be
  * understand by the query engine. Used for cases like the 11ty data cascade,
  * frontmatter and more. Expects an `input` object reference and specification type.
- * Optionally accepts a callback function which **MUST** return a specification,
- * whe provided it will augment the spec passed.
  */
-export function generate <T> (
-  input: any,
-  spec: IProperty | Properties
-): T {
+export function generate <T = any> (input: T, spec: any = {}, cycle = 1): T {
 
   /**
    * Object Keys
@@ -96,6 +49,7 @@ export function generate <T> (
     v = input[k];
 
     if (isString(v)) {
+
       if (array) {
 
         spec.items = TypeBasic.string;
@@ -107,7 +61,9 @@ export function generate <T> (
         spec[k].value = v;
 
       }
+
     } else if (isNumber(v)) {
+
       if (array) {
 
         spec.items = TypeBasic.number;
@@ -121,6 +77,7 @@ export function generate <T> (
 
       }
     } else if (isBoolean(v)) {
+
       if (array) {
 
         spec.items = TypeBasic.boolean;
@@ -147,32 +104,52 @@ export function generate <T> (
         spec[k].type = TypeBasic.any;
         spec[k].value = v;
         spec[k].description = 'Value is `null`';
+
       }
 
     } else if (isObject(v)) {
 
       if (isArray(v)) {
 
-        spec[k] = obj();
-        spec[k].type = TypeBasic.array;
-        spec[k].properties = obj();
+        if (isNaN(+k)) {
 
-        generate(v, spec[k]);
+          spec[k] = obj();
+          spec[k].type = TypeBasic.array;
+          spec[k].properties = obj();
 
-      } else {
+          generate(v, spec[k], ++cycle);
 
-        if (array) {
+        } else {
 
           spec.type = TypeBasic.array;
-          generate(v, spec.properties);
+          spec.properties = obj();
+          generate(v, spec.properties, cycle);
 
+        }
+
+      } else {
+        if (array) {
+          if ('properties' in spec) {
+
+            generate(v, spec.properties, ++cycle);
+
+          } else {
+
+            if (cycle === 1) {
+              spec.type = TypeBasic.array;
+              spec.properties = {};
+            }
+
+            generate(v, spec.properties, cycle);
+
+          }
         } else {
 
           spec[k] = obj();
           spec[k].type = TypeBasic.object;
           spec[k].properties = obj();
 
-          generate(v, spec[k].properties);
+          generate(v, spec[k].properties, ++cycle);
 
         }
       }

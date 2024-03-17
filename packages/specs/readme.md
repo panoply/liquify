@@ -1,5 +1,3 @@
-<img src="https://img.shields.io/circleci/build/github/panoply/liquify/circleci-project-setup?token=54a787fdd39139be0add226455eb4d07f34f9d3f&style=flat-square&logo=CircleCI&label=&labelColor=555" align="left" />&nbsp;&nbsp;<img align="left" src="https://img.shields.io/librariesio/release/npm/@liquify/specs?style=flat-square&label=&logoWidth=28&labelColor=555&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCA5LjMzIj48dGl0bGU+bnBtPC90aXRsZT48cGF0aCBkPSJNMCwwVjhINi42N1Y5LjMzSDEyVjhIMjRWMFpNNi42Nyw2LjY2SDUuMzN2LTRINHY0SDEuMzRWMS4zM0g2LjY3Wm00LDBWOEg4VjEuMzNoNS4zM1Y2LjY2SDEwLjY3Wm0xMiwwSDIxLjM0di00SDIwdjRIMTguNjd2LTRIMTcuMzR2NEgxNC42N1YxLjMzaDhabS0xMi00SDEyVjUuMzNIMTAuNjZaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9zdmc+" />
-
 # @liquify/specs
 
 This package is available on the npm registry for modules consumed by the [Liquify](https://liquify.dev) parser and text editor extension/plugin but it also exists as point of reference for different Liquid variations and can be appropriated into projects outside of Liquify. At its core, the module provides lexical, parse and feature capabilities for the Liquify [Liquid Language Server](https://github.com/panoply/liquify/tree/next/packages/server) and [Liquid Language Parser](https://github.com/panoply/liquify/tree/next/packages/parser).
@@ -19,12 +17,12 @@ The modules provides raw data references for the following:
 - HTML
 - Liquid Standard
 - Liquid Shopify
+- Liquid 11ty
 
 ### TODO
 
 The following Liquid variations are scheduled to be mapped.
 
-- Liquid 11ty
 - Liquid Jekyll
 
 # Install
@@ -46,6 +44,11 @@ We can access the specifications via 2 named exports, `html5` and `liquid`. Both
 ```typescript
 import { html5, liquid } from '@liquify/specs';
 
+// LIQUID HELPERS
+
+$.liquid.extend(engine: Engine, spec: Spec): void
+$.liquid.generate(data: any, spec: Spec): IObject
+
 // LIQUID STANDARD
 
 liquid.standard;
@@ -59,12 +62,12 @@ liquid.shopify.tags;
 liquid.shopify.filters;
 liquid.shopify.objects;
 
-// LIQUID JEKYLL
+// LIQUID ELEVENTY
 
-liquid.jekyll;
-liquid.jekyll.tags;
-liquid.jekyll.filters;
-liquid.jekyll.objects;
+liquid.eleventy;
+liquid.eleventy.tags;
+liquid.eleventy.filters;
+liquid.eleventy.objects;
 
 // HTML5
 
@@ -85,17 +88,21 @@ import { $ } from '@liquify/specs';
 
 // LIQUID
 
-$.liquid.engine;        // The current variation engine, ie: standard, shopify etc
-$.liquid.tag;           // The tag object specification in traversal
-$.liquid.filter;        // The filter object specification in traversal
-$.liquid.object;        // The object or property object specification in traversal
-$.liquid.argument;      // The tag or filter argument record in traversal
-$.liquid.value;         // The current tag, filter or object value in traversal
-$.liquid.separator;     // The current separator character code (if any)
-$.liquid.type;          // A persisted reference to a certain type, like an object type
-$.liquid.within;        // An enum number value informing upon the within status
-$.liquid.variable;      // A string[] list value which holds reference to an assigned value
-$.liquid.files;         // Map reference which maintain file specific data.
+$.liquid.engine;            // The current variation engine, ie: standard, shopify etc
+$.liquid.tag;               // The tag object specification in traversal
+$.liquid.filter;            // The filter object specification in traversal
+$.liquid.object;            // The object or property object specification in traversal
+$.liquid.type;              // A persisted reference to a certain type, like an object type
+$.liquid.argument;          // The tag or filter argument record in traversal
+$.liquid.value;             // The current tag, filter or object value in traversal
+$.liquid.within;            // An enum number value informing upon the within status
+$.liquid.scope;             // The current scope map value used for variable awareness
+$.liquid.variable;          // A string[] list value which holds reference to an assigned value
+$.liquid.files;             // Map reference which maintain file specific data.
+
+$.liquid.data.variation;    // The current variation specification
+$.liquid.data.variables;    // The document variables, key is variable name, value is ScopeMap
+$.liquid.data.completions;  // The LSP completion items for the specification
 
 // HTML5
 
@@ -119,7 +126,7 @@ q.getObjects(engine?: Engine): string[]
 
 // SETTERS
 
-q.setEngine(engine: IEngine): void
+q.setEngine(engine: Engine): void
 q.setTag(token: string): boolean;
 q.setType(type: string): boolean;
 q.setFilter(token: string): boolean;
@@ -156,7 +163,7 @@ q.prevArgument(): boolean;
 
 // OTHER
 
-q.reset(): void
+q.reset(force?: boolean): void
 
 ```
 
@@ -195,6 +202,148 @@ p.HTMLValueResolve(item: CompletionItem): CompletionItem
 
 ```
 
+### Integration
+
+The module can be used in isolation and does not require you to use the Liquify Parser. Below is an example of you might leverage the specs in a custom implementation to traverse and acquire context of Liquid syntactical structures. The `demo[]` array list includes a couple of invalid syntax tokens so we can best illustrate usage.
+
+> This is a bare-bones example, integration can be much more complex and there is far more ne can do with the query engine specifically. The intended implementation is to be conjured within a parser of some sort.
+
+<!-- prettier-ignore -->
+```ts
+import { $, q, Type, Engine } from '@liquify/specs';
+
+const demo = [
+  ['if'],['page','x'],      // {% if page.x %}
+  ['shop', 'name'],         // {{ shop.name }}
+  ['else']                  // {% else %}
+  ['endelse']               // {% endelse %}
+]
+
+q.setEngine(Engine.Shopify)  // Lets use the Shopify Variation
+q.setTag(demo[0])            // We have set the tag to "if"
+q.setObject(demo[1][0])      // We have set the object to "page"
+
+console.log($.liquid.tag)    // The specification for "if"
+console.log($.liquid.object) // The specification for "page"
+
+// First, lets create a local reference of the tag to use later on.
+// For the sake of brevity, we will also check it is a control type:
+const tag = q.isTagTag(Type.control) ? demo[0] : undefined
+
+// Lets now use the specification to perform some additional
+// queries and see what we get back. We passed "x" property
+// to object "page" which is invalid, let's check that:
+
+if(q.hasProperty(demo[1][1])) {
+  console.log('The x property exists on page'); // This will not be shown
+} else {
+  console.log('The x property does not exist'); // This will be shown
+}
+
+// There is no x property available to the "page" object, we can query
+// further to see what properties do exist.
+console.log($.liquid.object.properties)
+
+// Lets move ahead now and check index 2 in out demo list, which is
+// referencing the object "shop" and has property "name", both are valid.
+
+q.setObject(demo[2][0])       // We have set the object to "shop"
+
+// The object state reference is now pointing to "shop" - Lets quickly
+// log the object specification reference:
+console.log($.liquid.object)
+
+// The property of "name" will be accepted, we will use another query
+// method, this isProperty method will modify the object reference
+if(q.isProperty(demo[2][1])) {
+  console.log($.liquid.object)  // We have set the object "name" on "shop"
+}
+
+// The next tag in our demo list at index 3 is "else" which is a control
+// type and can only be used within certain tags, lets proceed:
+
+q.setTag(demo[3]);             // We have set the tag to "else"
+
+// Lets log the specification for the "else" tag. Notice how it has singleton
+// set to true, this tells us that the tag does not require an ender.
+console.log($.liquid.tag)
+
+// Lets validate the "else" tag some more and explore some of the additional
+// queries that can be performed via the specification. We will use above "tag"
+// constant we set to check if its correctly placed.
+
+if(q.isParent(tag)) {
+  console.log('The else tag is placed correctly')     // This will be shown
+} else {
+  console.log('The else tag is not placed correctly') // This will not be shown
+}
+
+// The last operation we will perform is on the "endelse" tag. This is invalid
+// and we can use the specification to determine this.
+if(demo[4].startsWith('end')){
+
+  // This set tag query will return false because it is currently pointing
+  // to the "else" tag. When a new tag is set, it will return true:
+  if(q.setTag(demo[4].slice(3))) {
+    console.log('The tag was changed')               // This will not be shown
+  } else {
+
+    // The "else" tag is marked as a singleton, this means that no ender
+    // should exist. As such, we can determine that the code is invalid:
+    if($.liquid.tag.singleton) {
+      console.log(`The ${demo[4]} tag is invalid`)   // This will be shown
+    } else {
+      console.log(`The ${demo[4]} tag is valid`)     // This will not be shown
+    }
+
+  }
+}
+
+```
+
+# Extending
+
+Specifications can be extended to support custom data structures. The data `liquid` export exposes 2 methods for this. The `liquid.extend()` and `liquid.generate()` methods are made available to add in custom specification references on demand. The `liquid.generate()` method is designed for Object specifications whereas the `liquid.extend()` method is designed for augmenting and adding to an existing variation. Depending on the integration required, extending can be done as follows.
+
+### Generate
+
+When dealing with custom data structures, where we require `object` based references, we can pass in any type of JSON data to the generate method and it will return a valid specification we can use.
+
+```ts
+import { liquid } from '@liquify/specs';
+
+// A random data structure which we want to use to generate
+// object specification and use in completions.
+
+const example = {
+  foo: 'Hello World',
+  bar: { prop: 'XXX', array: [1,2, { qux: 'Random' }] },
+  baz: [
+    { title: 'Lorem Ipsum', number: 100, condition: true }
+  ]
+}
+
+// We use the generate method to take the above structure and return
+// a valid specific from which we can extend the variation with.
+
+const objects = liquid.generate<Objects>(example);
+
+```
+
+### Extend
+
+The `extend` method can be used to augment an existing Liquid variation. The function will merge the passed in specification with the defined engine reference. The method applies a patched merge, but you may prefer to complete overwrite, which is made available by pass boolean `false` are the last argument. The extend method will be digested and used in future parse operations and is how one can control the behavior of LSP capabilities.
+
+```ts
+import { Engine, liquid } from '@liquify/specs';
+
+// Lets use the above specification we generated and extend
+// the objects model of the Eleventy Liquid specification
+
+const generate = liquid.extend(Engine.Eleventy, { objects });
+
+```
+
 # Documentation
 
 In the context of the Liquid Language Server, these _specifications_ are just data references that describe Liquid and HTML syntax. They are not quite parsing grammars and despite the name, they are not official specifications. The specs exist to enable developers of any level to quickly compose schemas that extend upon Liquid [standard](https://shopify.github.io/liquid/) and described tags, filters and objects in different variations.
@@ -219,13 +368,14 @@ The Standard specification are mostly hard-coded and partially use data pulled i
 
 The Shopify specifications pull in data from the [theme-liquid-docs](https://github.com/Shopify/theme-liquid-docs). If you find inconsistencies with descriptions or issues relating to this then it is Shopify's burden to bare.
 
+### Liquid 11ty
+
+The Eleventy specification provides 11ty supplied references and the data cascade of projects can use the specification to extend and generate specs. The Eleventy specification is mostly a generated spec as per-project handling is incurred.
+
 ### Liquid Jekyll
 
 _Not yet supported_
 
-### Liquid 11ty
-
-_Not yet supported_
 
 # Contributing
 
@@ -244,6 +394,4 @@ Consult the root [readme](#) for more information:
 
 ## Authors / Maintainers
 
-🥛 <small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" src="https://img.shields.io/badge/-@kaossissel-1DA1F2?logo=twitter&logoColor=fff" />
-<br>
-🍔 <small>[Joseph Curtis](#)</small> <img align="right" src="https://img.shields.io/badge/-@jCurt-1DA1F2?logo=twitter&logoColor=fff" />
+<small>[Νίκος Σαβίδης](mailto:nicos@gmx.com)</small> <img align="right" alt="X (formerly Twitter)" src="https://img.shields.io/twitter/follow/niksavvidis">
