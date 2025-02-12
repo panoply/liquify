@@ -68,7 +68,7 @@
     "@liquify/specs": "workspace:^",
     "lodash.inrange": "^3.3.6",
     "mergerino": "^0.4.0",
-    "vscode-languageserver-textdocument": "^1.0.8",
+    "vscode-languageserver-textdocument": "^1.0.11",
     "yamljs": "^0.3.0"
   },
   "repository": {
@@ -76,12 +76,12 @@
   },
   "devDependencies": {
     "@liquify/ava": "workspace:^",
-    "@types/lodash.inrange": "^3.3.7",
-    "ansis": "^1.5.5",
-    "ava": "5.2.0",
+    "@types/lodash.inrange": "^3.3.9",
+    "ansis": "^2.3.0",
+    "ava": "6.1.2",
     "json-stringify-safe": "^5.0.1",
     "pretty-hrtime": "^1.0.3",
-    "tsup": "^6.7.0",
-    "vscode-languageserver-types": "^3.17.3"
+    "tsup": "^8.0.2",
+    "vscode-languageserver-types": "^3.17.5"
   }
 }
