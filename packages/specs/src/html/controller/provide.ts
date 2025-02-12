@@ -1,10 +1,11 @@
+import { CompletionItem, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver-types';
+
+import { HTMLDataVSCode, HTMLProvideAttrs, HTMLTagAttributes } from '../';
 import * as specification from '../data';
-import { HTMLTagAttributes, HTMLProvideAttrs, HTMLDataVSCode } from '../';
 import { schema } from './schema';
-import { Tokens } from '../../utils/enums';
-import { documentation, descriptive } from '../../utils/signature';
-import { CompletionItemKind, CompletionItem, InsertTextFormat } from 'vscode-languageserver-types';
 import { html5 } from './states';
+import { Tokens } from '../../utils/enums';
+import { descriptive, documentation } from '../../utils/signature';
 
 export function HTMLCompletions () {
 

@@ -1,13 +1,18 @@
 {
-  "line_items_for": {
-    "description": "Returns the subset of cart line items that include a specified product or variant. Accepts the following object types:\n\n- `product`\n- `variant`\n\n#### Example\n\n```liquid\n\n{% assign product = all_products['bloodroot-whole'] %}\n{% assign line_items = cart | line_items_for: product %}\n\nTotal cart quantity for product: {{ line_items | sum: 'quantity' }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/line_items_for)\n\n\nLast Updated: 0th October 2023\n\n\n",
-    "returns": "array",
-    "snippet": "line_items_for: $1,",
-    "arguments": [
-      {
-        "type": "any",
-        "required": true
-      }
-    ]
+  "class_list": {
+    "description": "Generates the list of style classes for a [style setting](https://shopify.dev/storefronts/themes/architecture/settings/style-settings) or a collection of settings. <aside class=\"note beta\">\n  <h4>Developer preview</h4>\n  <p>Style settings are currently only available as part of the <a href=\"/storefronts/themes/architecture/blocks/theme-blocks/developer-preview\">Theme blocks developer preview</a>.</p>\n</aside>\n\n#### Example\n\n```liquid\n\n{{ settings.layout | class_list }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/class_list)\n\n\nLast Updated: 2nd February 2025\n\n\n",
+    "returns": "string"
+  },
+  "inline_asset_content": {
+    "description": "Outputs the content of an asset inline in the template. The asset must be either a SVG, JS, or CSS file. \n\n**Note**\n\n> The asset size must be less than 15KB to be inlined.\n>\n\n#### Example\n\n```liquid\n\n{{ 'icon.svg' | inline_asset_content }}\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/inline_asset_content)\n\n\nLast Updated: 2nd February 2025\n\n\n",
+    "returns": "string"
+  },
+  "avatar": {
+    "description": "Generates HTML to render a customer's avatar, if available. \n\n**Tip**\n\n> Use with the [`customer.has_avatar?`](https://shopify.dev/docs/api/liquid/objects/customer#customer-has_avatar?) method to determine if the customer has an avatar.\n\n```liquid\n{{ customer | avatar }}\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/avatar)\n\n\nLast Updated: 2nd February 2025\n\n\n",
+    "returns": "string"
+  },
+  "structured_data": {
+    "description": "Converts an object into a schema.org structured data format. The `structured_data` filter can be used on the [`product`](https://shopify.dev/docs/api/liquid/objects/product) and [`article`](https://shopify.dev/docs/api/liquid/objects/article) objects.\n\nProduct objects are output as a [schema.org `Product`](https://schema.org/Product) if they have no variants, and a [`ProductGroup`](https://schema.org/ProductGroup) if they have one or more variants.\n\nArticle objects are output as a [schema.org `Article`.](https://schema.org/Article)\n\n#### Example\n\n```liquid\n\n<script type=\"application/ld+json\">\n  {{ product | structured_data }}\n</script>\n\n```\n\n---\n\n[Shopify Liquid](https://shopify.dev/docs/api/liquid/filters/structured_data)\n\n\nLast Updated: 2nd February 2025\n\n\n",
+    "returns": "string"
   }
 }

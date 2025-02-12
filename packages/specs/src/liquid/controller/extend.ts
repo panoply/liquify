@@ -1,9 +1,9 @@
-import { isArray, keys, obj } from '../../utils/native';
-import { Objects, Filters, Tags } from '../..';
+import { Filters, Objects, Tags } from '../..';
 import { Engine, Type, TypeBasic } from '../../utils/enums';
-import { shopify, eleventy, jekyll, standard } from '../data';
-import { isObject, isString, isNumber, isBoolean, isNull } from '../../utils/typeof';
+import { isArray, keys, obj } from '../../utils/native';
 import { patchFilters, patchObjects, patchTags } from '../../utils/patches';
+import { isBoolean, isNull, isNumber, isObject, isString } from '../../utils/typeof';
+import { eleventy, jekyll, shopify, standard } from '../data';
 
 /**
  * Generate Specification
@@ -160,6 +160,104 @@ export function generate <T = any> (input: T, spec: any = {}, cycle = 1): T {
 
 }
 
+export function purge (engine: Engine, spec: {
+  objects?: string[],
+  filters?: string[],
+  tags?: string[],
+}) {
+
+  if (engine === Engine.shopify) {
+
+    if (spec?.objects) {
+      for (const k of spec.objects) {
+        if (k in shopify.objects) delete shopify.objects[k];
+      }
+    }
+
+    if (spec?.filters) {
+      for (const k of spec.filters) {
+        if (k in shopify.filters) delete shopify.filters[k];
+      }
+    }
+
+    if (spec?.tags) {
+      for (const k of spec.tags) {
+        if (k in shopify.tags) delete shopify.tags[k];
+      }
+    }
+
+    return shopify;
+
+  } else if (engine === Engine.eleventy) {
+
+    if (spec?.objects) {
+      for (const k of spec.objects) {
+        if (k in eleventy.objects) delete eleventy.objects[k];
+      }
+    }
+
+    if (spec?.filters) {
+      for (const k of spec.filters) {
+        if (k in eleventy.filters) delete eleventy.filters[k];
+      }
+    }
+
+    if (spec?.tags) {
+      for (const k of spec.tags) {
+        if (k in eleventy.tags) delete eleventy.tags[k];
+      }
+    }
+
+    return eleventy;
+
+  } else if (engine === Engine.jekyll) {
+
+    if (spec?.objects) {
+      for (const k of spec.objects) {
+        if (k in jekyll.objects) delete jekyll.objects[k];
+      }
+    }
+
+    if (spec?.filters) {
+      for (const k of spec.filters) {
+        if (k in jekyll.filters) delete jekyll.filters[k];
+      }
+    }
+
+    if (spec?.tags) {
+      for (const k of spec.tags) {
+        if (k in jekyll.tags) delete jekyll.tags[k];
+      }
+    }
+
+    return jekyll;
+
+  } else if (engine === Engine.standard) {
+
+    if (spec?.objects) {
+      for (const k of spec.objects) {
+        if (k in standard.objects) delete standard.objects[k];
+      }
+    }
+
+    if (spec?.filters) {
+      for (const k of spec.filters) {
+        if (k in standard.filters) delete standard.filters[k];
+      }
+    }
+
+    if (spec?.tags) {
+      for (const k of spec.tags) {
+        if (k in standard.tags) delete standard.tags[k];
+      }
+    }
+
+    return standard;
+
+  }
+
+}
+
 /**
  * Extend Specification
  *
@@ -178,9 +276,13 @@ export function extend (engine: Engine, spec: {
 
     if (spec?.objects) {
       patchObjects(shopify.objects, spec.objects, patch);
-    } else if (spec?.filters) {
+    }
+
+    if (spec?.filters) {
       patchFilters(shopify.filters, spec.filters, patch);
-    } if (spec?.tags) {
+    }
+
+    if (spec?.tags) {
       patchTags(shopify.tags, spec.tags, patch);
     }
 
@@ -190,9 +292,13 @@ export function extend (engine: Engine, spec: {
 
     if (spec?.objects) {
       patchObjects(eleventy.objects, spec.objects, patch);
-    } else if (spec?.filters) {
+    }
+
+    if (spec?.filters) {
       patchFilters(eleventy.filters, spec.filters, patch);
-    } if (spec?.tags) {
+    }
+
+    if (spec?.tags) {
       patchTags(eleventy.tags, spec.tags, patch);
     }
 
@@ -202,9 +308,13 @@ export function extend (engine: Engine, spec: {
 
     if (spec?.objects) {
       patchObjects(jekyll.objects, spec.objects, patch);
-    } else if (spec?.filters) {
+    }
+
+    if (spec?.filters) {
       patchFilters(jekyll.filters, spec.filters, patch);
-    } if (spec?.tags) {
+    }
+
+    if (spec?.tags) {
       patchTags(jekyll.tags, spec.tags, patch);
     }
 
@@ -214,9 +324,13 @@ export function extend (engine: Engine, spec: {
 
     if (spec?.objects) {
       patchObjects(standard.objects, spec.objects, patch);
-    } else if (spec?.filters) {
+    }
+
+    if (spec?.filters) {
       patchFilters(standard.filters, spec.filters, patch);
-    } if (spec?.tags) {
+    }
+
+    if (spec?.tags) {
       patchTags(standard.tags, spec.tags, patch);
     }
 

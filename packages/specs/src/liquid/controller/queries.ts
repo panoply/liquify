@@ -1,13 +1,14 @@
-import * as specification from '../data';
-import { Tag, Filter, Argument, Value, Completions, ScopeMapValue, IObject } from '../';
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
+
+import { Argument, Completions, Filter, IObject, ScopeMapValue, Tag, Value } from '../';
+import { liquid } from './states';
 import { ArgumentParameter } from '../../types/arguments';
-import { CompletionItemKind, CompletionItem } from 'vscode-languageserver-types';
-import { Engine, Within, Errors, Type, Scopes } from '../../utils/enums';
+import { Engine, Errors, Scopes, Type, Within } from '../../utils/enums';
+import { inPattern, inRange, inValues } from '../../utils/finders';
+import { entries, isArray, keys, last, values } from '../../utils/native';
 import { documentation, filterCompletions } from '../../utils/signature';
 import { isNumber } from '../../utils/typeof';
-import { keys, entries, isArray, last, values } from '../../utils/native';
-import { inPattern, inValues, inRange } from '../../utils/finders';
-import { liquid } from './states';
+import * as specification from '../data';
 
 /* -------------------------------------------- */
 /* LOCAL SCOPES                                 */

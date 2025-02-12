@@ -1,4 +1,4 @@
-import { HTMLValue, HTMLTagAttributes } from '../';
+import { HTMLTagAttributes, HTMLValue } from '../';
 import { html5 } from './states';
 
 /* -------------------------------------------- */

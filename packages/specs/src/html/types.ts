@@ -1,5 +1,4 @@
-/* eslint-disable object-curly-newline */
-import type { HTMLTag, HTMLTags, HTMLTagAttributes, HTMLAttributes, HTMLValues, HTMLCompletions } from '.';
+import type { HTMLAttributes, HTMLCompletions, HTMLTag, HTMLTagAttributes, HTMLTags, HTMLValues } from '.';
 
 export interface HTML5 {
   /**

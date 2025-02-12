@@ -1,6 +1,6 @@
-import * as specification from '../data';
 import { Liquid } from '..';
 import { Engine } from '../../utils/enums';
+import * as specification from '../data';
 
 export const liquid: Liquid = {
   engine: Engine.standard,

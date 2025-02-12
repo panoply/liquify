@@ -1,20 +1,36 @@
-import { shopify, standard, jekyll, eleventy } from './liquid/data/index';
-import { Tags, Objects, Filters } from './liquid';
-import { extend } from './liquid/controller/extend';
-import { attributes, tags, values, voids } from './html/data/index';
 import { HTMLAttributes, HTMLTags, HTMLValues } from './html';
+import { attributes, tags, values, voids } from './html/data/index';
+import { Filters, Objects, Tags } from './liquid';
+import { extend, generate, purge } from './liquid/controller/extend';
+import { eleventy, jekyll, shopify, standard } from './liquid/data/index';
 import { Engine } from './utils/enums';
 
 /**
  * Liquid Specifications
  */
 export const liquid: {
-/**
- * Extend Specification
- *
- * This function allows the specification to be extended
- * with custom support for different references.
- */
+  /**
+   * Purge Specification
+   *
+   * This function allows the specification to be extended
+   * with custom support for different references.
+   */
+  purge: (engine: Engine, spec: {
+    objects?: string[],
+    filters?: string[],
+    tags?: string[]
+  }) => {
+    objects?: Objects,
+    filters: Filters,
+    tags: Tags
+  }
+
+  /**
+   * Extend Specification
+   *
+   * This function allows the specification to be extended
+   * with custom support for different references.
+   */
   extend: (engine: Engine, spec: {
     objects?: Objects,
     filters?: Filters,
@@ -24,6 +40,15 @@ export const liquid: {
     filters: Filters,
     tags: Tags
   }
+
+  /**
+   * Generate Specification
+   *
+   * Traverses a data structure and composes a Liquid specification that can be
+   * understand by the query engine. Used for cases like the 11ty data cascade,
+   * frontmatter and more. Expects an `input` object reference and specification type.
+   */
+  generate: <T>(input: any, spec?: any) => T;
 
   /**
    * Standard Liquid
@@ -122,7 +147,9 @@ export const liquid: {
 
 } = {
 
+  purge,
   extend,
+  generate,
 
   get standard () {
     return standard;

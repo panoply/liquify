@@ -1,10 +1,13 @@
 import type { IObject, Properties, Types } from '..';
-import { TypeNames } from '../../utils/signature';
-import { CompletionItem, TextEdit, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver-types';
-import { liquid } from './states';
-import { entries, values } from '../../utils/native';
+
 import { ObjectGroupItems } from 'types/completions';
+import { LiteralUnion } from 'types/utils';
+import { CompletionItem, CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver-types';
+
+import { liquid } from './states';
 import { Type, TypeBasic } from '../../utils/enums';
+import { entries, values } from '../../utils/native';
+import { TypeNames } from '../../utils/signature';
 
 /* -------------------------------------------- */
 /* FUNCTIONS                                    */
@@ -16,9 +19,9 @@ import { Type, TypeBasic } from '../../utils/enums';
  * Returns the `CompletionItemKind` enum reference that
  * should be applied to the generated completion item.
  */
-export function ObjectDetail (type: Type | Types.Basic) {
+export function ObjectDetail (type: LiteralUnion<TypeBasic, Types.Basic>) {
 
-  switch (type) {
+  switch (type as unknown as Type) {
     case Type.string: return 'string';
     case Type.array: return 'array';
     case Type.boolean: return 'boolean';
@@ -44,7 +47,7 @@ export function ObjectDetail (type: Type | Types.Basic) {
  * Returns the `CompletionItemKind` enum reference that
  * should be applied to the generated completion item.
  */
-export function ObjectKind (type: Type | Types.Basic) {
+export function ObjectKind (type: Type) {
 
   switch (type) {
     case Type.string: return 'string';
@@ -99,10 +102,7 @@ export function ObjectType (type: string) {
  * Groups object completions according to their type. Returns
  * a partial completion item for implementation into clients.
  */
-export function ObjectGroups (
-  template: string,
-  callback:(object: IObject, item: any) => any
-): ObjectGroupItems {
+export function ObjectGroups (template: string, callback:(object: IObject, item: any) => any): ObjectGroupItems {
 
   const items: ObjectGroupItems = {
     all: [],

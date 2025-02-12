@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
+import type { Argument, Arguments, Filters, Objects } from 'liquid';
+
 import fs from 'fs';
 import { join } from 'path';
-import { Type } from 'utils/enums';
-import { ThemeDocs, ReturnType } from 'types/internal';
+
 import ansis from 'ansis';
-import type { Objects, Filters, Arguments, Argument } from 'liquid';
 import { shopify } from 'liquid/data';
+import { ReturnType, ThemeDocs } from 'types/internal';
 
 /**
  * Reference to Current Working Directory
@@ -607,7 +608,7 @@ function objects () {
 
         log(ansis.gray(`  - ${prop.name}`));
 
-        spec[item.name].properties[prop.name] = { type: Type.unknown };
+        spec[item.name].properties[prop.name] = { type: 'any' };
         spec[item.name].properties[prop.name].description = documentation('objects', prop, item.name);
 
         if (item.deprecated === true) spec[item.name].properties[prop.name].deprecated = item.deprecated;

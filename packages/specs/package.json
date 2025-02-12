@@ -1,6 +1,6 @@
 {
   "name": "@liquify/specs",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "private": false,
   "author": {
     "name": "Νίκος Σαβίδης",
@@ -44,23 +44,9 @@
     "concurrency": 5
   },
   "prettier": "@liquify/prettier-config",
-  "eslintConfig": {
-    "ignorePatterns": [
-      "package/**",
-      "bin/**"
-    ],
-    "extends": [
-      "@liquify/eslint-config"
-    ],
-    "rules": {
-      "no-template-curly-in-string": "off",
-      "no-unused-vars": "off",
-      "no-control-regex": "off",
-      "prefer-const": "off"
-    }
-  },
   "devDependencies": {
     "@liquify/eslint-config": "workspace:^",
+    "@liquify/prettier-config": "workspace:^",
     "@vscode/web-custom-data": "^0.4.9",
     "ansis": "^2.3.0",
     "ava": "^6.1.2",

@@ -1,5 +1,5 @@
-import * as specification from '../data';
 import { HTML5 } from '../';
+import * as specification from '../data';
 
 const html5: HTML5 = Object.assign(Object.create(null), { data: Object.create(null) });
 

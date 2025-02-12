@@ -1,13 +1,15 @@
-import type { HTMLValue, HTMLAttribute, HTMLTagAttributes, HTML5 } from '../';
-import type { TagData, HTMLDataVSCode, AttributeData, ValueData, ValueSet } from '../../types/html';
-import { isObject, isString } from '../../utils/typeof';
+import type { HTML5, HTMLAttribute, HTMLTagAttributes, HTMLValue } from '../';
+import type { AttributeData, HTMLDataVSCode, TagData, ValueData, ValueSet } from '../../types/html';
+
 import { MarkupContent } from 'vscode-languageserver-types';
+
 import { html5 } from './states';
+import { isObject, isString } from '../../utils/typeof';
 
 /**
  * Merges custom data using vscode schema to Liquify compatiable HTML spec
  */
-export function schema (custom: HTMLDataVSCode, specs: HTML5['data']['variation']): HTML5 {
+export function schema (custom: HTMLDataVSCode, _specs: HTML5['data']['variation']): HTML5 {
 
   if (custom.tags) {
     Object.assign(html5.data.variation.tags, custom.tags.reduce(toTags, Object.create(null)));
