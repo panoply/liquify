@@ -1,7 +1,7 @@
-import { References, Descriptions } from './shared';
-import { TypeBasic } from '../utils/enums';
+import { Descriptions, References } from './shared';
 import { Types } from './types';
 import { LiteralUnion } from './utils';
+import { TypeBasic } from '../utils/enums';
 
 /* OBJECT PROPERTY EXPORT --------------------- */
 
@@ -38,7 +38,7 @@ export declare interface IProperty extends Descriptions {
    *
    * The Typeof object value
    */
-  type: LiteralUnion<TypeBasic, Types.Basic>;
+  type: LiteralUnion<Types.Basic, TypeBasic>;
   /**
    * Literals
    *

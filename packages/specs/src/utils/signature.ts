@@ -1,8 +1,7 @@
-/* eslint-disable array-bracket-newline */
+import type { Arguments, Filter, Parameter } from '../liquid';
+import type { CompletionItem, MarkupContent, SignatureInformation } from 'vscode-languageserver-types';
 
 import { Tokens, Type } from './enums';
-import type { Arguments, Filter, Parameter } from '../liquid';
-import type { SignatureInformation, CompletionItem, MarkupContent } from 'vscode-languageserver-types';
 
 export const TypeNames = {
   1: 'string',

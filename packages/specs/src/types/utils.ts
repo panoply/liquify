@@ -1,4 +1,3 @@
-
 /* UNION INTERSECTION ------------------------- */
 
 declare type UnionToIntersection<U> = (

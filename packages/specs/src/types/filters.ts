@@ -1,5 +1,5 @@
-import { Descriptions, References } from './shared';
 import { Arguments } from './arguments';
+import { Descriptions, References } from './shared';
 import { Types } from './types';
 
 /* FILTER INTERFACE EXPORT -------------------- */

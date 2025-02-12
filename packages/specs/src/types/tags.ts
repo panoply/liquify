@@ -1,7 +1,7 @@
-import { References, Descriptions } from './shared';
-import { Type } from '../utils/enums';
-import { Types } from './types';
 import { Arguments, Parameter } from './arguments';
+import { Descriptions, References } from './shared';
+import { Types } from './types';
+import { Type } from '../utils/enums';
 
 /* TAG EMBEDDED LANGUAGES --------------------- */
 
