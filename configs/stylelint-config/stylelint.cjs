@@ -1,14 +1,20 @@
-module.exports = {
-  plugins: ["stylelint-scss"],
+/** @type {import('stylelint').Config} */
+export default {
+  plugins: [
+    "stylelint-scss",
+  ],
   extends: [
     "stylelint-config-standard-scss",
     "stylelint-config-rational-order",
   ],
   rules: {
-    "string-quotes": "double",
-    "selector-class-pattern": "^[a-zA-Z_-]+$",
+    // SCSS
     "scss/dollar-variable-empty-line-before": null,
-    indentation: 2,
+    "scss/function-quote-no-quoted-strings-inside": true,
+    "scss/block-no-redundant-nesting": true,
+
+    // BUILT IN
+    "function-url-quotes": null,
     "block-no-empty": null,
     "color-no-invalid-hex": true,
     "comment-empty-line-before": [
@@ -17,18 +23,18 @@ module.exports = {
         ignore: ["stylelint-commands", "after-comment"],
       },
     ],
-    "declaration-colon-newline-after": null,
     "no-descending-specificity": null,
-    "declaration-colon-space-after": "always",
-    "max-empty-lines": 2,
-    "block-opening-brace-newline-after": "always-multi-line",
     "rule-empty-line-before": [
-      "always-multi-line",
+      "always",
       {
-        "ignore": [
+        except: [
+          "inside-block-and-after-rule"
+        ],
+        ignore: [
           "after-comment",
-          "first-nested"
-        ]
+          "first-nested",
+          "inside-block"
+        ],
       }
     ]
   }
