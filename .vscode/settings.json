@@ -101,8 +101,6 @@
   /* -------------------------------------------- */
   /* ESLINT                                       */
   /* -------------------------------------------- */
-  "eslint.packageManager": "pnpm",
-  "eslint.alwaysShowStatus": true,
   "eslint.codeActionsOnSave.mode": "all",
   "eslint.lintTask.options": "--cache",
   "eslint.validate": [
