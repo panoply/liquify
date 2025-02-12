@@ -13,6 +13,8 @@ export default function (text: string, options: HighlightOptions = {}) {
 
   if (options.language !== 'html') return syntax;
 
-  return liquid.tags(syntax);
+  const tokens = liquid.tags(syntax);
+
+  return tokens
 
 }

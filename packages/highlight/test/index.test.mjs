@@ -24,6 +24,9 @@ const string = `
 
 <title>
   {{- page_title -}}
+  {% comment %}
+ hello world
+{% endcomment %}
   {%- if current_tags -%}
     {%- assign meta_tags = current_tags | join: ", " -%}
     {{ "general.meta.tags" | t: tags: meta_tags | prepend: " &ndash; " }}
@@ -51,5 +54,7 @@ const string = `
 test('Highlight Liquid', t => {
 
   console.log(highlight(string));
+
+  t.pass()
 
 });

@@ -1,6 +1,10 @@
 import chalk from 'chalk';
 import { POTION_THEME } from './theme';
 
+const COMMENT = /(?:(?:\x9B|\x1B\[)[0-?]*[ -\\/]*[@-~])*?{%(?:(?:\x9B|\x1B\[)[0-?]*[ -\\/]*[@-~])*-?(?:(?:\x9B|\x1B\[)[0-?]*[ -\\/]*[@-~])*\s*comment[\s\S]+?endcomment[^}]*%}(?:(?:\x9B|\x1B\[)[0-?]*[ -\\/]*[@-~])*/gm
+
+const LINE_COMMENT = /(?:(?:\x9B|\x1B\[)[0-?]*[ -\\/]*[@-~])*?{%(?:(?:\x9B|\x1B\[)[0-?]*[ -\\/]*[@-~])*-?(?:(?:\x9B|\x1B\[)[0-?]*[ -\\/]*[@-~])*\s*#[^}]*%}(?:(?:\x9B|\x1B\[)[0-?]*[ -\\/]*[@-~])*/gm
+
 /**
  * Strip Ansi
  */
@@ -37,16 +41,9 @@ const strings = (token: string) => POTION_THEME.string(strip(token));
 const filters = (token: string) => chalk.hex('#5CD7E')(token);
 
 /**
- * Comment Colouring
- */
-const comment = (token: string) => POTION_THEME.comment(strip(token));
-
-/**
  * Keyword Colouring
  */
-const keyword = (token: string) => /\b(?:end)?comment/.test(token)
-  ? POTION_THEME.comment(token)
-  : POTION_THEME.keyword(token);
+const keyword = (token: string) => POTION_THEME.keyword(token);
 
 /**
  * Delimiter Colouring
@@ -63,19 +60,18 @@ const delimiters = (token: string) => {
 };
 
 function inner (token: string) {
-
   return token
     .replace(/\s*[a-zA-Z._]+/, keyword)
     .replace(/(?<=[|,])\s*[a-zA-Z_]*(?=:?)/g, filters)
     .replace(/[a-zA-Z_]+?\s*(?=[[.])/, props)
     .replace(/[|,.:]/g, logical)
     .replace(/(?:=|[!=]=|[<>]=?|\b(?:and|or|contains|with|in|null|with|as)\b)/g, operators)
-    .replace(/["'].*?["']/g, strings);
+    .replace(/["'].*?["']/g, strings)
+    .replace(/#[\s\S]*/, POTION_THEME.comment);
 
 }
 
 function objects (token: string) {
-
   return token
     .replace(/(?<=[|,])\s*[a-zA-Z_]*(?=:?)/g, filters)
     .replace(/[a-zA-Z_]+?\s*(?=[[.])/, props)
@@ -84,24 +80,18 @@ function objects (token: string) {
 
 }
 
-const forceComment = (token: string) => {
-
-  return token.replace(/{%-?\s*#\s*[\s\S]+%}/g, t => {
-
-    console.log(t);
-    return strip(t);
-  });
-
-};
-
 export function tags (content: string) {
 
-  return content
+  const color = content
     .replace(/(?<={%-?)[\s\S]+?(?=-?%})/g, inner)
     .replace(/(?<={{-?)[\s\S]+?(?=-?}})/g, objects)
     .replace(/\b(null|false|nil|true|empty)\b/g, boolean)
     .replace(/{[{%]-?|-?[%}]}/g, delimiters)
-    .replace(/{%-?\s*comment[\s\S]+endcomment\s*-?%}/g, comment)
-    .replace(/{%-?\s*#\s*[\s\S]+%}/g, forceComment);
+
+
+  return color
+    .replace(COMMENT, m => chalk.gray(strip(m)))
+    .replace(LINE_COMMENT, m => chalk.gray(strip(m)))
+
 
 }
