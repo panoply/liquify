@@ -1,6 +1,4 @@
-/* eslint-disable no-use-before-define */
-
-import { Templates, Pattern, Descriptions } from './shared';
+import { Descriptions, Pattern, Templates } from './shared';
 import { Types } from './types';
 import { Type } from '../utils/enums';
 

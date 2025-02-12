@@ -1,4 +1,5 @@
 import type { CompletionItem } from 'vscode-languageserver-types';
+
 import { Arguments } from './arguments';
 import { IObject } from './objects';
 
