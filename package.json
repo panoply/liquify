@@ -16,7 +16,7 @@
   },
   "scripts": {
     "dev": "conc --restart-tries 2 -n \"AVA,ÆSTHETIC,SPECS,PARSER,VSCODE,SERVER\" -c \"#81D4FA,#FF69B,#9370DB,#1E90FF,#00CED1,#FF7F50\" \"pnpm @ava dev\" \"pnpm @esthetic dev\" \"pnpm @specs dev\" \"pnpm @parser dev\" \"pnpm @vscode dev\" \"pnpm @server dev\"",
-    "build": "pnpm exec ./build.sh",
+    "build": "pnpm --shell-mode \"./build.sh\"",
     "@server": "pnpm run -F liquid-language-server",
     "@ava": "pnpm -r run -F @liquify/ava",
     "@esthetic": "pnpm run -F esthetic",
@@ -45,11 +45,11 @@
     "@liquify/eslint-config": "workspace:*",
     "@liquify/prettier-config": "workspace:*",
     "@liquify/tsconfig": "workspace:*",
-    "concurrently": "^8.0.1",
-    "eslint": "^8.40.0",
-    "prettier": "^2.8.8",
-    "tsup": "^6.7.0",
-    "typescript": "^5.0.4"
+    "concurrently": "^8.2.2",
+    "eslint": "^9.6.0",
+    "prettier": "^3.3.2",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.3"
   },
   "publishConfig": {
     "access": "restricted"
