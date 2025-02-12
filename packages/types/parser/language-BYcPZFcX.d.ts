@@ -284,26 +284,33 @@ declare enum ParseError {
      */
     InvalidArgument = 37,
     /**
+     * Invalid File Import
+     *
+     * @example
+     * {% render object.prop %} // string import is required
+     */
+    InvalidFileImport = 38,
+    /**
      * Invalid Argument Number Range
      *
      * @example
      * {{ tag | color_modify: 'red', 2000  }} // '2000' is invalid
      */
-    InvalidNumberRange = 38,
+    InvalidNumberRange = 39,
     /**
      * Invalid Iteration Type
      *
      * @example
      * {% for i in product.title %} // 'title' is not an array
      */
-    InvalidIterationType = 39,
+    InvalidIterationType = 40,
     /**
      * Invalid Iteration Parameter
      *
      * @example
      * {% for i in array foo %} // 'foo' is invalid
      */
-    InvalidIterationParameter = 40,
+    InvalidIterationParameter = 41,
     /**
      * Invalid Character
      *
@@ -312,21 +319,21 @@ declare enum ParseError {
      * {% -- if foo == x %} // -- is invalid
      * {{- tag | x and 1 -}} // and is invalid
      */
-    InvalidCharacters = 41,
+    InvalidCharacters = 42,
     /**
      * Invalid String Quotation match
      *
      * @example
      * {{ object["prop'] }}
      */
-    InvalidQuotation = 42,
+    InvalidQuotation = 43,
     /**
      * Invalid Filter
      *
      * @example
      * {{ tag | fooo }} // 'fooo' is invalid or unknown
      */
-    InvalidFilter = 43,
+    InvalidFilter = 44,
     /**
      * Invalid Syntactic
      *
@@ -336,7 +343,7 @@ declare enum ParseError {
      * @example
      * {% if foo %}
      */
-    InvalidSyntactic = 44,
+    InvalidSyntactic = 45,
     /**
      * Invalid Placement Syntactic
      *
@@ -347,7 +354,7 @@ declare enum ParseError {
      * {% if foo %}
      * {% endif %}
      */
-    InvalidPlacement = 45,
+    InvalidPlacement = 46,
     /**
      * Invalid Operator
      *
@@ -355,7 +362,7 @@ declare enum ParseError {
      * {% unless x << y %} // << is invalid
      * {%- if foo =! x -%} // =! is invalid
      */
-    InvalidOperator = 46,
+    InvalidOperator = 47,
     /**
      * Reject String
      *
@@ -363,83 +370,83 @@ declare enum ParseError {
      * {% 'assign' = 'x' -%} // assign should not be string
      * {%- increment '1' -%} // increment should not be string
      */
-    RejectString = 47,
+    RejectString = 48,
     /**
      * Reject Number
      *
      * @example
      * {{ 100 }} // number cannot be used as object name
      */
-    RejectNumber = 48,
+    RejectNumber = 49,
     /**
      * Reject Integer
      *
      * @example
      * {{ tag | filter: -10 }} // `-10` is integer and cannot be used
      */
-    RejectInteger = 49,
+    RejectInteger = 50,
     /**
      * Reject Integer
      *
      * @example
      * {{ tag | filter: 10.10 }} // `10.10` is float and cannot be used
      */
-    RejectFloat = 50,
+    RejectFloat = 51,
     /**
      * Reject Boolean
      *
      * @example
      * {% for x in false %}
      */
-    RejectBoolean = 51,
+    RejectBoolean = 52,
     /**
      * Reject Array
      */
-    RejectArray = 52,
+    RejectArray = 53,
     /**
      * Reject Object
      */
-    RejectObject = 53,
+    RejectObject = 54,
     /**
      * Reject Property
      */
-    RejectProperty = 54,
+    RejectProperty = 55,
     /**
      * Reject Parameters
      */
-    RejectParameters = 55,
+    RejectParameters = 56,
     /**
      * Reject Filters
      */
-    RejectFilters = 56,
+    RejectFilters = 57,
     /**
      * Reject Filter Arguments
      *
      * @example
      * {{ tag | filter: argument }} // argument is not allowed
      */
-    RejectFilterArguments = 57,
+    RejectFilterArguments = 58,
     /**
      * Reject Whitespace
      *
      * @example
      * {{ object['prop   '] }} // whitespace "\s\s\s" is not allowed
      */
-    RejectWhitespace = 58,
+    RejectWhitespace = 59,
     /**
      * Reject Whitespace Control
      *
      * @example
      * {%- schema -%} // dash "-" is not allowed
      */
-    RejectWhitespaceControl = 59,
+    RejectWhitespaceControl = 60,
     /**
      * Required Filter Argument
      *
      * @example
      * {{ tag | append^ }} // Filter argument is required
      */
-    RequireFilterArgument = 60,
+    RequireFilterArgument = 61,
     /**
      * Warn Extrenous Whitespace
      *
@@ -448,7 +455,7 @@ declare enum ParseError {
      * {{- foo ['prop'] }}
      * {{- foo ['    prop'] }}
      */
-    WarnWhitespace = 61,
+    WarnWhitespace = 62,
     /**
      * Warn Extrenous Whitespace
      *
@@ -457,28 +464,28 @@ declare enum ParseError {
      * {{- foo ['prop'] }}
      * {{- foo ['    prop'] }}
      */
-    RejectItereeTypeValue = 62,
+    RejectItereeTypeValue = 63,
     /**
      * Unknown Filter Argument Parameter
      *
      * @example
      * {{ tag | filter: foo: 'bar' }} // 'foo' is unknown
      */
-    UnknownFilterArgumentParameter = 63,
+    UnknownFilterArgumentParameter = 64,
     /**
      * Unknown Object
      *
      * @example
      * {{- something.this_is_unknown_object -}}
      */
-    UnknownObject = 64,
+    UnknownObject = 65,
     /**
      * Unknown Property
      *
      * @example
      * {{- product.not_known_propery -}}
      */
-    UnknownProperty = 65
+    UnknownProperty = 66
 }
 
 declare enum NodeType {

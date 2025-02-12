@@ -49,6 +49,30 @@ export interface ParseStack extends Array<StackItem> {
 
 }
 
+export interface LevelsStack extends Array<number> {
+  /**
+   * The current indentation level, equivalent of `level.length - 1`
+   */
+  get indent(): number;
+  /**
+   * The last known applied indentation level, equivalent of `level.length - 2`
+   */
+  get last(): number;
+  /**
+   * An additional method for working with the `parse.stack` array.
+   * This will update the last known entry with provided values. The function
+   * accepts either `string`, `number`  types as a first parameter.
+   *
+   * - When a `string` type is provided then the last known token `[][0]` entry is updated
+   * - When a `number` type is provided then the last known index `[][1]` entry is updated
+   *
+   * To update both the `StackItem` array last known `token` and `index` entries then pass
+   * the `token` as first parameter and `index` as second parameter.
+   */
+  update(token: string | number, index?: number): StackItem;
+
+}
+
 export declare interface ParseOptions {
   /**
   * The current language identifier

@@ -15,7 +15,7 @@ export enum LogLevel {
   Detailed
 }
 
-export interface IConfig {
+export interface ISettings {
   /**
    * **Use `.editorconfig` File**
    *
@@ -26,6 +26,15 @@ export interface IConfig {
    * @default false
    */
   editorConfig?: boolean;
+  /**
+   * **GlobalThis**
+   *
+   * Whether of not Æsthetic should be made available to global scope when used in Browser
+   * environments. This defaults to `true` resulting in Æsthetic being accessible via `window`.
+   *
+   * @default true
+   */
+  globalThis?: boolean;
   /**
    * **Report Statistics**
    *
@@ -90,7 +99,7 @@ export interface IConfig {
   resolveConfig?: LiteralUnion<'package.json' | '.esthetic' | '.esthetic.json', string>
 }
 
-export interface IConfigInternal extends IConfig {
+export interface IConfigInternal extends ISettings {
   /**
    * **Environment**
    *
@@ -111,9 +120,9 @@ export interface IConfigInternal extends IConfig {
   /**
    * **Version**
    *
-   * The Æsthetic version
+   * The Æsthetic version number
    *
-   * @default 'node'
+   * @example '1.2.0'
    */
   version?: string;
   /**

@@ -1,3 +1,4 @@
+import { LiteralUnion } from 'type-fest';
 import { Languages } from 'lexical/enum';
 import { Types, LanguageOfficialName, LanguageName } from '../shared';
 import { StackItem } from 'types/next';
@@ -218,11 +219,33 @@ export interface Record {
  * used by the Parse Error logic.
  */
 export interface Syntactic {
+  /**
+   * The line number the start type pair exists
+   */
   line?: number;
+  /**
+   * The index of the token in the data~structure (same as the Map key)
+   */
   index?: number;
+  /**
+   * Whether or not to skip validation on this pair reference
+   */
+  skip?: boolean;
+  /**
+   * The expected ender token value, e.g: `</tag>` or `{% endtag %}`
+   */
   expect?: string;
+  /**
+   * The token name value as per the data~structure record entry
+   */
   token?: string;
+  /**
+   * The token stack name reference as per the parse~stack
+   */
   stack?: string;
+  /**
+   * An enum value describing the pair language
+   */
   type?: Languages
 }
 
@@ -320,11 +343,11 @@ export interface Splice {
   /**
    * The parse table data structure object to alter
    */
-  data: Data;
+  data?: Data;
   /**
    * How many indexes to remove
    */
-  howmany: number;
+  remove: number;
   /**
    * The index where to start
    */
@@ -335,16 +358,68 @@ export interface Splice {
   record?: Record;
 }
 
-export interface WrapComment {
-  chars: string[];
-  end: number;
-  lexer: string;
+export interface Comments {
+  /**
+   * The current index or starting position of comment
+   */
   start: number;
+  /**
+   * The last known character index
+   */
+  end: number;
+  /**
+   * The lexer mode
+   */
+  lexer: LiteralUnion< 'markup' |'script' | 'style', string>;
+  /**
+   * The opening delimiter token of the comment
+   */
   begin: string;
+  /**
+   * The closing delimiter token of the comment
+   */
   ender: string;
 }
 
+export type BlockComments = [
+  /**
+   * The processed comment
+   */
+  comment: string,
+  /**
+   * The advancement index
+   */
+  advance: number,
+  /**
+   * An optional records reference used to update data~structure
+   */
+  records?: [
+    /**
+     * The starting (opening token), e.g: `{% commment %}` etc
+     */
+    startToken: string,
+    /**
+     * The number of lines to pass to `lines`
+     */
+    startLines: number,
+    /**
+     * The ending (closing token), e.g: `{% endcommment %}` etc
+     */
+    enderToken: string,
+    /**
+     * The number of lines to pass to `lines`
+     */
+    enderLines: number
+  ]
+]
+
 export interface LiquidInternal {
+  /**
+   * Tag Name
+   *
+   * Holds a copy of the tag name
+   */
+  tname: string;
   /**
    * Pipes (Filters)
    *
@@ -404,6 +479,18 @@ export interface LiquidInternal {
    * // Indexes of the "and" and the "or" operators are stored
    */
   logic: number[];
+  /**
+   * Tag Parameters
+   *
+   * A list of indexes which reference parameter starting points
+   *
+   * @example
+   *
+   * {% for foo in array limit: 100 offset: 2 %}
+   *
+   * // Indexes before limit and before offset are stored
+   */
+  param: number[];
 }
 
 /**

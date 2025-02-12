@@ -13,69 +13,69 @@ type Excludes<T> = 'language' | 'indentLevel' | T
 /**
  * Liquid Specifics
  *
- * Used by the `prettify.liquid()` method
+ * Used by the `esthetic.liquid()` method
  */
 export type LiquidFormat = Format<string, Except<Rules, | 'language' | 'indentLevel'>>
 
 /**
  * HTML Specifics
  *
- * Used by the `prettify.html()` method
+ * Used by the `esthetic.html()` method
  */
 export type HTMLFormat = Format<string, Except<Rules, Excludes<'liquid'>>>
 
 /**
  * XML Specifics
  *
- * Used by the `prettify.xml()` method
+ * Used by the `esthetic.xml()` method
  */
 export type XMLFormat = Format<string, Except<Rules, Excludes<'liquid' | 'style' | 'script' |'json'>>>
 
 /**
  * CSS Specifics
  *
- * Used by the `prettify.css()` method
+ * Used by the `esthetic.css()` method
  */
 export type CSSFormat = Format<string, Except<Rules, Excludes<'liquid' | 'markup' | 'script' |'json'>>>
 
 /**
  * SCSS Specifics
  *
- * Used by the `prettify.scss()` method
+ * Used by the `esthetic.scss()` method
  */
 export type SCSSFormat = Format<string, Except<Rules, Excludes<'liquid' | 'markup' | 'script' |'json'>>>
 
 /**
  * JSON Specifics
  *
- * Used by the `prettify.json()` method
+ * Used by the `esthetic.json()` method
  */
 export type JSONFormat = Format<string, Except<Rules, Excludes<'liquid' | 'markup' | 'script' |'style'>>>
 
 /**
  * JavaScript Specifics
  *
- * Used by the `prettify.js()` method
+ * Used by the `esthetic.js()` method
  */
 export type JavaScriptFormat = Format<string, Except<Rules, Excludes<'liquid' | 'markup' | 'json' |'style'>>>
 
 /**
  * TypeScript Specifics
  *
- * Used by the `prettify.ts()` method
+ * Used by the `esthetic.ts()` method
  */
 export type TypeScriptFormat = Format<string, Except<Rules, Excludes<'liquid' | 'markup' | 'json' |'style'>>>
 
 /**
  * TSX Specifics
  *
- * Used by the `prettify.tsx()` method
+ * Used by the `esthetic.tsx()` method
  */
 export type TSXFormat = Format<string, Except<Rules, Excludes<'liquid'>>>
 
 /**
  * JSX Specifics
  *
- * Used by the `prettify.jsx()` method
+ * Used by the `esthetic.jsx()` method
  */
 export type JSXFormat = Format<string, Except<Rules, Excludes<'liquid'>>>

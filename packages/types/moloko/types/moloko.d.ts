@@ -2,6 +2,7 @@ import type { editor } from 'monaco-editor';
 import type { Rules, LanguageName, LanguageOfficialName } from 'esthetic';
 import type { Liquid } from 'liquidjs';
 export { StandardProperties as Style } from 'csstype';
+
 export type Icons = (
   | 'pane'
   | 'document'
@@ -9,9 +10,10 @@ export type Icons = (
   | 'table'
   | 'plus'
   | 'check'
+  | 'eye'
   | 'cross'
   | 'gears'
-  | 'github'
+  | 'ghissue'
   | 'refresh'
   | 'issue'
   | 'discord'
@@ -28,6 +30,37 @@ export type ISidebarActionKeys = (
   | 'link'
   | 'command'
 )
+
+export interface IGithubIssue {
+  /**
+   * The Issue Description
+   */
+  body?: string;
+  /**
+   * The Issue Title
+   */
+  title?: string;
+  /**
+   * List of labels to apply
+   */
+  labels?: string[];
+  /**
+   * Render Template
+   */
+  template?: string
+  /**
+   * Attach milestone
+   */
+  milestone?: string;
+  /**
+   * Apply Assigneee
+   */
+  assignee?: string;
+  /**
+   * Attach Projects
+   */
+  projects?: string[]
+}
 
 export interface IActions {
   /**
@@ -68,7 +101,7 @@ export interface ISidebar {
    *
    * Returns in the order of each key.
    */
-  actions: {
+  actions?: {
     /**
      * The current file
      */
@@ -77,6 +110,10 @@ export interface ISidebar {
      * The Æsthetic JSON rules
      */
     rules?: IActions;
+    /**
+     * Whether or not to show parse table
+     */
+    table?: IActions;
     /**
      * Whether or not to activate preview pane
      */
@@ -92,7 +129,7 @@ export interface ISidebar {
     /**
      * Submit an issue to github with playground reference
      */
-    github?: IActions
+    ghissue?: IActions
   }
 }
 
@@ -120,7 +157,7 @@ export interface IFooter {
    *
    * Returns in the order of each key.
    */
-  actions: {
+  actions?: {
     /**
      * Language detection control
      *
@@ -184,17 +221,9 @@ export interface IAttrs {
    */
   hash: string;
   /**
-   * Runtime Iframe
-   */
-  runtime: {
-    /**
-     * The iframe element
-     */
-    iframe: HTMLIFrameElement
-
-  },
-  /**
-   * The current hash reference
+   * **NOT YET AVAILABLE**
+   *
+   * Additional Service modules for extended usage
    *
    * @default null
    */
@@ -208,6 +237,9 @@ export interface IAttrs {
    * Panes Width
    */
   panes: {
+    /**
+     * Input Editor
+     */
     editor: number;
     /**
      * Rules
@@ -305,6 +337,18 @@ export interface IConfig {
    * - `https://website.com/monaco/workers/html.js`
    * - `https://website.com/monaco/workers/json.js`
    * - `https://website.com/monaco/workers/typescript.js`
+   * - `https://website.com/samples/plaintext.js`
+   * - `https://website.com/samples/html.js`
+   * - `https://website.com/samples/xml.js`
+   * - `https://website.com/samples/liquid.js`
+   * - `https://website.com/samples/css.js`
+   * - `https://website.com/samples/json.js`
+   * - `https://website.com/samples/scss.js`
+   * - `https://website.com/samples/javascript.js`
+   * - `https://website.com/samples/typescript.js`
+   * - `https://website.com/samples/jsx.js`
+   * - `https://website.com/samples/tsx.js`
+   * - `https://website.com/samples/yaml.js`
    */
   resolve?: {
     /**
@@ -318,8 +362,18 @@ export interface IConfig {
      *
      * **NOTE**
      *
-     * Do not include extensions, provide only path
-     * detinations.
+     * Do not include extensions, provide only path detinations.
+     *
+     * ```js
+     * import moloko from 'moloko';
+     *
+     * moloko.mount(document.body, {
+     *   resolve: {
+     *     path: 'assets/moloko' // Resolution path for workers
+     *   }
+     * })
+     *
+     * ```
      */
     path?: string;
     /**
@@ -342,6 +396,17 @@ export interface IConfig {
      *
      * Provide an already invoked mithril instance
      *
+     * ```js
+     * import m from 'mithril';
+     * import moloko from 'moloko';
+     *
+     * moloko.mount(document.body, {
+     *   resolve: {
+     *     mithril: m // provide the mithril import here
+     *   }
+     * })
+     *
+     * ```
      * @default true
      */
     mithril?: boolean | string | typeof import('mithril');
@@ -349,7 +414,7 @@ export interface IConfig {
     /**
      * Whether to use bundled esthetic.js
      *
-    * `true`
+     * `true`
      *
      * Uses the included esthetic module.
      *
@@ -362,15 +427,110 @@ export interface IConfig {
      * A path value or CDN reference to resolve esthetic
      *
      *
-     * `typeof m`
+     * `typeof esthetic`
      *
      * Provide an already invoked esthetic instance
      *
+     * ```js
+     * import esthetic from 'mithril';
+     * import moloko from 'moloko';
+     *
+     * moloko.mount(document.body, {
+     *   resolve: {
+     *     esthetic // provide the esthetic import here
+     *   }
+     * })
+     *
+     * ```
      * @default true
      */
     esthetic?: boolean | string | typeof import('esthetic');
-
   };
+  /**
+   * Use Moloko Code Samples
+   *
+   * @default true
+   */
+  samples?: boolean | {
+    /**
+     * Plaintext
+     *
+     * @default true
+     */
+    plaintext: boolean;
+    /**
+     * HTML
+     *
+     * @default true
+     */
+    html: boolean;
+    /**
+     * XML
+     *
+     * @default true
+     */
+    xml: boolean;
+    /**
+     * Liquid
+     *
+     * @default true
+     */
+    liquid: boolean;
+    /**
+     * CSS
+     *
+     * @default true
+     */
+    css: boolean;
+    /**
+     * JSON
+     *
+     * @default true
+     */
+    json: boolean;
+    /**
+     * SCSS
+     *
+     * @default true
+     */
+    scss: boolean;
+    /**
+     * JavaScript
+     *
+     * @default true
+     */
+    javascript: boolean;
+    /**
+     * TypeScript
+     *
+     * @default true
+     */
+    typescript: boolean;
+    /**
+     * JSX
+     *
+     * @default true
+     */
+    jsx: boolean;
+    /**
+     * TSX
+     *
+     * @default true
+     */
+    tsx: boolean;
+    /**
+     * YAML
+     *
+     * @default true
+     */
+    yaml: boolean;
+  }
+  /**
+   * Splash screen loading for when moloko intializes
+   *
+   * @default true
+   */
+  splash?: boolean
   /**
    * Monaco Editor Options
    *
@@ -378,17 +538,42 @@ export interface IConfig {
    */
   monaco?: editor.IEditorOptions;
   /**
+   * **NOT YET AVAILABLE**
+   *
    * Tabs
    */
   tabs?: boolean;
   /**
+   * **NOT YET AVAILABLE**
+   *
    * Whether or not instructions should render onload
    */
   instructions?: boolean;
   /**
+   * Æsthetic Rules
+   */
+  rules?: {
+    /**
+     * Enable Æsthetic
+     *
+     * @default true
+     */
+    enable?: boolean;
+    /**
+     * Pass Æsthetic rules for startup instance
+     */
+    esthetic?: Rules;
+  };
+  /**
    * The code preview pane
    */
   preview?: {
+    /**
+     * Enable Preview
+     *
+     * @default true
+     */
+    enable?: boolean;
     /**
      * The background colour of the preview pane
      */
@@ -434,10 +619,11 @@ export interface IConfig {
   diff?: boolean;
   /**
    * Sidebar Component
-   *
    */
   sidebar?: ISidebar;
   /**
+   * **NOT YET AVAILABLE**
+   *
    * Footer Component
    */
   footer?: IFooter;
@@ -464,7 +650,14 @@ export interface IConfig {
   };
 }
 
-export interface Hash extends Omit<IAttrs, | 'hash' | 'input' | 'editor' | 'files' | 'model' | 'path'> {
+export interface Hash extends Omit<IAttrs, (
+  | 'hash'
+  | 'input'
+  | 'editor'
+  | 'files'
+  | 'model'
+  | 'path'
+)> {
   model: string;
   language: string;
 }

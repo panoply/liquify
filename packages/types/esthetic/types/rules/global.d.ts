@@ -2,14 +2,12 @@ import { LiteralUnion } from 'type-fest';
 import { LanguageName } from '../shared';
 
 export interface GlobalRules {
-
   /**
    * **Default** `false`
    *
    * 💁🏽‍♀️ &nbsp;&nbsp; Recommended setting is: `true`
    */
   correct?: boolean;
-
   /**
    * **Default** `none`
    *
@@ -46,21 +44,24 @@ export interface GlobalRules {
    * enjoy that beautification style using this preset will produce the same results.
    *
    */
-  preset?: LiteralUnion<'default' | 'recommended' | 'strict' | 'warrington' | 'prettier', string> ;
+  preset?: LiteralUnion<
+  | 'default'
+  | 'recommended'
+  | 'strict'
+  | 'warrington'
+  | 'prettier', string> ;
   /**
    * **Default** `auto`
    *
    * The name of the language provided.
    */
   language?: LanguageName;
-
   /**
    * **Default** `2`
    *
    * The number of `indentChar` values to comprise a single indentation.
    */
   indentSize?: number;
-
   /**
    * **Default** `0`
    *
@@ -69,7 +70,6 @@ export interface GlobalRules {
    * between libraries.
    */
   indentLevel?: number;
-
   /**
    *  **Default** `0`
    *
@@ -77,16 +77,6 @@ export interface GlobalRules {
    * disables this option. A negative value concatenates script strings.
    */
   wrap?: number;
-
-  /**
-   * **Default** `0`
-   *
-   *
-   * Wrap fraction is used on internal structures as a secondary point of control.
-   * By default, it will use a 75% metric according to `wrap` defined values.
-   */
-  wrapFraction?: number;
-
   /**
    *  **Default** `false`
    *
@@ -97,7 +87,6 @@ export interface GlobalRules {
    * applied in **precedence** over Text Editor.
    */
   endNewline?: boolean;
-
   /**
    *  **Default** `false`
    *
@@ -105,7 +94,6 @@ export interface GlobalRules {
    * Unix (LF) format is the default.
    */
   crlf?: boolean;
-
   /**
    * **Default** ` `
    *
@@ -113,11 +101,11 @@ export interface GlobalRules {
    * Any string combination is accepted
    */
   indentChar?: string;
-
   /**
    * **Default** `2`
    *
    * The maximum number of consecutive empty lines to retain.
    */
   preserveLine?: number;
+
 }

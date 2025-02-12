@@ -11,6 +11,18 @@ import { MarkupTypes, StyleTypes, ScriptTypes, LiquidTypes, ExtraTypes } from '.
 /**
  * Option Rule Names Stirng Literal
  */
+export type RulePresetNames = LiteralUnion<(
+  | 'default'
+  | 'recommended'
+  | 'warrington'
+  | 'strict'
+  | 'prettier'
+  | 'blanklob'
+), string>
+
+/**
+ * Option Rule Names Stirng Literal
+ */
 export type RuleNames = (
   | keyof GlobalRules
   | keyof LiquidRules

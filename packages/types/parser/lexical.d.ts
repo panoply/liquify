@@ -1,4 +1,4 @@
-export { E as ErrorLevel, N as NodeKind, b as NodeLanguage, a as NodeType, P as ParseError, T as TagType } from './language-425603bb.js';
+export { E as ErrorLevel, N as NodeKind, b as NodeLanguage, a as NodeType, P as ParseError, T as TagType } from './language-BYcPZFcX.js';
 
 declare enum CharCode {
     /**
@@ -273,15 +273,28 @@ declare enum TokenType {
      * - `{{ article^`
      */
     ObjectTagName = 46,
-    Iteration = 47,
-    IterationIteree = 48,
-    IterationOperator = 49,
-    IterationArray = 50,
-    IterationParameter = 51,
-    IterationParameterValue = 52,
-    TrimDashLeft = 53,
-    TrimDashRight = 54,
-    TagName = 55,
+    /**
+     * Import tag file
+     *
+     * _Similar to `output` types but references a **known** object in the spec_
+     *
+     * **EXAMPLES**
+     *
+     * - `{% render 'file'^`
+     * - `{% include 'file'^`
+     * - `{% section 'file'^`
+     * - `{% layout 'file'^`
+     */
+    ImportFileString = 47,
+    Iteration = 48,
+    IterationIteree = 49,
+    IterationOperator = 50,
+    IterationArray = 51,
+    IterationParameter = 52,
+    IterationParameterValue = 53,
+    TrimDashLeft = 54,
+    TrimDashRight = 55,
+    TagName = 56,
     /**
      * Object
      *
@@ -295,7 +308,7 @@ declare enum TokenType {
      * - `foo` in `{{ x | filter: foo.bar }}`
      *
      */
-    Object = 56,
+    Object = 57,
     /**
      * Object Property
      *
@@ -307,8 +320,8 @@ declare enum TokenType {
      * - `bar` in `{% if foo.bar %}`
      * - `bar` in `{{ x | filter: foo.bar }}`
      */
-    ObjectProperty = 57,
-    ObjectPropertyString = 58,
+    ObjectProperty = 58,
+    ObjectPropertyString = 59,
     /**
      * Object Property Object
      *
@@ -319,64 +332,64 @@ declare enum TokenType {
      * - `object` in `{{ foo[object.prop] }}`
      * - `object` in `{{ foo[bar.prop[object]] }}`
      */
-    ObjectPropertyObject = 59,
-    ObjectPropertyNumber = 60,
-    ObjectDotNotation = 61,
-    ObjectBracketNotationOpen = 62,
-    ObjectBracketNotationClose = 63,
-    StringSingleQuote = 64,
-    StringDoubleQuote = 65,
-    Embedded = 66,
-    EmbeddedJSON = 67,
-    EmbeddedJavaScript = 68,
-    EmbeddedCSS = 69,
-    EmbeddedSCSS = 70,
-    Comment = 71,
-    ParsePrevNode = 72,
-    ParseResolve = 73,
-    ParseCancel = 74,
-    ParseError = 75,
-    ParseWarning = 76,
-    ParseSkip = 77,
-    ParseTolerate = 78,
-    Content = 79,
-    EOS = 80,
-    FrontmatterStart = 81,
-    FrontmatterEnd = 82,
-    YAMLCommentStart = 83,
-    YAMLComment = 84,
-    YAMLCommentClose = 85,
-    LiquidTagOpen = 86,
-    LiquidTag = 87,
-    LiquidTagClose = 88,
-    LiquidEndTagOpen = 89,
-    LiquidEndTag = 90,
-    LiquidEndTagClose = 91,
-    LiquidTagName = 92,
-    LiquidSingularTag = 93,
-    LiquidSingularTagClose = 94,
-    LiquidObjectTagOpen = 95,
-    LiquidObjectName = 96,
-    LiquidObjectTagClose = 97,
-    HTMLStartTagOpen = 98,
-    HTMLStartTagClose = 99,
-    HTMLStartTagLiquidStart = 100,
-    HTMLStartTagLiquidEnd = 101,
-    HTMLStartTagLiquidOutput = 102,
-    HTMLEndTagOpen = 103,
-    HTMLEndTagClose = 104,
-    HTMLVoidTagOpen = 105,
-    HTMLVoidTagClose = 106,
-    HTMLVoidTagLiquidStart = 107,
-    HTMLVoidTagLiquidEnd = 108,
-    HTMLVoidTagLiquidOutput = 109,
-    HTMLStartCommentTag = 110,
-    HTMLComment = 111,
-    HTMLEmbedded = 112,
-    HTMLAttributeName = 113,
-    HTMLLiquidAttribute = 114,
-    HTMLAttributeValue = 115,
-    HTMLOperatorValue = 116
+    ObjectPropertyObject = 60,
+    ObjectPropertyNumber = 61,
+    ObjectDotNotation = 62,
+    ObjectBracketNotationOpen = 63,
+    ObjectBracketNotationClose = 64,
+    StringSingleQuote = 65,
+    StringDoubleQuote = 66,
+    Embedded = 67,
+    EmbeddedJSON = 68,
+    EmbeddedJavaScript = 69,
+    EmbeddedCSS = 70,
+    EmbeddedSCSS = 71,
+    Comment = 72,
+    ParsePrevNode = 73,
+    ParseResolve = 74,
+    ParseCancel = 75,
+    ParseError = 76,
+    ParseWarning = 77,
+    ParseSkip = 78,
+    ParseTolerate = 79,
+    Content = 80,
+    EOS = 81,
+    FrontmatterStart = 82,
+    FrontmatterEnd = 83,
+    YAMLCommentStart = 84,
+    YAMLComment = 85,
+    YAMLCommentClose = 86,
+    LiquidTagOpen = 87,
+    LiquidTag = 88,
+    LiquidTagClose = 89,
+    LiquidEndTagOpen = 90,
+    LiquidEndTag = 91,
+    LiquidEndTagClose = 92,
+    LiquidTagName = 93,
+    LiquidSingularTag = 94,
+    LiquidSingularTagClose = 95,
+    LiquidObjectTagOpen = 96,
+    LiquidObjectName = 97,
+    LiquidObjectTagClose = 98,
+    HTMLStartTagOpen = 99,
+    HTMLStartTagClose = 100,
+    HTMLStartTagLiquidStart = 101,
+    HTMLStartTagLiquidEnd = 102,
+    HTMLStartTagLiquidOutput = 103,
+    HTMLEndTagOpen = 104,
+    HTMLEndTagClose = 105,
+    HTMLVoidTagOpen = 106,
+    HTMLVoidTagClose = 107,
+    HTMLVoidTagLiquidStart = 108,
+    HTMLVoidTagLiquidEnd = 109,
+    HTMLVoidTagLiquidOutput = 110,
+    HTMLStartCommentTag = 111,
+    HTMLComment = 112,
+    HTMLEmbedded = 113,
+    HTMLAttributeName = 114,
+    HTMLLiquidAttribute = 115,
+    HTMLAttributeValue = 116,
+    HTMLOperatorValue = 117
 }
 
 export { CharCode, TokenType };

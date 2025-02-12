@@ -19,6 +19,7 @@ export * from './parse/parser';
 export * from './misc/grammar';
 export * from './misc/defintions';
 export * from './misc/settings';
+export * from './misc/merger';
 export * from './rules/global';
 export * from './rules/liquid';
 export * from './rules/markup';

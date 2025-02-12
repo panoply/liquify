@@ -1,4 +1,676 @@
 /**
+ * Set Tag
+ *
+ * Finds a HTML tag and updates the scope reference to it.
+ * If no tag is found in the spec, it's likely a custom
+ * HTML tag, this is allowed but that is handled at the
+ * scanner/parser level.
+ *
+ * When a tag is matched, we immeadiatly check if the tag
+ * accepts a list of pre-defined attributes, if they exists
+ * we create a key list of the accepted values which we will
+ * use to match attributes.
+ */
+declare function setHTMLTag(name: string): boolean;
+/**
+ * Checks to see if the provided HTML tag is an
+ * embedded type tag, eg: <style> or <script>
+ */
+declare function isEmbedded(name: string): 'css' | 'javascript' | false;
+/**
+ * Checks the the attribute language of an embedded
+ * tag,
+ */
+declare function isLanguage(attribute: string): "javascript" | "json";
+/**
+ * Checks to see if the provided HTML tag is a void
+ * type tag, meaning it does not required an ender.
+ */
+declare function isVoid(name: string): boolean;
+/**
+ * Checks to see if the provided tag accepts a
+ * supplied attribute. If the tag contains attributes
+ * on its spec then the tag accepts a set of attributes
+ * which are unique to that tag, like (for example) the
+ * `<input>` tag which accepts attributes like `type=""`
+ *
+ * A local scope variable `attrs` generated in the setter,
+ * holds string list of values which contain accepted pre-defined
+ * attributes that we will check and from here determine if
+ * that attribute has a pre-determined set of values.
+ *
+ * If `attrs` is undefined then the tag accepts global attributes,
+ * so we will check the globals in the spec. When `attrs` is
+ * undefined or the value passed does not match any values in
+ * the list, we will proceed to the global attribute check.
+ *
+ * We allow `data-` attributes to pass
+ */
+declare function isAttribute(name: string): boolean;
+/**
+ * Checks to see if the attribute already exists on the tag.
+ * If a tag contains Liquid syntax, we will skip this check at
+ * scanner level after some validations.
+ */
+declare function isAttributeUniq(name: string): boolean;
+/**
+ * Validates an provided attribute value when a pre-defined
+ * value set exists for the provided attribute.
+ *
+ * @todo
+ * Because the specs value sets exists as an array,
+ * the values are walked this might be hurt perfomance
+ * and may be worth re-thinking in the future.
+ */
+declare function isAttributeValue(value: string): boolean;
+/**
+ * Checks to see if a value is required on the attribute.
+ * When a tag attribute contains a pre-defined attribute
+ * set, it is inferred that a value is to be provided.
+ */
+declare function isValueRequired(): boolean;
+
+/**
+ * Defines an unsigned integer in the range of 0 to 2^31 - 1.
+ */
+type uinteger = number;
+declare namespace uinteger {
+    const MIN_VALUE = 0;
+    const MAX_VALUE = 2147483647;
+    function is(value: any): value is uinteger;
+}
+/**
+ * The LSP any type.
+ *
+ * In the current implementation we map LSPAny to any. This is due to the fact
+ * that the TypeScript compilers can't infer string access signatures for
+ * interface correctly (it can though for types). See the following issue for
+ * details: https://github.com/microsoft/TypeScript/issues/15300.
+ *
+ * When the issue is addressed LSPAny can be defined as follows:
+ *
+ * ```ts
+ * export type LSPAny = LSPObject | LSPArray | string | integer | uinteger | decimal | boolean | null | undefined;
+ * export type LSPObject = { [key: string]: LSPAny };
+ * export type LSPArray = LSPAny[];
+ * ```
+ *
+ * Please note that strictly speaking a property with the value `undefined`
+ * can't be converted into JSON preserving the property name. However for
+ * convenience it is allowed and assumed that all these properties are
+ * optional as well.
+ *
+ * @since 3.17.0
+ */
+type LSPAny = any;
+/**
+ * Position in a text document expressed as zero-based line and character
+ * offset. Prior to 3.17 the offsets were always based on a UTF-16 string
+ * representation. So a string of the form `a𐐀b` the character offset of the
+ * character `a` is 0, the character offset of `𐐀` is 1 and the character
+ * offset of b is 3 since `𐐀` is represented using two code units in UTF-16.
+ * Since 3.17 clients and servers can agree on a different string encoding
+ * representation (e.g. UTF-8). The client announces it's supported encoding
+ * via the client capability [`general.positionEncodings`](https://microsoft.github.io/language-server-protocol/specifications/specification-current/#clientCapabilities).
+ * The value is an array of position encodings the client supports, with
+ * decreasing preference (e.g. the encoding at index `0` is the most preferred
+ * one). To stay backwards compatible the only mandatory encoding is UTF-16
+ * represented via the string `utf-16`. The server can pick one of the
+ * encodings offered by the client and signals that encoding back to the
+ * client via the initialize result's property
+ * [`capabilities.positionEncoding`](https://microsoft.github.io/language-server-protocol/specifications/specification-current/#serverCapabilities). If the string value
+ * `utf-16` is missing from the client's capability `general.positionEncodings`
+ * servers can safely assume that the client supports UTF-16. If the server
+ * omits the position encoding in its initialize result the encoding defaults
+ * to the string value `utf-16`. Implementation considerations: since the
+ * conversion from one encoding into another requires the content of the
+ * file / line the conversion is best done where the file is read which is
+ * usually on the server side.
+ *
+ * Positions are line end character agnostic. So you can not specify a position
+ * that denotes `\r|\n` or `\n|` where `|` represents the character offset.
+ *
+ * @since 3.17.0 - support for negotiated position encoding.
+ */
+interface Position {
+    /**
+     * Line position in a document (zero-based).
+     *
+     * If a line number is greater than the number of lines in a document, it defaults back to the number of lines in the document.
+     * If a line number is negative, it defaults to 0.
+     */
+    line: uinteger;
+    /**
+     * Character offset on a line in a document (zero-based).
+     *
+     * The meaning of this offset is determined by the negotiated
+     * `PositionEncodingKind`.
+     *
+     * If the character value is greater than the line length it defaults back to the
+     * line length.
+     */
+    character: uinteger;
+}
+/**
+ * The Position namespace provides helper functions to work with
+ * {@link Position} literals.
+ */
+declare namespace Position {
+    /**
+     * Creates a new Position literal from the given line and character.
+     * @param line The position's line.
+     * @param character The position's character.
+     */
+    function create(line: uinteger, character: uinteger): Position;
+    /**
+     * Checks whether the given literal conforms to the {@link Position} interface.
+     */
+    function is(value: any): value is Position;
+}
+/**
+ * A range in a text document expressed as (zero-based) start and end positions.
+ *
+ * If you want to specify a range that contains a line including the line ending
+ * character(s) then use an end position denoting the start of the next line.
+ * For example:
+ * ```ts
+ * {
+ *     start: { line: 5, character: 23 }
+ *     end : { line 6, character : 0 }
+ * }
+ * ```
+ */
+interface Range {
+    /**
+     * The range's start position.
+     */
+    start: Position;
+    /**
+     * The range's end position.
+     */
+    end: Position;
+}
+/**
+ * The Range namespace provides helper functions to work with
+ * {@link Range} literals.
+ */
+declare namespace Range {
+    /**
+     * Create a new Range literal.
+     * @param start The range's start position.
+     * @param end The range's end position.
+     */
+    function create(start: Position, end: Position): Range;
+    /**
+     * Create a new Range literal.
+     * @param startLine The start line number.
+     * @param startCharacter The start character.
+     * @param endLine The end line number.
+     * @param endCharacter The end character.
+     */
+    function create(startLine: uinteger, startCharacter: uinteger, endLine: uinteger, endCharacter: uinteger): Range;
+    /**
+     * Checks whether the given literal conforms to the {@link Range} interface.
+     */
+    function is(value: any): value is Range;
+}
+/**
+ * Represents a reference to a command. Provides a title which
+ * will be used to represent a command in the UI and, optionally,
+ * an array of arguments which will be passed to the command handler
+ * function when invoked.
+ */
+interface Command {
+    /**
+     * Title of the command, like `save`.
+     */
+    title: string;
+    /**
+     * The identifier of the actual command handler.
+     */
+    command: string;
+    /**
+     * Arguments that the command handler should be
+     * invoked with.
+     */
+    arguments?: LSPAny[];
+}
+/**
+ * The Command namespace provides helper functions to work with
+ * {@link Command} literals.
+ */
+declare namespace Command {
+    /**
+     * Creates a new Command literal.
+     */
+    function create(title: string, command: string, ...args: any[]): Command;
+    /**
+     * Checks whether the given literal conforms to the {@link Command} interface.
+     */
+    function is(value: any): value is Command;
+}
+/**
+ * A text edit applicable to a text document.
+ */
+interface TextEdit {
+    /**
+     * The range of the text document to be manipulated. To insert
+     * text into a document create a range where start === end.
+     */
+    range: Range;
+    /**
+     * The string to be inserted. For delete operations use an
+     * empty string.
+     */
+    newText: string;
+}
+/**
+ * The TextEdit namespace provides helper function to create replace,
+ * insert and delete edits more easily.
+ */
+declare namespace TextEdit {
+    /**
+     * Creates a replace text edit.
+     * @param range The range of text to be replaced.
+     * @param newText The new text.
+     */
+    function replace(range: Range, newText: string): TextEdit;
+    /**
+     * Creates an insert text edit.
+     * @param position The position to insert the text at.
+     * @param newText The text to be inserted.
+     */
+    function insert(position: Position, newText: string): TextEdit;
+    /**
+     * Creates a delete text edit.
+     * @param range The range of text to be deleted.
+     */
+    function del(range: Range): TextEdit;
+    function is(value: any): value is TextEdit;
+}
+/**
+ * Describes the content type that a client supports in various
+ * result literals like `Hover`, `ParameterInfo` or `CompletionItem`.
+ *
+ * Please note that `MarkupKinds` must not start with a `$`. This kinds
+ * are reserved for internal usage.
+ */
+declare namespace MarkupKind {
+    /**
+     * Plain text is supported as a content format
+     */
+    const PlainText: 'plaintext';
+    /**
+     * Markdown is supported as a content format
+     */
+    const Markdown: 'markdown';
+    /**
+     * Checks whether the given value is a value of the {@link MarkupKind} type.
+     */
+    function is(value: any): value is MarkupKind;
+}
+type MarkupKind = 'plaintext' | 'markdown';
+/**
+ * A `MarkupContent` literal represents a string value which content is interpreted base on its
+ * kind flag. Currently the protocol supports `plaintext` and `markdown` as markup kinds.
+ *
+ * If the kind is `markdown` then the value can contain fenced code blocks like in GitHub issues.
+ * See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting
+ *
+ * Here is an example how such a string can be constructed using JavaScript / TypeScript:
+ * ```ts
+ * let markdown: MarkdownContent = {
+ *  kind: MarkupKind.Markdown,
+ *  value: [
+ *    '# Header',
+ *    'Some text',
+ *    '```typescript',
+ *    'someCode();',
+ *    '```'
+ *  ].join('\n')
+ * };
+ * ```
+ *
+ * *Please Note* that clients might sanitize the return markdown. A client could decide to
+ * remove HTML from the markdown to avoid script execution.
+ */
+interface MarkupContent {
+    /**
+     * The type of the Markup
+     */
+    kind: MarkupKind;
+    /**
+     * The content itself
+     */
+    value: string;
+}
+declare namespace MarkupContent {
+    /**
+     * Checks whether the given value conforms to the {@link MarkupContent} interface.
+     */
+    function is(value: any): value is MarkupContent;
+}
+/**
+ * The kind of a completion entry.
+ */
+declare namespace CompletionItemKind {
+    const Text: 1;
+    const Method: 2;
+    const Function: 3;
+    const Constructor: 4;
+    const Field: 5;
+    const Variable: 6;
+    const Class: 7;
+    const Interface: 8;
+    const Module: 9;
+    const Property: 10;
+    const Unit: 11;
+    const Value: 12;
+    const Enum: 13;
+    const Keyword: 14;
+    const Snippet: 15;
+    const Color: 16;
+    const File: 17;
+    const Reference: 18;
+    const Folder: 19;
+    const EnumMember: 20;
+    const Constant: 21;
+    const Struct: 22;
+    const Event: 23;
+    const Operator: 24;
+    const TypeParameter: 25;
+}
+type CompletionItemKind = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25;
+/**
+ * Defines whether the insert text in a completion item should be interpreted as
+ * plain text or a snippet.
+ */
+declare namespace InsertTextFormat {
+    /**
+     * The primary text to be inserted is treated as a plain string.
+     */
+    const PlainText: 1;
+    /**
+     * The primary text to be inserted is treated as a snippet.
+     *
+     * A snippet can define tab stops and placeholders with `$1`, `$2`
+     * and `${3:foo}`. `$0` defines the final tab stop, it defaults to
+     * the end of the snippet. Placeholders with equal identifiers are linked,
+     * that is typing in one will update others too.
+     *
+     * See also: https://microsoft.github.io/language-server-protocol/specifications/specification-current/#snippet_syntax
+     */
+    const Snippet: 2;
+}
+type InsertTextFormat = 1 | 2;
+/**
+ * Completion item tags are extra annotations that tweak the rendering of a completion
+ * item.
+ *
+ * @since 3.15.0
+ */
+declare namespace CompletionItemTag {
+    /**
+     * Render a completion as obsolete, usually using a strike-out.
+     */
+    const Deprecated = 1;
+}
+type CompletionItemTag = 1;
+/**
+ * A special text edit to provide an insert and a replace operation.
+ *
+ * @since 3.16.0
+ */
+interface InsertReplaceEdit {
+    /**
+     * The string to be inserted.
+     */
+    newText: string;
+    /**
+     * The range if the insert is requested
+     */
+    insert: Range;
+    /**
+     * The range if the replace is requested.
+     */
+    replace: Range;
+}
+/**
+ * The InsertReplaceEdit namespace provides functions to deal with insert / replace edits.
+ *
+ * @since 3.16.0
+ */
+declare namespace InsertReplaceEdit {
+    /**
+     * Creates a new insert / replace edit
+     */
+    function create(newText: string, insert: Range, replace: Range): InsertReplaceEdit;
+    /**
+     * Checks whether the given literal conforms to the {@link InsertReplaceEdit} interface.
+     */
+    function is(value: TextEdit | InsertReplaceEdit): value is InsertReplaceEdit;
+}
+/**
+ * How whitespace and indentation is handled during completion
+ * item insertion.
+ *
+ * @since 3.16.0
+ */
+declare namespace InsertTextMode {
+    /**
+     * The insertion or replace strings is taken as it is. If the
+     * value is multi line the lines below the cursor will be
+     * inserted using the indentation defined in the string value.
+     * The client will not apply any kind of adjustments to the
+     * string.
+     */
+    const asIs: 1;
+    /**
+     * The editor adjusts leading whitespace of new lines so that
+     * they match the indentation up to the cursor of the line for
+     * which the item is accepted.
+     *
+     * Consider a line like this: <2tabs><cursor><3tabs>foo. Accepting a
+     * multi line completion item is indented using 2 tabs and all
+     * following lines inserted will be indented using 2 tabs as well.
+     */
+    const adjustIndentation: 2;
+}
+type InsertTextMode = 1 | 2;
+/**
+ * Additional details for a completion item label.
+ *
+ * @since 3.17.0
+ */
+interface CompletionItemLabelDetails {
+    /**
+     * An optional string which is rendered less prominently directly after {@link CompletionItem.label label},
+     * without any spacing. Should be used for function signatures and type annotations.
+     */
+    detail?: string;
+    /**
+     * An optional string which is rendered less prominently after {@link CompletionItem.detail}. Should be used
+     * for fully qualified names and file paths.
+     */
+    description?: string;
+}
+declare namespace CompletionItemLabelDetails {
+    function is(value: any): value is CompletionItemLabelDetails;
+}
+/**
+ * A completion item represents a text snippet that is
+ * proposed to complete text that is being typed.
+ */
+interface CompletionItem {
+    /**
+     * The label of this completion item.
+     *
+     * The label property is also by default the text that
+     * is inserted when selecting this completion.
+     *
+     * If label details are provided the label itself should
+     * be an unqualified name of the completion item.
+     */
+    label: string;
+    /**
+     * Additional details for the label
+     *
+     * @since 3.17.0
+     */
+    labelDetails?: CompletionItemLabelDetails;
+    /**
+     * The kind of this completion item. Based of the kind
+     * an icon is chosen by the editor.
+     */
+    kind?: CompletionItemKind;
+    /**
+     * Tags for this completion item.
+     *
+     * @since 3.15.0
+     */
+    tags?: CompletionItemTag[];
+    /**
+     * A human-readable string with additional information
+     * about this item, like type or symbol information.
+     */
+    detail?: string;
+    /**
+     * A human-readable string that represents a doc-comment.
+     */
+    documentation?: string | MarkupContent;
+    /**
+     * Indicates if this item is deprecated.
+     * @deprecated Use `tags` instead.
+     */
+    deprecated?: boolean;
+    /**
+     * Select this item when showing.
+     *
+     * *Note* that only one completion item can be selected and that the
+     * tool / client decides which item that is. The rule is that the *first*
+     * item of those that match best is selected.
+     */
+    preselect?: boolean;
+    /**
+     * A string that should be used when comparing this item
+     * with other items. When `falsy` the {@link CompletionItem.label label}
+     * is used.
+     */
+    sortText?: string;
+    /**
+     * A string that should be used when filtering a set of
+     * completion items. When `falsy` the {@link CompletionItem.label label}
+     * is used.
+     */
+    filterText?: string;
+    /**
+     * A string that should be inserted into a document when selecting
+     * this completion. When `falsy` the {@link CompletionItem.label label}
+     * is used.
+     *
+     * The `insertText` is subject to interpretation by the client side.
+     * Some tools might not take the string literally. For example
+     * VS Code when code complete is requested in this example
+     * `con<cursor position>` and a completion item with an `insertText` of
+     * `console` is provided it will only insert `sole`. Therefore it is
+     * recommended to use `textEdit` instead since it avoids additional client
+     * side interpretation.
+     */
+    insertText?: string;
+    /**
+     * The format of the insert text. The format applies to both the
+     * `insertText` property and the `newText` property of a provided
+     * `textEdit`. If omitted defaults to `InsertTextFormat.PlainText`.
+     *
+     * Please note that the insertTextFormat doesn't apply to
+     * `additionalTextEdits`.
+     */
+    insertTextFormat?: InsertTextFormat;
+    /**
+     * How whitespace and indentation is handled during completion
+     * item insertion. If not provided the clients default value depends on
+     * the `textDocument.completion.insertTextMode` client capability.
+     *
+     * @since 3.16.0
+     */
+    insertTextMode?: InsertTextMode;
+    /**
+     * An {@link TextEdit edit} which is applied to a document when selecting
+     * this completion. When an edit is provided the value of
+     * {@link CompletionItem.insertText insertText} is ignored.
+     *
+     * Most editors support two different operations when accepting a completion
+     * item. One is to insert a completion text and the other is to replace an
+     * existing text with a completion text. Since this can usually not be
+     * predetermined by a server it can report both ranges. Clients need to
+     * signal support for `InsertReplaceEdits` via the
+     * `textDocument.completion.insertReplaceSupport` client capability
+     * property.
+     *
+     * *Note 1:* The text edit's range as well as both ranges from an insert
+     * replace edit must be a [single line] and they must contain the position
+     * at which completion has been requested.
+     * *Note 2:* If an `InsertReplaceEdit` is returned the edit's insert range
+     * must be a prefix of the edit's replace range, that means it must be
+     * contained and starting at the same position.
+     *
+     * @since 3.16.0 additional type `InsertReplaceEdit`
+     */
+    textEdit?: TextEdit | InsertReplaceEdit;
+    /**
+     * The edit text used if the completion item is part of a CompletionList and
+     * CompletionList defines an item default for the text edit range.
+     *
+     * Clients will only honor this property if they opt into completion list
+     * item defaults using the capability `completionList.itemDefaults`.
+     *
+     * If not provided and a list's default range is provided the label
+     * property is used as a text.
+     *
+     * @since 3.17.0
+     */
+    textEditText?: string;
+    /**
+     * An optional array of additional {@link TextEdit text edits} that are applied when
+     * selecting this completion. Edits must not overlap (including the same insert position)
+     * with the main {@link CompletionItem.textEdit edit} nor with themselves.
+     *
+     * Additional text edits should be used to change text unrelated to the current cursor position
+     * (for example adding an import statement at the top of the file if the completion item will
+     * insert an unqualified type).
+     */
+    additionalTextEdits?: TextEdit[];
+    /**
+     * An optional set of characters that when pressed while this completion is active will accept it first and
+     * then type that character. *Note* that all commit characters should have `length=1` and that superfluous
+     * characters will be ignored.
+     */
+    commitCharacters?: string[];
+    /**
+     * An optional {@link Command command} that is executed *after* inserting this completion. *Note* that
+     * additional modifications to the current document should be described with the
+     * {@link CompletionItem.additionalTextEdits additionalTextEdits}-property.
+     */
+    command?: Command;
+    /**
+     * A data entry field that is preserved on a completion item between a
+     * {@link CompletionRequest} and a {@link CompletionResolveRequest}.
+     */
+    data?: LSPAny;
+}
+/**
+ * The CompletionItem namespace provides functions to deal with
+ * completion items.
+ */
+declare namespace CompletionItem {
+    /**
+     * Create a completion item and seed it with a label.
+     * @param label The completion item's label
+     */
+    function create(label: string): CompletionItem;
+}
+
+/**
  * Token References
  */
 declare const enum Tokens {
@@ -170,7 +842,8 @@ declare const enum TypeBasic {
     float = 4,
     boolean = 5,
     string = 6,
-    array = 7
+    array = 7,
+    null = 8
 }
 /**
  * Separator Types
@@ -753,906 +1426,298 @@ declare const enum Type {
     unknown = 22
 }
 
+declare function HTMLCompletions$1(): any;
 /**
- * Reset
- *
- * Resets all states. This is executed everytime we
- * encounter a new tag.
+ * Accepts custom data as per the vscode spec
+ * for HTML.
  */
-declare function reset(hard?: boolean): void;
-/**
- * Get Tag Name List
- *
- * Returns all Liquid tag names of the current defined
- * variation when no engine is provided.
- */
-declare function getTags(engine?: Engine): string[];
-/**
- * Get Filters Name List
- *
- * Returns all Liquid filter names of the current defined
- * variation when no engine is provided.
- */
-declare function getFilters(engine?: Engine): string[];
-/**
- * Get Objects Name List
- *
- * Returns all Liquid object names of the current defined
- * variation when no engine is provided.
- *
- * ---
- *
- * **Note**: The standard variation will return an empty array.
- */
-declare function getObjects(engine?: Engine.shopify | Engine.jekyll | Engine.eleventy): string[];
-/**
- * Get Argument
- *
- * Walks over _optional_ arguments contained on a tag
- * or filter until a `type` match is detected. If an
- * argument is `required` walk is cancelled.
- */
-declare function isArgument(type: any): boolean;
-/**
- * Is Parameter
- *
- * Queries the current argument for a `parameter` type. When
- * an argument does not have a `parameter` type, it attempts
- * to find a parameter argument via the `GetArgument` function.
- *
- * The function will return a boolean value to inform upon a
- * successful or unsuccessful match.
- *
- * ---
- *
- * **GET ARGUMENT**
- *
- * If an argument does equal type `parameter` it will attempt
- * to match the parameter passed value to a property listed
- * on the arguments `value` and if successful, the state reference
- * `argument` variable is updated and points to the parameter.
- *
- * ---
- *
- * **VALUE AS TYPE**
- *
- * If a parameters `value` points a _enum_  (number) the state
- * reference `argument` will remain pointing to the argument at index
- * and a boolean `true` will be returned.
- */
-declare function isParameter(token: string): boolean;
-/**
- * Is Value
- *
- * Validates an a argument value. This function will run
- * several typeof checks to figure out how a value should
- * be validated, starting with patterns and working its way
- * down to a specificaions `value` entries.
- *
- * ---
- *
- * **Note**: When an array parameter pattern is provided, like
- * that found on shopify `color_saturate` filter then the `value`
- * state reference will be reflect a string value of:
- *
- * `0 and 100`
- *
- * This `$.liquid.value` is used in validations etc.
- */
-declare function isValue(token: string): boolean;
-/**
- * Completions
- *
- * Constructs LSP completion-ready lists from the current
- * specification reference. Returns a closure getter combinator
- * with array lists for various tags, filters and objects.
- */
-declare function setCompletions(): Completions;
-/**
- * Set Engine
- *
- * Sets the Liquid `variation` and `engine` variable.
- * This will change what specification we reference.
- */
-declare function setEngine(name: Engine): void;
-/**
- * Set Tag
- *
- * Finds a tag matching specification and updates the cursor.
- * States are changed when a match is successful. Returns a
- * boolean which signals a matched or unmatched tag.
- */
-declare function setTag(name: string): boolean;
-/**
- * Set Filter
- *
- * Finds a filter matching specification and updates the cursor.
- * States are changed when a match is successful. Returns a
- * boolean which signals a matched or unmatched filter.
- */
-declare function setFilter(name: string): boolean;
-/**
- * Set Variable
- *
- * Add a variable assignment reference to the `data.variables`
- * store. Returns the index at which the reference exists in
- * the array list of variables. The variable store is an object
- * who's keys represent the variable keywords and the values are
- * an array. Each entry in the array will hold the the assigned value.
- */
-declare function setVariable(name: string): void;
-/**
- * Set Object
- *
- * Finds a matching object specification. Objects can be
- * contained in tags and filter, so the `cursor` is not
- * modified, instead the `object` state variable is updated.
- */
-declare function setObject(name: string): boolean;
-/**
- * Set Type
- *
- * Keeps a peristed store of a specific `type` which will
- * not change until re-setting via this function. It augments
- * the state `type` value. Typically used when walking object properties
- * to exclude non matching types.
- *
- * > This was added for usage in the vscode-liquid extension.
- */
-declare function setType(type: Type): boolean;
-/**
- * Has Object
- *
- * Queries the current variation to check whether or not the
- * provided name parameter exist in the object specifications.
- *
- * **DOES NOT MODIFY STATE**
- */
-declare function hasObject(name: string): boolean;
-/**
- * Has Property
- *
- * Queries the current object in state to check whether or not the
- * provided `prop` parameter exists on the object
- *
- * **DOES NOT MODIFY STATE**
- */
-declare function hasProperty(name: string): boolean;
-/**
- * Is Property
- *
- * Queries the current object for a property value
- * matching the parameter `value` provided. The object state
- * reference will update and point to the property
- * value when a match occurs.
- *
- * Accepts an optional `scopeArrays` which defaults to `true`
- * and will allow the spec to move state forward when object
- * type is array and its scope property matches. When `false`,
- * the object will persist.
- */
-declare function isProperty(token: string): boolean;
-/**
- * Is Allowed
- *
- * Checks the current cursor allows a value or some sort,
- * like filters or trim dashes. By default, when a value is
- * undefined on the specs, it is typically assumed to be `true`
- * unless we a dealing with a `required` value, which this
- * function does not validate for.
- */
-declare function isAllowed(prop: 'trims' | 'filters'): boolean;
-/**
- * Is Parent
- *
- * Check to see if the tag or object has the correct parent
- * tag, ie: a child of a certain tag or scope.
- */
-declare function isParent(name: string): boolean;
-/**
- * Is Variable
- *
- * Checks to see if the provide parameter is a scoped variable,
- * meaning that it holds a property assignment (ie: object).
- * When determined, the state `liquid.object` is aligned
- * and boolean type `true` is returned. If the variable scope does not
- * hold a property assignment then `false` is returned.
- *
- * When `false` is returned, the `liquid.variable` state will
- * represent the variable assignment type.
- */
-declare function isVariable(name: string): boolean;
-/**
- * Is Error
- *
- * Conditional checks the local error state reference
- * with the provided Query error enum.
- */
-declare function isError(err: Errors): boolean;
-/**
- * Is Object Variables
- *
- * Check a variables reference object properties
- * are valid by walknig over the object itself.
- */
-declare function isObjectVars(vars: string[]): boolean;
-/**
- * Is Object Type
- *
- * Validate the current object reference `type` value.
- * The object being validate will be type matched against
- * the most recent object applied at `SetObject()` or via
- * `isProperty()` function.
- */
-declare function isObjectType(type: Type): boolean;
-/**
- * Is Tag Type
- *
- * Validate a current tag `type` value. This is a sugar shortcut
- * function called when scanning a token by the parser.
- */
-declare function isTagType(type: Type): boolean;
-/**
- * Is Type
- *
- * Validate the current argument `type` value. It will match
- * an argument/parameter value type. This is a sugar shortcut
- * function called when scanning a token by the parser.
- */
-declare function isType(type: Type): boolean;
-/**
- * Is Within
- *
- * Used to validate the whereabouts of the current tag or filter
- * argument query engine position.
- */
-declare function isWithin(token: Within): boolean;
-/**
- * Is Required
- *
- * Checks the requirement for arguments, argument parameters or
- * parameter values. When a parameter has a `keyword` type, then
- * this returns `true`.
- */
-declare function isRequired(): boolean;
-/**
- * Is Optional
- *
- * Checks the requirement for every liquid.argument. If an arguments
- *  `required` value returns `true` then a boolean `false` will
- * be returned indicating that arguments are not optional and at
- * least 1 value is required. The function accepts a starting index,
- * default to the current argument index location.
- *
- * Some tag/filter arguments might all be optional, whereas some
- * might contain an optional starting arguments, but require arguments
- * proceeding that.
- */
-declare function isOptional(from?: number): boolean;
-/**
- * Previous Argument
- *
- * Moves the arugment back a position. If we are currently
- * walking the index `2` (argument 3) calling this will
- * move the arugment reference states to index `1`.
- */
-declare function prevArgument(): boolean;
-/**
- * Next Argument
- *
- * Moves to the _next_ argument (if available) and updates the
- * reference state variables. Returns a `boolean` which
- * indicates if we have reached the last argument or not.
- */
-declare function nextArgument(): boolean;
-/**
- * Next Parameter
- *
- * Despite its name, this function will reset the `argument`
- * state reference to its index starting point. When we
- * encounter a `parameter` type, the `argument` variable is
- * moved to its property value. This function reverts that.
- */
-declare function nextParameter(): boolean;
+declare function HTMLCustomData(data: HTMLDataVSCode): void;
+declare function HTMLTagComplete(): HTMLCompletionTags;
+declare function HTMLAttrsComplete(tag: string): HTMLProvideAttrs;
+declare function HTMLValueComplete(token?: string): false | {
+    data: {
+        token: Tokens;
+    };
+    label: string;
+    documentation?: {
+        kind: "markdown" | "plaintext";
+        value: string;
+    };
+}[];
+declare function HTMLTagResolve(item: CompletionItem): CompletionItem;
+declare function HTMLAttrsResolve(item: CompletionItem): CompletionItem;
+declare function HTMLValueResolve(item: CompletionItem): CompletionItem & {
+    kind: 12;
+};
+declare function HTMLTagAttrs(attrs: HTMLTagAttributes[]): HTMLCompletionAttrs;
 
-/**
- * Defines an unsigned integer in the range of 0 to 2^31 - 1.
- */
-declare type uinteger = number;
-declare namespace uinteger {
-    const MIN_VALUE = 0;
-    const MAX_VALUE = 2147483647;
-    function is(value: any): value is uinteger;
-}
-/**
- * The LSP any type.
- *
- * In the current implementation we map LSPAny to any. This is due to the fact
- * that the TypeScript compilers can't infer string access signatures for
- * interface correctly (it can though for types). See the following issue for
- * details: https://github.com/microsoft/TypeScript/issues/15300.
- *
- * When the issue is addressed LSPAny can be defined as follows:
- *
- * ```ts
- * export type LSPAny = LSPObject | LSPArray | string | integer | uinteger | decimal | boolean | null | undefined;
- * export type LSPObject = { [key: string]: LSPAny };
- * export type LSPArray = LSPAny[];
- * ```
- *
- * Please note that strictly speaking a property with the value `undefined`
- * can't be converted into JSON preserving the property name. However for
- * convenience it is allowed and assumed that all these properties are
- * optional as well.
- *
- * @since 3.17.0
- */
-declare type LSPAny = any;
-/**
- * Position in a text document expressed as zero-based line and character
- * offset. Prior to 3.17 the offsets were always based on a UTF-16 string
- * representation. So a string of the form `a𐐀b` the character offset of the
- * character `a` is 0, the character offset of `𐐀` is 1 and the character
- * offset of b is 3 since `𐐀` is represented using two code units in UTF-16.
- * Since 3.17 clients and servers can agree on a different string encoding
- * representation (e.g. UTF-8). The client announces it's supported encoding
- * via the client capability [`general.positionEncodings`](#clientCapabilities).
- * The value is an array of position encodings the client supports, with
- * decreasing preference (e.g. the encoding at index `0` is the most preferred
- * one). To stay backwards compatible the only mandatory encoding is UTF-16
- * represented via the string `utf-16`. The server can pick one of the
- * encodings offered by the client and signals that encoding back to the
- * client via the initialize result's property
- * [`capabilities.positionEncoding`](#serverCapabilities). If the string value
- * `utf-16` is missing from the client's capability `general.positionEncodings`
- * servers can safely assume that the client supports UTF-16. If the server
- * omits the position encoding in its initialize result the encoding defaults
- * to the string value `utf-16`. Implementation considerations: since the
- * conversion from one encoding into another requires the content of the
- * file / line the conversion is best done where the file is read which is
- * usually on the server side.
- *
- * Positions are line end character agnostic. So you can not specify a position
- * that denotes `\r|\n` or `\n|` where `|` represents the character offset.
- *
- * @since 3.17.0 - support for negotiated position encoding.
- */
-interface Position {
+interface HTML5 {
     /**
-     * Line position in a document (zero-based).
-     *
-     * If a line number is greater than the number of lines in a document, it defaults back to the number of lines in the document.
-     * If a line number is negative, it defaults to 0.
+     * The current tag specification
      */
-    line: uinteger;
+    tag: HTMLTag;
     /**
-     * Character offset on a line in a document (zero-based).
-     *
-     * The meaning of this offset is determined by the negotiated
-     * `PositionEncodingKind`.
-     *
-     * If the character value is greater than the line length it defaults back to the
-     * line length.
-     */
-    character: uinteger;
-}
-/**
- * The Position namespace provides helper functions to work with
- * {@link Position} literals.
- */
-declare namespace Position {
-    /**
-     * Creates a new Position literal from the given line and character.
-     * @param line The position's line.
-     * @param character The position's character.
-     */
-    function create(line: uinteger, character: uinteger): Position;
-    /**
-     * Checks whether the given literal conforms to the {@link Position} interface.
-     */
-    function is(value: any): value is Position;
-}
-/**
- * A range in a text document expressed as (zero-based) start and end positions.
- *
- * If you want to specify a range that contains a line including the line ending
- * character(s) then use an end position denoting the start of the next line.
- * For example:
- * ```ts
- * {
- *     start: { line: 5, character: 23 }
- *     end : { line 6, character : 0 }
- * }
- * ```
- */
-interface Range {
-    /**
-     * The range's start position.
-     */
-    start: Position;
-    /**
-     * The range's end position.
-     */
-    end: Position;
-}
-/**
- * The Range namespace provides helper functions to work with
- * {@link Range} literals.
- */
-declare namespace Range {
-    /**
-     * Create a new Range literal.
-     * @param start The range's start position.
-     * @param end The range's end position.
-     */
-    function create(start: Position, end: Position): Range;
-    /**
-     * Create a new Range literal.
-     * @param startLine The start line number.
-     * @param startCharacter The start character.
-     * @param endLine The end line number.
-     * @param endCharacter The end character.
-     */
-    function create(startLine: uinteger, startCharacter: uinteger, endLine: uinteger, endCharacter: uinteger): Range;
-    /**
-     * Checks whether the given literal conforms to the {@link Range} interface.
-     */
-    function is(value: any): value is Range;
-}
-/**
- * Represents a reference to a command. Provides a title which
- * will be used to represent a command in the UI and, optionally,
- * an array of arguments which will be passed to the command handler
- * function when invoked.
- */
-interface Command {
-    /**
-     * Title of the command, like `save`.
-     */
-    title: string;
-    /**
-     * The identifier of the actual command handler.
-     */
-    command: string;
-    /**
-     * Arguments that the command handler should be
-     * invoked with.
-     */
-    arguments?: LSPAny[];
-}
-/**
- * The Command namespace provides helper functions to work with
- * {@link Command} literals.
- */
-declare namespace Command {
-    /**
-     * Creates a new Command literal.
-     */
-    function create(title: string, command: string, ...args: any[]): Command;
-    /**
-     * Checks whether the given literal conforms to the {@link Command} interface.
-     */
-    function is(value: any): value is Command;
-}
-/**
- * A text edit applicable to a text document.
- */
-interface TextEdit {
-    /**
-     * The range of the text document to be manipulated. To insert
-     * text into a document create a range where start === end.
-     */
-    range: Range;
-    /**
-     * The string to be inserted. For delete operations use an
-     * empty string.
-     */
-    newText: string;
-}
-/**
- * The TextEdit namespace provides helper function to create replace,
- * insert and delete edits more easily.
- */
-declare namespace TextEdit {
-    /**
-     * Creates a replace text edit.
-     * @param range The range of text to be replaced.
-     * @param newText The new text.
-     */
-    function replace(range: Range, newText: string): TextEdit;
-    /**
-     * Creates an insert text edit.
-     * @param position The position to insert the text at.
-     * @param newText The text to be inserted.
-     */
-    function insert(position: Position, newText: string): TextEdit;
-    /**
-     * Creates a delete text edit.
-     * @param range The range of text to be deleted.
-     */
-    function del(range: Range): TextEdit;
-    function is(value: any): value is TextEdit;
-}
-/**
- * Describes the content type that a client supports in various
- * result literals like `Hover`, `ParameterInfo` or `CompletionItem`.
- *
- * Please note that `MarkupKinds` must not start with a `$`. This kinds
- * are reserved for internal usage.
- */
-declare namespace MarkupKind {
-    /**
-     * Plain text is supported as a content format
-     */
-    const PlainText: 'plaintext';
-    /**
-     * Markdown is supported as a content format
-     */
-    const Markdown: 'markdown';
-    /**
-     * Checks whether the given value is a value of the {@link MarkupKind} type.
-     */
-    function is(value: any): value is MarkupKind;
-}
-declare type MarkupKind = 'plaintext' | 'markdown';
-/**
- * A `MarkupContent` literal represents a string value which content is interpreted base on its
- * kind flag. Currently the protocol supports `plaintext` and `markdown` as markup kinds.
- *
- * If the kind is `markdown` then the value can contain fenced code blocks like in GitHub issues.
- * See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting
- *
- * Here is an example how such a string can be constructed using JavaScript / TypeScript:
- * ```ts
- * let markdown: MarkdownContent = {
- *  kind: MarkupKind.Markdown,
- *  value: [
- *    '# Header',
- *    'Some text',
- *    '```typescript',
- *    'someCode();',
- *    '```'
- *  ].join('\n')
- * };
- * ```
- *
- * *Please Note* that clients might sanitize the return markdown. A client could decide to
- * remove HTML from the markdown to avoid script execution.
- */
-interface MarkupContent {
-    /**
-     * The type of the Markup
-     */
-    kind: MarkupKind;
-    /**
-     * The content itself
+     * The current attribute value specification
      */
     value: string;
+    /**
+     * The current tag attribute specification
+     */
+    attribute: HTMLTagAttributes[];
+    /**
+     * Merged custom data references
+     */
+    data: {
+        /**
+         * Completion Items (LSP Related)
+         */
+        completions: HTMLCompletions;
+        /**
+         * The HTML variation. Similar to the Liquid specs
+         * this record represents a specification reference.
+         * This variation specifically will contain any vscode
+         * custom data records.
+         */
+        variation: {
+            /**
+             * HTML Tags
+             */
+            readonly tags?: HTMLTags;
+            /**
+             * HTML Attributes
+             */
+            readonly attributes?: HTMLAttributes;
+            /**
+             * HTML Attribute Values
+             */
+            readonly values?: HTMLValues;
+            /**
+             * A string list of HTML Void tags
+             */
+            readonly voids?: string[];
+        };
+    };
 }
-declare namespace MarkupContent {
+
+interface HTMLReference {
     /**
-     * Checks whether the given value conforms to the {@link MarkupContent} interface.
+     * Reference name of the documentation
      */
-    function is(value: any): value is MarkupContent;
+    name: string;
+    /**
+     * the reference url linking to the documentation
+     */
+    url: string;
 }
-/**
- * The kind of a completion entry.
- */
-declare namespace CompletionItemKind {
-    const Text: 1;
-    const Method: 2;
-    const Function: 3;
-    const Constructor: 4;
-    const Field: 5;
-    const Variable: 6;
-    const Class: 7;
-    const Interface: 8;
-    const Module: 9;
-    const Property: 10;
-    const Unit: 11;
-    const Value: 12;
-    const Enum: 13;
-    const Keyword: 14;
-    const Snippet: 15;
-    const Color: 16;
-    const File: 17;
-    const Reference: 18;
-    const Folder: 19;
-    const EnumMember: 20;
-    const Constant: 21;
-    const Struct: 22;
-    const Event: 23;
-    const Operator: 24;
-    const TypeParameter: 25;
-}
-declare type CompletionItemKind = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25;
-/**
- * Defines whether the insert text in a completion item should be interpreted as
- * plain text or a snippet.
- */
-declare namespace InsertTextFormat {
+interface HTMLTagAttributes {
     /**
-     * The primary text to be inserted is treated as a plain string.
+     * The name of attribute the tag accepts
      */
-    const PlainText: 1;
+    name: string;
     /**
-     * The primary text to be inserted is treated as a snippet.
-     *
-     * A snippet can define tab stops and placeholders with `$1`, `$2`
-     * and `${3:foo}`. `$0` defines the final tab stop, it defaults to
-     * the end of the snippet. Placeholders with equal identifiers are linked,
-     * that is typing in one will update others too.
-     *
-     * See also: https://microsoft.github.io/language-server-protocol/specifications/specification-current/#snippet_syntax
-     */
-    const Snippet: 2;
-}
-declare type InsertTextFormat = 1 | 2;
-/**
- * Completion item tags are extra annotations that tweak the rendering of a completion
- * item.
- *
- * @since 3.15.0
- */
-declare namespace CompletionItemTag {
-    /**
-     * Render a completion as obsolete, usually using a strike-out.
-     */
-    const Deprecated = 1;
-}
-declare type CompletionItemTag = 1;
-/**
- * A special text edit to provide an insert and a replace operation.
- *
- * @since 3.16.0
- */
-interface InsertReplaceEdit {
-    /**
-     * The string to be inserted.
-     */
-    newText: string;
-    /**
-     * The range if the insert is requested
-     */
-    insert: Range;
-    /**
-     * The range if the replace is requested.
-     */
-    replace: Range;
-}
-/**
- * The InsertReplaceEdit namespace provides functions to deal with insert / replace edits.
- *
- * @since 3.16.0
- */
-declare namespace InsertReplaceEdit {
-    /**
-     * Creates a new insert / replace edit
-     */
-    function create(newText: string, insert: Range, replace: Range): InsertReplaceEdit;
-    /**
-     * Checks whether the given literal conforms to the {@link InsertReplaceEdit} interface.
-     */
-    function is(value: TextEdit | InsertReplaceEdit): value is InsertReplaceEdit;
-}
-/**
- * How whitespace and indentation is handled during completion
- * item insertion.
- *
- * @since 3.16.0
- */
-declare namespace InsertTextMode {
-    /**
-     * The insertion or replace strings is taken as it is. If the
-     * value is multi line the lines below the cursor will be
-     * inserted using the indentation defined in the string value.
-     * The client will not apply any kind of adjustments to the
-     * string.
-     */
-    const asIs: 1;
-    /**
-     * The editor adjusts leading whitespace of new lines so that
-     * they match the indentation up to the cursor of the line for
-     * which the item is accepted.
-     *
-     * Consider a line like this: <2tabs><cursor><3tabs>foo. Accepting a
-     * multi line completion item is indented using 2 tabs and all
-     * following lines inserted will be indented using 2 tabs as well.
-     */
-    const adjustIndentation: 2;
-}
-declare type InsertTextMode = 1 | 2;
-/**
- * Additional details for a completion item label.
- *
- * @since 3.17.0
- */
-interface CompletionItemLabelDetails {
-    /**
-     * An optional string which is rendered less prominently directly after {@link CompletionItem.label label},
-     * without any spacing. Should be used for function signatures and type annotations.
-     */
-    detail?: string;
-    /**
-     * An optional string which is rendered less prominently after {@link CompletionItem.detail}. Should be used
-     * for fully qualified names and file paths.
+     * Description of the attribute value
      */
     description?: string;
-}
-declare namespace CompletionItemLabelDetails {
-    function is(value: any): value is CompletionItemLabelDetails;
-}
-/**
- * A completion item represents a text snippet that is
- * proposed to complete text that is being typed.
- */
-interface CompletionItem {
     /**
-     * The label of this completion item.
+     * A reference to the value set the attribute
+     * accepts as a value.
+     */
+    value?: string;
+}
+interface HTMLTag {
+    /**
+     * The description of the HTML tag
+     */
+    description?: string;
+    /**
+     * A list of valid attributes the tag accepts. If
+     * the attributes value is an empty array, it infers the
+     * tag accepts attributes contained in the Attributes export.
+     */
+    attributes: [] | HTMLTagAttributes[];
+    /**
+     * Whether the tag is a void or pair type
+     */
+    void: boolean;
+    /**
+     * URL and name reference to online documentation explaining the tag
      *
-     * The label property is also by default the text that
-     * is inserted when selecting this completion.
+     * @default undefined
+     */
+    reference?: HTMLReference;
+}
+declare interface HTMLTags {
+    [tag: string]: HTMLTag;
+}
+interface HTMLAttribute {
+    /**
+     * The description of the attribute
+     */
+    description?: string;
+    /**
+     * Mapping to a value-set lists.
+     */
+    value?: string;
+    /**
+     * URL and name reference to online documentation explaining this attribute
      *
-     * If label details are provided the label itself should
-     * be an unqualified name of the completion item.
+     * @default undefined
+     */
+    reference?: HTMLReference;
+}
+interface HTMLAttributes {
+    [attribute: string]: HTMLAttribute;
+}
+interface HTMLValue {
+    /**
+     * The predefined value name for the value
      */
     label: string;
     /**
-     * Additional details for the label
-     *
-     * @since 3.17.0
+     * An optional description for this value
      */
-    labelDetails?: CompletionItemLabelDetails;
-    /**
-     * The kind of this completion item. Based of the kind
-     * an icon is chosen by the editor.
-     */
-    kind?: CompletionItemKind;
-    /**
-     * Tags for this completion item.
-     *
-     * @since 3.15.0
-     */
-    tags?: CompletionItemTag[];
-    /**
-     * A human-readable string with additional information
-     * about this item, like type or symbol information.
-     */
-    detail?: string;
-    /**
-     * A human-readable string that represents a doc-comment.
-     */
-    documentation?: string | MarkupContent;
-    /**
-     * Indicates if this item is deprecated.
-     * @deprecated Use `tags` instead.
-     */
-    deprecated?: boolean;
-    /**
-     * Select this item when showing.
-     *
-     * *Note* that only one completion item can be selected and that the
-     * tool / client decides which item that is. The rule is that the *first*
-     * item of those that match best is selected.
-     */
-    preselect?: boolean;
-    /**
-     * A string that should be used when comparing this item
-     * with other items. When `falsy` the {@link CompletionItem.label label}
-     * is used.
-     */
-    sortText?: string;
-    /**
-     * A string that should be used when filtering a set of
-     * completion items. When `falsy` the {@link CompletionItem.label label}
-     * is used.
-     */
-    filterText?: string;
-    /**
-     * A string that should be inserted into a document when selecting
-     * this completion. When `falsy` the {@link CompletionItem.label label}
-     * is used.
-     *
-     * The `insertText` is subject to interpretation by the client side.
-     * Some tools might not take the string literally. For example
-     * VS Code when code complete is requested in this example
-     * `con<cursor position>` and a completion item with an `insertText` of
-     * `console` is provided it will only insert `sole`. Therefore it is
-     * recommended to use `textEdit` instead since it avoids additional client
-     * side interpretation.
-     */
-    insertText?: string;
-    /**
-     * The format of the insert text. The format applies to both the
-     * `insertText` property and the `newText` property of a provided
-     * `textEdit`. If omitted defaults to `InsertTextFormat.PlainText`.
-     *
-     * Please note that the insertTextFormat doesn't apply to
-     * `additionalTextEdits`.
-     */
-    insertTextFormat?: InsertTextFormat;
-    /**
-     * How whitespace and indentation is handled during completion
-     * item insertion. If not provided the clients default value depends on
-     * the `textDocument.completion.insertTextMode` client capability.
-     *
-     * @since 3.16.0
-     */
-    insertTextMode?: InsertTextMode;
-    /**
-     * An {@link TextEdit edit} which is applied to a document when selecting
-     * this completion. When an edit is provided the value of
-     * {@link CompletionItem.insertText insertText} is ignored.
-     *
-     * Most editors support two different operations when accepting a completion
-     * item. One is to insert a completion text and the other is to replace an
-     * existing text with a completion text. Since this can usually not be
-     * predetermined by a server it can report both ranges. Clients need to
-     * signal support for `InsertReplaceEdits` via the
-     * `textDocument.completion.insertReplaceSupport` client capability
-     * property.
-     *
-     * *Note 1:* The text edit's range as well as both ranges from an insert
-     * replace edit must be a [single line] and they must contain the position
-     * at which completion has been requested.
-     * *Note 2:* If an `InsertReplaceEdit` is returned the edit's insert range
-     * must be a prefix of the edit's replace range, that means it must be
-     * contained and starting at the same position.
-     *
-     * @since 3.16.0 additional type `InsertReplaceEdit`
-     */
-    textEdit?: TextEdit | InsertReplaceEdit;
-    /**
-     * The edit text used if the completion item is part of a CompletionList and
-     * CompletionList defines an item default for the text edit range.
-     *
-     * Clients will only honor this property if they opt into completion list
-     * item defaults using the capability `completionList.itemDefaults`.
-     *
-     * If not provided and a list's default range is provided the label
-     * property is used as a text.
-     *
-     * @since 3.17.0
-     */
-    textEditText?: string;
-    /**
-     * An optional array of additional {@link TextEdit text edits} that are applied when
-     * selecting this completion. Edits must not overlap (including the same insert position)
-     * with the main {@link CompletionItem.textEdit edit} nor with themselves.
-     *
-     * Additional text edits should be used to change text unrelated to the current cursor position
-     * (for example adding an import statement at the top of the file if the completion item will
-     * insert an unqualified type).
-     */
-    additionalTextEdits?: TextEdit[];
-    /**
-     * An optional set of characters that when pressed while this completion is active will accept it first and
-     * then type that character. *Note* that all commit characters should have `length=1` and that superfluous
-     * characters will be ignored.
-     */
-    commitCharacters?: string[];
-    /**
-     * An optional {@link Command command} that is executed *after* inserting this completion. *Note* that
-     * additional modifications to the current document should be described with the
-     * {@link CompletionItem.additionalTextEdits additionalTextEdits}-property.
-     */
-    command?: Command;
-    /**
-     * A data entry field that is preserved on a completion item between a
-     * {@link CompletionRequest} and a {@link CompletionResolveRequest}.
-     */
-    data?: LSPAny;
+    documentation?: {
+        kind: 'markdown' | 'plaintext';
+        value: string;
+    };
+}
+interface HTMLValues {
+    [value: string]: HTMLValue[];
 }
 /**
- * The CompletionItem namespace provides functions to deal with
- * completion items.
+ * HTML completion data. This is generated for HTML
+ * tags which do not provide a predefined set of attributes.
+ *
+ * For example, the `<input>` tag accepts a attributes which
+ * are unique to that tag and thus accepts additional attributes,
+ * such a tag would not use this interface, whereas a `<div>`
+ * tag would use this interface.
  */
-declare namespace CompletionItem {
+interface HTMLCompletionData {
     /**
-     * Create a completion item and seed it with a label.
-     * @param label The completion item's label
+     * Returns the value set reference or when no value boolean `false`
      */
-    function create(label: string): CompletionItem;
+    value: string | boolean;
+}
+/**
+ * HTML Completions data generated attributes. This array type is
+ * applied to HTML tags which accept additional attribute values,
+ * like the `<input>` tag which accepts attributes like `value=""`
+ *
+ * In the generated specs, such tags contain an array list of the
+ * additional attributes, those attributes are generated and passed
+ * to the `data` object of a completion item.
+ */
+type HTMLCompletionAttrs = Array<{
+    /**
+     * The completion attribute name
+     */
+    label: string;
+    /**
+     * The completion description
+     */
+    documentation: MarkupContent;
+    /**
+     * HTML completion data
+     */
+    data: HTMLCompletionData;
+}>;
+/**
+ * HTML completion tag data. This interface represents properties
+ * that will be passed to the `data{}` object of a completion item.
+ *
+ * The data is used when a completion item resolves.
+ */
+declare interface HTMLCompletionTagData {
+    /**
+     * Whether the tag is a void type tag or not
+     */
+    void: boolean;
+    /**
+     * Generated completion list of tag attributes.
+     * This is applied to the `data` object of a completion
+     */
+    attributes?: [] | HTMLCompletionAttrs;
+}
+/**
+ * HTML completion tags, used when completions are
+ * generated from the specs at runtime.
+ */
+type HTMLCompletionTags = Array<{
+    /**
+     * The completion attribute name
+     */
+    label: string;
+    /**
+     * The completion description
+     */
+    documentation: MarkupContent;
+    /**
+     * The completion data reference
+     */
+    data: HTMLCompletionTagData;
+}>;
+/**
+ * HTML Completion provider combinator, asserting
+ * that a completion item `data{}` will accept additional
+ * attributes (as per the defined spec) or no attributes.
+ */
+type HTMLProvideAttrs = HTMLCompletionAttrs | HTMLTagAttributes[];
+/**
+ * The generated completions interface
+ */
+declare interface HTMLCompletions {
+    /**
+     * List of available HTML tag completion
+     */
+    tags: HTMLCompletionTags;
+    /**
+     * List of global HTML tag attributes
+     */
+    attributes: HTMLCompletionAttrs;
+}
+/**
+ * Lifted from vscode-html-languageservice
+ */
+declare interface ValueData {
+    name: string;
+    description?: string | MarkupContent;
+    references?: HTMLReference[];
+}
+/**
+ * Lifted from vscode-html-languageservice
+ */
+declare interface AttributeData {
+    name: string;
+    description?: string | MarkupContent;
+    valueSet?: string;
+    values?: ValueData[];
+    references?: HTMLReference[];
+}
+/**
+ * Lifted from vscode-html-languageservice
+ */
+declare interface TagData {
+    name: string;
+    description?: string | MarkupContent;
+    attributes: AttributeData[];
+    references?: HTMLReference[];
+}
+/**
+ * Lifted from vscode-html-languageservice
+ */
+declare interface ValueSet {
+    name: string;
+    values: ValueData[];
+}
+/**
+ * Lifted from vscode-html-languageservice
+ */
+declare interface HTMLDataVSCode {
+    version: 1 | 1.1;
+    tags?: TagData[];
+    globalAttributes?: AttributeData[];
+    valueSets?: ValueSet[];
 }
 
 declare type Engines = ('standard' | 'shopify' | 'jekyll' | 'eleventy');
@@ -1690,10 +1755,12 @@ declare interface References {
     url: string;
 }
 
+type LiteralUnion<LiteralType, BaseType = string> = LiteralType | (BaseType & Record<never, never>);
+
 declare namespace Types {
-    type Basic = ('any' | 'object' | 'number' | 'boolean' | 'string' | 'array' | 'constant');
-    type Argument = ('parameter' | 'keyword' | 'attribute');
-    type Tag = ('control' | 'comment' | 'embedded' | 'generator' | 'import' | 'iteration' | 'link' | 'output' | 'variable' | 'raw' | 'unknown');
+    type Basic = LiteralUnion<('any' | 'object' | 'number' | 'boolean' | 'string' | 'array' | 'constant')>;
+    type Argument = LiteralUnion<('parameter' | 'keyword' | 'attribute')>;
+    type Tag = LiteralUnion<('control' | 'comment' | 'embedded' | 'generator' | 'import' | 'iteration' | 'link' | 'output' | 'variable' | 'raw' | 'unknown')>;
     type Separators = (',' | '\n' | '=');
 }
 
@@ -1972,18 +2039,16 @@ declare interface Argument extends Descriptions {
     /**
      * Value
      *
-     * The argument value can be pre-defined or user defined.
-     * When a `value` is supplied, it will be provided to completions.
-     * Values can be expressed in different forms and structures. The query
-     * engine will match certain argument sequences.
+     * The argument value can be pre-defined or user defined. When a `value` is supplied, it will be provided to
+     * completions. Values can be expressed in different forms and structures. The query engine will match certain
+     * argument sequences.
      *
      * **PAIR SEQUENCES**
      *
-     * Pair arguments can be inferred and occur when 2 (or more) entries exist on
-     * the `arguments` array list property available on filters or tags. When an
-     * argument item `value` uses an object `{}` type and the previous argument item
-     * in the list uses an array `value` type then the properties of the object
-     * type can reference the values, for example:
+     * Pair arguments can be inferred and occur when 2 (or more) entries exist on the `arguments` array list property
+     * available on filters or tags. When an argument item `value` uses an object `{}` type and the previous argument item
+     * in the list uses an array `value` type then the properties of the object type can reference the values, for
+     * example:
      *
      * ```js
      * [
@@ -2023,11 +2088,10 @@ declare interface Argument extends Descriptions {
      *
      * ```
      *
-     * In the above example we are inferring a `pair` argument sequence. The
-     * `value` defined at index `0` is being reference in the `value` defined at
-     * index `1`. We asserted a _loose_ match, so if `foo` or `bar` are provided
-     * as an argument in the tag, then the values supplied in index `1` must follow,
-     * but if `baz` was provided, it does not require pairing.
+     * In the above example we are inferring a `pair` argument sequence. The`value` defined at index `0` is being
+     * reference in the `value` defined at index `1`. We asserted a _loose_ match, so if `foo` or `bar` are provided
+     * as an argument in the tag, then the values supplied in index `1` must follow, but if `baz` was provided, it does
+     * not require pairing.
      *
      * Using the above example:
      *
@@ -2085,18 +2149,18 @@ declare interface IProperty extends Descriptions {
     /**
      * Items
      *
-     * When type is `array` and the object property does have a `scope`
+     * When type is `array` and the object property does not have a `scope`
      * but each entry in the array has known type, it can be defined here.
      *
      * @default undefined
      */
-    items?: string | Types.Basic;
+    items?: LiteralUnion<TypeBasic, Types.Basic>;
     /**
      * Type
      *
      * The Typeof object value
      */
-    type: Type | Types.Basic;
+    type: LiteralUnion<Types.Basic, TypeBasic>;
     /**
      * Literals
      *
@@ -2104,9 +2168,25 @@ declare interface IProperty extends Descriptions {
      * Say for example, the values that will be returns will either
      * be `foo` or `bar` then you'd provide them here.
      *
+     * This can also be used when objects return multiple types, in
+     * such a case, the `type` will be set to `literal` and types will
+     * be referred to on this value.
+     *
      * @default undefined
      */
     literal?: string[] | undefined;
+    /**
+     * Value
+     *
+     * Optionally provide the object value. This is typically not required,
+     * but is made available for static based completions when it may be desirable
+     * to pass the static result. When generating specifications for sources like
+     * that in 11ty when dealing with frontmatter or a data cascade, this entry
+     * will be populated.
+     *
+     * @default undefined
+     */
+    value?: any;
     /**
      * Reference
      *
@@ -2130,7 +2210,7 @@ declare interface IObject extends Descriptions {
      *
      * @default 'object'
      */
-    type?: Type | Types.Basic;
+    type?: LiteralUnion<TypeBasic, Types.Basic>;
     /**
      * Reference
      *
@@ -2187,6 +2267,10 @@ declare interface IObject extends Descriptions {
      * A known value list which will be returned by this property.
      * Say for example, the values that will be returns will either
      * be `foo` or `bar` then you'd provide them here.
+     *
+     * This can also be used when objects return multiple types, in
+     * such a case, the `type` will be set to `literal` and types will
+     * be referred to on this value.
      *
      * @default undefined
      */
@@ -2296,278 +2380,6 @@ interface Completions {
      * A list of object completions items
      */
     objects?: Completion[];
-}
-
-/**
- * Get Completion Detail
- *
- * Returns the `CompletionItemKind` enum reference that
- * should be applied to the generated completion item.
- */
-declare function ObjectDetail(type: Type | Types.Basic): "string" | "object" | "number" | "boolean" | "array" | "any" | "constant" | "control" | "embedded" | "import" | "iteration" | "variable" | "unknown" | "nil";
-/**
- * Get Completion Detail
- *
- * Returns the `CompletionItemKind` enum reference that
- * should be applied to the generated completion item.
- */
-declare function ObjectKind(type: Type | Types.Basic): "string" | "object" | "number" | "boolean" | "array" | "any" | "constant" | "control" | "embedded" | "import" | "iteration" | "variable" | "unknown" | "nil";
-/**
- * Get Completion Detail
- *
- * Returns the `CompletionItemKind` enum reference that
- * should be applied to the generated completion item.
- */
-declare function ObjectType(type: string): Type.nil | Type.any | Type.object | Type.number | Type.boolean | Type.string | Type.array | Type.constant | Type.control | Type.comment | Type.embedded | Type.import | Type.iteration | Type.variable | Type.unknown;
-/**
- * Object Type Groups
- *
- * Groups object completions according to their type. Returns
- * a partial completion item for implementation into clients.
- */
-declare function ObjectGroups(template: string, callback: (object: IObject, item: any) => any): ObjectGroupItems;
-/**
- * Set Completion Items
- *
- * Sets the completion items that are passed to the completion resolver.
- * Extracts necessary values from the passed in specification record.
- */
-declare function ProvideProps([label, { description, type, snippet }]: [any, {
-    description: any;
-    type: any;
-    snippet?: any;
-}]): CompletionItem;
-declare function LiquidFilterResolve(item: CompletionItem): CompletionItem;
-declare function LiquidOutputResolve(item: CompletionItem, edits?: TextEdit[]): CompletionItem;
-declare function LiquidTagResolve(item: CompletionItem, edits?: TextEdit[]): CompletionItem;
-/**
- * Liquid Property Completions
- *
- * Walks over defined objects and provides the property completions.
- * It works in such a way that Liquid objects can be queried and passed
- * to completions at any point,
- */
-declare function LiquidPropertyComplete(node: any, offset: number): Promise<any>;
-
-interface HTMLReference {
-    /**
-     * Reference name of the documentation
-     */
-    name: string;
-    /**
-     * the reference url linking to the documentation
-     */
-    url: string;
-}
-interface HTMLTagAttributes {
-    /**
-     * The name of attribute the tag accepts
-     */
-    name: string;
-    /**
-     * Description of the attribute value
-     */
-    description?: string;
-    /**
-     * A reference to the value set the attribute
-     * accepts as a value.
-     */
-    value?: string;
-}
-interface HTMLTag {
-    /**
-     * The description of the HTML tag
-     */
-    description?: string;
-    /**
-     * A list of valid attributes the tag accepts. If
-     * the attributes value is an empty array, it infers the
-     * tag accepts attributes contained in the Attributes export.
-     */
-    attributes: [] | HTMLTagAttributes[];
-    /**
-     * Whether the tag is a void or pair type
-     */
-    void: boolean;
-    /**
-     * URL and name reference to online documentation explaining the tag
-     *
-     * @default undefined
-     */
-    reference?: HTMLReference;
-}
-declare interface HTMLTags {
-    [tag: string]: HTMLTag;
-}
-interface HTMLAttribute {
-    /**
-     * The description of the attribute
-     */
-    description?: string;
-    /**
-     * Mapping to a value-set lists.
-     */
-    value?: string;
-    /**
-     * URL and name reference to online documentation explaining this attribute
-     *
-     * @default undefined
-     */
-    reference?: HTMLReference;
-}
-interface HTMLAttributes {
-    [attribute: string]: HTMLAttribute;
-}
-interface HTMLValue {
-    /**
-     * The predefined value name for the value
-     */
-    label: string;
-    /**
-     * An optional description for this value
-     */
-    documentation?: {
-        kind: 'markdown' | 'plaintext';
-        value: string;
-    };
-}
-interface HTMLValues {
-    [value: string]: HTMLValue[];
-}
-/**
- * HTML completion data. This is generated for HTML
- * tags which do not provide a predefined set of attributes.
- *
- * For example, the `<input>` tag accepts a attributes which
- * are unique to that tag and thus accepts additional attributes,
- * such a tag would not use this interface, whereas a `<div>`
- * tag would use this interface.
- */
-interface HTMLCompletionData {
-    /**
-     * Returns the value set reference or when no value boolean `false`
-     */
-    value: string | boolean;
-}
-/**
- * HTML Completions data generated attributes. This array type is
- * applied to HTML tags which accept additional attribute values,
- * like the `<input>` tag which accepts attributes like `value=""`
- *
- * In the generated specs, such tags contain an array list of the
- * additional attributes, those attributes are generated and passed
- * to the `data` object of a completion item.
- */
-type HTMLCompletionAttrs = Array<{
-    /**
-     * The completion attribute name
-     */
-    label: string;
-    /**
-     * The completion description
-     */
-    documentation: MarkupContent;
-    /**
-     * HTML completion data
-     */
-    data: HTMLCompletionData;
-}>;
-/**
- * HTML completion tag data. This interface represents properties
- * that will be passed to the `data{}` object of a completion item.
- *
- * The data is used when a completion item resolves.
- */
-declare interface HTMLCompletionTagData {
-    /**
-     * Whether the tag is a void type tag or not
-     */
-    void: boolean;
-    /**
-     * Generated completion list of tag attributes.
-     * This is applied to the `data` object of a completion
-     */
-    attributes?: [] | HTMLCompletionAttrs;
-}
-/**
- * HTML completion tags, used when completions are
- * generated from the specs at runtime.
- */
-type HTMLCompletionTags = Array<{
-    /**
-     * The completion attribute name
-     */
-    label: string;
-    /**
-     * The completion description
-     */
-    documentation: MarkupContent;
-    /**
-     * The completion data reference
-     */
-    data: HTMLCompletionTagData;
-}>;
-/**
- * HTML Completion provider combinator, asserting
- * that a completion item `data{}` will accept additional
- * attributes (as per the defined spec) or no attributes.
- */
-type HTMLProvideAttrs = HTMLCompletionAttrs | HTMLTagAttributes[];
-/**
- * The generated completions interface
- */
-declare interface HTMLCompletions$1 {
-    /**
-     * List of available HTML tag completion
-     */
-    tags: HTMLCompletionTags;
-    /**
-     * List of global HTML tag attributes
-     */
-    attributes: HTMLCompletionAttrs;
-}
-/**
- * Lifted from vscode-html-languageservice
- */
-declare interface ValueData {
-    name: string;
-    description?: string | MarkupContent;
-    references?: HTMLReference[];
-}
-/**
- * Lifted from vscode-html-languageservice
- */
-declare interface AttributeData {
-    name: string;
-    description?: string | MarkupContent;
-    valueSet?: string;
-    values?: ValueData[];
-    references?: HTMLReference[];
-}
-/**
- * Lifted from vscode-html-languageservice
- */
-declare interface TagData {
-    name: string;
-    description?: string | MarkupContent;
-    attributes: AttributeData[];
-    references?: HTMLReference[];
-}
-/**
- * Lifted from vscode-html-languageservice
- */
-declare interface ValueSet {
-    name: string;
-    values: ValueData[];
-}
-/**
- * Lifted from vscode-html-languageservice
- */
-declare interface HTMLDataVSCode {
-    version: 1 | 1.1;
-    tags?: TagData[];
-    globalAttributes?: AttributeData[];
-    valueSets?: ValueSet[];
 }
 
 declare interface Filter extends Descriptions {
@@ -2775,6 +2587,381 @@ declare interface Tags {
     [name: string]: Tag;
 }
 
+/**
+ * Reset
+ *
+ * Resets all states. This is executed everytime we encounter a new tag.
+ * Passing a parameter of `true` will trigger a **hard** reset and clear
+ * additional storages, such as `liquid.data.variables` or `liquid.data.files`
+ */
+declare function reset(hard?: boolean): void;
+/**
+ * Get Tag Name List
+ *
+ * Returns all Liquid tag names of the current defined
+ * variation when no engine is provided.
+ */
+declare function getTags(engine?: Engine): string[];
+/**
+ * Get Filters Name List
+ *
+ * Returns all Liquid filter names of the current defined
+ * variation when no engine is provided.
+ */
+declare function getFilters(engine?: Engine): string[];
+/**
+ * Get Objects Name List
+ *
+ * Returns all Liquid object names of the current defined
+ * variation when no engine is provided.
+ *
+ * ---
+ *
+ * **Note**: The standard variation will return an empty array.
+ */
+declare function getObjects(engine?: Engine.shopify | Engine.jekyll | Engine.eleventy): string[];
+/**
+ * Is Parameter
+ *
+ * Queries the current argument for a `parameter` type. When
+ * an argument does not have a `parameter` type, it attempts
+ * to find a parameter argument via the `GetArgument` function.
+ *
+ * The function will return a boolean value to inform upon a
+ * successful or unsuccessful match.
+ *
+ * ---
+ *
+ * **GET ARGUMENT**
+ *
+ * If an argument does equal type `parameter` it will attempt
+ * to match the parameter passed value to a property listed
+ * on the arguments `value` and if successful, the state reference
+ * `argument` variable is updated and points to the parameter.
+ *
+ * ---
+ *
+ * **VALUE AS TYPE**
+ *
+ * If a parameters `value` points a _enum_  (number) the state
+ * reference `argument` will remain pointing to the argument at index
+ * and a boolean `true` will be returned.
+ */
+declare function isParameter(token: string): boolean;
+/**
+ * Get Argument
+ *
+ * Walks over _optional_ arguments contained on a tag
+ * or filter until a `type` match is detected. If an
+ * argument is `required` walk is cancelled.
+ */
+declare function isArgument(type: any): boolean;
+/**
+ * Is Value
+ *
+ * Validates an a argument value. This function will run
+ * several typeof checks to figure out how a value should
+ * be validated, starting with patterns and working its way
+ * down to a specificaions `value` entries.
+ *
+ * ---
+ *
+ * **Note**: When an array parameter pattern is provided, like
+ * that found on shopify `color_saturate` filter then the `value`
+ * state reference will be reflect a string value of:
+ *
+ * `0 and 100`
+ *
+ * This `$.liquid.value` is used in validations etc.
+ */
+declare function isValue(token: string): boolean;
+/**
+ * Completions
+ *
+ * Constructs LSP completion-ready lists from the current
+ * specification reference. Returns a closure getter combinator
+ * with array lists for various tags, filters and objects.
+ */
+declare function setCompletions(): Completions;
+/**
+ * Set Engine
+ *
+ * Sets the Liquid `variation` and `engine` variable.
+ * This will change what specification we reference.
+ *
+ * **WARNING**
+ *
+ * A **hard** reset is applied when calling this function,
+ * all current states are purged.
+ */
+declare function setEngine(name: Engine): void;
+/**
+ * Set Tag
+ *
+ * Finds a tag matching specification and updates the cursor.
+ * States are changed when a match is successful. Returns a
+ * boolean which signals a matched or unmatched tag.
+ */
+declare function setTag(name: string): boolean;
+/**
+ * Set Filter
+ *
+ * Finds a filter matching specification and updates the cursor.
+ * States are changed when a match is successful. Returns a
+ * boolean which signals a matched or unmatched filter.
+ */
+declare function setFilter(name: string): boolean;
+/**
+ * Set Variable
+ *
+ * Add a variable assignment reference to the `data.variables`
+ * store. Returns the index at which the reference exists in
+ * the array list of variables. The variable store is an object
+ * who's keys represent the variable keywords and the values are
+ * an array. Each entry in the array will hold the the assigned value.
+ */
+declare function setVariable(name: string): void;
+/**
+ * Set Object
+ *
+ * Finds a matching object specification. Objects can be
+ * contained in tags and filter, so the `cursor` is not
+ * modified, instead the `object` state variable is updated.
+ */
+declare function setObject(name: string): boolean;
+/**
+ * Set Type
+ *
+ * Keeps a peristed store of a specific `type` which will
+ * not change until re-setting via this function. It augments
+ * the state `type` value. Typically used when walking object properties
+ * to exclude non matching types.
+ *
+ * > This was added for usage in the vscode-liquid extension.
+ */
+declare function setType(type: Type): boolean;
+/**
+ * Has Object
+ *
+ * Queries the current variation to check whether or not the
+ * provided name parameter exist in the object specifications.
+ *
+ * **DOES NOT MODIFY STATE**
+ */
+declare function hasObject(name: string): boolean;
+/**
+ * Has Property
+ *
+ * Queries the current object in state to check whether or not the
+ * provided `prop` parameter exists on the object
+ *
+ * **DOES NOT MODIFY STATE**
+ */
+declare function hasProperty(name: string): boolean;
+/**
+ * Has Requires
+ *
+ * Queries the current filter to check whether or not
+ * a parameter argument has requires. Expects the node
+ * `filter` value.
+ *
+ * **DOES NOT MODIFY STATE**
+ */
+declare function hasRequires(filters: {
+    [offset: number]: number | string[];
+}): boolean;
+/**
+ * Is Property
+ *
+ * Queries the current object for a property value
+ * matching the parameter `value` provided. The object state
+ * reference will update and point to the property
+ * value when a match occurs.
+ *
+ * Accepts an optional `scopeArrays` which defaults to `true`
+ * and will allow the spec to move state forward when object
+ * type is array and its scope property matches. When `false`,
+ * the object will persist.
+ */
+declare function isProperty(token: string): boolean;
+/**
+ * Is Allowed
+ *
+ * Checks the current cursor allows a value or some sort,
+ * like filters or trim dashes. By default, when a value is
+ * undefined on the specs, it is typically assumed to be `true`
+ * unless we a dealing with a `required` value, which this
+ * function does not validate for.
+ */
+declare function isAllowed(prop: 'trims' | 'filters'): boolean;
+/**
+ * Is Parent
+ *
+ * Check to see if the tag or object has the correct parent
+ * tag, ie: a child of a certain tag or scope.
+ */
+declare function isParent(name: string): boolean;
+/**
+ * Is Variable
+ *
+ * Checks to see if the provide parameter is a scoped variable,
+ * meaning that it holds a property assignment (ie: object).
+ * When determined, the state `liquid.object` is aligned
+ * and boolean type `true` is returned. If the variable scope does not
+ * hold a property assignment then `false` is returned.
+ *
+ * When `false` is returned, the `liquid.variable` state will
+ * represent the variable assignment type.
+ */
+declare function isVariable(name: string): boolean;
+/**
+ * Is Error
+ *
+ * Conditional checks the local error state reference
+ * with the provided Query error enum.
+ */
+declare function isError(err: Errors): boolean;
+/**
+ * Is Object Variables
+ *
+ * Check a variables reference object properties
+ * are valid by walknig over the object itself.
+ */
+declare function isObjectVars(vars: string[]): boolean;
+/**
+ * Is Object Type
+ *
+ * Validate the current object reference `type` value.
+ * The object being validate will be type matched against
+ * the most recent object applied at `SetObject()` or via
+ * `isProperty()` function.
+ */
+declare function isObjectType(type: Type): boolean;
+/**
+ * Is Tag Type
+ *
+ * Validate a current tag `type` value. This is a sugar shortcut
+ * function called when scanning a token by the parser.
+ */
+declare function isTagType(type: Type): boolean;
+/**
+ * Is Type
+ *
+ * Validate the current argument `type` value. It will match
+ * an argument/parameter value type. This is a sugar shortcut
+ * function called when scanning a token by the parser.
+ */
+declare function isType(type: Type): boolean;
+/**
+ * Is Within
+ *
+ * Used to validate the whereabouts of the current tag or filter
+ * argument query engine position.
+ */
+declare function isWithin(token: Within): boolean;
+/**
+ * Is Required
+ *
+ * Checks the requirement for arguments, argument parameters or
+ * parameter values. When a parameter has a `keyword` type, then
+ * this returns `true`.
+ *
+ * In some cases, like within filter specifications, a `requires`
+ * reference might be used. This check will also check for the existence
+ * of such a property.
+ */
+declare function isRequired(): boolean;
+/**
+ * Is Optional
+ *
+ * Checks the requirement for every liquid.argument. If an arguments
+ *  `required` value returns `true` then a boolean `false` will
+ * be returned indicating that arguments are not optional and at
+ * least 1 value is required. The function accepts a starting index,
+ * default to the current argument index location.
+ *
+ * Some tag/filter arguments might all be optional, whereas some
+ * might contain an optional starting arguments, but require arguments
+ * proceeding that.
+ */
+declare function isOptional(from?: number): boolean;
+/**
+ * Previous Argument
+ *
+ * Moves the arugment back a position. If we are currently
+ * walking the index `2` (argument 3) calling this will
+ * move the arugment reference states to index `1`.
+ */
+declare function prevArgument(): boolean;
+/**
+ * Next Argument
+ *
+ * Moves to the _next_ argument (if available) and updates the
+ * reference state variables. Returns a `boolean` which
+ * indicates if we have reached the last argument or not.
+ */
+declare function nextArgument(): boolean;
+/**
+ * Next Parameter
+ *
+ * Despite its name, this function will reset the `argument`
+ * state reference to its index starting point. When we
+ * encounter a `parameter` type, the `argument` variable is
+ * moved to its property value. This function reverts that.
+ */
+declare function nextParameter(): boolean;
+
+/**
+ * Get Completion Detail
+ *
+ * Returns the `CompletionItemKind` enum reference that
+ * should be applied to the generated completion item.
+ */
+declare function ObjectDetail(type: LiteralUnion<TypeBasic, Types.Basic>): "number" | "string" | "object" | "any" | "boolean" | "array" | "constant" | "control" | "embedded" | "import" | "iteration" | "variable" | "unknown" | "nil";
+/**
+ * Get Completion Detail
+ *
+ * Returns the `CompletionItemKind` enum reference that
+ * should be applied to the generated completion item.
+ */
+declare function ObjectKind(type: Type): "number" | "string" | "object" | "any" | "boolean" | "array" | "constant" | "control" | "embedded" | "import" | "iteration" | "variable" | "unknown" | "nil";
+/**
+ * Get Completion Detail
+ *
+ * Returns the `CompletionItemKind` enum reference that
+ * should be applied to the generated completion item.
+ */
+declare function ObjectType(type: string): Type.nil | Type.any | Type.object | Type.number | Type.boolean | Type.string | Type.array | Type.constant | Type.control | Type.comment | Type.embedded | Type.import | Type.iteration | Type.variable | Type.unknown;
+/**
+ * Object Type Groups
+ *
+ * Groups object completions according to their type. Returns
+ * a partial completion item for implementation into clients.
+ */
+declare function ObjectGroups(template: string, callback: (object: IObject, item: any) => any): ObjectGroupItems;
+/**
+ * Set Completion Items
+ *
+ * Sets the completion items that are passed to the completion resolver.
+ * Extracts necessary values from the passed in specification record.
+ */
+declare function ProvideProps([label, { description, type, snippet }]: [any, {
+    description?: string;
+    type: any;
+    snippet?: any;
+}]): CompletionItem;
+declare function LiquidFilterResolve(item: CompletionItem): CompletionItem;
+declare function LiquidOutputResolve(item: CompletionItem, edits?: TextEdit[]): CompletionItem;
+declare function LiquidTagResolve(item: CompletionItem, edits?: TextEdit[]): CompletionItem;
+/**
+ * Liquid Property Completions
+ *
+ * Walks over defined objects and provides the property completions.
+ * It works in such a way that Liquid objects can be queried and passed
+ * to completions at any point,
+ */
+declare function LiquidPropertyComplete(node: any, offset: number): Promise<any>;
+
 interface ScopeMapValue {
     /**
      * The scope enum which describes the value
@@ -2864,166 +3051,17 @@ declare interface Liquid {
     };
 }
 
-/**
- * Set Tag
- *
- * Finds a HTML tag and updates the scope reference to it.
- * If no tag is found in the spec, it's likely a custom
- * HTML tag, this is allowed but that is handled at the
- * scanner/parser level.
- *
- * When a tag is matched, we immeadiatly check if the tag
- * accepts a list of pre-defined attributes, if they exists
- * we create a key list of the accepted values which we will
- * use to match attributes.
- */
-declare function setHTMLTag(name: string): boolean;
-/**
- * Checks to see if the provided HTML tag is an
- * embedded type tag, eg: <style> or <script>
- */
-declare function isEmbedded(name: string): 'css' | 'javascript' | false;
-/**
- * Checks the the attribute language of an embedded
- * tag,
- */
-declare function isLanguage(attribute: string): "javascript" | "json";
-/**
- * Checks to see if the provided HTML tag is a void
- * type tag, meaning it does not required an ender.
- */
-declare function isVoid(name: string): boolean;
-/**
- * Checks to see if the provided tag accepts a
- * supplied attribute. If the tag contains attributes
- * on its spec then the tag accepts a set of attributes
- * which are unique to that tag, like (for example) the
- * `<input>` tag which accepts attributes like `type=""`
- *
- * A local scope variable `attrs` generated in the setter,
- * holds string list of values which contain accepted pre-defined
- * attributes that we will check and from here determine if
- * that attribute has a pre-determined set of values.
- *
- * If `attrs` is undefined then the tag accepts global attributes,
- * so we will check the globals in the spec. When `attrs` is
- * undefined or the value passed does not match any values in
- * the list, we will proceed to the global attribute check.
- *
- * We allow `data-` attributes to pass
- */
-declare function isAttribute(name: string): boolean;
-/**
- * Checks to see if the attribute already exists on the tag.
- * If a tag contains Liquid syntax, we will skip this check at
- * scanner level after some validations.
- */
-declare function isAttributeUniq(name: string): boolean;
-/**
- * Validates an provided attribute value when a pre-defined
- * value set exists for the provided attribute.
- *
- * @todo
- * Because the specs value sets exists as an array,
- * the values are walked this might be hurt perfomance
- * and may be worth re-thinking in the future.
- */
-declare function isAttributeValue(value: string): boolean;
-/**
- * Checks to see if a value is required on the attribute.
- * When a tag attribute contains a pre-defined attribute
- * set, it is inferred that a value is to be provided.
- */
-declare function isValueRequired(): boolean;
-
-declare function HTMLCompletions(): any;
-/**
- * Accepts custom data as per the vscode spec
- * for HTML.
- */
-declare function HTMLCustomData(data: HTMLDataVSCode): void;
-declare function HTMLTagComplete(): HTMLCompletionTags;
-declare function HTMLAttrsComplete(tag: string): HTMLProvideAttrs;
-declare function HTMLValueComplete(token?: string): false | {
-    data: {
-        token: Tokens;
-    };
-    label: string;
-    documentation?: {
-        kind: "plaintext" | "markdown";
-        value: string;
-    };
-}[];
-declare function HTMLTagResolve(item: CompletionItem): CompletionItem;
-declare function HTMLAttrsResolve(item: CompletionItem): CompletionItem;
-declare function HTMLValueResolve(item: CompletionItem): CompletionItem & {
-    kind: 12;
-};
-declare function HTMLTagAttrs(attrs: HTMLTagAttributes[]): HTMLCompletionAttrs;
-
-interface HTML5 {
-    /**
-     * The current tag specification
-     */
-    tag: HTMLTag;
-    /**
-     * The current attribute value specification
-     */
-    value: string;
-    /**
-     * The current tag attribute specification
-     */
-    attribute: HTMLTagAttributes[];
-    /**
-     * Merged custom data references
-     */
-    data: {
-        /**
-         * Completion Items (LSP Related)
-         */
-        completions: HTMLCompletions$1;
-        /**
-         * The HTML variation. Similar to the Liquid specs
-         * this record represents a specification reference.
-         * This variation specifically will contain any vscode
-         * custom data records.
-         */
-        variation: {
-            /**
-             * HTML Tags
-             */
-            readonly tags?: HTMLTags;
-            /**
-             * HTML Attributes
-             */
-            readonly attributes?: HTMLAttributes;
-            /**
-             * HTML Attribute Values
-             */
-            readonly values?: HTMLValues;
-            /**
-             * A string list of HTML Void tags
-             */
-            readonly voids?: string[];
-        };
-    };
-}
-
 declare const liquid$1: Liquid;
 
 declare const html5: HTML5;
 
 declare const s_html5: typeof html5;
 declare namespace s {
-  export {
-    s_html5 as html5,
-    liquid$1 as liquid,
-  };
+  export { s_html5 as html5, liquid$1 as liquid };
 }
 
 declare const p_HTMLAttrsComplete: typeof HTMLAttrsComplete;
 declare const p_HTMLAttrsResolve: typeof HTMLAttrsResolve;
-declare const p_HTMLCompletions: typeof HTMLCompletions;
 declare const p_HTMLCustomData: typeof HTMLCustomData;
 declare const p_HTMLTagAttrs: typeof HTMLTagAttrs;
 declare const p_HTMLTagComplete: typeof HTMLTagComplete;
@@ -3040,26 +3078,7 @@ declare const p_ObjectKind: typeof ObjectKind;
 declare const p_ObjectType: typeof ObjectType;
 declare const p_ProvideProps: typeof ProvideProps;
 declare namespace p {
-  export {
-    p_HTMLAttrsComplete as HTMLAttrsComplete,
-    p_HTMLAttrsResolve as HTMLAttrsResolve,
-    p_HTMLCompletions as HTMLCompletions,
-    p_HTMLCustomData as HTMLCustomData,
-    p_HTMLTagAttrs as HTMLTagAttrs,
-    p_HTMLTagComplete as HTMLTagComplete,
-    p_HTMLTagResolve as HTMLTagResolve,
-    p_HTMLValueComplete as HTMLValueComplete,
-    p_HTMLValueResolve as HTMLValueResolve,
-    p_LiquidFilterResolve as LiquidFilterResolve,
-    p_LiquidOutputResolve as LiquidOutputResolve,
-    p_LiquidPropertyComplete as LiquidPropertyComplete,
-    p_LiquidTagResolve as LiquidTagResolve,
-    p_ObjectDetail as ObjectDetail,
-    p_ObjectGroups as ObjectGroups,
-    p_ObjectKind as ObjectKind,
-    p_ObjectType as ObjectType,
-    p_ProvideProps as ProvideProps,
-  };
+  export { p_HTMLAttrsComplete as HTMLAttrsComplete, p_HTMLAttrsResolve as HTMLAttrsResolve, HTMLCompletions$1 as HTMLCompletions, p_HTMLCustomData as HTMLCustomData, p_HTMLTagAttrs as HTMLTagAttrs, p_HTMLTagComplete as HTMLTagComplete, p_HTMLTagResolve as HTMLTagResolve, p_HTMLValueComplete as HTMLValueComplete, p_HTMLValueResolve as HTMLValueResolve, p_LiquidFilterResolve as LiquidFilterResolve, p_LiquidOutputResolve as LiquidOutputResolve, p_LiquidPropertyComplete as LiquidPropertyComplete, p_LiquidTagResolve as LiquidTagResolve, p_ObjectDetail as ObjectDetail, p_ObjectGroups as ObjectGroups, p_ObjectKind as ObjectKind, p_ObjectType as ObjectType, p_ProvideProps as ProvideProps };
 }
 
 declare const q_getFilters: typeof getFilters;
@@ -3067,6 +3086,7 @@ declare const q_getObjects: typeof getObjects;
 declare const q_getTags: typeof getTags;
 declare const q_hasObject: typeof hasObject;
 declare const q_hasProperty: typeof hasProperty;
+declare const q_hasRequires: typeof hasRequires;
 declare const q_isAllowed: typeof isAllowed;
 declare const q_isArgument: typeof isArgument;
 declare const q_isAttribute: typeof isAttribute;
@@ -3102,53 +3122,28 @@ declare const q_setTag: typeof setTag;
 declare const q_setType: typeof setType;
 declare const q_setVariable: typeof setVariable;
 declare namespace q {
-  export {
-    q_getFilters as getFilters,
-    q_getObjects as getObjects,
-    q_getTags as getTags,
-    q_hasObject as hasObject,
-    q_hasProperty as hasProperty,
-    q_isAllowed as isAllowed,
-    q_isArgument as isArgument,
-    q_isAttribute as isAttribute,
-    q_isAttributeUniq as isAttributeUniq,
-    q_isAttributeValue as isAttributeValue,
-    q_isEmbedded as isEmbedded,
-    q_isError as isError,
-    q_isLanguage as isLanguage,
-    q_isObjectType as isObjectType,
-    q_isObjectVars as isObjectVars,
-    q_isOptional as isOptional,
-    q_isParameter as isParameter,
-    q_isParent as isParent,
-    q_isProperty as isProperty,
-    q_isRequired as isRequired,
-    q_isTagType as isTagType,
-    q_isType as isType,
-    q_isValue as isValue,
-    q_isValueRequired as isValueRequired,
-    q_isVariable as isVariable,
-    q_isVoid as isVoid,
-    q_isWithin as isWithin,
-    q_nextArgument as nextArgument,
-    q_nextParameter as nextParameter,
-    q_prevArgument as prevArgument,
-    q_reset as reset,
-    q_setCompletions as setCompletions,
-    q_setEngine as setEngine,
-    q_setFilter as setFilter,
-    q_setHTMLTag as setHTMLTag,
-    q_setObject as setObject,
-    q_setTag as setTag,
-    q_setType as setType,
-    q_setVariable as setVariable,
-  };
+  export { q_getFilters as getFilters, q_getObjects as getObjects, q_getTags as getTags, q_hasObject as hasObject, q_hasProperty as hasProperty, q_hasRequires as hasRequires, q_isAllowed as isAllowed, q_isArgument as isArgument, q_isAttribute as isAttribute, q_isAttributeUniq as isAttributeUniq, q_isAttributeValue as isAttributeValue, q_isEmbedded as isEmbedded, q_isError as isError, q_isLanguage as isLanguage, q_isObjectType as isObjectType, q_isObjectVars as isObjectVars, q_isOptional as isOptional, q_isParameter as isParameter, q_isParent as isParent, q_isProperty as isProperty, q_isRequired as isRequired, q_isTagType as isTagType, q_isType as isType, q_isValue as isValue, q_isValueRequired as isValueRequired, q_isVariable as isVariable, q_isVoid as isVoid, q_isWithin as isWithin, q_nextArgument as nextArgument, q_nextParameter as nextParameter, q_prevArgument as prevArgument, q_reset as reset, q_setCompletions as setCompletions, q_setEngine as setEngine, q_setFilter as setFilter, q_setHTMLTag as setHTMLTag, q_setObject as setObject, q_setTag as setTag, q_setType as setType, q_setVariable as setVariable };
 }
 
 /**
  * Liquid Specifications
  */
 declare const liquid: {
+    /**
+     * Purge Specification
+     *
+     * This function allows the specification to be extended
+     * with custom support for different references.
+     */
+    purge: (engine: Engine, spec: {
+        objects?: string[];
+        filters?: string[];
+        tags?: string[];
+    }) => {
+        objects?: Objects;
+        filters: Filters;
+        tags: Tags;
+    };
     /**
      * Extend Specification
      *
@@ -3164,6 +3159,14 @@ declare const liquid: {
         filters: Filters;
         tags: Tags;
     };
+    /**
+     * Generate Specification
+     *
+     * Traverses a data structure and composes a Liquid specification that can be
+     * understand by the query engine. Used for cases like the 11ty data cascade,
+     * frontmatter and more. Expects an `input` object reference and specification type.
+     */
+    generate: <T>(input: any, spec?: any) => T;
     /**
      * Standard Liquid
      */
@@ -3205,6 +3208,8 @@ declare const liquid: {
     };
     /**
      * Jekyll Liquid
+     *
+     * **NOT YET AVAILABLE**
      */
     get jekyll(): {
         /**
@@ -3227,6 +3232,32 @@ declare const liquid: {
          * Filters extend the Standard Variation and will be made
          * available here.
          */
+        objects: Objects;
+    };
+    /**
+     * Eleventy Liquid
+     */
+    get eleventy(): {
+        /**
+         * Eleventy Specification: Tags
+         *
+         * Tags extend the Standard Variation and will be made
+         * available here.
+         */
+        tags: Tags;
+        /**
+           * Eleventy Specification: Filters
+           *
+           * Filters extend the Standard Variation and will be made
+           * available here.
+           */
+        filters: Filters;
+        /**
+           * Eleventy Specification: Filters
+           *
+           * Filters extend the Standard Variation and will be made
+           * available here.
+           */
         objects: Objects;
     };
 };
@@ -3252,4 +3283,4 @@ declare const html: {
     get voids(): string[];
 };
 
-export { s as $, Argument, ArgumentParameter, Arguments, AttributeData, Completion, Completions, DataSource, Engine, Engines, Errors, Filter, Filters, HTML5, HTMLAttribute, HTMLAttributes, HTMLCompletionAttrs, HTMLCompletionData, HTMLCompletionTagData, HTMLCompletionTags, HTMLCompletions$1 as HTMLCompletions, HTMLDataVSCode, HTMLProvideAttrs, HTMLReference, HTMLTag, HTMLTagAttributes, HTMLTags, HTMLValue, HTMLValues, IObject, IProperty, Languages, Liquid, Objects, Parameter, Pattern, Properties, References, ScopeMapValue, Scopes, Separator, SpecNames, Tag, TagData, Tags, Templates, Tokens, Type, TypeBasic, Types, Value, ValueData, ValueSet, Within, html, liquid, p, q };
+export { s as $, type Argument, type ArgumentParameter, type Arguments, type AttributeData, type Completion, type Completions, DataSource, Engine, type Engines, Errors, type Filter, type Filters, type HTML5, type HTMLAttribute, type HTMLAttributes, type HTMLCompletionAttrs, type HTMLCompletionData, type HTMLCompletionTagData, type HTMLCompletionTags, type HTMLCompletions, type HTMLDataVSCode, type HTMLProvideAttrs, type HTMLReference, type HTMLTag, type HTMLTagAttributes, type HTMLTags, type HTMLValue, type HTMLValues, type IObject, type IProperty, type Languages, type Liquid, type Objects, type Parameter, type Pattern, type Properties, type References, type ScopeMapValue, Scopes, Separator, type SpecNames, type Tag, type TagData, type Tags, type Templates, Tokens, Type, TypeBasic, Types, Value, type ValueData, type ValueSet, Within, html, liquid, p, q };

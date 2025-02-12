@@ -1,8 +1,13 @@
-
 /**
  * Style lexer stack token types
  */
 export enum StyleTypes {
+
+  /**
+   * Describes a `:root`selector. This types value exists to uniquely set colon
+   * characters apart from other types values.
+   */
+  root = 'root',
   /**
    * Describes a : character. This types value exists to uniquely set colon
    * characters apart from other types values.
@@ -69,9 +74,8 @@ export enum StyleTypes {
    * of start or end types.
    *
    * ---
-   * @prettify
    *
-   * This infers Liquid code in Prettify
+   * This infers Liquid code in Æsthetic
    */
   template = 'template',
   /**
@@ -79,25 +83,22 @@ export enum StyleTypes {
    * Else tokens do not behave the same way as a templates start or end types.
    *
    * ---
-   * @prettify
    *
-   * This infers Liquid code in Prettify
+   * This infers Liquid code in Æsthetic
    */
   liquid_else = 'liquid_else',
   /**
    * Describes the closing sequence for a third party language template tag.
    *
    * ---
-   * @prettify
    *
-   * This infers Liquid code in Prettify
+   * This infers Liquid code in Æsthetic
    */
   liquid_end = 'liquid_end',
   /**
    * Describes the closing sequence for a third party language template tag.
    *
    * ---
-   * @prettify
    *
    * This infers Liquid code in Prettify
    */
@@ -121,7 +122,6 @@ export enum ScriptTypes {
    * Describes both block comments (`/*`) and line comments (`//`)
    *
    * ---
-   * @prettify
    *
    * This infers Liquid `{% comment %}` and `{% endcomment%}` in Prettify
    */
@@ -172,27 +172,24 @@ export enum ScriptTypes {
    * template language, and is otherwise illegal syntax in JavaScript.
    *
    * ---
-   * @prettify
    *
-   * This infers Liquid code in Prettify
+   * This infers Liquid code in Æsthetic
    */
   template = 'template',
   /**
    * A template type that is used as the else block of a condition.
    *
    * ---
-   * @prettify
    *
-   * This infers Liquid code in Prettify
+   * This infers Liquid code in Æsthetic
    */
   liquid_else = 'liquid_else',
   /**
    *  A terminal token of a template body
    *
    * ---
-   * @prettify
    *
-   * This infers Liquid code in Prettify
+   * This infers Liquid code in Æsthetic
    */
   liquid_end = 'liquid_end',
   /**
@@ -281,10 +278,6 @@ export enum MarkupTypes {
    */
   content = 'content',
   /**
-   * A content type that lets consuming applications this token must not be modified.
-   */
-  content_preserve = 'content_preserve',
-  /**
    * A start tag of a tag pair.
    * ---
    * @example
@@ -371,57 +364,9 @@ export enum MarkupTypes {
    */
   style = 'style',
   /**
-   * Preserves the inner content of a style tag but allows beautification of the attribute tokens.
-   *
-   * Typically used when the `ignoreJSON` rule is inferred, but can also be applied when script type
-   * token uses a `data-prettify-ignore` attribute or alternatively when the inner contents of the script
-   * begin with a `@prettify-ignore` comment.
-   */
-  style_preserve = 'style_preserve',
-  /**
    * A tag indicating it may contain JavaScript/TypeScript that need to be passed to the script lexer.
    */
   script = 'script',
-  /**
-   * Preserves the inner content of a script tag but allows beautification of the attribute tokens.
-   *
-   * Typically used when the `ignoreJS` rule is inferred, but can also be applied when script type
-   * tokens use a `data-prettify-ignore` attribute or alternatively when the inner contents of the script
-   * begin with a `@prettify-ignore` comment.
-   */
-  script_preserve = 'script_preserve',
-  /**
-   * A tag indicating it may contain JSON that needs to be passed to the script lexer.
-   */
-  json = 'json',
-  /**
-   * Indicates a HTML JSON start token tag reference, typically going to be `<script>`
-   * tag containing an attribute inferring contained JSON.
-   *
-   * ---
-   * @example
-   *
-   * <script type="application/json"> // JSON Start Token
-   */
-  json_start = 'json_start',
-  /**
-   * A tag attribute from a regular start or singular tag type.
-   * ---
-   * @example
-   *
-  * </script> // JSON Start Token
-  */
-  json_end = 'json_end',
-  /**
-   * Preserves the inner content of a script tag annotated with a JSON inferring attribute value, typically
-   * `type="application/json"` or `type="application/ld+json"`. Similar to `script_preserve` the type will
-   * allows beautification of the attribute tokens but will not touch the inner contents of the tag.
-   *
-   * Typically used when the `ignoreJSON` rule is inferred, but can also be applied when script type
-   * token uses a `data-prettify-ignore` attribute or alternatively when the inner contents of the script
-   * begin with a `@prettify-ignore` comment.
-   */
-  json_preserve = 'json_preserve',
   /**
    * A tag attribute from a regular start or singular tag type.
    * ---
@@ -539,87 +484,29 @@ export enum LiquidTypes {
    */
   liquid = 'liquid',
   /**
-   * This type is used when excluded liquid contained content, typically when the
-   * `esthetic-ignore-next` comment is used. It will prevent markup contained tags
-   * from having attributes formatted.
-   */
-  liquid_ignore = 'liquid_ignore',
-  /**
-   * A template tag that an embedded language that requires the script lexer. This
-   * has identical behaviour to `script` type but for liquid type tokens.
+   * Token represents a markup start tag encapsulated within a Liquid conditional
+   * expression structure.
    *
    * ---
    * @example
    *
-   * {% javascript %}
+   * {% unless x %}
+   *  <div>
+   * {% endunless %}
    */
-  liquid_script = 'liquid_script',
+  liquid_markup_start = 'liquid_markup_start',
   /**
-   * A template tag that an embedded language who's inner contents is excluded from
-   * beautifcation. This has identical behaviour to `script_preserve` type but for liquid
-   * type tokens.
+   * Token represents a markup end tag encapsulated within a Liquid conditional
+   * expression structure.
    *
    * ---
    * @example
    *
-   * {% javascript %}
+   * {% unless x %}
+   *  </div>
+   * {% endunless %}
    */
-  liquid_script_preserve = 'liquid_script_preserve',
-  /**
-   * A template tag that an embedded language that requires the script lexer. This
-   * has identical behaviour to `style` type but for liquid type tokens.
-   *
-   * ---
-   * @example
-   *
-   * {% stylesheet %}
-   * {% style %}
-   */
-  liquid_style_start = 'liquid_style_start',
-  /**
-   * A template tag that an embedded language that requires the script lexer. This
-   * has identical behaviour to `style` type but for liquid type tokens.
-   *
-   * ---
-   * @example
-   *
-   * {% endstylesheet %}
-   * {% endstyle %}
-   */
-  liquid_style_end = 'liquid_style_end',
-  /**
-   * A template tag that an embedded language who's inner contents is excluded from
-   * beautifcation. This has identical behaviour to `style_preserve` type but for liquid
-   * type tokens.
-   *
-   * ---
-   * @example
-   *
-   * {% stylesheet %}
-   * {% style %}
-   */
-  liquid_style_preserve = 'liquid_style_preserve',
-  /**
-   * A template tag that an embedded language that requires the script lexer. This
-   * has identical behaviour to `json` type but for liquid type tokens.
-   *
-   * ---
-   * @example
-   *
-   * {% schema %}
-   */
-  liquid_json = 'liquid_json',
-  /**
-   * A template tag that an embedded language who's inner contents is excluded from
-   * beautifcation. This has identical behaviour to `json_preserve` type but for liquid
-   * type tokens.
-   *
-   * ---
-   * @example
-   *
-   * {% schema %}
-   */
-  liquid_json_preserve = 'liquid_json_preserve',
+  liquid_markup_end = 'liquid_markup_end',
   /**
    * Bad Liquid start tag
    *
@@ -639,7 +526,7 @@ export enum LiquidTypes {
    */
   liquid_bad_end = 'liquid_bad_end',
   /**
-   * A template tag that contains content or other tags not associated with
+   * A Liquid tag that contains content or other tags not associated with
    * the template language and expects a closing tag. This is representative of
    * Liquid tags.
    *
@@ -652,6 +539,15 @@ export enum LiquidTypes {
    */
   liquid_start = 'liquid_start',
   /**
+   * A Liquid case start tag
+   *
+   * ---
+   * @example
+   *
+   * {% case foo %}
+   */
+  liquid_case_start = 'liquid_case_start',
+  /**
    * A singleton Liquid tag which is used within the `{% case %}` block tag
    * expression.
    *
@@ -663,6 +559,24 @@ export enum LiquidTypes {
    * {% when arg or arg %}
    */
   liquid_when = 'liquid_when',
+  /**
+   * A Liquid case else tag
+   *
+   * ---
+   * @example
+   *
+   * {% else %}
+   */
+  liquid_case_else = 'liquid_case_else',
+  /**
+   * A Liquid case end tag
+   *
+   * ---
+   * @example
+   *
+   * {% case foo %}
+   */
+  liquid_case_end = 'liquid_case_end',
   /**
    * A template tag acting as the else block of a condition. This is representative of
    * Liquid tags.
@@ -686,6 +600,80 @@ export enum LiquidTypes {
    * {% endif %}
    */
   liquid_end = 'liquid_end',
+  /**
+   * A Liquid capture tag
+   *
+   * ---
+   * @example
+   *
+   * {% capture foo %}
+   */
+  liquid_capture = 'liquid_capture',
+  /**
+   * Ignore next comment
+   *
+   * ---
+   * @example
+   *
+   * <!-- esthetic-ignore-next -->
+   * {% # esthetic-ignore-next %}
+   */
+  ignore_next = 'ignore_next',
+  /**
+   * Liquid block comment start tag
+   *
+   * ---
+   * @example
+   *
+   * {% comment %}
+   */
+  liquid_comment_start = 'liquid_comment_start',
+  /**
+   * Liquid block comment contents
+   *
+   * ---
+   * @example
+   *
+   * Lorem ipsum
+   */
+  liquid_comment = 'liquid_comment',
+  /**
+   * Liquid block comment end tag
+   *
+   * ---
+   * @example
+   *
+   * {% endcomment %}
+   */
+  liquid_comment_end = 'liquid_comment_end',
+  /**
+   * Represent a Liquid {% liquid tag
+   *
+   * ---
+   * @example
+   *
+   * {% liquid
+   */
+  liquid_liquid_start = 'liquid_tag',
+  /**
+   * Liquid tag which is empty (no name)
+   *
+   * ---
+   * @example
+   *
+   * {% %}
+   * {%- -%}
+   */
+  liquid_empty = 'liquid_empty',
+  /**
+   * Represent a Liquid (liquid) tag ending delimiter
+   *
+   * ---
+   * @example
+   *
+   * %}
+   */
+  liquid_liquid_end= 'liquid_tag',
 }
 
 /**
@@ -695,5 +683,33 @@ export enum ExtraTypes {
   else = 'else',
   mixin = 'mixin',
   comment = 'comment',
-  'content-ignore' = 'content-ignore'
+  ignore_start = 'ignore_start',
+  ignore_end = 'ignore_end',
+  'content-ignore' = 'content-ignore',
+  /**
+   * **INTERNAL USE**
+   *
+   * Preserves the inner content of a script tag annotated with a JSON inferring attribute value, typically
+   * `type="application/json"` or `type="application/ld+json"`.
+   *
+   * Typically used when the `ignoreJSON` rule is inferred.
+   */
+  json_preserve = 'json_preserve',
+  /**
+   * **INTERNAL USE**
+   *
+   * Preserves the inner content of a `<style>` tag
+   *
+   * Typically used when the `ignoreCSS` rule is inferred.
+   */
+  style_preserve = 'json_preserve',
+  /**
+   * **INTERNAL USE**
+   *
+   * Preserves the inner content of a `<script>` tag which contains JavaScript, `<script>` tags
+   * which are externally referencing a file do not apply this internal type.
+   *
+   * Typically used when the `ignoreCSS` rule is inferred.
+   */
+  script_preserve = 'json_preserve',
 }

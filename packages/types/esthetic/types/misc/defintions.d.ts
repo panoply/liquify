@@ -19,6 +19,10 @@ export interface Definition {
    */
   description: string;
   /**
+   * Documentation Reference
+   */
+  documentation?: string;
+  /**
    * The default setting
    */
   default: boolean | string[] | string | number;

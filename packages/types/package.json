@@ -26,6 +26,6 @@
     "url": "https://github.com/panoply/liquify/issues"
   },
   "scripts": {
-    "build": "pnpm exec ./build.sh"
+    "build": "pnpm --shell-mode \"./build.sh\""
   }
 }

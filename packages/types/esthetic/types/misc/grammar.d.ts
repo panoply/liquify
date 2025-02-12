@@ -167,19 +167,37 @@ export interface Grammars {
      * which require an `{% end %}` token be defined, like (for example) the
      * `{% capture %}` token which requires `{% endcapture %}`.
      *
-     * The Tags names you provide here will inform Prettify to cancel beautification
+     * The Tags names you provide here will inform Æsthetic to cancel formatting
      * when no ender can be found or the ender is in-correctly placed.
      */
     tags?: string[];
 
     /**
+     * **Iterator Tags**
+     *
+     * String list of tag names used for iteration purposes. The Tags names you provide
+     * here will inform Æsthetic on how to reason and handle certain expressions when
+     * building data structures for formatting.
+     *
+     * #### Defaults
+     *
+     * ```js
+     * [
+     *  'for',
+     *  'tablerow'
+     * ]
+     *
+     * ```
+     */
+    iterator?: string[];
+
+    /**
      * **Control Tags**
      *
      * String list of token names to be treated as control type openers. These are tags,
-     * which are used within conditionals.
-     *
-     * The Tags names you provide here will inform Prettify on how to reason and handle
-     * certain expressions when building data structures for beautification.
+     * which are used within conditionals. The Tags names you provide here will inform
+     * Æsthetic on how to reason and handle certain expressions when building data structures
+     * for formatting.
      *
      * #### Defaults
      *
@@ -192,16 +210,14 @@ export interface Grammars {
      *
      * ```
      */
-    control: string[];
+    control?: string[];
 
     /**
      * **Else Tags**
      *
-     * String list of token names to be treated as else type control singletons. These are tags,
-     * which are used within control tags.
-     *
-     * The Tags names you provide here will inform Prettify to cancel beautification
-     * when no ender can be found or the ender is in-correctly placed.
+     * String list of tag names to be treated as **else** type control singletons. These are tags,
+     * which are used within control tags. The Tags names you provide here will inform Æsthetic
+     * to cancel formatting when such tags are incorrectly placed.
      *
      * #### Defaults
      *
@@ -217,13 +233,42 @@ export interface Grammars {
     else?: string[];
 
     /**
+     * **Voids**
+     *
+     * String list of token names which void~like. Æsthetic considers Liquid tags which
+     * do not accept additional expressions as **void** types. See the below defaults to
+     * better understand a `void` tag type.
+     *
+     * Tags defined here should only include those which do not accept arguments or filters.
+     * However, tags that accept values can be provided, such as `{% increment %}`, `{% echo %}` etc.
+     *
+     * #### Defaults
+     *
+     * ```js
+     * [
+     *  'echo',
+     *  'else',
+     *  'break',
+     *  'continue',
+     *  'increment',
+     *  'decrement',
+     * ]
+     * ```
+     *
+     * > **NOTE**
+     * >
+     * > **End tags are automatically considered void types**
+     */
+    void?: string[];
+
+    /**
      * **Singletons**
      *
      * String list of token names to be treated as singletons. These are tags,
-     * which no require an `{% end %}` token to be defined, like (for example)
-     * the `{% assign %}` token is a singleton.
+     * which do not require an `{% end %}` token to be defined, like (for example)
+     * the `{% assign %}` tag is considered a singleton type.
      *
-     * The Tags names you provide here will inform Prettify to cancel beautification
+     * The Tags names you provide here will inform Æsthetic to cancel formatting
      * when if the token uses an ender.
      */
     singletons?: string[];
@@ -233,7 +278,7 @@ export interface Grammars {
      *
      * A list of Liquid token names who's inner contents should be formatted using a different
      * lexer mode. Embedded tags will treat their contained content as external and allow
-     * you to apply region based beautification to custom tag blocks.
+     * you to apply region based formatting to custom tag blocks.
      *
      * Embedded region grammar references expect an array list or strings, Regular Expressions
      * or for more pricise control you can provide an array who's first value represets the
@@ -242,7 +287,7 @@ export interface Grammars {
      * #### Example
      *
      * ```js
-     * prettify.grammar({
+     * esthetic.grammar({
      *   liquid: {
      *     embedded: {
      *       schema: [
@@ -306,20 +351,32 @@ export interface Grammars {
      *
      * String list of HTML tag blocks
      */
-    tags?: string[]
+    tags?: string[];
+    /**
+     * HTML Phrasing Content
+     *
+     * String list of HTML text nodes that should be categorized as
+     * [Phrasing Content](https://html.spec.whatwg.org/single-page.html#phrasing-content).
+     * By default, Æsthetic references the HTML Specification, treating all phrasing content
+     * elements (tags) according to the specification.
+     *
+     * Prefix entries with an exclimation mark `!` if you wish for Æsthetic to exclude any of
+     * the default entries, and instead treat such elements as flow content.
+     */
+    phrasing?: string[];
     /**
      * HTML Voids
      *
      * String list of additional or custom void type
      * HTML tags.
      */
-    voids?: string[]
+    voids?: string[];
     /**
      * **Embedded**
      *
      * A list of HTML token tag names who's inner contents should be formatted using a different
      * lexer mode. Embedded tags will treat their contained content as external and allow
-     * you to apply region based beautification to custom tag blocks.
+     * you to apply region based formatting to custom tag blocks.
      *
      * Embedded region grammar references expect an array list or strings, Regular Expressions
      * or for more pricise control you can provide an array who's first value represets the
@@ -328,7 +385,7 @@ export interface Grammars {
      * #### Example
      *
      * ```js
-     * prettify.grammar({
+     * esthetic.grammar({
      *   html: {
      *     embedded: {
      *       script: [
@@ -373,7 +430,6 @@ export interface Grammars {
    * Internal Usage
    */
   css?: {
-
     /**
      * At-rules are CSS statements that instruct CSS how to behave.
      * They begin with an at sign, `@`, followed by an identifier and

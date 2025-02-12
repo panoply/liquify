@@ -1,12 +1,12 @@
 import { Type, Engine } from '@liquify/specs';
 import { Range as Range$1, TextDocument, Position as Position$1 } from 'vscode-languageserver-textdocument';
 export { Position, Range, TextDocument } from 'vscode-languageserver-textdocument';
-import { N as NodeKind, a as NodeType, b as NodeLanguage, T as TagType, P as ParseError } from './language-425603bb.js';
+import { N as NodeKind, a as NodeType, b as NodeLanguage, T as TagType, P as ParseError } from './language-BYcPZFcX.js';
 
 /**
  * A tagging type for string properties that are actually document URIs.
  */
-declare type DocumentUri = string;
+type DocumentUri = string;
 declare namespace DocumentUri {
     function is(value: any): value is DocumentUri;
 }
@@ -15,14 +15,14 @@ declare namespace DocumentUri {
  *
  * @since 3.16.0
  */
-declare type URI = string;
+type URI = string;
 declare namespace URI {
     function is(value: any): value is URI;
 }
 /**
  * Defines an integer in the range of -2^31 to 2^31 - 1.
  */
-declare type integer = number;
+type integer = number;
 declare namespace integer {
     const MIN_VALUE = -2147483648;
     const MAX_VALUE = 2147483647;
@@ -31,7 +31,7 @@ declare namespace integer {
 /**
  * Defines an unsigned integer in the range of 0 to 2^31 - 1.
  */
-declare type uinteger = number;
+type uinteger = number;
 declare namespace uinteger {
     const MIN_VALUE = 0;
     const MAX_VALUE = 2147483647;
@@ -60,7 +60,7 @@ declare namespace uinteger {
  *
  * @since 3.17.0
  */
-declare type LSPAny = any;
+type LSPAny = any;
 /**
  * Position in a text document expressed as zero-based line and character
  * offset. Prior to 3.17 the offsets were always based on a UTF-16 string
@@ -69,14 +69,14 @@ declare type LSPAny = any;
  * offset of b is 3 since `𐐀` is represented using two code units in UTF-16.
  * Since 3.17 clients and servers can agree on a different string encoding
  * representation (e.g. UTF-8). The client announces it's supported encoding
- * via the client capability [`general.positionEncodings`](#clientCapabilities).
+ * via the client capability [`general.positionEncodings`](https://microsoft.github.io/language-server-protocol/specifications/specification-current/#clientCapabilities).
  * The value is an array of position encodings the client supports, with
  * decreasing preference (e.g. the encoding at index `0` is the most preferred
  * one). To stay backwards compatible the only mandatory encoding is UTF-16
  * represented via the string `utf-16`. The server can pick one of the
  * encodings offered by the client and signals that encoding back to the
  * client via the initialize result's property
- * [`capabilities.positionEncoding`](#serverCapabilities). If the string value
+ * [`capabilities.positionEncoding`](https://microsoft.github.io/language-server-protocol/specifications/specification-current/#serverCapabilities). If the string value
  * `utf-16` is missing from the client's capability `general.positionEncodings`
  * servers can safely assume that the client supports UTF-16. If the server
  * omits the position encoding in its initialize result the encoding defaults
@@ -246,7 +246,7 @@ declare namespace DiagnosticSeverity {
      */
     const Hint: 4;
 }
-declare type DiagnosticSeverity = 1 | 2 | 3 | 4;
+type DiagnosticSeverity = 1 | 2 | 3 | 4;
 /**
  * The diagnostic tags.
  *
@@ -267,7 +267,7 @@ declare namespace DiagnosticTag {
      */
     const Deprecated: 2;
 }
-declare type DiagnosticTag = 1 | 2;
+type DiagnosticTag = 1 | 2;
 /**
  * Structure to capture a description for an error code.
  *
@@ -603,6 +603,10 @@ interface INode {
         [offset: number]: string[] | number;
     };
     /**
+     * The file reference of an import tag type like `{% render %}`
+     */
+    import?: string;
+    /**
      * Tag scopes represent references and assignments. The information
      * contained on the scope property differs depending on the type of tag we
      * are dealing with.
@@ -734,6 +738,7 @@ declare class Node implements INode {
     children: INode[];
     scope: {};
     objects?: {};
+    import?: string;
     filters?: {};
     arguments?: {};
     singular: boolean;
@@ -761,7 +766,7 @@ declare class Node implements INode {
      *
      * - Lifted from vscode-html-languageservice
      */
-    getNodeAt(offset: number): INode | this;
+    getNodeAt(offset: number): this | INode;
 }
 
 declare class Embed extends Node {
@@ -942,6 +947,11 @@ declare class AST {
         range: Range$1;
         text: string;
     }>;
+    /**
+     * Reference externally referenced files in the document.
+     * Imports account for `{% render %}` like tags.
+     */
+    imports: {};
     /**
      * Warning Reporter. Generates the warning diagnostics which are
      * consumed within LSP. This does not support curried callback
@@ -1245,4 +1255,4 @@ declare class LiquidParser {
     update({ textDocument, contentChanges }: any): AST;
 }
 
-export { AST as IAST, IEmbed, INode, LiquidParser };
+export { AST as IAST, type IEmbed, type INode, LiquidParser };
